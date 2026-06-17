@@ -43,19 +43,19 @@ aspect.
 
 | § | Aspect | Tracking issue | Status | Owner |
 |---|---|---|---|---|
-| 3.1 | Profile objective & scope | `#__` | _tbd_ | _tbd_ |
-| 3.2 | Profile identity & metadata | `#__` | _tbd_ | _tbd_ |
-| 3.3 | Format-independent attribute model | `#__` | _tbd_ | _tbd_ |
-| 3.4 | Obligation levels & conformance semantics | `#__` | _tbd_ | _tbd_ |
-| 3.5 | Conformance & validation | `#__` | _tbd_ | _tbd_ |
-| 3.6 | Mapping to serialization formats (CycloneDX, SPDX) | `#__` | _tbd_ | _tbd_ |
-| 3.7 | Vocabularies & normalisation | `#__` | _tbd_ | _tbd_ |
-| 3.8 | Relationship to SBOM / HBOM & layering | `#__` | _tbd_ | _tbd_ |
-| 3.9 | Extensibility & profile composition | `#__` | _tbd_ | _tbd_ |
-| 3.10 | Forward-looking / roadmap information | `#__` | _tbd_ | _tbd_ |
-| 3.11 | Profile governance & lifecycle | `#__` | _tbd_ | _tbd_ |
-| 3.12 | Regulatory & policy alignment | `#__` | _tbd_ | _tbd_ |
-| 3.13 | Templates, worked examples & tooling | `#__` | _tbd_ | _tbd_ |
+| 3.1 | Profile objective & scope | `#4` | _tbd_ | _tbd_ |
+| 3.2 | Profile identity & metadata | `#5` | _tbd_ | _tbd_ |
+| 3.3 | Format-independent attribute model | `#1` | _tbd_ | _tbd_ |
+| 3.4 | Obligation levels & conformance semantics | `#6` | _tbd_ | _tbd_ |
+| 3.5 | Conformance & validation | `#7` | _tbd_ | _tbd_ |
+| 3.6 | Mapping to serialization formats (CycloneDX, SPDX) | `#2` | _tbd_ | _tbd_ |
+| 3.7 | Vocabularies & normalisation | `#3` | _tbd_ | _tbd_ |
+| 3.8 | Relationship to SBOM / HBOM & layering | `#8` | _tbd_ | _tbd_ |
+| 3.9 | Extensibility & profile composition | `#9` | _tbd_ | _tbd_ |
+| 3.10 | Forward-looking / roadmap information | `#10` | _tbd_ | _tbd_ |
+| 3.11 | Profile governance & lifecycle | `#11` | _tbd_ | _tbd_ |
+| 3.12 | Regulatory & policy alignment | `#12` | _tbd_ | _tbd_ |
+| 3.13 | Templates, worked examples & tooling | `#13` | _tbd_ | _tbd_ |
 
 ### Sequencing
 
