@@ -1,0 +1,30 @@
+# CODEOWNERS — aspect owners for the CBOM Profiles methodology.
+#
+# Each aspect owner is auto-requested for review on PRs touching their spec section, and is
+# the shepherd for that aspect's topic (see CONTRIBUTING.md). Replace the @placeholders with
+# GitHub handles or @org/team slugs as owners are confirmed. Owners drive the process; they
+# are not sole deciders.
+#
+# Pattern matching is last-match-wins, so order from general to specific.
+
+# Default review for anything not otherwise owned
+*                                   @ORG/cbom-wg-maintainers
+
+# Specification sections (paths are illustrative — align with the spec/ layout once created)
+/spec/03-attribute-model.md         @placeholder-owner-3-3
+/spec/04-objective-scope.md         @placeholder-owner-3-1
+/spec/05-identity-metadata.md       @placeholder-owner-3-2
+/spec/06-obligations.md             @placeholder-owner-3-4
+/spec/07-conformance-validation.md  @placeholder-owner-3-5
+/spec/08-format-mapping.md          @placeholder-owner-3-6
+/spec/09-normalisation.md           @placeholder-owner-3-7
+/spec/10-layering.md                @placeholder-owner-3-8
+/spec/11-extensibility.md           @placeholder-owner-3-9
+/spec/12-roadmap.md                 @placeholder-owner-3-10
+/spec/13-governance.md              @placeholder-owner-3-11
+/spec/14-regulatory.md              @placeholder-owner-3-12
+/spec/15-templates-tooling.md       @placeholder-owner-3-13
+
+# Process files
+/decisions/                         @ORG/cbom-wg-maintainers
+/.github/                           @ORG/cbom-wg-maintainers

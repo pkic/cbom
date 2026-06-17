@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Open-ended discussion
+    url: https://github.com/pkic/CBOM/discussions
+    about: >
+      For exploring an aspect before it has narrowed to a concrete choice, start a Discussion.
+      Promote it to an Issue (using the Aspect topic template) once it is ready to converge on
+      a decision.
+  - name: Working Group charter & scoping document
+    url: https://github.com//pkic/CBOM/blob/main/README.md
+    about: New here? Start with the README index and CONTRIBUTING before raising a topic.
