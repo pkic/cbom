@@ -124,19 +124,19 @@ maintainer running the setup script populates these).
 
 | § | Aspect | Tracking issue | Status | Owner |
 |---|---|---|---|---|
-| 3.1 | Profile objective & scope | `#__` | _tbd_ | _tbd_ |
-| 3.2 | Profile identity & metadata | `#__` | _tbd_ | _tbd_ |
-| 3.3 | Format-independent attribute model | `#__` | _tbd_ | _tbd_ |
-| 3.4 | Obligation levels & conformance semantics | `#__` | _tbd_ | _tbd_ |
-| 3.5 | Conformance & validation | `#__` | _tbd_ | _tbd_ |
-| 3.6 | Mapping to serialization formats (CycloneDX, SPDX) | `#__` | _tbd_ | _tbd_ |
-| 3.7 | Vocabularies & normalisation | `#__` | _tbd_ | _tbd_ |
-| 3.8 | Relationship to SBOM / HBOM & layering | `#__` | _tbd_ | _tbd_ |
-| 3.9 | Extensibility & profile composition | `#__` | _tbd_ | _tbd_ |
-| 3.10 | Forward-looking / roadmap information | `#__` | _tbd_ | _tbd_ |
-| 3.11 | Profile governance & lifecycle | `#__` | _tbd_ | _tbd_ |
-| 3.12 | Regulatory & policy alignment | `#__` | _tbd_ | _tbd_ |
-| 3.13 | Templates, worked examples & tooling | `#__` | _tbd_ | _tbd_ |
+| 3.1 | Profile objective & scope | #23 | Deliberating | _unassigned_ |
+| 3.2 | Profile identity & metadata | #24 | Deliberating | _unassigned_ |
+| 3.3 | Format-independent attribute model | #20 | Deliberating | _unassigned_ |
+| 3.4 | Obligation levels & conformance semantics | #25 | Deliberating | _unassigned_ |
+| 3.5 | Conformance & validation | #26 | Deliberating | _unassigned_ |
+| 3.6 | Mapping to serialization formats (CycloneDX, SPDX) | #21 | Deliberating | _unassigned_ |
+| 3.7 | Vocabularies & normalisation | #22 | Deliberating | _unassigned_ |
+| 3.8 | Relationship to SBOM / HBOM & layering | #27 | Deliberating | _unassigned_ |
+| 3.9 | Extensibility & profile composition | #28 | Deliberating | _unassigned_ |
+| 3.10 | Forward-looking / roadmap information | #29 | Deliberating | _unassigned_ |
+| 3.11 | Profile governance & lifecycle | #30 | Deliberating | _unassigned_ |
+| 3.12 | Regulatory & policy alignment | #31 | Deliberating | _unassigned_ |
+| 3.13 | Templates, worked examples & tooling | #32 | Deliberating | _unassigned_ |
 
 To read the table: **§** is the section number in the scoping document; **Tracking issue** is
 the GitHub issue where that aspect is discussed (click the number to jump to it); **Status**
