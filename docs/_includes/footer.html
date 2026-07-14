@@ -1,0 +1,32 @@
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <span class="brand-mark" aria-hidden="true">CBOM</span>
+      <p>A maintained register of standards, regulation and guidance relevant to
+         Cryptography Bills of Materials.</p>
+      <p class="muted">Register last updated {{ site.data.references.meta.updated }}.</p>
+    </div>
+    <div class="footer-col">
+      <h3>This site</h3>
+      <ul>
+        <li><a href="{{ '/' | relative_url }}">Overview</a></li>
+        <li><a href="{{ '/references/' | relative_url }}">References</a></li>
+        <li><a href="{{ '/contributing/' | relative_url }}">Contributing</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Working group</h3>
+      <ul>
+        <li><a href="{{ site.wg.url }}">CBOM Profiles WG</a></li>
+        <li><a href="https://pkic.org/wg/cbom/charter/">Charter</a></li>
+        <li><a href="https://pkic.org/">PKI Consortium</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-note">
+    <p class="muted">
+      Entries are curated, not exhaustive, and are provided for reference only. Always
+      confirm against the primary source before citing in a normative document.
+    </p>
+  </div>
+</footer>

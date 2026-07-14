@@ -1,0 +1,16 @@
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="{{ '/' | relative_url }}">
+      <span class="brand-mark" aria-hidden="true">CBOM</span>
+      <span class="brand-text">Reference Register</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      {% assign u = page.url %}
+      <a href="{{ '/' | relative_url }}" {% if u == '/' %}class="active" aria-current="page"{% endif %}>Overview</a>
+      <a href="{{ '/references/' | relative_url }}" {% if u contains '/references' %}class="active" aria-current="page"{% endif %}>References</a>
+      <a href="{{ '/contributing/' | relative_url }}" {% if u contains '/contributing' %}class="active" aria-current="page"{% endif %}>Contributing</a>
+      <a class="nav-ext" href="{{ site.wg.url }}">PKIC&nbsp;WG&nbsp;&#8599;</a>
+    </nav>
+  </div>
+</header>

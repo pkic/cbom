@@ -2,17 +2,13 @@
 layout: default
 title: References
 permalink: /references/
+eyebrow: CBOM Reference Register
+heading: References
+lede: Standards, regulation and guidance relevant to Cryptography Bills of Materials. Filter, search, or regroup the register below.
 ---
-
-# References
 
 {% assign refs = site.data.references.references %}
 {% assign total = refs | size %}
-
-<p class="lede">
-  {{ total }} entries. Filter by category, status or jurisdiction, or search across
-  titles, organisations and notes.
-</p>
 
 <div class="controls" id="controls">
   <input type="search" id="q" placeholder="Search titles, organisations, notes…" aria-label="Search references">
