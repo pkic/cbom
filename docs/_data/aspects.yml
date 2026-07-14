@@ -1,0 +1,133 @@
+# The thirteen methodology aspects — Section 3 of the scoping document
+# "Defining CBOM Profiles" (v0.1). Each aspect has ONE canonical tracking issue
+# in the repository; this file mirrors the README table so the Issues page can
+# render it. Keep issue numbers, status and owner in sync with the README table
+# and the GitHub issues.
+#
+# status:      raised | deliberating | converging | decided
+# orientation: inventory | migration | both | n-a
+
+meta:
+  source: "Defining CBOM Profiles (v0.1), Section 3"
+  lifecycle: [Raised, Deliberating, Converging, Decided]
+
+aspects:
+  - section: "3.1"
+    title: Profile objective & scope
+    issue: 4
+    status: deliberating
+    orientation: both
+    summary: >-
+      What a given profile is for and where its boundaries lie — the use case it serves
+      and what it deliberately leaves out.
+
+  - section: "3.2"
+    title: Profile identity & metadata
+    issue: 5
+    status: deliberating
+    orientation: both
+    summary: >-
+      How a profile names and versions itself so it can be referenced, compared and
+      pinned to a specific revision.
+
+  - section: "3.3"
+    title: Format-independent attribute model
+    issue: 1
+    status: deliberating
+    orientation: both
+    summary: >-
+      The core set of cryptographic attributes a profile constrains, defined independently
+      of any serialization format. Most other aspects build on this — settle it first.
+    keystone: true
+
+  - section: "3.4"
+    title: Obligation levels & conformance semantics
+    issue: 6
+    status: deliberating
+    orientation: both
+    summary: >-
+      How MUST / SHOULD / MAY (BCP 14) apply to profile attributes, and what "conforming"
+      actually means for a producer and a consumer.
+
+  - section: "3.5"
+    title: Conformance & validation
+    issue: 7
+    status: deliberating
+    orientation: both
+    summary: >-
+      How a CBOM is checked against a profile — the validation rules and the machinery that
+      turns a profile into a pass/fail result.
+
+  - section: "3.6"
+    title: Mapping to serialization formats (CycloneDX, SPDX)
+    issue: 2
+    status: deliberating
+    orientation: both
+    summary: >-
+      Normative mappings from the format-independent model onto CycloneDX and SPDX.
+      Cross-cutting — discussed here and linked from other aspects rather than re-argued.
+    crosscutting: true
+
+  - section: "3.7"
+    title: Vocabularies & normalisation
+    issue: 3
+    status: deliberating
+    orientation: both
+    summary: >-
+      Agreeing identifiers and value vocabularies (e.g. the CycloneDX Cryptography Registry,
+      purl) so the same thing is named the same way. Cross-cutting.
+    crosscutting: true
+
+  - section: "3.8"
+    title: Relationship to SBOM / HBOM & layering
+    issue: 8
+    status: deliberating
+    orientation: both
+    summary: >-
+      How a CBOM profile sits alongside and links to software and hardware BOMs rather than
+      duplicating them.
+
+  - section: "3.9"
+    title: Extensibility & profile composition
+    issue: 9
+    status: deliberating
+    orientation: both
+    summary: >-
+      How profiles extend the base model and how several profiles combine, so one CBOM can
+      satisfy more than one profile at once.
+
+  - section: "3.10"
+    title: Forward-looking / roadmap information
+    issue: 10
+    status: deliberating
+    orientation: migration
+    summary: >-
+      Expressing migration intent and PQC-readiness (planned vs implemented state). Mainly
+      relevant to migration-oriented profiles.
+
+  - section: "3.11"
+    title: Profile governance & lifecycle
+    issue: 11
+    status: deliberating
+    orientation: both
+    summary: >-
+      How a profile is proposed, versioned, revised and retired over time, and who is
+      accountable for it.
+
+  - section: "3.12"
+    title: Regulatory & policy alignment
+    issue: 12
+    status: deliberating
+    orientation: both
+    summary: >-
+      Keeping profiles aligned with the regulations and guidance in the reference register —
+      so a profile demonstrably satisfies what regulators ask for.
+
+  - section: "3.13"
+    title: Templates, worked examples & tooling
+    issue: 13
+    status: deliberating
+    orientation: both
+    summary: >-
+      The concrete outputs that make the methodology usable: a profile template, worked
+      examples, and tooling hooks.

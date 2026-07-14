@@ -323,6 +323,42 @@ h1, h2, h3 { color: var(--ink); font-family: var(--font-display); font-weight: 6
 .footer-note { border-top: 1px solid rgba(255,255,255,.1); padding: 20px 24px 40px; }
 .footer-note p { margin: 0; font-size: .85rem; color: #7f8ea6; max-width: 720px; }
 
+/* ------------------------------------------------- issues / aspects --- */
+.prose .card-grid, .prose .toolbar, .prose .aspect-list { max-width: none; }
+.contrib-grid { margin: 6px 0 10px; }
+.contrib-grid .feature-card .card-cta { cursor: pointer; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 22px; }
+
+.aspect-list { list-style: none; margin: 0 0 26px; padding: 0; }
+.aspect {
+  background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 16px 18px; margin: 0 0 10px; box-shadow: var(--shadow-sm);
+  transition: border-color .12s ease, box-shadow .12s ease;
+}
+.aspect:hover { border-color: #cfd9e8; box-shadow: var(--shadow-md); }
+.aspect-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.aspect-sec {
+  font-family: var(--font-mono); font-size: 12px; color: #fff; background: var(--accent-ink);
+  padding: 2px 8px; border-radius: 6px;
+}
+.aspect-title { font-family: var(--font-display); font-weight: 600; font-size: 1.08rem; color: var(--ink); }
+.aspect-title:hover { color: var(--accent); }
+.aspect-summary { margin: 9px 0 6px; color: var(--body); font-size: .96rem; }
+.aspect-meta { margin: 0; font-size: 12.5px; color: var(--muted); }
+
+.flag { font-size: 11px; padding: 2px 9px; border-radius: 999px; font-weight: 500; }
+.flag-keystone { background: #fdf1e1; color: var(--draft); }
+.flag-cross    { background: var(--accent-wash); color: var(--accent-ink); }
+.flag-orient   { background: #e7f7ef; color: var(--current); }
+
+.badge-raised       { color: var(--superseded); }
+.badge-deliberating { color: var(--draft); }
+.badge-converging   { color: var(--accent-ink); }
+.badge-decided      { color: var(--current); }
+
+.note { margin-top: 20px; font-size: .9rem; }
+
 /* ------------------------------------------------------------- responsive --- */
 @media (max-width: 860px) {
   .card-grid, .inside-grid, .lead-columns { grid-template-columns: 1fr; }

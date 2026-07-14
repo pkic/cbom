@@ -1,18 +1,25 @@
-title: CBOM Reference Register
+title: CBOM Profiles
 description: >-
-  A maintained register of standards, regulations and guidance relevant to
-  Cryptography Bills of Materials, curated by the PKI Consortium CBOM Profiles
-  Working Group.
+  The working home of the PKI Consortium CBOM Profiles Working Group — a neutral,
+  format-independent methodology for defining Cryptography Bill of Materials (CBOM)
+  profiles that map cleanly onto CycloneDX and SPDX.
 # Project site served at https://pkic.github.io/cbom/ — baseurl MUST be "/cbom"
 # so that {{ ... | relative_url }} resolves assets and links under /cbom/.
 url: "https://pkic.github.io"
 baseurl: "/cbom"
 
-# Rendered from _data/references.yml — see CONTRIBUTING-references.md
+# Working group + repository links used across the site
 wg:
   name: CBOM Profiles Working Group
   org: PKI Consortium
   url: https://pkic.org/wg/cbom/
+  charter: https://pkic.org/wg/cbom/charter/
+
+repo:
+  url: https://github.com/pkic/cbom
+  issues: https://github.com/pkic/cbom/issues
+  discussions: https://github.com/pkic/cbom/discussions
+  board: https://github.com/orgs/pkic/projects
 
 # Display labels. Add a key here when you add a new category/jurisdiction/status
 # value to the data file.
