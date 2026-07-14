@@ -3,8 +3,10 @@ description: >-
   A maintained register of standards, regulations and guidance relevant to
   Cryptography Bills of Materials, curated by the PKI Consortium CBOM Profiles
   Working Group.
-url: ""
-baseurl: ""
+# Project site served at https://pkic.github.io/cbom/ — baseurl MUST be "/cbom"
+# so that {{ ... | relative_url }} resolves assets and links under /cbom/.
+url: "https://pkic.github.io"
+baseurl: "/cbom"
 
 # Rendered from _data/references.yml — see CONTRIBUTING-references.md
 wg:
