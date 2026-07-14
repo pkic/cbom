@@ -1,14 +1,19 @@
-# Contributing to the CBOM reference register
+# Maintaining the CBOM reference register
+
+> **Contributing a reference?** You don't edit this file. Email the details to the
+> working-group mailing list — **cbom@lists.pkic.org** — or open an issue, and a maintainer
+> will add it. See the [Contributing page](https://pkic.github.io/cbom/contributing/) for what
+> to include. The rest of this document is for the maintainers who fold those suggestions in.
 
 The register lives in **`docs/_data/references.yml`**. That file is the source of
-truth; the published page is generated from it. You never need to touch HTML or
-templates to add a reference.
+truth; the published page is generated from it. No HTML or templates are involved.
 
-## Adding a reference
+## Adding a reference (maintainers)
 
-1. Open `docs/_data/references.yml`.
-2. Append an entry to the `references:` list, in the block for its category.
-3. Open a pull request using the **Add a reference** template.
+1. Take the details from the mailing-list suggestion or issue.
+2. Open `docs/_data/references.yml` and append an entry to the `references:` list, in the block
+   for its category.
+3. Commit on a branch and open a pull request using the **Add a reference** template.
 
 ```yaml
   - id: A8

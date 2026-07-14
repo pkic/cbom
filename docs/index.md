@@ -78,8 +78,8 @@ title: Overview
     <a class="feature-card" href="{{ '/contributing/' | relative_url }}">
       <span class="card-kicker">No install required</span>
       <h3>Contributing</h3>
-      <p>How to take part — join a discussion, raise an aspect topic, or add a reference. All
-         in the browser, no command line.</p>
+      <p>How to take part — join a discussion, raise an aspect topic, or suggest a reference by
+         email. No command line, no YAML.</p>
       <span class="card-cta">Read the guide &#8594;</span>
     </a>
     <a class="feature-card" href="{{ site.wg.url }}">

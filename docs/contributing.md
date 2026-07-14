@@ -4,11 +4,11 @@ title: Contributing
 permalink: /contributing/
 eyebrow: CBOM Profiles · Working Group
 heading: Contributing
-lede: You don't need to be a developer, and you don't need to install anything. If you can use a web forum, you can take part fully.
+lede: You don't need to be a developer, and you don't need to install anything. Most participation happens on GitHub in the browser; suggesting a reference is a simple email.
 ---
 
-There are three ways to contribute, in rough order of how often you'll do them. All happen in
-the browser at github.com, signed in with a GitHub account.
+There are a few ways to take part, depending on what you want to do. Pick whichever fits —
+none of them requires editing files or using a command line.
 
 <div class="card-grid contrib-grid">
   <div class="feature-card">
@@ -28,114 +28,76 @@ the browser at github.com, signed in with a GitHub account.
     <a class="card-cta" href="{{ site.repo.discussions }}">Go to discussions &#8599;</a>
   </div>
   <div class="feature-card">
-    <span class="card-kicker">Structured</span>
-    <h3>Add a reference</h3>
-    <p>Keep the <a href="{{ '/references/' | relative_url }}">register</a> current by adding a
-       single YAML entry and opening a pull request — the guide below covers it.</p>
-    <a class="card-cta" href="#adding-a-reference">Jump to the guide &#8595;</a>
+    <span class="card-kicker">By email</span>
+    <h3>Suggest a reference</h3>
+    <p>Spotted a standard, regulation or guidance we should track? Send a short note to the
+       working-group mailing list — no GitHub account needed.</p>
+    <a class="card-cta" href="#suggest-a-reference">How to suggest one &#8595;</a>
   </div>
 </div>
 
-## Raising a new topic
+## Discuss the methodology
 
-Decide which fits:
+The methodology is built one aspect at a time, in the open. To take part:
 
-- A **specific question to settle** → the [Issues]({{ site.repo.issues }}) tab → **New issue**
-  → the *Aspect topic* template, which prompts you for the right details.
-- An **open-ended conversation** → the [Discussions]({{ site.repo.discussions }}) tab →
-  **New discussion**.
+- **Catch up on a topic.** Open the [Issues]({{ '/issues/' | relative_url }}) page for the
+  thirteen aspects, or the [Discussions]({{ site.repo.discussions }}) tab for open-ended
+  threads. Click one and read from the top — the first post states the question, the comments
+  are the conversation so far.
+- **Weigh in.** Scroll to the bottom of any issue or discussion, type in the comment box, and
+  click the green button. To signal quick agreement without writing, use a reaction emoji.
+- **Raise a new topic.** A *specific question to settle* → the [Issues]({{ site.repo.issues }})
+  tab → **New issue** → the *Aspect topic* template. An *open-ended conversation* →
+  [Discussions]({{ site.repo.discussions }}) → **New discussion**. If unsure, start a
+  Discussion — it can become an Issue later.
 
-If you're not sure, start a Discussion — it can become an Issue later. Before opening one,
-check the [Issues page]({{ '/issues/' | relative_url }}) so you don't start a second thread on
-an aspect already being tracked.
+We keep **deliberation** (issues and discussions), **decisions** (records in `/decisions`), and
+the **artifact** (the spec text, changed by pull request) deliberately separate, and we work by
+lazy consensus. The full lifecycle is in [CONTRIBUTING.md]({{ site.repo.url }}/blob/main/CONTRIBUTING.md).
 
-## Adding a reference
+## Suggest a reference
 
-Everything on the [References]({{ '/references/' | relative_url }}) page is generated from
-**`docs/_data/references.yml`**. That file is the single source of truth — you never touch HTML
-or the templates.
+The [reference register]({{ '/references/' | relative_url }}) is curated by the working group.
+**You don't edit it directly** — instead, send the details to the CBOM mailing list and a
+maintainer will review the suggestion and fold it in.
 
 <div class="callout">
-  <strong>In three steps:</strong>
-  <ol>
-    <li>Open <code>docs/_data/references.yml</code>.</li>
-    <li>Append an entry to the <code>references:</code> list, in the block for its category.</li>
-    <li>Open a pull request using the <em>Add a reference</em> template.</li>
-  </ol>
+  <strong>Email:</strong> <a href="mailto:cbom@lists.pkic.org?subject=CBOM%20reference%20suggestion&amp;body=Document%20title%20%26%20number%2Fversion%3A%0APublisher%20%2F%20organisation%3A%0APublication%20date%3A%0ALink%20to%20the%20primary%20source%3A%0AWhy%20it%20matters%20for%20CBOM%20work%20(and%20does%20it%20name%20a%20format%3F)%3A%0A">cbom@lists.pkic.org</a>
+  <span class="muted"> — subject line “CBOM reference suggestion”.</span>
 </div>
 
-```yaml
-  - id: A8
-    doc: BSSN Regulation No. X
-    title: National cryptographic transition guidance
-    org: BSSN (Indonesia)
-    date: 2026-03
-    category: policy
-    jurisdiction: indonesia
-    status: current
-    url: https://example.gov.id/...
-    tags: [inventory, pqc]
-    notes: >-
-      One to three sentences on why this matters for CBOM work — what it requires,
-      and whether it names a format.
-```
+To make the suggestion easy to add, please include:
 
-If you introduce a new `jurisdiction`, add a matching label under `labels.jurisdiction` in
-`docs/_config.yml` so it renders with a readable name.
+- The document's **title** and its number or version (e.g. *BSI TR-03183-2 v2.1.0*)
+- The **publisher or organisation**
+- The **publication date**
+- A **link** to the primary source (the publisher's own page, not a mirror or vendor summary)
+- One or two lines on **why it matters** for CBOM work — and, importantly, whether it requires
+  a cryptographic inventory and whether it **names a format**
 
-### Field reference
+<p class="toolbar">
+  <a class="btn btn-ghost" href="mailto:cbom@lists.pkic.org?subject=CBOM%20reference%20suggestion&amp;body=Document%20title%20%26%20number%2Fversion%3A%0APublisher%20%2F%20organisation%3A%0APublication%20date%3A%0ALink%20to%20the%20primary%20source%3A%0AWhy%20it%20matters%20for%20CBOM%20work%20(and%20does%20it%20name%20a%20format%3F)%3A%0A">Email a reference suggestion &#8599;</a>
+  <a class="btn btn-ghost" href="{{ '/references/' | relative_url }}">See the register</a>
+</p>
 
-| Field | Required | Notes |
-| --- | --- | --- |
-| `id` | yes | Stable citation key (`F1`, `M3`, `E5`, `U7`, `A1`, `N1`). **Never reuse or renumber** — other documents cite these. Prefix by section: `F` formats, `M` methodology, `E` Europe, `U` United States, `A` Asia-Pacific, `N` other national. |
-| `doc` | yes | Document or standard number, e.g. `BSI TR-03183-2 v2.1.0`. Include the version. |
-| `title` | yes | Full published title. |
-| `org` | yes | Publishing body. |
-| `date` | no | `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. Publication date, not the date you found it. |
-| `category` | yes | `formats`, `methodology` or `policy`. |
-| `jurisdiction` | yes | Must exist in `labels.jurisdiction` in `docs/_config.yml`. |
-| `status` | yes | `current`, `draft`, `superseded` or `gap`. |
-| `url` | no | Canonical link. Prefer the publisher's own URL. |
-| `tags` | no | Free-text list. Apply `inventory` consistently. |
-| `notes` | no | One to three sentences on why it matters *for CBOM work*. |
-| `verify` | no | `true` if you could not confirm a detail against the primary source. Renders a badge. |
+<p class="muted">
+  Prefer GitHub? You can also open an issue on the
+  <a href="{{ site.repo.issues }}">repository</a> with the same details — whichever is easier
+  for you.
+</p>
 
-### House rules
+## Edit the specification (optional, later)
 
-<div class="rules">
-  <div class="rule">
-    <h3>State status honestly</h3>
-    <p>NIST IR 8547 is a draft; marking it <code>current</code> would imply a mandate that
-       does not exist. Say so in <code>notes</code>.</p>
-  </div>
-  <div class="rule">
-    <h3>Flag what you can't verify</h3>
-    <p>Set <code>verify: true</code> rather than asserting a detail you couldn't confirm.</p>
-  </div>
-  <div class="rule">
-    <h3>Supersede, don't delete</h3>
-    <p>When a document is replaced, set the old entry to <code>superseded</code> and note what
-       replaced it. Existing documents cite these keys.</p>
-  </div>
-  <div class="rule">
-    <h3>Tag inventory mandates</h3>
-    <p>Where a document requires a cryptographic inventory, tag it <code>inventory</code> and
-       note whether it specifies a <em>format</em> — that pattern is the central argument.</p>
-  </div>
-</div>
+When there is draft specification text to improve, you can propose a change straight from the
+browser: open the file, click the pencil ✏️ icon, make your edit, and click **Propose
+changes**. GitHub turns it into a pull request for others to review — you never touch a command
+line.
 
-## Previewing locally
+<hr>
 
-```bash
-cd docs
-bundle exec jekyll serve
-# or, without a local Ruby toolchain:
-docker run --rm -v "$PWD":/srv/jekyll -p 4000:4000 jekyll/jekyll jekyll serve
-```
-
-Or simply open the pull request — GitHub Pages builds a preview from the branch.
-
-<p class="post-links">
-  <a class="btn btn-ghost" href="{{ site.repo.url }}/blob/main/docs/_data/references.yml">Open references.yml on GitHub &#8599;</a>
-  <a class="btn btn-ghost" href="{{ '/issues/' | relative_url }}">See the open aspects</a>
+<p class="muted note">
+  <strong>For maintainers.</strong> The register is a single data file,
+  <a href="{{ site.repo.url }}/blob/main/docs/_data/references.yml"><code>docs/_data/references.yml</code></a>.
+  Mailing-list suggestions are vetted and added following the field definitions and house rules
+  in <a href="{{ site.repo.url }}/blob/main/CONTRIBUTING-references.md">CONTRIBUTING-references.md</a>.
 </p>
