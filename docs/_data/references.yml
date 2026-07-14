@@ -1,0 +1,624 @@
+# CBOM Reference Register — PKI Consortium CBOM Profiles Working Group
+#
+# Single source of truth for the references page. Add or amend entries here;
+# the rendered page is generated from this data. See CONTRIBUTING-references.md.
+#
+# Fields:
+#   id           (required) stable citation key, e.g. F1, M3, E5. Never reuse or renumber.
+#   doc          (required) document/standard number or short designation
+#   title        (required) full title
+#   org          (required) publishing organisation
+#   date         (optional) YYYY-MM-DD or YYYY-MM or YYYY
+#   category     (required) formats | methodology | policy
+#   jurisdiction (required) see _config.yml labels
+#   status       (required) current | draft | superseded | gap
+#   url          (optional) canonical link
+#   tags         (optional) list of free-text tags
+#   notes        (optional) why this matters for CBOM work; 1–3 sentences
+#   verify       (optional) true if the entry needs confirming against a primary source
+
+meta:
+  updated: 2026-07-14
+
+references:
+
+  # ----------------------------------------------------------------- formats
+  - id: F1
+    doc: ECMA-424, 2nd edition
+    title: CycloneDX Bill of Materials Standard
+    org: Ecma International
+    date: 2025-12
+    category: formats
+    jurisdiction: global
+    status: current
+    url: https://ecma-international.org/publications-and-standards/standards/ecma-424/
+    tags: [cyclonedx, standard]
+    notes: >-
+      Second edition aligns to CycloneDX v1.7. The first edition (June 2024) aligned to
+      v1.6 — cite the edition, not just the ECMA number.
+
+  - id: F2
+    doc: CycloneDX v1.7
+    title: CycloneDX Specification v1.7
+    org: OWASP CycloneDX
+    date: 2025-10
+    category: formats
+    jurisdiction: global
+    status: current
+    url: https://cyclonedx.org/specification/overview/
+    tags: [cyclonedx, cbom]
+    verify: true
+    notes: >-
+      Final release of the 1.x line; backward compatible with 1.4–1.6. Introduces the
+      algorithm-family object and a standardised elliptic-curve list, deprecating the v1.6
+      curve property. Confirm exact field names against the schema before citing.
+
+  - id: F3
+    doc: CycloneDX Cryptography Registry
+    title: Cryptography Registry
+    org: OWASP CycloneDX
+    date: 2025-10
+    category: formats
+    jurisdiction: global
+    status: current
+    url: https://cyclonedx.org/registry/cryptography/
+    tags: [cyclonedx, registry, normalisation]
+    notes: >-
+      Authoritative machine-readable registry of algorithm families and curves with a JSON
+      Schema. Versioned independently of the specification and usable outside CycloneDX,
+      which makes it the natural normalisation target for a format-independent profile.
+
+  - id: F4
+    doc: CycloneDX CBOM
+    title: Cryptography Bill of Materials (CBOM) capability
+    org: OWASP CycloneDX
+    category: formats
+    jurisdiction: global
+    status: current
+    url: https://cyclonedx.org/capabilities/cbom/
+    tags: [cyclonedx, cbom]
+
+  - id: F5
+    doc: OWASP CycloneDX
+    title: Authoritative Guide to CBOM
+    org: OWASP CycloneDX
+    category: formats
+    jurisdiction: global
+    status: current
+    url: https://cyclonedx.org/guides/OWASP_CycloneDX-Authoritative-Guide-to-CBOM-en.pdf
+    tags: [cyclonedx, cbom, guide]
+
+  - id: F6
+    doc: SPDX 3.0.1
+    title: SPDX Specification
+    org: Linux Foundation
+    category: formats
+    jurisdiction: global
+    status: draft
+    url: https://spdx.dev/
+    tags: [spdx]
+    verify: true
+    notes: >-
+      No dedicated cryptographic-asset object model equivalent to CycloneDX CBOM. A 3.1
+      release is in progress and more granular cryptographic metadata has been signalled.
+      Confirm the 3.1 status and any crypto profile with the SPDX project before citing.
+
+  - id: F7
+    doc: ISO/IEC 5962:2021
+    title: Information technology — SPDX Specification V2.2.1
+    org: ISO/IEC
+    date: 2021
+    category: formats
+    jurisdiction: global
+    status: current
+    tags: [spdx, iso]
+
+  - id: F8
+    doc: RFC 2119 / RFC 8174
+    title: Key words for use in RFCs to Indicate Requirement Levels (BCP 14)
+    org: IETF
+    date: 1997-03
+    category: formats
+    jurisdiction: global
+    status: current
+    url: https://www.rfc-editor.org/rfc/rfc8174
+    tags: [ietf, conformance]
+    notes: Normative keyword vocabulary for profile conformance language.
+
+  # ------------------------------------------------------------- methodology
+  - id: M1
+    doc: PKIC CBOM WG
+    title: CBOM Profiles Working Group
+    org: PKI Consortium
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://pkic.org/wg/cbom/
+    tags: [pkic, profiles]
+    notes: >-
+      Vendor-neutral, format-independent methodology for defining CBOM profiles that map
+      onto CycloneDX and SPDX. Deliverables in development: CBOM Profile Methodology and
+      Standards Mapping Guidance.
+
+  - id: M2
+    doc: PKIC CBOM WG Charter
+    title: CBOM Profiles Working Group Charter
+    org: PKI Consortium
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://pkic.org/wg/cbom/charter/
+    tags: [pkic, profiles]
+    notes: >-
+      The motivating precedent for the profile-first, format-independent methodology. Cite
+      this — not the PQC Maturity Model, which is a separate effort.
+
+  - id: M3
+    doc: PQCC
+    title: >-
+      Transitioning to Quantum-Safe Cryptography: Exploring the Role and Value of
+      Developing and Implementing a Cryptographic Bill of Materials
+    org: Post-Quantum Cryptography Coalition (MITRE)
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://pqcc.org
+    tags: [pqcc, cbom]
+
+  - id: M4
+    doc: PQCC Migration Roadmap
+    title: PQC Migration Roadmap
+    org: Post-Quantum Cryptography Coalition (MITRE)
+    date: 2025-05
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://pqcc.org
+    tags: [pqcc, migration]
+    notes: Prioritise inventoried assets by data sensitivity and protection lifetime.
+
+  - id: M5
+    doc: GSMA PQ.03 v2.0
+    title: Post Quantum Cryptography — Guidelines for Telecom Use Cases
+    org: GSMA PQTN
+    date: 2024-10-04
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://www.gsma.com/solutions-and-impact/technologies/security/post-quantum-cryptography-documents/
+    tags: [gsma, telecom, sector-profile]
+
+  - id: M6
+    doc: GSMA PQ.06 / PQ.07
+    title: >-
+      Implementation and Prototype Verification of Post-Quantum Use (PQ.06); Post Quantum
+      Cryptography for Non-Terrestrial Networks (PQ.07)
+    org: GSMA PQTN
+    date: 2026-02
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://www.gsma.com/solutions-and-impact/technologies/security/post-quantum-cryptography-documents/
+    tags: [gsma, telecom]
+
+  - id: M7
+    doc: ATIS
+    title: >-
+      Preparing Telecom for the Quantum-Safe Future: Why a Telecom-Specific CBOM Matters
+    org: Alliance for Telecommunications Industry Solutions
+    category: methodology
+    jurisdiction: us
+    status: current
+    tags: [atis, telecom, sector-profile]
+
+  - id: M8
+    doc: CBOMkit
+    title: CBOMkit — CBOM generation and analysis tooling
+    org: Post-Quantum Cryptography Alliance (Linux Foundation)
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://pqca.org/projects/cbomkit/
+    tags: [tooling, open-source]
+
+  - id: M9
+    doc: GSMA PQ tracker
+    title: Post Quantum Government Initiatives by Country and Region
+    org: GSMA
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://www.gsma.com/newsroom/post-quantum-government-initiatives-by-country-and-region/
+    tags: [tracker]
+    notes: >-
+      Maintained tracker of national PQC mandates; useful for keeping this register current.
+
+  # ------------------------------------------------------------ policy — EU
+  - id: E1
+    doc: Regulation (EU) 2024/2847
+    title: Cyber Resilience Act (CRA)
+    org: European Union
+    date: 2024-12
+    category: policy
+    jurisdiction: eu
+    status: current
+    tags: [cra, sbom, procurement]
+    notes: >-
+      Main obligations apply from 11 December 2027. Mandates SBOM-based supply-chain
+      transparency; contains no direct CBOM reference.
+
+  - id: E2
+    doc: Recommendation (EU) 2024/1101
+    title: >-
+      Commission Recommendation on a Coordinated Implementation Roadmap for the transition
+      to Post-Quantum Cryptography
+    org: European Commission
+    date: 2024-04-11
+    category: policy
+    jurisdiction: eu
+    status: current
+    tags: [pqc, roadmap]
+
+  - id: E3
+    doc: NIS CG PQC Roadmap
+    title: >-
+      A Coordinated Implementation Roadmap for the Transition to Post-Quantum Cryptography
+    org: NIS Cooperation Group
+    date: 2025-06
+    category: policy
+    jurisdiction: eu
+    status: current
+    url: https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography
+    tags: [pqc, roadmap, inventory]
+    notes: >-
+      Milestones: 31 Dec 2026 national roadmaps plus identification and awareness (i.e.
+      cryptographic inventory); 31 Dec 2030 high-risk use cases; 31 Dec 2035 full
+      transition. Annual reporting from April 2026. Recommends a standardised format for
+      cryptographic inventories — the clearest hook for a CBOM profile in EU policy.
+
+  - id: E4
+    doc: ENISA NIS2 TIG
+    title: >-
+      Technical Implementation Guidance on the Cybersecurity Risk-Management Measures of
+      NIS2 Implementing Regulation (EU) 2024/2690
+    org: ENISA
+    date: 2025-06-26
+    category: policy
+    jurisdiction: eu
+    status: current
+    tags: [nis2, inventory]
+    notes: Recommends inventorying cryptographic assets.
+
+  - id: E5
+    doc: BSI TR-03183-2 v2.1.0
+    title: >-
+      Cyber Resilience Requirements for Manufacturers and Products — Part 2: Software Bill
+      of Materials (SBOM)
+    org: BSI (Germany)
+    date: 2025-08-20
+    category: policy
+    jurisdiction: eu
+    status: current
+    url: https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/TechGuidelines/TR03183/BSI-TR-03183-2_v2_1_0.html
+    tags: [bsi, sbom, cra]
+    notes: Raises CycloneDX 1.5 to 1.6 and SPDX 2.2.1 to 3.0.1. Supersedes v2.0.0.
+
+  - id: E6
+    doc: BSI TR-02102-1 (2026)
+    title: "Cryptographic Mechanisms: Recommendations and Key Lengths"
+    org: BSI (Germany)
+    date: 2026
+    category: policy
+    jurisdiction: eu
+    status: current
+    tags: [bsi, algorithms]
+    notes: >-
+      The German baseline for algorithm and key-length adequacy against which a CBOM
+      profile's conformance rules would be assessed.
+
+  - id: E7
+    doc: BSI PQC migration guidance
+    title: BSI guidance on cryptographic inventory and PQC migration
+    org: BSI (Germany)
+    category: policy
+    jurisdiction: eu
+    status: current
+    tags: [bsi, inventory, pqc]
+    notes: >-
+      The NIS-2 cryptographic-procedures framework follows Inventarisieren → Bewerten →
+      Umsetzen. BSI has no official German term for CBOM; recommended first use is
+      "CBOM (kryptografische Stückliste)".
+
+  - id: E8
+    doc: DE/FR/NL joint statement
+    title: Joint statement on the transition to post-quantum cryptography
+    org: Germany, France, Netherlands
+    category: policy
+    jurisdiction: eu
+    status: current
+    tags: [pqc]
+
+  - id: E9
+    doc: NCSC PQC timelines
+    title: Timelines for migration to post-quantum cryptography
+    org: NCSC (United Kingdom)
+    date: 2025-03
+    category: policy
+    jurisdiction: uk
+    status: current
+    url: https://www.ncsc.gov.uk/guidance/pqc-migration-timelines
+    tags: [pqc, inventory, roadmap]
+    notes: >-
+      Three phases: by 2028 discovery, cryptographic inventory and migration plan;
+      2028–2031 high-priority upgrades; 2031–2035 full migration.
+
+  # ------------------------------------------------------------ policy — US
+  - id: U1
+    doc: EO 14306
+    title: >-
+      Sustaining Select Efforts to Strengthen the Nation's Cybersecurity and Amending
+      Executive Order 13694 and Executive Order 14144
+    org: The White House (United States)
+    date: 2025-06-06
+    category: policy
+    jurisdiction: us
+    status: current
+    tags: [executive-order, pqc]
+    notes: >-
+      Amends rather than rescinds EO 14144. Directs CISA to publish a list of product
+      categories supporting PQC; removes the 90-day solicitation trigger and the "as soon
+      as practicable" hybrid-adoption mandate.
+
+  - id: U2
+    doc: CISA PQC Product Categories List
+    title: Product Categories for Technologies That Use Post-Quantum Cryptography Standards
+    org: CISA (with NSA)
+    date: 2026-01-23
+    category: policy
+    jurisdiction: us
+    status: current
+    url: https://www.cisa.gov/resources-tools/resources/product-categories-technologies-use-post-quantum-cryptography-standards
+    tags: [pqc, procurement]
+    notes: >-
+      Two tiers — Widely Available (cloud, browsers, endpoint security) and Transitioning
+      (networking, SAN, IAM, containers). Advisory, not a procurement mandate.
+
+  - id: U3
+    doc: EO 14144
+    title: Strengthening and Promoting Innovation in the Nation's Cybersecurity
+    org: The White House (United States)
+    date: 2025-01-16
+    category: policy
+    jurisdiction: us
+    status: superseded
+    tags: [executive-order]
+    notes: Substantially amended by EO 14306.
+
+  - id: U4
+    doc: EO 14028
+    title: Improving the Nation's Cybersecurity
+    org: The White House (United States)
+    date: 2021-05-12
+    category: policy
+    jurisdiction: us
+    status: current
+    tags: [executive-order, sbom]
+    notes: Origin of federal SBOM procurement expectations.
+
+  - id: U5
+    doc: OMB M-23-02
+    title: Migrating to Post-Quantum Cryptography
+    org: Office of Management and Budget (United States)
+    date: 2022-11-18
+    category: policy
+    jurisdiction: us
+    status: current
+    tags: [inventory, pqc]
+    notes: Directs federal agencies to maintain a cryptographic inventory.
+
+  - id: U6
+    doc: 6 U.S.C. §1526
+    title: Quantum Computing Cybersecurity Preparedness Act
+    org: United States Congress
+    category: policy
+    jurisdiction: us
+    status: current
+    tags: [inventory, statute]
+    notes: >-
+      Statutory basis for federal inventories of cryptographic systems and migration
+      prioritisation.
+
+  - id: U7
+    doc: NIST IR 8547 (ipd)
+    title: Transition to Post-Quantum Cryptography Standards
+    org: NIST
+    date: 2024-11
+    category: policy
+    jurisdiction: us
+    status: draft
+    url: https://csrc.nist.gov/pubs/ir/8547/ipd
+    tags: [nist, pqc, timeline]
+    notes: >-
+      RSA/ECC deprecated 2030, disallowed 2035. Still an initial public draft — the
+      timeline is directional, not binding. Do not cite as a mandate.
+
+  - id: U8
+    doc: FIPS 203 / 204 / 205
+    title: ML-KEM, ML-DSA and SLH-DSA standards
+    org: NIST
+    date: 2024-08
+    category: policy
+    jurisdiction: us
+    status: current
+    tags: [nist, algorithms]
+
+  - id: U9
+    doc: NIST SP 1800-38
+    title: Migration to Post-Quantum Cryptography (Volumes A, B, C)
+    org: NIST NCCoE
+    category: policy
+    jurisdiction: us
+    status: draft
+    url: https://www.nccoe.nist.gov/applied-cryptography/migration-to-pqc
+    tags: [discovery, tooling, inventory]
+    notes: >-
+      Volume B covers public-key application discovery tools and a multi-tool discovery
+      approach — directly relevant to how a conforming CBOM is produced.
+
+  - id: U10
+    doc: CISA discovery strategy
+    title: >-
+      Strategy for Migrating to Automated Post-Quantum Cryptography Discovery and Inventory
+      Tools
+    org: CISA
+    date: 2024
+    category: policy
+    jurisdiction: us
+    status: current
+    tags: [discovery, inventory, tooling]
+
+  - id: U11
+    doc: CISA/NSA/NIST factsheet
+    title: "Quantum-Readiness: Migration to Post-Quantum Cryptography"
+    org: CISA, NSA, NIST
+    date: 2023-08-21
+    category: policy
+    jurisdiction: us
+    status: current
+    tags: [inventory, pqc]
+
+  - id: U12
+    doc: NIST SP 800-218
+    title: Secure Software Development Framework (SSDF) v1.1
+    org: NIST
+    category: policy
+    jurisdiction: us
+    status: current
+    tags: [ssdf, sdlc]
+
+  - id: U13
+    doc: CNSA 2.0
+    title: Commercial National Security Algorithm Suite 2.0
+    org: NSA
+    category: policy
+    jurisdiction: us
+    status: current
+    tags: [algorithms, nss]
+
+  # -------------------------------------------------- policy — Asia-Pacific
+  - id: A1
+    doc: CERT-In Technical Guidelines v2.0
+    title: Technical Guidelines on SBOM, QBOM & CBOM, AIBOM and HBOM
+    org: CERT-In / MeitY (India)
+    date: 2025-07-09
+    category: policy
+    jurisdiction: india
+    status: current
+    url: https://www.cert-in.org.in/PDF/TechnicalGuidelines-on-SBOM,QBOM&CBOM,AIBOM_and_HBOM_ver2.0.pdf
+    tags: [cbom, qbom, inventory]
+    notes: >-
+      The most CBOM-explicit national guideline published to date. Defines five BOM types;
+      the CBOM is an inventory of cryptographic assets carrying metadata such as usage
+      patterns and expiry, with a separate QBOM for quantum algorithms and quantum-safe
+      technologies. Currently voluntary, addressed to the public sector, government,
+      essential services and the software export industry. A strong candidate consumer of a
+      PKIC-defined profile.
+
+  - id: A2
+    doc: MAS Circular MAS/TCRS/2024/01
+    title: Advisory on Addressing the Cybersecurity Risks Associated with Quantum
+    org: Monetary Authority of Singapore
+    date: 2024-02
+    category: policy
+    jurisdiction: singapore
+    status: current
+    url: https://www.mas.gov.sg/-/media/mas-media-library/regulation/circulars/trpd/mas-quantum-advisory/mas-quantum-advisory.pdf
+    tags: [inventory, finance]
+    notes: >-
+      Directs financial institutions to maintain an inventory of all cryptographic assets
+      and identify priority assets for migration. Names no format.
+
+  - id: A3
+    doc: CSA Quantum-Safe Handbook
+    title: Quantum-Safe Handbook and Quantum Readiness Index
+    org: Cyber Security Agency of Singapore
+    category: policy
+    jurisdiction: singapore
+    status: current
+    url: https://www.csa.gov.sg/
+    tags: [inventory, maturity]
+    notes: >-
+      Handbook covers discovery of cryptographic assets, risk-based prioritisation, phased
+      migration, testing and post-migration monitoring. The Readiness Index is a
+      five-domain self-assessment: governance, risk assessment, training and capability,
+      external engagement, technology and agility.
+
+  - id: A4
+    doc: CyberSecurity Malaysia PQC framework
+    title: Post-Quantum Cryptography Migration Framework
+    org: CyberSecurity Malaysia
+    category: policy
+    jurisdiction: malaysia
+    status: current
+    url: https://www.cybersecurity.my/portal-main/services/post-quantum-overview
+    tags: [migration]
+
+  - id: A5
+    doc: ASD ISM / ACSC guidance
+    title: Planning for post-quantum cryptography; Information Security Manual
+    org: Australian Signals Directorate
+    category: policy
+    jurisdiction: australia
+    status: current
+    url: https://www.cyber.gov.au/business-government/secure-design/planning-for-post-quantum-cryptography
+    tags: [pqc, timeline, procurement]
+    notes: >-
+      The most aggressive timeline of any jurisdiction: traditional asymmetric cryptography
+      to cease by end 2030, pure PQC rather than hybrid, ML-KEM-1024 preferred. Control
+      ISM-1917 already requires cryptographic dependencies to be considered in procurement.
+
+  - id: A6
+    doc: NCO interim report / CRYPTREC guidelines
+    title: >-
+      National Cyber Command Office PQC transition target; CRYPTREC Cryptographic
+      Technology Guidelines (Post-Quantum Cryptography), 2024 Edition
+    org: NCO / CRYPTREC (Japan)
+    date: 2025-03
+    category: policy
+    jurisdiction: japan
+    status: current
+    tags: [pqc, timeline]
+    notes: >-
+      Sets a 2035 government PQC transition target; CRYPTREC will fold NIST PQC algorithms
+      into Japan's recommended-algorithm lists.
+
+  - id: A7
+    doc: ASEAN — no regional framework
+    title: Absence of a regional ASEAN PQC or CBOM framework
+    org: ASEAN
+    category: policy
+    jurisdiction: asean
+    status: gap
+    tags: [gap, engagement]
+    notes: >-
+      No regional ASEAN PQC or CBOM framework exists; the ASEAN Digital Masterplan 2025
+      does not mention quantum. Activity is national — Singapore leads (nationwide
+      quantum-safe network; MAS quantum-safe sandbox with DBS, HSBC, OCBC and UOB), with
+      Malaysia and Indonesia (BSSN) following. Recorded as an engagement opportunity for
+      the working group rather than a citable reference.
+
+  # --------------------------------------------------------- policy — other
+  - id: N1
+    doc: ITSM.40.001
+    title: >-
+      Roadmap for the Migration to Post-Quantum Cryptography for the Government of Canada
+    org: Canadian Centre for Cyber Security
+    date: 2025-06-23
+    category: policy
+    jurisdiction: canada
+    status: current
+    url: https://www.cyber.gc.ca/en/guidance/roadmap-migration-post-quantum-cryptography-government-canada-itsm40001
+    tags: [pqc, roadmap]
+    notes: >-
+      April 2026 initial departmental migration plan with annual reporting; end 2031
+      high-priority systems migrated; end 2035 remaining systems.

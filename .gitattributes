@@ -1,0 +1,6 @@
+# Normalise line endings. The repo stores LF; Git for Windows converts on checkout.
+# Without this, files authored on Linux vs Windows produce whole-file diffs.
+* text=auto eol=lf
+
+# Shell scripts must be LF regardless of platform.
+*.sh text eol=lf

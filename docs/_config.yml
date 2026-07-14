@@ -1,0 +1,42 @@
+title: CBOM Reference Register
+description: >-
+  A maintained register of standards, regulations and guidance relevant to
+  Cryptography Bills of Materials, curated by the PKI Consortium CBOM Profiles
+  Working Group.
+url: ""
+baseurl: ""
+
+# Rendered from _data/references.yml — see CONTRIBUTING-references.md
+wg:
+  name: CBOM Profiles Working Group
+  org: PKI Consortium
+  url: https://pkic.org/wg/cbom/
+
+# Display labels. Add a key here when you add a new category/jurisdiction/status
+# value to the data file.
+labels:
+  category:
+    formats: BOM formats & CBOM specifications
+    methodology: Methodology, sector work & tooling
+    policy: Regulation & government guidance
+  status:
+    current: Current
+    draft: Draft / not binding
+    superseded: Superseded
+    gap: Gap — no framework
+  jurisdiction:
+    global: Global
+    eu: European Union
+    uk: United Kingdom
+    us: United States
+    india: India
+    singapore: Singapore
+    malaysia: Malaysia
+    australia: Australia
+    japan: Japan
+    canada: Canada
+    asean: ASEAN
+
+exclude:
+  - README.md
+plugins: []

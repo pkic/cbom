@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="description" content="{{ site.description }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      <nav>
+        <a href="{{ '/' | relative_url }}">Overview</a>
+        <a href="{{ '/references/' | relative_url }}">References</a>
+        <a href="{{ site.wg.url }}">{{ site.wg.org }} WG</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    {{ content }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>
+        Maintained by the {{ site.wg.name }}, {{ site.wg.org }}.
+        Register last updated {{ site.data.references.meta.updated }}.
+      </p>
+      <p class="muted">
+        Entries are curated, not exhaustive. Always confirm against the primary source
+        before citing in a normative document.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

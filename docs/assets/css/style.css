@@ -1,0 +1,152 @@
+:root {
+  --ink: #1a1d21;
+  --muted: #5c6470;
+  --line: #e2e6ea;
+  --bg: #ffffff;
+  --accent: #0b5cad;
+  --chip: #f2f4f7;
+  --chip-on: #0b5cad;
+  --current: #12805c;
+  --draft: #a56a00;
+  --superseded: #8a8f98;
+  --gap: #a32c2c;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--bg);
+  font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+.wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  padding: 14px 0;
+  margin-bottom: 32px;
+}
+.site-header .wrap { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.brand { font-weight: 650; color: var(--ink); text-decoration: none; }
+.site-header nav a { margin-left: 16px; color: var(--muted); text-decoration: none; font-size: 14px; }
+.site-header nav a:hover { color: var(--accent); }
+
+h1 { font-size: 28px; letter-spacing: -0.01em; margin: 0 0 8px; }
+h2 { font-size: 20px; margin: 36px 0 10px; }
+a { color: var(--accent); }
+
+.lede { color: var(--muted); margin-top: 0; }
+
+/* ------------------------------------------------------------------ controls */
+.controls {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin: 20px 0 28px;
+  background: #fbfcfd;
+}
+#q {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+#q:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+.filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 7px; }
+.filter-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  width: 84px;
+  flex: 0 0 84px;
+}
+.chip {
+  border: 1px solid var(--line);
+  background: var(--chip);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 4px 11px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.is-on { background: var(--chip-on); border-color: var(--chip-on); color: #fff; }
+.chip.clear { background: transparent; border-style: dashed; color: var(--muted); margin-left: auto; }
+
+.count { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+
+/* ------------------------------------------------------------------- results */
+.group-heading {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 6px;
+  margin: 30px 0 4px;
+}
+
+.ref { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.ref-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cite {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.doc { font-size: 13px; color: var(--muted); }
+
+.badge {
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  line-height: 1.5;
+}
+.badge-current { color: var(--current); }
+.badge-draft { color: var(--draft); }
+.badge-superseded { color: var(--superseded); }
+.badge-gap { color: var(--gap); }
+.badge-verify { color: var(--draft); border-style: dashed; }
+
+.ref-title { font-size: 17px; margin: 6px 0 3px; font-weight: 600; line-height: 1.35; }
+.ref-title a { text-decoration: none; }
+.ref-title a:hover { text-decoration: underline; }
+
+.meta { font-size: 13px; color: var(--muted); margin: 0 0 7px; }
+.notes { font-size: 14.5px; margin: 0 0 8px; }
+.tags { margin: 0; }
+.tag {
+  font-size: 11px;
+  background: var(--chip);
+  color: var(--muted);
+  border-radius: 3px;
+  padding: 1px 6px;
+  margin-right: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.empty { color: var(--muted); padding: 24px 0; }
+.muted { color: var(--muted); }
+
+.site-footer {
+  margin-top: 56px;
+  padding: 20px 0 40px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+}
+.site-footer p { margin: 4px 0; }
+
+@media (max-width: 620px) {
+  .filter-label { width: 100%; flex: 1 0 100%; margin-bottom: 2px; }
+  .chip.clear { margin-left: 0; }
+}
