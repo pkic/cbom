@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Files</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="ontology.html">Ontology</a>
+    <a href="profile.html">Profile</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="files.html" class="active">Files</a>
+    <a href="demo.html">Demo</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">REFERENCE</div>
+  <h1>Files &amp; how to run</h1>
+  <p class="lead">Every machine-readable artifact behind the example, plus the commands to reproduce the pass/fail verdicts.</p>
+
+  <h2>Artifacts</h2>
+  <table>
+    <thead><tr><th>File</th><th>What it is</th></tr></thead>
+    <tbody>
+      <tr><td><a href="profile-interface-disclosure.md">profile-interface-disclosure.md</a></td><td>Prose profile spec (product + per-interface rules)</td></tr>
+      <tr><td><a href="profile-interface-disclosure.rules.json">profile-interface-disclosure.rules.json</a></td><td>Machine-readable rules, incl. <code>appliesTo</code> version range</td></tr>
+      <tr><td><a href="mapping-cyclonedx-spdx.md">mapping-cyclonedx-spdx.md</a></td><td>Full requirement → format mapping</td></tr>
+      <tr><td><a href="cbom-pass.cyclonedx.json">cbom-pass.cyclonedx.json</a></td><td>Conforming example CBOM (CycloneDX 1.7)</td></tr>
+      <tr><td><a href="cbom-fail.cyclonedx.json">cbom-fail.cyclonedx.json</a></td><td>Non-conforming example — omits the management interface</td></tr>
+      <tr><td><a href="validate_cbom.py">validate_cbom.py</a></td><td>Version-aware validator</td></tr>
+      <tr><td><a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a></td><td>How the project handles older CBOM files</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Run the validator</h2>
+  <pre><code># conforms (CycloneDX 1.7)
+python validate_cbom.py cbom-pass.cyclonedx.json profile-interface-disclosure.rules.json
+
+# does not conform — fails product rule P2 (no management interface)
+python validate_cbom.py cbom-fail.cyclonedx.json profile-interface-disclosure.rules.json
+
+# JSON output, for wiring into a CI gate
+python validate_cbom.py cbom-pass.cyclonedx.json profile-interface-disclosure.rules.json --json</code></pre>
+
+  <h2>See the version bands</h2>
+  <pre><code># make a legacy (1.6) and an unsupported (1.5) copy, then validate each
+python - &lt;&lt;'PY'
+import json
+b = json.load(open("cbom-pass.cyclonedx.json"))
+for v in ("1.6", "1.5"):
+    b["specVersion"] = v
+    json.dump(b, open(f"cbom-{v}.json", "w"))
+PY
+python validate_cbom.py cbom-1.6.json profile-interface-disclosure.rules.json   # legacy -> warn, still evaluates
+python validate_cbom.py cbom-1.5.json profile-interface-disclosure.rules.json   # unsupported -> refused</code></pre>
+
+  <div class="banner">Prefer to see it visually? The <a href="demo.html">Demo</a> page runs the same logic in the browser.</div>
+
+  <div class="pagenav">
+    <a href="versioning.html">← Versioning</a>
+    <a class="next" href="demo.html">Next: Demo →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Lifecycle Data</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="lifecycle.html" class="active">Lifecycle Data</a>
+    <a href="ontology.html">Ontology</a>
+    <a href="profile.html">Profile</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">BACKGROUND</div>
+  <h1>Data collected across development and deployment phases</h1>
+  <p class="lead">The same cryptographic fact carries different weight depending on when and by whom it was captured. A CBOM's <code>lifecycleStage</code> attribute records that phase, turning "the product uses X" into a claim you can reason about.</p>
+
+  <h2>The four lifecycle stages</h2>
+  <p>The profile's lifecycle model (v1) uses a flat enumeration — <code>intended</code>, <code>implemented</code>, <code>configured</code>, <code>observed</code> — attached to each interface. Each aligns with a phase of the software's life, a different producer, and a different data source.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <line x1="40" y1="60" x2="680" y2="60" stroke="#c9d3e0" stroke-width="2"/>
+      <g text-anchor="middle">
+        <circle cx="120" cy="60" r="7" fill="#7c3aed"/>
+        <text x="120" y="40" fill="#1a2230" font-weight="700">Design</text>
+        <rect x="55" y="78" width="130" height="150" rx="10" fill="#ffffff" stroke="#e2e7ef"/>
+        <text x="120" y="100" fill="#7c3aed" font-weight="700" font-family="monospace" font-size="11">intended</text>
+        <text x="120" y="122" fill="#5b6472" font-size="11">planned crypto</text>
+        <text x="120" y="150" fill="#39424f" font-size="10.5">who: architects</text>
+        <text x="120" y="167" fill="#39424f" font-size="10.5">source: design docs,</text>
+        <text x="120" y="181" fill="#39424f" font-size="10.5">threat models</text>
+        <text x="120" y="206" fill="#5b6472" font-size="10">confidence: aspirational</text>
+        <circle cx="290" cy="60" r="7" fill="#2563eb"/>
+        <text x="290" y="40" fill="#1a2230" font-weight="700">Build</text>
+        <rect x="225" y="78" width="130" height="150" rx="10" fill="#ffffff" stroke="#e2e7ef"/>
+        <text x="290" y="100" fill="#2563eb" font-weight="700" font-family="monospace" font-size="11">implemented</text>
+        <text x="290" y="122" fill="#5b6472" font-size="11">crypto in the binary</text>
+        <text x="290" y="150" fill="#39424f" font-size="10.5">who: dev / build</text>
+        <text x="290" y="167" fill="#39424f" font-size="10.5">source: source scan,</text>
+        <text x="290" y="181" fill="#39424f" font-size="10.5">build pipeline</text>
+        <text x="290" y="206" fill="#5b6472" font-size="10">confidence: capability</text>
+        <circle cx="460" cy="60" r="7" fill="#0284c7"/>
+        <text x="460" y="40" fill="#1a2230" font-weight="700">Deploy</text>
+        <rect x="395" y="78" width="130" height="150" rx="10" fill="#ffffff" stroke="#e2e7ef"/>
+        <text x="460" y="100" fill="#0284c7" font-weight="700" font-family="monospace" font-size="11">configured</text>
+        <text x="460" y="122" fill="#5b6472" font-size="11">what deploy enables</text>
+        <text x="460" y="150" fill="#39424f" font-size="10.5">who: integrator / ops</text>
+        <text x="460" y="167" fill="#39424f" font-size="10.5">source: config files,</text>
+        <text x="460" y="181" fill="#39424f" font-size="10.5">policy bundles</text>
+        <text x="460" y="206" fill="#5b6472" font-size="10">confidence: intent-in-place</text>
+        <circle cx="630" cy="60" r="7" fill="#15803d"/>
+        <text x="630" y="40" fill="#1a2230" font-weight="700">Runtime</text>
+        <rect x="565" y="78" width="130" height="150" rx="10" fill="#ffffff" stroke="#e2e7ef"/>
+        <text x="630" y="100" fill="#15803d" font-weight="700" font-family="monospace" font-size="11">observed</text>
+        <text x="630" y="122" fill="#5b6472" font-size="11">negotiated on the wire</text>
+        <text x="630" y="150" fill="#39424f" font-size="10.5">who: ops / monitoring</text>
+        <text x="630" y="167" fill="#39424f" font-size="10.5">source: TLS scan,</text>
+        <text x="630" y="181" fill="#39424f" font-size="10.5">telemetry</text>
+        <text x="630" y="206" fill="#5b6472" font-size="10">confidence: actuality</text>
+      </g>
+      <path d="M290 250 L290 262 L630 262 L630 250" fill="none" stroke="#b45309" stroke-width="1.5"/>
+      <text x="460" y="282" fill="#b45309" text-anchor="middle" font-size="11.5" font-weight="600">the readiness gap: capability ≠ what is actually running</text>
+    </svg>
+    <figcaption>Each stage answers a different question, from a different source. Read left to right it is a hand-off from architects to operators.</figcaption>
+  </figure>
+
+  <h2>What each phase can and cannot tell you</h2>
+  <table>
+    <thead><tr><th>Stage</th><th>Phase</th><th>Answers</th><th>Blind spot</th></tr></thead>
+    <tbody>
+      <tr><td><code>intended</code></td><td>Design</td><td>What the architecture is <em>supposed</em> to use.</td><td>Says nothing about what was actually built.</td></tr>
+      <tr><td><code>implemented</code></td><td>Build</td><td>What the shipped code/binary <em>can</em> do (the vendor build CBOM).</td><td>Capability ≠ what a deployment turns on.</td></tr>
+      <tr><td><code>configured</code></td><td>Deploy</td><td>What the deployed configuration <em>permits</em>.</td><td>Config can drift; may not match live sessions.</td></tr>
+      <tr><td><code>observed</code></td><td>Runtime</td><td>What was actually negotiated on the wire.</td><td>A snapshot; a later config change can invalidate it.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>The readiness gap — why the stage matters</h2>
+  <p>PQC-capable software and hardware do not, on their own, guarantee that PQC is configured and active — nor that it stays active across configuration changes. A product can be <code>implemented</code> with ML-KEM support that is never <code>configured</code>, and therefore never <code>observed</code>. Large migrations routinely surface interoperability and performance side-effects between these stages.</p>
+  <div class="banner warn">This is exactly why a CBOM should carry the lifecycle stage rather than a bare fact. A vendor's <code>implemented</code> CBOM and an operator's <code>observed</code> scan can both be correct and still disagree — and the disagreement <em>is</em> the finding. CBOMs that support both perspectives make the gap visible instead of hiding it.</div>
+
+  <h2>Two producers, one interface</h2>
+  <p>In the worked example the two lifecycle stages appear naturally:</p>
+  <ul>
+    <li>The HTTPS service interface is tagged <code>observed</code> — captured by scanning the running server (an operator/runtime view).</li>
+    <li>The SSH management interface is tagged <code>configured</code> — captured from the deployment configuration (an integrator view).</li>
+  </ul>
+  <p>A profile can require the stage to be <em>declared</em> (as the baseline does) or require a <em>specific</em> stage — for example, a runtime-assurance profile might insist every interface be <code>observed</code>, while a procurement profile might accept <code>implemented</code> from a vendor build.</p>
+
+  <h2>Progress tracking over time</h2>
+  <p>Successive CBOM revisions (the content-revision axis on the <a href="versioning.html">Versioning</a> page) turn these stages into an audit trail: the same interface moving from <code>implemented</code> to <code>configured</code> to <code>observed</code> with PQC enabled is a verifiable migration record for internal governance and regulators.</p>
+
+  <div class="pagenav">
+    <a href="challenges.html">← Challenges</a>
+    <a class="next" href="ontology.html">Next: Ontology →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Use Cases</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="ontology.html">Ontology</a>
+    <a href="profile.html">Profile</a>
+    <a href="use-cases.html" class="active">Use Cases</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">APPLIED</div>
+  <h1>Where profiles could be used</h1>
+  <p class="lead">A profile turns a CBOM from a document someone reads into a check a machine runs. Each use case below needs a different subset of attributes — which is exactly why profiles, not one universal schema, are the right unit. A single CBOM can satisfy several of these at once.</p>
+
+  <h2>The use cases</h2>
+
+  <h3>1 · PQC migration readiness &amp; planning</h3>
+  <p><strong>Goal:</strong> build evidence-based migration timelines and track progress toward quantum-safe. <strong>Profile shape:</strong> requires <code>pqcPosture</code> on every interface and often a specific <code>lifecycleStage</code> (compare <code>implemented</code> capability against <code>observed</code> actuality). <strong>Producer → consumer:</strong> vendor build / operator scan → migration planners and regulators. <strong>Example:</strong> compare current CBOMs against a quantum-safe target state to separate software-only updates from hardware refreshes.</p>
+
+  <h3>2 · Procurement &amp; tender conformance</h3>
+  <p><strong>Goal:</strong> state cryptographic requirements in a tender and check a vendor's CBOM against them automatically, replacing bespoke security questionnaires. <strong>Profile shape:</strong> per-interface minimums plus product-level structure (e.g. "declare a management interface"). <strong>Producer → consumer:</strong> vendor → operator procurement. <strong>Example:</strong> a required baseline for any product terminating an operator interface.</p>
+
+  <h3>3 · Vulnerability management &amp; incident response</h3>
+  <p><strong>Goal:</strong> when a library flaw lands (say an OpenSSL CVE), find every affected service fast. <strong>Profile shape:</strong> makes <code>implementationPurl</code> mandatory so CBOMs cross-reference cleanly against vulnerability feeds. <strong>Producer → consumer:</strong> build pipeline → security operations. <strong>Example:</strong> query the CBOM repository for all interfaces implemented by <code>pkg:generic/openssl@&lt;affected&gt;</code>.</p>
+
+  <h3>4 · Regulatory &amp; compliance reporting</h3>
+  <p><strong>Goal:</strong> demonstrate posture against frameworks such as the EU CRA, NIS2, BSI TR-03183 / TR-02102, or US directives. <strong>Profile shape:</strong> encodes the specific attributes a regulation expects into a checkable rule set; conformance becomes an artifact. <strong>Producer → consumer:</strong> operator → auditor / regulator. <strong>Example:</strong> a jurisdiction-specific profile a global vendor can satisfy once and report many times.</p>
+
+  <h3>5 · CI/CD quality gate</h3>
+  <p><strong>Goal:</strong> stop non-conforming crypto from reaching production. <strong>Profile shape:</strong> any profile, run as a pipeline step that fails the build on a MUST violation. <strong>Producer → consumer:</strong> build → the pipeline itself. <strong>Example:</strong> exactly the pass/fail behaviour on the <a href="demo.html">Demo</a> page, wired into CI.</p>
+
+  <h3>6 · Crypto-agility assessment</h3>
+  <p><strong>Goal:</strong> judge how quickly an estate could swap an algorithm out. <strong>Profile shape:</strong> emphasises <code>implementationPurl</code>, <code>keyExchange</code>/<code>encryption</code>/<code>authentication</code> separation, and dependency links, so agility can be reasoned about per interface. <strong>Producer → consumer:</strong> vendor → architecture / risk. <strong>Example:</strong> flag interfaces whose crypto is hard-wired rather than provider-swappable.</p>
+
+  <h3>7 · Supply-chain transparency</h3>
+  <p><strong>Goal:</strong> give downstream consumers a consistent, high-fidelity disclosure instead of free-form documentation. <strong>Profile shape:</strong> a disclosure baseline (like this example) that bounds what must be shared while protecting IP. <strong>Producer → consumer:</strong> tier-N supplier → integrator. <strong>Example:</strong> one vendor CBOM satisfies many operators' baselines.</p>
+
+  <h3>8 · Mergers &amp; third-party risk due diligence</h3>
+  <p><strong>Goal:</strong> assess an acquisition target's or partner's cryptographic exposure quickly. <strong>Profile shape:</strong> a broad disclosure + PQC-posture profile applied across their estate. <strong>Producer → consumer:</strong> target → acquiring security team. <strong>Example:</strong> surface deprecated algorithms and legacy-hardware-bound crypto before signing.</p>
+
+  <h2>Which attributes each use case leans on</h2>
+  <p>The same twelve attributes serve all of these, but each use case makes a different subset mandatory — the essence of profiling.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr>
+      <th>Use case</th><th>pqcPosture</th><th>lifecycleStage</th><th>implementationPurl</th><th>keyExchange / auth</th><th>interfaceType (mgmt)</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>PQC readiness</td><td>●</td><td>●</td><td>○</td><td>●</td><td>○</td></tr>
+      <tr><td>Procurement</td><td>●</td><td>○</td><td>○</td><td>●</td><td>●</td></tr>
+      <tr><td>Vuln / incident</td><td>○</td><td>○</td><td>●</td><td>○</td><td>○</td></tr>
+      <tr><td>Compliance reporting</td><td>●</td><td>●</td><td>○</td><td>●</td><td>●</td></tr>
+      <tr><td>CI quality gate</td><td>●</td><td>○</td><td>●</td><td>●</td><td>●</td></tr>
+      <tr><td>Crypto-agility</td><td>○</td><td>○</td><td>●</td><td>●</td><td>○</td></tr>
+      <tr><td>Supply-chain transparency</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+      <tr><td>M&amp;A due diligence</td><td>●</td><td>○</td><td>●</td><td>●</td><td>○</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">● emphasised by the profile for this use case · ○ still useful, not the focus</p>
+
+  <div class="banner">One CBOM, many profiles. A vendor generates a single high-fidelity CBOM; different consumers run it against the procurement, PQC-readiness, and vulnerability profiles independently. That is the payoff of keeping the methodology <a href="formats.html">format-independent</a> and the requirements in profiles.</div>
+
+  <div class="pagenav">
+    <a href="profile.html">← Profile</a>
+    <a class="next" href="formats.html">Next: Formats →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Demo</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .toggle{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:4px;gap:4px;margin:6px 0 16px}
+  .toggle button{background:none;border:0;color:var(--muted);padding:9px 16px;border-radius:7px;cursor:pointer;font-size:14px;font-weight:600}
+  .toggle button.on[data-v=pass]{background:#eefaf1;color:var(--pass)}
+  .toggle button.on[data-v=fail]{background:#fdeeee;color:var(--fail)}
+  .product{border:1px dashed var(--line);border-radius:14px;padding:16px;margin:6px 0 18px;background:#f2f6fc}
+  .plabel{font:600 12px/1 var(--mono);color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:12px}
+  .ifaces{display:flex;gap:14px;flex-wrap:wrap}
+  .iface{flex:1;min-width:240px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--panel);box-shadow:var(--shadow)}
+  .iface.svc{border-top:3px solid var(--svc)} .iface.management{border-top:3px solid var(--mgmt)}
+  .iface .itype{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.4px}
+  .iface.svc .itype{color:var(--svc)} .iface.management .itype{color:var(--mgmt)}
+  .iface .inm{font-weight:600;margin:5px 0 2px} .iface .imeta{color:var(--muted);font-size:12.5px}
+  .missing{flex:1;min-width:240px;border:1px dashed var(--fail);border-radius:12px;padding:14px;background:#fdeeee;color:var(--fail);display:flex;align-items:center;justify-content:center;text-align:center;font-size:13.5px}
+  .verdict{border-radius:12px;padding:14px 18px;font-weight:700;font-size:17px;margin:14px 0;border:1px solid}
+  .verdict.pass{background:#eefaf1;border-color:#bfe6cb;color:var(--pass)}
+  .verdict.fail{background:#fdeeee;border-color:#f2caca;color:var(--fail)}
+  .rulebox{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px;background:var(--panel);box-shadow:var(--shadow)}
+  .rulebox h3{margin:0 0 10px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  ul.checks{list-style:none;margin:0;padding:0}
+  ul.checks li{display:grid;grid-template-columns:52px 46px 1fr auto;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;margin-bottom:6px;background:#fbfcfe;font-size:13.5px}
+  ul.checks li.fail{border-color:#f2caca;background:#fdf2f2}
+  ul.checks li.product{grid-template-columns:52px 46px 1fr}
+  .pill{font:600 10px/1 var(--mono);padding:4px 6px;border-radius:20px;text-align:center;background:#e5ebf5;color:#2b3f66}
+  .st{font:700 11px/1 var(--mono);padding:5px 8px;border-radius:6px}
+  .st.PASS{background:#e3f5ea;color:var(--pass)} .st.FAIL{background:#fbe0e0;color:var(--fail)} .st.warn{background:#fbeed4;color:var(--warn)}
+  .attr{font-family:var(--mono);font-size:12.5px;color:#26324a} .detail{color:var(--muted);font-family:var(--mono);font-size:12px}
+  .ihead{font-weight:600;margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+  .dot{width:9px;height:9px;border-radius:50%} .dot.svc{background:var(--svc)} .dot.management{background:var(--mgmt)}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="ontology.html">Ontology</a>
+    <a href="profile.html">Profile</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html" class="active">Demo</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">INTERACTIVE</div>
+  <h1>Run the conformance check</h1>
+  <p class="lead">Toggle the two example CBOMs. The passing product declares both a service and a management interface; the failing one forgot to declare how it is configured. This reproduces <code>validate_cbom.py</code> exactly.</p>
+
+  <div class="toggle" id="toggle">
+    <button data-v="pass" class="on">✓ Passing CBOM</button>
+    <button data-v="fail">✕ Failing CBOM</button>
+  </div>
+
+  <div class="product">
+    <div class="plabel">Product · nginx 1.27.0 — declared cryptographic interfaces · CycloneDX 1.7 CBOM</div>
+    <div class="ifaces" id="ifaceStrip"></div>
+  </div>
+
+  <div id="verdict" class="verdict pass"></div>
+
+  <div class="rulebox">
+    <h3>Product-level rules (about the set of interfaces)</h3>
+    <ul class="checks" id="productChecks"></ul>
+  </div>
+
+  <div id="ifaceChecks"></div>
+
+  <div class="pagenav">
+    <a href="files.html">← Files</a>
+    <a class="next" href="index.html">Back to Overview →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+
+<script>
+const PROFILE = {
+  interfaceTypeVocabulary: ["management","service","interconnect","peer","storage"],
+  productRules: [
+    {id:"P1", level:"MUST", description:"Product declares at least one cryptographic interface", constraint:{minInterfaces:1}},
+    {id:"P2", level:"MUST", description:"Product declares at least one management (configuration) interface", constraint:{minInterfacesOfType:{interfaceType:"management",min:1}}}
+  ],
+  interfaceRules: [
+    {id:"I1", attribute:"protocol", level:"MUST", constraint:{present:true}},
+    {id:"I2", attribute:"protocolVersion", level:"MUST", constraint:{present:true}},
+    {id:"I3", attribute:"keyExchange", level:"MUST", constraint:{present:true}},
+    {id:"I4", attribute:"encryption", level:"MUST", constraint:{present:true}},
+    {id:"I5", attribute:"authentication", level:"MUST", constraint:{present:true}},
+    {id:"I6", attribute:"endpointRoles", level:"MUST", constraint:{minCount:2}},
+    {id:"I7", attribute:"interfaceType", level:"MUST", constraint:{enumRef:"interfaceTypeVocabulary"}},
+    {id:"I8", attribute:"lifecycleStage", level:"MUST", constraint:{enum:["intended","implemented","configured","observed"]}},
+    {id:"I9", attribute:"pqcPosture", level:"MUST", constraint:{enum:["classical","hybrid","pqc"]}},
+    {id:"I10", attribute:"implementationPurl", level:"SHOULD", constraint:{startsWith:"pkg:"}}
+  ]
+};
+const SVC = {interfaceId:"svc-https", interfaceType:"service", protocol:"TLS", protocolVersion:"1.3",
+  keyExchange:"X25519", encryption:"AES-256-GCM", authentication:"RSA-2048",
+  endpointRoles:["client","server"], lifecycleStage:"observed", pqcPosture:"classical",
+  implementationPurl:"pkg:generic/openssl@3.4.0", nm:"HTTPS service interface (TLS 1.3)", via:"OpenSSL 3.4.0"};
+const MGMT = {interfaceId:"mgmt-ssh", interfaceType:"management", protocol:"SSH", protocolVersion:"2.0",
+  keyExchange:"curve25519-sha256", encryption:"ChaCha20-Poly1305", authentication:"Ed25519 host key",
+  endpointRoles:["client","server"], lifecycleStage:"configured", pqcPosture:"classical",
+  implementationPurl:"pkg:generic/openssh@9.6", nm:"Management interface (SSH 2.0)", via:"OpenSSH 9.6"};
+const CBOMS = { pass:[SVC, MGMT], fail:[SVC] };
+
+function present(v){return !(v===null||v===undefined||v===""||(Array.isArray(v)&&!v.length));}
+function checkAttr(value, c){
+  if("present" in c){const p=present(value);return [p===c.present, p?"present":"absent"];}
+  if("minCount" in c){const n=(value||[]).length;return [n>=c.minCount, "count="+n+" (min "+c.minCount+")"];}
+  if(!present(value)) return [false,"absent"];
+  if("enum" in c) return [c.enum.includes(value), "= '"+value+"'"];
+  if("enumRef" in c) return [(PROFILE[c.enumRef]||[]).includes(value), "= '"+value+"'"];
+  if("startsWith" in c) return [String(value).startsWith(c.startsWith), "= '"+value+"'"];
+  return [true,"ok"];
+}
+function checkProduct(ifaces, c){
+  if("minInterfaces" in c){const n=ifaces.length;return [n>=c.minInterfaces, n+" interface(s) declared"];}
+  if("minInterfacesOfType" in c){const s=c.minInterfacesOfType;
+    const n=ifaces.filter(i=>i.interfaceType===s.interfaceType).length;
+    return [n>=s.min, n+" of type '"+s.interfaceType+"' (min "+s.min+")"];}
+  return [true,"ok"];
+}
+function validate(ifaces){
+  const product=PROFILE.productRules.map(r=>{const [ok,d]=checkProduct(ifaces,r.constraint);return {...r,ok,d};});
+  const interfaces=ifaces.map(f=>{
+    const rows=PROFILE.interfaceRules.map(r=>{const [ok,d]=checkAttr(f[r.attribute],r.constraint);return {...r,ok,d};});
+    return {iface:f, conforms:rows.every(r=>r.level!=="MUST"||r.ok), rows};
+  });
+  const pOk=product.every(r=>r.level!=="MUST"||r.ok);
+  const iOk=interfaces.every(i=>i.conforms);
+  return {conforms:pOk&&iOk, product, interfaces};
+}
+function stItem(r){const st=r.ok?"PASS":(r.level==="MUST"?"FAIL":"warn");return `<span class="st ${st}">${st==='warn'?'WARN':st}</span>`;}
+function render(v){
+  const ifaces=CBOMS[v];const res=validate(ifaces);
+  let strip = ifaces.map(f=>`<div class="iface ${f.interfaceType==='management'?'management':'svc'}">
+      <div class="itype">interfaceType · ${f.interfaceType}</div>
+      <div class="inm">${f.nm}</div>
+      <div class="imeta">${f.protocol} ${f.protocolVersion} · via ${f.via}<br>${f.endpointRoles.join(' ↔ ')} · ${f.lifecycleStage}</div></div>`).join("");
+  if(v==="fail") strip += `<div class="missing">no <b>management</b> interface declared<br>— nothing describes how the product is configured</div>`;
+  document.getElementById("ifaceStrip").innerHTML=strip;
+  const vd=document.getElementById("verdict");
+  vd.className="verdict "+(res.conforms?"pass":"fail");
+  const pf=res.product.filter(r=>!r.ok&&r.level==="MUST").map(r=>r.id);
+  vd.textContent=res.conforms ? "✓ CONFORMS to Interface Disclosure Baseline v0.1"
+    : "✕ DOES NOT CONFORM — failed product rule: "+pf.join(", ");
+  document.getElementById("productChecks").innerHTML=res.product.map(r=>
+    `<li class="product ${!r.ok?'fail':''}">${stItem(r)}<span class="pill">${r.level}</span>
+      <span><span class="attr">${r.id}</span> — ${r.description} <span class="detail">→ ${r.d}</span></span></li>`).join("");
+  document.getElementById("ifaceChecks").innerHTML=res.interfaces.map(it=>{
+    const rows=it.rows.map(r=>`<li class="${!r.ok&&r.level==='MUST'?'fail':''}">${stItem(r)}
+        <span class="pill">${r.level}</span><span class="attr">${r.id} · ${r.attribute}</span>
+        <span class="detail">${r.d}</span></li>`).join("");
+    return `<div class="ihead"><span class="dot ${it.iface.interfaceType==='management'?'management':'svc'}"></span>
+       Interface <span class="attr">${it.iface.interfaceId}</span> (type ${it.iface.interfaceType}) —
+       ${it.conforms?'<span style="color:var(--pass)">conforms</span>':'<span style="color:var(--fail)">fails</span>'}</div>
+       <ul class="checks">${rows}</ul>`;
+  }).join("");
+}
+const tg=document.getElementById("toggle");
+tg.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  [...tg.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");render(b.dataset.v);});
+render("pass");
+</script>
+</body>
+</html>

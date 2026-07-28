@@ -1,0 +1,32 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident.",
+  "profileId": "pkic.example.interface-disclosure",
+  "title": "Interface Disclosure Baseline (Example)",
+  "version": "0.1",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+
+  "appliesTo": {
+    "$comment": "Carrier-format acceptance. 'min' = oldest spec version the adapter is known to read; below it, evaluation is refused (unsupported). 'tested' = version the profile was authored/validated against; between min and tested the CBOM is accepted but flagged legacy. Newer-than-tested is accepted with a note.",
+    "cyclonedx": { "min": "1.6", "tested": "1.7" }
+  },
+
+  "interfaceTypeVocabulary": ["management", "service", "interconnect", "peer", "storage"],
+
+  "productRules": [
+    { "id": "P1", "description": "Product declares at least one cryptographic interface", "level": "MUST", "constraint": { "minInterfaces": 1 } },
+    { "id": "P2", "description": "Product declares at least one management (configuration) interface", "level": "MUST", "constraint": { "minInterfacesOfType": { "interfaceType": "management", "min": 1 } } }
+  ],
+
+  "interfaceRules": [
+    { "id": "I1", "attribute": "protocol",           "level": "MUST",   "constraint": { "present": true } },
+    { "id": "I2", "attribute": "protocolVersion",    "level": "MUST",   "constraint": { "present": true } },
+    { "id": "I3", "attribute": "keyExchange",        "level": "MUST",   "constraint": { "present": true } },
+    { "id": "I4", "attribute": "encryption",         "level": "MUST",   "constraint": { "present": true } },
+    { "id": "I5", "attribute": "authentication",     "level": "MUST",   "constraint": { "present": true }, "note": "Server/host authentication signature: certificate signature (TLS) or host key (SSH)." },
+    { "id": "I6", "attribute": "endpointRoles",      "level": "MUST",   "constraint": { "minCount": 2 } },
+    { "id": "I7", "attribute": "interfaceType",      "level": "MUST",   "constraint": { "enumRef": "interfaceTypeVocabulary" } },
+    { "id": "I8", "attribute": "lifecycleStage",     "level": "MUST",   "constraint": { "enum": ["intended", "implemented", "configured", "observed"] } },
+    { "id": "I9", "attribute": "pqcPosture",         "level": "MUST",   "constraint": { "enum": ["classical", "hybrid", "pqc"] } },
+    { "id": "I10", "attribute": "implementationPurl","level": "SHOULD", "constraint": { "startsWith": "pkg:" } }
+  ]
+}

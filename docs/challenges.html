@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Challenges</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="challenges.html" class="active">Challenges</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="ontology.html">Ontology</a>
+    <a href="profile.html">Profile</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">BACKGROUND</div>
+  <h1>Challenges with SBOMs and current CBOMs</h1>
+  <p class="lead">CBOMs inherit both the promise and the growing pains of software bills of materials, then add cryptography-specific problems on top. Understanding these is what motivates a profile-first, format-independent methodology.</p>
+
+  <h2>What SBOM adoption taught us</h2>
+  <p>Three properties have repeatedly separated smooth SBOM rollouts from painful ones, and each applies directly to CBOMs in a multi-vendor environment.</p>
+  <table>
+    <thead><tr><th>Lesson</th><th>The problem</th><th>Implication for CBOMs</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Harmonization</strong></td><td>A proliferation of vendor-specific formats and delivery methods made reconciliation impossible at scale.</td><td>Converge on one machine-readable format (CycloneDX today) and consistent delivery across the supply chain.</td></tr>
+      <tr><td><strong>Profiling</strong></td><td>Exhaustive coverage is not useful coverage — thousands of entries bury the ones a decision needs.</td><td>Define a minimum, purpose-built subset of attributes per objective. This is the whole point of a <a href="profile.html">profile</a>.</td></tr>
+      <tr><td><strong>Normalization</strong></td><td>Different producers spell the same thing differently, breaking automation.</td><td>Agree identifiers (syntactic) and attribute meanings (semantic) so tools can compare CBOMs at all.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>CBOM-specific challenges</h2>
+  <p>Beyond the SBOM inheritance, cryptography introduces its own difficulties that current standards only partly address.</p>
+
+  <h3>1 · No first-class model for relationships (the edge gap)</h3>
+  <p>Today's CBOM standards model cryptographic <em>assets</em> (algorithms, keys, certificates, protocols) as nodes, but have no object that represents the <em>relationship</em> — the place where cryptography is applied between two parties. A TLS connection is not an asset; it is a locus that <em>uses</em> assets. Classifiers that belong to the connection itself (endpoint roles, PQC posture of a specific session) end up pinned to a protocol asset, treating the edge as if it were a node.</p>
+  <figure>
+    <svg viewBox="0 0 720 170" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="13">
+      <rect x="40" y="40" width="290" height="92" rx="12" fill="#eefaf1" stroke="#15803d"/>
+      <text x="185" y="68" fill="#14532d" text-anchor="middle" font-weight="700">Assets (nodes)</text>
+      <text x="185" y="90" fill="#39424f" text-anchor="middle" font-size="12">algorithms · keys · certificates · protocols</text>
+      <text x="185" y="112" fill="#15803d" text-anchor="middle" font-size="12" font-family="monospace">✓ well modeled today</text>
+      <rect x="390" y="40" width="290" height="92" rx="12" fill="#fdeeee" stroke="#dc2626"/>
+      <text x="535" y="68" fill="#7f1d1d" text-anchor="middle" font-weight="700">Relationships (edges)</text>
+      <text x="535" y="90" fill="#39424f" text-anchor="middle" font-size="12">where crypto is applied between parties</text>
+      <text x="535" y="112" fill="#dc2626" text-anchor="middle" font-size="12" font-family="monospace">✗ no first-class object</text>
+    </svg>
+    <figcaption>The core modelling gap: standards describe the cryptography a component contains, not the connections in which it is used. See <a href="ontology.html">Ontology</a>.</figcaption>
+  </figure>
+
+  <h3>2 · SPDX has no cryptographic object model yet</h3>
+  <p>As of SPDX 3.0.1 there is no dedicated crypto model equivalent to CycloneDX's. Organizations standardizing on SPDX today typically pair it with a CycloneDX-format CBOM as a linked artifact. That works, but it means CBOM interoperability effectively depends on one format. See <a href="formats.html">Formats</a>.</p>
+
+  <h3>3 · Inconsistent algorithm naming</h3>
+  <p>Real deployments showed the same algorithm written many ways (<code>AES256</code>, <code>AES-256-GCM</code>, <code>AES_256_CBC</code>), which impeded policy enforcement and cross-organization analysis. CycloneDX 1.7's <strong>Cryptography Registry</strong> gives stable identifiers to close this — but older CBOMs still carry free text and must be normalized at ingest. See <a href="versioning.html">Versioning</a>.</p>
+
+  <h3>4 · Lifecycle and state ambiguity</h3>
+  <p>"The product uses ML-KEM" can mean four very different things: it is <em>intended</em> in the design, <em>implemented</em> in the binary, <em>configured</em> in a deployment, or <em>observed</em> on the wire. A vendor's build-time CBOM and an operator's runtime scan legitimately disagree. Without an explicit lifecycle tag, consumers cannot tell capability from actuality. See <a href="lifecycle.html">Lifecycle Data</a>.</p>
+
+  <h3>5 · Depth versus disclosure</h3>
+  <p>Over-reporting drowns the signal; under-reporting hides real risk and can also expose intellectual property. There is a genuine tension between operational utility and legitimate vendor confidentiality. A well-defined profile sets a floor that prevents underreporting while bounding what must be disclosed.</p>
+
+  <h3>6 · Tooling coverage and confidence</h3>
+  <p>Automated scanners can miss cryptography that is dynamically loaded, configuration-driven, or provided by hardware. A CBOM is only as trustworthy as the process that produced it, so provenance and, ideally, signing matter — and a CBOM's confidence varies by the lifecycle phase it was captured in.</p>
+
+  <h3>7 · Linking crypto to its environment</h3>
+  <p>Knowing a system uses ML-KEM is incomplete without knowing the library version that implements it (does it support hybrid mode?) and whether it runs in software, an HSM, or a TEE — the last potentially requiring a hardware refresh rather than a software update. CBOMs are therefore produced and consumed alongside SBOMs, and sometimes HBOMs. Cleanly linking the three is still maturing.</p>
+
+  <h3>8 · Versioning and legacy artifacts</h3>
+  <p>Standards move (CycloneDX 1.6 → 1.7), profiles tighten, and a product's CBOM is regenerated over time. Treating "old" as a single idea produces false verdicts; the three version axes must be handled deliberately. See <a href="versioning.html">Versioning</a>.</p>
+
+  <div class="banner">Most of these reduce to two needs a profile methodology is designed to meet: <strong>bound what must be disclosed</strong> (profiling), and <strong>agree what the disclosed values mean</strong> (normalization + an explicit lifecycle and relationship model).</div>
+
+  <div class="pagenav">
+    <a href="index.html">← Overview</a>
+    <a class="next" href="lifecycle.html">Next: Lifecycle Data →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

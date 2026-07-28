@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Overview</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <nav class="tabs">
+    <a href="index.html" class="active">Overview</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="ontology.html">Ontology</a>
+    <a href="profile.html">Profile</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+  </nav>
+</header>
+
+<main>
+  <h1>CBOM Profiles</h1>
+  <p class="lead">A CBOM profile is a defined subset of mandatory attributes for one objective — a minimum bar, not exhaustive coverage. This site explains the profile methodology through a worked example: an <strong>nginx</strong> web server, its CBOM in <strong>CycloneDX 1.7</strong>, checked against a small, product-independent profile.</p>
+  <div>
+    <span class="tag">PKIC CBOM Profiles WG</span>
+    <span class="tag">illustrative</span>
+    <span class="tag">CycloneDX 1.7 / ECMA-424</span>
+    <span class="tag">not normative</span>
+  </div>
+
+  <h2>Why profiles</h2>
+  <p>A cryptographic bill of materials (CBOM) records what cryptography a product uses, where, and under what conditions. Reporting every cryptographic call in a large product buries the items that matter for a given decision. A <strong>profile</strong> fixes that: it names the handful of facts a decision needs, so a CBOM can be checked automatically for "did you disclose enough?" A single CBOM can satisfy several profiles at once.</p>
+  <p>The example profile here — <em>Interface Disclosure Baseline</em> — asks a product to declare its cryptographic interfaces, including the one used to configure it, and to describe each. It never names a specific product or interface, so it applies to any TLS/SSH/IPsec-terminating system. nginx is only the subject that makes it concrete.</p>
+
+  <h2>Start here</h2>
+  <div class="cards">
+    <a class="card" href="challenges.html"><div class="num">background</div><h3>Challenges</h3><p>What SBOM adoption taught us, and where current CBOM standards still fall short.</p></a>
+    <a class="card" href="lifecycle.html"><div class="num">background</div><h3>Lifecycle Data</h3><p>What cryptographic data is knowable at each development and deployment phase — and the gaps between them.</p></a>
+    <a class="card" href="ontology.html"><div class="num">concept</div><h3>Ontology</h3><p>Node, edge, asset — the three words the whole methodology rests on.</p></a>
+    <a class="card" href="profile.html"><div class="num">core</div><h3>Profile</h3><p>The product-level and per-interface rules, dual use, and how conformance is decided.</p></a>
+    <a class="card" href="use-cases.html"><div class="num">applied</div><h3>Use Cases</h3><p>Where profiles earn their keep: PQC readiness, procurement, incident response, compliance, CI gates and more.</p></a>
+    <a class="card" href="formats.html"><div class="num">mapping</div><h3>Formats</h3><p>One profile, mapped onto CycloneDX and SPDX — and the "edge gap" both share.</p></a>
+    <a class="card" href="versioning.html"><div class="num">operations</div><h3>Versioning</h3><p>Handling older CBOM files across three version axes, with a machine-checked acceptance range.</p></a>
+    <a class="card" href="demo.html"><div class="num">interactive</div><h3>Demo</h3><p>Toggle a passing and a failing CBOM and watch the conformance checklist respond.</p></a>
+  </div>
+
+  <div class="banner">This is illustrative early-concept material for the PKIC CBOM Profiles Working Group — a methodology demonstration, not a normative deliverable. CycloneDX field names are aligned to v1.7 / ECMA-424 (2nd Edition) but should be schema-checked before real use.</div>
+
+  <div class="pagenav">
+    <span></span>
+    <a class="next" href="challenges.html">Next: Challenges →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>
