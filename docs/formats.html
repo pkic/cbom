@@ -20,13 +20,14 @@
     <a href="versioning.html">Versioning</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
+    <a href="references.html">References</a>
   </nav>
 </header>
 
 <main>
   <div class="crumb">MAPPING</div>
-  <h1>One profile, two formats</h1>
-  <p class="lead">The profile is written format-independently. A <strong>mapping</strong> locates each attribute — and the interface count — in a concrete document. CycloneDX has a native cryptographic model; SPDX 3.0.1 does not yet, so a CBOM is kept in CycloneDX and <em>linked</em> from an SPDX SBOM.</p>
+  <h1>A single profile expressed in two formats</h1>
+  <p class="lead">The profile is defined independently of any format. A mapping locates each attribute, and the interface count, within a concrete document. CycloneDX provides a native cryptographic model; SPDX 3.0.1 does not, so a CBOM is expressed in CycloneDX and referenced from an SPDX SBOM.</p>
 
   <figure>
     <svg viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
@@ -46,11 +47,11 @@
       <text x="418" y="164" fill="#5b6472" font-size="11.5" font-family="monospace">→ link the CycloneDX CBOM</text>
       <text x="418" y="182" fill="#15803d" font-size="11.5" font-family="monospace">✓ package identity via purl</text>
     </svg>
-    <figcaption>The same profile is satisfiable in either format, given a mapping. Where each is strong (and weak) differs.</figcaption>
+    <figcaption>The same profile can be satisfied in either format, given a mapping. The areas of strength and weakness differ between the two.</figcaption>
   </figure>
 
-  <h2>Where an interface lives</h2>
-  <p>An interface (cryptographic relationship) is a <code>cryptographic-asset</code> component with <code>assetType: protocol</code>. The product-level rules are answered by enumerating those components and counting them — including counting how many carry <code>interfaceType = management</code>. There is no native "interface set" object; the count is derived.</p>
+  <h2>Representation of an interface</h2>
+  <p>An interface (cryptographic relationship) is represented as a <code>cryptographic-asset</code> component with <code>assetType: protocol</code>. The product-level rules are evaluated by enumerating those components and counting them, including the number that carry <code>interfaceType = management</code>. There is no native object representing the set of interfaces; the count is derived.</p>
 
   <h2>Mapping table</h2>
   <div style="overflow:auto">
@@ -61,27 +62,27 @@
       <tr><td>P2</td><td>≥1 <code>management</code></td><td>count where <code>interfaceType==management</code></td><td>count of elements annotated management</td></tr>
       <tr><td>I1</td><td>protocol</td><td><code>protocolProperties.type</code></td><td>via linked CBOM</td></tr>
       <tr><td>I2</td><td>protocolVersion</td><td><code>protocolProperties.version</code></td><td>via linked CBOM</td></tr>
-      <tr><td>I3</td><td>keyExchange</td><td>algo <code>primitive=key-agree/kem</code></td><td>via linked CBOM</td></tr>
-      <tr><td>I4</td><td>encryption</td><td>algo <code>primitive=ae/aead</code></td><td>via linked CBOM</td></tr>
-      <tr><td>I5</td><td>authentication</td><td>cert <code>signatureAlgorithmRef</code> / host key</td><td>via linked CBOM</td></tr>
-      <tr><td>I6</td><td>endpointRoles</td><td><code>properties[endpointRole:*]</code> <span class="na">(no edge model)</span></td><td><code>Relationship</code> + annotation</td></tr>
+      <tr><td>I3</td><td>keyExchange</td><td>algorithm <code>primitive=key-agree/kem</code></td><td>via linked CBOM</td></tr>
+      <tr><td>I4</td><td>encryption</td><td>algorithm <code>primitive=ae/aead</code></td><td>via linked CBOM</td></tr>
+      <tr><td>I5</td><td>authentication</td><td>certificate <code>signatureAlgorithmRef</code> or host key</td><td>via linked CBOM</td></tr>
+      <tr><td>I6</td><td>endpointRoles</td><td><code>properties[endpointRole:*]</code> <span class="na">(no edge model)</span></td><td><code>Relationship</code> and annotation</td></tr>
       <tr><td>I7</td><td>interfaceType</td><td><code>properties[interfaceType]</code> <span class="na">(no native field)</span></td><td>annotation</td></tr>
       <tr><td>I8</td><td>lifecycleStage</td><td><code>properties[lifecycleStage]</code></td><td>annotation</td></tr>
-      <tr><td>I9</td><td>pqcPosture</td><td><code>properties[pqcPosture]</code> (or from <code>nistQuantumSecurityLevel</code>)</td><td>annotation</td></tr>
+      <tr><td>I9</td><td>pqcPosture</td><td><code>properties[pqcPosture]</code> (or derived from <code>nistQuantumSecurityLevel</code>)</td><td>annotation</td></tr>
       <tr><td>I10</td><td>implementationPurl</td><td><code>purl</code> on library component</td><td>native <code>packageUrl</code> <span class="na">(SPDX strength)</span></td></tr>
     </tbody>
   </table>
   </div>
 
-  <h2>Reading the columns</h2>
-  <p><strong>CycloneDX</strong> carries cryptographic assets (I1–I5, I10) on native fields — its strength. The interface-level classifiers the profile depends on — <code>interfaceType</code> (I7), endpoint roles (I6), lifecycle (I8), PQC posture (I9) — have no native field and ride in <code>component.properties</code> under a <code>pkic:profile:</code> namespace. Crucially, <code>interfaceType</code> is what makes product rule P2 answerable at all.</p>
-  <p><strong>SPDX</strong> lacks the crypto model in 3.0.1, so most detail is reached through the linked CycloneDX CBOM. Where SPDX is strong is provider identity (I10): it already names the OpenSSL / OpenSSH packages by <code>packageUrl</code>, which is what you cross-reference against CVE feeds.</p>
+  <h2>Interpretation of the columns</h2>
+  <p>In <strong>CycloneDX</strong>, the cryptographic assets (I1–I5 and the provider in I10) are represented in native fields, which is an area of strength for the format. The interface-level classifiers on which the profile depends — <code>interfaceType</code> (I7), endpoint roles (I6), lifecycle stage (I8), and PQC posture (I9) — have no native field and are carried in <code>component.properties</code> under the <code>pkic:profile:</code> namespace. The <code>interfaceType</code> attribute is what makes product rule P2 evaluable.</p>
+  <p>In <strong>SPDX</strong>, the absence of a cryptographic model in 3.0.1 means that most detail is obtained through the linked CycloneDX CBOM. The area of strength for SPDX is provider identity (I10): it identifies the OpenSSL and OpenSSH packages by <code>packageUrl</code>, which is the value cross-referenced against vulnerability feeds.</p>
 
   <h2>The edge gap</h2>
-  <div class="banner warn"><code>interfaceType</code> and endpoint roles describe the interface itself — the edge — yet neither format has an object that <em>is</em> the interface. Both pin these to the protocol <em>asset</em>. It works for this baseline, but cannot hold a verdict belonging to the connection itself (e.g. "this session negotiated a non-PQC group"). Closing that gap is the working group's first-class attributed-edge model.</div>
+  <div class="banner warn"><code>interfaceType</code> and endpoint roles describe the interface itself — the edge — yet neither format provides an object that represents the interface. Both attach these attributes to the protocol asset. This is sufficient for the disclosure baseline, but it cannot represent a determination that belongs to the connection itself, such as whether a session negotiated a non-post-quantum group. Providing such an object is the objective of the working group's first-class attributed-edge model.</div>
 
-  <h2>Normalization in 1.7</h2>
-  <p>CycloneDX 1.7 adds the <strong>Cryptography Registry</strong>, giving stable identifiers to algorithm families so <code>AES256</code> and <code>AES_256_GCM</code> resolve to one identity. For I3/I4/I5 prefer a registry id where present; older 1.6 CBOMs carry free-text names normalized at the adapter (see <a href="versioning.html">Versioning</a>).</p>
+  <h2>Normalization in CycloneDX 1.7</h2>
+  <p>CycloneDX 1.7 introduces the Cryptography Registry, which assigns stable identifiers to algorithm families so that, for example, <code>AES256</code> and <code>AES_256_GCM</code> resolve to a single identity. For I3, I4, and I5 a registry identifier is preferred where present; CBOMs authored to version 1.6 carry free-text names that are normalized at the adapter (see <a href="versioning.html">Versioning</a>).</p>
 
   <div class="pagenav">
     <a href="use-cases.html">← Use Cases</a>

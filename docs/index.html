@@ -20,12 +20,13 @@
     <a href="versioning.html">Versioning</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
+    <a href="references.html">References</a>
   </nav>
 </header>
 
 <main>
   <h1>CBOM Profiles</h1>
-  <p class="lead">A CBOM profile is a defined subset of mandatory attributes for one objective — a minimum bar, not exhaustive coverage. This site explains the profile methodology through a worked example: an <strong>nginx</strong> web server, its CBOM in <strong>CycloneDX 1.7</strong>, checked against a small, product-independent profile.</p>
+  <p class="lead">A Cryptography Bill of Materials (CBOM) profile defines the subset of attributes that a CBOM is required to contain for a stated objective. It establishes a minimum reporting requirement rather than exhaustive coverage. This documentation describes the profile methodology using a worked example: an nginx web server whose CBOM is expressed in CycloneDX 1.7 and evaluated against a small, product-independent profile.</p>
   <div>
     <span class="tag">PKIC CBOM Profiles WG</span>
     <span class="tag">illustrative</span>
@@ -33,23 +34,23 @@
     <span class="tag">not normative</span>
   </div>
 
-  <h2>Why profiles</h2>
-  <p>A cryptographic bill of materials (CBOM) records what cryptography a product uses, where, and under what conditions. Reporting every cryptographic call in a large product buries the items that matter for a given decision. A <strong>profile</strong> fixes that: it names the handful of facts a decision needs, so a CBOM can be checked automatically for "did you disclose enough?" A single CBOM can satisfy several profiles at once.</p>
-  <p>The example profile here — <em>Interface Disclosure Baseline</em> — asks a product to declare its cryptographic interfaces, including the one used to configure it, and to describe each. It never names a specific product or interface, so it applies to any TLS/SSH/IPsec-terminating system. nginx is only the subject that makes it concrete.</p>
+  <h2>Purpose</h2>
+  <p>A CBOM records the cryptography a product uses, together with the location and conditions of its use. Reporting every cryptographic operation in a large product produces a volume of data in which the items relevant to a particular decision are difficult to identify. A profile addresses this by specifying the attributes that a given objective requires, so that a CBOM can be evaluated automatically for completeness against that objective. A single CBOM may satisfy several profiles.</p>
+  <p>The example profile, the Interface Disclosure Baseline, requires a product to declare its cryptographic interfaces, including the interface used to configure the product, and to describe each interface. It does not reference a specific product or interface instance, and therefore applies to any product that terminates TLS, SSH, or IPsec. nginx serves only as the example subject.</p>
 
-  <h2>Start here</h2>
+  <h2>Contents</h2>
   <div class="cards">
-    <a class="card" href="challenges.html"><div class="num">background</div><h3>Challenges</h3><p>What SBOM adoption taught us, and where current CBOM standards still fall short.</p></a>
-    <a class="card" href="lifecycle.html"><div class="num">background</div><h3>Lifecycle Data</h3><p>What cryptographic data is knowable at each development and deployment phase — and the gaps between them.</p></a>
-    <a class="card" href="ontology.html"><div class="num">concept</div><h3>Ontology</h3><p>Node, edge, asset — the three words the whole methodology rests on.</p></a>
-    <a class="card" href="profile.html"><div class="num">core</div><h3>Profile</h3><p>The product-level and per-interface rules, dual use, and how conformance is decided.</p></a>
-    <a class="card" href="use-cases.html"><div class="num">applied</div><h3>Use Cases</h3><p>Where profiles earn their keep: PQC readiness, procurement, incident response, compliance, CI gates and more.</p></a>
-    <a class="card" href="formats.html"><div class="num">mapping</div><h3>Formats</h3><p>One profile, mapped onto CycloneDX and SPDX — and the "edge gap" both share.</p></a>
-    <a class="card" href="versioning.html"><div class="num">operations</div><h3>Versioning</h3><p>Handling older CBOM files across three version axes, with a machine-checked acceptance range.</p></a>
-    <a class="card" href="demo.html"><div class="num">interactive</div><h3>Demo</h3><p>Toggle a passing and a failing CBOM and watch the conformance checklist respond.</p></a>
+    <a class="card" href="challenges.html"><div class="num">background</div><h3>Challenges</h3><p>Lessons from SBOM adoption and the limitations of current CBOM standards.</p></a>
+    <a class="card" href="lifecycle.html"><div class="num">background</div><h3>Lifecycle Data</h3><p>The cryptographic data available at each development and deployment phase, and the differences between phases.</p></a>
+    <a class="card" href="ontology.html"><div class="num">concept</div><h3>Ontology</h3><p>The distinction between node, edge, and asset on which the methodology depends.</p></a>
+    <a class="card" href="profile.html"><div class="num">core</div><h3>Profile</h3><p>The product-level and per-interface rules, the two directions of use, and the basis for a conformance decision.</p></a>
+    <a class="card" href="use-cases.html"><div class="num">applied</div><h3>Use Cases</h3><p>Contexts in which profiles apply: PQC readiness, procurement, incident response, compliance reporting, and continuous integration.</p></a>
+    <a class="card" href="formats.html"><div class="num">mapping</div><h3>Formats</h3><p>The mapping of a single profile onto CycloneDX and SPDX, and the modelling gap common to both.</p></a>
+    <a class="card" href="versioning.html"><div class="num">operations</div><h3>Versioning</h3><p>Handling of CBOM files across three version axes, with a machine-checkable acceptance range.</p></a>
+    <a class="card" href="demo.html"><div class="num">interactive</div><h3>Demo</h3><p>An interactive comparison of a conforming and a non-conforming CBOM against the profile.</p></a>
   </div>
 
-  <div class="banner">This is illustrative early-concept material for the PKIC CBOM Profiles Working Group — a methodology demonstration, not a normative deliverable. CycloneDX field names are aligned to v1.7 / ECMA-424 (2nd Edition) but should be schema-checked before real use.</div>
+  <div class="banner">This material is illustrative and is intended to demonstrate the methodology. It is not a normative deliverable of the PKIC CBOM Profiles Working Group. Field names are aligned to CycloneDX v1.7 / ECMA-424 (2nd Edition) and should be validated against the current schema before operational use.</div>
 
   <div class="pagenav">
     <span></span>

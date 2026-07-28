@@ -50,17 +50,18 @@
     <a href="versioning.html">Versioning</a>
     <a href="files.html">Files</a>
     <a href="demo.html" class="active">Demo</a>
+    <a href="references.html">References</a>
   </nav>
 </header>
 
 <main>
   <div class="crumb">INTERACTIVE</div>
-  <h1>Run the conformance check</h1>
-  <p class="lead">Toggle the two example CBOMs. The passing product declares both a service and a management interface; the failing one forgot to declare how it is configured. This reproduces <code>validate_cbom.py</code> exactly.</p>
+  <h1>Conformance evaluation</h1>
+  <p class="lead">Select either example CBOM. The conforming product declares both a service and a management interface; the non-conforming product does not declare a management interface. This evaluation corresponds to that performed by <code>validate_cbom.py</code>.</p>
 
   <div class="toggle" id="toggle">
-    <button data-v="pass" class="on">✓ Passing CBOM</button>
-    <button data-v="fail">✕ Failing CBOM</button>
+    <button data-v="pass" class="on">✓ Conforming CBOM</button>
+    <button data-v="fail">✕ Non-conforming CBOM</button>
   </div>
 
   <div class="product">
@@ -71,7 +72,7 @@
   <div id="verdict" class="verdict pass"></div>
 
   <div class="rulebox">
-    <h3>Product-level rules (about the set of interfaces)</h3>
+    <h3>Product-level rules (constraints on the set of interfaces)</h3>
     <ul class="checks" id="productChecks"></ul>
   </div>
 
@@ -79,7 +80,7 @@
 
   <div class="pagenav">
     <a href="files.html">← Files</a>
-    <a class="next" href="index.html">Back to Overview →</a>
+    <a class="next" href="references.html">Next: References →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>
@@ -148,7 +149,7 @@ function render(v){
       <div class="itype">interfaceType · ${f.interfaceType}</div>
       <div class="inm">${f.nm}</div>
       <div class="imeta">${f.protocol} ${f.protocolVersion} · via ${f.via}<br>${f.endpointRoles.join(' ↔ ')} · ${f.lifecycleStage}</div></div>`).join("");
-  if(v==="fail") strip += `<div class="missing">no <b>management</b> interface declared<br>— nothing describes how the product is configured</div>`;
+  if(v==="fail") strip += `<div class="missing">no <b>management</b> interface declared<br>— the configuration interface is not described</div>`;
   document.getElementById("ifaceStrip").innerHTML=strip;
   const vd=document.getElementById("verdict");
   vd.className="verdict "+(res.conforms?"pass":"fail");

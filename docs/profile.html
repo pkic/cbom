@@ -20,17 +20,18 @@
     <a href="versioning.html">Versioning</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
+    <a href="references.html">References</a>
   </nav>
 </header>
 
 <main>
   <div class="crumb">CORE</div>
   <h1>The profile: Interface Disclosure Baseline</h1>
-  <p class="lead">A product-independent profile. It states structural requirements — which <em>kinds</em> of interface must exist, and what each must disclose — so it applies to any product. It never names a specific product or interface instance.</p>
-  <div class="banner warn"><strong>What a profile must not do:</strong> bind a rule to one product or one interface (an earlier draft wrongly required <code>interfaceId == "nginx-https"</code>). Rules constrain the <em>set</em> of interfaces and the <em>attributes</em> of each.</div>
+  <p class="lead">This profile is product-independent. It states structural requirements — which categories of interface must exist, and what each must disclose — and therefore applies to any product. It does not reference a specific product or interface instance.</p>
+  <div class="banner warn">A profile must not bind a rule to a specific product or interface. An earlier draft incorrectly required <code>interfaceId</code> to equal <code>"nginx-https"</code>. Rules instead constrain the set of interfaces and the attributes of each interface.</div>
 
-  <h2>Dual use</h2>
-  <p>The same attribute table is read in two directions.</p>
+  <h2>Two directions of use</h2>
+  <p>A single attribute table is applied in two directions.</p>
   <figure>
     <svg viewBox="0 0 720 170" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="13">
       <rect x="285" y="60" width="150" height="48" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
@@ -41,7 +42,7 @@
       <text x="114" y="96" fill="#5b6472" text-anchor="middle" font-size="11">build / scanner → CBOM</text>
       <line x1="204" y1="84" x2="285" y2="84" stroke="#15803d" stroke-width="2"/>
       <polygon points="285,84 273,79 273,89" fill="#15803d"/>
-      <text x="244" y="74" fill="#15803d" text-anchor="middle" font-size="11" font-weight="600">recipe</text>
+      <text x="244" y="74" fill="#15803d" text-anchor="middle" font-size="11" font-weight="600">specification</text>
       <rect x="516" y="54" width="180" height="60" rx="12" fill="#eef2f8" stroke="#c9d3e0"/>
       <text x="606" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">Consumer</text>
       <text x="606" y="96" fill="#5b6472" text-anchor="middle" font-size="11">CI gate validates CBOM</text>
@@ -49,7 +50,7 @@
       <polygon points="516,84 504,79 504,89" fill="#b45309"/>
       <text x="475" y="74" fill="#b45309" text-anchor="middle" font-size="11" font-weight="600">checklist</text>
     </svg>
-    <figcaption>A recipe for whoever generates the CBOM; a checklist for whoever consumes it.</figcaption>
+    <figcaption>The profile serves as a specification for the party that generates the CBOM and as a conformance checklist for the party that consumes it.</figcaption>
   </figure>
 
   <h2>Two rule groups</h2>
@@ -72,10 +73,10 @@
       <text x="396" y="152" fill="#5b6472" font-size="12">client (admin) ↔ server (host)</text>
       <text x="396" y="180" fill="#b45309" font-size="11.5" font-family="monospace">← rule P2 requires this exists</text>
     </svg>
-    <figcaption>Product rule P2 requires at least one <code>management</code> interface. Omitting the SSH box (as the failing CBOM does) fails P2 even though the service interface is perfectly described.</figcaption>
+    <figcaption>Product rule P2 requires at least one <code>management</code> interface. Omitting the management interface, as the non-conforming CBOM does, fails rule P2 even when the service interface is fully described.</figcaption>
   </figure>
 
-  <h3>Product-level rules (about the set of interfaces)</h3>
+  <h3>Product-level rules (constraints on the set of interfaces)</h3>
   <table>
     <thead><tr><th>#</th><th>Requirement</th><th>Level</th><th>Constraint</th></tr></thead>
     <tbody>
@@ -88,22 +89,22 @@
   <table>
     <thead><tr><th>#</th><th>Attribute</th><th>Level</th><th>Notes</th></tr></thead>
     <tbody>
-      <tr><td>I1</td><td><code>protocol</code></td><td><span class="must">MUST</span></td><td>TLS, SSH, IPsec, …</td></tr>
+      <tr><td>I1</td><td><code>protocol</code></td><td><span class="must">MUST</span></td><td>TLS, SSH, IPsec, and similar</td></tr>
       <tr><td>I2</td><td><code>protocolVersion</code></td><td><span class="must">MUST</span></td><td></td></tr>
-      <tr><td>I3</td><td><code>keyExchange</code></td><td><span class="must">MUST</span></td><td>registry algorithm id</td></tr>
-      <tr><td>I4</td><td><code>encryption</code></td><td><span class="must">MUST</span></td><td>bulk / AEAD algorithm</td></tr>
-      <tr><td>I5</td><td><code>authentication</code></td><td><span class="must">MUST</span></td><td>cert signature (TLS) or host key (SSH)</td></tr>
+      <tr><td>I3</td><td><code>keyExchange</code></td><td><span class="must">MUST</span></td><td>registry algorithm identifier</td></tr>
+      <tr><td>I4</td><td><code>encryption</code></td><td><span class="must">MUST</span></td><td>bulk or AEAD algorithm</td></tr>
+      <tr><td>I5</td><td><code>authentication</code></td><td><span class="must">MUST</span></td><td>certificate signature (TLS) or host key (SSH)</td></tr>
       <tr><td>I6</td><td><code>endpointRoles</code></td><td><span class="must">MUST</span></td><td>at least two endpoints</td></tr>
-      <tr><td>I7</td><td><code>interfaceType</code></td><td><span class="must">MUST</span></td><td>from the vocabulary</td></tr>
+      <tr><td>I7</td><td><code>interfaceType</code></td><td><span class="must">MUST</span></td><td>from the controlled vocabulary</td></tr>
       <tr><td>I8</td><td><code>lifecycleStage</code></td><td><span class="must">MUST</span></td><td>see <a href="lifecycle.html">Lifecycle Data</a></td></tr>
-      <tr><td>I9</td><td><code>pqcPosture</code></td><td><span class="must">MUST</span></td><td>classical / hybrid / pqc</td></tr>
+      <tr><td>I9</td><td><code>pqcPosture</code></td><td><span class="must">MUST</span></td><td>classical, hybrid, or pqc</td></tr>
       <tr><td>I10</td><td><code>implementationPurl</code></td><td><span class="should">SHOULD</span></td><td>Package URL of the implementing library</td></tr>
     </tbody>
   </table>
-  <div class="banner good">A CBOM <strong>conforms</strong> iff the carrier format is accepted, every product-level MUST holds, and every declared interface satisfies every per-interface MUST. <code>interfaceId</code> is a free instance label — never constrained by the profile.</div>
+  <div class="banner good">A CBOM conforms if and only if the carrier format is accepted, every product-level MUST rule holds, and every declared interface satisfies every per-interface MUST rule. <code>interfaceId</code> is an instance label chosen by the producer and is not constrained by the profile.</div>
 
   <h2>Conformance pipeline</h2>
-  <p>The validator runs four gates in order; content gates run only if the format gate accepts the CBOM.</p>
+  <p>The validator applies four stages in sequence. The content stages are evaluated only if the format stage accepts the CBOM.</p>
   <figure>
     <svg viewBox="0 0 720 150" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <g font-size="12">
@@ -128,9 +129,9 @@
         <line x1="440" y1="81" x2="470" y2="81" stroke="#2563eb"/><polygon points="470,81 460,76 460,86" fill="#2563eb"/>
         <line x1="600" y1="81" x2="630" y2="81" stroke="#2563eb"/><polygon points="630,81 620,76 620,86" fill="#2563eb"/>
       </g>
-      <text x="215" y="128" fill="#dc2626" text-anchor="middle" font-size="10.5">below min version → refuse here</text>
+      <text x="215" y="128" fill="#dc2626" text-anchor="middle" font-size="10.5">a version below the minimum is refused at this stage</text>
     </svg>
-    <figcaption>See the pipeline live on the <a href="demo.html">Demo</a> page, and the version bands on <a href="versioning.html">Versioning</a>.</figcaption>
+    <figcaption>The pipeline is shown interactively on the <a href="demo.html">Demo</a> page, and the version bands are described on the <a href="versioning.html">Versioning</a> page.</figcaption>
   </figure>
 
   <div class="pagenav">

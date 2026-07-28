@@ -20,13 +20,14 @@
     <a href="versioning.html">Versioning</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
+    <a href="references.html">References</a>
   </nav>
 </header>
 
 <main>
   <div class="crumb">CONCEPT</div>
   <h1>Ontology: node, edge, asset</h1>
-  <p class="lead">Three words carry the whole methodology. Keeping them straight is what lets a profile talk about connections, not just algorithms.</p>
+  <p class="lead">The methodology depends on three terms. Distinguishing them is what allows a profile to describe connections rather than only algorithms.</p>
 
   <figure>
     <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="13">
@@ -57,22 +58,22 @@
       </g>
       <text x="360" y="232" fill="#5b6472" text-anchor="middle" font-size="12">assets (nodes) are referenced by the relationship — they are not the relationship</text>
     </svg>
-    <figcaption>When a browser padlock reads "TLS 1.3, X25519, AES-256-GCM, RSA," you are reading the relationship; the browser and nginx are the endpoints; each named algorithm is an asset.</figcaption>
+    <figcaption>The security indicator presented by a browser (for example, TLS 1.3, X25519, AES-256-GCM, RSA) describes the relationship; the browser and nginx are the endpoints; each named algorithm is an asset.</figcaption>
   </figure>
 
   <h2>The three terms</h2>
   <table>
     <thead><tr><th>Term</th><th>Definition</th><th>In the example</th></tr></thead>
     <tbody>
-      <tr><td><strong>Cryptographic relationship</strong> (edge / interface)</td><td>The locus where cryptography is applied between parties. Not itself a cryptographic asset.</td><td>The TLS 1.3 session; the SSH session.</td></tr>
-      <tr><td><strong>Endpoint</strong> (node)</td><td>A party to a relationship.</td><td><code>client</code> (browser / admin) and <code>server</code> (nginx / host).</td></tr>
-      <tr><td><strong>Cryptographic asset</strong></td><td>An algorithm, protocol, certificate, or key the relationship uses.</td><td>X25519, AES-256-GCM, the RSA certificate, OpenSSL.</td></tr>
+      <tr><td><strong>Cryptographic relationship</strong> (edge / interface)</td><td>The location at which cryptography is applied between parties. It is not itself a cryptographic asset.</td><td>The TLS 1.3 session; the SSH session.</td></tr>
+      <tr><td><strong>Endpoint</strong> (node)</td><td>A party to a relationship.</td><td><code>client</code> (browser or admin) and <code>server</code> (nginx or host).</td></tr>
+      <tr><td><strong>Cryptographic asset</strong></td><td>An algorithm, protocol, certificate, or key used by the relationship.</td><td>X25519, AES-256-GCM, the RSA certificate, OpenSSL.</td></tr>
     </tbody>
   </table>
 
-  <h2>Why the distinction matters</h2>
-  <p>PQC migration analysis is about connections, not just inventory. "We use ML-KEM somewhere" is far less useful than "this specific connection between service A and service B still negotiates a classical group." The first is a node fact; the second is an edge fact. Conflating them breaks the analysis — which is why the working group settled on <strong>cryptographic relationship</strong> (edge) paired with <strong>endpoint</strong> (node) as the core terms, and why <code>interfaceType</code> and endpoint roles are attributes of the relationship, not of any single algorithm.</p>
-  <div class="banner">Neither CycloneDX nor SPDX has a first-class object that <em>is</em> the relationship today. Both approximate it by attaching edge attributes to a protocol asset. Closing that gap is the working group's first-class attributed-edge model — see <a href="challenges.html">Challenges</a> and <a href="formats.html">Formats</a>.</div>
+  <h2>Significance of the distinction</h2>
+  <p>Post-quantum migration analysis concerns connections, not inventory alone. The statement that an organization uses a given algorithm somewhere is of limited value compared with the statement that a specific connection between two services still negotiates a classical group. The first is a property of a node; the second is a property of an edge. Conflating the two prevents accurate analysis. For this reason the working group adopted <strong>cryptographic relationship</strong> (edge) and <strong>endpoint</strong> (node) as the core terms, and defines <code>interfaceType</code> and endpoint roles as attributes of the relationship rather than of any single algorithm.</p>
+  <div class="banner">Neither CycloneDX nor SPDX currently provides a first-class object that represents the relationship. Both approximate it by attaching relationship attributes to a protocol asset. Providing such an object is the objective of the working group's first-class attributed-edge model. See <a href="challenges.html">Challenges</a> and <a href="formats.html">Formats</a>.</div>
 
   <div class="pagenav">
     <a href="lifecycle.html">← Lifecycle Data</a>

@@ -20,27 +20,28 @@
     <a href="versioning.html" class="active">Versioning</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
+    <a href="references.html">References</a>
   </nav>
 </header>
 
 <main>
   <div class="crumb">OPERATIONS</div>
   <h1>Handling older CBOM files</h1>
-  <p class="lead">"Older" is ambiguous until you separate the versions that actually move. Three independent things carry a version, and each ages differently. A conformance claim must cite all three to be reproducible.</p>
+  <p class="lead">The term "older" is ambiguous until the versions that change independently are separated. Three items each carry a version and change independently. A conformance claim must reference all three to be reproducible.</p>
 
   <h2>Three version axes</h2>
   <table>
-    <thead><tr><th>Axis</th><th>Example</th><th>Moves when</th></tr></thead>
+    <thead><tr><th>Axis</th><th>Example</th><th>Changes when</th></tr></thead>
     <tbody>
-      <tr><td><strong>Carrier format</strong></td><td>CycloneDX <code>specVersion</code> 1.6 → 1.7</td><td>the SBOM/CBOM standard revises</td></tr>
+      <tr><td><strong>Carrier format</strong></td><td>CycloneDX <code>specVersion</code> 1.6 → 1.7</td><td>the SBOM/CBOM standard is revised</td></tr>
       <tr><td><strong>Profile</strong></td><td><code>interface-disclosure</code> v0.1 → v0.2</td><td>the requirements change</td></tr>
       <tr><td><strong>Content revision</strong></td><td>a product's CBOM <code>version</code> over time</td><td>the product or a re-scan changes</td></tr>
     </tbody>
   </table>
-  <p>A freshly generated CBOM (new content revision) may still be serialized in CycloneDX 1.6 (old carrier) and evaluated against profile v0.2 (new rules). Conflating the axes is the usual mistake.</p>
+  <p>A newly generated CBOM (a new content revision) may still be serialized in CycloneDX 1.6 (an older carrier) and evaluated against profile v0.2 (newer rules). Conflating these axes is a common error.</p>
 
   <h2>Carrier version bands</h2>
-  <p>The profile declares an acceptance range, so older CBOMs are handled deliberately. The rules file says <code>"appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } }</code> and the validator applies a four-band policy:</p>
+  <p>The profile declares an acceptance range so that older CBOMs are handled explicitly. The rules file specifies <code>"appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } }</code>, and the validator applies a four-band policy:</p>
   <figure>
     <svg viewBox="0 0 720 150" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <rect x="30" y="60" width="150" height="34" fill="#fdeeee" stroke="#dc2626"/>
@@ -53,27 +54,27 @@
       <text x="615" y="82" fill="#2563eb" text-anchor="middle" font-weight="600">&gt; 1.7</text>
       <text x="105" y="116" fill="#5b6472" text-anchor="middle" font-size="11">refuse</text>
       <text x="105" y="130" fill="#5b6472" text-anchor="middle" font-size="10">upgrade first</text>
-      <text x="270" y="116" fill="#5b6472" text-anchor="middle" font-size="11">legacy — accept + warn</text>
+      <text x="270" y="116" fill="#5b6472" text-anchor="middle" font-size="11">legacy — accept, warn</text>
       <text x="450" y="116" fill="#5b6472" text-anchor="middle" font-size="11">target — accept</text>
-      <text x="615" y="116" fill="#5b6472" text-anchor="middle" font-size="11">newer — accept + review</text>
+      <text x="615" y="116" fill="#5b6472" text-anchor="middle" font-size="11">newer — accept, review</text>
       <polygon points="450,44 444,54 456,54" fill="#15803d"/>
       <text x="450" y="38" fill="#15803d" text-anchor="middle" font-size="11" font-weight="700">this example</text>
       <text x="30" y="26" fill="#5b6472" font-size="11" font-family="monospace">min = 1.6   tested = 1.7</text>
     </svg>
-    <figcaption>A range gives a migration window (don't invalidate every 1.6 CBOM overnight) with an honest floor (below min, silent evaluation could give a false verdict).</figcaption>
+    <figcaption>A declared range provides a migration window, so that existing 1.6 CBOMs are not invalidated when 1.7 is published, together with a defined lower bound below which evaluation could produce an incorrect verdict.</figcaption>
   </figure>
-  <p>The validator prints the band it landed in. On the command line you can see all four by running against 1.7, a 1.6 copy, and a 1.5 copy of the example CBOM.</p>
+  <p>The validator reports the band in which the CBOM falls. All four bands can be observed by evaluating the example CBOM at version 1.7 and at 1.6 and 1.5 copies.</p>
 
   <h2>Supporting recommendations</h2>
   <ul>
-    <li><strong>Normalize at the adapter.</strong> Prefer CycloneDX 1.7 Cryptography Registry identifiers where present; for 1.6 free-text names, apply a versioned name-map before the rules run.</li>
-    <li><strong>Upgrade over reject.</strong> Mechanically upgrade a legacy CBOM (bump version, attach registry ids, record provenance) rather than bouncing it — re-encode facts, never add them.</li>
-    <li><strong>Pin the profile version</strong> in every conformance claim; tighten rules behind dated grace windows (emit a warning before flipping to fail).</li>
-    <li><strong>Deprecate, don't delete, vocabulary.</strong> If <code>interfaceType</code> values change, keep old values recognized (mapped to their replacement) for at least one profile major version.</li>
-    <li><strong>Track freshness &amp; supersedence</strong> so an old content revision never silently means "wrong."</li>
+    <li><strong>Normalize at the adapter.</strong> Prefer CycloneDX 1.7 Cryptography Registry identifiers where present; for 1.6 free-text names, apply a versioned name map before the rules are evaluated.</li>
+    <li><strong>Upgrade rather than reject.</strong> Convert a legacy but supported CBOM mechanically (raise the version, attach registry identifiers, record provenance), re-encoding existing facts and adding none, rather than rejecting it.</li>
+    <li><strong>Pin the profile version</strong> in every conformance claim, and tighten rules behind dated grace windows, emitting a warning before changing a result to a failure.</li>
+    <li><strong>Deprecate, rather than delete, vocabulary.</strong> If <code>interfaceType</code> values change, retain recognition of the former values (mapped to their replacements) for at least one profile major version.</li>
+    <li><strong>Track freshness and supersedence</strong> so that an older content revision is not treated as incorrect without cause.</li>
   </ul>
 
-  <div class="banner">Full detail is in <a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a>, and the acceptance range is enforced by <code>validate_cbom.py</code>'s format gate — see <a href="files.html">Files</a>.</div>
+  <div class="banner">The full treatment is provided in <a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a>, and the acceptance range is enforced by the format gate in <code>validate_cbom.py</code>; see <a href="files.html">Files</a>.</div>
 
   <div class="pagenav">
     <a href="formats.html">← Formats</a>

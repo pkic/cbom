@@ -17,7 +17,8 @@ no build step, no external dependencies. Served by GitHub Pages from this `docs/
 | `formats.html` | Formats (CycloneDX & SPDX mapping) |
 | `versioning.html` | Versioning (older CBOM files) |
 | `files.html` | Files & how to run |
-| `demo.html` | Interactive pass/fail explorer |
+| `demo.html` | Interactive conformance evaluation |
+| `references.html` | References |
 
 Shared styling is in `styles.css`. `.nojekyll` disables Jekyll processing so the
 files are served exactly as written.

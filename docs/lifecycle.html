@@ -20,16 +20,17 @@
     <a href="versioning.html">Versioning</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
+    <a href="references.html">References</a>
   </nav>
 </header>
 
 <main>
   <div class="crumb">BACKGROUND</div>
   <h1>Data collected across development and deployment phases</h1>
-  <p class="lead">The same cryptographic fact carries different weight depending on when and by whom it was captured. A CBOM's <code>lifecycleStage</code> attribute records that phase, turning "the product uses X" into a claim you can reason about.</p>
+  <p class="lead">The significance of a cryptographic fact depends on the phase at which, and the party by which, it was captured. The <code>lifecycleStage</code> attribute of a CBOM records that phase, which allows the statement that a product uses a given algorithm to be interpreted precisely.</p>
 
   <h2>The four lifecycle stages</h2>
-  <p>The profile's lifecycle model (v1) uses a flat enumeration — <code>intended</code>, <code>implemented</code>, <code>configured</code>, <code>observed</code> — attached to each interface. Each aligns with a phase of the software's life, a different producer, and a different data source.</p>
+  <p>The lifecycle model (version 1) uses a flat enumeration — <code>intended</code>, <code>implemented</code>, <code>configured</code>, <code>observed</code> — attached to each interface. Each value corresponds to a phase of the software lifecycle, a distinct producer, and a distinct data source.</p>
 
   <figure>
     <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
@@ -75,34 +76,34 @@
       <path d="M290 250 L290 262 L630 262 L630 250" fill="none" stroke="#b45309" stroke-width="1.5"/>
       <text x="460" y="282" fill="#b45309" text-anchor="middle" font-size="11.5" font-weight="600">the readiness gap: capability ≠ what is actually running</text>
     </svg>
-    <figcaption>Each stage answers a different question, from a different source. Read left to right it is a hand-off from architects to operators.</figcaption>
+    <figcaption>Each stage answers a distinct question from a distinct source. Read from left to right, the sequence is a progression from architects to operators.</figcaption>
   </figure>
 
-  <h2>What each phase can and cannot tell you</h2>
+  <h2>Information available at each phase</h2>
   <table>
-    <thead><tr><th>Stage</th><th>Phase</th><th>Answers</th><th>Blind spot</th></tr></thead>
+    <thead><tr><th>Stage</th><th>Phase</th><th>Establishes</th><th>Does not establish</th></tr></thead>
     <tbody>
-      <tr><td><code>intended</code></td><td>Design</td><td>What the architecture is <em>supposed</em> to use.</td><td>Says nothing about what was actually built.</td></tr>
-      <tr><td><code>implemented</code></td><td>Build</td><td>What the shipped code/binary <em>can</em> do (the vendor build CBOM).</td><td>Capability ≠ what a deployment turns on.</td></tr>
-      <tr><td><code>configured</code></td><td>Deploy</td><td>What the deployed configuration <em>permits</em>.</td><td>Config can drift; may not match live sessions.</td></tr>
-      <tr><td><code>observed</code></td><td>Runtime</td><td>What was actually negotiated on the wire.</td><td>A snapshot; a later config change can invalidate it.</td></tr>
+      <tr><td><code>intended</code></td><td>Design</td><td>What the architecture is specified to use.</td><td>What was actually built.</td></tr>
+      <tr><td><code>implemented</code></td><td>Build</td><td>What the shipped code or binary is capable of (the vendor build CBOM).</td><td>What a deployment enables; capability is not actuality.</td></tr>
+      <tr><td><code>configured</code></td><td>Deploy</td><td>What the deployed configuration permits.</td><td>Whether configuration matches live sessions; configuration may drift.</td></tr>
+      <tr><td><code>observed</code></td><td>Runtime</td><td>What was negotiated on the wire.</td><td>Durability; a later configuration change can invalidate the observation.</td></tr>
     </tbody>
   </table>
 
-  <h2>The readiness gap — why the stage matters</h2>
-  <p>PQC-capable software and hardware do not, on their own, guarantee that PQC is configured and active — nor that it stays active across configuration changes. A product can be <code>implemented</code> with ML-KEM support that is never <code>configured</code>, and therefore never <code>observed</code>. Large migrations routinely surface interoperability and performance side-effects between these stages.</p>
-  <div class="banner warn">This is exactly why a CBOM should carry the lifecycle stage rather than a bare fact. A vendor's <code>implemented</code> CBOM and an operator's <code>observed</code> scan can both be correct and still disagree — and the disagreement <em>is</em> the finding. CBOMs that support both perspectives make the gap visible instead of hiding it.</div>
+  <h2>The readiness gap</h2>
+  <p>PQC-capable software and hardware do not, in themselves, guarantee that post-quantum cryptography is configured and active, nor that it remains active across configuration changes. A product may be <code>implemented</code> with support for a given algorithm that is never <code>configured</code> and therefore never <code>observed</code>. Large migrations regularly reveal interoperability and performance effects between these stages.</p>
+  <div class="banner warn">For this reason a CBOM should record the lifecycle stage rather than an unqualified fact. A vendor's <code>implemented</code> CBOM and an operator's <code>observed</code> scan may both be correct and yet differ; the discrepancy is itself a significant result. A CBOM that supports both perspectives represents the discrepancy explicitly.</div>
 
-  <h2>Two producers, one interface</h2>
-  <p>In the worked example the two lifecycle stages appear naturally:</p>
+  <h2>Multiple producers of a single interface's data</h2>
+  <p>In the worked example the two lifecycle stages arise from the two producers:</p>
   <ul>
-    <li>The HTTPS service interface is tagged <code>observed</code> — captured by scanning the running server (an operator/runtime view).</li>
-    <li>The SSH management interface is tagged <code>configured</code> — captured from the deployment configuration (an integrator view).</li>
+    <li>The HTTPS service interface is recorded as <code>observed</code>, captured by scanning the running server (a runtime, operator view).</li>
+    <li>The SSH management interface is recorded as <code>configured</code>, captured from the deployment configuration (an integrator view).</li>
   </ul>
-  <p>A profile can require the stage to be <em>declared</em> (as the baseline does) or require a <em>specific</em> stage — for example, a runtime-assurance profile might insist every interface be <code>observed</code>, while a procurement profile might accept <code>implemented</code> from a vendor build.</p>
+  <p>A profile may require the stage to be declared, as the baseline profile does, or may require a specific stage. A runtime-assurance profile might require every interface to be <code>observed</code>, whereas a procurement profile might accept <code>implemented</code> from a vendor build.</p>
 
   <h2>Progress tracking over time</h2>
-  <p>Successive CBOM revisions (the content-revision axis on the <a href="versioning.html">Versioning</a> page) turn these stages into an audit trail: the same interface moving from <code>implemented</code> to <code>configured</code> to <code>observed</code> with PQC enabled is a verifiable migration record for internal governance and regulators.</p>
+  <p>Successive CBOM revisions (the content-revision axis described on the <a href="versioning.html">Versioning</a> page) constitute an audit trail. An interface progressing from <code>implemented</code> to <code>configured</code> to <code>observed</code> with post-quantum cryptography enabled provides a verifiable migration record for internal governance and for regulators.</p>
 
   <div class="pagenav">
     <a href="challenges.html">← Challenges</a>
