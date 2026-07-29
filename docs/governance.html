@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Governance</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="ontology.html">Ontology</a>
+    <a href="profile.html">Profile</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="governance.html" class="active">Governance</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+    <a href="references.html">References</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">GOVERNANCE</div>
+  <h1>Governance</h1>
+  <p class="lead">Governance concerns the processes and controls that apply to CBOMs and profiles over their lifetime: how they are produced, authenticated, distributed, evolved, and retired. This page describes the areas of governance and their relationship to the rest of the methodology.</p>
+
+  <h2>The CBOM lifecycle</h2>
+  <p>A CBOM passes through a defined sequence of states. Governance defines the controls that apply at each transition.</p>
+  <figure>
+    <svg viewBox="0 0 720 140" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <g>
+        <rect x="8" y="50" width="118" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+        <text x="67" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">Create</text>
+        <text x="67" y="88" fill="#5b6472" text-anchor="middle" font-size="10">build / scan</text>
+        <rect x="152" y="50" width="118" height="46" rx="10" fill="#ffffff" stroke="#2563eb"/>
+        <text x="211" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">Sign</text>
+        <text x="211" y="88" fill="#5b6472" text-anchor="middle" font-size="10">integrity, provenance</text>
+        <rect x="296" y="50" width="118" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+        <text x="355" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">Publish</text>
+        <text x="355" y="88" fill="#5b6472" text-anchor="middle" font-size="10">registry, access</text>
+        <rect x="440" y="50" width="118" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+        <text x="499" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">Validate</text>
+        <text x="499" y="88" fill="#5b6472" text-anchor="middle" font-size="10">against profiles</text>
+        <rect x="584" y="50" width="128" height="46" rx="10" fill="#fff7ec" stroke="#b45309"/>
+        <text x="648" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">Supersede</text>
+        <text x="648" y="88" fill="#5b6472" text-anchor="middle" font-size="10">revise / retire</text>
+      </g>
+      <g stroke="#2563eb" stroke-width="2" fill="none">
+        <line x1="126" y1="73" x2="152" y2="73"/><polygon points="152,73 142,68 142,78" fill="#2563eb"/>
+        <line x1="270" y1="73" x2="296" y2="73"/><polygon points="296,73 286,68 286,78" fill="#2563eb"/>
+        <line x1="414" y1="73" x2="440" y2="73"/><polygon points="440,73 430,68 430,78" fill="#2563eb"/>
+        <line x1="558" y1="73" x2="584" y2="73"/><polygon points="584,73 574,68 574,78" fill="#2563eb"/>
+      </g>
+    </svg>
+    <figcaption>The CBOM lifecycle. A new revision re-enters the sequence at Create; superseded revisions are retained for audit.</figcaption>
+  </figure>
+
+  <h2>Roles</h2>
+  <table>
+    <thead><tr><th>Role</th><th>Responsibility</th></tr></thead>
+    <tbody>
+      <tr><td>Producer</td><td>Generates the CBOM (build pipeline or scanner), and records provenance and lifecycle stage.</td></tr>
+      <tr><td>Consumer</td><td>Validates the CBOM against the applicable profiles and records the conformance claim.</td></tr>
+      <tr><td>Curator / registry</td><td>Stores, versions, and serves CBOMs, and enforces retention and access control.</td></tr>
+      <tr><td>Profile authority</td><td>Defines and versions profiles, and manages the controlled vocabulary and its deprecation.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Integrity and authenticity (signing)</h2>
+  <p>A CBOM should be signed so that a consumer can verify its origin and detect subsequent modification. Two distinct objects may be signed:</p>
+  <ul>
+    <li><strong>The CBOM document</strong>, by a detached digital signature over the serialized file, so that any alteration is detectable.</li>
+    <li><strong>The process that produced it</strong>, as a build attestation (for example, in the in-toto or SLSA model), so that the provenance of the CBOM is itself verifiable.</li>
+  </ul>
+  <p>Signing requires key management: the management, protection, and rotation of signing keys, and a means for consumers to establish trust in the signing identity. Because the subject matter is cryptography, the signature algorithms are themselves in scope: a CBOM signed with a classical algorithm has an assurance horizon bounded by the strength of that algorithm, and the choice of signing algorithm should be governed on the same basis as the cryptography the CBOM describes.</p>
+  <div class="banner warn">Signing establishes that a CBOM originates from a stated party and has not been altered. It does not establish that the CBOM is accurate; accuracy is a function of the producing process, which is the reason provenance and lifecycle stage are recorded alongside the signature.</div>
+
+  <h2>Provenance</h2>
+  <p>A CBOM should record how it was produced: the generating tool and its version, the inputs, the lifecycle stage at which it was captured, and any mechanical upgrade applied to it (see <a href="versioning.html">Versioning</a>). Provenance supports both trust and reproducibility, and is a precondition for a meaningful conformance claim.</p>
+
+  <h2>Evolution and change control</h2>
+  <p>Profiles, the controlled vocabulary, and the methodology evolve over time. Changes are managed through explicit versioning (see <a href="versioning.html">Versioning</a>), recorded decisions, and, within the working group, lazy consensus. Requirements are tightened behind dated grace windows, and vocabulary values are deprecated rather than removed, so that changes are predictable and auditable.</p>
+
+  <h2>Distribution, retention, and immutability</h2>
+  <p>Published CBOM revisions should be immutable: a correction or update is issued as a new revision rather than an in-place change, and superseding revisions replace, but do not delete, their predecessors. The registry governs access control and retention. Retention of superseded revisions provides the audit trail on which progress tracking and incident investigation depend.</p>
+
+  <h2>Conformance-claim governance</h2>
+  <p>A conformance claim references the profile version, the carrier format version, and the CBOM content revision (see <a href="versioning.html">Versioning</a>). Claims are recorded so that a stated result can be reproduced and audited. A claim that omits any of these three references is not reproducible.</p>
+
+  <h2>Confidentiality and disclosure</h2>
+  <p>Governance also addresses the boundary between disclosure and the protection of intellectual property. A profile establishes the lower bound of what must be disclosed; governance addresses the treatment of information beyond that bound, including any redaction policy and the conditions under which more detailed CBOMs are shared. See the discussion of depth of disclosure in <a href="challenges.html">Challenges</a>.</p>
+
+  <div class="banner">In summary: governance defines who may produce, sign, publish, and revise a CBOM; how integrity, authenticity, and provenance are established; how profiles evolve; and how conformance claims are recorded and audited. Versioning provides the mechanisms; governance provides the process around them.</div>
+
+  <div class="pagenav">
+    <a href="versioning.html">← Versioning</a>
+    <a class="next" href="files.html">Next: Files →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

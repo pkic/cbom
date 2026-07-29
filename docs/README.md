@@ -10,12 +10,14 @@ no build step, no external dependencies. Served by GitHub Pages from this `docs/
 |---|---|
 | `index.html` | Overview |
 | `challenges.html` | Challenges (SBOM & current CBOM limitations) |
+| `inventory.html` | Inventory and CBOMs |
 | `lifecycle.html` | Lifecycle Data (dev & deployment phases) |
 | `ontology.html` | Ontology (node · edge · asset) |
 | `profile.html` | Profile (rules, dual use, conformance) |
 | `use-cases.html` | Use Cases |
 | `formats.html` | Formats (CycloneDX & SPDX mapping) |
 | `versioning.html` | Versioning (older CBOM files) |
+| `governance.html` | Governance (lifecycle, signing, provenance) |
 | `files.html` | Files & how to run |
 | `demo.html` | Interactive conformance evaluation |
 | `references.html` | References |
