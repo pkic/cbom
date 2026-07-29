@@ -16,6 +16,7 @@
     <a href="lifecycle.html">Lifecycle Data</a>
     <a href="ontology.html">Ontology</a>
     <a href="profile.html">Profile</a>
+    <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="use-cases.html">Use Cases</a>
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
@@ -46,7 +47,7 @@
   <p>In addition to the properties inherited from SBOMs, cryptography introduces difficulties that current standards address only in part.</p>
 
   <h3>1 · No first-class model for relationships (the edge gap)</h3>
-  <p>Current CBOM standards model cryptographic <em>assets</em> (algorithms, keys, certificates, protocols) as nodes, but provide no object that represents the <em>relationship</em>: the point at which cryptography is applied between two parties. A TLS connection is not an asset; it is a location at which assets are used. Classifiers that belong to the connection itself, such as endpoint roles or the post-quantum posture of a specific session, are consequently attached to a protocol asset, which represents the edge as though it were a node.</p>
+  <p>Current CBOM standards model cryptographic <em>assets</em> (algorithms, keys, certificates, protocols) as nodes, but provide no object that represents the <em>relationship</em>: the point at which cryptography is applied between two parties. A TLS connection is not an asset; it is a location at which assets are used. Classifiers that belong to the connection itself, such as the endpoint roles of a specific session, are consequently attached to a protocol asset, which represents the edge as though it were a node.</p>
   <figure>
     <svg viewBox="0 0 720 170" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="13">
       <rect x="40" y="40" width="290" height="92" rx="12" fill="#eefaf1" stroke="#15803d"/>
@@ -67,22 +68,26 @@
   <h3>3 · Inconsistent algorithm naming</h3>
   <p>Deployments have shown the same algorithm expressed in several forms (<code>AES256</code>, <code>AES-256-GCM</code>, <code>AES_256_CBC</code>), which impedes policy enforcement and cross-organization analysis. The CycloneDX 1.7 Cryptography Registry provides stable identifiers to address this; CBOMs authored to earlier versions carry free-text names and require normalization on ingest. See <a href="versioning.html">Versioning</a>.</p>
 
-  <h3>4 · Ambiguity of lifecycle and state</h3>
+  <h3>4 · Multiple valid encodings of the same information</h3>
+  <p>Both CycloneDX and SPDX permit the same cryptographic information to be encoded correctly in more than one way. A given fact — for example, an algorithm reference, a protocol version, or the association between a certificate and its signature algorithm — may be represented in different but equally valid locations or structures within a single document. A consumer that must accept any valid encoding has to implement and maintain parsing logic for each variant, which increases complexity and the risk of inconsistent interpretation.</p>
+  <p>The mapping component of this project addresses this by defining a single, canonical encoding for each profile attribute in each format. When producers follow the mapping, a consumer extracts the information a CBOM requires from one defined location rather than several, which reduces parsing complexity and improves consistency of interpretation. Normalization of encoding is complementary to normalization of naming (item 3): the former concerns where and how a value is represented, the latter concerns the value itself. See <a href="formats.html">Formats</a>.</p>
+
+  <h3>5 · Ambiguity of lifecycle and state</h3>
   <p>The statement that a product uses a given algorithm admits four distinct meanings: the algorithm may be <em>intended</em> in the design, <em>implemented</em> in the binary, <em>configured</em> in a deployment, or <em>observed</em> on the wire. A vendor's build-time CBOM and an operator's runtime scan may legitimately differ. Without an explicit lifecycle indicator, a consumer cannot distinguish capability from actuality. See <a href="lifecycle.html">Lifecycle Data</a>.</p>
 
-  <h3>5 · Depth of disclosure</h3>
+  <h3>6 · Depth of disclosure</h3>
   <p>Excessive reporting reduces the value of the data, while insufficient reporting conceals risk and may also expose intellectual property. A tension exists between operational utility and legitimate vendor confidentiality. A well-defined profile establishes a lower bound that prevents underreporting while limiting the scope of required disclosure.</p>
 
-  <h3>6 · Tooling coverage and confidence</h3>
+  <h3>7 · Tooling coverage and confidence</h3>
   <p>Automated tools may fail to detect cryptography that is dynamically loaded, configuration-driven, or provided by hardware. A CBOM is only as reliable as the process that produces it; provenance and, where feasible, signing are therefore significant, and the confidence attached to a CBOM depends on the lifecycle phase at which it was captured.</p>
 
-  <h3>7 · Linking cryptography to its environment</h3>
+  <h3>8 · Linking cryptography to its environment</h3>
   <p>Knowledge that a system uses a given algorithm is incomplete without the version of the library that implements it, which determines whether modes such as hybrid key exchange are available, and without knowledge of whether execution occurs in software, in a Hardware Security Module, or in a Trusted Execution Environment, the last of which may require hardware replacement rather than a software update. CBOMs are therefore produced and consumed alongside SBOMs, and in some cases Hardware Bills of Materials. The linkage between these artifacts is not yet mature.</p>
 
-  <h3>8 · Versioning and legacy artifacts</h3>
+  <h3>9 · Versioning and legacy artifacts</h3>
   <p>Standards are revised (CycloneDX 1.6 to 1.7), profiles are tightened, and a product's CBOM is regenerated over time. Treating "older" as a single concept produces incorrect verdicts; the three version axes must be handled explicitly. See <a href="versioning.html">Versioning</a>.</p>
 
-  <div class="banner">These challenges reduce to two requirements that a profile methodology is designed to satisfy: to bound the information that must be disclosed (profiling), and to establish the meaning of the disclosed values (normalization, together with an explicit lifecycle and relationship model).</div>
+  <div class="banner">These challenges reduce to a small number of requirements that a profile methodology is designed to satisfy: to bound the information that must be disclosed (profiling); to establish both how the information is encoded and what the disclosed values mean (normalization of encoding and of naming); and to represent lifecycle state and cryptographic relationships explicitly.</div>
 
   <div class="pagenav">
     <a href="index.html">← Overview</a>

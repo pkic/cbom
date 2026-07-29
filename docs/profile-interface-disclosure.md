@@ -73,12 +73,15 @@ exist, irrespective of its name.
 | I6 | `endpointRoles` | **MUST** | at least two endpoints declared |
 | I7 | `interfaceType` | **MUST** | from the vocabulary in §2 |
 | I8 | `lifecycleStage` | **MUST** | one of `intended` \| `implemented` \| `configured` \| `observed` |
-| I9 | `pqcPosture` | **MUST** | one of `classical` \| `hybrid` \| `pqc` |
-| I10 | `implementationPurl` | SHOULD | `pkg:` Package URL of the implementing library |
+| I9 | `implementationPurl` | SHOULD | `pkg:` Package URL of the implementing library |
 
 A CBOM conforms if and only if every product-level MUST rule holds and every declared interface
 satisfies every per-interface MUST rule. `interfaceId` is an instance label chosen by the
 producer; the profile does not constrain its value.
+
+Derived evaluations such as post-quantum posture are deliberately not profile attributes. They
+are computed by an external policy from the disclosed facts, because the criteria on which they
+depend change over time. See the discussion of policy evaluation in the accompanying documentation.
 
 ## 5. Expected declaration
 
@@ -90,7 +93,7 @@ interface #2  interfaceType = management   protocol = SSH  2.0   (admin  <-> hos
 ```
 
 Each carries protocol, version, keyExchange, encryption, authentication, two endpoint roles,
-interfaceType, lifecycleStage, and pqcPosture. Interface #2 is the interface that satisfies P2;
+interfaceType, and lifecycleStage. Interface #2 is the interface that satisfies P2;
 without it, the product would provide cryptography for its own configuration that is not
 disclosed.
 

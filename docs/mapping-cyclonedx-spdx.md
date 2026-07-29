@@ -48,8 +48,7 @@ There is no native object representing the set of interfaces; the count is deriv
 | I6 | `endpointRoles` | `component.properties[name="pkic:profile:endpointRole:*"]` (no edge/endpoint model) | `Relationship` records with annotation (approximate) |
 | I7 | `interfaceType` | `component.properties[name="pkic:profile:interfaceType"]` (no native field) | `Annotation` on linked element |
 | I8 | `lifecycleStage` | `component.properties[name="pkic:profile:lifecycleStage"]` (flat lifecycle tag, per lifecycle model v1) | `Annotation` on linked element |
-| I9 | `pqcPosture` | `component.properties[name="pkic:profile:pqcPosture"]` (or derived from `nistQuantumSecurityLevel`) | `Annotation` on linked element |
-| I10 | `implementationPurl` | `purl` on the OpenSSL/OpenSSH SBOM component, or a property | native SPDX `Package` with `packageUrl` (SPDX strength) |
+| I9 | `implementationPurl` | `purl` on the OpenSSL/OpenSSH SBOM component, or a property | native SPDX `Package` with `packageUrl` (SPDX strength) |
 
 ## Product-level rule mapping
 
@@ -60,17 +59,17 @@ There is no native object representing the set of interfaces; the count is deriv
 
 ## Interpretation of the columns
 
-In CycloneDX, the cryptographic assets (I1–I5 and the provider in I10) are represented in
+In CycloneDX, the cryptographic assets (I1–I5 and the provider in I9) are represented in
 native fields, which is an area of strength for the format. The interface-level classifiers on
-which the profile depends — `interfaceType` (I7), endpoint roles (I6), lifecycle stage (I8),
-and PQC posture (I9) — have no native field and are carried in `component.properties` under the
+which the profile depends — `interfaceType` (I7), endpoint roles (I6), and lifecycle stage (I8)
+— have no native field and are carried in `component.properties` under the
 `pkic:profile:` namespace. The `interfaceType` attribute is what makes product rule P2
 evaluable; without an agreed means of indicating which interface is the management interface, a
 profile cannot require that one exist.
 
 In SPDX, the absence of a cryptographic object model in 3.0.1 means that most detail is
 obtained through the linked CycloneDX CBOM. The area of strength for SPDX is provider identity
-(I10): it identifies the OpenSSL and OpenSSH packages by `packageUrl`, which is the value
+(I9): it identifies the OpenSSL and OpenSSH packages by `packageUrl`, which is the value
 cross-referenced against vulnerability feeds.
 
 ## The edge gap

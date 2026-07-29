@@ -26,7 +26,6 @@
     { "id": "I6", "attribute": "endpointRoles",      "level": "MUST",   "constraint": { "minCount": 2 } },
     { "id": "I7", "attribute": "interfaceType",      "level": "MUST",   "constraint": { "enumRef": "interfaceTypeVocabulary" } },
     { "id": "I8", "attribute": "lifecycleStage",     "level": "MUST",   "constraint": { "enum": ["intended", "implemented", "configured", "observed"] } },
-    { "id": "I9", "attribute": "pqcPosture",         "level": "MUST",   "constraint": { "enum": ["classical", "hybrid", "pqc"] } },
-    { "id": "I10", "attribute": "implementationPurl","level": "SHOULD", "constraint": { "startsWith": "pkg:" } }
+    { "id": "I9", "attribute": "implementationPurl", "level": "SHOULD", "constraint": { "startsWith": "pkg:" } }
   ]
 }

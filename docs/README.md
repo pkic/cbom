@@ -14,6 +14,7 @@ no build step, no external dependencies. Served by GitHub Pages from this `docs/
 | `lifecycle.html` | Lifecycle Data (dev & deployment phases) |
 | `ontology.html` | Ontology (node · edge · asset) |
 | `profile.html` | Profile (rules, dual use, conformance) |
+| `policy-evaluation.html` | Policy Evaluation (facts vs derived evaluations) |
 | `use-cases.html` | Use Cases |
 | `formats.html` | Formats (CycloneDX & SPDX mapping) |
 | `versioning.html` | Versioning (older CBOM files) |

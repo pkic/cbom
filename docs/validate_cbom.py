@@ -93,7 +93,6 @@ def extract_interfaces(bom):
             "authentication": auth(refs, comps),
             "endpointRoles": roles,
             "lifecycleStage": props.get("pkic:profile:lifecycleStage"),
-            "pqcPosture": props.get("pkic:profile:pqcPosture"),
             "implementationPurl": props.get("pkic:profile:implementationPurl"),
         })
     return interfaces

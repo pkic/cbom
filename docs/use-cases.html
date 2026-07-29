@@ -16,6 +16,7 @@
     <a href="lifecycle.html">Lifecycle Data</a>
     <a href="ontology.html">Ontology</a>
     <a href="profile.html">Profile</a>
+    <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="use-cases.html" class="active">Use Cases</a>
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
@@ -34,7 +35,7 @@
   <h2>Use cases</h2>
 
   <h3>1 · PQC migration readiness and planning</h3>
-  <p><strong>Objective:</strong> establish evidence-based migration timelines and track progress toward quantum-safe cryptography. <strong>Profile emphasis:</strong> requires <code>pqcPosture</code> on every interface, and frequently a specific <code>lifecycleStage</code>, so that <code>implemented</code> capability can be compared with <code>observed</code> actuality. <strong>Producer and consumer:</strong> vendor build or operator scan, consumed by migration planners and regulators. <strong>Example:</strong> comparison of current CBOMs against a quantum-safe target state to distinguish software-only updates from changes requiring hardware replacement.</p>
+  <p><strong>Objective:</strong> establish evidence-based migration timelines and track progress toward quantum-safe cryptography. <strong>Profile emphasis:</strong> requires disclosure of the key-exchange and authentication algorithms — the facts from which post-quantum posture is derived by an external policy (see <a href="policy-evaluation.html">Policy Evaluation</a>) — and frequently a specific <code>lifecycleStage</code>, so that <code>implemented</code> capability can be compared with <code>observed</code> actuality. <strong>Producer and consumer:</strong> vendor build or operator scan, consumed by migration planners and regulators. <strong>Example:</strong> comparison of current CBOMs against a quantum-safe target state to distinguish software-only updates from changes requiring hardware replacement.</p>
 
   <h3>2 · Procurement and tender conformance</h3>
   <p><strong>Objective:</strong> state cryptographic requirements in a tender and evaluate a vendor's CBOM against them automatically, in place of security questionnaires. <strong>Profile emphasis:</strong> per-interface minimums together with product-level structure, such as the requirement to declare a management interface. <strong>Producer and consumer:</strong> vendor, consumed by operator procurement. <strong>Example:</strong> a required baseline for any product that terminates an operator interface.</p>
@@ -58,21 +59,21 @@
   <p><strong>Objective:</strong> assess the cryptographic exposure of an acquisition target or partner. <strong>Profile emphasis:</strong> a broad disclosure and PQC-posture profile applied across the estate. <strong>Producer and consumer:</strong> the target, consumed by the acquiring security function. <strong>Example:</strong> identification of deprecated algorithms and cryptography bound to legacy hardware prior to completion.</p>
 
   <h2>Attributes emphasised by each use case</h2>
-  <p>The same twelve attributes serve all of these use cases, but each makes a different subset mandatory. This selectivity is the defining characteristic of profiling.</p>
+  <p>The same set of attributes serves all of these use cases, but each makes a different subset mandatory. This selectivity is the defining characteristic of profiling.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr>
-      <th>Use case</th><th>pqcPosture</th><th>lifecycleStage</th><th>implementationPurl</th><th>keyExchange / auth</th><th>interfaceType (mgmt)</th>
+      <th>Use case</th><th>lifecycleStage</th><th>implementationPurl</th><th>keyExchange / auth</th><th>interfaceType (mgmt)</th>
     </tr></thead>
     <tbody>
-      <tr><td>PQC readiness</td><td>●</td><td>●</td><td>○</td><td>●</td><td>○</td></tr>
-      <tr><td>Procurement</td><td>●</td><td>○</td><td>○</td><td>●</td><td>●</td></tr>
-      <tr><td>Vulnerability / incident</td><td>○</td><td>○</td><td>●</td><td>○</td><td>○</td></tr>
-      <tr><td>Compliance reporting</td><td>●</td><td>●</td><td>○</td><td>●</td><td>●</td></tr>
-      <tr><td>CI quality gate</td><td>●</td><td>○</td><td>●</td><td>●</td><td>●</td></tr>
-      <tr><td>Crypto-agility</td><td>○</td><td>○</td><td>●</td><td>●</td><td>○</td></tr>
-      <tr><td>Supply-chain transparency</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
-      <tr><td>M&amp;A due diligence</td><td>●</td><td>○</td><td>●</td><td>●</td><td>○</td></tr>
+      <tr><td>PQC readiness</td><td>●</td><td>○</td><td>●</td><td>○</td></tr>
+      <tr><td>Procurement</td><td>○</td><td>○</td><td>●</td><td>●</td></tr>
+      <tr><td>Vulnerability / incident</td><td>○</td><td>●</td><td>○</td><td>○</td></tr>
+      <tr><td>Compliance reporting</td><td>●</td><td>○</td><td>●</td><td>●</td></tr>
+      <tr><td>CI quality gate</td><td>○</td><td>●</td><td>●</td><td>●</td></tr>
+      <tr><td>Crypto-agility</td><td>○</td><td>●</td><td>●</td><td>○</td></tr>
+      <tr><td>Supply-chain transparency</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+      <tr><td>M&amp;A due diligence</td><td>○</td><td>●</td><td>●</td><td>○</td></tr>
     </tbody>
   </table>
   </div>
@@ -81,7 +82,7 @@
   <div class="banner">A single CBOM may satisfy multiple profiles. A vendor generates one high-fidelity CBOM, and different consumers evaluate it independently against the procurement, PQC-readiness, and vulnerability profiles. This is a direct consequence of keeping the methodology <a href="formats.html">format-independent</a> and locating the requirements in profiles.</div>
 
   <div class="pagenav">
-    <a href="profile.html">← Profile</a>
+    <a href="policy-evaluation.html">← Policy Evaluation</a>
     <a class="next" href="formats.html">Next: Formats →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>

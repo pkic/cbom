@@ -89,8 +89,8 @@ be resolved remains flagged.
 
 ## 5. Profile-version change (the second axis)
 
-When a profile is tightened (for example, v0.2 adds a rule requiring `pqcPosture` to be
-`hybrid` or `pqc` for `service` interfaces), existing CBOMs do not become incorrect; they were
+When a profile is tightened (for example, v0.2 raises `implementationPurl` from SHOULD to MUST
+for `service` interfaces), existing CBOMs do not become incorrect; they were
 evaluated against the profile in force at the time. This is handled as any policy change:
 
 - **Evaluate against a stated profile version.** An older CBOM must not be re-interpreted under

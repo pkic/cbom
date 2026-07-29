@@ -64,7 +64,6 @@
       "properties": [
         { "name": "pkic:profile:interfaceId", "value": "svc-https" },
         { "name": "pkic:profile:interfaceType", "value": "service" },
-        { "name": "pkic:profile:pqcPosture", "value": "classical" },
         { "name": "pkic:profile:lifecycleStage", "value": "observed" },
         { "name": "pkic:profile:endpointRole:client", "value": "endpoint:browser" },
         { "name": "pkic:profile:endpointRole:server", "value": "endpoint:nginx" },
@@ -91,7 +90,6 @@
       "properties": [
         { "name": "pkic:profile:interfaceId", "value": "mgmt-ssh" },
         { "name": "pkic:profile:interfaceType", "value": "management" },
-        { "name": "pkic:profile:pqcPosture", "value": "classical" },
         { "name": "pkic:profile:lifecycleStage", "value": "configured" },
         { "name": "pkic:profile:endpointRole:client", "value": "endpoint:admin" },
         { "name": "pkic:profile:endpointRole:server", "value": "endpoint:host" },

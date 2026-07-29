@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Policy Evaluation</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="ontology.html">Ontology</a>
+    <a href="profile.html">Profile</a>
+    <a href="policy-evaluation.html" class="active">Policy Evaluation</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="governance.html">Governance</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+    <a href="references.html">References</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">CONCEPT</div>
+  <h1>Policy evaluation</h1>
+  <p class="lead">A CBOM records facts. A judgement about those facts — for example, whether an interface is post-quantum-safe — is a separate matter. Such judgements should be produced by an external policy applied to the facts at evaluation time, rather than stored as attributes within the CBOM, because the criteria on which they depend change over time.</p>
+
+  <h2>Facts versus evaluations</h2>
+  <p>A CBOM states <strong>facts</strong>: the protocols, versions, algorithms, key material, and certificate signature algorithms an interface uses. These are primary data, observed or declared by the producer.</p>
+  <p>An <strong>evaluation</strong> is a judgement <em>derived</em> from those facts against a set of criteria. "Is this interface post-quantum-safe?" is not a fact recorded by the producer; it is a conclusion drawn from the algorithms the interface uses, assessed against current guidance. The conclusion depends on criteria that are external to the facts and that are revised as guidance develops.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <!-- facts -->
+      <rect x="20" y="40" width="200" height="76" rx="12" fill="#eefaf1" stroke="#15803d"/>
+      <text x="120" y="66" fill="#14532d" text-anchor="middle" font-weight="700">CBOM — facts</text>
+      <text x="120" y="86" fill="#39424f" text-anchor="middle" font-size="11">algorithms, versions, key sizes</text>
+      <text x="120" y="104" fill="#15803d" text-anchor="middle" font-size="10.5" font-family="monospace">stable · immutable revision</text>
+      <!-- policy -->
+      <rect x="20" y="140" width="200" height="76" rx="12" fill="#fff7ec" stroke="#b45309"/>
+      <text x="120" y="166" fill="#6b4a12" text-anchor="middle" font-weight="700">Policy — criteria</text>
+      <text x="120" y="186" fill="#39424f" text-anchor="middle" font-size="11">what counts as safe / mature</text>
+      <text x="120" y="204" fill="#b45309" text-anchor="middle" font-size="10.5" font-family="monospace">versioned · changes over time</text>
+      <!-- engine -->
+      <rect x="300" y="90" width="150" height="76" rx="12" fill="#ffffff" stroke="#2563eb"/>
+      <text x="375" y="124" fill="#1a2230" text-anchor="middle" font-weight="600">Evaluation</text>
+      <text x="375" y="142" fill="#5b6472" text-anchor="middle" font-size="10.5">applied at a point in time</text>
+      <!-- verdict -->
+      <rect x="530" y="90" width="170" height="76" rx="12" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="615" y="118" fill="#1a2230" text-anchor="middle" font-weight="700">Derived verdict</text>
+      <text x="615" y="138" fill="#5b6472" text-anchor="middle" font-size="11">PQC posture · maturity</text>
+      <text x="615" y="156" fill="#5b6472" text-anchor="middle" font-size="10.5" font-family="monospace">carries policy version + date</text>
+      <!-- arrows -->
+      <g stroke="#2563eb" stroke-width="2" fill="none">
+        <line x1="220" y1="78" x2="300" y2="118"/><polygon points="300,118 289,116 293,107" fill="#2563eb"/>
+        <line x1="220" y1="178" x2="300" y2="138"/><polygon points="300,138 293,149 289,140" fill="#2563eb"/>
+        <line x1="450" y1="128" x2="530" y2="128"/><polygon points="530,128 520,123 520,133" fill="#2563eb"/>
+      </g>
+    </svg>
+    <figcaption>The same CBOM facts, re-evaluated later under revised policy criteria, may yield a different verdict. The facts do not change; the judgement does.</figcaption>
+  </figure>
+
+  <h2>Why the evaluation must be external to the data</h2>
+  <p>If a derived value such as post-quantum posture is stored as an attribute within the CBOM, three problems follow:</p>
+  <ul>
+    <li><strong>The value becomes stale.</strong> When the criteria change — for example, when an algorithm is reclassified — the stored value no longer reflects current guidance, yet the CBOM presents it as though it did.</li>
+    <li><strong>Producers evaluate inconsistently.</strong> Different producers, applying different or outdated criteria, record different verdicts for equivalent facts, which prevents comparison.</li>
+    <li><strong>The record and the judgement are conflated.</strong> A CBOM is intended to be a durable record of facts. Embedding a time-dependent judgement in it undermines that role.</li>
+  </ul>
+  <p>Keeping the evaluation external avoids these problems. The CBOM remains a stable record of facts; a single, versioned policy evaluates all CBOMs consistently; and the same immutable facts can be re-evaluated at any time under the criteria then in force.</p>
+
+  <h2>Examples of evaluations</h2>
+  <table>
+    <thead><tr><th>Evaluation</th><th>Derived from (facts)</th><th>Against (criteria, external)</th></tr></thead>
+    <tbody>
+      <tr><td>Post-quantum posture</td><td>the key-exchange and authentication algorithms an interface uses, and whether they are classical, hybrid, or post-quantum</td><td>current guidance on which algorithms and combinations are considered quantum-safe, which is revised over time</td></tr>
+      <tr><td>Cryptographic maturity</td><td>algorithm strength, key sizes, deprecation status, library currency, and cryptographic agility</td><td>a maturity rubric that is revised as recommendations and deprecations change</td></tr>
+    </tbody>
+  </table>
+  <p>Both evaluations draw on the same kind of primary data and are subject to the same consideration: the criteria are not fixed, so the evaluation must be applied externally and dated, rather than frozen into the CBOM.</p>
+
+  <h2>Consequence for this profile</h2>
+  <p>For this reason, <code>pqcPosture</code> has been removed from the profile's attributes. The profile requires disclosure of the facts from which posture is derived — the protocol, key exchange, encryption, and authentication algorithms, and the implementing library — while the posture itself is computed by an external policy at evaluation time. The same applies to any cryptographic maturity assessment.</p>
+
+  <h2>Relationship to profiles and governance</h2>
+  <p>An evaluation policy is versioned, dated, and governed in the same manner as a profile (see <a href="versioning.html">Versioning</a> and <a href="governance.html">Governance</a>). Just as a conformance claim references the profile version, a posture or maturity determination references the policy version and the date on which it was applied, so that the determination is reproducible and its basis is auditable.</p>
+
+  <div class="banner">In summary: the CBOM holds facts; an external, versioned policy derives judgements such as post-quantum posture and cryptographic maturity from those facts. Separating the two allows the facts to remain stable while the criteria evolve, and allows any CBOM to be re-evaluated under current criteria at any time.</div>
+
+  <div class="pagenav">
+    <a href="profile.html">← Profile</a>
+    <a class="next" href="use-cases.html">Next: Use Cases →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

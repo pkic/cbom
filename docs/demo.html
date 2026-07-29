@@ -46,6 +46,7 @@
     <a href="lifecycle.html">Lifecycle Data</a>
     <a href="ontology.html">Ontology</a>
     <a href="profile.html">Profile</a>
+    <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="use-cases.html">Use Cases</a>
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
@@ -103,17 +104,16 @@ const PROFILE = {
     {id:"I6", attribute:"endpointRoles", level:"MUST", constraint:{minCount:2}},
     {id:"I7", attribute:"interfaceType", level:"MUST", constraint:{enumRef:"interfaceTypeVocabulary"}},
     {id:"I8", attribute:"lifecycleStage", level:"MUST", constraint:{enum:["intended","implemented","configured","observed"]}},
-    {id:"I9", attribute:"pqcPosture", level:"MUST", constraint:{enum:["classical","hybrid","pqc"]}},
-    {id:"I10", attribute:"implementationPurl", level:"SHOULD", constraint:{startsWith:"pkg:"}}
+    {id:"I9", attribute:"implementationPurl", level:"SHOULD", constraint:{startsWith:"pkg:"}}
   ]
 };
 const SVC = {interfaceId:"svc-https", interfaceType:"service", protocol:"TLS", protocolVersion:"1.3",
   keyExchange:"X25519", encryption:"AES-256-GCM", authentication:"RSA-2048",
-  endpointRoles:["client","server"], lifecycleStage:"observed", pqcPosture:"classical",
+  endpointRoles:["client","server"], lifecycleStage:"observed",
   implementationPurl:"pkg:generic/openssl@3.4.0", nm:"HTTPS service interface (TLS 1.3)", via:"OpenSSL 3.4.0"};
 const MGMT = {interfaceId:"mgmt-ssh", interfaceType:"management", protocol:"SSH", protocolVersion:"2.0",
   keyExchange:"curve25519-sha256", encryption:"ChaCha20-Poly1305", authentication:"Ed25519 host key",
-  endpointRoles:["client","server"], lifecycleStage:"configured", pqcPosture:"classical",
+  endpointRoles:["client","server"], lifecycleStage:"configured",
   implementationPurl:"pkg:generic/openssh@9.6", nm:"Management interface (SSH 2.0)", via:"OpenSSH 9.6"};
 const CBOMS = { pass:[SVC, MGMT], fail:[SVC] };
 
