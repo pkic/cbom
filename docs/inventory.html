@@ -30,11 +30,11 @@
 <main>
   <div class="crumb">CONTEXT</div>
   <h1>Inventory and CBOMs</h1>
-  <p class="lead">A CBOM and a cryptographic inventory are related but distinct. This page describes the difference between the two and the relationship between them, so that the role of a CBOM within a wider inventory is clear.</p>
+  <p class="lead">A CBOM and a cryptographic inventory are related but not the same thing. This page sets out how they differ and how they work together, so the role of a CBOM within a wider inventory is clear.</p>
 
-  <h2>Two artifacts, two scopes</h2>
+  <h2>How a CBOM and an inventory differ</h2>
   <p>A <strong>CBOM</strong> is a bill of materials for a single artifact: a structured, machine-readable description of the cryptography that a specific component contains or uses, produced at a defined point in time. It is analogous to a software bill of materials.</p>
-  <p>A <strong>cryptographic inventory</strong> is an organization-wide record of the cryptography in use across systems, aggregated from many sources and maintained continuously. It exists to support risk management, compliance, and migration planning across the estate.</p>
+  <p>A <strong>cryptographic inventory</strong> is an organization-wide record of the cryptography in use across systems, aggregated from many sources and maintained continuously. It supports risk management, compliance, and migration planning across the estate.</p>
 
   <table>
     <thead><tr><th>Property</th><th>CBOM</th><th>Cryptographic inventory</th></tr></thead>
@@ -49,7 +49,7 @@
   </table>
 
   <h2>How they relate</h2>
-  <p>CBOMs are a primary input to a cryptographic inventory. An inventory is assembled by collecting, normalizing, and correlating CBOMs from across the estate, together with data from other sources such as network and configuration discovery. The CBOM is per-component and point-in-time; the inventory is cross-component and longitudinal.</p>
+  <p>CBOMs are a primary input to a cryptographic inventory. The inventory is built by normalizing and correlating CBOMs from across the estate, together with data from other sources such as network and configuration discovery. A CBOM describes one component at one point in time; the inventory spans many components and is maintained over time.</p>
   <figure>
     <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <!-- sources -->
@@ -77,18 +77,56 @@
       <text x="665" y="109" fill="#1a2230" text-anchor="middle" font-size="11">Compliance</text>
       <rect x="620" y="134" width="90" height="34" rx="8" fill="#f2f6fc" stroke="#c9d3e0"/>
       <text x="665" y="155" fill="#1a2230" text-anchor="middle" font-size="11">Migration</text>
+      <rect x="620" y="180" width="90" height="36" rx="8" fill="#f2f6fc" stroke="#c9d3e0"/>
+      <text x="665" y="197" fill="#1a2230" text-anchor="middle" font-size="10">Supply-chain</text>
+      <text x="665" y="209" fill="#1a2230" text-anchor="middle" font-size="10">request</text>
       <!-- arrows -->
       <g stroke="#2563eb" stroke-width="2" fill="none">
         <line x1="170" y1="59" x2="250" y2="110"/><line x1="170" y1="105" x2="250" y2="120"/><line x1="170" y1="151" x2="250" y2="132"/>
         <line x1="380" y1="125" x2="450" y2="125"/><polygon points="450,125 440,120 440,130" fill="#2563eb"/>
-        <line x1="600" y1="110" x2="620" y2="63" /><line x1="600" y1="125" x2="620" y2="105"/><line x1="600" y1="140" x2="620" y2="151"/>
+        <line x1="600" y1="110" x2="620" y2="63" /><line x1="600" y1="123" x2="620" y2="105"/><line x1="600" y1="138" x2="620" y2="151"/><line x1="600" y1="150" x2="620" y2="197"/>
       </g>
     </svg>
-    <figcaption>CBOMs and discovery data are normalized and correlated to form the cryptographic inventory, which in turn supports risk, compliance, and migration activities.</figcaption>
+    <figcaption>CBOMs and discovery data are normalized and correlated to form the cryptographic inventory, which then supports risk, compliance, migration, and the handling of supply-chain requests.</figcaption>
   </figure>
 
+  <h2>Extracting a CBOM from the inventory</h2>
+  <p>The inventory is a source of CBOMs as well as a destination for them. A CBOM can be extracted from the inventory to serve a specific consumer. That consumer may be internal, such as a security or architecture team that needs a description of the cryptography in a given system, or external, such as a client, an auditor, or a regulator. A common external case is a supply-chain request, where a customer or partner asks the organization for a CBOM covering a product or service it supplies.</p>
+  <p>An extracted CBOM is a scoped snapshot of the inventory. It is generated for a defined subject, such as a product, a service, or a bounded part of the estate. It is filtered to the content the consumer needs, redacted where confidentiality requires it, marked with its provenance (the inventory revision and the time it was drawn from), and signed where appropriate. See <a href="governance.html">Governance</a>.</p>
+  <figure>
+    <svg viewBox="0 0 720 235" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="18" y="80" width="140" height="74" rx="10" fill="#eefaf1" stroke="#15803d"/>
+      <text x="88" y="110" fill="#14532d" text-anchor="middle" font-weight="700">Cryptographic</text>
+      <text x="88" y="128" fill="#14532d" text-anchor="middle" font-weight="700">inventory</text>
+      <rect x="210" y="75" width="150" height="84" rx="10" fill="#ffffff" stroke="#2563eb"/>
+      <text x="285" y="104" fill="#1a2230" text-anchor="middle" font-weight="600">Extract &amp; scope</text>
+      <text x="285" y="123" fill="#5b6472" text-anchor="middle" font-size="10.5">select · filter · redact</text>
+      <text x="285" y="139" fill="#5b6472" text-anchor="middle" font-size="10.5">sign · timestamp</text>
+      <rect x="412" y="82" width="128" height="70" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="476" y="108" fill="#1a2230" text-anchor="middle" font-weight="700">Output CBOM</text>
+      <text x="476" y="128" fill="#15803d" text-anchor="middle" font-size="10.5" font-family="monospace">profile-validated</text>
+      <text x="655" y="26" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">CONSUMERS</text>
+      <rect x="596" y="40" width="116" height="32" rx="8" fill="#f2f6fc" stroke="#c9d3e0"/>
+      <text x="654" y="60" fill="#1a2230" text-anchor="middle" font-size="11">Internal use case</text>
+      <rect x="596" y="84" width="116" height="32" rx="8" fill="#f2f6fc" stroke="#c9d3e0"/>
+      <text x="654" y="104" fill="#1a2230" text-anchor="middle" font-size="11">External client</text>
+      <rect x="596" y="128" width="116" height="36" rx="8" fill="#f2f6fc" stroke="#c9d3e0"/>
+      <text x="654" y="145" fill="#1a2230" text-anchor="middle" font-size="10.5">Supply-chain</text>
+      <text x="654" y="158" fill="#1a2230" text-anchor="middle" font-size="10.5">response</text>
+      <rect x="210" y="180" width="330" height="30" rx="8" fill="#fff7ec" stroke="#b45309"/>
+      <text x="375" y="199" fill="#6b4a12" text-anchor="middle" font-size="10.5">the same profile validates the output CBOM before release</text>
+      <g stroke="#2563eb" stroke-width="2" fill="none">
+        <line x1="158" y1="117" x2="210" y2="117"/><polygon points="210,117 200,112 200,122" fill="#2563eb"/>
+        <line x1="360" y1="117" x2="412" y2="117"/><polygon points="412,117 402,112 402,122" fill="#2563eb"/>
+        <line x1="540" y1="112" x2="596" y2="56"/><line x1="540" y1="117" x2="596" y2="100"/><line x1="540" y1="122" x2="596" y2="146"/>
+      </g>
+    </svg>
+    <figcaption>A CBOM is extracted from the inventory for a specific consumer (an internal team, an external client, or a supply-chain request), scoped and redacted as required, and validated against the requesting profile before release.</figcaption>
+  </figure>
+  <p>A single profile applies in both directions. On input, it validates the CBOMs supplied to the inventory. On output, it validates a CBOM extracted from the inventory before that CBOM is released. A consumer making a supply-chain request can state which profile the returned CBOM must satisfy, and the producer checks the output against that profile before sending it. One set of rules therefore governs both the assembly of the inventory and the disclosures drawn from it.</p>
+
   <h2>The role of profiles</h2>
-  <p>For CBOMs produced by different tools and vendors to be aggregated into a coherent inventory, they must be comparable. A <a href="profile.html">profile</a> defines the attributes each CBOM is required to contain, and, together with normalization at the adapter, ensures that values are expressed consistently. This comparability is a precondition for reliable aggregation. Without it, an inventory assembled from heterogeneous CBOMs cannot be relied upon. See <a href="challenges.html">Challenges</a> and <a href="formats.html">Formats</a>.</p>
+  <p>For CBOMs produced by different tools and vendors to be aggregated into a coherent inventory, they must be comparable. A <a href="profile.html">profile</a> defines the attributes each CBOM is required to contain, and, together with normalization at the adapter, ensures that values are expressed consistently. This comparability is a precondition for reliable aggregation. Without it, an inventory assembled from heterogeneous CBOMs cannot be relied upon. The same profile also applies to CBOMs extracted from the inventory, as noted above. See <a href="challenges.html">Challenges</a> and <a href="formats.html">Formats</a>.</p>
 
   <h2>Multiple data sources and lifecycle stage</h2>
   <p>A cryptographic inventory typically combines CBOM data, which is frequently <code>implemented</code> or <code>configured</code>, with runtime discovery, which is <code>observed</code>. The <code>lifecycleStage</code> attribute allows the inventory to distinguish declared capability from observed use, rather than conflating the two. See <a href="lifecycle.html">Lifecycle Data</a>.</p>
@@ -96,7 +134,21 @@
   <h2>Relationship to SBOM and HBOM inventories</h2>
   <p>A cryptographic inventory is generally maintained alongside software and, where relevant, hardware inventories. CBOMs are consumed together with SBOMs, and in some cases Hardware Bills of Materials, so that cryptography can be related to the components and hardware that implement it. This relationship determines, for example, whether a change requires a software update or a hardware replacement.</p>
 
-  <div class="banner">In summary: a CBOM is a per-component, point-in-time disclosure; a cryptographic inventory is the organization-wide, continuously maintained aggregate constructed from many CBOMs and other sources. Profiles and normalization are what make that aggregation reliable.</div>
+  <h2>Foundational considerations for CBOM exchange</h2>
+  <p>Using the inventory as both a source and a destination raises several points that a fuller treatment of this topic should cover:</p>
+  <ul>
+    <li><strong>Subject and scope.</strong> An extracted CBOM should state its subject precisely (for example, a product, a service, or a defined portion of the estate) and the criteria used to select its content.</li>
+    <li><strong>Provenance and point-in-time.</strong> Because the inventory changes continuously, an extracted CBOM is a snapshot; it should record the inventory revision and the time from which it was produced.</li>
+    <li><strong>Authenticity.</strong> An output CBOM issued to an external party should be signed, so that the recipient can verify its origin and integrity. See <a href="governance.html">Governance</a>.</li>
+    <li><strong>Redaction and confidentiality.</strong> External disclosure may require redaction. The profile sets the lower bound of what must be disclosed; policy governs what is withheld. See the discussion of depth of disclosure in <a href="challenges.html">Challenges</a>.</li>
+    <li><strong>Format and version negotiation.</strong> A consumer may require a particular carrier format and version; the mapping and the profile's accepted version range determine what can be produced and validated. See <a href="formats.html">Formats</a> and <a href="versioning.html">Versioning</a>.</li>
+    <li><strong>Derived evaluations excluded.</strong> Post-quantum posture and cryptographic maturity are not embedded in the extracted CBOM; the recipient derives them from the disclosed facts by policy. See <a href="policy-evaluation.html">Policy Evaluation</a>.</li>
+    <li><strong>Identity and re-request.</strong> Stable identifiers allow the recipient to correlate the CBOM with the corresponding SBOM and HBOM, and to request an updated CBOM when the subject changes.</li>
+    <li><strong>Request and response.</strong> A supply-chain request should state the profile and scope required; the response is validated against that profile and retained for audit.</li>
+    <li><strong>Trust asymmetry.</strong> Inputs to the inventory may come from lower-trust sources and require verification and normalization; outputs produced by the organization carry its own attestation.</li>
+  </ul>
+
+  <div class="banner">In summary: a CBOM describes one component at a point in time, while a cryptographic inventory is the organization-wide record built and maintained from many CBOMs and other sources. CBOMs move in both directions: into the inventory as inputs, and out of it as scoped disclosures for internal and external consumers. Normalization and a shared profile keep the two consistent, and the same profile validates CBOMs on the way in and on the way out.</div>
 
   <div class="pagenav">
     <a href="challenges.html">← Challenges</a>

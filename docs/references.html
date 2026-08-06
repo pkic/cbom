@@ -79,24 +79,47 @@
     </tbody>
   </table>
 
-  <h2>Regulation and policy</h2>
+  <h2>Industry references to CBOM</h2>
+  <p style="color:var(--muted);font-size:14px">References from standards bodies, vendors, and sector groups that define or adopt the CBOM.</p>
   <table>
-    <thead><tr><th>Reference</th><th>Title</th></tr></thead>
+    <thead><tr><th>Reference</th><th>Description</th></tr></thead>
     <tbody>
-      <tr><td>EU Cyber Resilience Act (CRA)</td><td>Regulation (EU) on horizontal cybersecurity requirements for products with digital elements. <span class="na">(confirm regulation number and date)</span></td></tr>
-      <tr><td>NIS2 Directive</td><td>Directive (EU) 2022/2555 on measures for a high common level of cybersecurity across the Union. <span class="na">(confirm reference)</span></td></tr>
-      <tr><td>BSI TR-03183</td><td>Cyber Resilience Requirements for Manufacturers and Products. Bundesamt für Sicherheit in der Informationstechnik. <a href="https://www.bsi.bund.de">bsi.bund.de</a></td></tr>
-      <tr><td>BSI TR-02102-1</td><td>Cryptographic Mechanisms: Recommendations and Key Lengths. Bundesamt für Sicherheit in der Informationstechnik.</td></tr>
-      <tr><td>US Executive Order (cybersecurity)</td><td>Executive Order on improving the nation's cybersecurity. <span class="na">(confirm EO number and date)</span></td></tr>
+      <tr><td>OWASP CycloneDX · Ecma TC54</td><td>CBOM was introduced in CycloneDX v1.6 and the format is standardized as ECMA-424; advanced by the OWASP Foundation and the Ecma International Technical Committee for Software &amp; System Transparency (TC54). <a href="https://cyclonedx.org">cyclonedx.org</a></td></tr>
+      <tr><td>IBM Research</td><td>Originated the CBOM concept and its standardization in CycloneDX; see "Cryptographic bill of materials speeds quantum-safe adoption" and related publications. <a href="https://research.ibm.com/blog/cryptographic-bill-of-materials">research.ibm.com</a></td></tr>
+      <tr><td>GSMA</td><td>Post-Quantum Telco Network task force (initiated by IBM and Vodafone); analysis of the role of CBOM in telecommunications, and "PQ.03 Post-Quantum Cryptography — Guidelines for Telecom Use Cases". <a href="https://www.gsma.com/solutions-and-impact/technologies/security/post-quantum-cryptography-documents/">gsma.com</a></td></tr>
+      <tr><td>Linux Foundation PQCA</td><td>Post-Quantum Cryptography Alliance; industry consortium supporting PQC adoption and tooling. <a href="https://pqca.org">pqca.org</a></td></tr>
+      <tr><td>PKI Consortium (PKIC)</td><td>Post-Quantum Cryptography conferences; CBOM Profiles Working Group. <a href="https://pkic.org">pkic.org</a></td></tr>
+      <tr><td>SandboxAQ</td><td>Cryptographic discovery and inventory tooling; contributor to GSMA quantum risk-management guidance. <a href="https://www.sandboxaq.com">sandboxaq.com</a></td></tr>
     </tbody>
   </table>
 
-  <h2>Sector and working-group material</h2>
+  <h2>Governmental references to CBOM and cryptographic inventory</h2>
+  <p style="color:var(--muted);font-size:14px">Many governmental sources require or recommend a <em>cryptographic inventory</em> — for which a CBOM is a mechanism — rather than referring to CBOM by name.</p>
+  <h3>United States</h3>
   <table>
-    <thead><tr><th>Reference</th><th>Title</th></tr></thead>
+    <thead><tr><th>Reference</th><th>Description</th></tr></thead>
     <tbody>
-      <tr><td>GSMA</td><td>Cryptography Bill of Materials in Telecommunications (draft). GSM Association. <a href="https://www.gsma.com">gsma.com</a></td></tr>
-      <tr><td>PKIC</td><td>CBOM Profiles Working Group charter. PKI Consortium. <a href="https://pkic.org">pkic.org</a></td></tr>
+      <tr><td>OMB M-23-02</td><td>"Migrating to Post-Quantum Cryptography" (November 2022); requires federal agencies to maintain a prioritized inventory of quantum-vulnerable cryptographic systems. Superseded by OMB M-26-15 (June 2026). <a href="https://www.whitehouse.gov/wp-content/uploads/2022/11/M-23-02-M-Memo-on-Migrating-to-Post-Quantum-Cryptography.pdf">whitehouse.gov</a></td></tr>
+      <tr><td>Quantum Computing Cybersecurity Preparedness Act</td><td>2022 (Public Law 117-260); directs OMB to issue guidance on inventorying cryptographic systems. <span class="na">(confirm citation)</span></td></tr>
+      <tr><td>CISA · NSA · NIST</td><td>"Quantum-Readiness: Migration to Post-Quantum Cryptography" joint factsheet (August 2023); recommends preparing a cryptographic inventory. <a href="https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography">cisa.gov</a></td></tr>
+      <tr><td>CISA</td><td>"Strategy for Migrating to Automated Post-Quantum Cryptography Discovery and Inventory Tools" (2024). <a href="https://www.cisa.gov/quantum">cisa.gov</a></td></tr>
+      <tr><td>NIST NCCoE</td><td>"Migration to Post-Quantum Cryptography" project (cryptographic discovery and inventory). <a href="https://pages.nist.gov/nccoe-migration-post-quantum-cryptography/">pages.nist.gov</a></td></tr>
+      <tr><td>NIST IR 8547</td><td>"Transition to Post-Quantum Cryptography Standards" <span class="na">(draft; confirm status)</span>. <a href="https://csrc.nist.gov">csrc.nist.gov</a></td></tr>
+      <tr><td>NSA CNSA 2.0</td><td>Commercial National Security Algorithm Suite 2.0. <a href="https://www.nsa.gov">nsa.gov</a></td></tr>
+      <tr><td>GSA</td><td>"Post-Quantum Cryptography Buyer's Guide" (2025); federal acquisition guidance. <a href="https://buy.gsa.gov">buy.gsa.gov</a></td></tr>
+    </tbody>
+  </table>
+  <h3>Europe and national authorities</h3>
+  <table>
+    <thead><tr><th>Reference</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>BSI (Germany)</td><td>"Migration to Post-Quantum Cryptography — Recommendations for Action"; TR-02102-1 (Cryptographic Mechanisms); TR-03183 (Cyber Resilience Requirements, including SBOM). <a href="https://www.bsi.bund.de">bsi.bund.de</a></td></tr>
+      <tr><td>AIVD · CWI · TNO (Netherlands)</td><td>"The PQC Migration Handbook" (2nd edition, December 2024); advises inventorying all cryptography in use. <a href="https://publications.tno.nl/publication/34643386/fXcPVHsX/TNO-2024-pqc-en.pdf">publications.tno.nl</a></td></tr>
+      <tr><td>Joint European statement on PQC</td><td>November 2024; coordinated by Germany, France, and the Netherlands and signed by numerous European states.</td></tr>
+      <tr><td>EU</td><td>Cyber Resilience Act (Regulation (EU) 2024/2847) and NIS2 Directive (Directive (EU) 2022/2555). <span class="na">(confirm CRA number)</span></td></tr>
+      <tr><td>ENISA</td><td>Reports on post-quantum cryptography and migration. <a href="https://www.enisa.europa.eu">enisa.europa.eu</a></td></tr>
+      <tr><td>UK NCSC</td><td>Guidance on migrating to post-quantum cryptography. <a href="https://www.ncsc.gov.uk">ncsc.gov.uk</a></td></tr>
+      <tr><td>ANSSI (France)</td><td>Position on the transition to post-quantum cryptography. <a href="https://cyber.gouv.fr">cyber.gouv.fr</a></td></tr>
     </tbody>
   </table>
 

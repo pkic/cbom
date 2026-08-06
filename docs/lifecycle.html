@@ -93,9 +93,35 @@
     </tbody>
   </table>
 
+  <h2>False positives and false negatives across the lifecycle</h2>
+  <p>No single stage gives a complete or perfectly accurate picture. Each is prone to two kinds of error: a <strong>false positive</strong>, where cryptography is reported but is not actually in effect, and a <strong>false negative</strong>, where cryptography is in effect but is not reported. The balance between the two shifts as a subject moves from design to runtime.</p>
+  <table>
+    <thead><tr><th>Stage</th><th>Typical false positive (reported, not in effect)</th><th>Typical false negative (in effect, not reported)</th></tr></thead>
+    <tbody>
+      <tr><td><code>intended</code></td><td>An algorithm specified in the design but never implemented.</td><td>Cryptography introduced during implementation, such as that inside libraries and dependencies, which the design did not foresee.</td></tr>
+      <tr><td><code>implemented</code></td><td>Compiled-in capability, such as cipher suites or providers, that no deployment ever uses.</td><td>Cryptography loaded dynamically at runtime, provided by hardware (an HSM or TEE), or reached through dependencies the scanner does not cover.</td></tr>
+      <tr><td><code>configured</code></td><td>An algorithm permitted by the configuration but never negotiated in practice.</td><td>Cryptography outside the inspected configuration, such as built-in defaults or out-of-band channels.</td></tr>
+      <tr><td><code>observed</code></td><td>Cryptography seen only in a scan probe or a transient session, not representative of normal use.</td><td>Cryptography on paths not exercised during the observation window, such as failover, administrative, or rarely used interfaces.</td></tr>
+    </tbody>
+  </table>
+  <p>False positives are highest early, where a design or a build reports what is possible rather than what runs, and lowest at runtime, where what is seen has genuinely occurred. False negatives do not simply fall; they change character. A design misses implementation detail, a static scan misses dynamic and hardware cryptography, a configuration misses what it does not govern, and a runtime scan misses whatever was not exercised while it watched.</p>
+  <p>This is why a product CBOM and a service CBOM are combined rather than used in isolation. A product CBOM, from the <code>implemented</code> stage, tends to over-report capability and under-report runtime and hardware cryptography; a service CBOM, from the <code>observed</code> stage, under-reports paths it did not see. Reading them together reduces both kinds of error.</p>
+
   <h2>The readiness gap</h2>
   <p>PQC-capable software and hardware do not, in themselves, guarantee that post-quantum cryptography is configured and active, nor that it remains active across configuration changes. A product may be <code>implemented</code> with support for a given algorithm that is never <code>configured</code> and therefore never <code>observed</code>. Large migrations regularly reveal interoperability and performance effects between these stages.</p>
   <div class="banner warn">For this reason a CBOM should record the lifecycle stage rather than an unqualified fact. A vendor's <code>implemented</code> CBOM and an operator's <code>observed</code> scan may both be correct and yet differ; the discrepancy is itself a significant result. A CBOM that supports both perspectives represents the discrepancy explicitly.</div>
+
+  <h2>Product CBOM and service CBOM</h2>
+  <p>It helps to separate two kinds of CBOM, because they answer different questions and are produced by different parties.</p>
+  <p>A <strong>product CBOM</strong> describes the cryptography a product contains or is able to use. It is usually produced by the vendor at build time and ships with a release, so it reflects the <code>implemented</code> stage: what the product can do. A <strong>service CBOM</strong> describes the cryptography a running service actually uses. It is produced by the operator from the deployed configuration and from what is observed on the wire, so it reflects the <code>configured</code> and <code>observed</code> stages: what a particular deployment does.</p>
+  <p>A service is usually built from several products, so a service CBOM draws on the product CBOMs of its components and adds the configuration and runtime picture that exists only once the service is deployed. The cryptographic relationships between endpoints exist at the service level, not within any single product.</p>
+  <h3>Why the distinction matters for PQC migration</h3>
+  <p>PQC migration turns on the difference between capability and use. A product CBOM tells you whether a product can be made quantum-safe, and whether that requires a software update or a hardware change. A service CBOM tells you whether a given deployment is quantum-safe today. The two are not interchangeable:</p>
+  <ul>
+    <li>A product CBOM on its own can overstate readiness. A product may support ML-KEM, but that says nothing about whether any deployment has enabled it.</li>
+    <li>A service CBOM on its own cannot show the upgrade path. Knowing that a service still negotiates a classical group does not tell you whether the underlying products can be reconfigured or must be replaced.</li>
+  </ul>
+  <p>Migration planning needs both. Product CBOMs identify which products can reach a quantum-safe target and how; service CBOMs identify which deployments have actually reached it, and which have not. Comparing the two, interface by interface, is what separates a software update from a hardware refresh, and a planned state from a running one.</p>
 
   <h2>Multiple producers of a single interface's data</h2>
   <p>In the worked example the two lifecycle stages arise from the two producers:</p>
