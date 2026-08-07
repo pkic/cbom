@@ -128,6 +128,28 @@
   <h2>The role of profiles</h2>
   <p>For CBOMs produced by different tools and vendors to be aggregated into a coherent inventory, they must be comparable. A <a href="profile.html">profile</a> defines the attributes each CBOM is required to contain, and, together with normalization at the adapter, ensures that values are expressed consistently. This comparability is a precondition for reliable aggregation. Without it, an inventory assembled from heterogeneous CBOMs cannot be relied upon. The same profile also applies to CBOMs extracted from the inventory, as noted above. See <a href="challenges.html">Challenges</a> and <a href="formats.html">Formats</a>.</p>
 
+  <h2>Distributed and central inventories</h2>
+  <p>An inventory does not have to be a single database. In practice organizations tend to land somewhere between two arrangements, and the choice affects how profiles and normalization are applied.</p>
+  <p>A <strong>central inventory</strong> holds the collected data in one place. Data is gathered from across the estate, normalized on the way in, and queried centrally. Queries that span the estate are straightforward, and normalization happens once. The cost is that the central store must be kept current, and it can become a bottleneck for teams that own the underlying systems.</p>
+  <p>A <strong>distributed inventory</strong> leaves the data with the business units, subsidiaries, or regions that own it. Each maintains its own inventory, and estate-wide questions are answered by querying across them or by collecting summaries. This suits organizations where ownership is already devolved, or where data residency or confidentiality rules prevent detail from being pooled. The difficulty is that each participant may normalize differently, so an estate-wide answer is only as good as the agreement between them.</p>
+  <p>A common middle position is a federated arrangement: detail stays local, while an agreed subset is published upward for estate-wide reporting. This is where a profile earns its place. If every participant validates against the same profile, the published subsets are comparable even though the underlying inventories are separate and independently run. The profile defines the common denominator, and normalization is applied by each participant rather than once at the centre. Mergers, acquisitions, and outsourced operations tend to push organizations toward this arrangement whether or not it was planned.</p>
+
+  <h2>Context data that is not itself cryptographic</h2>
+  <p>A cryptographic inventory that records only cryptography is difficult to act on. Knowing that a service negotiates X25519 says nothing about whether that matters. Deciding whether it matters, and how urgently, depends on data that is not cryptographic at all and usually already exists elsewhere in the organization.</p>
+  <table>
+    <thead><tr><th>Context</th><th>Typical source</th><th>What it supports</th></tr></thead>
+    <tbody>
+      <tr><td>Business criticality and service ownership</td><td>CMDB, service catalogue</td><td>Prioritizing which systems to migrate first, and identifying who is accountable for doing it.</td></tr>
+      <tr><td>Data classification and retention period</td><td>Data governance records</td><td>Assessing harvest-now-decrypt-later exposure. Data that must stay confidential for decades is more urgent than data that expires next quarter.</td></tr>
+      <tr><td>Regulatory scope and jurisdiction</td><td>Compliance register</td><td>Determining which deadlines and cryptographic requirements apply to a given system.</td></tr>
+      <tr><td>Deployment topology and network exposure</td><td>Network and infrastructure records</td><td>Distinguishing an internet-facing interface from one confined to a private segment.</td></tr>
+      <tr><td>Software and hardware composition</td><td>SBOM, HBOM, asset register</td><td>Establishing whether a change is a library update, a configuration change, or a hardware replacement.</td></tr>
+      <tr><td>Lifecycle and support status</td><td>Asset management, vendor roadmaps</td><td>Identifying systems that will never receive a quantum-safe update and must be replaced.</td></tr>
+      <tr><td>Third-party and contractual relationships</td><td>Procurement records</td><td>Establishing which suppliers to approach, and what they are obliged to provide.</td></tr>
+    </tbody>
+  </table>
+  <p>Two consequences follow. First, the inventory needs stable identifiers so that a cryptographic record can be joined to the corresponding entries in these other systems. Correlation is usually more valuable than duplication: the inventory should reference the CMDB entry rather than copy its contents, which would then drift. Second, this context belongs outside the CBOM. A CBOM describes the cryptography of its subject; criticality and data classification are properties of the business, and they change on their own schedule. Keeping them separate is the same reasoning applied to derived evaluations on the <a href="policy-evaluation.html">Policy Evaluation</a> page.</p>
+
   <h2>Multiple data sources and lifecycle stage</h2>
   <p>A cryptographic inventory typically combines CBOM data, which is frequently <code>implemented</code> or <code>configured</code>, with runtime discovery, which is <code>observed</code>. The <code>lifecycleStage</code> attribute allows the inventory to distinguish declared capability from observed use, rather than conflating the two. See <a href="lifecycle.html">Lifecycle Data</a>.</p>
 
