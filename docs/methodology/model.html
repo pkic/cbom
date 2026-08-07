@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — The cryptographic relationship model</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="model.html" class="active">Model</a>
+    <a href="profile.html">Profile</a>
+    <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="governance.html">Governance</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+    <a href="references.html">References</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">CONCEPT</div>
+  <h1>The cryptographic relationship model</h1>
+  <p class="lead">This section fixes the vocabulary the rest of the methodology is written in. A profile states which facts a CBOM must disclose, and those statements are only as precise as the terms they use. Settling the terms is therefore a prerequisite for writing a profile rather than background reading.</p>
+
+  <h2>Why this section exists</h2>
+  <p>The questions that CBOMs are asked to answer are mostly questions about <em>use</em>, not about <em>inventory</em>. "Which algorithms does this product implement?" is an inventory question, and it is the easier one. "Which of our connections would still be readable if an adversary recorded them today?" is a question about where cryptography is applied, between whom, and under what negotiated terms. Migration planning, procurement conformance, and incident response all sit closer to the second question than the first.</p>
+  <p>Current CBOM standards answer the first question well. They provide objects for algorithms, keys, certificates, and protocols, with fields for their parameters. They provide no object for the use of those assets between two parties. The consequence is that facts belonging to a connection have to be attached to whichever asset is nearest, which works while there is one obvious connection per product and becomes unreliable as soon as there is not.</p>
+  <p>This has a direct effect on profiles. The example profile requires a product to declare its cryptographic interfaces and to include a management interface among them. That requirement means nothing unless "interface" has an agreed definition, unless it is clear that an interface is not the same thing as an algorithm, and unless a producer and a consumer will count the same set of interfaces when they read the same document. Product rule P2 is a statement about relationships, and it is checkable only because the terms below are fixed.</p>
+  <p>This section therefore does four things: it defines the three terms, draws the boundary between them by showing what is <em>not</em> a relationship, works through examples chosen to break the assumptions that a simple TLS session quietly supports, and records one case the current model does not cover.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="13">
+      <rect x="24" y="70" width="170" height="70" rx="12" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="109" y="98" fill="#0284c7" font-size="11" font-weight="700" text-anchor="middle" font-family="monospace">ENDPOINT · client</text>
+      <text x="109" y="120" fill="#1a2230" font-weight="600" text-anchor="middle">Browser</text>
+      <rect x="526" y="70" width="170" height="70" rx="12" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="611" y="98" fill="#7c3aed" font-size="11" font-weight="700" text-anchor="middle" font-family="monospace">ENDPOINT · server</text>
+      <text x="611" y="120" fill="#1a2230" font-weight="600" text-anchor="middle">nginx</text>
+      <line x1="194" y1="105" x2="526" y2="105" stroke="#2563eb" stroke-width="2"/>
+      <polygon points="526,105 514,100 514,110" fill="#2563eb"/>
+      <polygon points="194,105 206,100 206,110" fill="#2563eb"/>
+      <rect x="286" y="86" width="148" height="38" rx="19" fill="#ffffff" stroke="#2563eb"/>
+      <text x="360" y="103" fill="#1a2230" text-anchor="middle" font-size="12" font-weight="600">cryptographic</text>
+      <text x="360" y="117" fill="#5b6472" text-anchor="middle" font-size="11">relationship (edge)</text>
+      <line x1="360" y1="124" x2="360" y2="158" stroke="#c9d3e0"/>
+      <line x1="230" y1="158" x2="490" y2="158" stroke="#c9d3e0"/>
+      <line x1="230" y1="158" x2="230" y2="178" stroke="#c9d3e0"/>
+      <line x1="360" y1="158" x2="360" y2="178" stroke="#c9d3e0"/>
+      <line x1="490" y1="158" x2="490" y2="178" stroke="#c9d3e0"/>
+      <g font-size="11" font-family="monospace">
+        <rect x="168" y="178" width="124" height="30" rx="8" fill="#eef2f8" stroke="#d5dbe6"/>
+        <text x="230" y="197" fill="#1f3a8a" text-anchor="middle">key exchange</text>
+        <rect x="300" y="178" width="120" height="30" rx="8" fill="#eef2f8" stroke="#d5dbe6"/>
+        <text x="360" y="197" fill="#1f3a8a" text-anchor="middle">encryption</text>
+        <rect x="428" y="178" width="124" height="30" rx="8" fill="#eef2f8" stroke="#d5dbe6"/>
+        <text x="490" y="197" fill="#1f3a8a" text-anchor="middle">certificate</text>
+      </g>
+      <text x="360" y="232" fill="#5b6472" text-anchor="middle" font-size="12">assets (nodes) are referenced by the relationship — they are not the relationship</text>
+    </svg>
+    <figcaption>The security indicator presented by a browser (for example, TLS 1.3, X25519, AES-256-GCM, RSA) describes the relationship; the browser and nginx are the endpoints; each named algorithm is an asset.</figcaption>
+  </figure>
+
+  <h2>The three terms</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Definition</th><th>In the example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Cryptographic relationship</strong> (edge / interface)</td><td>The location at which cryptography is applied between parties. It is not itself a cryptographic asset.</td><td>The TLS 1.3 session; the SSH session.</td></tr>
+      <tr><td><strong>Endpoint</strong> (node)</td><td>A party to a relationship.</td><td><code>client</code> (browser or admin) and <code>server</code> (nginx or host).</td></tr>
+      <tr><td><strong>Cryptographic asset</strong></td><td>An algorithm, protocol, certificate, or key used by the relationship.</td><td>X25519, AES-256-GCM, the RSA certificate, OpenSSL.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Why the term is "relationship"</h3>
+  <p>Two other terms were considered and set aside. <em>Interface</em> reads naturally for a network connection between two systems, and it over-fits: it suggests two parties communicating at the same moment over a link, which excludes several of the cases below. It is retained in the profile as <code>interfaceType</code> and <code>interfaceId</code> for the subset of relationships that are interfaces, but not as the general term. <em>Cryptographic context</em> collides with established usage, where a context is the runtime state held by a cipher implementation. <em>Cryptographic relationship</em> carries no prior technical meaning in this space and describes what the thing is, so it is the settled term.</p>
+
+  <h2>What is not a relationship</h2>
+  <p>The distinction is easier to hold once the boundary is drawn from the other side. Each pair below states a node fact and the corresponding edge fact. The left column is what an asset inventory records. The right column is what a migration decision needs.</p>
+  <table>
+    <thead><tr><th>Node fact (a property of a thing)</th><th>Edge fact (a property of a use)</th></tr></thead>
+    <tbody>
+      <tr><td>The product supports AES-256-GCM.</td><td>This connection negotiated AES-256-GCM.</td></tr>
+      <tr><td>OpenSSL 3.4 is installed on the host.</td><td>This interface's key exchange is performed by OpenSSL 3.4.</td></tr>
+      <tr><td>The certificate is signed with ECDSA P-384.</td><td>This session authenticates the server using that certificate.</td></tr>
+      <tr><td>The device holds an ML-KEM implementation.</td><td>This link to the peer falls back to a classical group.</td></tr>
+      <tr><td>The archive is encrypted with AES-256.</td><td>The key protecting the archive is wrapped with RSA-2048 and must survive the retention period.</td></tr>
+    </tbody>
+  </table>
+  <p>The most common modelling error is to record a left-column fact and treat it as though it answered a right-column question. Capability is not use, and a product that can do the right thing is not evidence that any particular connection does.</p>
+
+  <h2>Worked examples</h2>
+  <p>A single TLS session makes the terms easy to state and easy to underestimate, because the two parties are obvious and present at the same moment. The examples below are chosen because each one breaks a different assumption that the TLS case quietly supports.</p>
+
+  <h3>1 · One apparent connection is several relationships</h3>
+  <p>A browser connects to a service through a content delivery network or a load balancer. The user sees one padlock. There are at least two relationships, and the cryptography on each is chosen independently. It is common for the public leg to be modern while the leg behind it uses an older protocol version, or none at all, on the reasoning that the network is private.</p>
+  <figure>
+    <svg viewBox="0 0 720 190" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="16" y="70" width="150" height="54" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="91" y="94" fill="#1a2230" text-anchor="middle" font-weight="600">Browser</text>
+      <text x="91" y="111" fill="#5b6472" text-anchor="middle" font-size="10.5">endpoint</text>
+      <rect x="285" y="70" width="150" height="54" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="360" y="94" fill="#1a2230" text-anchor="middle" font-weight="600">CDN / proxy</text>
+      <text x="360" y="111" fill="#5b6472" text-anchor="middle" font-size="10.5">endpoint to both</text>
+      <rect x="554" y="70" width="150" height="54" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="629" y="94" fill="#1a2230" text-anchor="middle" font-weight="600">Origin server</text>
+      <text x="629" y="111" fill="#5b6472" text-anchor="middle" font-size="10.5">endpoint</text>
+      <line x1="166" y1="97" x2="285" y2="97" stroke="#15803d" stroke-width="2"/>
+      <rect x="176" y="40" width="100" height="24" rx="12" fill="#eefaf1" stroke="#15803d"/>
+      <text x="226" y="56" fill="#15803d" text-anchor="middle" font-size="10.5">TLS 1.3</text>
+      <line x1="435" y1="97" x2="554" y2="97" stroke="#dc2626" stroke-width="2" stroke-dasharray="5 4"/>
+      <rect x="440" y="40" width="110" height="24" rx="12" fill="#fdeeee" stroke="#dc2626"/>
+      <text x="495" y="56" fill="#dc2626" text-anchor="middle" font-size="10.5">TLS 1.0 or none</text>
+      <path d="M16 140 L16 152 L285 152 L285 140" fill="none" stroke="#5b6472"/>
+      <text x="150" y="170" fill="#5b6472" text-anchor="middle" font-size="11">what the padlock reports</text>
+      <path d="M435 140 L435 152 L704 152 L704 140" fill="none" stroke="#b45309"/>
+      <text x="570" y="170" fill="#b45309" text-anchor="middle" font-size="11">not visible to the user, and often not inventoried</text>
+    </svg>
+    <figcaption>An asset inventory that records "TLS 1.3 in use" is accurate and misleading at the same time. The risk lives on the relationship the user cannot see.</figcaption>
+  </figure>
+
+  <h3>2 · The parties are separated in time, not space</h3>
+  <p>An encrypted backup or archive has two parties: the process that writes it and whatever reads it later. There is no session, and the second party may not exist yet. The relationship still has all the properties that matter, including a lifetime, which here is the retention period rather than the duration of a connection.</p>
+  <p>This case decides harvest-now-decrypt-later urgency. The bulk algorithm is usually adequate. The exposure sits in the key wrapping, and whether it matters depends on how long the data must stay confidential, which is a property of the relationship and not of any algorithm in it.</p>
+  <figure>
+    <svg viewBox="0 0 720 190" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <line x1="30" y1="150" x2="690" y2="150" stroke="#c9d3e0" stroke-width="2"/>
+      <polygon points="690,150 680,145 680,155" fill="#c9d3e0"/>
+      <text x="360" y="172" fill="#5b6472" text-anchor="middle" font-size="11">time</text>
+      <circle cx="120" cy="150" r="6" fill="#2563eb"/>
+      <circle cx="600" cy="150" r="6" fill="#7c3aed"/>
+      <rect x="45" y="66" width="150" height="50" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="120" y="88" fill="#1a2230" text-anchor="middle" font-weight="600">Writer</text>
+      <text x="120" y="105" fill="#5b6472" text-anchor="middle" font-size="10.5">backup job, today</text>
+      <rect x="525" y="66" width="150" height="50" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="600" y="88" fill="#1a2230" text-anchor="middle" font-weight="600">Reader</text>
+      <text x="600" y="105" fill="#5b6472" text-anchor="middle" font-size="10.5">restore, years later</text>
+      <line x1="120" y1="116" x2="120" y2="144" stroke="#c9d3e0"/>
+      <line x1="600" y1="116" x2="600" y2="144" stroke="#c9d3e0"/>
+      <line x1="195" y1="91" x2="525" y2="91" stroke="#2563eb" stroke-width="2"/>
+      <rect x="268" y="76" width="184" height="30" rx="15" fill="#ffffff" stroke="#2563eb"/>
+      <text x="360" y="95" fill="#1a2230" text-anchor="middle" font-size="11">relationship spans the retention period</text>
+      <rect x="180" y="18" width="160" height="26" rx="8" fill="#eefaf1" stroke="#15803d"/>
+      <text x="260" y="36" fill="#15803d" text-anchor="middle" font-size="10.5">AES-256 data encryption</text>
+      <rect x="370" y="18" width="180" height="26" rx="8" fill="#fdeeee" stroke="#dc2626"/>
+      <text x="460" y="36" fill="#dc2626" text-anchor="middle" font-size="10.5">RSA-2048 key wrapping</text>
+    </svg>
+    <figcaption>An endpoint is a party to the use of cryptography, not necessarily a running host. Here the two parties never coexist.</figcaption>
+  </figure>
+
+  <h3>3 · The parties never interact</h3>
+  <p>A publisher signs firmware or code. A relying party verifies the signature, possibly years afterwards, with no communication between them in either direction. The relationship is one of trust rather than exchange, and it is real enough that its failure has consequences.</p>
+  <p>What makes this case instructive for migration is that the constraint sits at the far end. A publisher can adopt a post-quantum signature algorithm whenever it wishes, and gains nothing if the deployed devices cannot verify it. The relationship's ceiling is set by the verifier, which may be a device with no update path.</p>
+  <figure>
+    <svg viewBox="0 0 720 185" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="16" y="62" width="160" height="56" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="96" y="86" fill="#1a2230" text-anchor="middle" font-weight="600">Publisher</text>
+      <text x="96" y="103" fill="#5b6472" text-anchor="middle" font-size="10.5">signs the artifact</text>
+      <rect x="290" y="66" width="140" height="48" rx="10" fill="#ffffff" stroke="#c9d3e0"/>
+      <text x="360" y="86" fill="#1a2230" text-anchor="middle" font-size="11">signed artifact</text>
+      <text x="360" y="102" fill="#5b6472" text-anchor="middle" font-size="10">carried by any means</text>
+      <rect x="544" y="62" width="160" height="56" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="624" y="82" fill="#1a2230" text-anchor="middle" font-weight="600">Device</text>
+      <text x="624" y="99" fill="#5b6472" text-anchor="middle" font-size="10.5">verifies, years later</text>
+      <text x="624" y="112" fill="#b45309" text-anchor="middle" font-size="10">no update path</text>
+      <line x1="176" y1="90" x2="290" y2="90" stroke="#c9d3e0" stroke-width="2"/>
+      <polygon points="290,90 280,85 280,95" fill="#c9d3e0"/>
+      <line x1="430" y1="90" x2="544" y2="90" stroke="#c9d3e0" stroke-width="2"/>
+      <polygon points="544,90 534,85 534,95" fill="#c9d3e0"/>
+      <path d="M96 128 L96 142 L624 142 L624 128" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <rect x="252" y="130" width="216" height="26" rx="13" fill="#ffffff" stroke="#2563eb"/>
+      <text x="360" y="147" fill="#1a2230" text-anchor="middle" font-size="11">the relationship: signer to relying party</text>
+      <text x="360" y="176" fill="#b45309" text-anchor="middle" font-size="11">the verifier's capability, not the signer's, sets what can be used</text>
+    </svg>
+    <figcaption>A relationship with no session and no simultaneity. Migration planning that looks only at the signing end reaches the wrong conclusion.</figcaption>
+  </figure>
+
+  <h3>4 · Relationships overlap on the same wire</h3>
+  <p>Transport security and message-level security protect different spans. A signed token travels inside a TLS session, and the two do not share endpoints. Where a gateway terminates TLS, the transport relationships run from client to gateway and from gateway to service, while the signature relationship runs from the originator to the final recipient and passes through the gateway untouched.</p>
+  <p>This matters when a consumer asks what protects a given piece of data end to end. The answer differs by layer, and a model that records one relationship per connection cannot express it.</p>
+  <figure>
+    <svg viewBox="0 0 720 205" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="16" y="76" width="150" height="50" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="91" y="97" fill="#1a2230" text-anchor="middle" font-weight="600">Originator</text>
+      <text x="91" y="113" fill="#5b6472" text-anchor="middle" font-size="10.5">signs the token</text>
+      <rect x="285" y="76" width="150" height="50" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="360" y="97" fill="#1a2230" text-anchor="middle" font-weight="600">Gateway</text>
+      <text x="360" y="113" fill="#5b6472" text-anchor="middle" font-size="10.5">terminates TLS</text>
+      <rect x="554" y="76" width="150" height="50" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="629" y="97" fill="#1a2230" text-anchor="middle" font-weight="600">Service</text>
+      <text x="629" y="113" fill="#5b6472" text-anchor="middle" font-size="10.5">verifies the token</text>
+      <line x1="166" y1="101" x2="285" y2="101" stroke="#0284c7" stroke-width="2"/>
+      <line x1="435" y1="101" x2="554" y2="101" stroke="#0284c7" stroke-width="2"/>
+      <rect x="176" y="40" width="100" height="24" rx="12" fill="#e8f4fd" stroke="#0284c7"/>
+      <text x="226" y="56" fill="#0284c7" text-anchor="middle" font-size="10.5">TLS relationship</text>
+      <rect x="444" y="40" width="100" height="24" rx="12" fill="#e8f4fd" stroke="#0284c7"/>
+      <text x="494" y="56" fill="#0284c7" text-anchor="middle" font-size="10.5">TLS relationship</text>
+      <path d="M91 140 L91 158 L629 158 L629 140" fill="none" stroke="#7c3aed" stroke-width="2"/>
+      <rect x="250" y="146" width="220" height="26" rx="13" fill="#f5eeff" stroke="#7c3aed"/>
+      <text x="360" y="163" fill="#7c3aed" text-anchor="middle" font-size="11">signature relationship, originator to service</text>
+      <text x="360" y="192" fill="#5b6472" text-anchor="middle" font-size="11">three relationships, two layers, different endpoint pairs</text>
+    </svg>
+    <figcaption>Relationships are not a partition of the network path. They overlap, and each has its own endpoints and its own properties.</figcaption>
+  </figure>
+
+  <h3>5 · One asset, many relationships</h3>
+  <p>A gateway with a single IPsec implementation may hold tunnels to many peers. An operator's interconnect, a service mesh, and a partner VPN estate all have this shape. The implementation is one asset. The relationships are many, and their properties differ because each peer negotiates separately.</p>
+  <p>Post-quantum readiness is therefore not a property that a product can hold on its own. An organization may deploy a fully capable gateway and still have most of its tunnels running classical key exchange, because readiness on any given tunnel depends on the other side as well.</p>
+  <figure>
+    <svg viewBox="0 0 720 230" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="255" y="90" width="170" height="60" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="340" y="113" fill="#1a2230" text-anchor="middle" font-weight="700">Gateway</text>
+      <text x="340" y="131" fill="#5b6472" text-anchor="middle" font-size="10.5">one IPsec implementation</text>
+      <rect x="560" y="16" width="146" height="40" rx="10" fill="#eefaf1" stroke="#15803d"/>
+      <text x="633" y="33" fill="#1a2230" text-anchor="middle" font-size="11">Peer A</text>
+      <text x="633" y="47" fill="#15803d" text-anchor="middle" font-size="10">hybrid key exchange</text>
+      <rect x="560" y="66" width="146" height="40" rx="10" fill="#fdeeee" stroke="#dc2626"/>
+      <text x="633" y="83" fill="#1a2230" text-anchor="middle" font-size="11">Peer B</text>
+      <text x="633" y="97" fill="#dc2626" text-anchor="middle" font-size="10">classical only</text>
+      <rect x="560" y="134" width="146" height="40" rx="10" fill="#fdeeee" stroke="#dc2626"/>
+      <text x="633" y="151" fill="#1a2230" text-anchor="middle" font-size="11">Peer C</text>
+      <text x="633" y="165" fill="#dc2626" text-anchor="middle" font-size="10">classical only</text>
+      <rect x="560" y="184" width="146" height="40" rx="10" fill="#eefaf1" stroke="#15803d"/>
+      <text x="633" y="201" fill="#1a2230" text-anchor="middle" font-size="11">Peer D</text>
+      <text x="633" y="215" fill="#15803d" text-anchor="middle" font-size="10">hybrid key exchange</text>
+      <g stroke="#c9d3e0" stroke-width="2" fill="none">
+        <line x1="425" y1="112" x2="560" y2="36"/>
+        <line x1="425" y1="116" x2="560" y2="86"/>
+        <line x1="425" y1="124" x2="560" y2="154"/>
+        <line x1="425" y1="128" x2="560" y2="204"/>
+      </g>
+      <text x="150" y="115" fill="#5b6472" text-anchor="middle" font-size="11">the product is one node</text>
+      <text x="150" y="133" fill="#5b6472" text-anchor="middle" font-size="11">its posture is four different answers</text>
+      <line x1="255" y1="120" x2="230" y2="120" stroke="#c9d3e0" stroke-width="2"/>
+    </svg>
+    <figcaption>Readiness reported against a product collapses a distribution into a single value. The distribution is what a migration plan needs.</figcaption>
+  </figure>
+
+  <h3>6 · Capability is not the negotiated outcome</h3>
+  <p>Two systems both implement a post-quantum key exchange. The session between them uses a classical group, because of a configuration setting, an intermediary that rejects the larger handshake, or a policy on one side. Both node records are accurate. The connection is nevertheless not quantum-safe.</p>
+  <p>There is no node on which this fact can be stored. It belongs to the relationship, and it cannot be derived from either endpoint's inventory entry. This is the clearest case for treating the edge as a first-class object rather than an annotation on an asset.</p>
+  <figure>
+    <svg viewBox="0 0 720 195" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="16" y="56" width="180" height="76" rx="12" fill="#eefaf1" stroke="#15803d"/>
+      <text x="106" y="79" fill="#1a2230" text-anchor="middle" font-weight="600">Endpoint A</text>
+      <text x="106" y="98" fill="#15803d" text-anchor="middle" font-size="10.5" font-family="monospace">supports ML-KEM-768</text>
+      <text x="106" y="115" fill="#15803d" text-anchor="middle" font-size="10.5" font-family="monospace">supports X25519</text>
+      <rect x="524" y="56" width="180" height="76" rx="12" fill="#eefaf1" stroke="#15803d"/>
+      <text x="614" y="79" fill="#1a2230" text-anchor="middle" font-weight="600">Endpoint B</text>
+      <text x="614" y="98" fill="#15803d" text-anchor="middle" font-size="10.5" font-family="monospace">supports ML-KEM-768</text>
+      <text x="614" y="115" fill="#15803d" text-anchor="middle" font-size="10.5" font-family="monospace">supports X25519</text>
+      <line x1="196" y1="94" x2="524" y2="94" stroke="#dc2626" stroke-width="2"/>
+      <rect x="266" y="76" width="188" height="38" rx="19" fill="#fdeeee" stroke="#dc2626"/>
+      <text x="360" y="93" fill="#dc2626" text-anchor="middle" font-size="11" font-weight="600">negotiated: X25519 only</text>
+      <text x="360" y="107" fill="#7f1d1d" text-anchor="middle" font-size="10">classical</text>
+      <text x="360" y="150" fill="#5b6472" text-anchor="middle" font-size="11">both node records are correct</text>
+      <text x="360" y="170" fill="#5b6472" text-anchor="middle" font-size="11">the true state of the connection appears on neither of them</text>
+    </svg>
+    <figcaption>Where capability and outcome diverge, only the relationship holds the answer. Node-level reporting will show this estate as ready.</figcaption>
+  </figure>
+
+  <h3>7 · The weaker party sets the ceiling</h3>
+  <p>A modern gateway communicates with a controller installed twenty years ago. The gateway supports current algorithms. The controller supports what it shipped with and cannot be changed. The relationship's posture is fixed by the less capable end, and no upgrade to the gateway alters it.</p>
+  <p>Planning that works from a product inventory will schedule an upgrade that cannot deliver the intended result. Planning that works from relationships identifies the controller as the item requiring replacement, which is a different and usually more expensive piece of work.</p>
+  <figure>
+    <svg viewBox="0 0 720 180" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="16" y="58" width="190" height="74" rx="12" fill="#eefaf1" stroke="#15803d"/>
+      <text x="111" y="82" fill="#1a2230" text-anchor="middle" font-weight="600">Modern gateway</text>
+      <text x="111" y="100" fill="#15803d" text-anchor="middle" font-size="10.5" font-family="monospace">ML-KEM, AES-256-GCM</text>
+      <text x="111" y="117" fill="#5b6472" text-anchor="middle" font-size="10">upgradeable</text>
+      <rect x="514" y="58" width="190" height="74" rx="12" fill="#fdeeee" stroke="#dc2626"/>
+      <text x="609" y="82" fill="#1a2230" text-anchor="middle" font-weight="600">Legacy controller</text>
+      <text x="609" y="100" fill="#dc2626" text-anchor="middle" font-size="10.5" font-family="monospace">fixed algorithm set</text>
+      <text x="609" y="117" fill="#b45309" text-anchor="middle" font-size="10">no firmware path</text>
+      <line x1="206" y1="95" x2="514" y2="95" stroke="#b45309" stroke-width="2"/>
+      <rect x="272" y="78" width="176" height="34" rx="17" fill="#fff7ec" stroke="#b45309"/>
+      <text x="360" y="99" fill="#6b4a12" text-anchor="middle" font-size="11">posture set by the weaker end</text>
+      <text x="360" y="146" fill="#5b6472" text-anchor="middle" font-size="11">upgrading the gateway does not change this relationship</text>
+      <text x="360" y="166" fill="#5b6472" text-anchor="middle" font-size="11">the remediation is replacement of the controller</text>
+    </svg>
+    <figcaption>Relationship-level planning identifies the item that actually constrains the estate, which is rarely the item being upgraded.</figcaption>
+  </figure>
+
+  <h3>8 · Relationships that carry no data</h3>
+  <p>An application uses a key held in a hardware security module or a trusted execution environment. The key never leaves the module. What passes between them are requests to use the key and the results of those operations. The relationship is one of custody and control, and it crosses a hardware boundary rather than a network.</p>
+  <p>The distinction has practical weight for migration. If the key material is confined to hardware, adopting a new algorithm may require the module to support it, which can mean replacement rather than reconfiguration.</p>
+  <figure>
+    <svg viewBox="0 0 720 180" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="40" y="56" width="180" height="70" rx="12" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="130" y="82" fill="#1a2230" text-anchor="middle" font-weight="600">Application</text>
+      <text x="130" y="101" fill="#5b6472" text-anchor="middle" font-size="10.5">requests operations</text>
+      <rect x="500" y="46" width="180" height="90" rx="12" fill="#f5eeff" stroke="#7c3aed"/>
+      <text x="590" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">HSM or TEE</text>
+      <rect x="536" y="84" width="108" height="34" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-dasharray="4 3"/>
+      <text x="590" y="99" fill="#7c3aed" text-anchor="middle" font-size="10.5">private key</text>
+      <text x="590" y="112" fill="#5b6472" text-anchor="middle" font-size="9.5">never leaves</text>
+      <line x1="220" y1="91" x2="500" y2="91" stroke="#2563eb" stroke-width="2"/>
+      <polygon points="500,91 490,86 490,96" fill="#2563eb"/>
+      <polygon points="220,91 230,86 230,96" fill="#2563eb"/>
+      <rect x="272" y="73" width="176" height="36" rx="18" fill="#ffffff" stroke="#2563eb"/>
+      <text x="360" y="90" fill="#1a2230" text-anchor="middle" font-size="11">custody relationship</text>
+      <text x="360" y="103" fill="#5b6472" text-anchor="middle" font-size="10">sign and unwrap requests</text>
+      <text x="360" y="152" fill="#5b6472" text-anchor="middle" font-size="11">algorithm support here is a hardware property, so migration may mean replacement</text>
+    </svg>
+    <figcaption>Not every relationship transfers protected data between two hosts. Some describe where key material is held and who may ask it to act.</figcaption>
+  </figure>
+
+  <h2>A known limitation: one-to-many relationships</h2>
+  <p>Every example above is pairwise. Some cryptography is not. A broadcast or multicast group, a mobile air interface serving many receivers, and a group messaging session all apply cryptography among more than two parties at once, and the natural representation is a relationship with n endpoints rather than two.</p>
+  <figure>
+    <svg viewBox="0 0 720 190" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="24" y="72" width="150" height="54" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="99" y="96" fill="#1a2230" text-anchor="middle" font-weight="600">Transmitter</text>
+      <text x="99" y="113" fill="#5b6472" text-anchor="middle" font-size="10.5">one sender</text>
+      <path d="M300 30 L300 168 L620 168 L620 30 Z" fill="#fff7ec" stroke="#b45309" stroke-dasharray="6 5"/>
+      <text x="460" y="24" fill="#b45309" text-anchor="middle" font-size="11">one relationship, many endpoints</text>
+      <g>
+        <rect x="330" y="42" width="120" height="30" rx="8" fill="#ffffff" stroke="#c9d3e0"/>
+        <text x="390" y="61" fill="#1a2230" text-anchor="middle" font-size="10.5">Receiver 1</text>
+        <rect x="470" y="42" width="120" height="30" rx="8" fill="#ffffff" stroke="#c9d3e0"/>
+        <text x="530" y="61" fill="#1a2230" text-anchor="middle" font-size="10.5">Receiver 2</text>
+        <rect x="330" y="86" width="120" height="30" rx="8" fill="#ffffff" stroke="#c9d3e0"/>
+        <text x="390" y="105" fill="#1a2230" text-anchor="middle" font-size="10.5">Receiver 3</text>
+        <rect x="470" y="86" width="120" height="30" rx="8" fill="#ffffff" stroke="#c9d3e0"/>
+        <text x="530" y="105" fill="#1a2230" text-anchor="middle" font-size="10.5">Receiver 4</text>
+        <rect x="330" y="128" width="260" height="30" rx="8" fill="#ffffff" stroke="#c9d3e0"/>
+        <text x="460" y="147" fill="#5b6472" text-anchor="middle" font-size="10.5">further receivers, membership changing over time</text>
+      </g>
+      <line x1="174" y1="99" x2="300" y2="99" stroke="#b45309" stroke-width="2"/>
+      <polygon points="300,99 290,94 290,104" fill="#b45309"/>
+    </svg>
+    <figcaption>A group relationship does not decompose into pairwise edges without losing the shared key and the membership over which it applies.</figcaption>
+  </figure>
+  <div class="banner warn">The v1 model treats relationships as pairwise, and this case is recorded as a known limitation rather than modelled. Representing it as several pairwise relationships loses the property that matters, which is the shared key and the set of parties holding it. This sits alongside the first-class attributed-edge model as a candidate for a later revision, and should be revisited when a consumer needs to express group membership or per-group posture. See <a href="challenges.html">Challenges</a>.</div>
+
+  <h2>Summary: a taxonomy of relationships</h2>
+  <p>Taken together the examples vary along four dimensions: how many parties there are, whether those parties exist at the same time, what passes between them, and how far the protection extends. Setting them out in one place shows that the model is more general than the network connection it is usually explained with, and gives a way to test it against a case from a new sector.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Relationship</th><th>Parties</th><th>Simultaneous</th><th>What passes</th><th>Span</th><th>Property it exercises</th></tr></thead>
+    <tbody>
+      <tr><td>TLS session to a service</td><td>2</td><td>yes</td><td>data in transit</td><td>single hop</td><td>the base case</td></tr>
+      <tr><td>Termination at a proxy or CDN</td><td>2 per leg</td><td>yes</td><td>data in transit</td><td>chained, multi-hop</td><td>one apparent connection is several relationships</td></tr>
+      <tr><td>Encrypted backup or archive</td><td>2</td><td>no</td><td>data at rest</td><td>single</td><td>parties separated in time; lifetime is the retention period</td></tr>
+      <tr><td>Code or firmware signing</td><td>2</td><td>no</td><td>a signed artifact is carried</td><td>single</td><td>parties never interact; the verifier sets the ceiling</td></tr>
+      <tr><td>Message-level security inside transport</td><td>2 per layer</td><td>yes</td><td>data in transit</td><td>layered, overlapping</td><td>relationships overlap rather than partition the path</td></tr>
+      <tr><td>IPsec mesh or operator interconnect</td><td>2 per tunnel, many tunnels</td><td>yes</td><td>data in transit</td><td>single hop, repeated</td><td>one asset supports many relationships of differing posture</td></tr>
+      <tr><td>Negotiated fallback between capable peers</td><td>2</td><td>yes</td><td>data in transit</td><td>single hop</td><td>capability is not the negotiated outcome</td></tr>
+      <tr><td>Modern gateway to legacy controller</td><td>2</td><td>yes</td><td>data in transit</td><td>single hop</td><td>the less capable party fixes the posture</td></tr>
+      <tr><td>Application to HSM or TEE</td><td>2</td><td>yes</td><td>operation requests; key material confined</td><td>crosses a hardware boundary</td><td>a relationship that transfers no protected data</td></tr>
+      <tr><td>Broadcast, multicast, or group messaging</td><td>n</td><td>yes</td><td>data in transit</td><td>one to many</td><td>not represented in v1, as described above</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The dimensions also indicate where a profile written for one sector will need rules that another does not. A profile concerned with data at rest has to address the retention period, which does not arise for a session. A profile concerned with signing has to address the population of verifiers, which has no counterpart in a transport profile. The same table appears in the profile specification at <a href="profile-interface-disclosure.md">profile-interface-disclosure.md</a>, where it defines the scope a profile applies to.</p>
+  <div class="banner">Neither CycloneDX nor SPDX currently provides a first-class object that represents the relationship. Both approximate it by attaching relationship attributes to a protocol asset, which is workable for a single pairwise interface and increasingly awkward for the cases above. Providing such an object is the objective of the working group's first-class attributed-edge model. See <a href="challenges.html">Challenges</a> and <a href="formats.html">Formats</a>.</div>
+
+  <div class="pagenav">
+    <a href="lifecycle.html">← Lifecycle Data</a>
+    <a class="next" href="profile.html">Next: Profile →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

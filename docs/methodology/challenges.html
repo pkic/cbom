@@ -8,13 +8,17 @@
 </head>
 <body>
 <header class="site">
-  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
     <a href="challenges.html" class="active">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
-    <a href="ontology.html">Ontology</a>
+    <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="use-cases.html">Use Cases</a>
@@ -31,20 +35,25 @@
   <div class="crumb">BACKGROUND</div>
   <h1>Challenges with SBOMs and current CBOMs</h1>
   <p class="lead">CBOMs inherit the benefits and the limitations of software bills of materials, and introduce further difficulties specific to cryptography. These constraints are the primary motivation for a profile-based, format-independent methodology.</p>
+  <div class="banner warn">The items below are observations of the position at the time of writing, not permanent properties of the formats. Both CycloneDX and SPDX are under active development and several of these points are already being addressed: CycloneDX 1.7 introduced the Cryptography Registry, and SPDX is adding a cryptographic object model. Readers should check the current status of each specification. A profile methodology that stays independent of any one format remains useful as the formats change, since it is the mapping rather than the profile that is revised.</div>
 
   <h2>Lessons from SBOM adoption</h2>
   <p>Three properties have consistently distinguished successful SBOM deployments from difficult ones. Each applies equally to CBOMs in a multi-vendor environment.</p>
   <table>
     <thead><tr><th>Lesson</th><th>Problem observed</th><th>Implication for CBOMs</th></tr></thead>
     <tbody>
-      <tr><td><strong>Harmonization</strong></td><td>A proliferation of vendor-specific formats and delivery methods prevented reconciliation at scale.</td><td>Converge on a single machine-readable format (CycloneDX at present) and on consistent delivery across the supply chain.</td></tr>
+      <tr><td><strong>Harmonization</strong></td><td>A proliferation of vendor-specific formats and delivery methods prevented reconciliation at scale.</td><td>Agree how attributes are expressed, rather than mandating one format. A profile states what must be disclosed, and a mapping fixes how each attribute is encoded in each format, so several formats can coexist and still be reconciled.</td></tr>
       <tr><td><strong>Profiling</strong></td><td>Exhaustive coverage is not necessarily useful coverage; a large number of entries obscures those relevant to a decision.</td><td>Define a minimum, purpose-specific subset of attributes for each objective. This is the function of a <a href="profile.html">profile</a>.</td></tr>
       <tr><td><strong>Normalization</strong></td><td>Different producers represent the same value differently, which prevents automated processing.</td><td>Agree identifiers (syntactic normalization) and attribute meanings (semantic normalization) so that CBOMs can be compared.</td></tr>
     </tbody>
   </table>
 
+  <p>Harmonization is worth stating carefully, because the obvious answer is the wrong one. Requiring everyone to adopt a single format is not achievable and not necessary. Organizations have existing commitments to CycloneDX or SPDX, regulators and customers ask for different things, and the formats themselves continue to change. What has to be consistent is the information: which attributes are disclosed, and where each one sits in a given document. That is the work a profile and its mapping do. The profile is written once, independently of any format, and a mapping is defined for each format it needs to support. A consumer can then reconcile CBOMs from several formats, and a producer is not forced to abandon the format it already uses. Consistency is achieved through agreed encoding rather than through a single target format. See <a href="formats.html">Formats</a>.</p>
+  <p>This is also the position taken by the 2026 minimum elements guidance, which states that minimum support for automation means supporting all data formats that are widely used, open source, and compatible with existing formats, and that the set of supported formats should be reassessed periodically. Both SPDX and CycloneDX are named. A consumer is therefore expected to handle more than one format, which is the condition a profile and its mappings are designed to serve. See <a href="references.html">References</a>.</p>
+  <p>Coverage is a separate question from attribute selection, and the two are sometimes confused. The same guidance requires an SBOM to include all components of the target software, including transitive dependencies, and states that there is no minimum depth. That is a floor for which components appear and which elements each carries. A profile does something different: it states which attributes are mandatory for a stated purpose. It does not license omitting components. The worked example on this site behaves accordingly, judging the interfaces a product declares while saying nothing about the other entries a production CBOM would contain.</p>
+
   <h2>Challenges specific to CBOMs</h2>
-  <p>In addition to the properties inherited from SBOMs, cryptography introduces difficulties that current standards address only in part.</p>
+  <p>In addition to the properties inherited from SBOMs, cryptography introduces difficulties that current standards address only in part. As noted above, this reflects the position at the time of writing.</p>
 
   <h3>1 · No first-class model for relationships (the edge gap)</h3>
   <p>Current CBOM standards model cryptographic <em>assets</em> (algorithms, keys, certificates, protocols) as nodes, but provide no object that represents the <em>relationship</em>: the point at which cryptography is applied between two parties. A TLS connection is not an asset; it is a location at which assets are used. Classifiers that belong to the connection itself, such as the endpoint roles of a specific session, are consequently attached to a protocol asset, which represents the edge as though it were a node.</p>
@@ -59,11 +68,12 @@
       <text x="535" y="90" fill="#39424f" text-anchor="middle" font-size="12">where crypto is applied between parties</text>
       <text x="535" y="112" fill="#dc2626" text-anchor="middle" font-size="12" font-family="monospace">✗ no first-class object</text>
     </svg>
-    <figcaption>The principal modelling gap: standards describe the cryptography a component contains, not the connections in which it is used. See <a href="ontology.html">Ontology</a>.</figcaption>
+    <figcaption>The principal modelling gap: standards describe the cryptography a component contains, not the connections in which it is used. See <a href="model.html">the relationship model</a>.</figcaption>
   </figure>
 
-  <h3>2 · SPDX has no cryptographic object model</h3>
-  <p>As of SPDX 3.0.1 there is no dedicated cryptographic model equivalent to that in CycloneDX. Organizations that standardize on SPDX at present typically pair it with a CycloneDX-format CBOM referenced as a linked artifact. This approach is workable, but it means that CBOM interoperability currently depends on a single format. See <a href="formats.html">Formats</a>.</p>
+  <h3>2 · Cryptographic coverage differs between the formats</h3>
+  <p>SPDX 3.0.1 has no dedicated cryptographic model equivalent to the one in CycloneDX, so organizations that standardize on SPDX today usually pair it with a CycloneDX-format CBOM referenced as a linked artifact. That works, but it leaves CBOM interoperability resting on one format.</p>
+  <p>This is changing. SPDX is adding a cryptographic object model, and once it is available the linked-artifact pattern becomes a choice rather than a necessity. The point for this methodology is that the profile does not change when that happens; only the SPDX column of the mapping does. Readers should confirm the current state of both specifications rather than relying on the position described here. See <a href="formats.html">Formats</a>.</p>
 
   <h3>3 · Inconsistent algorithm naming</h3>
   <p>Deployments have shown the same algorithm expressed in several forms (<code>AES256</code>, <code>AES-256-GCM</code>, <code>AES_256_CBC</code>), which impedes policy enforcement and cross-organization analysis. The CycloneDX 1.7 Cryptography Registry provides stable identifiers to address this; CBOMs authored to earlier versions carry free-text names and require normalization on ingest. See <a href="versioning.html">Versioning</a>.</p>
@@ -78,16 +88,21 @@
   <h3>6 · Depth of disclosure</h3>
   <p>Excessive reporting reduces the value of the data, while insufficient reporting conceals risk and may also expose intellectual property. A tension exists between operational utility and legitimate vendor confidentiality. A well-defined profile establishes a lower bound that prevents underreporting while limiting the scope of required disclosure.</p>
 
-  <h3>7 · Tooling coverage and confidence</h3>
+  <h3>7 · Absent, unknown, and withheld are three different things</h3>
+  <p>Most CBOM tooling treats an attribute as either present or missing. That collapses three situations a consumer needs to tell apart: the producer holds the information and disclosed it, the producer does not have it, or the producer has it and is withholding it under a confidentiality policy.</p>
+  <p>The distinction changes what a consumer should do. An unknown value points to a limitation in the producing process and may justify improving tooling or discounting the result. A withheld value is a policy decision, and the consumer knows the information exists and could be released under other terms, such as a non-disclosure agreement. Reporting both as an empty field loses that difference, and in procurement it misrepresents the supplier: a vendor whose scanner cannot see hardware cryptography is not in the same position as one that has chosen not to publish a library version.</p>
+  <p>The 2026 minimum elements guidance now requires an SBOM author to state which of the two applies, treating it as a practice maintained across the SBOM lifecycle rather than a single data field. Neither CycloneDX nor SPDX has a native field for this, so it falls to the mapping to fix a convention. This connects to redaction, described in the <a href="inventory.html">Inventory</a> section, where a CBOM extracted for an external party is deliberately reduced.</p>
+
+  <h3>8 · Tooling coverage and confidence</h3>
   <p>Automated tools may fail to detect cryptography that is dynamically loaded, configuration-driven, or provided by hardware. A CBOM is only as reliable as the process that produces it; provenance and, where feasible, signing are therefore significant, and the confidence attached to a CBOM depends on the lifecycle phase at which it was captured.</p>
 
-  <h3>8 · Linking cryptography to its environment</h3>
+  <h3>9 · Linking cryptography to its environment</h3>
   <p>Knowledge that a system uses a given algorithm is incomplete without the version of the library that implements it, which determines whether modes such as hybrid key exchange are available, and without knowledge of whether execution occurs in software, in a Hardware Security Module, or in a Trusted Execution Environment, the last of which may require hardware replacement rather than a software update. CBOMs are therefore produced and consumed alongside SBOMs, and in some cases Hardware Bills of Materials. The linkage between these artifacts is not yet mature.</p>
 
-  <h3>9 · Versioning and legacy artifacts</h3>
+  <h3>10 · Versioning and legacy artifacts</h3>
   <p>Standards are revised (CycloneDX 1.6 to 1.7), profiles are tightened, and a product's CBOM is regenerated over time. Treating "older" as a single concept produces incorrect verdicts; the three version axes must be handled explicitly. See <a href="versioning.html">Versioning</a>.</p>
 
-  <div class="banner">These challenges reduce to a small number of requirements that a profile methodology is designed to satisfy: to bound the information that must be disclosed (profiling); to establish both how the information is encoded and what the disclosed values mean (normalization of encoding and of naming); and to represent lifecycle state and cryptographic relationships explicitly.</div>
+  <div class="banner">These challenges reduce to a small number of requirements that a profile methodology is designed to satisfy: to bound the information that must be disclosed (profiling); to establish both how the information is encoded and what the disclosed values mean (normalization of encoding and of naming); and to represent lifecycle state and cryptographic relationships explicitly. Because the formats continue to develop, the methodology is deliberately kept separate from them. When a specification adds capability, the mapping is updated and the profile stands.</div>
 
   <div class="pagenav">
     <a href="index.html">← Overview</a>

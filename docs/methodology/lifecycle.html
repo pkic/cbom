@@ -8,13 +8,17 @@
 </head>
 <body>
 <header class="site">
-  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html" class="active">Lifecycle Data</a>
-    <a href="ontology.html">Ontology</a>
+    <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="use-cases.html">Use Cases</a>
@@ -93,6 +97,20 @@
     </tbody>
   </table>
 
+  <h2>Relationship to SBOM Generation Context</h2>
+  <p>The 2026 minimum elements guidance adds an element called SBOM Generation Context, defined as the relative software lifecycle phase and the data available when the author generated the SBOM. The reasoning given there matches the reasoning here: component data differs according to the phase at which it was captured, and a consumer assessing risk needs to know which phase that was.</p>
+  <p>The guidance gives "before build", "build", and "after build" as acceptable values and permits more specific identifiers. Our four stages map onto those references and subdivide the last one, because the difference between what a deployment permits and what it actually negotiates is the distinction PQC migration turns on.</p>
+  <table>
+    <thead><tr><th>Lifecycle stage used here</th><th>Corresponding generation context</th></tr></thead>
+    <tbody>
+      <tr><td><code>intended</code></td><td>before build</td></tr>
+      <tr><td><code>implemented</code></td><td>build</td></tr>
+      <tr><td><code>configured</code></td><td>after build, as a more specific identifier</td></tr>
+      <tr><td><code>observed</code></td><td>after build, as a more specific identifier</td></tr>
+    </tbody>
+  </table>
+  <p>A producer that follows the minimum elements therefore already records what a profile needs, though possibly at a coarser granularity. Where only the coarse value is available, a consumer can place the CBOM in the right region of the lifecycle but cannot separate configured capability from observed use, which is a limitation worth recording rather than inferring. See <a href="references.html">References</a>.</p>
+
   <h2>False positives and false negatives across the lifecycle</h2>
   <p>No single stage gives a complete or perfectly accurate picture. Each is prone to two kinds of error: a <strong>false positive</strong>, where cryptography is reported but is not actually in effect, and a <strong>false negative</strong>, where cryptography is in effect but is not reported. The balance between the two shifts as a subject moves from design to runtime.</p>
   <table>
@@ -132,11 +150,11 @@
   <p>A profile may require the stage to be declared, as the baseline profile does, or may require a specific stage. A runtime-assurance profile might require every interface to be <code>observed</code>, whereas a procurement profile might accept <code>implemented</code> from a vendor build.</p>
 
   <h2>Progress tracking over time</h2>
-  <p>Successive CBOM revisions (the content-revision axis described on the <a href="versioning.html">Versioning</a> page) constitute an audit trail. An interface progressing from <code>implemented</code> to <code>configured</code> to <code>observed</code> with post-quantum cryptography enabled provides a verifiable migration record for internal governance and for regulators.</p>
+  <p>Successive CBOM revisions (the content-revision axis described in the <a href="versioning.html">Versioning</a> section) constitute an audit trail. An interface progressing from <code>implemented</code> to <code>configured</code> to <code>observed</code> with post-quantum cryptography enabled provides a verifiable migration record for internal governance and for regulators.</p>
 
   <div class="pagenav">
     <a href="inventory.html">← Inventory</a>
-    <a class="next" href="ontology.html">Next: Ontology →</a>
+    <a class="next" href="model.html">Next: Model →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>

@@ -1,13 +1,19 @@
 {
-  "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident.",
+  "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident. v0.2 adds the three-state disclosure model described under 'disclosure'.",
   "profileId": "pkic.example.interface-disclosure",
   "title": "Interface Disclosure Baseline (Example)",
-  "version": "0.1",
+  "version": "0.2",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
 
   "appliesTo": {
     "$comment": "Carrier-format acceptance. 'min' = oldest spec version the adapter is known to read; below it, evaluation is refused (unsupported). 'tested' = version the profile was authored/validated against; between min and tested the CBOM is accepted but flagged legacy. Newer-than-tested is accepted with a note.",
     "cyclonedx": { "min": "1.6", "tested": "1.7" }
+  },
+
+  "disclosure": {
+    "$comment": "An attribute that carries no value is not necessarily the same as an attribute that was never considered. Following the 2026 SBOM minimum elements, a producer states whether missing information is unknown to it or is being withheld. Neither CycloneDX nor SPDX has a native field for this, so the marker is carried as a property and the convention is fixed here. A rule with 'withholdable': true is satisfied by a 'withheld' marker; otherwise withholding fails the rule. 'unknown' never satisfies a MUST rule, but is reported separately from silent omission.",
+    "markerPrefix": "pkic:profile:disclosure:",
+    "states": ["unknown", "withheld"]
   },
 
   "interfaceTypeVocabulary": ["management", "service", "interconnect", "peer", "storage"],
@@ -26,6 +32,6 @@
     { "id": "I6", "attribute": "endpointRoles",      "level": "MUST",   "constraint": { "minCount": 2 } },
     { "id": "I7", "attribute": "interfaceType",      "level": "MUST",   "constraint": { "enumRef": "interfaceTypeVocabulary" } },
     { "id": "I8", "attribute": "lifecycleStage",     "level": "MUST",   "constraint": { "enum": ["intended", "implemented", "configured", "observed"] } },
-    { "id": "I9", "attribute": "implementationPurl", "level": "SHOULD", "constraint": { "startsWith": "pkg:" } }
+    { "id": "I9", "attribute": "implementationPurl", "level": "SHOULD", "constraint": { "startsWith": "pkg:" }, "withholdable": true, "note": "A producer may decline to publish the implementing library version; the profile accepts a withheld marker here." }
   ]
 }

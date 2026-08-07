@@ -8,13 +8,17 @@
 </head>
 <body>
 <header class="site">
-  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
-    <a href="ontology.html">Ontology</a>
+    <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="use-cases.html">Use Cases</a>
@@ -42,6 +46,7 @@
     </tbody>
   </table>
   <p>A newly generated CBOM (a new content revision) may still be serialized in CycloneDX 1.6 (an older carrier) and evaluated against profile v0.2 (newer rules). Conflating these axes is a common error.</p>
+  <p>Two of these axes are now recorded data rather than local convention. The 2026 minimum elements guidance adds SBOM Data Format Name and SBOM Data Format Version, which give the carrier axis, and SBOM Version, which gives the content-revision axis. Its Frequency element expects a new bill of materials for each build or release, so content revisions are produced as a matter of course rather than on request. A producer meeting that baseline supplies the two values a validator needs to place a document on both axes. See <a href="references.html">References</a>.</p>
 
   <h2>Carrier version bands</h2>
   <p>The profile declares an acceptance range so that older CBOMs are handled explicitly. The rules file specifies <code>"appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } }</code>, and the validator applies a four-band policy:</p>
@@ -71,7 +76,7 @@
   <h2>Supporting recommendations</h2>
   <ul>
     <li><strong>Normalize at the adapter.</strong> Prefer CycloneDX 1.7 Cryptography Registry identifiers where present; for 1.6 free-text names, apply a versioned name map before the rules are evaluated.</li>
-    <li><strong>Upgrade rather than reject.</strong> Convert a legacy but supported CBOM mechanically (raise the version, attach registry identifiers, record provenance), re-encoding existing facts and adding none, rather than rejecting it.</li>
+    <li><strong>Upgrade rather than reject.</strong> Convert a legacy but supported CBOM mechanically (raise the version, attach registry identifiers, record provenance), re-encoding existing facts and adding none, rather than rejecting it. This sits with the expectation in the minimum elements guidance that organizations accommodate updates to bill-of-materials data, including corrections.</li>
     <li><strong>Pin the profile version</strong> in every conformance claim, and tighten rules behind dated grace windows, emitting a warning before changing a result to a failure.</li>
     <li><strong>Deprecate, rather than delete, vocabulary.</strong> If <code>interfaceType</code> values change, retain recognition of the former values (mapped to their replacements) for at least one profile major version.</li>
     <li><strong>Track freshness and supersedence</strong> so that an older content revision is not treated as incorrect without cause.</li>

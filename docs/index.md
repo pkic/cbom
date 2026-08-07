@@ -20,7 +20,8 @@ title: Overview
       CycloneDX and SPDX.
     </p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="{{ '/issues/' | relative_url }}">See what we're working on</a>
+      <a class="btn btn-primary" href="{{ '/methodology/' | relative_url }}">Read the methodology</a>
+      <a class="btn btn-ghost" href="{{ '/issues/' | relative_url }}">See what we're working on</a>
       <a class="btn btn-ghost" href="{{ site.wg.charter }}">Read the charter</a>
     </div>
     <dl class="hero-stats">
@@ -55,12 +56,44 @@ title: Overview
   </div>
 </section>
 
+<section class="band">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The methodology, worked through</h2>
+      <p>The draft, explained against a subject anyone can check.</p>
+    </div>
+    <div class="lead-columns">
+      <p>
+        The <a href="{{ '/methodology/' | relative_url }}">methodology documentation</a> sets out the
+        approach in full and applies it to an ordinary example: an <strong>nginx</strong> web server,
+        its CBOM expressed in CycloneDX 1.7, checked against a small product-independent profile.
+        One CBOM conforms and one does not, and you can run the check yourself.
+      </p>
+      <p>
+        It covers the vocabulary the methodology rests on, how a profile is written and validated,
+        how the same profile maps onto CycloneDX and SPDX, what happens to older CBOM files, and
+        how profiles are governed over time. Start with
+        <a href="{{ '/methodology/model.html' | relative_url }}">the model</a>, the
+        <a href="{{ '/methodology/profile.html' | relative_url }}">profile itself</a>, or the
+        <a href="{{ '/methodology/demo.html' | relative_url }}">interactive conformance check</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
 <section class="wrap cards-section">
   <div class="section-head">
     <h2>Explore the project</h2>
-    <p>Four places to dig in.</p>
+    <p>Five places to dig in.</p>
   </div>
   <div class="card-grid">
+    <a class="feature-card" href="{{ '/methodology/' | relative_url }}">
+      <span class="card-kicker">Working draft</span>
+      <h3>Methodology</h3>
+      <p>The deliverable itself — profiles, the relationship model, format mappings and
+         governance — with a worked nginx example and a conformance check you can run.</p>
+      <span class="card-cta">Read the methodology &#8594;</span>
+    </a>
     <a class="feature-card" href="{{ '/issues/' | relative_url }}">
       <span class="card-kicker">{{ naspects }} aspects</span>
       <h3>Issues</h3>

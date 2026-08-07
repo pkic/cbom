@@ -1,4 +1,4 @@
-# CBOM Profile — Interface Disclosure Baseline (Example v0.1)
+# CBOM Profile — Interface Disclosure Baseline (Example v0.2)
 
 > **Status:** Illustrative early-concept artifact for the PKIC CBOM Profiles Working Group.
 > Not a normative deliverable. CycloneDX crypto field names are aligned to v1.7 / ECMA-424
@@ -39,6 +39,38 @@ The profile is protocol-neutral. It uses the terms `encryption`, `keyExchange`, 
 `authentication` rather than the TLS-specific term "cipher suite," so that the same rules apply
 to a TLS service interface and to an SSH management interface.
 
+### 2.1 Taxonomy of cryptographic relationships
+
+A relationship is more general than a network connection, and the profile has to state which
+kinds it covers. Relationships vary along four dimensions: the number of parties, whether those
+parties exist at the same time, what passes between them, and how far the protection extends.
+The table places the worked examples from the relationship model against those dimensions. Each
+is described with a diagram in [model.html](model.html).
+
+| Relationship | Parties | Simultaneous | What passes | Span | Property it exercises |
+|---|---|---|---|---|---|
+| TLS session to a service | 2 | yes | data in transit | single hop | the base case |
+| Termination at a proxy or CDN | 2 per leg | yes | data in transit | chained, multi-hop | one apparent connection is several relationships |
+| Encrypted backup or archive | 2 | no | data at rest | single | parties separated in time; lifetime is the retention period |
+| Code or firmware signing | 2 | no | nothing directly; a signed artifact is carried | single | parties never interact; the verifier sets the ceiling |
+| Message-level security inside transport | 2 per layer | yes | data in transit | layered, overlapping | relationships overlap rather than partition the path |
+| IPsec mesh or operator interconnect | 2 per tunnel, many tunnels | yes | data in transit | single hop, repeated | one asset supports many relationships with differing posture |
+| Negotiated fallback between capable peers | 2 | yes | data in transit | single hop | capability is not the negotiated outcome |
+| Modern gateway to legacy controller | 2 | yes | data in transit | single hop | the less capable party fixes the posture |
+| Application to HSM or TEE | 2 | yes | operation requests; key material is confined | local, crosses a hardware boundary | a relationship that transfers no protected data |
+| Broadcast, multicast, or group messaging | n | yes | data in transit | one to many | not represented in v1; see below |
+
+**Scope for this version.** The profile applies to pairwise relationships. Group relationships,
+in the last row, are out of scope for v1 and are recorded as a known limitation rather than
+approximated, because decomposing a group into pairwise relationships loses the shared key and
+the membership over which it applies. A future revision should address them together with the
+first-class attributed-edge model.
+
+The dimensions also indicate where a profile written for one sector may need different rules.
+A profile concerned with data at rest will care about retention period, which does not arise for
+a session; a profile concerned with signing will care about the verifier population, which has no
+counterpart in a transport profile.
+
 ## 3. Two directions of use
 
 | Direction | Party | Question |
@@ -73,7 +105,7 @@ exist, irrespective of its name.
 | I6 | `endpointRoles` | **MUST** | at least two endpoints declared |
 | I7 | `interfaceType` | **MUST** | from the vocabulary in §2 |
 | I8 | `lifecycleStage` | **MUST** | one of `intended` \| `implemented` \| `configured` \| `observed` |
-| I9 | `implementationPurl` | SHOULD | `pkg:` Package URL of the implementing library |
+| I9 | `implementationPurl` | SHOULD | `pkg:` Package URL of the implementing library. Withholdable (see §4.3). |
 
 A CBOM conforms if and only if every product-level MUST rule holds and every declared interface
 satisfies every per-interface MUST rule. `interfaceId` is an instance label chosen by the
@@ -82,6 +114,33 @@ producer; the profile does not constrain its value.
 Derived evaluations such as post-quantum posture are deliberately not profile attributes. They
 are computed by an external policy from the disclosed facts, because the criteria on which they
 depend change over time. See the discussion of policy evaluation in the accompanying documentation.
+
+### 4.3 Disclosure states
+
+An attribute that carries no value may do so for different reasons, and a consumer needs to tell
+them apart. Following the 2026 SBOM minimum elements, a producer states whether missing
+information is unknown to it or is being withheld. This profile recognises four outcomes per
+attribute:
+
+| Outcome | Meaning | Effect on a MUST rule | Effect on a SHOULD rule |
+|---|---|---|---|
+| value | A value was supplied and is checked against the constraint | passes if valid | passes if valid |
+| withheld | The producer holds the information and declines to publish it | passes only if the rule is marked `withholdable` | passes only if the rule is marked `withholdable` |
+| unknown | The producer does not have the information | fails, reported as unknown rather than absent | reported, does not fail conformance |
+| undeclared | Neither a value nor a marker was supplied | fails | reported, does not fail conformance |
+
+`unknown` never satisfies a MUST rule, because the profile's requirement has not been met. It is
+nevertheless reported separately from `undeclared`, since the two carry different information: the
+first records a limit of the producing process, the second records that the question was not
+addressed at all.
+
+In this profile only I9 (`implementationPurl`) is withholdable, on the basis that a producer may
+reasonably decline to publish the version of an implementing library while still meeting the
+disclosure objective. Other profiles will make different choices, and a procurement profile may
+permit no withholding at all.
+
+Markers are carried in the CBOM as properties under `pkic:profile:disclosure:`, because neither
+CycloneDX nor SPDX provides a native field for them. The mapping records the convention.
 
 ## 5. Expected declaration
 

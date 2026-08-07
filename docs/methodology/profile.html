@@ -8,13 +8,17 @@
 </head>
 <body>
 <header class="site">
-  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
-    <a href="ontology.html">Ontology</a>
+    <a href="model.html">Model</a>
     <a href="profile.html" class="active">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="use-cases.html">Use Cases</a>
@@ -100,11 +104,24 @@
       <tr><td>I6</td><td><code>endpointRoles</code></td><td><span class="must">MUST</span></td><td>at least two endpoints</td></tr>
       <tr><td>I7</td><td><code>interfaceType</code></td><td><span class="must">MUST</span></td><td>from the controlled vocabulary</td></tr>
       <tr><td>I8</td><td><code>lifecycleStage</code></td><td><span class="must">MUST</span></td><td>see <a href="lifecycle.html">Lifecycle Data</a></td></tr>
-      <tr><td>I9</td><td><code>implementationPurl</code></td><td><span class="should">SHOULD</span></td><td>Package URL of the implementing library</td></tr>
+      <tr><td>I9</td><td><code>implementationPurl</code></td><td><span class="should">SHOULD</span></td><td>Package URL of the implementing library. Withholdable.</td></tr>
     </tbody>
   </table>
   <div class="banner good">A CBOM conforms if and only if the carrier format is accepted, every product-level MUST rule holds, and every declared interface satisfies every per-interface MUST rule. <code>interfaceId</code> is an instance label chosen by the producer and is not constrained by the profile.</div>
   <p>Derived evaluations such as post-quantum posture are deliberately not profile attributes. They are computed by an external policy from the disclosed facts, because the criteria on which they depend change over time. See <a href="policy-evaluation.html">Policy Evaluation</a>.</p>
+
+  <h2>Disclosure states</h2>
+  <p>An attribute with no value may be missing for different reasons, and version 0.2 of the profile distinguishes them. Following the 2026 SBOM minimum elements, a producer states whether the information is unknown to it or is being withheld.</p>
+  <table>
+    <thead><tr><th>Outcome</th><th>Meaning</th><th>Effect on a MUST rule</th></tr></thead>
+    <tbody>
+      <tr><td><code>value</code></td><td>A value was supplied and checked against the constraint.</td><td>Passes if valid.</td></tr>
+      <tr><td><code>withheld</code></td><td>The producer holds the information and declines to publish it.</td><td>Passes only where the rule is marked withholdable.</td></tr>
+      <tr><td><code>unknown</code></td><td>The producer does not have the information.</td><td>Fails, but is reported as unknown rather than absent.</td></tr>
+      <tr><td><code>undeclared</code></td><td>Neither a value nor a marker was supplied.</td><td>Fails.</td></tr>
+    </tbody>
+  </table>
+  <p>An unknown value does not satisfy a MUST rule, because the requirement has not been met. It is still reported separately from an undeclared one: the first records a limit of the producing process, the second records that the question was not addressed. In this profile only I9 is withholdable, on the basis that a producer may decline to publish a library version while still meeting the disclosure objective. A procurement profile might permit no withholding at all. See <a href="challenges.html">Challenges</a> and <a href="demo.html">Demo</a>.</p>
 
   <h2>Conformance pipeline</h2>
   <p>The validator applies four stages in sequence. The content stages are evaluated only if the format stage accepts the CBOM.</p>
@@ -134,11 +151,11 @@
       </g>
       <text x="215" y="128" fill="#dc2626" text-anchor="middle" font-size="10.5">a version below the minimum is refused at this stage</text>
     </svg>
-    <figcaption>The pipeline is shown interactively on the <a href="demo.html">Demo</a> page, and the version bands are described on the <a href="versioning.html">Versioning</a> page.</figcaption>
+    <figcaption>The pipeline is shown interactively in the <a href="demo.html">Demo</a> section, and the version bands are described in the <a href="versioning.html">Versioning</a> section.</figcaption>
   </figure>
 
   <div class="pagenav">
-    <a href="ontology.html">← Ontology</a>
+    <a href="model.html">← Model</a>
     <a class="next" href="policy-evaluation.html">Next: Policy Evaluation →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>

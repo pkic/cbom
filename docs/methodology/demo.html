@@ -31,6 +31,9 @@
   .pill{font:600 10px/1 var(--mono);padding:4px 6px;border-radius:20px;text-align:center;background:#e5ebf5;color:#2b3f66}
   .st{font:700 11px/1 var(--mono);padding:5px 8px;border-radius:6px}
   .st.PASS{background:#e3f5ea;color:var(--pass)} .st.FAIL{background:#fbe0e0;color:var(--fail)} .st.warn{background:#fbeed4;color:var(--warn)}
+  .st.held{background:#ede4fb;color:var(--mgmt)} .st.unkn{background:#e5ebf5;color:#3d5480}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:10px 0 18px;font-size:12.5px;color:var(--muted)}
+  .legend span.k{font:700 10.5px/1 var(--mono);padding:4px 7px;border-radius:6px;margin-right:5px}
   .attr{font-family:var(--mono);font-size:12.5px;color:#26324a} .detail{color:var(--muted);font-family:var(--mono);font-size:12px}
   .ihead{font-weight:600;margin:14px 0 8px;display:flex;align-items:center;gap:8px}
   .dot{width:9px;height:9px;border-radius:50%} .dot.svc{background:var(--svc)} .dot.management{background:var(--mgmt)}
@@ -38,13 +41,17 @@
 </head>
 <body>
 <header class="site">
-  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
-    <a href="ontology.html">Ontology</a>
+    <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="use-cases.html">Use Cases</a>
@@ -61,6 +68,13 @@
   <div class="crumb">INTERACTIVE</div>
   <h1>Conformance evaluation</h1>
   <p class="lead">Select either example CBOM. The conforming product declares both a service and a management interface; the non-conforming product does not declare a management interface. This evaluation corresponds to that performed by <code>validate_cbom.py</code>.</p>
+  <div class="legend">
+    <div><span class="k st PASS">PASS</span>value supplied and valid</div>
+    <div><span class="k st held">HELD</span>withheld by the producer, permitted for this attribute</div>
+    <div><span class="k st unkn">UNKN</span>declared unknown to the producer</div>
+    <div><span class="k st FAIL">FAIL</span>absent or invalid</div>
+  </div>
+  <p style="font-size:13.5px;color:var(--muted)">The management interface below withholds its library version rather than omitting it, which the profile permits for that attribute. See <a href="challenges.html">Challenges</a> on why absent, unknown, and withheld are treated separately.</p>
 
   <div class="toggle" id="toggle">
     <button data-v="pass" class="on">✓ Conforming CBOM</button>
@@ -104,7 +118,7 @@ const PROFILE = {
     {id:"I6", attribute:"endpointRoles", level:"MUST", constraint:{minCount:2}},
     {id:"I7", attribute:"interfaceType", level:"MUST", constraint:{enumRef:"interfaceTypeVocabulary"}},
     {id:"I8", attribute:"lifecycleStage", level:"MUST", constraint:{enum:["intended","implemented","configured","observed"]}},
-    {id:"I9", attribute:"implementationPurl", level:"SHOULD", constraint:{startsWith:"pkg:"}}
+    {id:"I9", attribute:"implementationPurl", level:"SHOULD", constraint:{startsWith:"pkg:"}, withholdable:true}
   ]
 };
 const SVC = {interfaceId:"svc-https", interfaceType:"service", protocol:"TLS", protocolVersion:"1.3",
@@ -114,7 +128,7 @@ const SVC = {interfaceId:"svc-https", interfaceType:"service", protocol:"TLS", p
 const MGMT = {interfaceId:"mgmt-ssh", interfaceType:"management", protocol:"SSH", protocolVersion:"2.0",
   keyExchange:"curve25519-sha256", encryption:"ChaCha20-Poly1305", authentication:"Ed25519 host key",
   endpointRoles:["client","server"], lifecycleStage:"configured",
-  implementationPurl:"pkg:generic/openssh@9.6", nm:"Management interface (SSH 2.0)", via:"OpenSSH 9.6"};
+  _disclosure:{implementationPurl:"withheld"}, nm:"Management interface (SSH 2.0)", via:"OpenSSH (version withheld)"};
 const CBOMS = { pass:[SVC, MGMT], fail:[SVC] };
 
 function present(v){return !(v===null||v===undefined||v===""||(Array.isArray(v)&&!v.length));}
@@ -134,17 +148,35 @@ function checkProduct(ifaces, c){
     return [n>=s.min, n+" of type '"+s.interfaceType+"' (min "+s.min+")"];}
   return [true,"ok"];
 }
+function checkRule(iface, r){
+  const value=iface[r.attribute];
+  if(present(value)){const [ok,d]=checkAttr(value,r.constraint);return [ok,"value",d];}
+  const marker=(iface._disclosure||{})[r.attribute];
+  if(marker==="withheld"){
+    return r.withholdable ? [true,"withheld","withheld by producer (permitted)"]
+                          : [false,"withheld","withheld by producer (not permitted here)"];
+  }
+  if(marker==="unknown") return [false,"unknown","declared unknown to producer"];
+  return [false,"undeclared","absent, with no disclosure marker"];
+}
 function validate(ifaces){
   const product=PROFILE.productRules.map(r=>{const [ok,d]=checkProduct(ifaces,r.constraint);return {...r,ok,d};});
   const interfaces=ifaces.map(f=>{
-    const rows=PROFILE.interfaceRules.map(r=>{const [ok,d]=checkAttr(f[r.attribute],r.constraint);return {...r,ok,d};});
+    const rows=PROFILE.interfaceRules.map(r=>{const [ok,state,d]=checkRule(f,r);return {...r,ok,state,d};});
     return {iface:f, conforms:rows.every(r=>r.level!=="MUST"||r.ok), rows};
   });
   const pOk=product.every(r=>r.level!=="MUST"||r.ok);
   const iOk=interfaces.every(i=>i.conforms);
   return {conforms:pOk&&iOk, product, interfaces};
 }
-function stItem(r){const st=r.ok?"PASS":(r.level==="MUST"?"FAIL":"warn");return `<span class="st ${st}">${st==='warn'?'WARN':st}</span>`;}
+function stItem(r){
+  let st;
+  if(r.ok) st = r.state==="withheld" ? "held" : "PASS";
+  else if(r.level==="MUST") st = r.state==="unknown" ? "unkn" : "FAIL";
+  else st = "warn";
+  const label={held:"HELD",unkn:"UNKN",warn:"WARN"}[st] || st;
+  return `<span class="st ${st}">${label}</span>`;
+}
 function render(v){
   const ifaces=CBOMS[v];const res=validate(ifaces);
   let strip = ifaces.map(f=>`<div class="iface ${f.interfaceType==='management'?'management':'svc'}">
@@ -156,7 +188,7 @@ function render(v){
   const vd=document.getElementById("verdict");
   vd.className="verdict "+(res.conforms?"pass":"fail");
   const pf=res.product.filter(r=>!r.ok&&r.level==="MUST").map(r=>r.id);
-  vd.textContent=res.conforms ? "✓ CONFORMS to Interface Disclosure Baseline v0.1"
+  vd.textContent=res.conforms ? "✓ CONFORMS to Interface Disclosure Baseline v0.2"
     : "✕ DOES NOT CONFORM — failed product rule: "+pf.join(", ");
   document.getElementById("productChecks").innerHTML=res.product.map(r=>
     `<li class="product ${!r.ok?'fail':''}">${stItem(r)}<span class="pill">${r.level}</span>

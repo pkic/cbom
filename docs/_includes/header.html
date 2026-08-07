@@ -8,6 +8,7 @@
     <nav class="site-nav" aria-label="Primary">
       {% assign u = page.url %}
       <a href="{{ '/' | relative_url }}" {% if u == '/' %}class="active" aria-current="page"{% endif %}>Overview</a>
+      <a href="{{ '/methodology/' | relative_url }}" {% if u contains '/methodology' %}class="active" aria-current="page"{% endif %}>Methodology</a>
       <a href="{{ '/references/' | relative_url }}" {% if u contains '/references' %}class="active" aria-current="page"{% endif %}>References</a>
       <a href="{{ '/issues/' | relative_url }}" {% if u contains '/issues' %}class="active" aria-current="page"{% endif %}>Issues</a>
       <a href="{{ '/contributing/' | relative_url }}" {% if u contains '/contributing' %}class="active" aria-current="page"{% endif %}>Contributing</a>

@@ -8,13 +8,17 @@
 </head>
 <body>
 <header class="site">
-  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html" class="active">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
-    <a href="ontology.html">Ontology</a>
+    <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="use-cases.html">Use Cases</a>
@@ -30,7 +34,7 @@
 <main>
   <div class="crumb">CONTEXT</div>
   <h1>Inventory and CBOMs</h1>
-  <p class="lead">A CBOM and a cryptographic inventory are related but not the same thing. This page sets out how they differ and how they work together, so the role of a CBOM within a wider inventory is clear.</p>
+  <p class="lead">A CBOM and a cryptographic inventory are related but not the same thing. This section sets out how they differ and how they work together, so the role of a CBOM within a wider inventory is clear.</p>
 
   <h2>How a CBOM and an inventory differ</h2>
   <p>A <strong>CBOM</strong> is a bill of materials for a single artifact: a structured, machine-readable description of the cryptography that a specific component contains or uses, produced at a defined point in time. It is analogous to a software bill of materials.</p>
@@ -143,12 +147,12 @@
       <tr><td>Data classification and retention period</td><td>Data governance records</td><td>Assessing harvest-now-decrypt-later exposure. Data that must stay confidential for decades is more urgent than data that expires next quarter.</td></tr>
       <tr><td>Regulatory scope and jurisdiction</td><td>Compliance register</td><td>Determining which deadlines and cryptographic requirements apply to a given system.</td></tr>
       <tr><td>Deployment topology and network exposure</td><td>Network and infrastructure records</td><td>Distinguishing an internet-facing interface from one confined to a private segment.</td></tr>
-      <tr><td>Software and hardware composition</td><td>SBOM, HBOM, asset register</td><td>Establishing whether a change is a library update, a configuration change, or a hardware replacement.</td></tr>
+      <tr><td>Software and hardware composition</td><td>SBOM, HBOM, asset register</td><td>Establishing whether a change is a library update, a configuration change, or a hardware replacement. An SBOM meeting the 2026 minimum elements also carries the component hash algorithm, which is itself cryptographic data of interest to the inventory.</td></tr>
       <tr><td>Lifecycle and support status</td><td>Asset management, vendor roadmaps</td><td>Identifying systems that will never receive a quantum-safe update and must be replaced.</td></tr>
       <tr><td>Third-party and contractual relationships</td><td>Procurement records</td><td>Establishing which suppliers to approach, and what they are obliged to provide.</td></tr>
     </tbody>
   </table>
-  <p>Two consequences follow. First, the inventory needs stable identifiers so that a cryptographic record can be joined to the corresponding entries in these other systems. Correlation is usually more valuable than duplication: the inventory should reference the CMDB entry rather than copy its contents, which would then drift. Second, this context belongs outside the CBOM. A CBOM describes the cryptography of its subject; criticality and data classification are properties of the business, and they change on their own schedule. Keeping them separate is the same reasoning applied to derived evaluations on the <a href="policy-evaluation.html">Policy Evaluation</a> page.</p>
+  <p>Two consequences follow. First, the inventory needs stable identifiers so that a cryptographic record can be joined to the corresponding entries in these other systems. Correlation is usually more valuable than duplication: the inventory should reference the CMDB entry rather than copy its contents, which would then drift. Second, this context belongs outside the CBOM. A CBOM describes the cryptography of its subject; criticality and data classification are properties of the business, and they change on their own schedule. Keeping them separate is the same reasoning applied to derived evaluations in the <a href="policy-evaluation.html">Policy Evaluation</a> section.</p>
 
   <h2>Multiple data sources and lifecycle stage</h2>
   <p>A cryptographic inventory typically combines CBOM data, which is frequently <code>implemented</code> or <code>configured</code>, with runtime discovery, which is <code>observed</code>. The <code>lifecycleStage</code> attribute allows the inventory to distinguish declared capability from observed use, rather than conflating the two. See <a href="lifecycle.html">Lifecycle Data</a>.</p>
@@ -162,10 +166,10 @@
     <li><strong>Subject and scope.</strong> An extracted CBOM should state its subject precisely (for example, a product, a service, or a defined portion of the estate) and the criteria used to select its content.</li>
     <li><strong>Provenance and point-in-time.</strong> Because the inventory changes continuously, an extracted CBOM is a snapshot; it should record the inventory revision and the time from which it was produced.</li>
     <li><strong>Authenticity.</strong> An output CBOM issued to an external party should be signed, so that the recipient can verify its origin and integrity. See <a href="governance.html">Governance</a>.</li>
-    <li><strong>Redaction and confidentiality.</strong> External disclosure may require redaction. The profile sets the lower bound of what must be disclosed; policy governs what is withheld. See the discussion of depth of disclosure in <a href="challenges.html">Challenges</a>.</li>
+    <li><strong>Redaction and confidentiality.</strong> External disclosure may require redaction. The profile sets the lower bound of what must be disclosed; policy governs what is withheld. Redaction should be recorded rather than performed silently: an attribute removed on release is marked as withheld, so the recipient can see that the information exists and was not disclosed, instead of reading the gap as a limitation of the producer's tooling. See <a href="challenges.html">Challenges</a>.</li>
     <li><strong>Format and version negotiation.</strong> A consumer may require a particular carrier format and version; the mapping and the profile's accepted version range determine what can be produced and validated. See <a href="formats.html">Formats</a> and <a href="versioning.html">Versioning</a>.</li>
     <li><strong>Derived evaluations excluded.</strong> Post-quantum posture and cryptographic maturity are not embedded in the extracted CBOM; the recipient derives them from the disclosed facts by policy. See <a href="policy-evaluation.html">Policy Evaluation</a>.</li>
-    <li><strong>Identity and re-request.</strong> Stable identifiers allow the recipient to correlate the CBOM with the corresponding SBOM and HBOM, and to request an updated CBOM when the subject changes.</li>
+    <li><strong>Identity and re-request.</strong> Stable identifiers allow the recipient to correlate the CBOM with the corresponding SBOM and HBOM, and to request an updated CBOM when the subject changes. The minimum elements guidance makes the same point for SBOMs through its Component Identifiers element, which expects machine-processable unique identifiers to support automated analysis.</li>
     <li><strong>Request and response.</strong> A supply-chain request should state the profile and scope required; the response is validated against that profile and retained for audit.</li>
     <li><strong>Trust asymmetry.</strong> Inputs to the inventory may come from lower-trust sources and require verification and normalization; outputs produced by the organization carry its own attestation.</li>
   </ul>

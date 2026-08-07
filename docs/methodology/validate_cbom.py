@@ -13,6 +13,14 @@ product- and instance-independent:
                        least one management interface"), naming no specific one.
   * INTERFACE rules -- apply uniformly to EVERY declared cryptographic interface.
 
+Disclosure states (profile v0.2). An attribute is reported in one of four ways:
+  value      -- a value was supplied and checked against the constraint
+  withheld   -- the producer declared it withheld; satisfies a rule marked
+                'withholdable', otherwise fails
+  unknown    -- the producer declared it unknown to itself; never satisfies MUST,
+                but is distinguished from silent omission
+  undeclared -- neither a value nor a marker was supplied
+
 Design point (matches the working-group methodology):
   * The RULES are format-independent and protocol-neutral.
   * The FORMAT ADAPTER (extract_interfaces) is the only format-specific part, and
@@ -83,7 +91,10 @@ def extract_interfaces(bom):
             refs += s.get("algorithms", [])
         roles = [k.split(":")[-1] for k in props
                  if k.startswith("pkic:profile:endpointRole:")]
+        markers = {k.split(":")[-1]: v for k, v in props.items()
+                   if k.startswith("pkic:profile:disclosure:")}
         interfaces.append({
+            "_disclosure": markers,
             "interfaceId": props.get("pkic:profile:interfaceId") or c.get("bom-ref"),
             "interfaceType": props.get("pkic:profile:interfaceType"),
             "protocol": (proto.get("type") or "").upper() or None,
@@ -149,6 +160,31 @@ def check_attr(value, constraint, profile):
     return (True, "ok")
 
 
+def check_rule(iface, rule, profile):
+    """Evaluate one interface rule, accounting for disclosure markers.
+
+    Returns (ok, state, detail) where state is one of:
+      value      -- an actual value was supplied and checked
+      withheld   -- the producer declared the value withheld
+      unknown    -- the producer declared the value unknown to it
+      undeclared -- no value and no marker
+    """
+    attr = rule["attribute"]
+    value = iface.get(attr)
+    if present(value):
+        ok, detail = check_attr(value, rule["constraint"], profile)
+        return (ok, "value", detail)
+
+    marker = iface.get("_disclosure", {}).get(attr)
+    if marker == "withheld":
+        if rule.get("withholdable"):
+            return (True, "withheld", "withheld by producer (permitted)")
+        return (False, "withheld", "withheld by producer (not permitted here)")
+    if marker == "unknown":
+        return (False, "unknown", "declared unknown to producer")
+    return (False, "undeclared", "absent, with no disclosure marker")
+
+
 def check_product(interfaces, constraint):
     if "minInterfaces" in constraint:
         n = len(interfaces)
@@ -179,10 +215,10 @@ def validate(bom, profile):
     for iface in interfaces:
         rows = []
         for rule in profile.get("interfaceRules", []):
-            ok, detail = check_attr(iface.get(rule["attribute"]),
-                                    rule["constraint"], profile)
+            ok, state, detail = check_rule(iface, rule, profile)
             rows.append({"id": rule["id"], "level": rule["level"],
-                         "attribute": rule["attribute"], "ok": ok, "detail": detail})
+                         "attribute": rule["attribute"], "ok": ok,
+                         "state": state, "detail": detail})
         iface_ok = all(r["ok"] for r in rows if r["level"] == "MUST")
         report["interfaces"].append({
             "interfaceId": iface["interfaceId"],
@@ -231,7 +267,12 @@ def main(argv):
         print("INTERFACE  %s  (type=%s)  ==>  %s"
               % (iface["interfaceId"], iface["interfaceType"], status))
         for r in iface["rows"]:
-            icon = "PASS" if r["ok"] else ("FAIL" if r["level"] == "MUST" else "warn")
+            if r["ok"]:
+                icon = "HELD" if r.get("state") == "withheld" else "PASS"
+            elif r["level"] == "MUST":
+                icon = "UNKN" if r.get("state") == "unknown" else "FAIL"
+            else:
+                icon = "warn"
             print("  [%s] %-4s %-6s %-18s %s"
                   % (icon, r["id"], r["level"], r["attribute"], r["detail"]))
     print("=" * 64)

@@ -1,6 +1,8 @@
 # Profile-to-format mapping: CycloneDX and SPDX (nginx example)
 
-> **Status:** Illustrative. Aligned to CycloneDX 1.7 / ECMA-424 (2nd Edition) and SPDX 3.0.1
+> **Status:** Illustrative, and describing the position at the time of writing. Both
+> specifications are under active development, so the format columns should be checked against
+> the current releases. Aligned to CycloneDX 1.7 / ECMA-424 (2nd Edition) and SPDX 3.0.1
 > as understood at the time of writing. CycloneDX crypto field names are illustrative and
 > should be validated against the current schema. CycloneDX 1.7 introduces the Cryptography
 > Registry (stable algorithm identifiers); for I3, I4, and I5 a registry identifier is
@@ -25,7 +27,9 @@ Three considerations shape the mapping:
 1. CycloneDX provides a native cryptographic object model — `cryptographic-asset` components
    with `cryptoProperties`. Most asset attributes correspond to first-class fields.
 2. SPDX 3.0.1 provides no dedicated cryptographic object model. Common practice is to express
-   the CBOM in CycloneDX and reference it from the SPDX SBOM as an external artifact.
+   the CBOM in CycloneDX and reference it from the SPDX SBOM as an external artifact. SPDX is
+   adding a cryptographic object model, so this position is expected to change; when it does,
+   the SPDX column below is revised and the profile is unaffected.
 3. Neither format provides a first-class object representing the cryptographic relationship
    (the edge). Relationship-level attributes are carried in properties or annotations.
 
@@ -70,7 +74,24 @@ profile cannot require that one exist.
 In SPDX, the absence of a cryptographic object model in 3.0.1 means that most detail is
 obtained through the linked CycloneDX CBOM. The area of strength for SPDX is provider identity
 (I9): it identifies the OpenSSL and OpenSSH packages by `packageUrl`, which is the value
-cross-referenced against vulnerability feeds.
+cross-referenced against vulnerability feeds. As SPDX gains a cryptographic object model,
+entries in this column move from the linked CBOM to native SPDX fields while the requirement
+numbers stay the same.
+
+## Disclosure markers
+
+Profile v0.2 distinguishes an attribute that is unknown to the producer from one the producer is
+withholding, following the 2026 SBOM minimum elements. Neither format has a native field for this,
+so the convention is fixed here:
+
+| State | CycloneDX | SPDX |
+|---|---|---|
+| unknown | `component.properties[name="pkic:profile:disclosure:<attribute>"]` with value `unknown` | `Annotation` on the linked element |
+| withheld | the same property with value `withheld` | `Annotation` on the linked element |
+
+The marker replaces the attribute rather than accompanying it. A producer supplying a value does
+not also supply a marker, and a consumer reads the marker only where the value is absent. Silent
+omission remains distinguishable, because it produces neither.
 
 ## The edge gap
 

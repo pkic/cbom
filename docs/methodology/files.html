@@ -8,13 +8,17 @@
 </head>
 <body>
 <header class="site">
-  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
-    <a href="ontology.html">Ontology</a>
+    <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="use-cases.html">Use Cases</a>
@@ -68,7 +72,7 @@ PY
 python validate_cbom.py cbom-1.6.json profile-interface-disclosure.rules.json   # legacy: accepted with a warning
 python validate_cbom.py cbom-1.5.json profile-interface-disclosure.rules.json   # unsupported: refused</code></pre>
 
-  <div class="banner">The <a href="demo.html">Demo</a> page performs the same evaluation in the browser.</div>
+  <div class="banner">The <a href="demo.html">Demo</a> section performs the same evaluation in the browser.</div>
 
   <div class="pagenav">
     <a href="governance.html">← Governance</a>

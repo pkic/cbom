@@ -8,13 +8,17 @@
 </head>
 <body>
 <header class="site">
-  <div class="hbar"><div class="htitle">CBOM Profiles <span>documentation · nginx worked example</span></div></div>
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
-    <a href="ontology.html">Ontology</a>
+    <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="use-cases.html" class="active">Use Cases</a>
@@ -47,7 +51,7 @@
   <p><strong>Objective:</strong> demonstrate cryptographic posture against frameworks such as the EU CRA, NIS2, BSI TR-03183 and TR-02102, or United States directives. <strong>Profile emphasis:</strong> encodes the attributes a regulation expects into a checkable rule set, so that conformance becomes a defined artifact. <strong>Producer and consumer:</strong> operator, consumed by auditors and regulators. <strong>Example:</strong> a jurisdiction-specific profile that a global vendor satisfies once and reports against in multiple jurisdictions.</p>
 
   <h3>5 · Continuous integration quality gate</h3>
-  <p><strong>Objective:</strong> prevent non-conforming cryptography from reaching production. <strong>Profile emphasis:</strong> any profile, executed as a pipeline stage that fails the build on a MUST violation. <strong>Producer and consumer:</strong> the build, consumed by the pipeline. <strong>Example:</strong> the pass and fail behaviour shown on the <a href="demo.html">Demo</a> page, integrated into continuous integration.</p>
+  <p><strong>Objective:</strong> prevent non-conforming cryptography from reaching production. <strong>Profile emphasis:</strong> any profile, executed as a pipeline stage that fails the build on a MUST violation. <strong>Producer and consumer:</strong> the build, consumed by the pipeline. <strong>Example:</strong> the pass and fail behaviour shown in the <a href="demo.html">Demo</a> section, integrated into continuous integration.</p>
 
   <h3>6 · Crypto-agility assessment</h3>
   <p><strong>Objective:</strong> assess how readily an estate could replace an algorithm. <strong>Profile emphasis:</strong> emphasises <code>implementationPurl</code>, the separation of <code>keyExchange</code>, <code>encryption</code>, and <code>authentication</code>, and dependency links, so that agility can be assessed per interface. <strong>Producer and consumer:</strong> vendor, consumed by architecture and risk functions. <strong>Example:</strong> identification of interfaces whose cryptography is fixed rather than provider-replaceable.</p>

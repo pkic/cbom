@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Formats</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="model.html">Model</a>
+    <a href="profile.html">Profile</a>
+    <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="formats.html" class="active">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="governance.html">Governance</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+    <a href="references.html">References</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">MAPPING</div>
+  <h1>A single profile expressed in two formats</h1>
+  <p class="lead">The profile is defined independently of any format. A mapping locates each attribute, and the interface count, within a concrete document. CycloneDX provides a native cryptographic model. SPDX 3.0.1 does not, so a CBOM is currently expressed in CycloneDX and referenced from an SPDX SBOM, though SPDX is adding a cryptographic object model and that position will change.</p>
+  <p>Because both formats permit the same information to be encoded in more than one valid way, the mapping also serves to normalize encoding: it defines a single, canonical location for each attribute. A consumer that relies on the mapping extracts the required information from one place rather than accommodating every valid variant, which reduces parsing complexity. See <a href="challenges.html">Challenges</a>.</p>
+  <div class="banner warn">The format comparisons in this section describe the position at the time of writing. Both specifications are being developed actively. When a format gains capability, the mapping is revised and the profile is unaffected, which is the practical benefit of keeping the profile separate from any format.</div>
+
+  <figure>
+    <svg viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="280" y="16" width="160" height="46" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="360" y="37" fill="#1a2230" text-anchor="middle" font-weight="700">Profile</text>
+      <text x="360" y="53" fill="#5b6472" text-anchor="middle" font-size="10.5">format-independent</text>
+      <line x1="330" y1="62" x2="190" y2="104" stroke="#c9d3e0" stroke-width="2"/>
+      <line x1="390" y1="62" x2="530" y2="104" stroke="#c9d3e0" stroke-width="2"/>
+      <rect x="40" y="104" width="300" height="90" rx="12" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="58" y="126" fill="#1a2230" font-weight="700">CycloneDX 1.7</text>
+      <text x="58" y="146" fill="#15803d" font-size="11.5" font-family="monospace">✓ native crypto model (assets)</text>
+      <text x="58" y="164" fill="#b45309" font-size="11.5" font-family="monospace">~ edge attrs in component.properties</text>
+      <text x="58" y="182" fill="#5b6472" font-size="11.5" font-family="monospace">+ Cryptography Registry (1.7)</text>
+      <rect x="400" y="104" width="280" height="90" rx="12" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="418" y="126" fill="#1a2230" font-weight="700">SPDX 3.0.1</text>
+      <text x="418" y="146" fill="#b45309" font-size="11.5" font-family="monospace">~ crypto model in development</text>
+      <text x="418" y="164" fill="#5b6472" font-size="11.5" font-family="monospace">→ link the CycloneDX CBOM today</text>
+      <text x="418" y="182" fill="#15803d" font-size="11.5" font-family="monospace">✓ package identity via purl</text>
+    </svg>
+    <figcaption>The same profile can be satisfied in either format, given a mapping. The areas of strength differ between the two, and both are changing.</figcaption>
+  </figure>
+
+  <h2>Two valid encodings of the same fact</h2>
+  <p>The encoding problem is easier to see with a concrete case. Take a single fact from the worked example: the HTTPS interface uses X25519 for key exchange. CycloneDX allows a producer to record this in at least two ways, both correct.</p>
+  <figure>
+    <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <text x="20" y="20" fill="#5b6472" font-size="11" font-family="monospace">FACT: the HTTPS interface uses X25519 for key exchange</text>
+      <rect x="20" y="34" width="320" height="120" rx="10" fill="#ffffff" stroke="#0284c7"/>
+      <text x="36" y="54" fill="#0284c7" font-size="11" font-weight="700" font-family="monospace">ENCODING A — inside the cipher suite</text>
+      <text x="36" y="76" fill="#1f2937" font-size="10.5" font-family="monospace">protocolProperties:</text>
+      <text x="36" y="92" fill="#1f2937" font-size="10.5" font-family="monospace">  cipherSuites:</text>
+      <text x="36" y="108" fill="#1f2937" font-size="10.5" font-family="monospace">  - name: TLS_AES_256_GCM_SHA384</text>
+      <text x="36" y="124" fill="#15803d" font-size="10.5" font-family="monospace">    algorithms: [crypto:algo:x25519]</text>
+      <text x="36" y="144" fill="#5b6472" font-size="10">the algorithm is reached through the suite</text>
+      <rect x="380" y="34" width="320" height="120" rx="10" fill="#ffffff" stroke="#7c3aed"/>
+      <text x="396" y="54" fill="#7c3aed" font-size="11" font-weight="700" font-family="monospace">ENCODING B — flat reference list</text>
+      <text x="396" y="76" fill="#1f2937" font-size="10.5" font-family="monospace">protocolProperties:</text>
+      <text x="396" y="92" fill="#1f2937" font-size="10.5" font-family="monospace">  cryptoRefArray:</text>
+      <text x="396" y="108" fill="#15803d" font-size="10.5" font-family="monospace">  - crypto:algo:x25519</text>
+      <text x="396" y="124" fill="#1f2937" font-size="10.5" font-family="monospace">  - crypto:algo:aes-256-gcm</text>
+      <text x="396" y="144" fill="#5b6472" font-size="10">the algorithm is referenced directly</text>
+      <line x1="180" y1="154" x2="300" y2="196" stroke="#c9d3e0" stroke-width="2"/>
+      <line x1="540" y1="154" x2="420" y2="196" stroke="#c9d3e0" stroke-width="2"/>
+      <rect x="230" y="196" width="260" height="42" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="360" y="222" fill="#1a2230" text-anchor="middle" font-weight="600">Same fact, two locations</text>
+      <rect x="150" y="252" width="420" height="36" rx="10" fill="#fff7ec" stroke="#b45309"/>
+      <text x="360" y="268" fill="#6b4a12" text-anchor="middle" font-size="11">A consumer must read both, or the mapping must name one</text>
+      <text x="360" y="282" fill="#6b4a12" text-anchor="middle" font-size="10.5">the profile mapping selects the canonical location</text>
+    </svg>
+    <figcaption>One fact, two valid CycloneDX encodings. Without an agreed convention, a consumer that reads only one location will report the key exchange as absent when the producer used the other.</figcaption>
+  </figure>
+  <p>Neither encoding is wrong, and a producer may use both together. The consequence is that a consumer cannot assume a single location. The validator in this example reads both, merging the cipher-suite algorithm list with the flat reference array before it evaluates any rule, because a CBOM that omits the key exchange and one that records it in the less common place are otherwise indistinguishable.</p>
+  <p>The same pattern appears for authentication. A TLS interface usually reaches its signature algorithm through the certificate, using <code>certificateProperties.signatureAlgorithmRef</code>. An SSH interface has no certificate, so the host key algorithm is referenced directly by the interface. Both satisfy the profile requirement for an authentication algorithm, and a consumer has to handle each. The mapping records which form applies in which case, so a consumer knows what to expect instead of establishing it by experiment.</p>
+  <p>Beyond locating attributes, then, the mapping removes a class of errors in which a CBOM is complete but a consumer reports it as deficient, only because the producer chose a different valid structure.</p>
+
+  <h2>Representation of an interface</h2>
+  <p>An interface, meaning a cryptographic relationship, is represented as a <code>cryptographic-asset</code> component with <code>assetType: protocol</code>. It is worth setting out how this works, because the profile's model and the format's model do not align at this point.</p>
+  <p>The format treats the protocol as an asset, in the same category as an algorithm or a certificate. The profile treats the interface as a relationship between endpoints. The mapping bridges the two by using the protocol asset as the carrier for the relationship and attaching the relationship's attributes to it as properties. Both formats support this today, but it is a convention agreed in the mapping rather than a structure the format enforces.</p>
+  <p>This has several consequences for an implementation:</p>
+  <ul>
+    <li>The set of interfaces is derived, not declared. A consumer enumerates the components with <code>assetType: protocol</code> and counts them. Product rules P1 and P2 are evaluated against that derived set, including the count of components carrying <code>interfaceType = management</code>.</li>
+    <li>Nothing in the format prevents a protocol asset from being used for something other than an interface. A producer might record a protocol that a product implements generally, without it corresponding to a deployed interface. The <code>interfaceType</code> property is what distinguishes the two, which is why the profile requires it on every interface.</li>
+    <li>An interface is identified by the producer's own <code>interfaceId</code>, which the profile does not constrain. Consumers should treat it as a label, not as a stable cross-organization identifier.</li>
+    <li>The algorithms belonging to an interface are reached by reference, through the encodings described above, rather than being contained within it. A broken or missing reference presents as an absent attribute.</li>
+    <li>Where one deployed interface is described by more than one component, for example when a product and an operator each report the same connection, correlation happens in the inventory rather than in the document. See <a href="inventory.html">Inventory</a>.</li>
+  </ul>
+  <p>If a format introduces a first-class object for the relationship, this part of the mapping changes and the profile's requirements do not.</p>
+
+  <h2>Mapping table</h2>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>#</th><th>Requirement</th><th>CycloneDX 1.7 <span class="na">(illustrative)</span></th><th>SPDX 3.0.1</th></tr></thead>
+    <tbody>
+      <tr><td>P1</td><td>≥1 interface</td><td>count of <code>assetType:protocol</code> components</td><td>count of linked interface elements</td></tr>
+      <tr><td>P2</td><td>≥1 <code>management</code></td><td>count where <code>interfaceType==management</code></td><td>count of elements annotated management</td></tr>
+      <tr><td>I1</td><td>protocol</td><td><code>protocolProperties.type</code></td><td>via linked CBOM</td></tr>
+      <tr><td>I2</td><td>protocolVersion</td><td><code>protocolProperties.version</code></td><td>via linked CBOM</td></tr>
+      <tr><td>I3</td><td>keyExchange</td><td>algorithm <code>primitive=key-agree/kem</code></td><td>via linked CBOM</td></tr>
+      <tr><td>I4</td><td>encryption</td><td>algorithm <code>primitive=ae/aead</code></td><td>via linked CBOM</td></tr>
+      <tr><td>I5</td><td>authentication</td><td>certificate <code>signatureAlgorithmRef</code> or host key</td><td>via linked CBOM</td></tr>
+      <tr><td>I6</td><td>endpointRoles</td><td><code>properties[endpointRole:*]</code> <span class="na">(no edge model)</span></td><td><code>Relationship</code> and annotation</td></tr>
+      <tr><td>I7</td><td>interfaceType</td><td><code>properties[interfaceType]</code> <span class="na">(no native field)</span></td><td>annotation</td></tr>
+      <tr><td>I8</td><td>lifecycleStage</td><td><code>properties[lifecycleStage]</code></td><td>annotation</td></tr>
+      <tr><td>I9</td><td>implementationPurl</td><td><code>purl</code> on library component</td><td>native <code>packageUrl</code> <span class="na">(SPDX strength)</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Interpretation of the columns</h2>
+  <p>In <strong>CycloneDX</strong>, the cryptographic assets (I1–I5 and the provider in I9) are represented in native fields, which is an area of strength for the format. The interface-level classifiers on which the profile depends — <code>interfaceType</code> (I7), endpoint roles (I6), and lifecycle stage (I8) — have no native field and are carried in <code>component.properties</code> under the <code>pkic:profile:</code> namespace. The <code>interfaceType</code> attribute is what makes product rule P2 evaluable.</p>
+  <p>In <strong>SPDX</strong>, the absence of a cryptographic model in 3.0.1 means that most detail is obtained through the linked CycloneDX CBOM. The area of strength for SPDX is provider identity (I9): it identifies the OpenSSL and OpenSSH packages by <code>packageUrl</code>, which is the value cross-referenced against vulnerability feeds. As SPDX gains a cryptographic object model, entries in this column will move from the linked CBOM to native SPDX fields. The requirement numbers stay the same, which is the point of expressing the profile independently of the format.</p>
+
+  <h2>The edge gap</h2>
+  <div class="banner warn"><code>interfaceType</code> and endpoint roles describe the interface itself — the edge — yet neither format provides an object that represents the interface. Both attach these attributes to the protocol asset. This is sufficient for the disclosure baseline, but it cannot represent a determination that belongs to the connection itself, such as whether a session negotiated a non-post-quantum group. Providing such an object is the objective of the working group's first-class attributed-edge model.</div>
+
+  <h2>Normalization</h2>
+  <p>Normalization covers two separate questions: where a value is written in the document, and how the value itself is expressed. Both have to be settled before CBOMs from different producers can be compared. The second causes more difficulty in practice.</p>
+
+  <h3>Why it matters</h3>
+  <p>Every automated use of a CBOM depends on matching a value against something, whether a policy, a deprecation list, a vulnerability feed, or the same attribute in another CBOM. Those matches are exact. A value that means the right thing but is written differently will not match, and nothing in the process reports an error. A policy engine looking for AES-256-GCM that encounters <code>AES256</code> finds no match, and depending on how the rule is written it treats the interface either as compliant or as having no encryption at all. Both results are incorrect, and both look like ordinary output.</p>
+  <p>The problem grows with the size of the estate. A single supplier using an unusual spelling can be handled by hand. The same variance across many suppliers and a large number of interfaces makes estate-wide questions impractical to answer, such as how many interfaces still use a deprecated algorithm, or which services an advisory affects. Inconsistent naming seen in real deployments is the reason the registry was introduced.</p>
+
+  <h3>What the registry solves</h3>
+  <p>CycloneDX 1.7 introduces the Cryptography Registry, which assigns stable identifiers to algorithm families and their parameters. Elliptic curve names show the problem clearly. The same curve is commonly written three ways, depending on which standards body or library the producer follows:</p>
+  <table>
+    <thead><tr><th>As written by the producer</th><th>Origin</th><th>Refers to</th></tr></thead>
+    <tbody>
+      <tr><td><code>P-256</code></td><td>NIST</td><td rowspan="3">The same curve. The three strings have no form in common, so a text comparison treats them as unrelated.</td></tr>
+      <tr><td><code>secp256r1</code></td><td>SECG</td></tr>
+      <tr><td><code>prime256v1</code></td><td>ANSI, used by OpenSSL</td></tr>
+    </tbody>
+  </table>
+  <p>Compared as text these are three distinct values; compared as registry identifiers they are one. Symmetric algorithms raise a related difficulty: <code>AES256</code>, <code>AES-256-GCM</code>, and <code>AES_256_GCM</code> may or may not denote the same thing, because the first omits the mode that the others state. The registry also separates the algorithm from its parameters, so a query for deprecated key sizes does not depend on parsing a name.</p>
+  <p>For requirements I3, I4, and I5 a registry identifier is preferred wherever one exists. CBOMs authored to version 1.6 carry free-text names and are normalized at the adapter using a versioned name map, so that rules only ever see canonical values. See <a href="versioning.html">Versioning</a>.</p>
+
+  <h3>Protocols need normalizing too</h3>
+  <p>Algorithm naming receives most of the attention, but protocol identity presents the same difficulty. The protocol and its version are recorded as free text in <code>protocolProperties</code>, and producers write them inconsistently: <code>TLS</code>, <code>tls</code>, and <code>TLSv1.3</code>; a version given as <code>1.3</code>, <code>TLS 1.3</code>, or <code>0x0304</code>; SSH as <code>2.0</code> or <code>SSH-2.0</code>. Some protocols have more than one accepted name, such as MACsec and IEEE 802.1AE.</p>
+  <p>There are several practical reasons to normalize this.</p>
+  <ul>
+    <li>Profiles gate on protocol version. A rule requiring TLS 1.2 or higher has to compare versions, and comparison needs a defined ordering. Strings do not provide one: <code>1.10</code> sorts before <code>1.9</code> as text, and <code>TLSv1.3</code> does not parse as a number at all.</li>
+    <li>Deprecation is expressed per protocol version. Guidance withdraws TLS 1.0 and 1.1, not TLS generally, so a policy cannot be applied unless the version is canonical.</li>
+    <li>The protocol determines which algorithm roles exist. TLS authenticates with a certificate signature, SSH with a host key, IPsec through IKE negotiation. A consumer that misreads the protocol looks for the wrong attribute and reports it as missing, as the authentication case above illustrates.</li>
+    <li>Aggregation depends on it. Counting how many interfaces across an estate still run a given protocol version is a routine migration question, and it cannot be answered by grouping on inconsistent strings.</li>
+    <li>Sector vocabularies differ. The same interface may be named by a 3GPP reference point in one document and by its IETF protocol in another. Without a canonical protocol identity these do not reconcile.</li>
+  </ul>
+  <p>The mapping therefore specifies the expected form for protocol type and version, and the adapter normalizes what it receives before any rule is evaluated. Where a registry provides protocol identifiers, those are preferred for the same reasons they are preferred for algorithms.</p>
+
+  <div class="pagenav">
+    <a href="use-cases.html">← Use Cases</a>
+    <a class="next" href="versioning.html">Next: Versioning →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>
