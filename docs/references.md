@@ -11,7 +11,28 @@ lede: Standards, regulation and guidance relevant to Cryptography Bills of Mater
 {% assign total = refs | size %}
 
 <div class="controls" id="controls">
-  <input type="search" id="q" placeholder="Search titles, organisations, notes…" aria-label="Search references">
+  <div class="control-bar">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+        <line x1="13.5" y1="13.5" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <input type="search" id="q" placeholder="Search titles, organisations, notes and tags…" aria-label="Search references">
+    </div>
+
+    <select id="jurisdiction" aria-label="Filter by jurisdiction">
+      <option value="">All jurisdictions</option>
+      {% for j in site.labels.jurisdiction %}
+        <option value="{{ j[0] }}">{{ j[1] }}</option>
+      {% endfor %}
+    </select>
+
+    <select id="groupby" aria-label="Group results by">
+      <option value="category">Group by category</option>
+      <option value="jurisdiction">Group by jurisdiction</option>
+      <option value="status">Group by status</option>
+    </select>
+  </div>
 
   <div class="filter-row">
     <span class="filter-label">Category</span>
@@ -25,20 +46,7 @@ lede: Standards, regulation and guidance relevant to Cryptography Bills of Mater
     {% for s in site.labels.status %}
       <button class="chip" data-facet="status" data-value="{{ s[0] }}">{{ s[1] }}</button>
     {% endfor %}
-  </div>
-
-  <div class="filter-row">
-    <span class="filter-label">Jurisdiction</span>
-    {% for j in site.labels.jurisdiction %}
-      <button class="chip" data-facet="jurisdiction" data-value="{{ j[0] }}">{{ j[1] }}</button>
-    {% endfor %}
-  </div>
-
-  <div class="filter-row">
-    <span class="filter-label">Group by</span>
-    <button class="chip toggle is-on" data-group="category">Category</button>
-    <button class="chip toggle" data-group="jurisdiction">Jurisdiction</button>
-    <button class="chip clear" id="clear">Clear all</button>
+    <button class="chip clear" id="clear" hidden>Clear filters</button>
   </div>
 
   <p class="count" id="count"></p>
@@ -91,7 +99,8 @@ lede: Standards, regulation and guidance relevant to Cryptography Bills of Mater
 <script>
   window.CBOM_LABELS = {
     category: {{ site.labels.category | jsonify }},
-    jurisdiction: {{ site.labels.jurisdiction | jsonify }}
+    jurisdiction: {{ site.labels.jurisdiction | jsonify }},
+    status: {{ site.labels.status | jsonify }}
   };
 </script>
 <script src="{{ '/assets/js/references.js' | relative_url }}"></script>

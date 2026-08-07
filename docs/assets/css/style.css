@@ -246,11 +246,28 @@ h1, h2, h3 { color: var(--ink); font-family: var(--font-display); font-weight: 6
   background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg);
   padding: 18px 20px; margin: 0 0 26px; box-shadow: var(--shadow-sm);
 }
+.control-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.search-wrap { position: relative; flex: 1 1 300px; display: flex; align-items: center; }
+.search-icon {
+  position: absolute; left: 13px; width: 17px; height: 17px;
+  color: var(--faint); pointer-events: none;
+}
 #q {
-  width: 100%; padding: 12px 14px; font-family: var(--font-ui); font-size: 15px;
-  border: 1px solid var(--line); border-radius: 10px; margin-bottom: 14px; background: var(--canvas);
+  width: 100%; padding: 11px 14px 11px 38px; font-family: var(--font-ui); font-size: 15px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); color: var(--body);
 }
 #q:focus { outline: none; border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px var(--accent-wash); }
+#q::-webkit-search-cancel-button { cursor: pointer; }
+
+.control-bar select {
+  flex: 0 1 auto; padding: 11px 34px 11px 13px; font-family: var(--font-ui); font-size: 14px;
+  color: var(--body); border: 1px solid var(--line); border-radius: 10px; background-color: var(--canvas);
+  cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%235f6b7a' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; background-size: 11px;
+}
+.control-bar select:hover { border-color: var(--accent); }
+.control-bar select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-wash); }
 
 .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-bottom: 9px; }
 .filter-label {
@@ -266,8 +283,13 @@ h1, h2, h3 { color: var(--ink); font-family: var(--font-display); font-weight: 6
 .chip.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
 .chip.clear { background: transparent; border-style: dashed; color: var(--muted); margin-left: auto; }
 .chip.clear:hover { color: var(--gap); border-color: var(--gap); }
+.chip.clear[hidden] { display: none; }
 
 .count { font-size: 13px; color: var(--muted); margin: 12px 0 0; }
+.group-count {
+  font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--muted);
+  background: var(--band); border-radius: 20px; padding: 2px 9px; vertical-align: middle; margin-left: 6px;
+}
 
 /* --------------------------------------------------- references: results --- */
 .group-heading {

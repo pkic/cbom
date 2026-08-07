@@ -27,7 +27,7 @@
     <a href="governance.html">Governance</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
-    <a href="references.html">References</a>
+    <a href="../references/">References</a>
   </nav>
 </header>
 
@@ -49,7 +49,7 @@
   </table>
 
   <p>Harmonization is worth stating carefully, because the obvious answer is the wrong one. Requiring everyone to adopt a single format is not achievable and not necessary. Organizations have existing commitments to CycloneDX or SPDX, regulators and customers ask for different things, and the formats themselves continue to change. What has to be consistent is the information: which attributes are disclosed, and where each one sits in a given document. That is the work a profile and its mapping do. The profile is written once, independently of any format, and a mapping is defined for each format it needs to support. A consumer can then reconcile CBOMs from several formats, and a producer is not forced to abandon the format it already uses. Consistency is achieved through agreed encoding rather than through a single target format. See <a href="formats.html">Formats</a>.</p>
-  <p>This is also the position taken by the 2026 minimum elements guidance, which states that minimum support for automation means supporting all data formats that are widely used, open source, and compatible with existing formats, and that the set of supported formats should be reassessed periodically. Both SPDX and CycloneDX are named. A consumer is therefore expected to handle more than one format, which is the condition a profile and its mappings are designed to serve. See <a href="references.html">References</a>.</p>
+  <p>This is also the position taken by the 2026 minimum elements guidance, which states that minimum support for automation means supporting all data formats that are widely used, open source, and compatible with existing formats, and that the set of supported formats should be reassessed periodically. Both SPDX and CycloneDX are named. A consumer is therefore expected to handle more than one format, which is the condition a profile and its mappings are designed to serve. See <a href="../references/">References</a>.</p>
   <p>Coverage is a separate question from attribute selection, and the two are sometimes confused. The same guidance requires an SBOM to include all components of the target software, including transitive dependencies, and states that there is no minimum depth. That is a floor for which components appear and which elements each carries. A profile does something different: it states which attributes are mandatory for a stated purpose. It does not license omitting components. The worked example on this site behaves accordingly, judging the interfaces a product declares while saying nothing about the other entries a production CBOM would contain.</p>
 
   <h2>Challenges specific to CBOMs</h2>

@@ -607,6 +607,27 @@ references:
       Malaysia and Indonesia (BSSN) following. Recorded as an engagement opportunity for
       the working group rather than a citable reference.
 
+  # ------------------------------------------------------ policy — multilateral
+  - id: X1
+    doc: 2026 SBOM Minimum Elements
+    title: 2026 Minimum Elements for a Software Bill of Materials (SBOM)
+    org: >-
+      CISA, NSA and FBI, co-sealed with ACSC, Cyber Centre, NÚKIB, ANSSI, BSI, CERT-In,
+      ACN, METI, NCO, NIS/NCSC, KISA, NCSC-NL, NCSC-NZ, NASK and NBU
+    date: 2026-07-29
+    category: policy
+    jurisdiction: global
+    status: current
+    url: https://media.defense.gov/2026/Jul/29/2003971159/-1/-1/1/CSI_2026_cisa_sbom_minimum_elements_508c.PDF
+    tags: [sbom, minimum-elements, provenance, signing]
+    notes: >-
+      Updates the 2021 NTIA minimum elements. Adds SBOM Generation Context (the lifecycle
+      phase at which the data was captured), SBOM Author Signature, data format name and
+      version, and tool provenance. Requires authors to distinguish information that is
+      unknown from information deliberately withheld, and states that supporting automation
+      means supporting all widely used formats rather than mandating one — both positions
+      the profile methodology depends on.
+
   # --------------------------------------------------------- policy — other
   - id: N1
     doc: ITSM.40.001
@@ -622,3 +643,121 @@ references:
     notes: >-
       April 2026 initial departmental migration plan with annual reporting; end 2031
       high-priority systems migrated; end 2035 remaining systems.
+
+  # ------------------------------------------------- protocol & algorithm specs
+  # Specifications cited by the methodology's worked example. Grouped separately so
+  # they can be filtered out when reviewing standards and policy.
+
+  - id: S1
+    doc: RFC 8446
+    title: The Transport Layer Security (TLS) Protocol Version 1.3
+    org: IETF
+    date: 2018-08
+    category: specs
+    jurisdiction: global
+    status: current
+    url: https://www.rfc-editor.org/info/rfc8446
+    tags: [ietf, tls, protocol]
+    notes: >-
+      The protocol behind the worked example's service interface. Defines the handshake
+      whose negotiated result, rather than either endpoint's capability, determines the
+      cryptography actually in use.
+
+  - id: S2
+    doc: RFC 4253 (with RFC 4251)
+    title: The Secure Shell (SSH) Transport Layer Protocol
+    org: IETF
+    date: 2006-01
+    category: specs
+    jurisdiction: global
+    status: current
+    url: https://www.rfc-editor.org/info/rfc4253
+    tags: [ietf, ssh, protocol]
+    notes: >-
+      The protocol behind the worked example's management interface. Authenticates with a
+      host key rather than a certificate, which is why a profile has to name the
+      authentication role abstractly rather than in TLS terms.
+
+  - id: S3
+    doc: RFC 7748
+    title: Elliptic Curves for Security
+    org: IETF
+    date: 2016-01
+    category: specs
+    jurisdiction: global
+    status: current
+    url: https://www.rfc-editor.org/info/rfc7748
+    tags: [ietf, curves, key-exchange]
+    notes: >-
+      Defines X25519, used for key exchange in the worked example. The same curve appears
+      in the wild as P-256-style SECG and ANSI names elsewhere, which is the naming problem
+      the CycloneDX Cryptography Registry addresses.
+
+  - id: S4
+    doc: RFC 8032
+    title: Edwards-Curve Digital Signature Algorithm (EdDSA)
+    org: IETF
+    date: 2017-01
+    category: specs
+    jurisdiction: global
+    status: current
+    url: https://www.rfc-editor.org/info/rfc8032
+    tags: [ietf, signatures]
+    notes: Defines Ed25519, the host key algorithm in the worked example's SSH interface.
+
+  - id: S5
+    doc: RFC 8439
+    title: ChaCha20 and Poly1305 for IETF Protocols
+    org: IETF
+    date: 2018-06
+    category: specs
+    jurisdiction: global
+    status: current
+    url: https://www.rfc-editor.org/info/rfc8439
+    tags: [ietf, aead]
+    notes: The AEAD construction used by the worked example's SSH interface.
+
+  - id: S6
+    doc: RFC 8017
+    title: "PKCS #1: RSA Cryptography Specifications Version 2.2"
+    org: IETF
+    date: 2016-11
+    category: specs
+    jurisdiction: global
+    status: current
+    url: https://www.rfc-editor.org/info/rfc8017
+    tags: [ietf, rsa, signatures]
+    notes: >-
+      RSA, used for the server certificate signature in the worked example. Quantum
+      vulnerable, and therefore one of the facts a post-quantum posture evaluation is
+      derived from.
+
+  - id: S7
+    doc: NIST SP 800-38D
+    title: >-
+      Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC
+    org: NIST
+    date: 2007-11
+    category: specs
+    jurisdiction: global
+    status: current
+    url: https://csrc.nist.gov/pubs/sp/800/38/d/final
+    tags: [nist, aead, modes]
+    notes: >-
+      Defines GCM, the mode in AES-256-GCM. Mode matters for identity: a bare "AES256"
+      omits it, which is why encoding an algorithm name without its parameters cannot be
+      compared reliably.
+
+  - id: S8
+    doc: Package URL (purl)
+    title: Package URL Specification
+    org: Package URL community
+    category: specs
+    jurisdiction: global
+    status: current
+    url: https://github.com/package-url/purl-spec
+    tags: [purl, identifiers]
+    notes: >-
+      The identifier scheme the methodology uses to name the library implementing an
+      interface, and the value that links a CBOM entry to vulnerability feeds and to the
+      corresponding SBOM component.

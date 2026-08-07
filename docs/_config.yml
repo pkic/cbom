@@ -28,6 +28,7 @@ labels:
     formats: BOM formats & CBOM specifications
     methodology: Methodology, sector work & tooling
     policy: Regulation & government guidance
+    specs: Protocol & algorithm specifications
   status:
     current: Current
     draft: Draft / not binding
