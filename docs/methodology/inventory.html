@@ -58,7 +58,7 @@
   <h2>How they relate</h2>
   <p>CBOMs are a primary input to a cryptographic inventory. The inventory is built by normalizing and correlating CBOMs from across the estate, together with data from other sources such as network and configuration discovery. A CBOM describes one component at one point in time; the inventory spans many components and is maintained over time.</p>
   <figure>
-    <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+    <svg viewBox="0 0 720 250" role="img" aria-label="Three source boxes, vendor CBOM, build CBOM and runtime or config scan, feeding a normalization step, then the cryptographic inventory, which feeds risk, compliance, migration and supply-chain uses" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <!-- sources -->
       <text x="95" y="30" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">SOURCES</text>
       <rect x="20" y="42" width="150" height="34" rx="8" fill="#eef2f8" stroke="#c9d3e0"/>
@@ -101,7 +101,7 @@
   <p>The inventory is a source of CBOMs as well as a destination for them. A CBOM can be extracted from the inventory to serve a specific consumer. That consumer may be internal, such as a security or architecture team that needs a description of the cryptography in a given system, or external, such as a client, an auditor, or a regulator. A common external case is a supply-chain request, where a customer or partner asks the organization for a CBOM covering a product or service it supplies.</p>
   <p>An extracted CBOM is a scoped snapshot of the inventory. It is generated for a defined subject, such as a product, a service, or a bounded part of the estate. It is filtered to the content the consumer needs, redacted where confidentiality requires it, marked with its provenance (the inventory revision and the time it was drawn from), and signed where appropriate. See <a href="governance.html">Governance</a>.</p>
   <figure>
-    <svg viewBox="0 0 720 235" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+    <svg viewBox="0 0 720 235" role="img" aria-label="The cryptographic inventory feeding an extract and scope step that selects, filters, redacts, signs and timestamps, producing an output CBOM for internal, external client and supply-chain consumers" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <rect x="18" y="80" width="140" height="74" rx="10" fill="#eefaf1" stroke="#15803d"/>
       <text x="88" y="110" fill="#14532d" text-anchor="middle" font-weight="700">Cryptographic</text>
       <text x="88" y="128" fill="#14532d" text-anchor="middle" font-weight="700">inventory</text>

@@ -172,3 +172,39 @@ disclosed.
 
 To evaluate: `python validate_cbom.py <cbom> profile-interface-disclosure.rules.json`, or open
 `demo.html`.
+
+## 7. Changelog
+
+The Versioning section asks profile authors to publish a changelog and to say which changes
+oblige a producer to do further work. This section is that record for the example, and is
+written to the form the methodology proposes.
+
+A change is **tightening** if a document that conformed to the previous version may no longer
+conform, **relaxing** if the reverse, and **editorial** if conformance is unaffected. Version
+numbers are the profile's own and are independent of the carrier version.
+
+### v0.2 — 2026-08-07
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Added the disclosure state model of §4.3, with the `pkic:profile:disclosure:` marker prefix and a `withholdable` flag on every rule | tightening | A document that omitted an attribute silently now fails as `undeclared`; supplying a marker restores conformance |
+| Added rule I9 `implementationPurl` at SHOULD, withholdable | none | SHOULD rules are reported, not enforced |
+| Recorded `appliesTo` as CycloneDX `min: 1.6`, `tested: 1.7` | editorial | Documents at 1.6 are evaluated and flagged legacy rather than refused |
+
+The derived PQC migration profile pins v0.2 and raises I9 to a non-withholdable MUST. Under
+decision 0004 that tightening is permitted; a subsequent baseline revision that relaxed I9 would
+place the derived profile in conflict, which is why the base is pinned by version.
+
+### v0.1 — initial draft
+
+Product-level rules P1 and P2 and per-interface rules I1 to I8. An earlier working draft bound a
+rule to a named interface (`interfaceId MUST equal "nginx-https"`); the correction to
+product-independent form is described in §1 and recorded as decision 0001. That draft was not
+published and no document was authored against it.
+
+### Not yet decided
+
+Whether a tightening obliges a grace window before a consumer may reject documents produced
+against the previous version, and whether that window belongs to the profile or to the agreement
+between the parties. The Versioning section describes dated grace windows; the example does not
+yet exercise one.

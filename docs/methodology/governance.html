@@ -42,7 +42,7 @@
   <h2>The CBOM lifecycle</h2>
   <p>A CBOM passes through a defined sequence of states. Governance defines the controls that apply at each transition.</p>
   <figure>
-    <svg viewBox="0 0 720 140" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+    <svg viewBox="0 0 720 140" role="img" aria-label="Five boxes joined left to right by arrows: Create from build or scan, Sign for integrity and provenance, Publish to a registry, Validate against profiles, and Supersede" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <g>
         <rect x="8" y="50" width="118" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
         <text x="67" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">Create</text>
@@ -99,7 +99,7 @@
   <p>Cryptography does not exist apart from the software and hardware that implement it, so a CBOM is of limited use without some way to reach the component context. There is more than one way to arrange that, and the choice is a governance decision rather than a technical detail. It determines what is signed, who is accountable for which document, how often each is regenerated, and what a consumer has to fetch before it can act.</p>
   <p>Four arrangements are in use. The first two produce a single document; the second two produce a pair with a reference between them.</p>
   <figure>
-    <svg viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11.5">
+    <svg viewBox="0 0 720 210" role="img" aria-label="Four arrangements side by side: a unified document holding software components and crypto assets, a standalone CBOM, a CBOM with an arrow to an SBOM, and an SBOM with an arrow to a CBOM" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11.5">
       <text x="88" y="18" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">A · UNIFIED</text>
       <rect x="16" y="30" width="144" height="104" rx="10" fill="#ffffff" stroke="#1c5fd6"/>
       <rect x="30" y="46" width="116" height="34" rx="7" fill="#eaf1fe" stroke="#c9d3e0"/>
@@ -186,6 +186,7 @@
 
   <h2>Evolution and change control</h2>
   <p>Profiles, the controlled vocabulary, and the methodology evolve over time. Changes are managed through explicit versioning (see <a href="versioning.html">Versioning</a>), recorded decisions, and, within the working group, lazy consensus. Requirements are tightened behind dated grace windows, and vocabulary values are deprecated rather than removed, so that changes are predictable and auditable.</p>
+  <p>The working group's own record is kept in the repository. Decisions taken while drafting are written up in <a href="https://github.com/pkic/cbom/tree/main/decisions">decisions/</a>, one file per decision, stating the options considered and what reversing the decision would involve; a decision is superseded rather than deleted. Unresolved items are collected in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a> and mapped to the methodology aspect that tracks each one. A profile applies the same discipline to itself: the example baseline carries a changelog classifying each change as tightening, relaxing, or editorial, so that a producer can tell from the record whether a new version obliges further work.</p>
 
   <h2>Distribution, retention, and immutability</h2>
   <p>Published CBOM revisions should be immutable: a correction or update is issued as a new revision rather than an in-place change, and superseding revisions replace, but do not delete, their predecessors. The registry governs access control and retention. Retention of superseded revisions provides the audit trail on which progress tracking and incident investigation depend.</p>

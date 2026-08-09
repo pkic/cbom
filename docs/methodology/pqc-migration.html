@@ -52,7 +52,7 @@
   <h2>The black-box constraint</h2>
   <p>The defining constraint is that the consumer cannot see inside the product, and the vendor will not expose its internals. Everything the profile asks for therefore has to be declarable at the boundary: observable at an interface, or stated by the vendor as a property of the product it ships. Anything requiring disclosure of source, design or internal architecture is out of scope, and would not be supplied in any case.</p>
   <figure>
-    <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+    <svg viewBox="0 0 720 250" role="img" aria-label="A dark box labelled Product, its internals not disclosed, with five interface markers on its edges: two service and one management interface on the left, two interconnect interfaces on the right" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <rect x="215" y="52" width="290" height="150" rx="14" fill="#29323d" stroke="#0f1b2d"/>
       <text x="360" y="115" fill="#ffffff" text-anchor="middle" font-weight="700" font-size="15">Product</text>
       <text x="360" y="137" fill="#c9d3e0" text-anchor="middle" font-size="11">internals not disclosed</text>
@@ -217,13 +217,26 @@
   <p>Where an attribute is unavailable, the three disclosure states apply. A vendor may withhold <code>implementationPurl</code> and still conform. A vendor that does not know whether an interface can coexist should record <code>coexistence</code> as <code>unknown</code> instead of guessing, because a wrong answer here produces a migration plan that fails at cutover.</p>
 
   <h2>Recorded decisions</h2>
-  <p>Two choices in this profile were made against the more obvious alternative. Recording them here means any future change to them is a deliberate act.</p>
-  <ul>
-    <li><strong>Capability is stated as facts, not as a verdict.</strong> The profile requires the algorithm sets an interface supports and does not ask whether they amount to being quantum-safe. That judgement is made by an external policy at the time of asking, for the reasons given in <a href="policy-evaluation.html">Policy Evaluation</a>. Revisit if a stable, widely accepted definition of quantum-safe emerges that no longer changes with guidance.</li>
-    <li><strong>Availability is expressed as a status and a blocker.</strong> Dates and target releases sit in a referenced roadmap entry, away from the interface. Revisit if consumers report that the indirection is not being followed in practice, which would argue for accepting stale dates in exchange for locality.</li>
-  </ul>
+  <p>Two choices in this profile were made against the more obvious alternative. Each is written up as a decision record in the repository, with the options considered, the rationale and what reversing it would involve. The records are the authoritative statement; the summaries below are for orientation.</p>
+  <table>
+    <thead><tr><th>Record</th><th>Decision</th><th>Aspect</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><a href="https://github.com/pkic/cbom/blob/main/decisions/0002-facts-in-cbom-judgements-in-policy.md">0002</a></td>
+        <td>Capability is stated as facts. The profile requires the algorithm sets an interface supports and does not ask whether they amount to being quantum-safe. That judgement is made by an external policy at the time of asking, for the reasons given in <a href="policy-evaluation.html">Policy Evaluation</a>.</td>
+        <td>3.3</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pkic/cbom/blob/main/decisions/0007-availability-as-status-and-blocker.md">0007</a></td>
+        <td>Availability is expressed as a status and a blocker. Dates and target releases sit in a referenced roadmap entry, away from the interface.</td>
+        <td>3.10</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Rules M1 to M12 also depend on decisions taken elsewhere in the methodology: <a href="https://github.com/pkic/cbom/blob/main/decisions/0004-monotonic-profile-extension.md">0004</a> for what this profile is permitted to change in the baseline it extends, and <a href="https://github.com/pkic/cbom/blob/main/decisions/0005-attribute-naming-conventions.md">0005</a> for the <code>Supported</code> suffix. The full index is in <a href="https://github.com/pkic/cbom/tree/main/decisions">decisions/</a>.</p>
 
   <h2>Open questions for the working group</h2>
+  <p>These are also carried in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a>, which collects the unresolved items from every section and maps each to the methodology aspect that tracks it.</p>
   <ul>
     <li>Whether raising <code>implementationPurl</code> to a non-withholdable MUST is acceptable to vendors. It is the one place this profile tightens the baseline, and it removes an option the baseline deliberately offered.</li>
     <li>Whether <code>enablementMethod</code> should be a single value or a set, since some capabilities need both an update and a configuration change.</li>

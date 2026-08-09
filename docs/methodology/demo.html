@@ -10,6 +10,7 @@
   .toggle button{background:none;border:0;color:var(--muted);padding:9px 16px;border-radius:7px;cursor:pointer;font-size:14px;font-weight:600}
   .toggle button.on[data-v=pass]{background:#eefaf1;color:var(--pass)}
   .toggle button.on[data-v=fail]{background:#fdeeee;color:var(--fail)}
+  .toggle button.on[data-v=disclosure]{background:#ede4fb;color:var(--mgmt)}
   .product{border:1px dashed var(--line);border-radius:14px;padding:16px;margin:6px 0 18px;background:#f2f6fc}
   .plabel{font:600 12px/1 var(--mono);color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:12px}
   .ifaces{display:flex;gap:14px;flex-wrap:wrap}
@@ -37,6 +38,19 @@
   .attr{font-family:var(--mono);font-size:12.5px;color:#26324a} .detail{color:var(--muted);font-family:var(--mono);font-size:12px}
   .ihead{font-weight:600;margin:14px 0 8px;display:flex;align-items:center;gap:8px}
   .dot{width:9px;height:9px;border-radius:50%} .dot.svc{background:var(--svc)} .dot.management{background:var(--mgmt)}
+  .st.undec{background:#e8e5e0;color:#6b6257}
+  .ctl{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-end;margin:6px 0 4px}
+  .ctl .grp{display:flex;flex-direction:column;gap:4px}
+  .ctl .lbl{font:600 10.5px/1 var(--mono);color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+  .toggle.vers button.on{background:#e5ebf5;color:#2b3f66}
+  .toggle.vers button{padding:8px 13px;font-size:13px}
+  .band{border-radius:10px;padding:11px 14px;margin:12px 0;font-size:13.5px;border:1px solid}
+  .band.target{background:#eefaf1;border-color:#bfe6cb;color:#1a5c33}
+  .band.legacy{background:#fbeed4;border-color:#e6d3a3;color:#7a5a12}
+  .band.newer{background:#e9f0fb;border-color:#c2d4ee;color:#26456f}
+  .band.refused{background:#fdeeee;border-color:#f2caca;color:var(--fail)}
+  .band b{font-family:var(--mono);font-size:12.5px}
+  .dim{opacity:.4;pointer-events:none}
 </style>
 </head>
 <body>
@@ -70,33 +84,53 @@
 <main>
   <div class="crumb">INTERACTIVE</div>
   <h1>Conformance evaluation</h1>
-  <p class="lead">Select either example CBOM. The conforming product declares both a service and a management interface; the non-conforming product does not declare a management interface. This evaluation corresponds to that performed by <code>validate_cbom.py</code>.</p>
+  <p class="lead">Three example documents, evaluated against the Interface Disclosure Baseline v0.2. The first declares both a service and a management interface and conforms. The second omits the management interface and fails a product rule. The third declares both but exercises each of the four disclosure outcomes. The carrier version selector shows how the profile's declared acceptance range treats documents written to other versions of CycloneDX. This evaluation corresponds to that performed by <code>validate_cbom.py</code>.</p>
   <div class="legend">
     <div><span class="k st PASS">PASS</span>value supplied and valid</div>
     <div><span class="k st held">HELD</span>withheld by the producer, permitted for this attribute</div>
     <div><span class="k st unkn">UNKN</span>declared unknown to the producer</div>
-    <div><span class="k st FAIL">FAIL</span>absent or invalid</div>
+    <div><span class="k st undec">NONE</span>undeclared: no value and no marker</div>
+    <div><span class="k st FAIL">FAIL</span>value supplied but invalid</div>
   </div>
-  <p style="font-size:13.5px;color:var(--muted)">The management interface below withholds its library version rather than omitting it, which the profile permits for that attribute. See <a href="challenges.html">Challenges</a> on why absent, unknown, and withheld are treated separately.</p>
+  <p style="font-size:13.5px;color:var(--muted)">The four outcomes are distinguished because they mean different things to a consumer. Withholding is a commercial position, an unknown is a limit of the producing process, and an undeclared attribute indicates the document was not built against the profile. Select the third example to see all four at once. See <a href="challenges.html">Challenges</a> and the disclosure states in <a href="profile.html">Profile</a>.</p>
 
-  <div class="toggle" id="toggle">
-    <button data-v="pass" class="on">✓ Conforming CBOM</button>
-    <button data-v="fail">✕ Non-conforming CBOM</button>
+  <div class="ctl">
+    <div class="grp">
+      <span class="lbl">Example document</span>
+      <div class="toggle" id="toggle">
+        <button data-v="pass" class="on">✓ Conforming</button>
+        <button data-v="fail">✕ Missing interface</button>
+        <button data-v="disclosure">◐ Disclosure states</button>
+      </div>
+    </div>
+    <div class="grp">
+      <span class="lbl">Carrier version (CycloneDX specVersion)</span>
+      <div class="toggle vers" id="vtoggle">
+        <button data-ver="1.5">1.5</button>
+        <button data-ver="1.6">1.6</button>
+        <button data-ver="1.7" class="on">1.7</button>
+        <button data-ver="1.8">1.8</button>
+      </div>
+    </div>
   </div>
+
+  <div id="bandNotice"></div>
 
   <div class="product">
-    <div class="plabel">Product · nginx 1.27.0 — declared cryptographic interfaces · CycloneDX 1.7 CBOM</div>
+    <div class="plabel" id="plabel"></div>
     <div class="ifaces" id="ifaceStrip"></div>
   </div>
 
   <div id="verdict" class="verdict pass"></div>
 
-  <div class="rulebox">
-    <h3>Product-level rules (constraints on the set of interfaces)</h3>
-    <ul class="checks" id="productChecks"></ul>
-  </div>
+  <div id="ruleArea">
+    <div class="rulebox">
+      <h3>Product-level rules (constraints on the set of interfaces)</h3>
+      <ul class="checks" id="productChecks"></ul>
+    </div>
 
-  <div id="ifaceChecks"></div>
+    <div id="ifaceChecks"></div>
+  </div>
 
   <div class="pagenav">
     <a href="files.html">← Files</a>
@@ -107,6 +141,7 @@
 
 <script>
 const PROFILE = {
+  appliesTo: {cyclonedx:{min:"1.6", tested:"1.7"}},
   interfaceTypeVocabulary: ["management","service","interconnect","peer","storage"],
   productRules: [
     {id:"P1", level:"MUST", description:"Product declares at least one cryptographic interface", constraint:{minInterfaces:1}},
@@ -132,7 +167,41 @@ const MGMT = {interfaceId:"mgmt-ssh", interfaceType:"management", protocol:"SSH"
   keyExchange:"curve25519-sha256", encryption:"ChaCha20-Poly1305", authentication:"Ed25519 host key",
   endpointRoles:["client","server"], lifecycleStage:"configured",
   _disclosure:{implementationPurl:"withheld"}, nm:"Management interface (SSH 2.0)", via:"OpenSSH (version withheld)"};
-const CBOMS = { pass:[SVC, MGMT], fail:[SVC] };
+// Third example: one interface exercising all four disclosure outcomes at once.
+// implementationPurl is withheld and permitted; encryption is declared unknown;
+// authentication carries neither a value nor a marker.
+const MIXED = {interfaceId:"mgmt-ssh", interfaceType:"management", protocol:"SSH", protocolVersion:"2.0",
+  keyExchange:"curve25519-sha256",
+  endpointRoles:["client","server"], lifecycleStage:"configured",
+  _disclosure:{implementationPurl:"withheld", encryption:"unknown"},
+  nm:"Management interface (SSH 2.0)", via:"OpenSSH (version withheld)"};
+const CBOMS = { pass:[SVC, MGMT], fail:[SVC], disclosure:[SVC, MIXED] };
+
+// --- carrier version bands -------------------------------------------------
+function cmpVer(a,b){
+  const pa=String(a).split(".").map(Number), pb=String(b).split(".").map(Number);
+  for(let i=0;i<Math.max(pa.length,pb.length);i++){
+    const d=(pa[i]||0)-(pb[i]||0); if(d) return d<0?-1:1;
+  }
+  return 0;
+}
+function band(ver){
+  const r=PROFILE.appliesTo.cyclonedx;
+  if(cmpVer(ver,r.min)<0)    return {k:"refused", evaluate:false,
+    t:"Refused. specVersion <b>"+ver+"</b> is older than the profile minimum of <b>"+r.min+"</b>. "+
+      "The profile cannot express its rules against this carrier version, so no verdict is issued. "+
+      "A refusal is not a conformance failure, and the two are reported separately."};
+  if(cmpVer(ver,r.tested)<0) return {k:"legacy", evaluate:true,
+    t:"Legacy. specVersion <b>"+ver+"</b> is at or above the minimum of <b>"+r.min+"</b> but below the tested version <b>"+
+      r.tested+"</b>. The document is evaluated and the result is flagged, because refusing it would discard "+
+      "information the consumer already holds."};
+  if(cmpVer(ver,r.tested)===0) return {k:"target", evaluate:true,
+    t:"Target. specVersion <b>"+ver+"</b> is the version this profile was exercised against. The result is unqualified."};
+  return {k:"newer", evaluate:true,
+    t:"Newer. specVersion <b>"+ver+"</b> post-dates the version this profile was tested against (<b>"+r.tested+
+      "</b>). The document is evaluated and the result is qualified, since the profile may not account for "+
+      "constructs the newer carrier introduced."};
+}
 
 function present(v){return !(v===null||v===undefined||v===""||(Array.isArray(v)&&!v.length));}
 function checkAttr(value, c){
@@ -175,24 +244,50 @@ function validate(ifaces){
 function stItem(r){
   let st;
   if(r.ok) st = r.state==="withheld" ? "held" : "PASS";
-  else if(r.level==="MUST") st = r.state==="unknown" ? "unkn" : "FAIL";
-  else st = "warn";
-  const label={held:"HELD",unkn:"UNKN",warn:"WARN"}[st] || st;
+  else if(r.level!=="MUST") st = "warn";
+  else if(r.state==="unknown") st = "unkn";
+  else if(r.state==="undeclared") st = "undec";
+  else st = "FAIL";
+  const label={held:"HELD",unkn:"UNKN",undec:"NONE",warn:"WARN"}[st] || st;
   return `<span class="st ${st}">${label}</span>`;
 }
-function render(v){
+let curVariant="pass", curVer="1.7";
+
+function render(){
+  const v=curVariant;
   const ifaces=CBOMS[v];const res=validate(ifaces);
+  const bd=band(curVer);
+  document.getElementById("bandNotice").innerHTML =
+    `<div class="band ${bd.k}">${bd.t}</div>`;
+  document.getElementById("ruleArea").className = bd.evaluate ? "" : "dim";
   let strip = ifaces.map(f=>`<div class="iface ${f.interfaceType==='management'?'management':'svc'}">
       <div class="itype">interfaceType · ${f.interfaceType}</div>
       <div class="inm">${f.nm}</div>
       <div class="imeta">${f.protocol} ${f.protocolVersion} · via ${f.via}<br>${f.endpointRoles.join(' ↔ ')} · ${f.lifecycleStage}</div></div>`).join("");
   if(v==="fail") strip += `<div class="missing">no <b>management</b> interface declared<br>— the configuration interface is not described</div>`;
   document.getElementById("ifaceStrip").innerHTML=strip;
+  document.getElementById("plabel").textContent =
+    "Product · nginx 1.27.0 — declared cryptographic interfaces · CycloneDX "+curVer+" CBOM";
+
   const vd=document.getElementById("verdict");
-  vd.className="verdict "+(res.conforms?"pass":"fail");
-  const pf=res.product.filter(r=>!r.ok&&r.level==="MUST").map(r=>r.id);
-  vd.textContent=res.conforms ? "✓ CONFORMS to Interface Disclosure Baseline v0.2"
-    : "✕ DOES NOT CONFORM — failed product rule: "+pf.join(", ");
+  if(!bd.evaluate){
+    vd.className="verdict fail";
+    vd.textContent="⊘ REFUSED — carrier version "+curVer+" precedes the profile minimum. No conformance verdict.";
+  } else {
+    vd.className="verdict "+(res.conforms?"pass":"fail");
+    const reasons=[];
+    const pf=res.product.filter(r=>!r.ok&&r.level==="MUST").map(r=>r.id);
+    if(pf.length) reasons.push("product rule "+pf.join(", "));
+    res.interfaces.filter(i=>!i.conforms).forEach(i=>{
+      const ids=i.rows.filter(r=>!r.ok&&r.level==="MUST").map(r=>r.id);
+      reasons.push(i.iface.interfaceId+" ("+ids.join(", ")+")");
+    });
+    const q = bd.k==="legacy" ? " · legacy carrier, result flagged"
+            : bd.k==="newer"  ? " · newer carrier, result qualified" : "";
+    vd.textContent=res.conforms
+      ? "✓ CONFORMS to Interface Disclosure Baseline v0.2"+q
+      : "✕ DOES NOT CONFORM — failed "+reasons.join("; ")+q;
+  }
   document.getElementById("productChecks").innerHTML=res.product.map(r=>
     `<li class="product ${!r.ok?'fail':''}">${stItem(r)}<span class="pill">${r.level}</span>
       <span><span class="attr">${r.id}</span> — ${r.description} <span class="detail">→ ${r.d}</span></span></li>`).join("");
@@ -206,10 +301,19 @@ function render(v){
        <ul class="checks">${rows}</ul>`;
   }).join("");
 }
-const tg=document.getElementById("toggle");
-tg.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
-  [...tg.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");render(b.dataset.v);});
-render("pass");
+function wire(id, attr, set){
+  const tg=document.getElementById(id);
+  tg.addEventListener("click", e=>{
+    const b=e.target.closest("button"); if(!b) return;
+    [...tg.children].forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    set(b.dataset[attr]);
+    render();
+  });
+}
+wire("toggle","v",   x=>{curVariant=x;});
+wire("vtoggle","ver",x=>{curVer=x;});
+render();
 </script>
 </body>
 </html>
