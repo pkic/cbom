@@ -1,0 +1,34 @@
+name: Profile tests
+
+# Checks that the published example profiles, CBOMs and validator still behave
+# as the methodology documentation describes. Runs on any change to the
+# methodology artifacts or to the tests themselves.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/methodology/**'
+      - 'tests/**'
+      - '.github/workflows/profile-tests.yml'
+  pull_request:
+    paths:
+      - 'docs/methodology/**'
+      - 'tests/**'
+      - '.github/workflows/profile-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  profile-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run profile tests
+        run: bash tests/run-profile-tests.sh

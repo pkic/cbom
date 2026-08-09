@@ -1,0 +1,16 @@
+{
+  "$comment": "TEST FIXTURE — deliberately invalid. This profile extends the interface disclosure baseline and tries to relax an inherited rule, lowering I3 (keyExchange) from MUST to SHOULD and making I1 withholdable. Extension is monotonic, so the validator must reject it with exit code 3 rather than evaluating any CBOM against it. Not a real profile; do not copy.",
+  "profileId": "pkic.test.invalid-relaxing",
+  "title": "Invalid relaxing profile (test fixture)",
+  "version": "0.0",
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.2",
+    "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
+  },
+  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
+  "overrides": [
+    { "id": "I3", "level": "SHOULD" }
+  ],
+  "interfaceRules": []
+}
