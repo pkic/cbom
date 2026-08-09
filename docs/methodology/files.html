@@ -15,13 +15,16 @@
   </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
+    <a href="terms.html">Terms</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="method.html">Method</a>
     <a href="use-cases.html">Use Cases</a>
+    <a href="pqc-migration.html">PQC Migration</a>
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
     <a href="governance.html">Governance</a>
@@ -45,7 +48,10 @@
       <tr><td><a href="mapping-cyclonedx-spdx.md">mapping-cyclonedx-spdx.md</a></td><td>Complete requirement-to-format mapping</td></tr>
       <tr><td><a href="cbom-pass.cyclonedx.json">cbom-pass.cyclonedx.json</a></td><td>Conforming example CBOM (CycloneDX 1.7)</td></tr>
       <tr><td><a href="cbom-fail.cyclonedx.json">cbom-fail.cyclonedx.json</a></td><td>Non-conforming example; omits the management interface</td></tr>
-      <tr><td><a href="validate_cbom.py">validate_cbom.py</a></td><td>Version-aware validator</td></tr>
+      <tr><td><a href="profile-pqc-migration.rules.json">profile-pqc-migration.rules.json</a></td><td>The PQC migration profile, derived from the baseline via <code>extends</code></td></tr>
+      <tr><td><a href="cbom-pqc-pass.cyclonedx.json">cbom-pqc-pass.cyclonedx.json</a></td><td>Conforming example for the migration profile; three interfaces at different readiness stages</td></tr>
+      <tr><td><a href="cbom-pqc-fail.cyclonedx.json">cbom-pqc-fail.cyclonedx.json</a></td><td>Non-conforming example exercising both conditional rules and the inherited-rule tightening</td></tr>
+      <tr><td><a href="validate_cbom.py">validate_cbom.py</a></td><td>Version-aware validator with profile composition</td></tr>
       <tr><td><a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a></td><td>Treatment of older CBOM files</td></tr>
     </tbody>
   </table>
@@ -72,7 +78,18 @@ PY
 python validate_cbom.py cbom-1.6.json profile-interface-disclosure.rules.json   # legacy: accepted with a warning
 python validate_cbom.py cbom-1.5.json profile-interface-disclosure.rules.json   # unsupported: refused</code></pre>
 
-  <div class="banner">The <a href="demo.html">Demo</a> section performs the same evaluation in the browser. Standards, regulation and specifications cited across this documentation are listed in the <a href="../references/">reference register</a>.</div>
+  <h2>The derived profile</h2>
+  <p>The PQC migration profile extends the baseline, so evaluating against it also evaluates every baseline rule. The validator resolves the base, applies the overrides, and rejects any override that would relax an inherited rule.</p>
+  <pre><code># conforms
+python validate_cbom.py cbom-pqc-pass.cyclonedx.json profile-pqc-migration.rules.json
+
+# does not conform, for three separate reasons
+python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-pqc-migration.rules.json</code></pre>
+  <p>The failing document is worth reading alongside its verdict. Two failures come from conditional rules: an interface claiming enablement by software update without naming the version (M5), and one declaring a capability committed without saying what blocks it (M11). The third is the instructive one. Its interconnect interface withholds <code>implementationPurl</code>, which the baseline permits. Evaluated against the baseline alone that document conforms; it fails here only because the derived profile removed withholdability from that rule.</p>
+  <pre><code># the same document against the base profile, which permits the withheld value
+python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-interface-disclosure.rules.json</code></pre>
+
+  <div class="banner">The <a href="demo.html">Demo</a> section performs the same evaluation in the browser for the baseline profile. Standards, regulation and specifications cited across this documentation are listed in the <a href="../references/">reference register</a>.</div>
 
   <div class="pagenav">
     <a href="governance.html">← Governance</a>

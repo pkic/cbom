@@ -15,13 +15,16 @@
   </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
+    <a href="terms.html">Terms</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
     <a href="model.html">Model</a>
     <a href="profile.html" class="active">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="method.html">Method</a>
     <a href="use-cases.html">Use Cases</a>
+    <a href="pqc-migration.html">PQC Migration</a>
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
     <a href="governance.html">Governance</a>
@@ -93,6 +96,7 @@
   </table>
 
   <h3>Per-interface rules (applied to every interface)</h3>
+  <p>Names follow the conventions in <a href="method.html">Method</a>. The bare name denotes present state, so <code>keyExchange</code> is what the interface uses; a profile needing declared capability adds the <code>Supported</code> suffix, as the <a href="pqc-migration.html">PQC Migration</a> profile does.</p>
   <table>
     <thead><tr><th>#</th><th>Attribute</th><th>Level</th><th>Notes</th></tr></thead>
     <tbody>
@@ -122,6 +126,95 @@
     </tbody>
   </table>
   <p>An unknown value does not satisfy a MUST rule, because the requirement has not been met. It is still reported separately from an undeclared one: the first records a limit of the producing process, the second records that the question was not addressed. In this profile only I9 is withholdable, on the basis that a producer may decline to publish a library version while still meeting the disclosure objective. A procurement profile might permit no withholding at all. See <a href="challenges.html">Challenges</a> and <a href="demo.html">Demo</a>.</p>
+
+  <h2>Composition: how profiles relate to each other</h2>
+  <p>Two different things are meant when profiles are combined, and keeping them apart matters because they carry different guarantees.</p>
+  <figure>
+    <svg viewBox="0 0 720 235" role="img" aria-label="Independent evaluation produces separate verdicts; extension produces a derived profile whose conformance implies the base" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <title>Independent evaluation compared with extension</title>
+      <text x="180" y="20" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">INDEPENDENT EVALUATION</text>
+      <rect x="16" y="80" width="104" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="68" y="108" fill="#1a2230" text-anchor="middle">one CBOM</text>
+      <rect x="196" y="38" width="128" height="34" rx="8" fill="#ffffff" stroke="#1c5fd6"/>
+      <text x="260" y="60" fill="#1a2230" text-anchor="middle" font-size="11">procurement</text>
+      <rect x="196" y="86" width="128" height="34" rx="8" fill="#ffffff" stroke="#1c5fd6"/>
+      <text x="260" y="108" fill="#1a2230" text-anchor="middle" font-size="11">migration</text>
+      <rect x="196" y="134" width="128" height="34" rx="8" fill="#ffffff" stroke="#1c5fd6"/>
+      <text x="260" y="156" fill="#1a2230" text-anchor="middle" font-size="11">vulnerability</text>
+      <g stroke="#c9d3e0" stroke-width="2" fill="none">
+        <line x1="120" y1="97" x2="196" y2="55"/><line x1="120" y1="103" x2="196" y2="103"/><line x1="120" y1="109" x2="196" y2="151"/>
+      </g>
+      <text x="180" y="196" fill="#5b6472" text-anchor="middle" font-size="11">three separate verdicts</text>
+      <text x="180" y="212" fill="#5b6472" text-anchor="middle" font-size="11">no profile knows about the others</text>
+
+      <line x1="376" y1="30" x2="376" y2="215" stroke="#e4e8ee" stroke-width="2"/>
+
+      <text x="548" y="20" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">EXTENSION</text>
+      <rect x="470" y="42" width="156" height="42" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="548" y="62" fill="#1a2230" text-anchor="middle" font-size="11.5">base profile</text>
+      <text x="548" y="77" fill="#5b6472" text-anchor="middle" font-size="10">interface disclosure v0.2</text>
+      <rect x="470" y="120" width="156" height="42" rx="10" fill="#eafaf1" stroke="#0f7a52"/>
+      <text x="548" y="140" fill="#1a2230" text-anchor="middle" font-size="11.5">derived profile</text>
+      <text x="548" y="155" fill="#5b6472" text-anchor="middle" font-size="10">adds and tightens only</text>
+      <line x1="548" y1="84" x2="548" y2="120" stroke="#0f7a52" stroke-width="2"/>
+      <polygon points="548,84 543,94 553,94" fill="#0f7a52"/>
+      <text x="548" y="196" fill="#0f7a52" text-anchor="middle" font-size="11">conforming to the derived profile</text>
+      <text x="548" y="212" fill="#0f7a52" text-anchor="middle" font-size="11">means conforming to the base</text>
+    </svg>
+    <figcaption>Independent evaluation answers several questions about one document. Extension builds one profile out of another, and carries a guarantee that independent evaluation does not.</figcaption>
+  </figure>
+
+  <h3>Independent evaluation</h3>
+  <p>A CBOM may be evaluated against any number of profiles, each producing its own verdict. The profiles need not know of each other and are not combined. This is what the claim that one document serves several purposes amounts to: a vendor publishes once, and a procurement team, a migration planner and a vulnerability responder each apply the profile matching their decision.</p>
+  <p>Two conditions make this work. Attribute names are global across the methodology, so a name means the same thing in every profile that uses it, which is why the naming conventions and the attribute table in <a href="terms.html">Terms</a> apply to all profiles and not to each in isolation. And a verdict is always reported per profile; conformance to one says nothing about another.</p>
+
+  <h3>Extension</h3>
+  <p>A profile may declare that it extends another. It then inherits every rule of the base and states only what it adds or changes. A sector baseline built on a general one, and the <a href="pqc-migration.html">PQC migration</a> profile built on the interface disclosure baseline, are both of this kind.</p>
+  <p>Extension is <strong>monotonic</strong>: a derived profile may add rules and tighten inherited ones, and may not relax them. The consequence is the property that makes extension worth having, which is that a document conforming to the derived profile also conforms to the base. Without it, a claim of conformance to a sector profile "based on" the baseline would tell a consumer nothing about the baseline, and the word "based" would be doing misleading work.</p>
+  <table>
+    <thead><tr><th>Operation on an inherited rule</th><th>Permitted</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Raise the level, SHOULD to MUST</td><td><span class="must">yes</span></td><td>Tightening. Anything satisfying the derived rule satisfies the base rule.</td></tr>
+      <tr><td>Narrow a constraint, such as restricting an enumeration to a subset or raising a minimum count</td><td><span class="must">yes</span></td><td>Tightening.</td></tr>
+      <tr><td>Make a withholdable attribute non-withholdable</td><td><span class="must">yes</span></td><td>Tightening.</td></tr>
+      <tr><td>Add a new attribute or structural rule</td><td><span class="must">yes</span></td><td>Extension proper.</td></tr>
+      <tr><td>Lower the level, MUST to SHOULD</td><td><span class="na">no</span></td><td>Relaxing. Breaks the implication that derived conformance means base conformance.</td></tr>
+      <tr><td>Widen a constraint or remove a rule</td><td><span class="na">no</span></td><td>Relaxing, on the same grounds.</td></tr>
+      <tr><td>Make a non-withholdable attribute withholdable</td><td><span class="na">no</span></td><td>Relaxing.</td></tr>
+      <tr><td>Redefine what an inherited attribute means</td><td><span class="na">no</span></td><td>Names are global. A profile needing different semantics needs a different attribute.</td></tr>
+    </tbody>
+  </table>
+  <p>A profile that genuinely needs to relax a base requirement is not an extension of it. It is an independent profile, and should be written and claimed as one. Treating that as a restriction rather than an inconvenience keeps conformance claims meaningful.</p>
+
+  <h3>Pinning, ranges and identifiers</h3>
+  <ul>
+    <li><strong>The base version is pinned.</strong> A derived profile names the base profile and the exact version it extends. A later release of the base has no effect until the derived profile's author re-pins and re-checks, which follows the general treatment of profile versions in <a href="versioning.html">Versioning</a>.</li>
+    <li><strong>The carrier acceptance range may narrow, never widen.</strong> A derived profile cannot accept a format version the base excludes, since the base's adapter may be unable to read it.</li>
+    <li><strong>Inherited rules keep the base's identifiers.</strong> A report can then say that I3 comes from the baseline and M9 was added by the derived profile, and a reader can trace any failure to the profile that imposed it.</li>
+    <li><strong>Single inheritance only, for now.</strong> A profile extends at most one base. Multiple inheritance raises conflicts between bases that would need resolution rules, and no case requiring it has arisen.</li>
+  </ul>
+
+  <h3>Expressing a conformance claim</h3>
+  <p>A claim names every profile evaluated, each with its version, together with the carrier format version and the content revision. For a derived profile the base is named as well, because the derived profile pins a particular version of it and a reader should not have to look that up.</p>
+  <pre><code>Conforms to:
+  pkic.example.pqc-migration v0.1
+    extending pkic.example.interface-disclosure v0.2
+  pkic.example.interface-disclosure v0.2   (independently evaluated)
+Carrier: CycloneDX 1.7
+Content revision: 3</code></pre>
+
+  <h3>Machine-readable form</h3>
+  <p>A derived rules file declares its base and lists only its additions and its tightenings.</p>
+  <pre><code>{
+  "profileId": "pkic.example.pqc-migration",
+  "version": "0.1",
+  "extends": { "profileId": "pkic.example.interface-disclosure", "version": "0.2" },
+  "overrides": [
+    { "id": "I9", "level": "MUST", "withholdable": false }
+  ],
+  "interfaceRules": [ ... rules added by this profile ... ]
+}</code></pre>
+  <p>A validator loading such a file resolves the base, applies the overrides, and rejects any override that relaxes an inherited rule. That check is worth implementing early, because a relaxing override is easy to write by accident and its effect on a conformance claim is not obvious from reading the file.</p>
 
   <h2>Conformance pipeline</h2>
   <p>The validator applies four stages in sequence. The content stages are evaluated only if the format stage accepts the CBOM.</p>

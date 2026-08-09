@@ -1,0 +1,63 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile for PQC migration planning. DERIVED: this profile extends the interface disclosure baseline under the composition rules on the Profile page. It inherits every baseline rule, tightens one, and adds twelve per-interface rules and two product-level rules. Extension is monotonic, so a CBOM conforming to this profile also conforms to the baseline. The 'file' hint in 'extends' tells the validator where to resolve the base from; profileId and version are what a conformance claim cites.",
+  "profileId": "pkic.example.pqc-migration",
+  "title": "PQC Migration Readiness (Example)",
+  "version": "0.1",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.2",
+    "file": "profile-interface-disclosure.rules.json"
+  },
+
+  "appliesTo": {
+    "$comment": "Must lie within the base profile's range. A derived profile may narrow the accepted carrier versions and may not widen them.",
+    "cyclonedx": { "min": "1.6", "tested": "1.7" }
+  },
+
+  "disclosure": {
+    "markerPrefix": "pkic:profile:disclosure:",
+    "states": ["unknown", "withheld"]
+  },
+
+  "capabilityStatusVocabulary": ["available", "committed", "planned", "under-evaluation", "not-planned"],
+  "blockedByVocabulary": ["provider", "product", "hardware", "standard", "certification"],
+  "enablementMethodVocabulary": ["already-enabled", "configuration", "software-update", "hardware-change", "licence", "not-available"],
+  "providerLocationVocabulary": ["software", "hsm", "tee", "unspecified"],
+  "coexistenceVocabulary": ["simultaneous", "exclusive", "unknown"],
+  "coverageVocabulary": ["all-external", "all", "partial"],
+
+  "overrides": [
+    {
+      "id": "I9",
+      "level": "MUST",
+      "withholdable": false,
+      "note": "Tightened from SHOULD/withholdable. Migration sequencing depends on knowing which library implements an interface, so a withheld value leaves the consumer unable to plan."
+    }
+  ],
+
+  "productRules": [
+    { "id": "P3", "description": "Product states how complete its declared interface set is", "level": "MUST", "constraint": { "productAttribute": "coverage", "enumRef": "coverageVocabulary" } },
+    { "id": "P4", "description": "Product identifies at least one cryptographic provider", "level": "SHOULD", "constraint": { "minProviders": 1 } }
+  ],
+
+  "interfaceRules": [
+    { "id": "M1", "attribute": "protocolVersionsSupported", "level": "MUST",   "constraint": { "minCount": 1 }, "list": true },
+    { "id": "M2", "attribute": "keyExchangeSupported",      "level": "MUST",   "constraint": { "minCount": 1 }, "list": true },
+    { "id": "M3", "attribute": "authenticationSupported",   "level": "MUST",   "constraint": { "minCount": 1 }, "list": true },
+    { "id": "M4", "attribute": "enablementMethod",          "level": "MUST",   "constraint": { "enumRef": "enablementMethodVocabulary" } },
+    { "id": "M5", "attribute": "minimumProductVersion",     "level": "MUST",   "constraint": { "present": true },
+      "requiredWhen": { "attribute": "enablementMethod", "equals": "software-update" },
+      "note": "Conditional. Applies only where the capability is enabled by a software update." },
+    { "id": "M6", "attribute": "providerLocation",          "level": "MUST",   "constraint": { "enumRef": "providerLocationVocabulary" } },
+    { "id": "M7", "attribute": "coexistence",               "level": "MUST",   "constraint": { "enumRef": "coexistenceVocabulary" } },
+    { "id": "M8", "attribute": "negotiationControl",        "level": "SHOULD", "constraint": { "present": true } },
+    { "id": "M9", "attribute": "integrationConstraints",    "level": "SHOULD", "constraint": { "present": true } },
+    { "id": "M10", "attribute": "capabilityStatus",         "level": "MUST",   "constraint": { "enumRef": "capabilityStatusVocabulary" } },
+    { "id": "M11", "attribute": "blockedBy",                "level": "MUST",   "constraint": { "enumRef": "blockedByVocabulary" },
+      "requiredWhen": { "attribute": "capabilityStatus", "notEquals": "available" },
+      "note": "Conditional. Applies wherever the capability is not already available." },
+    { "id": "M12", "attribute": "roadmapRef",               "level": "MAY",    "constraint": { "present": true } }
+  ]
+}

@@ -1,41 +1,54 @@
 #!/usr/bin/env python3
 """
-Illustrative CBOM profile validator (product-independent, version-aware).
+Illustrative CBOM profile validator.
 
-Demonstrates the "conformance checklist" direction of a CBOM profile that is
-product- and instance-independent:
+Demonstrates the conformance-checklist direction of a profile that is
+product-independent, version-aware, and composable:
 
   * FORMAT check    -- is this CBOM in a carrier format/version the profile
-                       accepts? (see 'appliesTo' in the rules file). Older CBOMs
-                       are handled deliberately: refused below 'min', flagged
+                       accepts? ('appliesTo'). Refused below 'min', flagged
                        'legacy' between 'min' and 'tested', accepted at 'tested'.
-  * PRODUCT rules   -- constrain the SET of interfaces (cardinality, e.g. "at
-                       least one management interface"), naming no specific one.
-  * INTERFACE rules -- apply uniformly to EVERY declared cryptographic interface.
+  * COMPOSITION     -- a profile may 'extend' another. The base is resolved,
+                       'overrides' are applied, and any override that RELAXES an
+                       inherited rule is rejected. Extension is monotonic, so
+                       conforming to a derived profile implies conforming to its
+                       base.
+  * PRODUCT rules   -- constrain the SET of interfaces and product-level
+                       attributes, naming no specific interface.
+  * INTERFACE rules -- applied to every declared cryptographic interface, with
+                       support for conditional rules ('requiredWhen') and
+                       list-valued attributes ('list': true).
 
-Disclosure states (profile v0.2). An attribute is reported in one of four ways:
-  value      -- a value was supplied and checked against the constraint
-  withheld   -- the producer declared it withheld; satisfies a rule marked
-                'withholdable', otherwise fails
-  unknown    -- the producer declared it unknown to itself; never satisfies MUST,
-                but is distinguished from silent omission
-  undeclared -- neither a value nor a marker was supplied
-
-Design point (matches the working-group methodology):
-  * The RULES are format-independent and protocol-neutral.
-  * The FORMAT ADAPTER (extract_interfaces) is the only format-specific part, and
-    it reads fields common to CycloneDX 1.6 and 1.7 so older CBOMs still validate.
+Disclosure states. An attribute is reported as one of:
+  value      -- supplied and checked against the constraint
+  withheld   -- declared withheld; satisfies a rule marked 'withholdable'
+  unknown    -- declared unknown to the producer; never satisfies MUST
+  undeclared -- neither a value nor a marker
+  n/a        -- a conditional rule whose condition does not hold
 
 Usage:
     python validate_cbom.py <cbom.json> <profile.rules.json> [--json]
-Exit code: 0 = conforms, 1 = does not conform, 2 = usage/error.
+
+Exit codes:
+    0  conforms
+    1  does not conform
+    2  usage error
+    3  profile error, such as an override that relaxes an inherited rule
 """
 import json
+import os
 import sys
+
+
+class ProfileError(Exception):
+    """The profile itself is invalid, as distinct from a CBOM failing it."""
 
 ENC_PRIMS = {"ae", "aead", "block-cipher", "stream-cipher"}
 KEX_PRIMS = {"key-agree", "key-agreement", "kem"}
 SIG_PRIMS = {"signature"}
+
+LEVEL_ORDER = {"MAY": 0, "SHOULD": 1, "MUST": 2}
+PROP = "pkic:profile:"
 
 
 def ver_tuple(s):
@@ -43,12 +56,108 @@ def ver_tuple(s):
 
 
 # --------------------------------------------------------------------------- #
-# Carrier-format / version handling                                           #
+# Profile loading and composition                                             #
+# --------------------------------------------------------------------------- #
+def load_profile(path):
+    """Load a profile, resolving 'extends' and applying 'overrides'.
+
+    Returns (profile, origin, notes) where origin maps a rule id to the
+    profileId that imposed it, and notes records composition events."""
+    with open(path, encoding="utf-8") as fh:
+        prof = json.load(fh)
+    notes = []
+
+    ext = prof.get("extends")
+    if not ext:
+        origin = {r["id"]: prof["profileId"]
+                  for r in prof.get("productRules", []) + prof.get("interfaceRules", [])}
+        return prof, origin, notes
+
+    base_file = ext.get("file")
+    if not base_file:
+        raise ProfileError("extends: no 'file' hint, cannot resolve base profile")
+    base_path = os.path.join(os.path.dirname(os.path.abspath(path)), base_file)
+    base, origin, base_notes = load_profile(base_path)
+    notes += base_notes
+
+    if base.get("profileId") != ext.get("profileId"):
+        raise ProfileError("extends: resolved base %r does not match declared %r"
+                         % (base.get("profileId"), ext.get("profileId")))
+    if str(base.get("version")) != str(ext.get("version")):
+        raise ProfileError("extends: base is version %s, profile pins %s"
+                         % (base.get("version"), ext.get("version")))
+
+    merged = dict(base)
+    merged.update({k: v for k, v in prof.items()
+                   if k not in ("productRules", "interfaceRules", "overrides", "extends")})
+    merged["profileId"] = prof["profileId"]
+    merged["title"] = prof.get("title", base.get("title"))
+    merged["version"] = prof.get("version")
+    merged["extends"] = ext
+
+    check_range_narrows(base, prof)
+
+    for group in ("productRules", "interfaceRules"):
+        inherited = [dict(r) for r in base.get(group, [])]
+        by_id = {r["id"]: r for r in inherited}
+        for ov in prof.get("overrides", []):
+            if ov["id"] in by_id:
+                target = by_id[ov["id"]]
+                if target.get("_group", group) == group or ov["id"] in by_id:
+                    check_override_tightens(target, ov, notes)
+                    target.update({k: v for k, v in ov.items() if k != "note"})
+                    origin[ov["id"]] = "%s (tightened by %s)" % (
+                        base["profileId"], prof["profileId"])
+        added = prof.get(group, [])
+        for r in added:
+            if r["id"] in by_id:
+                raise ProfileError("rule id %s collides with an inherited rule" % r["id"])
+            origin[r["id"]] = prof["profileId"]
+        merged[group] = inherited + added
+
+    unmatched = [o["id"] for o in prof.get("overrides", []) if o["id"] not in origin]
+    if unmatched:
+        raise ProfileError("overrides reference unknown rule(s): %s" % ", ".join(unmatched))
+
+    return merged, origin, notes
+
+
+def check_override_tightens(base_rule, ov, notes):
+    """Reject an override that relaxes an inherited rule."""
+    rid = base_rule["id"]
+    if "level" in ov:
+        old, new = base_rule.get("level", "MAY"), ov["level"]
+        if LEVEL_ORDER.get(new, 0) < LEVEL_ORDER.get(old, 0):
+            raise ProfileError(
+                "override on %s relaxes the level from %s to %s; extension is monotonic"
+                % (rid, old, new))
+        if LEVEL_ORDER.get(new, 0) > LEVEL_ORDER.get(old, 0):
+            notes.append("%s: level raised %s -> %s" % (rid, old, new))
+    if "withholdable" in ov:
+        if ov["withholdable"] and not base_rule.get("withholdable"):
+            raise ProfileError(
+                "override on %s makes a non-withholdable attribute withholdable; "
+                "extension is monotonic" % rid)
+        if base_rule.get("withholdable") and not ov["withholdable"]:
+            notes.append("%s: withholdability removed" % rid)
+
+
+def check_range_narrows(base, derived):
+    """A derived profile may narrow the carrier acceptance range, never widen it."""
+    b = base.get("appliesTo", {}).get("cyclonedx")
+    d = derived.get("appliesTo", {}).get("cyclonedx")
+    if not b or not d:
+        return
+    if ver_tuple(d["min"]) < ver_tuple(b["min"]):
+        raise ProfileError(
+            "derived profile accepts CycloneDX %s, below the base minimum %s"
+            % (d["min"], b["min"]))
+
+
+# --------------------------------------------------------------------------- #
+# Carrier format / version handling                                           #
 # --------------------------------------------------------------------------- #
 def check_format(bom, profile):
-    """Decide whether this CBOM's carrier format/version is acceptable.
-    Returns dict: {ok, status, detail}. status in
-    {target, legacy, newer, unsupported-version, unsupported-format}."""
     fmt = bom.get("bomFormat")
     spec = bom.get("specVersion")
     applies = profile.get("appliesTo", {})
@@ -61,11 +170,11 @@ def check_format(bom, profile):
     v, vmin, vtested = ver_tuple(spec), ver_tuple(rng["min"]), ver_tuple(rng["tested"])
     if v < vmin:
         return {"ok": False, "status": "unsupported-version",
-                "detail": "CycloneDX %s is older than min supported %s -- refuse; upgrade the CBOM first"
-                          % (spec, rng["min"])}
+                "detail": "CycloneDX %s is older than min supported %s -- refuse; "
+                          "upgrade the CBOM first" % (spec, rng["min"])}
     if v < vtested:
         return {"ok": True, "status": "legacy",
-                "detail": "CycloneDX %s accepted, but profile was tested against %s (legacy -- warn)"
+                "detail": "CycloneDX %s accepted, profile tested against %s (legacy -- warn)"
                           % (spec, rng["tested"])}
     if v > vtested:
         return {"ok": True, "status": "newer",
@@ -75,8 +184,36 @@ def check_format(bom, profile):
 
 
 # --------------------------------------------------------------------------- #
-# Format adapter: CycloneDX 1.6/1.7 CBOM -> list of abstract interfaces         #
+# Format adapter: CycloneDX -> abstract attributes                            #
 # --------------------------------------------------------------------------- #
+def split_properties(component):
+    """Return (single, multi, markers) from a component's properties.
+
+    CycloneDX permits a property name to repeat, which is how list-valued
+    attributes are carried. 'single' keeps the last value seen; 'multi' keeps
+    every value in order."""
+    single, multi, markers = {}, {}, {}
+    for p in component.get("properties", []):
+        name, value = p.get("name", ""), p.get("value")
+        if name.startswith(PROP + "disclosure:"):
+            markers[name.split(":")[-1]] = value
+            continue
+        if not name.startswith(PROP):
+            continue
+        key = name[len(PROP):]
+        single[key] = value
+        multi.setdefault(key, []).append(value)
+    return single, multi, markers
+
+
+def extract_product(bom):
+    comp = bom.get("metadata", {}).get("component", {})
+    single, _multi, markers = split_properties(comp)
+    providers = [c for c in bom.get("components", [])
+                 if c.get("type") == "library" and c.get("purl")]
+    return {"attrs": single, "_disclosure": markers, "providerCount": len(providers)}
+
+
 def extract_interfaces(bom):
     comps = {c.get("bom-ref"): c for c in bom.get("components", [])}
     interfaces = []
@@ -84,28 +221,35 @@ def extract_interfaces(bom):
         cp = c.get("cryptoProperties", {})
         if cp.get("assetType") != "protocol":
             continue
-        props = {p["name"]: p["value"] for p in c.get("properties", [])}
+        single, multi, markers = split_properties(c)
         proto = cp.get("protocolProperties", {})
         refs = list(proto.get("cryptoRefArray", []))
         for s in proto.get("cipherSuites", []):
             refs += s.get("algorithms", [])
-        roles = [k.split(":")[-1] for k in props
-                 if k.startswith("pkic:profile:endpointRole:")]
-        markers = {k.split(":")[-1]: v for k, v in props.items()
-                   if k.startswith("pkic:profile:disclosure:")}
-        interfaces.append({
+        roles = [k.split(":")[-1] for k in single if k.startswith("endpointRole:")]
+
+        iface = {
             "_disclosure": markers,
-            "interfaceId": props.get("pkic:profile:interfaceId") or c.get("bom-ref"),
-            "interfaceType": props.get("pkic:profile:interfaceType"),
+            "interfaceId": single.get("interfaceId") or c.get("bom-ref"),
+            "interfaceType": single.get("interfaceType"),
             "protocol": (proto.get("type") or "").upper() or None,
             "protocolVersion": proto.get("version"),
             "keyExchange": algo_name(refs, comps, KEX_PRIMS),
             "encryption": algo_name(refs, comps, ENC_PRIMS),
             "authentication": auth(refs, comps),
             "endpointRoles": roles,
-            "lifecycleStage": props.get("pkic:profile:lifecycleStage"),
-            "implementationPurl": props.get("pkic:profile:implementationPurl"),
-        })
+            "lifecycleStage": single.get("lifecycleStage"),
+            "implementationPurl": single.get("implementationPurl"),
+        }
+        # Attributes added by derived profiles, carried wholly as properties.
+        for key in ("enablementMethod", "minimumProductVersion", "providerLocation",
+                    "coexistence", "negotiationControl", "integrationConstraints",
+                    "capabilityStatus", "blockedBy", "roadmapRef"):
+            iface[key] = single.get(key)
+        for key in ("protocolVersionsSupported", "keyExchangeSupported",
+                    "authenticationSupported"):
+            iface[key] = multi.get(key)
+        interfaces.append(iface)
     return interfaces
 
 
@@ -128,8 +272,7 @@ def auth(refs, comps):
         if not c:
             continue
         if c.get("cryptoProperties", {}).get("assetType") == "certificate":
-            props = c["cryptoProperties"]["certificateProperties"]
-            sig = props.get("signatureAlgorithmRef")
+            sig = c["cryptoProperties"]["certificateProperties"].get("signatureAlgorithmRef")
             if sig and sig in comps:
                 return comps[sig].get("name")
     return algo_name(refs, comps, SIG_PRIMS)
@@ -160,19 +303,31 @@ def check_attr(value, constraint, profile):
     return (True, "ok")
 
 
-def check_rule(iface, rule, profile):
-    """Evaluate one interface rule, accounting for disclosure markers.
+def condition_holds(rule, iface):
+    """Evaluate a 'requiredWhen' guard. Absent guard means always applicable."""
+    cond = rule.get("requiredWhen")
+    if not cond:
+        return True, None
+    actual = iface.get(cond["attribute"])
+    if "equals" in cond:
+        return actual == cond["equals"], "%s=%r" % (cond["attribute"], actual)
+    if "notEquals" in cond:
+        return actual != cond["notEquals"], "%s=%r" % (cond["attribute"], actual)
+    return True, None
 
-    Returns (ok, state, detail) where state is one of:
-      value      -- an actual value was supplied and checked
-      withheld   -- the producer declared the value withheld
-      unknown    -- the producer declared the value unknown to it
-      undeclared -- no value and no marker
-    """
+
+def check_rule(iface, rule, profile):
+    """Evaluate one interface rule. Returns (ok, state, detail)."""
+    applies, why = condition_holds(rule, iface)
+    if not applies:
+        return (True, "n/a", "not applicable (%s)" % why)
+
     attr = rule["attribute"]
     value = iface.get(attr)
     if present(value):
         ok, detail = check_attr(value, rule["constraint"], profile)
+        if rule.get("list"):
+            detail = "%s %s" % (detail, list(value)[:3])
         return (ok, "value", detail)
 
     marker = iface.get("_disclosure", {}).get(attr)
@@ -185,7 +340,7 @@ def check_rule(iface, rule, profile):
     return (False, "undeclared", "absent, with no disclosure marker")
 
 
-def check_product(interfaces, constraint):
+def check_product(product, interfaces, constraint, profile):
     if "minInterfaces" in constraint:
         n = len(interfaces)
         return (n >= constraint["minInterfaces"], "%d interface(s) declared" % n)
@@ -194,6 +349,20 @@ def check_product(interfaces, constraint):
         n = sum(1 for i in interfaces if i.get("interfaceType") == spec["interfaceType"])
         return (n >= spec["min"],
                 "%d of type '%s' (min %d)" % (n, spec["interfaceType"], spec["min"]))
+    if "minProviders" in constraint:
+        n = product.get("providerCount", 0)
+        return (n >= constraint["minProviders"],
+                "%d provider component(s) with a purl" % n)
+    if "productAttribute" in constraint:
+        value = product.get("attrs", {}).get(constraint["productAttribute"])
+        if not present(value):
+            marker = product.get("_disclosure", {}).get(constraint["productAttribute"])
+            if marker:
+                return (False, "declared %s" % marker)
+            return (False, "%s absent" % constraint["productAttribute"])
+        if "enumRef" in constraint:
+            return (value in profile.get(constraint["enumRef"], []), "= %r" % (value,))
+        return (True, "= %r" % (value,))
     return (True, "ok")
 
 
@@ -201,15 +370,14 @@ def check_product(interfaces, constraint):
 def validate(bom, profile):
     fmt = check_format(bom, profile)
     report = {"format": fmt, "product": [], "interfaces": []}
-
-    # If the carrier format/version is unsupported, refuse without pretending
-    # to evaluate content it may not fully understand.
     if not fmt["ok"]:
         return False, report
 
+    product = extract_product(bom)
     interfaces = extract_interfaces(bom)
+
     for rule in profile.get("productRules", []):
-        ok, detail = check_product(interfaces, rule["constraint"])
+        ok, detail = check_product(product, interfaces, rule["constraint"], profile)
         report["product"].append(dict(rule, ok=ok, detail=detail))
 
     for iface in interfaces:
@@ -219,6 +387,7 @@ def validate(bom, profile):
             rows.append({"id": rule["id"], "level": rule["level"],
                          "attribute": rule["attribute"], "ok": ok,
                          "state": state, "detail": detail})
+        rows.sort(key=lambda r: (r["id"][0], int(r["id"][1:] or 0)))
         iface_ok = all(r["ok"] for r in rows if r["level"] == "MUST")
         report["interfaces"].append({
             "interfaceId": iface["interfaceId"],
@@ -231,51 +400,65 @@ def validate(bom, profile):
     return (product_ok and ifaces_ok), report
 
 
+def icon_for(row):
+    if row["ok"]:
+        return {"withheld": "HELD", "n/a": " -- "}.get(row.get("state"), "PASS")
+    if row["level"] == "MUST":
+        return "UNKN" if row.get("state") == "unknown" else "FAIL"
+    return "warn"
+
+
 def main(argv):
-    if len(argv) < 3:
+    args = [a for a in argv[1:] if not a.startswith("--")]
+    if len(args) < 2:
         print(__doc__)
         return 2
     as_json = "--json" in argv
-    bom = json.load(open(argv[1], encoding="utf-8"))
-    profile = json.load(open(argv[2], encoding="utf-8"))
+
+    bom = json.load(open(args[0], encoding="utf-8"))
+    try:
+        profile, origin, notes = load_profile(args[1])
+    except ProfileError as err:
+        print("PROFILE ERROR: %s" % err, file=sys.stderr)
+        return 3
     conforms, report = validate(bom, profile)
 
     if as_json:
-        print(json.dumps({"conforms": conforms, "report": report}, indent=2))
+        print(json.dumps({"conforms": conforms, "profile": profile.get("profileId"),
+                          "report": report, "origin": origin}, indent=2))
         return 0 if conforms else 1
 
     print("Profile : %s v%s" % (profile["title"], profile["version"]))
-    print("CBOM    : %s" % argv[1])
-    print("=" * 64)
+    if profile.get("extends"):
+        e = profile["extends"]
+        print("          extends %s v%s" % (e["profileId"], e["version"]))
+        for n in notes:
+            print("          override %s" % n)
+    print("CBOM    : %s" % args[0])
+    print("=" * 70)
     f = report["format"]
-    icon = "PASS" if f["ok"] else "FAIL"
     warn = f["status"] in ("legacy", "newer")
-    print("FORMAT  [%s] %s" % ("warn" if warn else icon, f["detail"]))
+    print("FORMAT  [%s] %s" % ("warn" if warn else ("PASS" if f["ok"] else "FAIL"), f["detail"]))
     if not f["ok"]:
-        print("=" * 64)
+        print("=" * 70)
         print("VERDICT : DOES NOT CONFORM  (carrier format/version not accepted)")
         return 1
-    print("=" * 64)
+
+    print("=" * 70)
     print("PRODUCT-LEVEL RULES")
     for r in report["product"]:
-        icon = "PASS" if r["ok"] else "FAIL"
-        print("  [%s] %-3s %-5s %s" % (icon, r["id"], r["level"], r["description"]))
-        print("         -> %s" % r["detail"])
+        print("  [%s] %-3s %-6s %s" % ("PASS" if r["ok"] else "FAIL",
+                                       r["id"], r["level"], r["description"]))
+        print("         -> %s   [%s]" % (r["detail"], origin.get(r["id"], "?")))
     for iface in report["interfaces"]:
-        print("-" * 64)
-        status = "conforms" if iface["conforms"] else "FAILS"
+        print("-" * 70)
         print("INTERFACE  %s  (type=%s)  ==>  %s"
-              % (iface["interfaceId"], iface["interfaceType"], status))
+              % (iface["interfaceId"], iface["interfaceType"],
+                 "conforms" if iface["conforms"] else "FAILS"))
         for r in iface["rows"]:
-            if r["ok"]:
-                icon = "HELD" if r.get("state") == "withheld" else "PASS"
-            elif r["level"] == "MUST":
-                icon = "UNKN" if r.get("state") == "unknown" else "FAIL"
-            else:
-                icon = "warn"
-            print("  [%s] %-4s %-6s %-18s %s"
-                  % (icon, r["id"], r["level"], r["attribute"], r["detail"]))
-    print("=" * 64)
+            print("  [%s] %-4s %-6s %-26s %s" % (icon_for(r), r["id"], r["level"],
+                                                 r["attribute"], r["detail"]))
+    print("=" * 70)
     fails = [r["id"] for r in report["product"] if not r["ok"] and r["level"] == "MUST"]
     for i in report["interfaces"]:
         for r in i["rows"]:
@@ -283,8 +466,7 @@ def main(argv):
                 fails.append("%s/%s" % (i["interfaceId"], r["id"]))
     verdict = "CONFORMS" if conforms else "DOES NOT CONFORM"
     tail = ("  (failed MUST: %s)" % ", ".join(fails)) if fails else ""
-    note = "  [carrier: %s]" % report["format"]["status"]
-    print("VERDICT : %s%s%s" % (verdict, tail, note))
+    print("VERDICT : %s%s  [carrier: %s]" % (verdict, tail, report["format"]["status"]))
     return 0 if conforms else 1
 
 

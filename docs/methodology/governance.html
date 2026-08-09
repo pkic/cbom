@@ -15,13 +15,16 @@
   </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
+    <a href="terms.html">Terms</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="method.html">Method</a>
     <a href="use-cases.html">Use Cases</a>
+    <a href="pqc-migration.html">PQC Migration</a>
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
     <a href="governance.html" class="active">Governance</a>
@@ -91,6 +94,95 @@
   <h2>Provenance</h2>
   <p>A CBOM should record how it was produced: the generating tool and its version, the inputs, the lifecycle stage at which it was captured, and any mechanical upgrade applied to it (see <a href="versioning.html">Versioning</a>). Provenance supports both trust and reproducibility, and is a precondition for a meaningful conformance claim. The tool name and version are now named minimum elements, so a producer meeting the SBOM baseline already carries most of what a CBOM consumer needs to judge how the data was obtained.</p>
   <p>Provenance also has to say what is not there. Where an attribute is unavailable, the record should state whether the producer lacks the information or is withholding it, rather than leaving the field empty. See the discussion in <a href="challenges.html">Challenges</a>.</p>
+
+  <h2>Relating a CBOM to an SBOM</h2>
+  <p>Cryptography does not exist apart from the software and hardware that implement it, so a CBOM is of limited use without some way to reach the component context. There is more than one way to arrange that, and the choice is a governance decision rather than a technical detail. It determines what is signed, who is accountable for which document, how often each is regenerated, and what a consumer has to fetch before it can act.</p>
+  <p>Four arrangements are in use. The first two produce a single document; the second two produce a pair with a reference between them.</p>
+  <figure>
+    <svg viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11.5">
+      <text x="88" y="18" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">A · UNIFIED</text>
+      <rect x="16" y="30" width="144" height="104" rx="10" fill="#ffffff" stroke="#1c5fd6"/>
+      <rect x="30" y="46" width="116" height="34" rx="7" fill="#eaf1fe" stroke="#c9d3e0"/>
+      <text x="88" y="67" fill="#1a2230" text-anchor="middle">software components</text>
+      <rect x="30" y="88" width="116" height="34" rx="7" fill="#eafaf1" stroke="#c9d3e0"/>
+      <text x="88" y="109" fill="#1a2230" text-anchor="middle">crypto assets</text>
+      <text x="88" y="152" fill="#5b6472" text-anchor="middle">one document</text>
+      <text x="88" y="168" fill="#5b6472" text-anchor="middle">one signature</text>
+
+      <text x="264" y="18" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">B · STANDALONE</text>
+      <rect x="192" y="30" width="144" height="104" rx="10" fill="#ffffff" stroke="#9a6300"/>
+      <rect x="206" y="67" width="116" height="34" rx="7" fill="#eafaf1" stroke="#c9d3e0"/>
+      <text x="264" y="88" fill="#1a2230" text-anchor="middle">crypto assets only</text>
+      <text x="264" y="152" fill="#9a6300" text-anchor="middle">no component context</text>
+      <text x="264" y="168" fill="#5b6472" text-anchor="middle">self-contained</text>
+
+      <text x="440" y="18" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">C · CBOM → SBOM</text>
+      <rect x="368" y="30" width="144" height="46" rx="10" fill="#eafaf1" stroke="#0f7a52"/>
+      <text x="440" y="58" fill="#1a2230" text-anchor="middle">CBOM</text>
+      <rect x="368" y="100" width="144" height="46" rx="10" fill="#eaf1fe" stroke="#1c5fd6"/>
+      <text x="440" y="128" fill="#1a2230" text-anchor="middle">SBOM</text>
+      <line x1="440" y1="76" x2="440" y2="100" stroke="#0f7a52" stroke-width="2"/>
+      <polygon points="440,100 435,90 445,90" fill="#0f7a52"/>
+      <text x="440" y="168" fill="#5b6472" text-anchor="middle">crypto is primary</text>
+
+      <text x="616" y="18" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">D · SBOM → CBOM</text>
+      <rect x="544" y="30" width="144" height="46" rx="10" fill="#eaf1fe" stroke="#1c5fd6"/>
+      <text x="616" y="58" fill="#1a2230" text-anchor="middle">SBOM</text>
+      <rect x="544" y="100" width="144" height="46" rx="10" fill="#eafaf1" stroke="#0f7a52"/>
+      <text x="616" y="128" fill="#1a2230" text-anchor="middle">CBOM</text>
+      <line x1="616" y1="76" x2="616" y2="100" stroke="#1c5fd6" stroke-width="2"/>
+      <polygon points="616,100 611,90 621,90" fill="#1c5fd6"/>
+      <text x="616" y="168" fill="#5b6472" text-anchor="middle">software is primary</text>
+
+      <text x="360" y="198" fill="#5b6472" text-anchor="middle" font-size="11">the arrow shows which document holds the reference, and therefore which one a consumer fetches first</text>
+    </svg>
+    <figcaption>The four arrangements. A and B are single documents. C and D are pairs, differing in which document is the entry point and which is discovered from it.</figcaption>
+  </figure>
+
+  <h3>A · Unified document</h3>
+  <p>One bill of materials contains both the software components and the cryptographic assets, with dependencies expressed between them. CycloneDX supports this directly, since cryptographic assets are components like any other. The worked example on this site is of this kind: the OpenSSH and OpenSSL library components sit in the same document as the interfaces and algorithms that use them.</p>
+  <p>The advantage is that there is nothing to resolve and nothing to keep in step. A single signature covers the whole claim, one author is accountable, and a consumer that has the document has everything. The disadvantage appears when the two kinds of data have different lifetimes or different owners. A vendor's software inventory changes on release; a deployment's cryptographic configuration can change without any software changing at all. Binding them into one artifact forces the slower-moving part to be republished whenever the faster-moving part does, and it means a consumer entitled to the software inventory necessarily receives the cryptographic detail as well.</p>
+
+  <h3>B · Standalone CBOM</h3>
+  <p>The CBOM stands alone, describing cryptography without reference to any software inventory. This is the right shape when the subject genuinely is not a software artifact, for instance an operator describing the cryptography observed on a service it did not build, or a survey of an estate assembled from network discovery.</p>
+  <p>It is simple to produce and to distribute, and it avoids publishing software composition that the producer may not wish to disclose. What it gives up is the ability to answer the question that usually follows. If an algorithm needs replacing, the next thing anyone asks is which library implements it and whether that library can be updated. A standalone CBOM cannot say. Recording <code>implementationPurl</code> mitigates this by naming the implementing package even in the absence of a linked SBOM, which is why the profile asks for it.</p>
+
+  <h3>C · CBOM referencing an external SBOM</h3>
+  <p>The CBOM is the entry point and carries a reference to the SBOM for the same subject. A consumer starts from the cryptography and resolves outward to component detail when it needs it.</p>
+  <p>This suits consumers whose question is cryptographic: migration planners, and anyone assessing an interface rather than a release. The two documents keep independent lifecycles, so a configuration change can produce a new CBOM revision without reissuing the SBOM. The cost is referential integrity. A reference that names a document without pinning its revision will eventually point at something that has moved on, and a consumer that cannot resolve the reference is left with an incomplete picture that still looks complete.</p>
+
+  <h3>D · SBOM referencing an external CBOM</h3>
+  <p>The SBOM is the entry point and links to the CBOM as an external artifact. This is the arrangement the site describes for SPDX, because SPDX 3.0.1 has no cryptographic object model, so the practical option today is an SPDX SBOM alongside a CycloneDX CBOM.</p>
+  <p>Its strengths are distributional. Existing supply-chain processes already request, store and verify SBOMs, so a CBOM reached from one inherits that plumbing rather than needing its own. Access can also be separated, which matters when an organization is willing to publish software composition more widely than cryptographic configuration. The weakness is that cryptography becomes a secondary artifact. A consumer that stops at the SBOM, or whose tooling ignores unfamiliar external references, never sees the CBOM at all, and there is no signal in the SBOM that anything is missing.</p>
+
+  <h3>Comparison</h3>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Governance question</th><th>A · Unified</th><th>B · Standalone</th><th>C · CBOM → SBOM</th><th>D · SBOM → CBOM</th></tr></thead>
+    <tbody>
+      <tr><td>Documents to produce</td><td>one</td><td>one</td><td>two</td><td>two</td></tr>
+      <tr><td>Signature covers the whole claim</td><td>yes</td><td>yes, but the claim is narrower</td><td>no, each signed separately</td><td>no, each signed separately</td></tr>
+      <tr><td>Independent regeneration</td><td>no</td><td>not applicable</td><td>yes</td><td>yes</td></tr>
+      <tr><td>Separate access control</td><td>no</td><td>not applicable</td><td>yes</td><td>yes</td></tr>
+      <tr><td>Risk of version skew</td><td>none</td><td>none</td><td>present</td><td>present</td></tr>
+      <tr><td>Risk of the CBOM being missed</td><td>none</td><td>none</td><td>low</td><td>higher</td></tr>
+      <tr><td>Answers "which library implements this"</td><td>directly</td><td>only via <code>implementationPurl</code></td><td>after resolution</td><td>directly, from the entry point</td></tr>
+      <tr><td>Available in SPDX today</td><td>no</td><td>no</td><td>no</td><td>yes</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Requirements that apply whichever is chosen</h3>
+  <p>Where two documents are used, the reference between them has to be governed or it decays.</p>
+  <ul>
+    <li><strong>Pin the revision.</strong> A reference should identify a specific revision of the target, not merely the target. CycloneDX provides a link form that identifies a BOM by serial number and version, which is the mechanism to prefer over a bare URL. Confirm the exact syntax against the current schema before relying on it.</li>
+    <li><strong>Give the pair a shared subject identifier.</strong> Both documents should name the same subject in the same way, so that a consumer holding one can find the other without following a link that may have rotted.</li>
+    <li><strong>State whether resolution is required for conformance.</strong> A profile should say whether an unresolvable reference is a failure or a warning. Silence here means two consumers will reach different verdicts on the same document.</li>
+    <li><strong>Sign both, and record the relationship.</strong> Two signatures do not by themselves attest that the two documents belong together. The reference should be inside the signed content of at least one of them.</li>
+    <li><strong>Keep retention aligned.</strong> A retained CBOM whose SBOM has been deleted is an audit record that can no longer be interpreted.</li>
+  </ul>
+
+  <div class="banner good">A defensible default: use a unified document for a product CBOM generated at build time, where the software and cryptographic views share an author and a release cadence, and use a referenced pair for an operator or service CBOM, where the cryptographic configuration changes independently of any software release. Where the consumer requires SPDX, arrangement D is currently the only option, and the reference should be treated as part of the deliverable rather than as a convenience.</div>
 
   <h2>Evolution and change control</h2>
   <p>Profiles, the controlled vocabulary, and the methodology evolve over time. Changes are managed through explicit versioning (see <a href="versioning.html">Versioning</a>), recorded decisions, and, within the working group, lazy consensus. Requirements are tightened behind dated grace windows, and vocabulary values are deprecated rather than removed, so that changes are predictable and auditable.</p>

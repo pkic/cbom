@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Terms</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="terms.html" class="active">Terms</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="model.html">Model</a>
+    <a href="profile.html">Profile</a>
+    <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="method.html">Method</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="pqc-migration.html">PQC Migration</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="governance.html">Governance</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+    <a href="../references/">References</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">REFERENCE</div>
+  <h1>Terms and definitions</h1>
+  <p class="lead">The vocabulary this methodology uses, collected in one place. Definitions here are summaries; the section named against each term is where it is developed and is authoritative if the two differ.</p>
+
+  <h2>How to read this section</h2>
+  <p>Terms are grouped by what they describe. Where a term is borrowed from elsewhere, the source is named, because a methodology that quietly redefines an established term causes more difficulty than one that invents a new word. Attribute names follow the conventions recorded in <a href="method.html">Method</a>: a bare name denotes present state and a <code>Supported</code> suffix denotes declared capability.</p>
+  <p>The last table lists terms deliberately not used, with the reason. Those entries exist because each was considered and set aside, and without a record the discussion tends to recur.</p>
+
+  <h2>The model</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Definition</th><th>Developed in</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Cryptographic relationship</strong><br><span class="na">also: edge</span></td><td>The location at which cryptography is applied between parties. It is not itself a cryptographic asset. The methodology's own term.</td><td><a href="model.html">Model</a></td></tr>
+      <tr><td><strong>Endpoint</strong><br><span class="na">also: node</span></td><td>A party to a cryptographic relationship. An endpoint need not be a running host, and the parties to a relationship need not exist at the same time.</td><td><a href="model.html">Model</a></td></tr>
+      <tr><td><strong>Cryptographic asset</strong></td><td>An algorithm, protocol, certificate, or key used by a relationship. Corresponds to the CycloneDX component type of the same name.</td><td><a href="model.html">Model</a></td></tr>
+      <tr><td><strong>Interface</strong></td><td>A cryptographic relationship that is a communication interface between two parties. A subset of relationships, retained because the profile's rules are written about interfaces.</td><td><a href="model.html">Model</a></td></tr>
+      <tr><td><strong>Node fact / edge fact</strong></td><td>A property of a thing, against a property of a use. "The product supports AES-256-GCM" is a node fact; "this connection negotiated AES-256-GCM" is an edge fact.</td><td><a href="model.html">Model</a></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Profiles and conformance</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Definition</th><th>Developed in</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Profile</strong></td><td>A defined subset of mandatory attributes for a stated objective, expressed independently of any format. A minimum reporting requirement, not exhaustive coverage.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Product-level rule</strong><br><span class="na">also: structural rule</span></td><td>A rule constraining the set of interfaces a product declares, such as a required count or a required kind. Catches omission, which per-attribute rules cannot.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Per-interface rule</strong></td><td>A rule applied uniformly to every declared interface.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Conformance level</strong></td><td>MUST, SHOULD or MAY, following BCP 14 (RFC 2119 and RFC 8174).</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Withholdable</strong></td><td>A property of a rule. A withholdable attribute is satisfied by a <code>withheld</code> marker; otherwise withholding fails the rule.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Conformance claim</strong></td><td>A statement that a CBOM conforms, citing the profile version, the carrier format version and the content revision. A claim omitting any of the three is not reproducible.</td><td><a href="governance.html">Governance</a></td></tr>
+      <tr><td><strong>Dual use</strong></td><td>The property that one profile serves both as a specification for the producer and as a checklist for the consumer.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Independent evaluation</strong></td><td>Evaluating one CBOM against several profiles, each producing its own verdict. The profiles need not know of each other and are not combined.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Extension</strong><br><span class="na">base profile / derived profile</span></td><td>A profile declaring that it inherits every rule of another and states only additions and tightenings.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Monotonic extension</strong></td><td>The rule that a derived profile may add and tighten but never relax. It gives the guarantee that conforming to the derived profile means conforming to the base.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Tightening</strong></td><td>Raising a conformance level, narrowing a constraint, or removing withholdability. Permitted in an extension.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Relaxing</strong></td><td>Lowering a level, widening a constraint, removing a rule, or adding withholdability. Not permitted in an extension; a profile needing it is independent.</td><td><a href="profile.html">Profile</a></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Disclosure states</h2>
+  <p>Four outcomes are possible for any attribute. The distinction between the last three is required by the 2026 SBOM minimum elements guidance and is not expressible in either format natively.</p>
+  <table>
+    <thead><tr><th>State</th><th>Meaning</th><th>Effect on a MUST rule</th></tr></thead>
+    <tbody>
+      <tr><td><code>value</code></td><td>A value was supplied and checked against the constraint.</td><td>Passes if valid.</td></tr>
+      <tr><td><code>withheld</code></td><td>The producer holds the information and declines to publish it.</td><td>Passes only where the rule is withholdable.</td></tr>
+      <tr><td><code>unknown</code></td><td>The producer does not have the information.</td><td>Fails, reported separately from an absent attribute.</td></tr>
+      <tr><td><code>undeclared</code></td><td>Neither a value nor a marker was supplied.</td><td>Fails.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Attributes</h2>
+  <p>Attributes shared across profiles, followed by those introduced by the PQC migration profile.</p>
+  <table>
+    <thead><tr><th>Attribute</th><th>Definition</th><th>Introduced in</th></tr></thead>
+    <tbody>
+      <tr><td><code>interfaceId</code></td><td>The producer's own label for an interface. Profiles do not constrain its value, and consumers should not treat it as a stable cross-organization identifier.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><code>interfaceType</code></td><td>The role of an interface, from a controlled vocabulary. What makes a rule such as "declare a management interface" evaluable.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><code>protocol</code></td><td>The protocol securing the interface, such as TLS, SSH or IPsec.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><code>protocolVersion</code> / <code>protocolVersionsSupported</code></td><td>The version in use, and the set of versions the interface can negotiate.</td><td><a href="profile.html">Profile</a> / <a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>keyExchange</code> / <code>keyExchangeSupported</code></td><td>The key-agreement or key-encapsulation algorithm in use, and the set the interface is able to use.</td><td><a href="profile.html">Profile</a> / <a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>encryption</code></td><td>The bulk or AEAD algorithm protecting data on the interface.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><code>authentication</code> / <code>authenticationSupported</code></td><td>The signature algorithm authenticating the server or host: a certificate signature for TLS, a host key for SSH.</td><td><a href="profile.html">Profile</a> / <a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>endpointRoles</code></td><td>The roles of the parties to the interface, such as client and server.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><code>lifecycleStage</code></td><td>The phase at which the data was captured. See the lifecycle table below.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
+      <tr><td><code>implementationPurl</code></td><td>The Package URL of the library implementing the interface's cryptography. The value cross-referenced against vulnerability feeds.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><code>coverage</code></td><td>A product-level statement of how complete the declared interface set is.</td><td><a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>capabilityStatus</code></td><td>A commitment class for a capability the interface does not yet have, expressed without a date.</td><td><a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>blockedBy</code></td><td>What must change before a capability becomes available, and therefore who is able to change it.</td><td><a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>roadmapRef</code></td><td>A reference to a roadmap entry carrying a target release and, where offered, a date. Kept outside the interface so that a slipping date does not force a CBOM revision.</td><td><a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>enablementMethod</code></td><td>What a consumer must do to turn a capability on.</td><td><a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>minimumProductVersion</code></td><td>The product version at which a capability becomes available. Required where enablement is by software update.</td><td><a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>providerLocation</code></td><td>Where key operations execute, which determines whether adopting an algorithm is a software matter at all.</td><td><a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>coexistence</code></td><td>Whether the interface can serve classical and post-quantum peers at the same time. Determines whether migration requires a coordinated cutover.</td><td><a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>negotiationControl</code></td><td>Whether the interface can be configured to require post-quantum key exchange and refuse a classical fallback.</td><td><a href="pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>integrationConstraints</code></td><td>Known effects of enabling a capability, such as handshake size limits or intermediary incompatibilities.</td><td><a href="pqc-migration.html">PQC Migration</a></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Controlled vocabularies</h2>
+  <table>
+    <thead><tr><th>Attribute</th><th>Permitted values</th></tr></thead>
+    <tbody>
+      <tr><td><code>interfaceType</code></td><td><code>management</code> · <code>service</code> · <code>interconnect</code> · <code>peer</code> · <code>storage</code></td></tr>
+      <tr><td><code>lifecycleStage</code></td><td><code>intended</code> · <code>implemented</code> · <code>configured</code> · <code>observed</code></td></tr>
+      <tr><td><code>coverage</code></td><td><code>all-external</code> · <code>all</code> · <code>partial</code></td></tr>
+      <tr><td><code>capabilityStatus</code></td><td><code>available</code> · <code>committed</code> · <code>planned</code> · <code>under-evaluation</code> · <code>not-planned</code></td></tr>
+      <tr><td><code>blockedBy</code></td><td><code>provider</code> · <code>product</code> · <code>hardware</code> · <code>standard</code> · <code>certification</code></td></tr>
+      <tr><td><code>enablementMethod</code></td><td><code>already-enabled</code> · <code>configuration</code> · <code>software-update</code> · <code>hardware-change</code> · <code>licence</code> · <code>not-available</code></td></tr>
+      <tr><td><code>providerLocation</code></td><td><code>software</code> · <code>hsm</code> · <code>tee</code> · <code>unspecified</code></td></tr>
+      <tr><td><code>coexistence</code></td><td><code>simultaneous</code> · <code>exclusive</code> · <code>unknown</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Lifecycle and provenance</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Definition</th><th>Developed in</th></tr></thead>
+    <tbody>
+      <tr><td><code>intended</code></td><td>Cryptography specified at design time. Says nothing about what was built.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
+      <tr><td><code>implemented</code></td><td>Cryptography present in the shipped binary. Capability, not actuality.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
+      <tr><td><code>configured</code></td><td>Cryptography the deployed configuration permits.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
+      <tr><td><code>observed</code></td><td>Cryptography negotiated on the wire. A snapshot, invalidated by later configuration change.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
+      <tr><td><strong>Readiness gap</strong></td><td>The difference between what a product is capable of and what a deployment actually runs.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
+      <tr><td><strong>Product CBOM</strong></td><td>A CBOM describing what a product contains or can use. Vendor-produced, normally <code>implemented</code>.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
+      <tr><td><strong>Service CBOM</strong></td><td>A CBOM describing what a running deployment uses. Operator-produced, normally <code>configured</code> or <code>observed</code>.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
+      <tr><td><strong>Provenance</strong></td><td>The record of how a CBOM was produced: generating tool and version, inputs, lifecycle stage, and any mechanical upgrade applied.</td><td><a href="governance.html">Governance</a></td></tr>
+      <tr><td><strong>SBOM Generation Context</strong> <span class="na">(CISA)</span></td><td>The lifecycle phase and data available when an SBOM was generated. The equivalent concept in the 2026 minimum elements guidance, at coarser granularity.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Formats, mapping and versions</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Definition</th><th>Developed in</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Carrier format</strong></td><td>The format in which a CBOM is serialized, such as CycloneDX or SPDX. Distinct from the profile expressed in it.</td><td><a href="versioning.html">Versioning</a></td></tr>
+      <tr><td><strong>Mapping</strong></td><td>The statement of where each profile attribute lives in a given format, including a canonical location where the format permits several.</td><td><a href="formats.html">Formats</a></td></tr>
+      <tr><td><strong>Format adapter</strong></td><td>The format-specific part of a validator, which extracts abstract attributes from a concrete document. The only component that changes between formats.</td><td><a href="formats.html">Formats</a></td></tr>
+      <tr><td><strong>Acceptance range</strong><br><span class="na">also: appliesTo</span></td><td>The carrier versions a profile accepts, expressed as a minimum and a tested version.</td><td><a href="versioning.html">Versioning</a></td></tr>
+      <tr><td><strong>Version bands</strong></td><td>The four outcomes of the acceptance range: unsupported below the minimum, legacy between minimum and tested, target at tested, newer above it.</td><td><a href="versioning.html">Versioning</a></td></tr>
+      <tr><td><strong>Encoding normalization</strong></td><td>Agreement on where a value is written, where a format permits more than one valid location.</td><td><a href="formats.html">Formats</a></td></tr>
+      <tr><td><strong>Naming normalization</strong></td><td>Agreement on how a value is expressed, so that equivalent values match. Addressed by the CycloneDX Cryptography Registry for algorithms.</td><td><a href="formats.html">Formats</a></td></tr>
+      <tr><td><strong>Content revision</strong></td><td>A successive version of a CBOM for the same subject, forming the audit trail progress tracking relies on.</td><td><a href="versioning.html">Versioning</a></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Inventory and exchange</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Definition</th><th>Developed in</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Cryptographic inventory</strong></td><td>An organization-wide, continuously maintained record of cryptography in use, aggregated from CBOMs and other sources.</td><td><a href="inventory.html">Inventory</a></td></tr>
+      <tr><td><strong>Extracted CBOM</strong><br><span class="na">also: output CBOM</span></td><td>A scoped snapshot drawn from an inventory for a specific consumer, filtered and redacted as required.</td><td><a href="inventory.html">Inventory</a></td></tr>
+      <tr><td><strong>Central / distributed / federated inventory</strong></td><td>Arrangements for where inventory data is held. In the federated case a profile defines the subset published upward, which is what makes separately-held inventories comparable.</td><td><a href="inventory.html">Inventory</a></td></tr>
+      <tr><td><strong>Supersedence</strong></td><td>The replacement of a CBOM revision by a newer one for the same subject, with the earlier revision retained for audit.</td><td><a href="governance.html">Governance</a></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Evaluation and policy</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Definition</th><th>Developed in</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Fact</strong></td><td>Something a producer observes or declares, recorded in the CBOM.</td><td><a href="policy-evaluation.html">Policy Evaluation</a></td></tr>
+      <tr><td><strong>Evaluation</strong><br><span class="na">also: derived judgement</span></td><td>A conclusion drawn from facts against criteria that change over time. Produced by an external policy at the time of asking and dated, never stored as a CBOM attribute.</td><td><a href="policy-evaluation.html">Policy Evaluation</a></td></tr>
+      <tr><td><strong>Post-quantum posture</strong></td><td>An evaluation, not an attribute. Whether an interface's algorithms are considered quantum-safe, assessed against current guidance.</td><td><a href="policy-evaluation.html">Policy Evaluation</a></td></tr>
+      <tr><td><strong>Cryptographic maturity</strong></td><td>An evaluation, not an attribute, on the same basis as posture.</td><td><a href="policy-evaluation.html">Policy Evaluation</a></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Related artifacts</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><strong>CBOM</strong></td><td>Cryptography Bill of Materials. A structured description of the cryptography a subject contains or uses, at a point in time.</td></tr>
+      <tr><td><strong>SBOM</strong></td><td>Software Bill of Materials. Consumed alongside a CBOM so that cryptography can be related to the components implementing it.</td></tr>
+      <tr><td><strong>HBOM</strong></td><td>Hardware Bill of Materials. Relevant where cryptography is bound to hardware and a change means replacement.</td></tr>
+      <tr><td><strong>purl</strong> <span class="na">(external)</span></td><td>Package URL. The identifier scheme used to name implementing libraries.</td></tr>
+      <tr><td><strong>BCP 14</strong> <span class="na">(IETF)</span></td><td>RFC 2119 with RFC 8174, defining the requirement keywords MUST, SHOULD and MAY.</td></tr>
+      <tr><td><strong>Cryptography Registry</strong> <span class="na">(CycloneDX)</span></td><td>The registry of stable algorithm identifiers introduced in CycloneDX 1.7, addressing naming normalization.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Terms deliberately not used</h2>
+  <p>Each of these was considered and set aside. Recording the reasoning prevents the discussion recurring.</p>
+  <table>
+    <thead><tr><th>Term</th><th>Why it is not used</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Interface</strong>, as the general term</td><td>It over-fits. The word suggests two parties communicating simultaneously over a link, which excludes relationships separated in time and those transferring no data. Retained for the subset that genuinely are interfaces.</td></tr>
+      <tr><td><strong>Cryptographic context</strong></td><td>Collides with established usage, where a context is the runtime state held by a cipher implementation.</td></tr>
+      <tr><td><code>pqcPosture</code></td><td>Removed from the profile. It encodes an evaluation, and its correct value changes when guidance changes without the product changing.</td></tr>
+      <tr><td><code>plannedAvailability</code></td><td>Replaced by <code>capabilityStatus</code>, <code>blockedBy</code> and <code>roadmapRef</code>. A date on an interface duplicates one underlying change event across every interface that inherits it.</td></tr>
+      <tr><td><code>*Current</code> suffix</td><td>Redundant under the naming conventions, where a bare name already denotes present state.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pagenav">
+    <a href="index.html">← Overview</a>
+    <a class="next" href="challenges.html">Next: Challenges →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

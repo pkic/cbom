@@ -37,13 +37,16 @@ untouched and they are served at `/cbom/methodology/`.
 | File | Section |
 |---|---|
 | `index.html` | Overview |
+| `terms.html` | Terms and definitions |
 | `challenges.html` | Challenges with SBOMs and current CBOMs |
 | `inventory.html` | Inventory and CBOMs |
 | `lifecycle.html` | Lifecycle data across development and deployment |
 | `model.html` | The cryptographic relationship model |
 | `profile.html` | The profile: rules, dual use, conformance |
 | `policy-evaluation.html` | Policy evaluation: facts against derived judgements |
+| `method.html` | How to define a CBOM profile (the procedure) |
 | `use-cases.html` | Use cases for profiles |
+| `pqc-migration.html` | PQC migration: worked use case to profile definition |
 | `formats.html` | CycloneDX and SPDX mapping |
 | `versioning.html` | Handling older CBOM files |
 | `governance.html` | Governance: lifecycle, signing, provenance |
@@ -60,7 +63,10 @@ Machine-readable artifacts in the same folder:
 | `mapping-cyclonedx-spdx.md` | Requirement-to-format mapping for both formats. |
 | `cbom-pass.cyclonedx.json` | Conforming example CBOM. |
 | `cbom-fail.cyclonedx.json` | Non-conforming example; omits the management interface. |
-| `validate_cbom.py` | Version-aware validator. |
+| `profile-pqc-migration.rules.json` | The PQC migration profile, derived from the baseline via `extends`. |
+| `cbom-pqc-pass.cyclonedx.json` | Conforming example for the migration profile. |
+| `cbom-pqc-fail.cyclonedx.json` | Non-conforming example exercising conditional rules and the tightening. |
+| `validate_cbom.py` | Version-aware validator, with profile composition. |
 | `versioning-and-legacy-cboms.md` | Design note on handling older CBOM files. |
 
 Running the validator:

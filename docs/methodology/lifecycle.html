@@ -15,13 +15,16 @@
   </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
+    <a href="terms.html">Terms</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html" class="active">Lifecycle Data</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="method.html">Method</a>
     <a href="use-cases.html">Use Cases</a>
+    <a href="pqc-migration.html">PQC Migration</a>
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
     <a href="governance.html">Governance</a>
@@ -148,6 +151,71 @@
     <li>The SSH management interface is recorded as <code>configured</code>, captured from the deployment configuration (an integrator view).</li>
   </ul>
   <p>A profile may require the stage to be declared, as the baseline profile does, or may require a specific stage. A runtime-assurance profile might require every interface to be <code>observed</code>, whereas a procurement profile might accept <code>implemented</code> from a vendor build.</p>
+
+  <h2>Stakeholders at each stage</h2>
+  <p>Each stage has a different producer, and in most cases the party that produces the data is not the party that needs it. That separation is why the lifecycle stage has to be recorded rather than assumed: a consumer receiving a CBOM usually did not generate it and cannot tell from the content alone which phase it describes.</p>
+  <p>The table sets out who produces a CBOM at each stage, who typically consumes it, and which <a href="use-cases.html">use cases</a> the data at that stage can support. A use case appears against more than one stage where it draws on both, which is common: several of them depend on comparing one stage against another rather than reading a single one.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Stage</th><th>Produced by</th><th>Consumed by</th><th>Use cases it supports</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>intended</code><br><span class="na">design</span></td>
+        <td>Architects and security architects, from design documents and threat models.</td>
+        <td>Architecture review boards; procurement teams writing requirements; the working group or sector body defining a profile.</td>
+        <td>
+          <a href="use-cases.html#crypto-agility">Crypto-agility assessment</a><br>
+          <a href="use-cases.html#procurement">Procurement</a>, for stating the requirement rather than checking it
+        </td>
+      </tr>
+      <tr>
+        <td><code>implemented</code><br><span class="na">build</span></td>
+        <td>Development and build teams, from source and dependency analysis in the pipeline.</td>
+        <td>The vendor's own product security function; downstream integrators; operator procurement; security operations holding a component inventory.</td>
+        <td>
+          <a href="use-cases.html#procurement">Procurement and tender conformance</a><br>
+          <a href="use-cases.html#ci-gate">CI quality gate</a><br>
+          <a href="use-cases.html#vulnerability">Vulnerability management</a><br>
+          <a href="use-cases.html#supply-chain">Supply-chain transparency</a><br>
+          <a href="use-cases.html#crypto-agility">Crypto-agility assessment</a>
+        </td>
+      </tr>
+      <tr>
+        <td><code>configured</code><br><span class="na">deploy</span></td>
+        <td>Integrators, platform and infrastructure teams, from deployment configuration and policy bundles.</td>
+        <td>Deployment gates; internal risk and assurance; migration programme leads.</td>
+        <td>
+          <a href="use-cases.html#pqc-readiness">PQC migration readiness</a><br>
+          <a href="use-cases.html#ci-gate">CI quality gate</a>, at the admission step<br>
+          <a href="use-cases.html#compliance">Compliance reporting</a>
+        </td>
+      </tr>
+      <tr>
+        <td><code>observed</code><br><span class="na">runtime</span></td>
+        <td>Operations and monitoring teams, from scanning and telemetry against the running service.</td>
+        <td>Assurance and audit; incident responders; regulators receiving a reported position; customers asking what a service actually uses.</td>
+        <td>
+          <a href="use-cases.html#pqc-readiness">PQC migration readiness</a>, for actual rather than declared state<br>
+          <a href="use-cases.html#vulnerability">Incident response</a><br>
+          <a href="use-cases.html#compliance">Compliance reporting</a><br>
+          <a href="use-cases.html#due-diligence">Due diligence</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Consumers who never produce</h3>
+  <p>Several stakeholders appear only on the consuming side, and their needs shape what a profile has to require. Regulators and auditors read a position they had no part in generating, so provenance and lifecycle stage matter more to them than to anyone else. Customers and partners issuing a supply-chain request are in the same position, and are usually the reason a CBOM has to be scoped and redacted before release, as described in the <a href="inventory.html">Inventory</a> section. Acquiring organizations performing due diligence read across an entire estate they do not operate, where the absence of data is as significant as its content.</p>
+
+  <h3>Where the hand-offs fail</h3>
+  <p>The stages are separated by organizational boundaries as often as by time, and the boundaries are where the data degrades.</p>
+  <ul>
+    <li>Between <code>implemented</code> and <code>configured</code> the producer changes organization, from vendor to operator. A vendor cannot state what a deployment will enable, and an operator cannot see inside the binary. Neither party can produce a complete picture alone, which is the argument for combining a product CBOM with a service CBOM rather than choosing between them.</li>
+    <li>Between <code>configured</code> and <code>observed</code> the producer usually stays within one organization but changes team. This is where drift appears, because configuration is authored once and running systems change afterwards.</li>
+    <li>Between <code>intended</code> and <code>implemented</code> the data is frequently lost entirely. Design intent is rarely carried into a machine-readable form, so a consumer cannot tell whether cryptography present in a build was deliberate or incidental.</li>
+  </ul>
+  <p>A profile can require the stage to be declared, which makes these gaps visible. It cannot close them, because closing them means getting a different party to produce data they do not currently produce. That is an adoption question rather than a specification one.</p>
 
   <h2>Progress tracking over time</h2>
   <p>Successive CBOM revisions (the content-revision axis described in the <a href="versioning.html">Versioning</a> section) constitute an audit trail. An interface progressing from <code>implemented</code> to <code>configured</code> to <code>observed</code> with post-quantum cryptography enabled provides a verifiable migration record for internal governance and for regulators.</p>

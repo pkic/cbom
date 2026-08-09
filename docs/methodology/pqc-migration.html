@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — PQC Migration</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="terms.html">Terms</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="model.html">Model</a>
+    <a href="profile.html">Profile</a>
+    <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="method.html">Method</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="pqc-migration.html" class="active">PQC Migration</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="governance.html">Governance</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+    <a href="../references/">References</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">WORKED USE CASE</div>
+  <h1>PQC migration: from use case to profile</h1>
+  <p class="lead">This section takes one use case and develops it in full, from the decision a consumer is trying to make through to a complete profile definition. It applies the twelve steps set out in <a href="method.html">Method</a>, and is the reference example for how the remaining use cases would be worked up.</p>
+  <div class="banner warn">Illustrative. The profile below is a worked draft for discussion, not an adopted deliverable. Attribute names are proposals of this example rather than established terms.</div>
+
+  <h2>The decision being supported</h2>
+  <p>An operator runs a product it did not build and cannot inspect. It needs to answer three questions about every interface that product exposes, and it needs the answers in a form it can aggregate across hundreds of instances.</p>
+  <ul>
+    <li>Can this interface be made quantum-safe at all, and if so with which algorithms?</li>
+    <li>What would it take: a configuration change, a software update, or new hardware?</li>
+    <li>What breaks when we do it, and can we do it while the other end is still classical?</li>
+  </ul>
+  <p>None of these is an inventory question. Knowing which algorithms an interface uses today leaves all three unanswered, because they concern capability, the route to enabling it, and what enabling it costs in interoperability. A migration profile therefore has to require the facts those answers rest on.</p>
+
+  <h2>The black-box constraint</h2>
+  <p>The defining constraint is that the consumer cannot see inside the product, and the vendor will not expose its internals. Everything the profile asks for therefore has to be declarable at the boundary: observable at an interface, or stated by the vendor as a property of the product it ships. Anything requiring disclosure of source, design or internal architecture is out of scope, and would not be supplied in any case.</p>
+  <figure>
+    <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="215" y="52" width="290" height="150" rx="14" fill="#29323d" stroke="#0f1b2d"/>
+      <text x="360" y="115" fill="#ffffff" text-anchor="middle" font-weight="700" font-size="15">Product</text>
+      <text x="360" y="137" fill="#c9d3e0" text-anchor="middle" font-size="11">internals not disclosed</text>
+      <text x="360" y="155" fill="#8a94a1" text-anchor="middle" font-size="10.5">and not required</text>
+
+      <rect x="205" y="72" width="20" height="20" rx="4" fill="#0284c7"/>
+      <rect x="205" y="118" width="20" height="20" rx="4" fill="#6d28d9"/>
+      <rect x="205" y="164" width="20" height="20" rx="4" fill="#0284c7"/>
+      <rect x="495" y="95" width="20" height="20" rx="4" fill="#0f7a52"/>
+      <rect x="495" y="141" width="20" height="20" rx="4" fill="#0f7a52"/>
+
+      <text x="196" y="86" fill="#5b6472" text-anchor="end" font-size="11">service interface</text>
+      <text x="196" y="132" fill="#5b6472" text-anchor="end" font-size="11">management interface</text>
+      <text x="196" y="178" fill="#5b6472" text-anchor="end" font-size="11">service interface</text>
+      <text x="524" y="109" fill="#5b6472" font-size="11">interconnect interface</text>
+      <text x="524" y="155" fill="#5b6472" font-size="11">interconnect interface</text>
+
+      <text x="360" y="30" fill="#1a2230" text-anchor="middle" font-weight="600">the profile describes the boundary, not the box</text>
+      <text x="360" y="228" fill="#5b6472" text-anchor="middle" font-size="11">each interface declares what it can negotiate, how that is enabled, and what it costs to change</text>
+    </svg>
+    <figcaption>The unit of disclosure is the interface. A consumer plans against the boundary a product presents, because that is all it can verify and all the vendor will state.</figcaption>
+  </figure>
+  <p>This is also why the profile is interface-driven rather than product-driven. A single answer at product level, of the kind "this product supports ML-KEM", is not actionable: a product may support a post-quantum key exchange on its service interface and not on its management interface, and the operator has to migrate both. Migration is planned and executed one interface at a time.</p>
+
+  <h2>From questions to attributes</h2>
+  <p>Each planning question implies particular facts. Working from the question to the attribute, rather than from the format's available fields to whatever they can express, is what keeps a profile purposeful.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>What the consumer needs to know</th><th>Attribute that supplies it</th></tr></thead>
+    <tbody>
+      <tr><td>Which interface are we talking about, and does it matter?</td><td><code>interfaceId</code>, <code>interfaceType</code></td></tr>
+      <tr><td>What protocol, and which versions can it speak?</td><td><code>protocol</code>, <code>protocolVersionsSupported</code></td></tr>
+      <tr><td>What is it doing now?</td><td><code>keyExchange</code>, <code>authentication</code></td></tr>
+      <tr><td>What else could it do without changing the product?</td><td><code>keyExchangeSupported</code>, <code>authenticationSupported</code></td></tr>
+      <tr><td>How do we switch it on?</td><td><code>enablementMethod</code>, <code>minimumProductVersion</code></td></tr>
+      <tr><td>Is this a software change or a hardware one?</td><td><code>providerLocation</code>, <code>implementationPurl</code></td></tr>
+      <tr><td>Can we migrate while the far end is still classical?</td><td><code>coexistence</code>, <code>negotiationControl</code></td></tr>
+      <tr><td>What is likely to break?</td><td><code>integrationConstraints</code></td></tr>
+      <tr><td>If it cannot do this yet, what is stopping it, and who can change that?</td><td><code>capabilityStatus</code>, <code>blockedBy</code>, <code>roadmapRef</code></td></tr>
+      <tr><td>How much should we trust this record?</td><td><code>lifecycleStage</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>The profile definition</h2>
+  <p>Keywords follow BCP 14. The profile is product-independent: no rule names a product, a vendor or an interface instance. It builds on the interface disclosure baseline described in the <a href="profile.html">Profile</a> section and adds the capability and enablement attributes migration requires.</p>
+  <p>Attribute names follow the conventions in <a href="method.html">Method</a>. Where an attribute also appears in the baseline profile it keeps the same name and meaning: <code>keyExchange</code> and <code>authentication</code> denote what the interface uses now, and the <code>Supported</code> suffix denotes what it is able to use.</p>
+  <p>This profile <strong>extends</strong> the interface disclosure baseline at version 0.2, under the composition rules in <a href="profile.html">Profile</a>. It inherits every baseline rule, adds the capability and enablement attributes below, and tightens one inherited rule. Because extension is monotonic, a CBOM conforming to this profile also conforms to the baseline.</p>
+  <table>
+    <thead><tr><th>Relationship to the baseline</th><th>Rules</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Inherited unchanged</strong></td><td>P1, P2 at product level; I1 to I8 per interface, covering interface identity, protocol, current key exchange, encryption, current authentication, endpoint roles, interface type and lifecycle stage.</td></tr>
+      <tr><td><strong>Tightened</strong></td><td>I9 <code>implementationPurl</code> is raised from SHOULD to MUST and is no longer withholdable. Migration planning depends on knowing which library implements an interface, since that determines whether an update is available at all.</td></tr>
+      <tr><td><strong>Added</strong></td><td>P3 and P4 at product level; M1 to M12 per interface, listed below. The M prefix distinguishes them from the baseline's I rules, so a failure report identifies which profile imposed a requirement.</td></tr>
+    </tbody>
+  </table>
+  <p>The tables that follow list the added and tightened rules. Inherited rules are not restated, and the baseline remains authoritative for them.</p>
+
+  <h3>Product-level rules</h3>
+  <table>
+    <thead><tr><th>#</th><th>Requirement</th><th>Level</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>P1</td><td>Declare at least one cryptographic interface</td><td><span class="must">MUST</span></td><td>As in the baseline profile.</td></tr>
+      <tr><td>P2</td><td>Declare at least one interface of type <code>management</code></td><td><span class="must">MUST</span></td><td>Administrative access is migrated too, and is the interface most often omitted.</td></tr>
+      <tr><td>P3</td><td>State the completeness of the interface set</td><td><span class="must">MUST</span></td><td><code>coverage</code> is one of <code>all-external</code>, <code>all</code>, or <code>partial</code>. A planner needs to know whether the list is exhaustive; a partial list that looks complete produces a plan with silent gaps.</td></tr>
+      <tr><td>P4</td><td>Identify the cryptographic providers the product uses</td><td>SHOULD</td><td>Lets a consumer reason about update paths shared across interfaces.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Per-interface rules added here</h3>
+  <p>Applied to every declared interface, alongside the inherited baseline rules I1 to I9. The M prefix marks a rule as belonging to this profile, so a failure report shows which profile imposed it.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>#</th><th>Attribute</th><th>Level</th><th>Values and purpose</th></tr></thead>
+    <tbody>
+      <tr><td>M1</td><td><code>protocolVersionsSupported</code></td><td><span class="must">MUST</span></td><td>All versions the interface can negotiate, not only the default. Post-quantum key exchange is unavailable on older versions of some protocols, so the version set bounds what is possible.</td></tr>
+      <tr><td>M2</td><td><code>keyExchangeSupported</code></td><td><span class="must">MUST</span></td><td>The full set the interface can negotiate, including hybrid constructions. This is the attribute that answers whether the interface can be made quantum-safe.</td></tr>
+      <tr><td>M3</td><td><code>authenticationSupported</code></td><td><span class="must">MUST</span></td><td>Authentication migrates separately from key exchange and usually later, because it depends on what a certificate authority will issue.</td></tr>
+      <tr><td>M4</td><td><code>enablementMethod</code></td><td><span class="must">MUST</span></td><td><code>already-enabled</code> · <code>configuration</code> · <code>software-update</code> · <code>hardware-change</code> · <code>licence</code> · <code>not-available</code>. This single attribute separates the cheap changes from the expensive ones and drives sequencing more than any other.</td></tr>
+      <tr><td>M5</td><td><code>minimumProductVersion</code></td><td>conditional</td><td>MUST where <code>enablementMethod</code> is <code>software-update</code>. Without it the consumer knows an update is needed but not to what.</td></tr>
+      <tr><td>M6</td><td><code>providerLocation</code></td><td><span class="must">MUST</span></td><td><code>software</code> · <code>hsm</code> · <code>tee</code> · <code>unspecified</code>. Where key operations execute determines whether a new algorithm is a software matter at all.</td></tr>
+      <tr><td>M7</td><td><code>coexistence</code></td><td><span class="must">MUST</span></td><td><code>simultaneous</code> · <code>exclusive</code> · <code>unknown</code>. Whether the interface can serve classical and post-quantum peers at the same time. An <code>exclusive</code> interface forces a coordinated cutover with every counterparty.</td></tr>
+      <tr><td>M8</td><td><code>negotiationControl</code></td><td><span class="should">SHOULD</span></td><td>Whether the interface can be configured to require post-quantum key exchange and refuse a classical fallback. Determines whether migration can be enforced or only offered.</td></tr>
+      <tr><td>M9</td><td><code>integrationConstraints</code></td><td><span class="should">SHOULD</span></td><td>Known effects of enabling the capability: handshake or record size limits, fragmentation behaviour, certificate size ceilings, intermediary incompatibilities, measured performance impact.</td></tr>
+      <tr><td>M10</td><td><code>capabilityStatus</code></td><td><span class="must">MUST</span></td><td><code>available</code> · <code>committed</code> · <code>planned</code> · <code>under-evaluation</code> · <code>not-planned</code>. A commitment class rather than a date. Most sequencing decisions turn on the difference between <code>planned</code> and <code>not-planned</code>, which needs no date at all.</td></tr>
+      <tr><td>M11</td><td><code>blockedBy</code></td><td>conditional</td><td>MUST where <code>capabilityStatus</code> is not <code>available</code>. One of <code>provider</code> · <code>product</code> · <code>hardware</code> · <code>standard</code> · <code>certification</code>. Identifies what has to change and therefore who can change it.</td></tr>
+      <tr><td>M12</td><td><code>roadmapRef</code></td><td>MAY</td><td>Reference to a roadmap entry carrying the target release and, if offered, a date. Interfaces sharing a blocker reference the same entry.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>The one tightening</h3>
+  <table>
+    <thead><tr><th>Inherited rule</th><th>Baseline</th><th>Here</th></tr></thead>
+    <tbody>
+      <tr><td>I9 <code>implementationPurl</code></td><td>SHOULD, withholdable</td><td>MUST, not withholdable</td></tr>
+    </tbody>
+  </table>
+  <p>Migration planning depends on knowing which library implements an interface, since that determines whether an update exists and when it arrived. A vendor withholding it leaves the consumer unable to sequence the work. This is the only inherited rule this profile changes, and raising a level is permitted because it tightens.</p>
+
+  <h3>Conditional rules</h3>
+  <p>Two of the rules above apply only in certain states, which is worth noting in itself. A profile is not limited to a flat list of mandatory fields; a requirement can depend on the value of another attribute. Here, M5 obliges a producer claiming that a capability needs a software update to say which version provides it, and M11 obliges one declaring anything other than present capability to say what is in the way. Both dependencies exist because the unconditional alternatives are unhelpful: requiring a version from every interface would produce noise, and requiring none would leave the useful case unstated.</p>
+
+  <h3>Availability, and why it is not a date on an interface</h3>
+  <p>An earlier draft of this profile put a <code>plannedAvailability</code> date on each interface. It is the obvious design, and it does not hold up. The reason is structural.</p>
+  <p>Interfaces do not gain capability independently. A product with six TLS interfaces built on one cryptographic provider gains post-quantum key exchange on all six at the moment that provider is updated and the product integrates it. A date on each interface duplicates one underlying event six times, and the six copies drift apart as they are maintained. Availability belongs to the change that delivers the capability; the interfaces merely inherit it.</p>
+  <p>What a planner needs first is therefore not the date but the obstacle, because the obstacle determines whether any date is credible and who is able to move it.</p>
+  <table>
+    <thead><tr><th><code>blockedBy</code></th><th>What has to happen</th><th>Who can move it</th><th>Predictability</th></tr></thead>
+    <tbody>
+      <tr><td><code>provider</code></td><td>A dependency is upgraded to a version offering the algorithm.</td><td>The vendor, by taking the upgrade.</td><td>Reasonable</td></tr>
+      <tr><td><code>product</code></td><td>The product's own code must change to expose or negotiate it.</td><td>The vendor, in a named release.</td><td>Reasonable</td></tr>
+      <tr><td><code>hardware</code></td><td>A module, firmware or platform must support the algorithm.</td><td>The vendor together with the module supplier.</td><td>Poor</td></tr>
+      <tr><td><code>standard</code></td><td>No specification yet defines the algorithm for this protocol.</td><td>Nobody, until the standards process concludes.</td><td>None</td></tr>
+      <tr><td><code>certification</code></td><td>A validated implementation is required, for example under a scheme such as FIPS.</td><td>An external laboratory or scheme.</td><td>Externally determined</td></tr>
+    </tbody>
+  </table>
+  <p>The distinction that matters most is the fourth row. An interface blocked on a protocol standard cannot be given a credible date by any vendor, and a consumer who understands that stops waiting and considers compensating controls instead. Recording it as "planned, date to follow" alongside a case that is genuinely scheduled for the next release conflates two situations that call for opposite responses.</p>
+  <p>Where a date or release is offered, the profile keeps it out of the interface and out of the CBOM. Target release and date sit in a roadmap entry that interfaces reference through <code>roadmapRef</code>, so that interfaces sharing a blocker point at one entry. Two reasons: a CBOM revision is an immutable point-in-time record, so a slipping date either goes stale inside an authoritative-looking document or forces CBOM republication when nothing about the product has changed; and roadmap data has a different owner and a different cadence from the rest of the document, which is the same argument the <a href="governance.html">Governance</a> section makes for keeping separately-lifecycled artifacts apart.</p>
+  <p>A target release is also preferable to a calendar date. Releases are the vendor's own unit of change, and the statement "this lands in 9.x" survives slippage in a way that a date does not.</p>
+  <div class="banner">Three existing parts of the methodology carry this without additions. Forward-looking capability is <code>intended</code> in the lifecycle model, so the stage attribute already marks it as a statement about the future. A vendor that shares roadmap detail only under agreement records <code>roadmapRef</code> as <code>withheld</code>, which is more informative than an empty field. And the freshness policy in <a href="versioning.html">Versioning</a> applies to the roadmap entry, so a consumer can tell a current commitment from one nobody has revisited.</div>
+
+  <h2>A worked interface</h2>
+  <p>One interface of a hypothetical product, declared under this profile. The values are illustrative.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td><code>interfaceId</code></td><td><code>svc-api-tls</code></td></tr>
+      <tr><td><code>interfaceType</code></td><td><code>service</code></td></tr>
+      <tr><td><code>protocol</code> / <code>protocolVersionsSupported</code></td><td><code>TLS</code> / <code>1.2</code>, <code>1.3</code></td></tr>
+      <tr><td><code>keyExchange</code></td><td><code>X25519</code></td></tr>
+      <tr><td><code>keyExchangeSupported</code></td><td><code>X25519</code>, <code>secp256r1</code>, <code>X25519MLKEM768</code></td></tr>
+      <tr><td><code>authentication</code></td><td><code>RSA-2048</code></td></tr>
+      <tr><td><code>authenticationSupported</code></td><td><code>RSA-2048</code>, <code>ECDSA-P256</code></td></tr>
+      <tr><td><code>enablementMethod</code></td><td><code>software-update</code></td></tr>
+      <tr><td><code>minimumProductVersion</code></td><td><code>8.2.0</code></td></tr>
+      <tr><td><code>providerLocation</code></td><td><code>software</code></td></tr>
+      <tr><td><code>implementationPurl</code></td><td><code>pkg:generic/openssl@3.5.0</code></td></tr>
+      <tr><td><code>coexistence</code></td><td><code>simultaneous</code></td></tr>
+      <tr><td><code>negotiationControl</code></td><td>configurable to require hybrid</td></tr>
+      <tr><td><code>integrationConstraints</code></td><td>larger ClientHello may exceed some middlebox limits; no measured throughput impact</td></tr>
+      <tr><td><code>capabilityStatus</code></td><td><code>available</code> for key exchange; <code>committed</code> for authentication</td></tr>
+      <tr><td><code>blockedBy</code></td><td><code>certification</code>, for the authentication case only</td></tr>
+      <tr><td><code>roadmapRef</code></td><td><code>rm:pqc-auth-2027</code></td></tr>
+      <tr><td><code>lifecycleStage</code></td><td><code>implemented</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>What a planner can now conclude, without seeing inside the product: this interface can be made quantum-safe for key exchange but not yet for authentication; the key-exchange change requires an upgrade to 8.2.0 rather than new hardware; the upgrade can be rolled out before counterparties are ready, because classical and hybrid peers can be served at once; there is a specific interoperability risk to test for; and the authentication half is waiting on certification, so a scheme controls that date and pressing the vendor for it in a tender will achieve little. An inventory of the algorithms in use today yields none of these conclusions.</p>
+  <p>The example also shows why key exchange and authentication carry separate capability statements. They migrate on different schedules and for different reasons, and a single per-interface status would have to report the worse of the two, losing the fact that half the work can proceed now.</p>
+
+  <h2>What the profile deliberately excludes</h2>
+  <p>The profile omits three kinds of information, in each case deliberately.</p>
+  <p>It carries no readiness or posture verdict. Whether a declared algorithm set counts as quantum-safe is a judgement against criteria still under revision, so an external policy computes it from these facts at the time of asking and dates the result. <a href="policy-evaluation.html">Policy Evaluation</a> sets out the reasoning, which is also why <code>pqcPosture</code> was dropped from the baseline profile.</p>
+  <p>Maturity scores are excluded on the same grounds. Collapsing heterogeneous attributes into one number has a further drawback: it tends to hide whichever attribute is actually blocking the migration.</p>
+  <p>Internal implementation is out of scope, so no source references, design detail or component structure are requested. This follows from the black-box constraint and is not a concession to it. A vendor asked to expose internals will decline, and a profile nobody satisfies achieves nothing.</p>
+  <p>One further omission is worth explaining, since a reader comparing this with the baseline will notice it. The baseline's <code>encryption</code> attribute is inherited and still required, so an interface states the bulk algorithm it uses. What this profile does not add is an <code>encryptionSupported</code> counterpart. Symmetric encryption at adequate key lengths is not the pressing concern in a post-quantum migration, and the interfaces needing work are identified by their key exchange and authentication. A profile combining migration with a broader agility objective would add it.</p>
+
+  <h2>Expressing it in a CBOM</h2>
+  <p>The attributes above are format-independent. Several map onto native CycloneDX fields, and the remainder are carried as properties under the <code>pkic:profile:</code> namespace, in the same manner as the baseline profile. The capability attributes hold lists where the baseline holds single values, which is the main structural difference between the two and the point at which the mapping needs care: a consumer must be able to distinguish an empty list from an absent one, and both from a withheld one. See <a href="formats.html">Formats</a> for the encoding conventions and <a href="challenges.html">Challenges</a> for why that distinction matters.</p>
+  <p>Where an attribute is unavailable, the three disclosure states apply. A vendor may withhold <code>implementationPurl</code> and still conform. A vendor that does not know whether an interface can coexist should record <code>coexistence</code> as <code>unknown</code> instead of guessing, because a wrong answer here produces a migration plan that fails at cutover.</p>
+
+  <h2>Recorded decisions</h2>
+  <p>Two choices in this profile were made against the more obvious alternative. Recording them here means any future change to them is a deliberate act.</p>
+  <ul>
+    <li><strong>Capability is stated as facts, not as a verdict.</strong> The profile requires the algorithm sets an interface supports and does not ask whether they amount to being quantum-safe. That judgement is made by an external policy at the time of asking, for the reasons given in <a href="policy-evaluation.html">Policy Evaluation</a>. Revisit if a stable, widely accepted definition of quantum-safe emerges that no longer changes with guidance.</li>
+    <li><strong>Availability is expressed as a status and a blocker.</strong> Dates and target releases sit in a referenced roadmap entry, away from the interface. Revisit if consumers report that the indirection is not being followed in practice, which would argue for accepting stale dates in exchange for locality.</li>
+  </ul>
+
+  <h2>Open questions for the working group</h2>
+  <ul>
+    <li>Whether raising <code>implementationPurl</code> to a non-withholdable MUST is acceptable to vendors. It is the one place this profile tightens the baseline, and it removes an option the baseline deliberately offered.</li>
+    <li>Whether <code>enablementMethod</code> should be a single value or a set, since some capabilities need both an update and a configuration change.</li>
+    <li>Whether <code>integrationConstraints</code> can be structured usefully or should remain prose. Structured constraints can be checked automatically, though prose is what vendors are more likely to supply.</li>
+    <li>Whether <code>capabilityStatus</code> should be stated once per interface or separately for key exchange and authentication. The worked example does the latter, because the two migrate on different schedules, but it complicates the rule.</li>
+    <li>Whether a CBOM should carry forward-looking data at all. This one is a substantive disagreement, not a detail to be tidied up. A procurement profile has a defensible claim on it, since a buyer is entitled to ask what a product will support before committing; a runtime assurance profile arguably has none, because a statement about the future says nothing about what is running. The answer may legitimately differ between profiles, and need not be settled once for all of them.</li>
+    <li>How this profile relates to a sector baseline. A telecommunications or finance profile would most likely add required interface types and constrain the acceptable algorithm sets, leaving the attribute list intact.</li>
+  </ul>
+
+  <div class="banner">The pattern to take from this section: name the consumer and the decision, derive the questions that decision raises, and turn each question into an attribute that can be declared at the boundary. The list of attributes is the output of that analysis. Beginning instead from the fields a format happens to offer produces a profile with no stated purpose, and no way to argue about whether it asks for the right things.</div>
+
+  <div class="pagenav">
+    <a href="use-cases.html">← Use Cases</a>
+    <a class="next" href="formats.html">Next: Formats →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

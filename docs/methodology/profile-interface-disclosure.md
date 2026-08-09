@@ -95,6 +95,11 @@ exist, irrespective of its name.
 
 ### 4.2 Per-interface rules (applied to every declared interface)
 
+Attribute names follow the methodology's naming conventions: a bare name denotes present state,
+and a `Supported` suffix denotes declared capability. This profile records present state only, so
+no attribute here carries the suffix. A profile requiring capability, such as the PQC migration
+profile, reuses these names unchanged and adds the suffixed forms alongside them.
+
 | # | Attribute | Level | Allowed values / notes |
 |---|---|---|---|
 | I1 | `protocol` | **MUST** | present (for example `TLS`, `SSH`, `IPsec`) |

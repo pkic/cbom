@@ -1,0 +1,143 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7",
+  "serialNumber": "urn:uuid:6f6f6f6f-0000-4000-8000-000000pqcbad",
+  "version": 1,
+  "$comment": "EXAMPLE CBOM — DOES NOT CONFORM to pkic.example.pqc-migration v0.1. Three distinct failures, each chosen to exercise machinery the baseline profile does not have. (1) svc-api-tls declares enablementMethod=software-update but no minimumProductVersion, so conditional rule M5 fires. (2) mgmt-ssh declares capabilityStatus=committed but no blockedBy, so conditional rule M11 fires. (3) ic-ipsec withholds implementationPurl, which the BASELINE permits but this profile does not, because the override on I9 removed withholdability. That third case is the interesting one: this document would conform to the baseline profile and fails only because the derived profile tightened an inherited rule.",
+  "metadata": {
+    "timestamp": "2026-08-07T09:05:00Z",
+    "component": {
+      "type": "application",
+      "bom-ref": "app:gateway",
+      "name": "Example Gateway",
+      "version": "9.0.4",
+      "purl": "pkg:generic/example-gateway@9.0.4",
+      "description": "Illustrative product treated as a black box",
+      "properties": [
+        { "name": "pkic:profile:coverage", "value": "all-external" }
+      ]
+    }
+  },
+  "components": [
+    { "type": "library", "bom-ref": "lib:openssl", "name": "OpenSSL", "version": "3.5.0", "purl": "pkg:generic/openssl@3.5.0" },
+    { "type": "library", "bom-ref": "lib:openssh", "name": "OpenSSH", "version": "9.6", "purl": "pkg:generic/openssh@9.6" },
+
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:protocol:svc-api-tls",
+      "name": "Public API interface (TLS 1.3)",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "tls",
+          "version": "1.3",
+          "cryptoRefArray": ["crypto:algo:aes-256-gcm", "crypto:algo:x25519", "crypto:cert:server-leaf"]
+        }
+      },
+      "properties": [
+        { "name": "pkic:profile:interfaceId", "value": "svc-api-tls" },
+        { "name": "pkic:profile:interfaceType", "value": "service" },
+        { "name": "pkic:profile:lifecycleStage", "value": "implemented" },
+        { "name": "pkic:profile:endpointRole:client", "value": "endpoint:consumer" },
+        { "name": "pkic:profile:endpointRole:server", "value": "endpoint:gateway" },
+        { "name": "pkic:profile:implementationPurl", "value": "pkg:generic/openssl@3.5.0" },
+        { "name": "pkic:profile:protocolVersionsSupported", "value": "1.2" },
+        { "name": "pkic:profile:protocolVersionsSupported", "value": "1.3" },
+        { "name": "pkic:profile:keyExchangeSupported", "value": "X25519" },
+        { "name": "pkic:profile:keyExchangeSupported", "value": "X25519MLKEM768" },
+        { "name": "pkic:profile:authenticationSupported", "value": "RSA-2048" },
+        { "name": "pkic:profile:enablementMethod", "value": "software-update" },
+        { "name": "pkic:profile:providerLocation", "value": "software" },
+        { "name": "pkic:profile:coexistence", "value": "simultaneous" },
+        { "name": "pkic:profile:negotiationControl", "value": "can be configured to require hybrid" },
+        { "name": "pkic:profile:integrationConstraints", "value": "larger ClientHello may exceed some middlebox limits" },
+        { "name": "pkic:profile:capabilityStatus", "value": "available" }
+      ]
+    },
+
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:protocol:mgmt-ssh",
+      "name": "Management interface (SSH 2.0)",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "ssh",
+          "version": "2.0",
+          "cryptoRefArray": ["crypto:algo:chacha20-poly1305", "crypto:algo:curve25519", "crypto:algo:ed25519"]
+        }
+      },
+      "properties": [
+        { "name": "pkic:profile:interfaceId", "value": "mgmt-ssh" },
+        { "name": "pkic:profile:interfaceType", "value": "management" },
+        { "name": "pkic:profile:lifecycleStage", "value": "implemented" },
+        { "name": "pkic:profile:endpointRole:client", "value": "endpoint:admin" },
+        { "name": "pkic:profile:endpointRole:server", "value": "endpoint:gateway" },
+        { "name": "pkic:profile:implementationPurl", "value": "pkg:generic/openssh@9.6" },
+        { "name": "pkic:profile:protocolVersionsSupported", "value": "2.0" },
+        { "name": "pkic:profile:keyExchangeSupported", "value": "curve25519-sha256" },
+        { "name": "pkic:profile:authenticationSupported", "value": "Ed25519" },
+        { "name": "pkic:profile:enablementMethod", "value": "configuration" },
+        { "name": "pkic:profile:providerLocation", "value": "software" },
+        { "name": "pkic:profile:coexistence", "value": "simultaneous" },
+        { "name": "pkic:profile:negotiationControl", "value": "not configurable to require PQC" },
+        { "name": "pkic:profile:integrationConstraints", "value": "no known constraints" },
+        { "name": "pkic:profile:capabilityStatus", "value": "committed" }
+      ]
+    },
+
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:protocol:ic-ipsec",
+      "name": "Interconnect interface (IPsec / IKEv2)",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "ipsec",
+          "version": "2.0",
+          "cryptoRefArray": ["crypto:algo:aes-256-gcm", "crypto:algo:dh-group14", "crypto:algo:ecdsa-p256"]
+        }
+      },
+      "properties": [
+        { "name": "pkic:profile:interfaceId", "value": "ic-ipsec" },
+        { "name": "pkic:profile:interfaceType", "value": "interconnect" },
+        { "name": "pkic:profile:lifecycleStage", "value": "implemented" },
+        { "name": "pkic:profile:endpointRole:initiator", "value": "endpoint:gateway" },
+        { "name": "pkic:profile:endpointRole:responder", "value": "endpoint:peer" },
+        { "name": "pkic:profile:disclosure:implementationPurl", "value": "withheld" },
+        { "name": "pkic:profile:protocolVersionsSupported", "value": "2.0" },
+        { "name": "pkic:profile:keyExchangeSupported", "value": "DH-group14" },
+        { "name": "pkic:profile:authenticationSupported", "value": "ECDSA-P256" },
+        { "name": "pkic:profile:enablementMethod", "value": "not-available" },
+        { "name": "pkic:profile:providerLocation", "value": "hsm" },
+        { "name": "pkic:profile:coexistence", "value": "unknown" },
+        { "name": "pkic:profile:negotiationControl", "value": "not applicable while unavailable" },
+        { "name": "pkic:profile:integrationConstraints", "value": "hardware module would require replacement" },
+        { "name": "pkic:profile:capabilityStatus", "value": "not-planned" },
+        { "name": "pkic:profile:blockedBy", "value": "standard" }
+      ]
+    },
+
+    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:aes-256-gcm", "name": "AES-256-GCM",
+      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "ae", "parameterSetIdentifier": "256", "mode": "gcm", "nistQuantumSecurityLevel": 1 } } },
+    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:x25519", "name": "X25519",
+      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "key-agree", "curve": "x25519", "nistQuantumSecurityLevel": 0 } } },
+    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:rsa-2048", "name": "RSA-2048",
+      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "signature", "parameterSetIdentifier": "2048", "nistQuantumSecurityLevel": 0 } } },
+    { "type": "cryptographic-asset", "bom-ref": "crypto:cert:server-leaf", "name": "API server certificate",
+      "cryptoProperties": { "assetType": "certificate", "certificateProperties": { "subjectName": "CN=api.example.com", "certificateFormat": "X.509", "signatureAlgorithmRef": "crypto:algo:rsa-2048" } } },
+    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:chacha20-poly1305", "name": "ChaCha20-Poly1305",
+      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "ae", "nistQuantumSecurityLevel": 1 } } },
+    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:curve25519", "name": "curve25519-sha256",
+      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "key-agree", "curve": "x25519", "nistQuantumSecurityLevel": 0 } } },
+    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:ed25519", "name": "Ed25519 host key",
+      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "signature", "curve": "ed25519", "nistQuantumSecurityLevel": 0 } } },
+    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:dh-group14", "name": "DH group 14",
+      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "key-agree", "parameterSetIdentifier": "2048", "nistQuantumSecurityLevel": 0 } } },
+    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:ecdsa-p256", "name": "ECDSA P-256",
+      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "signature", "curve": "secp256r1", "nistQuantumSecurityLevel": 0 } } }
+  ],
+  "dependencies": [
+    { "ref": "app:gateway", "dependsOn": ["lib:openssl", "lib:openssh", "crypto:protocol:svc-api-tls", "crypto:protocol:mgmt-ssh", "crypto:protocol:ic-ipsec"] }
+  ]
+}

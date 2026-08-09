@@ -15,13 +15,16 @@
   </div>
   <nav class="tabs">
     <a href="index.html">Overview</a>
+    <a href="terms.html">Terms</a>
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="method.html">Method</a>
     <a href="use-cases.html" class="active">Use Cases</a>
+    <a href="pqc-migration.html">PQC Migration</a>
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
     <a href="governance.html">Governance</a>
@@ -34,60 +37,74 @@
 <main>
   <div class="crumb">APPLIED</div>
   <h1>Use cases for profiles</h1>
-  <p class="lead">A profile enables a CBOM to be evaluated automatically rather than assessed manually. Each use case below requires a different subset of attributes, which is the reason profiles, rather than a single universal schema, are the appropriate unit. A single CBOM may satisfy several of these use cases simultaneously.</p>
+  <p class="lead">A profile cannot be written without first deciding what it is for. This section sets out the purposes a CBOM profile is asked to serve, because each one determines a different set of mandatory attributes, and that difference is the reason the methodology produces profiles rather than a single schema.</p>
 
-  <h2>Use cases</h2>
+  <h2>Why the use case comes first</h2>
+  <p>The question a profile answers is not "what cryptography does this contain" but "what must be disclosed so that a particular decision can be made". Those are different questions, and the second cannot be answered in the abstract. An attribute that is indispensable for one purpose is noise for another: a vulnerability responder needs the implementing library and can ignore endpoint roles, while a procurement team checking an interface baseline needs the reverse.</p>
+  <p>Starting from the use case also bounds the disclosure. Without a stated purpose there is no principled way to decide where a profile stops, and the result drifts either towards demanding everything, which vendors reasonably resist, or towards a lowest common denominator that supports no decision at all. A profile with a named consumer and a named decision can be argued about on its merits.</p>
+  <p>One CBOM can serve several of these purposes at once. The document does not change; the profile applied to it does. A vendor generating a single high-fidelity CBOM may find it evaluated against a procurement profile by one customer, a migration profile by another, and a vulnerability profile internally, with no republication in between.</p>
+  <p>The use cases below are described briefly. One of them, PQC migration, is worked through in full on the <a href="pqc-migration.html">PQC Migration</a> tab, where the consumer's decision is turned into a complete profile definition. That section is the template for how the others would be developed.</p>
 
-  <h3>1 · PQC migration readiness and planning</h3>
-  <p><strong>Objective:</strong> establish evidence-based migration timelines and track progress toward quantum-safe cryptography. <strong>Profile emphasis:</strong> requires disclosure of the key-exchange and authentication algorithms — the facts from which post-quantum posture is derived by an external policy (see <a href="policy-evaluation.html">Policy Evaluation</a>) — and frequently a specific <code>lifecycleStage</code>, so that <code>implemented</code> capability can be compared with <code>observed</code> actuality. <strong>Producer and consumer:</strong> vendor build or operator scan, consumed by migration planners and regulators. <strong>Example:</strong> comparison of current CBOMs against a quantum-safe target state to distinguish software-only updates from changes requiring hardware replacement.</p>
+  <h2>The use cases</h2>
 
-  <h3>2 · Procurement and tender conformance</h3>
-  <p><strong>Objective:</strong> state cryptographic requirements in a tender and evaluate a vendor's CBOM against them automatically, in place of security questionnaires. <strong>Profile emphasis:</strong> per-interface minimums together with product-level structure, such as the requirement to declare a management interface. <strong>Producer and consumer:</strong> vendor, consumed by operator procurement. <strong>Example:</strong> a required baseline for any product that terminates an operator interface.</p>
+  <h3 id="pqc-readiness">1 · PQC migration readiness and planning</h3>
+  <p>An operator has to decide which systems to migrate, in what order, and what each will cost. That means separating the systems needing only a configuration change from those requiring a software update, and both from those tied to hardware that must be replaced. The consumers are migration programme leads and, increasingly, the regulators they report to.</p>
+  <p>A profile for this purpose requires the algorithms an interface currently uses and those it is able to use, so that capability and actuality can be compared, together with the lifecycle stage that says which is being reported. It does not ask for a readiness verdict, because that judgement depends on criteria which change over time and belongs in an external policy. This use case is developed in detail on the <a href="pqc-migration.html">PQC Migration</a> tab.</p>
 
-  <h3>3 · Vulnerability management and incident response</h3>
-  <p><strong>Objective:</strong> when a library vulnerability is disclosed, such as an OpenSSL advisory, identify every affected service promptly. <strong>Profile emphasis:</strong> requires <code>implementationPurl</code> so that CBOMs can be cross-referenced against vulnerability feeds. <strong>Producer and consumer:</strong> build pipeline, consumed by security operations. <strong>Example:</strong> a query of the CBOM repository for all interfaces implemented by <code>pkg:generic/openssl@&lt;affected&gt;</code>.</p>
+  <h3 id="procurement">2 · Procurement and tender conformance</h3>
+  <p>An operator states cryptographic requirements in a tender and needs to check what comes back without reading it by hand. Today this is done with security questionnaires, whose answers are prose and cannot be compared between vendors. A profile turns the requirement into something a machine evaluates, and the vendor's CBOM into the response.</p>
+  <p>The requirements here are structural as much as attribute-level. Beyond describing each interface, a procurement profile typically insists that certain kinds of interface are present at all, which is how it catches a vendor that has described its service interface and said nothing about how the product is administered.</p>
 
-  <h3>4 · Regulatory and compliance reporting</h3>
-  <p><strong>Objective:</strong> demonstrate cryptographic posture against frameworks such as the EU CRA, NIS2, BSI TR-03183 and TR-02102, or United States directives. <strong>Profile emphasis:</strong> encodes the attributes a regulation expects into a checkable rule set, so that conformance becomes a defined artifact. <strong>Producer and consumer:</strong> operator, consumed by auditors and regulators. <strong>Example:</strong> a jurisdiction-specific profile that a global vendor satisfies once and reports against in multiple jurisdictions.</p>
+  <h3 id="vulnerability">3 · Vulnerability management and incident response</h3>
+  <p>An advisory is published against a cryptographic library. The question is which services are affected, and it has to be answered in hours rather than weeks. This is the use case with the shortest tolerance for manual work.</p>
+  <p>Almost everything depends on one attribute: the identifier of the implementing library, expressed in a form that can be matched against a vulnerability feed. Endpoint roles, interface types and lifecycle stages contribute little here. A profile written for this purpose is correspondingly narrow, which is a feature rather than a limitation.</p>
 
-  <h3>5 · Continuous integration quality gate</h3>
-  <p><strong>Objective:</strong> prevent non-conforming cryptography from reaching production. <strong>Profile emphasis:</strong> any profile, executed as a pipeline stage that fails the build on a MUST violation. <strong>Producer and consumer:</strong> the build, consumed by the pipeline. <strong>Example:</strong> the pass and fail behaviour shown in the <a href="demo.html">Demo</a> section, integrated into continuous integration.</p>
+  <h3 id="compliance">4 · Regulatory and compliance reporting</h3>
+  <p>An organization must demonstrate its cryptographic position against a framework such as the EU Cyber Resilience Act, NIS2, the BSI technical guidelines, or a national directive. The consumer is an auditor or regulator who did not generate the data and cannot ask follow-up questions of the system.</p>
+  <p>A profile encodes what a given framework expects, so that conformance becomes a dated artifact rather than an assertion. Because the reader is external, provenance and lifecycle stage carry unusual weight: a reported position is only meaningful if it says when and from what it was derived. A jurisdiction-specific profile also lets a global vendor satisfy the requirement once and report against it in several places.</p>
 
-  <h3>6 · Crypto-agility assessment</h3>
-  <p><strong>Objective:</strong> assess how readily an estate could replace an algorithm. <strong>Profile emphasis:</strong> emphasises <code>implementationPurl</code>, the separation of <code>keyExchange</code>, <code>encryption</code>, and <code>authentication</code>, and dependency links, so that agility can be assessed per interface. <strong>Producer and consumer:</strong> vendor, consumed by architecture and risk functions. <strong>Example:</strong> identification of interfaces whose cryptography is fixed rather than provider-replaceable.</p>
+  <h3 id="ci-gate">5 · Continuous integration quality gate</h3>
+  <p>The aim is to stop non-conforming cryptography reaching production, by checking a CBOM at a pipeline stage and failing the build when a mandatory rule is violated. The consumer is the pipeline itself, which is the only case here where no human reads the result on the happy path.</p>
+  <p>Any profile can be used this way, so the requirement is less about which attributes are mandatory than about the validator returning a usable exit status and a machine-readable report. The behaviour is the same as the <a href="demo.html">Demo</a> section shows interactively.</p>
 
-  <h3>7 · Supply-chain transparency</h3>
-  <p><strong>Objective:</strong> provide downstream consumers with a consistent, high-fidelity disclosure in place of free-form documentation. <strong>Profile emphasis:</strong> a disclosure baseline, such as this example, that bounds the information to be shared while protecting intellectual property. <strong>Producer and consumer:</strong> a supplier at any tier, consumed by an integrator. <strong>Example:</strong> a single vendor CBOM that satisfies the baselines of multiple operators.</p>
+  <h3 id="crypto-agility">6 · Crypto-agility assessment</h3>
+  <p>Before an algorithm needs replacing, an architecture or risk function wants to know how hard replacing it would be. The answer is rarely uniform across an estate, and the interfaces that will cause trouble are usually known in advance if anyone has looked.</p>
+  <p>What matters is whether cryptography is reachable through a replaceable provider or fixed in place, which makes the implementing library and its location the central attributes. Keeping key exchange, encryption and authentication as separate attributes rather than a single cipher-suite string also matters, because agility usually differs between them.</p>
 
-  <h3>8 · Mergers and third-party risk due diligence</h3>
-  <p><strong>Objective:</strong> assess the cryptographic exposure of an acquisition target or partner. <strong>Profile emphasis:</strong> a broad disclosure and PQC-posture profile applied across the estate. <strong>Producer and consumer:</strong> the target, consumed by the acquiring security function. <strong>Example:</strong> identification of deprecated algorithms and cryptography bound to legacy hardware prior to completion.</p>
+  <h3 id="supply-chain">7 · Supply-chain transparency</h3>
+  <p>A supplier at any tier needs to tell its customers what cryptography its product uses, and would prefer to do so once rather than in a different format for each customer. Downstream, an integrator needs disclosures it can compare across suppliers.</p>
+  <p>A disclosure baseline serves this, and the interesting constraint is the upper bound rather than the lower one. The profile has to be satisfiable without exposing information a supplier has a legitimate reason to protect, which is why the ability to mark an attribute as withheld rather than silently omitting it matters here more than anywhere else.</p>
+
+  <h3 id="due-diligence">8 · Mergers and third-party risk due diligence</h3>
+  <p>An acquiring organization, or one onboarding a significant partner, needs a view of cryptographic exposure across an estate it does not operate and cannot inspect directly. The work is usually done under time pressure and with limited cooperation.</p>
+  <p>Coverage matters more than depth. A broad disclosure across the estate, with the absence of data recorded explicitly rather than left blank, tells the assessor where the risk concentrates: deprecated algorithms still in use, and cryptography bound to hardware that will not be upgraded.</p>
 
   <h2>Attributes emphasised by each use case</h2>
-  <p>The same set of attributes serves all of these use cases, but each makes a different subset mandatory. This selectivity is the defining characteristic of profiling.</p>
+  <p>The same set of attributes serves all of these purposes, but each makes a different subset mandatory. That selectivity is what a profile is.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr>
-      <th>Use case</th><th>lifecycleStage</th><th>implementationPurl</th><th>keyExchange / auth</th><th>interfaceType (mgmt)</th>
+      <th>Use case</th><th>lifecycleStage</th><th>implementationPurl</th><th>keyExchange / auth</th><th>interfaceType</th><th>disclosure markers</th>
     </tr></thead>
     <tbody>
-      <tr><td>PQC readiness</td><td>●</td><td>○</td><td>●</td><td>○</td></tr>
-      <tr><td>Procurement</td><td>○</td><td>○</td><td>●</td><td>●</td></tr>
-      <tr><td>Vulnerability / incident</td><td>○</td><td>●</td><td>○</td><td>○</td></tr>
-      <tr><td>Compliance reporting</td><td>●</td><td>○</td><td>●</td><td>●</td></tr>
-      <tr><td>CI quality gate</td><td>○</td><td>●</td><td>●</td><td>●</td></tr>
-      <tr><td>Crypto-agility</td><td>○</td><td>●</td><td>●</td><td>○</td></tr>
-      <tr><td>Supply-chain transparency</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
-      <tr><td>M&amp;A due diligence</td><td>○</td><td>●</td><td>●</td><td>○</td></tr>
+      <tr><td>PQC readiness</td><td>●</td><td>○</td><td>●</td><td>○</td><td>○</td></tr>
+      <tr><td>Procurement</td><td>○</td><td>○</td><td>●</td><td>●</td><td>○</td></tr>
+      <tr><td>Vulnerability / incident</td><td>○</td><td>●</td><td>○</td><td>○</td><td>○</td></tr>
+      <tr><td>Compliance reporting</td><td>●</td><td>○</td><td>●</td><td>●</td><td>●</td></tr>
+      <tr><td>CI quality gate</td><td>○</td><td>●</td><td>●</td><td>●</td><td>○</td></tr>
+      <tr><td>Crypto-agility</td><td>○</td><td>●</td><td>●</td><td>○</td><td>○</td></tr>
+      <tr><td>Supply-chain transparency</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+      <tr><td>M&amp;A due diligence</td><td>○</td><td>●</td><td>●</td><td>○</td><td>●</td></tr>
     </tbody>
   </table>
   </div>
-  <p style="font-size:13px;color:var(--muted)">● emphasised by the profile for this use case · ○ relevant but not the focus</p>
+  <p style="font-size:13px;color:var(--muted)">● emphasised by a profile for this use case · ○ relevant but not the focus</p>
 
-  <div class="banner">A single CBOM may satisfy multiple profiles. A vendor generates one high-fidelity CBOM, and different consumers evaluate it independently against the procurement, PQC-readiness, and vulnerability profiles. This is a direct consequence of keeping the methodology <a href="formats.html">format-independent</a> and locating the requirements in profiles.</div>
+  <div class="banner">One CBOM, several profiles. A vendor generates one high-fidelity document, and different consumers evaluate it independently against the profile that matches their decision. This is a direct consequence of keeping the methodology <a href="formats.html">format-independent</a> and locating the requirements in profiles rather than in the format.</div>
 
   <div class="pagenav">
-    <a href="policy-evaluation.html">← Policy Evaluation</a>
-    <a class="next" href="formats.html">Next: Formats →</a>
+    <a href="method.html">← Method</a>
+    <a class="next" href="pqc-migration.html">Next: PQC Migration →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>

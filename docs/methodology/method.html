@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Method</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="terms.html">Terms</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="model.html">Model</a>
+    <a href="profile.html">Profile</a>
+    <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="method.html" class="active">Method</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="pqc-migration.html">PQC Migration</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="governance.html">Governance</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+    <a href="../references/">References</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">CORE</div>
+  <h1>How to define a CBOM profile</h1>
+  <p class="lead">This section states the procedure. The sections before it establish what a profile is and the vocabulary it is written in; the sections after it show the procedure applied. A sector body adopting this methodology follows the twelve steps below.</p>
+  <div class="banner warn">This procedure is derived from how the worked example in this documentation was actually built. It is a proposal for the working group to accept, amend or reject, and is not yet an agreed position.</div>
+
+  <h2>The shape of the work</h2>
+  <p>The steps group into five stages. The order matters more than it might appear: each stage constrains the next, and the most common way to produce an unusable profile is to begin in the middle, at the point where attributes are chosen.</p>
+  <figure>
+    <svg viewBox="0 0 720 210" role="img" aria-label="Five stages: Scope, Content, Rules, Realisation, Proof, with a feedback loop from Proof back to Content" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <title>The five stages of defining a profile</title>
+      <g>
+        <rect x="10" y="52" width="126" height="62" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+        <text x="73" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">1 · Scope</text>
+        <text x="73" y="94" fill="#5b6472" text-anchor="middle" font-size="10.5">consumer, decision,</text>
+        <text x="73" y="107" fill="#5b6472" text-anchor="middle" font-size="10.5">subject, boundary</text>
+
+        <rect x="152" y="52" width="126" height="62" rx="10" fill="#ffffff" stroke="#1c5fd6"/>
+        <text x="215" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">2 · Content</text>
+        <text x="215" y="94" fill="#5b6472" text-anchor="middle" font-size="10.5">questions, attributes,</text>
+        <text x="215" y="107" fill="#5b6472" text-anchor="middle" font-size="10.5">facts and judgements</text>
+
+        <rect x="294" y="52" width="126" height="62" rx="10" fill="#ffffff" stroke="#1c5fd6"/>
+        <text x="357" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">3 · Rules</text>
+        <text x="357" y="94" fill="#5b6472" text-anchor="middle" font-size="10.5">levels, structure,</text>
+        <text x="357" y="107" fill="#5b6472" text-anchor="middle" font-size="10.5">exclusions</text>
+
+        <rect x="436" y="52" width="126" height="62" rx="10" fill="#ffffff" stroke="#1c5fd6"/>
+        <text x="499" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">4 · Realisation</text>
+        <text x="499" y="94" fill="#5b6472" text-anchor="middle" font-size="10.5">mapping, versions,</text>
+        <text x="499" y="107" fill="#5b6472" text-anchor="middle" font-size="10.5">decisions</text>
+
+        <rect x="578" y="52" width="132" height="62" rx="10" fill="#eafaf1" stroke="#0f7a52"/>
+        <text x="644" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">5 · Proof</text>
+        <text x="644" y="94" fill="#5b6472" text-anchor="middle" font-size="10.5">examples and</text>
+        <text x="644" y="107" fill="#5b6472" text-anchor="middle" font-size="10.5">a running validator</text>
+      </g>
+      <g stroke="#1c5fd6" stroke-width="2" fill="none">
+        <line x1="136" y1="83" x2="152" y2="83"/><polygon points="152,83 143,78 143,88" fill="#1c5fd6"/>
+        <line x1="278" y1="83" x2="294" y2="83"/><polygon points="294,83 285,78 285,88" fill="#1c5fd6"/>
+        <line x1="420" y1="83" x2="436" y2="83"/><polygon points="436,83 427,78 427,88" fill="#1c5fd6"/>
+        <line x1="562" y1="83" x2="578" y2="83"/><polygon points="578,83 569,78 569,88" fill="#1c5fd6"/>
+      </g>
+      <path d="M644 114 L644 152 L215 152 L215 114" fill="none" stroke="#9a6300" stroke-width="2" stroke-dasharray="6 4"/>
+      <polygon points="215,114 210,124 220,124" fill="#9a6300"/>
+      <text x="430" y="170" fill="#9a6300" text-anchor="middle" font-size="11">building the examples usually sends you back to the attributes</text>
+      <text x="430" y="190" fill="#5b6472" text-anchor="middle" font-size="11">the procedure is iterative; stage 5 is a test of stages 2 and 3, not a formality</text>
+    </svg>
+    <figcaption>Five stages. The feedback path is the normal case: a profile that has never been run against a real document has not been checked.</figcaption>
+  </figure>
+
+  <h2>Stage 1 — Scope</h2>
+
+  <h3>Step 1. Name the consumer and the decision</h3>
+  <p>Write down who will read a CBOM evaluated against this profile, and what they will do differently depending on what it says. Both halves are required. A named consumer with no decision produces a profile that collects data nobody acts on; a decision with no named consumer produces one that nobody is accountable for satisfying.</p>
+  <p>The test to apply: state the decision as a sentence containing a choice. "Whether to schedule this system for upgrade, replacement, or no action" passes. "To understand our cryptographic position" does not, and a profile written from it will grow until it demands everything.</p>
+
+  <h3>Step 2. Establish the subject and its boundary</h3>
+  <p>Decide what the profile describes: a product, a deployed service, a component, or a bounded part of an estate. Then decide where the boundary sits, which means deciding what the producer can reasonably declare. A profile for a product a consumer cannot inspect is limited to what is observable or assertable at its interfaces. A profile for an operator's own service can ask for more.</p>
+  <p>The boundary is a feasibility constraint and setting it early prevents work on attributes nobody will supply. The test: for each thing you intend to ask for, could the producer answer without disclosing something it has a legitimate reason to protect? See the black-box discussion in <a href="pqc-migration.html">PQC Migration</a> for a worked instance.</p>
+
+  <h3>Also in stage 1: decide whether you are extending</h3>
+  <p>Before deriving questions, establish whether an existing profile already covers part of the ground. If one does, the new profile can extend it, inheriting its rules and stating only additions and tightenings. If the new profile would need to relax anything the candidate base requires, it is an independent profile and should be written as one. That choice is made once, early, because it determines what the remaining steps produce: an extension states differences, while an independent profile states everything.</p>
+  <p>The rules governing extension, including why relaxation is excluded, are in <a href="profile.html">Profile</a>.</p>
+
+  <h2>Stage 2 — Content</h2>
+
+  <h3>Step 3. Derive the questions</h3>
+  <p>From the decision, enumerate the questions the consumer must answer to make it. Keep them as questions, phrased in the consumer's own language, and resist converting them to attributes yet. This is the step most often skipped, and skipping it is what produces profiles that mirror the fields a format happens to offer.</p>
+  <p>Expect between three and a dozen. If the list runs much longer, the decision in step 1 was probably too broad and should be split into separate profiles.</p>
+
+  <h3>Step 4. Convert each question into a declarable attribute</h3>
+  <p>Work through the questions and, for each, identify what would have to be disclosed to answer it. One question may need several attributes, and several questions may share one. Two properties are required of every attribute: it must be declarable at the boundary established in step 2, and it must be capable of being wrong in principle, which is what makes conformance meaningful.</p>
+  <p>Express attributes in format-independent terms. Use the vocabulary in <a href="model.html">the model</a>, so that an attribute belongs clearly to a relationship, an endpoint, or an asset. Attributes that turn out to belong to none of those are usually judgements, which step 5 handles.</p>
+
+  <h4>Naming conventions</h4>
+  <p>Profiles written under this methodology are meant to be read together, and a reader should not have to work out that two names mean the same thing. Four conventions apply.</p>
+  <table>
+    <thead><tr><th>Convention</th><th>Form</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>Present state carries the bare name</td><td><code>attribute</code></td><td><code>keyExchange</code> is what the interface uses now</td></tr>
+      <tr><td>Declared capability takes a <code>Supported</code> suffix</td><td><code>attributeSupported</code></td><td><code>keyExchangeSupported</code> is everything it could use</td></tr>
+      <tr><td>Sets are plural, single values are singular</td><td><code>attributesSupported</code></td><td><code>protocolVersionsSupported</code> holds several; <code>protocolVersion</code> holds one</td></tr>
+      <tr><td>Names describe what is disclosed, not what it implies</td><td>—</td><td><code>keyExchangeSupported</code>, never <code>pqcReady</code></td></tr>
+    </tbody>
+  </table>
+  <p>The fourth convention is a restatement of step 5 at the level of naming. A name that describes a conclusion tends to smuggle the conclusion back in even when the values beneath it are facts.</p>
+  <p>Where an existing profile has already published an attribute, later profiles reuse the name and its meaning without redefining it. Divergence here is the single easiest way to make two profiles unusable together, and it is not always visible to whoever introduces it.</p>
+
+  <h3>Step 5. Separate facts from judgements</h3>
+  <p>Review the attribute list and remove anything that is a conclusion drawn against criteria that change over time. Post-quantum posture and cryptographic maturity are the two clearest cases. These belong to an external, versioned policy that reads the profile's facts and produces a dated verdict, and the reasoning is set out in <a href="policy-evaluation.html">Policy Evaluation</a>.</p>
+  <p>The test: if the same disclosed values could yield a different answer next year without the product changing, it is a judgement. Keep the inputs, discard the conclusion.</p>
+
+  <h2>Stage 3 — Rules</h2>
+
+  <h3>Step 6. Assign conformance levels and disclosure treatment</h3>
+  <p>Give every attribute a level using BCP 14 keywords. Then decide, per attribute, what happens when a value is absent. Under the three-state model an attribute may be unknown to the producer or deliberately withheld, and a profile must say which attributes may be withheld and still conform. A procurement profile may permit none; a supply-chain disclosure profile will permit several.</p>
+  <p>The test for each attribute: what should a consumer conclude if this is missing? An attribute whose absence changes nothing does not need to be mandatory, and possibly does not need to be in the profile.</p>
+
+  <h3>Step 7. Add the structural rules</h3>
+  <p>Per-attribute rules catch misstatement. They do not catch omission, because a rule about interfaces says nothing about an interface that was never declared. Structural rules constrain the set: how many of a thing must be present, and of which kinds.</p>
+  <p>This is where a profile requires that a management interface exists at all, or that the producer states whether its list is complete. Structural rules are product-independent by construction, since they constrain kinds and counts and never name an instance.</p>
+
+  <h3>Step 8. State the exclusions</h3>
+  <p>Write down what the profile deliberately does not ask for, and why. This is not padding. It pre-empts the reasonable objection that something obvious was forgotten, it records the boundary decision from step 2 in a form a reader can check, and it makes later expansion a deliberate act.</p>
+
+  <h2>Stage 4 — Realisation</h2>
+
+  <h3>Step 9. Define the format mapping</h3>
+  <p>For each format the profile must support, state where every attribute lives. Because formats permit the same information to be encoded in more than one valid way, the mapping fixes a canonical location so consumers read from one place. Record the naming and encoding normalization the mapping assumes. The conventions and the reasoning are in <a href="formats.html">Formats</a>.</p>
+  <p>The profile itself stays format-independent. Adding support for a further format adds a mapping and changes no requirement.</p>
+
+  <h3>Step 10. Declare the carrier acceptance range</h3>
+  <p>State which format versions the profile accepts, using a minimum and a tested version, so that older documents are handled deliberately. The bands and the reasoning are in <a href="versioning.html">Versioning</a>.</p>
+
+  <h3>Step 11. Record the decisions and their revival triggers</h3>
+  <p>Where a choice was made against a defensible alternative, record it with the condition that should cause it to be revisited. A decision without a trigger tends to be either re-argued from scratch or never re-examined. The working group's decision-record template applies, and <a href="governance.html">Governance</a> covers how profiles evolve after publication.</p>
+
+  <h2>Stage 5 — Proof</h2>
+
+  <h3>Step 12. Build the examples and run them</h3>
+  <p>Produce at least two documents: one that conforms and one that fails for a specific, stated reason. Implement the rules in machine-readable form and run a validator over both. A profile that has never been executed has not been tested, and the failures this step surfaces are usually in the attribute definitions rather than in the tooling.</p>
+  <p>Expect to return to stage 2. Attributes that read well in prose turn out to be ambiguous when something has to decide whether a document satisfies them, and conditional or list-valued attributes are where this happens most.</p>
+
+  <h2>When a profile is finished</h2>
+  <p>The criteria for a first release, as opposed to a perfect one:</p>
+  <ul>
+    <li>The consumer and the decision are stated, and the decision contains a choice.</li>
+    <li>Every attribute traces back to a question, and every question to the decision.</li>
+    <li>No attribute encodes a judgement that policy should make.</li>
+    <li>No rule names a product, a vendor, or an interface instance.</li>
+    <li>Absence is defined for every attribute, including which may be withheld.</li>
+    <li>Structural rules exist, so that omission is detectable.</li>
+    <li>Exclusions are written down with reasons.</li>
+    <li>A mapping exists for at least one format, with a stated acceptance range.</li>
+    <li>A conforming and a non-conforming example exist, and a validator agrees with both.</li>
+  </ul>
+
+  <h2>Ways this goes wrong</h2>
+  <p>Five failure modes, each observed while building the worked example in this documentation.</p>
+  <table>
+    <thead><tr><th>Failure</th><th>How it shows up</th><th>Remedy</th></tr></thead>
+    <tbody>
+      <tr><td>Starting from the format</td><td>The attribute list resembles the fields CycloneDX offers, and no attribute traces to a question.</td><td>Return to step 1 and derive the questions before looking at any schema.</td></tr>
+      <tr><td>No named decision</td><td>The profile grows during review because every suggestion seems reasonable and nothing rules anything out.</td><td>State the decision as a choice. Suggestions that do not affect it are out of scope.</td></tr>
+      <tr><td>Encoding a judgement</td><td>An attribute such as a readiness rating, whose correct value changes when guidance changes.</td><td>Keep the inputs and move the conclusion to an external policy.</td></tr>
+      <tr><td>Naming an instance</td><td>A rule requires a particular identifier value, so the profile only applies to one product.</td><td>Constrain kinds and counts. The baseline profile in this documentation was corrected for exactly this.</td></tr>
+      <tr><td>Treating absence as one thing</td><td>A consumer cannot distinguish a producer that lacks the data from one withholding it.</td><td>Apply the three disclosure states and decide withholdability per attribute.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worked application</h2>
+  <p>The <a href="pqc-migration.html">PQC Migration</a> section applies this procedure end to end for a product treated as a black box, and is the reference example. The <a href="profile.html">Profile</a> section describes the resulting baseline profile in its finished form, and the <a href="demo.html">Demo</a> section is stage 5 made visible.</p>
+
+  <div class="banner">The procedure exists to keep two properties true of whatever it produces: that every requirement can be traced to a decision somebody is making, and that no requirement names the product it was first written for.</div>
+
+  <div class="pagenav">
+    <a href="policy-evaluation.html">← Policy Evaluation</a>
+    <a class="next" href="use-cases.html">Next: Use Cases →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>
