@@ -157,6 +157,28 @@ expect_exit   "relaxing override is rejected"      3 \
 expect_output "rejection names monotonicity" "monotonic" \
               "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-invalid-relaxing.rules.json"
 
+# ---------------------------------------------- withholdable MUST (v0.3) ---
+# Withholding can only change an outcome on a MUST rule. Baseline v0.3 raised I9
+# to MUST while keeping it withholdable, which is the combination the disclosure
+# model exists for. Before v0.3 no rule combined the two.
+echo
+echo "Withholdable MUST"
+"$PY" - "$M/cbom-pass.cyclonedx.json" "$TMP" <<'PY'
+import json, sys, os
+bom = json.load(open(sys.argv[1], encoding="utf-8"))
+# Strip the withheld marker, leaving implementationPurl with neither a value nor
+# a marker on the management interface: undeclared rather than withheld.
+for c in bom.get("components", []):
+    c["properties"] = [p for p in c.get("properties", [])
+                       if p.get("name") != "pkic:profile:disclosure:implementationPurl"]
+json.dump(bom, open(os.path.join(sys.argv[2], "cbom-no-marker.json"), "w"))
+PY
+expect_exit   "a withheld marker satisfies the MUST"       0 "$M/cbom-pass.cyclonedx.json" "$BASE"
+expect_exit   "silent omission of the same attribute does not" 1 "$TMP/cbom-no-marker.json" "$BASE"
+expect_output "the failure is I9"                       "I9" "$TMP/cbom-no-marker.json" "$BASE"
+expect_output "reported as undeclared, not withheld" "no disclosure marker" \
+              "$TMP/cbom-no-marker.json" "$BASE"
+
 # -------------------------------------------------- profile well-formedness ---
 # The second conformance target: a profile checked against the methodology.
 # Requirements C1 to C10 are stated in the Conformance section.
@@ -188,6 +210,8 @@ expect_check_output "C6 is the failing requirement" "[FAIL] C6" "$FIX/profile-c6
 expect_check_exit   "C7 relaxing override is rejected"   1 "$FIX/profile-invalid-relaxing.rules.json"
 expect_check_output "C7 is the failing requirement" "[FAIL] C7" "$FIX/profile-invalid-relaxing.rules.json"
 expect_check_output "C7 explains monotonicity" "monotonic" "$FIX/profile-invalid-relaxing.rules.json"
+expect_check_exit   "C7 diverging inherited block is rejected" 1 "$FIX/profile-c7-diverging-block.rules.json"
+expect_check_output "C7 names the diverging block" "disclosure" "$FIX/profile-c7-diverging-block.rules.json"
 
 # SHOULD failures are reported without affecting the verdict, unless --strict.
 echo

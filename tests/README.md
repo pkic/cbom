@@ -33,6 +33,7 @@ what this suite is an early form of.
 | Carrier version bands | A 1.6 copy is accepted and flagged legacy; a 1.5 copy is refused with an explanation. |
 | Derived PQC profile | The conforming CBOM is accepted and the base profile resolves; the non-conforming one trips both conditional rules and the tightened inherited rule. |
 | Composition | The document that fails the derived profile still conforms to the base, which is the tightening doing its work. A fixture with a relaxing override is rejected with exit code 3. |
+| Withholdable MUST | A withheld marker satisfies baseline rule I9; the same document with the marker stripped does not, and is reported as undeclared rather than withheld. This is the only combination in which the disclosure model changes a verdict, and before profile v0.3 no rule exercised it. |
 | Profile well-formedness | Both example profiles satisfy C1 to C10, including under `--strict`. One fixture per MUST requirement confirms that each is enforced and that the right requirement is the one reported. |
 | SHOULD handling | A profile failing only SHOULD requirements still passes, and `--strict` promotes those failures. |
 
@@ -72,6 +73,7 @@ a real profile.
 | `profile-c4-no-withholdable.rules.json` | C4 | A rule that does not say whether withholding satisfies it, so the answer would depend on the validator's default. |
 | `profile-c5-naming.rules.json` | C5 | Uses the rejected `Current` suffix, and a `Supported` attribute that is not list-valued. |
 | `profile-c6-judgement.rules.json` | C6 | Requires `pqcPosture`, a derived judgement. Reproduces the attribute removed by decision 0002. |
+| `profile-c7-diverging-block.rules.json` | C7 | Extends the baseline and restates `disclosure` with a different marker prefix. Nothing is relaxed and no rule changes, but the base's prefix is overridden silently and every marker would stop being recognised. |
 | `profile-should-gaps.rules.json` | C8, C9, C10 only | Satisfies every MUST and no SHOULD. Also the template the others mutate. |
 
 Each of the C1 to C6 fixtures fails exactly one MUST requirement, so a test can

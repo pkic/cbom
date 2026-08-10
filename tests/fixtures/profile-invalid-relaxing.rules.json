@@ -5,7 +5,7 @@
   "version": "0.0",
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.2",
+    "version": "0.3",
     "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
   },
   "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
