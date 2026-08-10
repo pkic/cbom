@@ -87,7 +87,7 @@ python validate_cbom.py cbom-pqc-pass.cyclonedx.json profile-pqc-migration.rules
 
 # does not conform, for three separate reasons
 python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-pqc-migration.rules.json</code></pre>
-  <p>The failing document is worth reading alongside its verdict. Two failures come from conditional rules: an interface claiming enablement by software update without naming the version (M5), and one declaring a capability committed without saying what blocks it (M11). The third is the instructive one. Its interconnect interface withholds <code>implementationPurl</code>, which the baseline permits. Evaluated against the baseline alone that document conforms; it fails here only because the derived profile removed withholdability from that rule.</p>
+  <p>The failing document is worth reading alongside its verdict. Two failures come from conditional rules: an interface claiming enablement by software update without naming the version (M5), and one declaring a capability committed without saying what blocks it (M11). The third arises from the extension itself. Its interconnect interface withholds <code>implementationPurl</code>, which the baseline permits. Evaluated against the baseline alone that document conforms; it fails here only because the derived profile removed withholdability from that rule.</p>
   <pre><code># the same document against the base profile, which permits the withheld value
 python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-interface-disclosure.rules.json</code></pre>
 

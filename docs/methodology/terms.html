@@ -71,10 +71,10 @@
       <tr><td><strong>Conformance claim</strong></td><td>A statement by an identified party that a named document revision was assessed against a named profile version and produced a stated verdict, citing the profile version, the carrier format version and the content revision.</td><td><a href="conformance.html">Conformance</a></td></tr>
       <tr><td><strong>Self-declared claim</strong></td><td>A claim in which the evaluating party is the producer of the document. Permitted, and labelled as such.</td><td><a href="conformance.html">Conformance</a></td></tr>
       <tr><td><strong>Attested claim</strong></td><td>A claim in which the evaluating party is other than the producer.</td><td><a href="conformance.html">Conformance</a></td></tr>
-      <tr><td><strong>Dual use</strong></td><td>The property that one profile serves both as a specification for the producer and as a checklist for the consumer.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Dual use</strong></td><td>The property that one profile is both a specification for the producer and a checklist for the consumer.</td><td><a href="profile.html">Profile</a></td></tr>
       <tr><td><strong>Independent evaluation</strong></td><td>Evaluating one CBOM against several profiles, each producing its own verdict. The profiles need not know of each other and are not combined.</td><td><a href="profile.html">Profile</a></td></tr>
       <tr><td><strong>Extension</strong><br><span class="na">base profile / derived profile</span></td><td>A profile declaring that it inherits every rule of another and states only additions and tightenings.</td><td><a href="profile.html">Profile</a></td></tr>
-      <tr><td><strong>Monotonic extension</strong></td><td>The rule that a derived profile may add and tighten but never relax. It gives the guarantee that conforming to the derived profile means conforming to the base.</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Monotonic extension</strong></td><td>The rule that a derived profile may add and tighten but never relax. It guarantees that conforming to the derived profile means conforming to the base.</td><td><a href="profile.html">Profile</a></td></tr>
       <tr><td><strong>Tightening</strong></td><td>Raising a conformance level, narrowing a constraint, or removing withholdability. Permitted in an extension.</td><td><a href="profile.html">Profile</a></td></tr>
       <tr><td><strong>Relaxing</strong></td><td>Lowering a level, widening a constraint, removing a rule, or adding withholdability. Not permitted in an extension; a profile needing it is independent.</td><td><a href="profile.html">Profile</a></td></tr>
     </tbody>
@@ -140,7 +140,7 @@
     <thead><tr><th>Term</th><th>Definition</th><th>Developed in</th></tr></thead>
     <tbody>
       <tr><td><code>intended</code></td><td>Cryptography specified at design time. Says nothing about what was built.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
-      <tr><td><code>implemented</code></td><td>Cryptography present in the shipped binary. Capability, not actuality.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
+      <tr><td><code>implemented</code></td><td>Cryptography present in the shipped binary. Indicates capability rather than use.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
       <tr><td><code>configured</code></td><td>Cryptography the deployed configuration permits.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
       <tr><td><code>observed</code></td><td>Cryptography negotiated on the wire. A snapshot, invalidated by later configuration change.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
       <tr><td><strong>Readiness gap</strong></td><td>The difference between what a product is capable of and what a deployment actually runs.</td><td><a href="lifecycle.html">Lifecycle Data</a></td></tr>
@@ -162,7 +162,7 @@
       <tr><td><strong>Version bands</strong></td><td>The four outcomes of the acceptance range: unsupported below the minimum, legacy between minimum and tested, target at tested, newer above it.</td><td><a href="versioning.html">Versioning</a></td></tr>
       <tr><td><strong>Encoding normalization</strong></td><td>Agreement on where a value is written, where a format permits more than one valid location.</td><td><a href="formats.html">Formats</a></td></tr>
       <tr><td><strong>Naming normalization</strong></td><td>Agreement on how a value is expressed, so that equivalent values match. Addressed by the CycloneDX Cryptography Registry for algorithms.</td><td><a href="formats.html">Formats</a></td></tr>
-      <tr><td><strong>Content revision</strong></td><td>A successive version of a CBOM for the same subject, forming the audit trail progress tracking relies on.</td><td><a href="versioning.html">Versioning</a></td></tr>
+      <tr><td><strong>Content revision</strong></td><td>A successive version of a CBOM for the same subject. The sequence of revisions is the audit trail that progress tracking relies on.</td><td><a href="versioning.html">Versioning</a></td></tr>
     </tbody>
   </table>
 
@@ -172,7 +172,7 @@
     <tbody>
       <tr><td><strong>Cryptographic inventory</strong></td><td>An organization-wide, continuously maintained record of cryptography in use, aggregated from CBOMs and other sources.</td><td><a href="inventory.html">Inventory</a></td></tr>
       <tr><td><strong>Extracted CBOM</strong><br><span class="na">also: output CBOM</span></td><td>A scoped snapshot drawn from an inventory for a specific consumer, filtered and redacted as required.</td><td><a href="inventory.html">Inventory</a></td></tr>
-      <tr><td><strong>Central / distributed / federated inventory</strong></td><td>Arrangements for where inventory data is held. In the federated case a profile defines the subset published upward, which is what makes separately-held inventories comparable.</td><td><a href="inventory.html">Inventory</a></td></tr>
+      <tr><td><strong>Central / distributed / federated inventory</strong></td><td>Arrangements for where inventory data is held. In the federated case a profile defines the subset published upward, which makes separately-held inventories comparable.</td><td><a href="inventory.html">Inventory</a></td></tr>
       <tr><td><strong>Supersedence</strong></td><td>The replacement of a CBOM revision by a newer one for the same subject, with the earlier revision retained for audit.</td><td><a href="governance.html">Governance</a></td></tr>
     </tbody>
   </table>
@@ -197,7 +197,7 @@
       <tr><td><strong>HBOM</strong></td><td>Hardware Bill of Materials. Relevant where cryptography is bound to hardware and a change means replacement.</td></tr>
       <tr><td><strong>purl</strong> <span class="na">(external)</span></td><td>Package URL. The identifier scheme used to name implementing libraries.</td></tr>
       <tr><td><strong>BCP 14</strong> <span class="na">(IETF)</span></td><td>RFC 2119 with RFC 8174, defining the requirement keywords MUST, SHOULD and MAY.</td></tr>
-      <tr><td><strong>Cryptography Registry</strong> <span class="na">(CycloneDX)</span></td><td>The registry of stable algorithm identifiers introduced in CycloneDX 1.7, addressing naming normalization.</td></tr>
+      <tr><td><strong>Cryptography Registry</strong> <span class="na">(CycloneDX)</span></td><td>The registry of stable algorithm identifiers introduced in CycloneDX 1.7. It addresses naming normalization.</td></tr>
     </tbody>
   </table>
 

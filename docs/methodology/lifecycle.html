@@ -134,7 +134,7 @@
   <div class="banner warn">For this reason a CBOM should record the lifecycle stage rather than an unqualified fact. A vendor's <code>implemented</code> CBOM and an operator's <code>observed</code> scan may both be correct and yet differ; the discrepancy is itself a significant result. A CBOM that supports both perspectives represents the discrepancy explicitly.</div>
 
   <h2>Product CBOM and service CBOM</h2>
-  <p>It helps to separate two kinds of CBOM, because they answer different questions and are produced by different parties.</p>
+  <p>Two kinds of CBOM are separated here, because they answer different questions and are produced by different parties.</p>
   <p>A <strong>product CBOM</strong> describes the cryptography a product contains or is able to use. It is usually produced by the vendor at build time and ships with a release, so it reflects the <code>implemented</code> stage: what the product can do. A <strong>service CBOM</strong> describes the cryptography a running service actually uses. It is produced by the operator from the deployed configuration and from what is observed on the wire, so it reflects the <code>configured</code> and <code>observed</code> stages: what a particular deployment does.</p>
   <p>A service is usually built from several products, so a service CBOM draws on the product CBOMs of its components and adds the configuration and runtime picture that exists only once the service is deployed. The cryptographic relationships between endpoints exist at the service level, not within any single product.</p>
   <h3>Why the distinction matters for PQC migration</h3>
@@ -143,7 +143,7 @@
     <li>A product CBOM on its own can overstate readiness. A product may support ML-KEM, but that says nothing about whether any deployment has enabled it.</li>
     <li>A service CBOM on its own cannot show the upgrade path. Knowing that a service still negotiates a classical group does not tell you whether the underlying products can be reconfigured or must be replaced.</li>
   </ul>
-  <p>Migration planning needs both. Product CBOMs identify which products can reach a quantum-safe target and how; service CBOMs identify which deployments have actually reached it, and which have not. Comparing the two, interface by interface, is what separates a software update from a hardware refresh, and a planned state from a running one.</p>
+  <p>Migration planning needs both. Product CBOMs identify which products can reach a quantum-safe target and how; service CBOMs identify which deployments have actually reached it, and which have not. Comparing the two, interface by interface, distinguishes a software update from a hardware refresh, and a planned state from a running one.</p>
 
   <h2>Multiple producers of a single interface's data</h2>
   <p>In the worked example the two lifecycle stages arise from the two producers:</p>
@@ -210,13 +210,13 @@
   <p>Several stakeholders appear only on the consuming side, and their needs shape what a profile has to require. Regulators and auditors read a position they had no part in generating, so provenance and lifecycle stage matter more to them than to anyone else. Customers and partners issuing a supply-chain request are in the same position, and are usually the reason a CBOM has to be scoped and redacted before release, as described in the <a href="inventory.html">Inventory</a> section. Acquiring organizations performing due diligence read across an entire estate they do not operate, where the absence of data is as significant as its content.</p>
 
   <h3>Where the hand-offs fail</h3>
-  <p>The stages are separated by organizational boundaries as often as by time, and the boundaries are where the data degrades.</p>
+  <p>The stages are separated by organizational boundaries as often as by time, and the data degrades at those boundaries.</p>
   <ul>
     <li>Between <code>implemented</code> and <code>configured</code> the producer changes organization, from vendor to operator. A vendor cannot state what a deployment will enable, and an operator cannot see inside the binary. Neither party can produce a complete picture alone, which is the argument for combining a product CBOM with a service CBOM rather than choosing between them.</li>
     <li>Between <code>configured</code> and <code>observed</code> the producer usually stays within one organization but changes team. This is where drift appears, because configuration is authored once and running systems change afterwards.</li>
     <li>Between <code>intended</code> and <code>implemented</code> the data is frequently lost entirely. Design intent is rarely carried into a machine-readable form, so a consumer cannot tell whether cryptography present in a build was deliberate or incidental.</li>
   </ul>
-  <p>A profile can require the stage to be declared, which makes these gaps visible. It cannot close them, because closing them means getting a different party to produce data they do not currently produce. That is an adoption question rather than a specification one.</p>
+  <p>A profile can require the stage to be declared, which makes these gaps visible. It cannot close them; doing so would require a different party to produce data it does not currently produce. That is an adoption question rather than a specification one.</p>
 
   <h2>Progress tracking over time</h2>
   <p>Successive CBOM revisions (the content-revision axis described in the <a href="versioning.html">Versioning</a> section) constitute an audit trail. An interface progressing from <code>implemented</code> to <code>configured</code> to <code>observed</code> with post-quantum cryptography enabled provides a verifiable migration record for internal governance and for regulators.</p>

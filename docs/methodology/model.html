@@ -38,7 +38,7 @@
 <main>
   <div class="crumb">CONCEPT</div>
   <h1>The cryptographic relationship model</h1>
-  <p class="lead">This section fixes the vocabulary the rest of the methodology is written in. A profile states which facts a CBOM must disclose, and those statements are only as precise as the terms they use. Settling the terms is therefore a prerequisite for writing a profile rather than background reading.</p>
+  <p class="lead">This section fixes the vocabulary the rest of the methodology is written in. A profile states which facts a CBOM must disclose, and those statements are only as precise as the terms they use. Settling the terms is therefore a prerequisite for writing a profile.</p>
 
   <h2>Why this section exists</h2>
   <p>The questions that CBOMs are asked to answer are mostly questions about <em>use</em>, not about <em>inventory</em>. "Which algorithms does this product implement?" is an inventory question, and it is the easier one. "Which of our connections would still be readable if an adversary recorded them today?" is a question about where cryptography is applied, between whom, and under what negotiated terms. Migration planning, procurement conformance, and incident response all sit closer to the second question than the first.</p>
@@ -103,7 +103,7 @@
       <tr><td>The archive is encrypted with AES-256.</td><td>The key protecting the archive is wrapped with RSA-2048 and must survive the retention period.</td></tr>
     </tbody>
   </table>
-  <p>The most common modelling error is to record a left-column fact and treat it as though it answered a right-column question. Capability is not use, and a product that can do the right thing is not evidence that any particular connection does.</p>
+  <p>The most common modelling error is to record a left-column fact and treat it as though it answered a right-column question. Capability is not the same as use: that a product can perform an operation is not evidence that any particular connection performs it.</p>
 
   <h2>Worked examples</h2>
   <p>A single TLS session makes the terms easy to state and easy to underestimate, because the two parties are obvious and present at the same moment. The examples below are chosen because each one breaks a different assumption that the TLS case quietly supports.</p>
@@ -132,7 +132,7 @@
       <path d="M435 140 L435 152 L704 152 L704 140" fill="none" stroke="#b45309"/>
       <text x="570" y="170" fill="#b45309" text-anchor="middle" font-size="11">not visible to the user, and often not inventoried</text>
     </svg>
-    <figcaption>An asset inventory that records "TLS 1.3 in use" is accurate and misleading at the same time. The risk lives on the relationship the user cannot see.</figcaption>
+    <figcaption>An asset inventory that records "TLS 1.3 in use" is accurate and misleading at the same time. The risk is on the relationship the user cannot see.</figcaption>
   </figure>
 
   <h3>2 · The parties are separated in time, not space</h3>
@@ -165,8 +165,8 @@
   </figure>
 
   <h3>3 · The parties never interact</h3>
-  <p>A publisher signs firmware or code. A relying party verifies the signature, possibly years afterwards, with no communication between them in either direction. The relationship is one of trust rather than exchange, and it is real enough that its failure has consequences.</p>
-  <p>What makes this case instructive for migration is that the constraint sits at the far end. A publisher can adopt a post-quantum signature algorithm whenever it wishes, and gains nothing if the deployed devices cannot verify it. The relationship's ceiling is set by the verifier, which may be a device with no update path.</p>
+  <p>A publisher signs firmware or code. A relying party verifies the signature, possibly years afterwards, with no communication between them in either direction. The relationship is one of trust rather than exchange, and its failure has consequences.</p>
+  <p>For migration, the constraint in this case sits at the far end. A publisher can adopt a post-quantum signature algorithm whenever it wishes, and gains nothing if the deployed devices cannot verify it. The relationship's ceiling is set by the verifier, which may be a device with no update path.</p>
   <figure>
     <svg viewBox="0 0 720 185" role="img" aria-label="A publisher signing an artifact, the signed artifact carried by any means, and a device verifying it years later with no update path, bracketed as one signer to relying party relationship" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <rect x="16" y="62" width="160" height="56" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
@@ -249,7 +249,7 @@
       <text x="150" y="133" fill="#5b6472" text-anchor="middle" font-size="11">its posture is four different answers</text>
       <line x1="255" y1="120" x2="230" y2="120" stroke="#c9d3e0" stroke-width="2"/>
     </svg>
-    <figcaption>Readiness reported against a product collapses a distribution into a single value. The distribution is what a migration plan needs.</figcaption>
+    <figcaption>Readiness reported against a product collapses a distribution into a single value, and a migration plan needs the distribution.</figcaption>
   </figure>
 
   <h3>6 · Capability is not the negotiated outcome</h3>

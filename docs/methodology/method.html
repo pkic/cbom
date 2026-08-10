@@ -103,11 +103,11 @@
   <h2>Stage 2 — Content</h2>
 
   <h3>Step 3. Derive the questions</h3>
-  <p>From the decision, enumerate the questions the consumer must answer to make it. Keep them as questions, phrased in the consumer's own language, and resist converting them to attributes yet. This is the step most often skipped, and skipping it is what produces profiles that mirror the fields a format happens to offer.</p>
+  <p>From the decision, enumerate the questions the consumer must answer to make it. Keep them as questions, phrased in the consumer's own language, and resist converting them to attributes yet. This is the step most often skipped, and omitting it produces profiles that mirror the fields a format happens to offer.</p>
   <p>Expect between three and a dozen. If the list runs much longer, the decision in step 1 was probably too broad and should be split into separate profiles.</p>
 
   <h3>Step 4. Convert each question into a declarable attribute</h3>
-  <p>Work through the questions and, for each, identify what would have to be disclosed to answer it. One question may need several attributes, and several questions may share one. Two properties are required of every attribute: it must be declarable at the boundary established in step 2, and it must be capable of being wrong in principle, which is what makes conformance meaningful.</p>
+  <p>Work through the questions and, for each, identify what would have to be disclosed to answer it. One question may need several attributes, and several questions may share one. Two properties are required of every attribute: it must be declarable at the boundary established in step 2, and it must be capable of being wrong in principle, which makes conformance meaningful.</p>
   <p>Express attributes in format-independent terms. Use the vocabulary in <a href="model.html">the model</a>, so that an attribute belongs clearly to a relationship, an endpoint, or an asset. Attributes that turn out to belong to none of those are usually judgements, which step 5 handles.</p>
 
   <h4>Naming conventions</h4>
@@ -122,7 +122,7 @@
     </tbody>
   </table>
   <p>The fourth convention is a restatement of step 5 at the level of naming. A name that describes a conclusion tends to smuggle the conclusion back in even when the values beneath it are facts.</p>
-  <p>Where an existing profile has already published an attribute, later profiles reuse the name and its meaning without redefining it. Divergence here is the single easiest way to make two profiles unusable together, and it is not always visible to whoever introduces it.</p>
+  <p>Where an existing profile has already published an attribute, later profiles reuse the name and its meaning without redefining it. Divergence here is the easiest way to make two profiles unusable together, and it is not always visible to whoever introduces it.</p>
 
   <h3>Step 5. Separate facts from judgements</h3>
   <p>Review the attribute list and remove anything that is a conclusion drawn against criteria that change over time. Post-quantum posture and cryptographic maturity are the two clearest cases. These belong to an external, versioned policy that reads the profile's facts and produces a dated verdict, and the reasoning is set out in <a href="policy-evaluation.html">Policy Evaluation</a>.</p>
@@ -187,7 +187,7 @@
   </table>
 
   <h2>Worked application</h2>
-  <p>The <a href="pqc-migration.html">PQC Migration</a> section applies this procedure end to end for a product treated as a black box, and is the reference example. The <a href="profile.html">Profile</a> section describes the resulting baseline profile in its finished form, and the <a href="demo.html">Demo</a> section is stage 5 made visible.</p>
+  <p>The <a href="pqc-migration.html">PQC Migration</a> section applies this procedure end to end for a product treated as a black box, and is the reference example. The <a href="profile.html">Profile</a> section describes the resulting baseline profile in its finished form, and the <a href="demo.html">Demo</a> section runs stage 5 in the browser.</p>
 
   <div class="banner">The procedure exists to keep two properties true of whatever it produces: that every requirement can be traced to a decision somebody is making, and that no requirement names the product it was first written for.</div>
 

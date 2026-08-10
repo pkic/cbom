@@ -38,7 +38,7 @@
 <main>
   <div class="crumb">OPERATIONS</div>
   <h1>Handling older CBOM files</h1>
-  <p class="lead">The term "older" is ambiguous until the versions that change independently are separated. Three items each carry a version and change independently. A conformance claim must reference all three to be reproducible.</p>
+  <p class="lead">The term "older" is ambiguous until the versions involved are separated. Three items each carry a version and change independently. A conformance claim must reference all three to be reproducible.</p>
 
   <h2>Three version axes</h2>
   <table>
@@ -80,8 +80,8 @@
   <h2>Supporting recommendations</h2>
   <ul>
     <li><strong>Normalize at the adapter.</strong> Prefer CycloneDX 1.7 Cryptography Registry identifiers where present; for 1.6 free-text names, apply a versioned name map before the rules are evaluated.</li>
-    <li><strong>Upgrade rather than reject.</strong> Convert a legacy but supported CBOM mechanically (raise the version, attach registry identifiers, record provenance), re-encoding existing facts and adding none, rather than rejecting it. This sits with the expectation in the minimum elements guidance that organizations accommodate updates to bill-of-materials data, including corrections.</li>
-    <li><strong>Pin the profile version</strong> in every conformance claim, and tighten rules behind dated grace windows, emitting a warning before changing a result to a failure.</li>
+    <li><strong>Upgrade rather than reject.</strong> Convert a legacy but supported CBOM mechanically (raise the version, attach registry identifiers, record provenance) rather than rejecting it; the conversion re-encodes existing facts and adds none. This is consistent with the expectation in the minimum elements guidance that organizations accommodate updates to bill-of-materials data, including corrections.</li>
+    <li><strong>Pin the profile version</strong> in every conformance claim, and tighten rules behind dated grace windows, so that a warning is emitted before a result changes to a failure.</li>
     <li><strong>Deprecate, rather than delete, vocabulary.</strong> If <code>interfaceType</code> values change, retain recognition of the former values (mapped to their replacements) for at least one profile major version.</li>
     <li><strong>Track freshness and supersedence</strong> so that an older content revision is not treated as incorrect without cause.</li>
   </ul>
