@@ -1,0 +1,23 @@
+{
+  "$comment": "Fixture. Deliberately fails C3 in both of the ways it can be failed. P1 requires an interface of type 'nginx-https', which is a product's interface instance rather than a controlled interface type; this reproduces the defect corrected in decision 0001. I1 constrains 'interfaceId', which is a producer-chosen label the profile must not touch.",
+  "profileId": "pkic.test.c3",
+  "title": "Fixture - C3 names a product instance",
+  "version": "0.1",
+
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the checker rejects a rule that names an instance."
+  },
+
+  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
+
+  "interfaceTypeVocabulary": ["management", "service"],
+
+  "productRules": [
+    { "id": "P1", "description": "Product declares the nginx HTTPS interface", "level": "MUST", "constraint": { "minInterfacesOfType": { "interfaceType": "nginx-https", "min": 1 } } }
+  ],
+
+  "interfaceRules": [
+    { "id": "I1", "attribute": "interfaceId", "level": "MUST", "constraint": { "present": true }, "withholdable": false }
+  ]
+}

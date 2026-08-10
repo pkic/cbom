@@ -5,6 +5,12 @@
   "version": "0.1",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
 
+  "objective": {
+    "$comment": "C1. A derived profile states its own consumer and decision; it does not inherit the base's, because the whole reason to derive is that the decision differs.",
+    "consumer": "An operator planning a post-quantum migration across an estate of products it did not build.",
+    "decision": "For each interface a product exposes: whether it can be made quantum-safe, what enabling it requires, what enabling it costs in interoperability, and where the capability is not yet available, what is preventing it and who controls that."
+  },
+
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
     "version": "0.2",
@@ -38,26 +44,52 @@
   ],
 
   "productRules": [
-    { "id": "P3", "description": "Product states how complete its declared interface set is", "level": "MUST", "constraint": { "productAttribute": "coverage", "enumRef": "coverageVocabulary" } },
+    { "id": "P3", "description": "Product states how complete its declared interface set is", "level": "MUST", "constraint": { "productAttribute": "coverage", "enumRef": "coverageVocabulary" }, "withholdable": false },
     { "id": "P4", "description": "Product identifies at least one cryptographic provider", "level": "SHOULD", "constraint": { "minProviders": 1 } }
   ],
 
   "interfaceRules": [
-    { "id": "M1", "attribute": "protocolVersionsSupported", "level": "MUST",   "constraint": { "minCount": 1 }, "list": true },
-    { "id": "M2", "attribute": "keyExchangeSupported",      "level": "MUST",   "constraint": { "minCount": 1 }, "list": true },
-    { "id": "M3", "attribute": "authenticationSupported",   "level": "MUST",   "constraint": { "minCount": 1 }, "list": true },
-    { "id": "M4", "attribute": "enablementMethod",          "level": "MUST",   "constraint": { "enumRef": "enablementMethodVocabulary" } },
-    { "id": "M5", "attribute": "minimumProductVersion",     "level": "MUST",   "constraint": { "present": true },
+    { "id": "M1", "attribute": "protocolVersionsSupported", "level": "MUST",   "constraint": { "minCount": 1 }, "list": true, "withholdable": false },
+    { "id": "M2", "attribute": "keyExchangeSupported",      "level": "MUST",   "constraint": { "minCount": 1 }, "list": true, "withholdable": false },
+    { "id": "M3", "attribute": "authenticationSupported",   "level": "MUST",   "constraint": { "minCount": 1 }, "list": true, "withholdable": false },
+    { "id": "M4", "attribute": "enablementMethod",          "level": "MUST",   "constraint": { "enumRef": "enablementMethodVocabulary" }, "withholdable": false },
+    { "id": "M5", "attribute": "minimumProductVersion",     "level": "MUST",   "constraint": { "present": true }, "withholdable": false,
       "requiredWhen": { "attribute": "enablementMethod", "equals": "software-update" },
       "note": "Conditional. Applies only where the capability is enabled by a software update." },
-    { "id": "M6", "attribute": "providerLocation",          "level": "MUST",   "constraint": { "enumRef": "providerLocationVocabulary" } },
-    { "id": "M7", "attribute": "coexistence",               "level": "MUST",   "constraint": { "enumRef": "coexistenceVocabulary" } },
-    { "id": "M8", "attribute": "negotiationControl",        "level": "SHOULD", "constraint": { "present": true } },
-    { "id": "M9", "attribute": "integrationConstraints",    "level": "SHOULD", "constraint": { "present": true } },
-    { "id": "M10", "attribute": "capabilityStatus",         "level": "MUST",   "constraint": { "enumRef": "capabilityStatusVocabulary" } },
-    { "id": "M11", "attribute": "blockedBy",                "level": "MUST",   "constraint": { "enumRef": "blockedByVocabulary" },
+    { "id": "M6", "attribute": "providerLocation",          "level": "MUST",   "constraint": { "enumRef": "providerLocationVocabulary" }, "withholdable": false },
+    { "id": "M7", "attribute": "coexistence",               "level": "MUST",   "constraint": { "enumRef": "coexistenceVocabulary" }, "withholdable": false },
+    { "id": "M8", "attribute": "negotiationControl",        "level": "SHOULD", "constraint": { "present": true }, "withholdable": true, "note": "Whether the far end can be pinned or forced is sometimes contractual; a producer may decline to publish it." },
+    { "id": "M9", "attribute": "integrationConstraints",    "level": "SHOULD", "constraint": { "present": true }, "withholdable": true },
+    { "id": "M10", "attribute": "capabilityStatus",         "level": "MUST",   "constraint": { "enumRef": "capabilityStatusVocabulary" }, "withholdable": false },
+    { "id": "M11", "attribute": "blockedBy",                "level": "MUST",   "constraint": { "enumRef": "blockedByVocabulary" }, "withholdable": false,
       "requiredWhen": { "attribute": "capabilityStatus", "notEquals": "available" },
       "note": "Conditional. Applies wherever the capability is not already available." },
-    { "id": "M12", "attribute": "roadmapRef",               "level": "MAY",    "constraint": { "present": true } }
+    { "id": "M12", "attribute": "roadmapRef",               "level": "MAY",    "constraint": { "present": true }, "withholdable": true }
+  ],
+
+  "exclusions": [
+    { "item": "A date on which an interface will gain a capability",
+      "reason": "Interfaces do not gain capability independently of one another, and a date offered where the blocker is an unfinished standard is not one the vendor can keep. The profile records capabilityStatus, blockedBy and roadmapRef instead. See decision 0007." },
+    { "item": "Any judgement as to whether an interface is quantum-safe",
+      "reason": "Inherited from the baseline. The profile requires the algorithm sets an interface uses and supports, and leaves the judgement to external versioned policy. See decision 0002." },
+    { "item": "Internal migration plans, engineering schedules, and unreleased design detail",
+      "reason": "Outside the black-box boundary. Anything the profile requires must be declarable at an interface or stated as a property of the shipped product." },
+    { "item": "Per-algorithm capability status within a single interface",
+      "reason": "Deferred rather than rejected. The worked example states status separately for key exchange and authentication, which the current rule shape does not express. Recorded as Q27." }
+  ],
+
+  "artifacts": {
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "cbom-pqc-pass.cyclonedx.json",
+    "nonConformingExample": "cbom-pqc-fail.cyclonedx.json"
+  },
+
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-08-07",
+      "summary": "Initial draft. Derived from the interface disclosure baseline v0.2: adds product rules P3 and P4 and per-interface rules M1 to M12, and tightens inherited rule I9 to a non-withholdable MUST.",
+      "changes": []
+    }
   ]
 }

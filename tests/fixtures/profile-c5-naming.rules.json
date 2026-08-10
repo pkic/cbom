@@ -1,0 +1,24 @@
+{
+  "$comment": "Fixture. Deliberately fails C5 in both ways. I1 uses the rejected 'Current' suffix, which is redundant because a bare name already denotes present state. I2 declares a capability with the 'Supported' suffix but does not mark the rule as list-valued, and a declared capability is always a set.",
+  "profileId": "pkic.test.c5",
+  "title": "Fixture - C5 naming conventions",
+  "version": "0.1",
+
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the checker enforces the attribute naming conventions."
+  },
+
+  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
+
+  "interfaceTypeVocabulary": ["management", "service"],
+
+  "productRules": [
+    { "id": "P1", "description": "Product declares at least one cryptographic interface", "level": "MUST", "constraint": { "minInterfaces": 1 } }
+  ],
+
+  "interfaceRules": [
+    { "id": "I1", "attribute": "keyExchangeCurrent",   "level": "MUST", "constraint": { "present": true }, "withholdable": false },
+    { "id": "I2", "attribute": "keyExchangeSupported", "level": "MUST", "constraint": { "present": true }, "withholdable": false }
+  ]
+}

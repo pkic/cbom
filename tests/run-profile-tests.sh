@@ -55,6 +55,37 @@ expect_output() {
   fi
 }
 
+# checkprof <args...> -> writes output to $OUT, sets $RC
+checkprof() {
+  OUT="$("$PY" "$M/check_profile.py" "$@" 2>&1)"
+  RC=$?
+}
+
+# expect_check_exit <label> <expected-rc> <args...>
+expect_check_exit() {
+  local label=$1 want=$2
+  shift 2
+  checkprof "$@"
+  if [ "$RC" -eq "$want" ]; then
+    ok "$label"
+  else
+    bad "$label" "expected exit $want, got $RC$(printf '\n     %s' "$(echo "$OUT" | tail -3)")"
+  fi
+}
+
+# expect_check_output <label> <literal-needle> <args...>
+# Uses a fixed-string match: the needles here contain [ and ].
+expect_check_output() {
+  local label=$1 needle=$2
+  shift 2
+  checkprof "$@"
+  if printf '%s' "$OUT" | grep -qF -- "$needle"; then
+    ok "$label"
+  else
+    bad "$label" "output did not contain: $needle"
+  fi
+}
+
 echo
 echo "CBOM profile tests"
 echo "=================="
@@ -70,11 +101,13 @@ for f in "$M"/*.json "$FIX"/*.json; do
   fi
 done
 
-if "$PY" -c "import ast,sys; ast.parse(open(sys.argv[1]).read())" "$M/validate_cbom.py" 2>/dev/null; then
-  ok "validator parses"
-else
-  bad "validator parses" "syntax error in validate_cbom.py"
-fi
+for script in validate_cbom.py check_profile.py; do
+  if "$PY" -c "import ast,sys; ast.parse(open(sys.argv[1]).read())" "$M/$script" 2>/dev/null; then
+    ok "$script parses"
+  else
+    bad "$script parses" "syntax error"
+  fi
+done
 
 # ------------------------------------------------------- baseline profile ---
 echo
@@ -105,7 +138,8 @@ echo
 echo "PQC migration profile (derived)"
 expect_exit   "conforming CBOM is accepted"        0 "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
 expect_output "base profile is resolved"     "extends" "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
-expect_output "inapplicable conditional is skipped" -- "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+expect_output "inapplicable conditional is skipped" "not applicable" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
 expect_exit   "non-conforming CBOM is rejected"    1 "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
 expect_output "conditional M5 fires"             "M5" "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
 expect_output "conditional M11 fires"           "M11" "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
@@ -122,6 +156,45 @@ expect_exit   "relaxing override is rejected"      3 \
               "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-invalid-relaxing.rules.json"
 expect_output "rejection names monotonicity" "monotonic" \
               "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-invalid-relaxing.rules.json"
+
+# -------------------------------------------------- profile well-formedness ---
+# The second conformance target: a profile checked against the methodology.
+# Requirements C1 to C10 are stated in the Conformance section.
+echo
+echo "Profile well-formedness (C1-C10)"
+expect_check_exit "baseline profile is well-formed"        0 "$BASE"
+expect_check_exit "derived profile is well-formed"         0 "$PQC"
+expect_check_output "baseline verdict reads WELL-FORMED" "VERDICT : WELL-FORMED" "$BASE"
+expect_check_exit "both are well-formed under --strict"    0 "$BASE" --strict
+expect_check_exit "derived is well-formed under --strict"  0 "$PQC" --strict
+
+# One fixture per MUST requirement, each failing exactly that requirement.
+echo
+echo "Each MUST requirement is enforced"
+expect_check_exit   "C1 missing objective is rejected"   1 "$FIX/profile-c1-no-objective.rules.json"
+expect_check_output "C1 is the failing requirement" "[FAIL] C1" "$FIX/profile-c1-no-objective.rules.json"
+expect_check_exit   "C2 missing appliesTo is rejected"   1 "$FIX/profile-c2-no-applies-to.rules.json"
+expect_check_output "C2 is the failing requirement" "[FAIL] C2" "$FIX/profile-c2-no-applies-to.rules.json"
+expect_check_exit   "C3 instance-naming rule is rejected" 1 "$FIX/profile-c3-names-instance.rules.json"
+expect_check_output "C3 is the failing requirement" "[FAIL] C3" "$FIX/profile-c3-names-instance.rules.json"
+expect_check_output "C3 names the offending type" "nginx-https" "$FIX/profile-c3-names-instance.rules.json"
+expect_check_exit   "C4 unstated withholdability is rejected" 1 "$FIX/profile-c4-no-withholdable.rules.json"
+expect_check_output "C4 is the failing requirement" "[FAIL] C4" "$FIX/profile-c4-no-withholdable.rules.json"
+expect_check_exit   "C5 naming violations are rejected"  1 "$FIX/profile-c5-naming.rules.json"
+expect_check_output "C5 is the failing requirement" "[FAIL] C5" "$FIX/profile-c5-naming.rules.json"
+expect_check_output "C5 catches the Current suffix" "Current" "$FIX/profile-c5-naming.rules.json"
+expect_check_exit   "C6 derived judgement is rejected"   1 "$FIX/profile-c6-judgement.rules.json"
+expect_check_output "C6 is the failing requirement" "[FAIL] C6" "$FIX/profile-c6-judgement.rules.json"
+expect_check_exit   "C7 relaxing override is rejected"   1 "$FIX/profile-invalid-relaxing.rules.json"
+expect_check_output "C7 is the failing requirement" "[FAIL] C7" "$FIX/profile-invalid-relaxing.rules.json"
+expect_check_output "C7 explains monotonicity" "monotonic" "$FIX/profile-invalid-relaxing.rules.json"
+
+# SHOULD failures are reported without affecting the verdict, unless --strict.
+echo
+echo "SHOULD requirements and --strict"
+expect_check_exit   "SHOULD gaps alone still pass"       0 "$FIX/profile-should-gaps.rules.json"
+expect_check_output "the warnings are reported" "warn" "$FIX/profile-should-gaps.rules.json"
+expect_check_exit   "--strict promotes them to failures" 1 "$FIX/profile-should-gaps.rules.json" --strict
 
 # ------------------------------------------------------------------ summary ---
 echo

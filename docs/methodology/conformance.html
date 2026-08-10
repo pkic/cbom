@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Conformance</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="terms.html">Terms</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="model.html">Model</a>
+    <a href="profile.html">Profile</a>
+    <a href="conformance.html" class="active">Conformance</a>
+    <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="method.html">Method</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="pqc-migration.html">PQC Migration</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="governance.html">Governance</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+    <a href="../references/">References</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">CORE</div>
+  <h1>Conformance</h1>
+  <p class="lead">This section states what conformance means within the methodology, what may be assessed for conformance, who may assert it, how an assertion is expressed, and what an assertion does not cover. The <a href="profile.html">Profile</a> section describes the rules of one example profile; this section describes the relation those rules take part in.</p>
+  <div class="banner warn">Illustrative. This clause is a draft for working group discussion. Several points marked below remain open, and are recorded in the open questions register.</div>
+
+  <h2>Requirement keywords</h2>
+  <p>The keywords MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in BCP 14 (RFC 2119 and RFC 8174) when, and only when, they appear in capitals. The same keywords in lower case carry their ordinary English meaning and impose no requirement.</p>
+
+  <h2>What can be assessed</h2>
+  <p>Three different things are assessed against three different criteria, and a claim that does not say which of them is meant is ambiguous. A statement that something "is conformant" without naming the target is not a conformance claim under this methodology.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Target</th><th>Assessed against</th><th>Assessed by</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>A CBOM document</strong><br><span style="color:var(--muted);font-size:13px">a specific revision of a specific document</span></td>
+        <td>A specific version of a specific profile</td>
+        <td>A validator, mechanically</td>
+        <td>Conforms · Does not conform · Refused</td>
+      </tr>
+      <tr>
+        <td><strong>A profile</strong><br><span style="color:var(--muted);font-size:13px">the rules document itself</span></td>
+        <td>This methodology</td>
+        <td>Review, with mechanical checks on the rules file</td>
+        <td>Well-formed · Not well-formed</td>
+      </tr>
+      <tr>
+        <td><strong>An evaluation tool</strong><br><span style="color:var(--muted);font-size:13px">a validator implementation</span></td>
+        <td>This methodology's evaluation semantics</td>
+        <td>A conformance test suite</td>
+        <td>Conforms · Does not conform</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The three are related in one direction only. A document assessed by a non-conforming tool has no established verdict, and a verdict against a profile that is not well-formed establishes nothing about the document, because the rules it was measured against were not valid rules.</p>
+
+  <h2>1. A CBOM document conforming to a profile</h2>
+  <p>A CBOM document conforms to a profile version when all of the following hold.</p>
+  <ul>
+    <li>The document's carrier format and version fall within the profile's declared acceptance range. See <a href="versioning.html">Versioning</a>.</li>
+    <li>Every product-level rule at MUST level is satisfied.</li>
+    <li>Every declared interface satisfies every per-interface rule at MUST level.</li>
+    <li>Every rule assessed as satisfied by a disclosure marker rather than a value is a rule the profile marks as withholdable.</li>
+  </ul>
+  <p>Rules at SHOULD and MAY level are evaluated and reported. They do not determine the verdict. A profile that intends a requirement to determine the verdict states it at MUST level. Where a consumer treats a SHOULD rule as binding, the error lies in the reading of the profile, and the remedy is for the profile author to raise the level if that is what was meant.</p>
+
+  <h3>Verdict vocabulary</h3>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Verdict</th><th>Meaning</th><th>What it says about the document</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Conforms</strong></td><td>Every MUST rule is satisfied, at a carrier version within the acceptance range.</td><td>The document discloses at least what the profile requires.</td></tr>
+      <tr><td><strong>Does not conform</strong></td><td>At least one MUST rule is not satisfied.</td><td>The document was assessed and found short. The report identifies each failing rule.</td></tr>
+      <tr><td><strong>Refused</strong></td><td>The carrier version falls below the profile's declared minimum.</td><td>Nothing. No assessment was performed, because the profile cannot express its rules against that carrier version.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Refusal and non-conformance are reported distinctly and MUST NOT be merged. A refused document may be entirely adequate; the profile is simply unable to say so. Treating a refusal as a failure penalises a producer for the age of a format rather than for the content of its disclosure.</p>
+
+  <h3>Effect of the disclosure states</h3>
+  <p>An attribute with no value is assessed according to which of the four outcomes applies. The states are defined in the <a href="profile.html">Profile</a> section and are summarised here for their effect on a verdict.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Outcome</th><th>Against a MUST rule</th><th>Against a SHOULD or MAY rule</th></tr></thead>
+    <tbody>
+      <tr><td><strong>value</strong></td><td>Satisfied if the value meets the constraint</td><td>Reported; satisfied if the value meets the constraint</td></tr>
+      <tr><td><strong>withheld</strong></td><td>Satisfied only where the rule is marked withholdable; otherwise not satisfied</td><td>Reported as withheld</td></tr>
+      <tr><td><strong>unknown</strong></td><td>Not satisfied, and reported as unknown rather than as absent</td><td>Reported; does not affect the verdict</td></tr>
+      <tr><td><strong>undeclared</strong></td><td>Not satisfied</td><td>Reported; does not affect the verdict</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>A conforming document may therefore withhold material, and a consumer reading only the verdict will not know that it did. For that reason a conformance report states the disclosure state of every rule it assessed, and a consumer that acts on the verdict alone is discarding the part of the result most likely to matter commercially.</p>
+
+  <h3>Conformance to more than one profile</h3>
+  <p>A document evaluated against several profiles receives one verdict per profile. No verdict implies anything about another, except where one profile extends the other: conformance to a derived profile implies conformance to the base version it pins, because extension is monotonic. See the composition rules in <a href="profile.html">Profile</a>.</p>
+
+  <h3>Scope of a verdict</h3>
+  <p>A verdict applies to one revision of one document, assessed at a point in time. It does not extend to later revisions, to other documents describing the same product, or to the product itself. A product does not conform to a profile; a document describing it does.</p>
+
+  <h2>2. A profile conforming to this methodology</h2>
+  <p>A profile is well-formed under this methodology when it satisfies the following. These restate, as requirements, the outputs the procedure in <a href="method.html">Method</a> produces.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>#</th><th>Requirement</th><th>Level</th></tr></thead>
+    <tbody>
+      <tr><td>C1</td><td>The profile states the consumer it serves and the decision it supports.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C2</td><td>The profile carries an identifier and a version, and declares an acceptance range for every carrier format it supports.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C3</td><td>No rule refers to a named product, vendor, or interface instance.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C4</td><td>Every rule carries a stable identifier, an obligation level, and a statement of whether withholding satisfies it.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C5</td><td>Attribute names follow the methodology's naming conventions, and any attribute already defined elsewhere in the methodology is used with its established meaning.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C6</td><td>No rule requires a derived judgement whose criteria are external to the document and subject to change. See <a href="policy-evaluation.html">Policy Evaluation</a>.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C7</td><td>Where the profile extends another, it pins the base by identifier and version, and no override relaxes an inherited rule.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C8</td><td>The profile states what it deliberately excludes, and why.</td><td>SHOULD</td></tr>
+      <tr><td>C9</td><td>The profile is accompanied by a mapping to at least one carrier format, and by at least one document that conforms and one that does not.</td><td>SHOULD</td></tr>
+      <tr><td>C10</td><td>The profile carries a changelog classifying each change as tightening, relaxing, or editorial.</td><td>SHOULD</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>C3, C6 and C7 are the three that a review most often has to enforce, because each is easy to violate while producing a rules file that loads and runs. A profile naming an instance still evaluates documents; it simply evaluates them for one deployment.</p>
+  <p>C1 to C7 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
+
+  <h2>3. An evaluation tool conforming to this methodology</h2>
+  <p>Two tools given the same document, the same profile and the same resolution of any extended base are expected to return the same verdict. The requirements below are what that expectation rests on.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>#</th><th>Requirement</th><th>Level</th></tr></thead>
+    <tbody>
+      <tr><td>T1</td><td>Determine the carrier band before evaluating content, and refuse a document below the declared minimum without issuing a conformance verdict.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>T2</td><td>Report the four disclosure outcomes distinctly, and not collapse withheld, unknown and undeclared into a single absent state.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>T3</td><td>Resolve an extended base and reject, before evaluating any document, a profile containing an override that relaxes an inherited rule.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>T4</td><td>Report, for every rule assessed, its identifier, the profile that imposed it, its obligation level, and the outcome.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>T5</td><td>Distinguish, in whatever channel the caller consumes, between a conformance failure and an invalid profile.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>T6</td><td>Evaluate rules at SHOULD and MAY level and report them without allowing them to determine the verdict.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>T7</td><td>Produce identical output for identical inputs, with no dependence on ordering within the document.</td><td>SHOULD</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The reference validator distinguishes T5 by exit code: 0 for conforms, 1 for does not conform, 2 for a usage error, and 3 for a profile error such as a relaxing override. What the methodology requires is that the distinction reach the caller. The particular codes are an implementation choice, and another tool may signal it differently.</p>
+
+  <h2>Making and recording a claim</h2>
+  <p>A conformance claim is a statement by an identified party that a named document revision was assessed against a named profile version and produced a stated verdict.</p>
+
+  <h3>What a claim cites</h3>
+  <p>A claim names the profile and its version, the carrier format and its version, and the content revision of the document assessed. A claim omitting any of the three cannot be reproduced, and a claim that cannot be reproduced cannot be audited. Where a derived profile was used, the base and the version it pins are named as well.</p>
+  <pre><code>Conforms to:
+  pkic.example.pqc-migration v0.1
+    extending pkic.example.interface-disclosure v0.2
+Carrier: CycloneDX 1.7
+Content revision: 3
+Assessed by: Example Ltd (self-declared)
+Assessed on: 2026-08-09
+Tool: validate_cbom.py 0.2</code></pre>
+
+  <h3>Who may claim</h3>
+  <p>A claim is made by the party that performed the evaluation, and identifies that party. A producer evaluating its own document makes a self-declared claim, which is permitted and is labelled as such. A claim made by a party other than the producer is an attested claim, and carries whatever additional weight the relying party assigns to the attesting party.</p>
+  <div class="banner warn">Open point. Whether self-declaration is sufficient for a given purpose, or whether some profiles should require attestation by an independent party, is not settled. It may reasonably differ between a procurement profile and an internal reporting profile. Recorded as Q14.</div>
+
+  <h3>Validity over time</h3>
+  <p>A claim is fixed to the revision assessed and does not roll forward. A new content revision requires a new evaluation. A new profile version requires a new evaluation, and where the profile change was a tightening, a document that previously conformed may no longer do so. The changelog is what tells a producer whether re-evaluation is likely to be needed, which is why the methodology asks for changes to be classified.</p>
+  <div class="banner warn">Open point. Whether a tightening obliges a grace window before a consumer may reject documents produced against the previous version, and whether that window belongs to the profile or to the agreement between the parties, is not settled. Recorded as Q15.</div>
+
+  <h2>What a conformance verdict does not assert</h2>
+  <p>The verdict is a statement about disclosure. It is worth being explicit about the claims it is likely to be mistaken for.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>A verdict of "conforms" does not assert</th><th>Because</th></tr></thead>
+    <tbody>
+      <tr><td>That the disclosed values are accurate</td><td>Accuracy is a property of the producing process. Signing establishes origin, and the lifecycle stage records how the data was obtained. Neither is checked by the profile.</td></tr>
+      <tr><td>That the disclosed values are current</td><td>A CBOM revision is a point-in-time record. A configured or observed value may have changed since capture.</td></tr>
+      <tr><td>That the cryptography described is adequate</td><td>Adequacy is a derived judgement made by external versioned policy, deliberately kept out of the document. See <a href="policy-evaluation.html">Policy Evaluation</a>.</td></tr>
+      <tr><td>That the document is complete</td><td>A profile is a minimum reporting requirement. Cryptography outside the profile's scope may exist and is not required to be disclosed.</td></tr>
+      <tr><td>That every relevant interface was declared</td><td>Product rules constrain the set of declared interfaces by kind and count. An undeclared interface that no product rule requires is invisible to the evaluation.</td></tr>
+      <tr><td>That the product is suitable for a given purpose</td><td>Suitability is the consumer's decision. The profile exists to supply the facts that decision needs.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The last two are the ones most likely to cause difficulty in procurement, because both allow a document to conform while omitting something the buyer assumed was covered. The remedy is available to the profile author: product rules strong enough that the omission fails the evaluation. It is a question of how the profile is drafted, and the conformance semantics do not need to change to accommodate it.</p>
+
+  <div class="banner">Conformance under this methodology is a relation between one document revision and one profile version, established mechanically and reproducibly, stating that the document discloses at least what the profile requires. Whether the disclosure is accurate, and whether the cryptography it describes is adequate, are separate questions addressed in <a href="governance.html">Governance</a> and <a href="policy-evaluation.html">Policy Evaluation</a>.</div>
+
+  <div class="pagenav">
+    <a href="profile.html">← Profile</a>
+    <a class="next" href="policy-evaluation.html">Next: Policy Evaluation →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

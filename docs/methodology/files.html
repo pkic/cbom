@@ -21,6 +21,7 @@
     <a href="lifecycle.html">Lifecycle Data</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
+    <a href="conformance.html">Conformance</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="method.html">Method</a>
     <a href="use-cases.html">Use Cases</a>
@@ -51,7 +52,8 @@
       <tr><td><a href="profile-pqc-migration.rules.json">profile-pqc-migration.rules.json</a></td><td>The PQC migration profile, derived from the baseline via <code>extends</code></td></tr>
       <tr><td><a href="cbom-pqc-pass.cyclonedx.json">cbom-pqc-pass.cyclonedx.json</a></td><td>Conforming example for the migration profile; three interfaces at different readiness stages</td></tr>
       <tr><td><a href="cbom-pqc-fail.cyclonedx.json">cbom-pqc-fail.cyclonedx.json</a></td><td>Non-conforming example exercising both conditional rules and the inherited-rule tightening</td></tr>
-      <tr><td><a href="validate_cbom.py">validate_cbom.py</a></td><td>Version-aware validator with profile composition</td></tr>
+      <tr><td><a href="validate_cbom.py">validate_cbom.py</a></td><td>Version-aware validator with profile composition. Checks a document against a profile</td></tr>
+      <tr><td><a href="check_profile.py">check_profile.py</a></td><td>Well-formedness checker. Checks a profile against requirements C1 to C10 of <a href="conformance.html">Conformance</a></td></tr>
       <tr><td><a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a></td><td>Treatment of older CBOM files</td></tr>
     </tbody>
   </table>
@@ -88,6 +90,19 @@ python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-pqc-migration.rules
   <p>The failing document is worth reading alongside its verdict. Two failures come from conditional rules: an interface claiming enablement by software update without naming the version (M5), and one declaring a capability committed without saying what blocks it (M11). The third is the instructive one. Its interconnect interface withholds <code>implementationPurl</code>, which the baseline permits. Evaluated against the baseline alone that document conforms; it fails here only because the derived profile removed withholdability from that rule.</p>
   <pre><code># the same document against the base profile, which permits the withheld value
 python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-interface-disclosure.rules.json</code></pre>
+
+  <h2>Checking a profile</h2>
+  <p>A profile is itself checkable, against requirements C1 to C10 of <a href="conformance.html">Conformance</a>. C1 to C7 are MUST requirements and determine the result; C8 to C10 are reported as warnings unless <code>--strict</code> is given.</p>
+  <pre><code># both example profiles are well-formed
+python check_profile.py profile-interface-disclosure.rules.json
+python check_profile.py profile-pqc-migration.rules.json
+
+# require the SHOULD material as well: exclusions, companion artifacts, changelog
+python check_profile.py profile-interface-disclosure.rules.json --strict
+
+# machine-readable findings
+python check_profile.py profile-pqc-migration.rules.json --json</code></pre>
+  <p>The test suite carries one deliberately defective profile per MUST requirement, so that each check is itself tested. See <code>tests/fixtures/</code> and <code>tests/README.md</code> in the repository.</p>
 
   <div class="banner">The <a href="demo.html">Demo</a> section performs the same evaluation in the browser for the baseline profile. Standards, regulation and specifications cited across this documentation are listed in the <a href="../references/">reference register</a>.</div>
 

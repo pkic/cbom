@@ -21,6 +21,7 @@
     <a href="lifecycle.html">Lifecycle Data</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
+    <a href="conformance.html">Conformance</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="method.html">Method</a>
     <a href="use-cases.html">Use Cases</a>
@@ -49,7 +50,7 @@
   <p>The example profile, the Interface Disclosure Baseline, requires a product to declare its cryptographic interfaces, including the interface used to configure the product, and to describe each interface. It does not reference a specific product or interface instance, and therefore applies to any product that terminates TLS, SSH, or IPsec. nginx serves only as the example subject.</p>
 
   <h2>Suggested reading paths</h2>
-  <p>The sections are ordered so that each one can be read on its own, which makes the tab bar a poor guide to where to start. The routes below cover the four positions from which the material is usually approached. Each is between four and six sections, and none requires the others.</p>
+  <p>The sections are ordered so that each one can be read on its own, which makes the tab bar a poor guide to where to start. The routes below cover the four positions from which the material is usually approached. Each is between five and seven sections, and none requires the others.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>If you are</th><th>Read in this order</th><th>Why this route</th></tr></thead>
@@ -61,12 +62,12 @@
       </tr>
       <tr>
         <td><strong>Consuming CBOMs</strong><br><span style="color:var(--muted);font-size:13px">an operator, or a buyer assessing a supplier</span></td>
-        <td><a href="challenges.html">Challenges</a> → <a href="inventory.html">Inventory</a> → <a href="lifecycle.html">Lifecycle Data</a> → <a href="profile.html">Profile</a> → <a href="use-cases.html">Use Cases</a> → <a href="demo.html">Demo</a></td>
-        <td>Starts from why the data received today is difficult to use, then how it reaches an inventory, how far each lifecycle stage can be trusted, and what a profile allows you to require.</td>
+        <td><a href="challenges.html">Challenges</a> → <a href="inventory.html">Inventory</a> → <a href="lifecycle.html">Lifecycle Data</a> → <a href="profile.html">Profile</a> → <a href="conformance.html">Conformance</a> → <a href="use-cases.html">Use Cases</a> → <a href="demo.html">Demo</a></td>
+        <td>Starts from why the data received today is difficult to use, then how it reaches an inventory, how far each lifecycle stage can be trusted, and what a profile allows you to require. Conformance matters here in particular, because it sets out what a passing verdict does not assert.</td>
       </tr>
       <tr>
         <td><strong>Writing or approving a profile</strong><br><span style="color:var(--muted);font-size:13px">working group members, sector bodies</span></td>
-        <td><a href="terms.html">Terms</a> → <a href="model.html">Model</a> → <a href="method.html">Method</a> → <a href="profile.html">Profile</a> → <a href="pqc-migration.html">PQC Migration</a> → <a href="governance.html">Governance</a></td>
+        <td><a href="terms.html">Terms</a> → <a href="model.html">Model</a> → <a href="method.html">Method</a> → <a href="profile.html">Profile</a> → <a href="conformance.html">Conformance</a> → <a href="pqc-migration.html">PQC Migration</a> → <a href="governance.html">Governance</a></td>
         <td>The methodology's own subject matter. Method gives the procedure, PQC Migration works one profile through it end to end, and Governance covers what happens once a profile is published.</td>
       </tr>
       <tr>
@@ -87,6 +88,7 @@
     <a class="card" href="lifecycle.html"><div class="num">background</div><h3>Lifecycle Data</h3><p>The cryptographic data available at each development and deployment phase, and the differences between phases.</p></a>
     <a class="card" href="model.html"><div class="num">concept</div><h3>Model</h3><p>Relationships, endpoints and assets — the vocabulary the methodology is written in, with worked examples.</p></a>
     <a class="card" href="profile.html"><div class="num">core</div><h3>Profile</h3><p>The product-level and per-interface rules, the two directions of use, and the basis for a conformance decision.</p></a>
+    <a class="card" href="conformance.html"><div class="num">core</div><h3>Conformance</h3><p>What may be assessed, what a verdict means, who may claim it, how a claim is expressed, and what conformance does not assert.</p></a>
     <a class="card" href="method.html"><div class="num">core</div><h3>Method</h3><p>The procedure for defining a profile, in twelve steps across five stages, with the tests to apply at each and the ways it goes wrong.</p></a>
     <a class="card" href="use-cases.html"><div class="num">applied</div><h3>Use Cases</h3><p>Contexts in which profiles apply: PQC readiness, procurement, incident response, compliance reporting, and continuous integration.</p></a>
     <a class="card" href="pqc-migration.html"><div class="num">worked use case</div><h3>PQC Migration</h3><p>One use case developed in full, from the consumer's decision to a complete profile definition, for a product treated as a black box.</p></a>

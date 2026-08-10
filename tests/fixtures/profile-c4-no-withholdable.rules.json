@@ -1,0 +1,23 @@
+{
+  "$comment": "Fixture. Deliberately fails C4: rule I1 assesses a disclosed attribute but does not state whether withholding satisfies it. A producer reading this profile cannot tell whether a 'withheld' marker is acceptable, and the answer would depend on the validator's default rather than on the profile.",
+  "profileId": "pkic.test.c4",
+  "title": "Fixture - C4 withholdability not stated",
+  "version": "0.1",
+
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the checker requires every rule to state its withholdability."
+  },
+
+  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
+
+  "interfaceTypeVocabulary": ["management", "service"],
+
+  "productRules": [
+    { "id": "P1", "description": "Product declares at least one cryptographic interface", "level": "MUST", "constraint": { "minInterfaces": 1 } }
+  ],
+
+  "interfaceRules": [
+    { "id": "I1", "attribute": "protocol", "level": "MUST", "constraint": { "present": true } }
+  ]
+}

@@ -21,6 +21,7 @@
     <a href="lifecycle.html">Lifecycle Data</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
+    <a href="conformance.html">Conformance</a>
     <a href="policy-evaluation.html">Policy Evaluation</a>
     <a href="method.html">Method</a>
     <a href="use-cases.html">Use Cases</a>
@@ -62,9 +63,14 @@
       <tr><td><strong>Profile</strong></td><td>A defined subset of mandatory attributes for a stated objective, expressed independently of any format. A minimum reporting requirement, not exhaustive coverage.</td><td><a href="profile.html">Profile</a></td></tr>
       <tr><td><strong>Product-level rule</strong><br><span class="na">also: structural rule</span></td><td>A rule constraining the set of interfaces a product declares, such as a required count or a required kind. Catches omission, which per-attribute rules cannot.</td><td><a href="profile.html">Profile</a></td></tr>
       <tr><td><strong>Per-interface rule</strong></td><td>A rule applied uniformly to every declared interface.</td><td><a href="profile.html">Profile</a></td></tr>
-      <tr><td><strong>Conformance level</strong></td><td>MUST, SHOULD or MAY, following BCP 14 (RFC 2119 and RFC 8174).</td><td><a href="profile.html">Profile</a></td></tr>
+      <tr><td><strong>Conformance level</strong><br><span class="na">also: obligation level</span></td><td>MUST, SHOULD or MAY, following BCP 14 (RFC 2119 and RFC 8174). Only MUST determines a verdict.</td><td><a href="conformance.html">Conformance</a></td></tr>
       <tr><td><strong>Withholdable</strong></td><td>A property of a rule. A withholdable attribute is satisfied by a <code>withheld</code> marker; otherwise withholding fails the rule.</td><td><a href="profile.html">Profile</a></td></tr>
-      <tr><td><strong>Conformance claim</strong></td><td>A statement that a CBOM conforms, citing the profile version, the carrier format version and the content revision. A claim omitting any of the three is not reproducible.</td><td><a href="governance.html">Governance</a></td></tr>
+      <tr><td><strong>Verdict</strong></td><td>The result of evaluating one document revision against one profile version: <em>conforms</em>, <em>does not conform</em>, or <em>refused</em>.</td><td><a href="conformance.html">Conformance</a></td></tr>
+      <tr><td><strong>Refused</strong></td><td>An outcome, distinct from non-conformance, where the carrier version falls below the profile's declared minimum and no assessment is performed. A refusal says nothing about the document's content.</td><td><a href="conformance.html">Conformance</a></td></tr>
+      <tr><td><strong>Well-formed profile</strong></td><td>A profile satisfying the methodology's own requirements C1 to C10. A verdict issued against a profile that is not well-formed establishes nothing.</td><td><a href="conformance.html">Conformance</a></td></tr>
+      <tr><td><strong>Conformance claim</strong></td><td>A statement by an identified party that a named document revision was assessed against a named profile version and produced a stated verdict, citing the profile version, the carrier format version and the content revision.</td><td><a href="conformance.html">Conformance</a></td></tr>
+      <tr><td><strong>Self-declared claim</strong></td><td>A claim in which the evaluating party is the producer of the document. Permitted, and labelled as such.</td><td><a href="conformance.html">Conformance</a></td></tr>
+      <tr><td><strong>Attested claim</strong></td><td>A claim in which the evaluating party is other than the producer.</td><td><a href="conformance.html">Conformance</a></td></tr>
       <tr><td><strong>Dual use</strong></td><td>The property that one profile serves both as a specification for the producer and as a checklist for the consumer.</td><td><a href="profile.html">Profile</a></td></tr>
       <tr><td><strong>Independent evaluation</strong></td><td>Evaluating one CBOM against several profiles, each producing its own verdict. The profiles need not know of each other and are not combined.</td><td><a href="profile.html">Profile</a></td></tr>
       <tr><td><strong>Extension</strong><br><span class="na">base profile / derived profile</span></td><td>A profile declaring that it inherits every rule of another and states only additions and tightenings.</td><td><a href="profile.html">Profile</a></td></tr>

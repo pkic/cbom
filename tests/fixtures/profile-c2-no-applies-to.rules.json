@@ -1,0 +1,21 @@
+{
+  "$comment": "Fixture. Deliberately fails C2: no 'appliesTo', so the profile does not say which carrier formats and versions it accepts. A validator would have no basis for the format gate.",
+  "profileId": "pkic.test.c2",
+  "title": "Fixture - C2 no acceptance range",
+  "version": "0.1",
+
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the checker requires a declared carrier acceptance range."
+  },
+
+  "interfaceTypeVocabulary": ["management", "service"],
+
+  "productRules": [
+    { "id": "P1", "description": "Product declares at least one cryptographic interface", "level": "MUST", "constraint": { "minInterfaces": 1 } }
+  ],
+
+  "interfaceRules": [
+    { "id": "I1", "attribute": "protocol", "level": "MUST", "constraint": { "present": true }, "withholdable": false }
+  ]
+}

@@ -5,6 +5,12 @@
   "version": "0.2",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
 
+  "objective": {
+    "$comment": "C1 of the Conformance section. A profile that does not say who it serves and what decision it supports cannot be argued about, because there is no standard against which to judge whether it asks for the right things.",
+    "consumer": "An operator or purchaser holding a product it did not build and cannot inspect.",
+    "decision": "Whether the cryptography the product applies at its boundaries, including the interface used to configure it, is disclosed in enough detail to be recorded in a cryptographic inventory and assessed against policy."
+  },
+
   "appliesTo": {
     "$comment": "Carrier-format acceptance. 'min' = oldest spec version the adapter is known to read; below it, evaluation is refused (unsupported). 'tested' = version the profile was authored/validated against; between min and tested the CBOM is accepted but flagged legacy. Newer-than-tested is accepted with a note.",
     "cyclonedx": { "min": "1.6", "tested": "1.7" }
@@ -24,14 +30,53 @@
   ],
 
   "interfaceRules": [
-    { "id": "I1", "attribute": "protocol",           "level": "MUST",   "constraint": { "present": true } },
-    { "id": "I2", "attribute": "protocolVersion",    "level": "MUST",   "constraint": { "present": true } },
-    { "id": "I3", "attribute": "keyExchange",        "level": "MUST",   "constraint": { "present": true } },
-    { "id": "I4", "attribute": "encryption",         "level": "MUST",   "constraint": { "present": true } },
-    { "id": "I5", "attribute": "authentication",     "level": "MUST",   "constraint": { "present": true }, "note": "Server/host authentication signature: certificate signature (TLS) or host key (SSH)." },
-    { "id": "I6", "attribute": "endpointRoles",      "level": "MUST",   "constraint": { "minCount": 2 } },
-    { "id": "I7", "attribute": "interfaceType",      "level": "MUST",   "constraint": { "enumRef": "interfaceTypeVocabulary" } },
-    { "id": "I8", "attribute": "lifecycleStage",     "level": "MUST",   "constraint": { "enum": ["intended", "implemented", "configured", "observed"] } },
+    { "id": "I1", "attribute": "protocol",           "level": "MUST",   "constraint": { "present": true }, "withholdable": false },
+    { "id": "I2", "attribute": "protocolVersion",    "level": "MUST",   "constraint": { "present": true }, "withholdable": false },
+    { "id": "I3", "attribute": "keyExchange",        "level": "MUST",   "constraint": { "present": true }, "withholdable": false },
+    { "id": "I4", "attribute": "encryption",         "level": "MUST",   "constraint": { "present": true }, "withholdable": false },
+    { "id": "I5", "attribute": "authentication",     "level": "MUST",   "constraint": { "present": true }, "withholdable": false, "note": "Server/host authentication signature: certificate signature (TLS) or host key (SSH)." },
+    { "id": "I6", "attribute": "endpointRoles",      "level": "MUST",   "constraint": { "minCount": 2 }, "withholdable": false },
+    { "id": "I7", "attribute": "interfaceType",      "level": "MUST",   "constraint": { "enumRef": "interfaceTypeVocabulary" }, "withholdable": false },
+    { "id": "I8", "attribute": "lifecycleStage",     "level": "MUST",   "constraint": { "enum": ["intended", "implemented", "configured", "observed"] }, "withholdable": false },
     { "id": "I9", "attribute": "implementationPurl", "level": "SHOULD", "constraint": { "startsWith": "pkg:" }, "withholdable": true, "note": "A producer may decline to publish the implementing library version; the profile accepts a withheld marker here." }
+  ],
+
+  "exclusions": [
+    { "item": "Internal cryptographic operations not reachable at an interface",
+      "reason": "The subject is treated as a black box. A consumer cannot verify internal operations and a vendor will not disclose them, so requiring them would produce a profile no one can satisfy." },
+    { "item": "Derived judgements such as post-quantum posture or cryptographic maturity",
+      "reason": "The criteria behind such judgements change while the product does not. The profile records the facts they are derived from and leaves the judgement to external versioned policy. See decision 0002." },
+    { "item": "Forward-looking capability and roadmap information",
+      "reason": "This profile records present state. A consumer needing planning information uses a derived profile, such as the PQC migration example, which adds it." },
+    { "item": "Key material, secrets, and certificate private components",
+      "reason": "Never disclosed in a bill of materials under any profile." }
+  ],
+
+  "artifacts": {
+    "$comment": "C9. The mapping demonstrates that the profile is satisfiable in a concrete format, and the two example documents demonstrate that the rules discriminate.",
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "cbom-pass.cyclonedx.json",
+    "nonConformingExample": "cbom-fail.cyclonedx.json"
+  },
+
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-08-05",
+      "summary": "Initial draft. Product rules P1 and P2, per-interface rules I1 to I8.",
+      "changes": []
+    },
+    {
+      "version": "0.2",
+      "date": "2026-08-07",
+      "changes": [
+        { "kind": "tightening",
+          "summary": "Added the disclosure state model, with the marker prefix and a withholdable flag on every rule. An attribute previously omitted in silence now fails as undeclared; supplying a marker restores conformance." },
+        { "kind": "editorial",
+          "summary": "Added rule I9 implementationPurl at SHOULD level, withholdable. SHOULD rules are reported and do not determine the verdict." },
+        { "kind": "editorial",
+          "summary": "Recorded the carrier acceptance range as CycloneDX min 1.6, tested 1.7. Documents at 1.6 are evaluated and flagged legacy rather than refused." }
+      ]
+    }
   ]
 }
