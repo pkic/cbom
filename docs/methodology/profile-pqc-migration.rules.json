@@ -3,8 +3,6 @@
   "profileId": "pkic.example.pqc-migration",
   "title": "PQC Migration Readiness (Example)",
   "version": "0.1",
-  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
-
   "objective": {
     "$comment": "C1. A derived profile states its own consumer and decision; it does not inherit the base's, because the whole reason to derive is that the decision differs.",
     "consumer": "An operator planning a post-quantum migration across an estate of products it did not build.",
@@ -13,7 +11,7 @@
 
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.2",
+    "version": "0.3",
     "file": "profile-interface-disclosure.rules.json"
   },
 
@@ -22,10 +20,7 @@
     "cyclonedx": { "min": "1.6", "tested": "1.7" }
   },
 
-  "disclosure": {
-    "markerPrefix": "pkic:profile:disclosure:",
-    "states": ["unknown", "withheld"]
-  },
+  "$inherited": "The disclosure model and the requirement keywords are inherited from the base and are deliberately not restated. Restating an inherited block would override the base's value silently, so a later change to the base, such as a new marker prefix, would not reach this profile and every marker would stop being recognised without an error. Only appliesTo is restated, because narrowing the carrier range is a real choice and the validator checks that a restated range does not widen the base's.",
 
   "capabilityStatusVocabulary": ["available", "committed", "planned", "under-evaluation", "not-planned"],
   "blockedByVocabulary": ["provider", "product", "hardware", "standard", "certification"],
@@ -39,7 +34,7 @@
       "id": "I9",
       "level": "MUST",
       "withholdable": false,
-      "note": "Tightened from SHOULD/withholdable. Migration sequencing depends on knowing which library implements an interface, so a withheld value leaves the consumer unable to plan."
+      "note": "Tightened by removing withholdability. The base already requires implementationPurl at MUST and accepts a 'withheld' marker in place of a value. Migration sequencing depends on knowing which library implements an interface, so this profile removes that option and requires the value itself. Level is restated as MUST for readability and is unchanged from the base."
     }
   ],
 
@@ -74,6 +69,8 @@
       "reason": "Inherited from the baseline. The profile requires the algorithm sets an interface uses and supports, and leaves the judgement to external versioned policy. See decision 0002." },
     { "item": "Internal migration plans, engineering schedules, and unreleased design detail",
       "reason": "Outside the black-box boundary. Anything the profile requires must be declarable at an interface or stated as a property of the shipped product." },
+    { "item": "encryptionSupported, the counterpart of the inherited encryption attribute",
+      "reason": "The profile adds a Supported form for key exchange, authentication and protocol version, and deliberately not for bulk encryption. A quantum computer degrades symmetric encryption rather than defeating it, so the migration is a key-length change within the same algorithm family and does not constrain sequencing in the way a key exchange or signature change does. A consumer needing it reads the inherited encryption attribute and the product's documentation." },
     { "item": "Per-algorithm capability status within a single interface",
       "reason": "Deferred rather than rejected. The worked example states status separately for key exchange and authentication, which the current rule shape does not express. Recorded as Q27." }
   ],
@@ -88,7 +85,7 @@
     {
       "version": "0.1",
       "date": "2026-08-07",
-      "summary": "Initial draft. Derived from the interface disclosure baseline v0.2: adds product rules P3 and P4 and per-interface rules M1 to M12, and tightens inherited rule I9 to a non-withholdable MUST.",
+      "summary": "Initial draft. Derived from the interface disclosure baseline v0.3: adds product rules P3 and P4 and per-interface rules M1 to M12, and tightens inherited rule I9 by removing its withholdability.",
       "changes": []
     }
   ]

@@ -80,7 +80,7 @@ numbers stay the same.
 
 ## Disclosure markers
 
-Profile v0.2 distinguishes an attribute that is unknown to the producer from one the producer is
+The profile distinguishes an attribute that is unknown to the producer from one the producer is
 withholding, following the 2026 SBOM minimum elements. Neither format has a native field for this,
 so the convention is fixed here:
 

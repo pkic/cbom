@@ -1,8 +1,8 @@
 {
-  "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident. v0.2 adds the three-state disclosure model described under 'disclosure'.",
+  "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident. v0.2 added the three-state disclosure model described under 'disclosure'; v0.3 raised I9 to a withholdable MUST, which is the only combination in which that model affects a verdict. See 'changelog'.",
   "profileId": "pkic.example.interface-disclosure",
   "title": "Interface Disclosure Baseline (Example)",
-  "version": "0.2",
+  "version": "0.3",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
 
   "objective": {
@@ -38,7 +38,7 @@
     { "id": "I6", "attribute": "endpointRoles",      "level": "MUST",   "constraint": { "minCount": 2 }, "withholdable": false },
     { "id": "I7", "attribute": "interfaceType",      "level": "MUST",   "constraint": { "enumRef": "interfaceTypeVocabulary" }, "withholdable": false },
     { "id": "I8", "attribute": "lifecycleStage",     "level": "MUST",   "constraint": { "enum": ["intended", "implemented", "configured", "observed"] }, "withholdable": false },
-    { "id": "I9", "attribute": "implementationPurl", "level": "SHOULD", "constraint": { "startsWith": "pkg:" }, "withholdable": true, "note": "A producer may decline to publish the implementing library version; the profile accepts a withheld marker here." }
+    { "id": "I9", "attribute": "implementationPurl", "level": "MUST",   "constraint": { "startsWith": "pkg:" }, "withholdable": true, "note": "Required, and withholdable. A producer unwilling to publish the implementing library says so with a 'withheld' marker, which satisfies the rule; silent omission does not. This is the one rule in the baseline where the disclosure model affects the verdict, which is the point of having it." }
   ],
 
   "exclusions": [
@@ -76,6 +76,16 @@
           "summary": "Added rule I9 implementationPurl at SHOULD level, withholdable. SHOULD rules are reported and do not determine the verdict." },
         { "kind": "editorial",
           "summary": "Recorded the carrier acceptance range as CycloneDX min 1.6, tested 1.7. Documents at 1.6 are evaluated and flagged legacy rather than refused." }
+      ]
+    },
+    {
+      "version": "0.3",
+      "date": "2026-08-09",
+      "changes": [
+        { "kind": "tightening",
+          "summary": "Raised I9 implementationPurl from SHOULD to MUST, keeping it withholdable. A document that omits the attribute in silence no longer conforms; a document that declares it withheld does. Until this version no rule combined MUST with withholdability, which is the only combination where the disclosure model affects a verdict, so the model was demonstrated in reporting and never at the point of decision." },
+        { "kind": "editorial",
+          "summary": "Stated 'withholdable' explicitly on every rule. Behaviour is unchanged, since an absent flag was already treated as false, but a producer can now read the answer from the profile instead of inferring it from a validator's default." }
       ]
     }
   ]

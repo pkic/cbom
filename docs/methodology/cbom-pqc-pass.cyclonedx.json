@@ -3,7 +3,7 @@
   "specVersion": "1.7",
   "serialNumber": "urn:uuid:5e5e5e5e-0000-4000-8000-0000000pqcok",
   "version": 1,
-  "$comment": "EXAMPLE CBOM — CONFORMS to pkic.example.pqc-migration v0.1, which extends pkic.example.interface-disclosure v0.2. A hypothetical product with three interfaces at different stages of post-quantum readiness: one already capable, one committed and blocked on product work, one not planned and blocked on a protocol standard. List-valued attributes are carried as repeated properties of the same name, which CycloneDX permits.",
+  "$comment": "EXAMPLE CBOM — CONFORMS to pkic.example.pqc-migration v0.1, which extends pkic.example.interface-disclosure v0.3. A hypothetical product with three interfaces at different stages of post-quantum readiness: one already capable, one committed and blocked on product work, one not planned and blocked on a protocol standard. List-valued attributes are carried as repeated properties of the same name, which CycloneDX permits.",
   "metadata": {
     "timestamp": "2026-08-07T09:00:00Z",
     "component": {

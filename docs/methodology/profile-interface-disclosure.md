@@ -1,4 +1,4 @@
-# CBOM Profile — Interface Disclosure Baseline (Example v0.2)
+# CBOM Profile — Interface Disclosure Baseline (Example v0.3)
 
 > **Status:** Illustrative early-concept artifact for the PKIC CBOM Profiles Working Group.
 > Not a normative deliverable. CycloneDX crypto field names are aligned to v1.7 / ECMA-424
@@ -110,7 +110,7 @@ profile, reuses these names unchanged and adds the suffixed forms alongside them
 | I6 | `endpointRoles` | **MUST** | at least two endpoints declared |
 | I7 | `interfaceType` | **MUST** | from the vocabulary in §2 |
 | I8 | `lifecycleStage` | **MUST** | one of `intended` \| `implemented` \| `configured` \| `observed` |
-| I9 | `implementationPurl` | SHOULD | `pkg:` Package URL of the implementing library. Withholdable (see §4.3). |
+| I9 | `implementationPurl` | **MUST** | `pkg:` Package URL of the implementing library. Withholdable (see §4.3): a `withheld` marker satisfies this rule, silent omission does not. |
 
 A CBOM conforms if and only if every product-level MUST rule holds and every declared interface
 satisfies every per-interface MUST rule. `interfaceId` is an instance label chosen by the
@@ -143,6 +143,14 @@ In this profile only I9 (`implementationPurl`) is withholdable, on the basis tha
 reasonably decline to publish the version of an implementing library while still meeting the
 disclosure objective. Other profiles will make different choices, and a procurement profile may
 permit no withholding at all.
+
+The combination of level and withholdability is what determines whether the disclosure model
+affects a verdict. Withholding can only change an outcome on a MUST rule, because a SHOULD rule
+does not decide conformance in the first place. Until v0.3 this profile held I9 at SHOULD while
+marking it withholdable, so the flag was inert and the model was visible only in the report. I9
+is now a withholdable MUST, which is the combination the model exists for: the producer is
+obliged to address the attribute and may answer either with a value or with a declared refusal,
+and a consumer can tell those apart from a document that never addressed it.
 
 Markers are carried in the CBOM as properties under `pkic:profile:disclosure:`, because neither
 CycloneDX nor SPDX provides a native field for them. The mapping records the convention.
@@ -191,9 +199,21 @@ numbers are the profile's own and are independent of the carrier version.
 | Added rule I9 `implementationPurl` at SHOULD, withholdable | none | SHOULD rules are reported, not enforced |
 | Recorded `appliesTo` as CycloneDX `min: 1.6`, `tested: 1.7` | editorial | Documents at 1.6 are evaluated and flagged legacy rather than refused |
 
-The derived PQC migration profile pins v0.2 and raises I9 to a non-withholdable MUST. Under
-decision 0004 that tightening is permitted; a subsequent baseline revision that relaxed I9 would
-place the derived profile in conflict, which is why the base is pinned by version.
+### v0.3 — 2026-08-09
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Raised I9 `implementationPurl` from SHOULD to MUST, keeping it withholdable | tightening | A document omitting the attribute in silence no longer conforms. Adding either a value or a `withheld` marker restores conformance |
+| Stated `withholdable` explicitly on every rule | editorial | None. An absent flag was already treated as false; the value is now readable from the profile rather than inferred from a validator's default |
+
+The first change exists because of what the comparison in §4.3 describes: no rule in either
+example profile combined MUST with withholdability, and that is the only combination in which
+withholding alters a verdict. The disclosure model was being described rather than exercised.
+
+The derived PQC migration profile pins v0.3 and tightens I9 by removing its withholdability, the
+level being already MUST. Under decision 0004 that tightening is permitted; a subsequent baseline
+revision that relaxed I9 would place the derived profile in conflict, which is why the base is
+pinned by version.
 
 ### v0.1 — initial draft
 

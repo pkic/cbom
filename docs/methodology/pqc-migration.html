@@ -101,12 +101,12 @@
   <h2>The profile definition</h2>
   <p>Keywords follow BCP 14. The profile is product-independent: no rule names a product, a vendor or an interface instance. It builds on the interface disclosure baseline described in the <a href="profile.html">Profile</a> section and adds the capability and enablement attributes migration requires.</p>
   <p>Attribute names follow the conventions in <a href="method.html">Method</a>. Where an attribute also appears in the baseline profile it keeps the same name and meaning: <code>keyExchange</code> and <code>authentication</code> denote what the interface uses now, and the <code>Supported</code> suffix denotes what it is able to use.</p>
-  <p>This profile <strong>extends</strong> the interface disclosure baseline at version 0.2, under the composition rules in <a href="profile.html">Profile</a>. It inherits every baseline rule, adds the capability and enablement attributes below, and tightens one inherited rule. Because extension is monotonic, a CBOM conforming to this profile also conforms to the baseline.</p>
+  <p>This profile <strong>extends</strong> the interface disclosure baseline at version 0.3, under the composition rules in <a href="profile.html">Profile</a>. It inherits every baseline rule, adds the capability and enablement attributes below, and tightens one inherited rule. Because extension is monotonic, a CBOM conforming to this profile also conforms to the baseline.</p>
   <table>
     <thead><tr><th>Relationship to the baseline</th><th>Rules</th></tr></thead>
     <tbody>
       <tr><td><strong>Inherited unchanged</strong></td><td>P1, P2 at product level; I1 to I8 per interface, covering interface identity, protocol, current key exchange, encryption, current authentication, endpoint roles, interface type and lifecycle stage.</td></tr>
-      <tr><td><strong>Tightened</strong></td><td>I9 <code>implementationPurl</code> is raised from SHOULD to MUST and is no longer withholdable. Migration planning depends on knowing which library implements an interface, since that determines whether an update is available at all.</td></tr>
+      <tr><td><strong>Tightened</strong></td><td>I9 <code>implementationPurl</code> is no longer withholdable. The baseline already requires it at MUST and accepts a <code>withheld</code> marker in place of a value; this profile removes that option. Migration planning depends on knowing which library implements an interface, since that determines whether an update is available at all.</td></tr>
       <tr><td><strong>Added</strong></td><td>P3 and P4 at product level; M1 to M12 per interface, listed below. The M prefix distinguishes them from the baseline's I rules, so a failure report identifies which profile imposed a requirement.</td></tr>
     </tbody>
   </table>
@@ -149,7 +149,7 @@
   <table>
     <thead><tr><th>Inherited rule</th><th>Baseline</th><th>Here</th></tr></thead>
     <tbody>
-      <tr><td>I9 <code>implementationPurl</code></td><td>SHOULD, withholdable</td><td>MUST, not withholdable</td></tr>
+      <tr><td>I9 <code>implementationPurl</code></td><td>MUST, withholdable</td><td>MUST, not withholdable</td></tr>
     </tbody>
   </table>
   <p>Migration planning depends on knowing which library implements an interface, since that determines whether an update exists and when it arrived. A vendor withholding it leaves the consumer unable to sequence the work. This is the only inherited rule this profile changes, and raising a level is permitted because it tightens.</p>

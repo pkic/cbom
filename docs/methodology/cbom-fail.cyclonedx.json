@@ -3,7 +3,7 @@
   "specVersion": "1.7",
   "serialNumber": "urn:uuid:4d4d4d4d-0000-4000-8000-00000000fail",
   "version": 1,
-  "$comment": "EXAMPLE CBOM — DOES NOT CONFORM to profile pkic.example.interface-disclosure v0.2. Carrier format: CycloneDX 1.7. The product declares ONLY its client-facing HTTPS service interface (fully described) and omits the management/configuration interface entirely, so product rule P2 (at least one interface of type 'management') fails. The service interface it DID declare passes every per-interface rule — the failure is a missing mandatory ELEMENT at the product level, not a missing attribute.",
+  "$comment": "EXAMPLE CBOM — DOES NOT CONFORM to profile pkic.example.interface-disclosure v0.3. Carrier format: CycloneDX 1.7. The product declares ONLY its client-facing HTTPS service interface (fully described) and omits the management/configuration interface entirely, so product rule P2 (at least one interface of type 'management') fails. The service interface it DID declare passes every per-interface rule — the failure is a missing mandatory ELEMENT at the product level, not a missing attribute.",
   "metadata": {
     "timestamp": "2026-07-16T09:05:00Z",
     "component": {

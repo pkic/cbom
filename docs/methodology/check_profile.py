@@ -254,8 +254,34 @@ def c7_extension(path, prof, f):
     except (OSError, KeyError) as err:
         f.add("C7", "MUST", False, "base could not be resolved: %s" % err)
         return
+
+    # A restated inherited block silently overrides the base's value, so a later
+    # change to the base would not reach this profile and would raise no error.
+    # 'appliesTo' is exempt: narrowing the carrier range is a real choice, and
+    # check_range_narrows already rejects a range that widens the base's.
+    diverged = []
+    try:
+        base_path = os.path.join(os.path.dirname(os.path.abspath(path)), ext["file"])
+        base = load_profile(base_path)[0]
+    except (ProfileError, OSError, KeyError):
+        base = None
+    if base:
+        # Vocabularies are deliberately not checked here: narrowing an inherited
+        # vocabulary is a tightening and a derived profile may legitimately do
+        # it. Only the blocks that carry no requirement of their own are checked,
+        # because for those a divergence can only be a mistake.
+        for key in ("disclosure", "conformanceKeywords"):
+            if key in prof and prof[key] != base.get(key):
+                diverged.append(key)
+    if diverged:
+        f.add("C7", "MUST", False,
+              "restates inherited block(s) with a different value: %s. "
+              "The base's value is overridden silently, so a change to the base "
+              "would not reach this profile" % ", ".join(diverged))
+        return
+
     f.add("C7", "MUST", True,
-          "pins %s v%s; base resolves and no override relaxes it"
+          "pins %s v%s; base resolves, no override relaxes it, no inherited block diverges"
           % (ext["profileId"], ext["version"]))
 
 
