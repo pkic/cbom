@@ -19,6 +19,7 @@
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="data-exposure.html">Data Exposure</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="conformance.html">Conformance</a>
@@ -29,6 +30,7 @@
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
     <a href="governance.html" class="active">Governance</a>
+    <a href="related-work.html">Related Work</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
     <a href="../references/">References</a>
@@ -189,6 +191,36 @@
   <p>Profiles, the controlled vocabulary, and the methodology evolve over time. Changes are managed through explicit versioning (see <a href="versioning.html">Versioning</a>), recorded decisions, and, within the working group, lazy consensus. Requirements are tightened behind dated grace windows, and vocabulary values are deprecated rather than removed, so that changes are predictable and auditable.</p>
   <p>The working group's own record is kept in the repository. Decisions taken while drafting are written up in <a href="https://github.com/pkic/cbom/tree/main/decisions">decisions/</a>, one file per decision, stating the options considered and what reversing the decision would involve; a decision is superseded rather than deleted. Unresolved items are collected in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a> and mapped to the methodology aspect that tracks each one. A profile applies the same discipline to itself: the example baseline carries a changelog classifying each change as tightening, relaxing, or editorial, so that a producer can tell from the record whether a new version obliges further work.</p>
 
+  <h2>Stewardship of profiles and mappings</h2>
+  <p>Change control describes what happens when a profile is revised. Stewardship describes what happens over the years in which it is in use, and it is a separate question because a profile outlives the circumstances that produced it. A conformance claim made against a profile can be examined long after the group that wrote it has moved on, and the claim is only meaningful if the profile it cites is still obtainable in the form it had at the time.</p>
+  <p>Profiles and mappings need different treatment. A profile changes when its author decides to change it. A mapping changes because a carrier format changed, on a schedule nobody in this working group controls. That makes mapping maintenance a standing obligation and profile maintenance an occasional decision.</p>
+
+  <h3>Areas to be assigned</h3>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Area</th><th>What has to be settled</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Ownership</strong></td><td>Who maintains a profile after publication. A tiered arrangement is available: the working group owns the baseline, a sector body owns the profiles it derives, and the consortium maintains the register and the archive.</td></tr>
+      <tr><td><strong>Review cadence</strong></td><td>A stated review period, and a trigger on each carrier format release, so that a profile is examined on a schedule instead of when somebody notices a problem.</td></tr>
+      <tr><td><strong>Deprecation and withdrawal</strong></td><td>How a profile is retired, the minimum notice, and what becomes of claims that cite it. A withdrawn profile does not invalidate past claims, which were correct when made.</td></tr>
+      <tr><td><strong>Archive</strong></td><td>Every published version retained and served indefinitely, addressed by version. See below.</td></tr>
+      <tr><td><strong>Mapping maintenance</strong></td><td>Named responsibility for tracking each carrier format, and a method for recording that a stated limitation has been addressed upstream.</td></tr>
+      <tr><td><strong>Succession</strong></td><td>What happens when a working group closes or a sector body withdraws, including whether an unmaintained profile is transferred or marked dormant.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>The archive obligation</h3>
+  <p>A conformance claim cites a profile version so that the result can be reproduced. An auditor examining a claim years later needs the text of that version as it stood when the claim was made, because a later version may require different things. If published versions are not retained and served, every claim becomes unverifiable as soon as the profile moves on, and reproducibility is the property the whole conformance model depends on.</p>
+  <p>This places an obligation on whoever publishes a profile: retain every published version indefinitely, addressable by its version identifier, and do not alter a published version in place. A correction is issued as a new version. The requirement matches the treatment of superseded CBOM revisions described below, and for the same reason.</p>
+  <div class="banner warn">This obligation is currently unstated and is assumed by the conformance model. A profile published without a durable, versioned address undermines every claim that cites it, and the failure is silent: the claim looks valid until somebody tries to check it.</div>
+
+  <h3>Mappings track something the group does not control</h3>
+  <p>A mapping states where each attribute sits in a concrete format. When CycloneDX or SPDX publishes a release, the mapping may become incomplete, or a limitation the documentation records may cease to be true. Neither event is triggered by anything the working group does, so neither will be noticed unless somebody is watching. Assigning that responsibility, and deciding how a superseded limitation is recorded, is what keeps the documentation from asserting things about the formats that stopped being accurate two releases ago.</p>
+
+  <h3>Related open questions</h3>
+  <p>Several questions already recorded in the open questions register belong to stewardship and are best settled together rather than one at a time: who may publish under a consortium namespace and who maintains the register; whether a published profile is signed and by whom; who tracks the carrier formats; whether raising the tested carrier version obliges a profile version increment; and how long a producer has when a profile is tightened.</p>
+
   <h2>Distribution, retention, and immutability</h2>
   <p>Published CBOM revisions should be immutable: a correction or update is issued as a new revision rather than an in-place change, and superseding revisions replace, but do not delete, their predecessors. The registry governs access control and retention. Retention of superseded revisions provides the audit trail on which progress tracking and incident investigation depend.</p>
   <p>Immutability does not remove the obligation to correct. The minimum elements guidance expects organizations to accommodate updates to bill-of-materials data, including corrections, and expects authors to correct errors promptly. The two work together: the erroneous revision is retained for audit and a corrected revision supersedes it.</p>
@@ -203,7 +235,7 @@
 
   <div class="pagenav">
     <a href="versioning.html">← Versioning</a>
-    <a class="next" href="files.html">Next: Files →</a>
+    <a class="next" href="related-work.html">Next: Related Work →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>

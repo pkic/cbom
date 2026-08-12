@@ -19,6 +19,7 @@
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="data-exposure.html">Data Exposure</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="conformance.html">Conformance</a>
@@ -29,6 +30,7 @@
     <a href="formats.html" class="active">Formats</a>
     <a href="versioning.html">Versioning</a>
     <a href="governance.html">Governance</a>
+    <a href="related-work.html">Related Work</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
     <a href="../references/">References</a>
@@ -138,6 +140,7 @@
 
   <h2>Normalization</h2>
   <p>Normalization covers two separate questions: where a value is written in the document, and how the value itself is expressed. Both have to be settled before CBOMs from different producers can be compared. The second causes more difficulty in practice.</p>
+  <p>The mapping normalizes identity as well as encoding. Naming a canonical location settles where a value is read; it does not settle whether two documents that carry that value describe the same component, certificate, key, or interface. Where an identifier scheme exists the mapping can require it, as requirement I9 does for the implementing library and as the registry does for algorithms. Where no scheme exists, and for the producer-chosen <code>interfaceId</code> in particular, a mapping cannot supply an identity the formats do not define, so identity normalization is the harder of the two and the residual correlation is performed in the inventory. See <a href="challenges.html">Challenges</a>.</p>
 
   <h3>Why it matters</h3>
   <p>Every automated use of a CBOM depends on matching a value against something, whether a policy, a deprecation list, a vulnerability feed, or the same attribute in another CBOM. Those matches are exact. A value that means the right thing but is written differently will not match, and nothing in the process reports an error. A policy engine looking for AES-256-GCM that encounters <code>AES256</code> finds no match, and depending on how the rule is written it treats the interface either as compliant or as having no encryption at all. Both results are incorrect, and both look like ordinary output.</p>

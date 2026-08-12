@@ -48,6 +48,8 @@
       "reason": "The criteria behind such judgements change while the product does not. The profile records the facts they are derived from and leaves the judgement to external versioned policy. See decision 0002." },
     { "item": "Forward-looking capability and roadmap information",
       "reason": "This profile records present state. A consumer needing planning information uses a derived profile, such as the PQC migration example, which adds it." },
+    { "item": "Properties of the data carried over an interface, such as its confidentiality lifetime, its classification, or where the traffic runs",
+      "reason": "A vendor does not know what a customer will send through its product, and the same product carries public information at one site and long-lived personal records at another. These facts are known to the operator and belong to a deployment-scope profile. They are required to assess the harvest-now-decrypt-later threat, which the cryptography alone does not measure." },
     { "item": "Key material, secrets, and certificate private components",
       "reason": "Never disclosed in a bill of materials under any profile." }
   ],

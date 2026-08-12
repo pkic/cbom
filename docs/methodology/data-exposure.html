@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Data Exposure</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="terms.html">Terms</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="data-exposure.html" class="active">Data Exposure</a>
+    <a href="model.html">Model</a>
+    <a href="profile.html">Profile</a>
+    <a href="conformance.html">Conformance</a>
+    <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="method.html">Method</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="pqc-migration.html">PQC Migration</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="governance.html">Governance</a>
+    <a href="related-work.html">Related Work</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+    <a href="../references/">References</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">BACKGROUND</div>
+  <h1>Data exposure and the harvest-now-decrypt-later threat</h1>
+  <p class="lead">An adversary able to record encrypted traffic today can decrypt it once a cryptographically relevant quantum computer exists. The exposure this creates is not visible in the cryptography a CBOM currently discloses, because it depends on how long the data carried must remain confidential and on whether the traffic can be captured at all. This section sets out what has to be recorded to make that exposure assessable, and where those facts belong.</p>
+  <div class="banner warn">Illustrative. The attributes proposed here are a draft for working group discussion. They are not part of the example profiles, and the scope decision they rest on is recorded as an open question.</div>
+
+  <h2>What makes this threat different</h2>
+  <p>Most cryptographic risk is prospective. A weakness discovered in an algorithm affects the traffic protected by it from that point forward, and the remedy is to stop using it. This threat is retrospective. Traffic captured and stored today is decrypted years later, when the capability arrives, and no action taken at that point recovers the confidentiality of data that has already been recorded.</p>
+  <p>The consequence for planning is that the decision to migrate has to be taken before the capability exists, and the window in which the decision matters is closing while the estimate of when the capability arrives remains uncertain. An organization that waits for confirmation has already lost the traffic it was protecting.</p>
+  <p>The threat therefore applies unevenly. Data that ceases to be sensitive within a year is largely unaffected, because a recording made today has little value by the time it can be read. Data that must remain confidential for decades is exposed now, regardless of the algorithm protecting it, if that algorithm is one a quantum computer will break.</p>
+
+  <h2>Why the cryptography alone does not answer the question</h2>
+  <p>Consider two interfaces on two products. Both terminate TLS 1.3, both negotiate X25519 for key exchange and AES-256-GCM for encryption, and both authenticate with an RSA-2048 certificate. Against every attribute the baseline profile requires, the two are identical. Their exposure to this threat is not comparable.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 260" role="img" aria-label="Two panels showing interfaces with identical cryptography. The left carries a public status page over the internet with a confidentiality lifetime under one year and low exposure. The right carries clinical records over the internet with a lifetime over fifteen years and high exposure" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="20" y="30" width="320" height="200" rx="12" fill="#eefaf1" stroke="#15803d"/>
+      <rect x="380" y="30" width="320" height="200" rx="12" fill="#fdeeee" stroke="#dc2626"/>
+
+      <text x="180" y="54" fill="#14532d" text-anchor="middle" font-weight="700">Interface A</text>
+      <text x="540" y="54" fill="#7f1d1d" text-anchor="middle" font-weight="700">Interface B</text>
+
+      <text x="180" y="76" fill="#39424f" text-anchor="middle" font-size="11">public status page</text>
+      <text x="540" y="76" fill="#39424f" text-anchor="middle" font-size="11">clinical records</text>
+
+      <rect x="44" y="90" width="272" height="60" rx="8" fill="#ffffff" stroke="#c9d3e0"/>
+      <rect x="404" y="90" width="272" height="60" rx="8" fill="#ffffff" stroke="#c9d3e0"/>
+      <text x="180" y="110" fill="#5b6472" text-anchor="middle" font-size="10.5" font-family="monospace">TLS 1.3 · X25519</text>
+      <text x="180" y="126" fill="#5b6472" text-anchor="middle" font-size="10.5" font-family="monospace">AES-256-GCM · RSA-2048</text>
+      <text x="180" y="142" fill="#1a2230" text-anchor="middle" font-size="10.5" font-weight="600">identical disclosure</text>
+      <text x="540" y="110" fill="#5b6472" text-anchor="middle" font-size="10.5" font-family="monospace">TLS 1.3 · X25519</text>
+      <text x="540" y="126" fill="#5b6472" text-anchor="middle" font-size="10.5" font-family="monospace">AES-256-GCM · RSA-2048</text>
+      <text x="540" y="142" fill="#1a2230" text-anchor="middle" font-size="10.5" font-weight="600">identical disclosure</text>
+
+      <text x="44" y="176" fill="#5b6472" font-size="11">confidentiality lifetime</text>
+      <text x="316" y="176" fill="#14532d" text-anchor="end" font-size="11" font-weight="600">under 1 year</text>
+      <text x="404" y="176" fill="#5b6472" font-size="11">confidentiality lifetime</text>
+      <text x="676" y="176" fill="#7f1d1d" text-anchor="end" font-size="11" font-weight="600">over 15 years</text>
+
+      <text x="44" y="196" fill="#5b6472" font-size="11">exposure</text>
+      <text x="316" y="196" fill="#39424f" text-anchor="end" font-size="11">public internet</text>
+      <text x="404" y="196" fill="#5b6472" font-size="11">exposure</text>
+      <text x="676" y="196" fill="#39424f" text-anchor="end" font-size="11">public internet</text>
+
+      <text x="180" y="220" fill="#15803d" text-anchor="middle" font-size="11" font-weight="700">little affected</text>
+      <text x="540" y="220" fill="#dc2626" text-anchor="middle" font-size="11" font-weight="700">exposed today</text>
+
+      <text x="360" y="18" fill="#1a2230" text-anchor="middle" font-size="11" font-weight="600">the cryptography is the same; the exposure is not</text>
+    </svg>
+    <figcaption>Every attribute the baseline profile requires is identical across the two interfaces. What separates them is a property of the data, which no current profile records.</figcaption>
+  </figure>
+
+  <h2>The three quantities</h2>
+  <p>The assessment reduces to a comparison between three periods, in the formulation Mosca gives. Two of them describe the organization and one describes the world.</p>
+  <table>
+    <thead><tr><th>Quantity</th><th>Meaning</th><th>Known by</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Confidentiality lifetime</strong></td><td>How long the data carried must remain confidential after it is transmitted</td><td>The data owner, which is the operator and not the vendor</td></tr>
+      <tr><td><strong>Migration time</strong></td><td>How long it takes to move the interface to quantum-safe cryptography</td><td>Derived from vendor capability and operator capacity. The migration profile records the vendor half</td></tr>
+      <tr><td><strong>Time to capability</strong></td><td>How long until a cryptographically relevant quantum computer exists</td><td>Nobody. It is an estimate that changes with published research and national guidance</td></tr>
+    </tbody>
+  </table>
+  <p>Where the first two added together exceed the third, data being transmitted now will be readable before it stops being sensitive. The organization is already exposed, and the exposure grows with every day the interface continues to operate.</p>
+  <p>The methodology supplies the second quantity through the migration profile, which records what a capability requires and what is blocking it. It supplies nothing at all for the first. That is the gap this section addresses.</p>
+
+  <h2>Why these facts cannot sit in a product CBOM</h2>
+  <p>The confidentiality lifetime of the data crossing an interface is not a property of the product. A vendor shipping a device does not know what its customers will send through it, and the same product carries public information at one site and long-lived personal records at another. A requirement on the vendor to declare data sensitivity produces a refusal or a guess, and a guess is worse because it will be relied on.</p>
+  <p>The distinction that resolves this is already in the methodology. <a href="lifecycle.html">Lifecycle Data</a> separates a <strong>product CBOM</strong>, describing what a vendor ships, from a <strong>service or deployment CBOM</strong>, describing what an operator runs in a particular configuration. Facts about data belong to the second. A product CBOM describes an interface that is capable of carrying anything; a deployment CBOM describes an interface that carries something specific.</p>
+  <div class="banner warn">This is a scope rule and not a matter of emphasis. A profile that asks a vendor to classify the data flowing over an interface has asked for something the vendor cannot know, which is a defect in the profile under the procedure in <a href="method.html">Method</a>.</div>
+
+  <h2>Proposed attributes</h2>
+  <p>The following are candidates for a deployment-scope profile. Names follow the conventions in <a href="method.html">Method</a>, and each is a fact the operator can state rather than a judgement about the result.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Attribute</th><th>What it records</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>confidentialityLifetime</code></td>
+        <td>How long the data carried must remain confidential</td>
+        <td>Recorded in bands: under 1 year, 1 to 5 years, 5 to 15 years, over 15 years, indefinite. Bands are comparable between organizations, which specific durations and classification labels are not. This is the attribute the assessment depends on</td>
+      </tr>
+      <tr>
+        <td><code>exposure</code></td>
+        <td>Where the traffic runs</td>
+        <td>From a controlled vocabulary: <code>public-internet</code>, <code>partner-network</code>, <code>private-network</code>, <code>physical-local</code>. Determines whether interception at scale is plausible, which is what separates a real threat from a theoretical one</td>
+      </tr>
+      <tr>
+        <td><code>dataClassification</code></td>
+        <td>The operator's own classification of the data</td>
+        <td>Optional, and states the scheme it is drawn from. Classification labels are not comparable between organizations or jurisdictions, so this supports internal use and does not support aggregation across suppliers</td>
+      </tr>
+      <tr>
+        <td><code>retentionAtRest</code></td>
+        <td>Whether ciphertext is stored, and for how long</td>
+        <td>The threat applies to stored ciphertext as much as to captured traffic. A backup or archive interface may carry the higher exposure, and is easier to overlook because it is not a network connection</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p><code>confidentialityLifetime</code> carries most of the value. If the working group adopts one attribute from this list, that is the one, because it is the quantity the comparison needs and because the others qualify rather than supply it.</p>
+
+  <h3>Bands, and why not dates</h3>
+  <p>A date implies a precision the answer does not have. An operator asked how long clinical records must stay confidential will reasonably say decades, and a profile that demands a date invites either a fabricated one or an empty field. Bands also aggregate: a migration programme wants to know how many interfaces fall in the longest band, and that question is answerable across suppliers only if the bands are the same everywhere.</p>
+
+  <h2>What stays outside the CBOM</h2>
+  <p>The date at which a cryptographically relevant quantum computer is expected is not a fact about any product, and no CBOM should record it. It is an estimate that moves with published research and with national guidance, and a document that embedded it would be authoritative in appearance and wrong in substance within a year.</p>
+  <p>Under the treatment in <a href="policy-evaluation.html">Policy Evaluation</a>, that estimate is an input to external versioned policy. The resulting urgency ranking is a derived judgement, computed at the time of asking, carrying the policy version and the date it was applied. This is the same treatment the methodology already gives post-quantum posture, so the machinery exists and no new mechanism is required.</p>
+  <table>
+    <thead><tr><th>Held in</th><th>What it carries</th></tr></thead>
+    <tbody>
+      <tr><td>Deployment CBOM</td><td>Algorithms in use and supported, confidentiality lifetime, exposure, retention</td></tr>
+      <tr><td>External policy</td><td>The estimated arrival of the capability, and the thresholds that define urgency</td></tr>
+      <tr><td>The evaluation</td><td>An urgency ranking across interfaces, dated, citing the policy version</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Storage as well as transit</h2>
+  <p>Discussion of this threat usually assumes network capture, and the transit case is the clearer one. Stored ciphertext is exposed in the same way and by a shorter route, since an adversary that obtains a backup has the recording without needing to intercept anything. Storage interfaces are already within the model, and the <code>storage</code> value in the interface type vocabulary exists for them. A deployment profile addressing this threat should require them to be declared, and the <code>retentionAtRest</code> attribute is where the duration is recorded.</p>
+
+  <h2>Open points</h2>
+  <ul>
+    <li>Whether data attributes are accepted as deployment scope only, and excluded from product CBOMs. This is the decision the rest of the section rests on.</li>
+    <li>Where the band boundaries fall. The values above follow the periods that appear in published migration guidance, and the group may prefer others.</li>
+    <li>Whether <code>dataClassification</code> earns its place, given that it cannot be aggregated across organizations and the classification schemes it draws on are not public.</li>
+    <li>Whether storage interfaces need attributes of their own beyond retention.</li>
+    <li>Whether a deployment-scope profile should be written as an extension of the interface disclosure baseline or as an independent profile. The composition rules in <a href="profile.html">Profile</a> permit either.</li>
+  </ul>
+
+  <div class="banner">The cryptography an interface uses is not sufficient to assess this threat. What is missing is a property of the data, which the operator holds and the vendor cannot. Recording it at deployment scope, and leaving the threat estimate to external policy, keeps every fact in the document verifiable by the party that stated it.</div>
+
+  <div class="pagenav">
+    <a href="lifecycle.html">← Lifecycle Data</a>
+    <a class="next" href="model.html">Next: Model →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

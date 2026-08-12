@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Related Work</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+  <nav class="tabs">
+    <a href="index.html">Overview</a>
+    <a href="terms.html">Terms</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="data-exposure.html">Data Exposure</a>
+    <a href="model.html">Model</a>
+    <a href="profile.html">Profile</a>
+    <a href="conformance.html">Conformance</a>
+    <a href="policy-evaluation.html">Policy Evaluation</a>
+    <a href="method.html">Method</a>
+    <a href="use-cases.html">Use Cases</a>
+    <a href="pqc-migration.html">PQC Migration</a>
+    <a href="formats.html">Formats</a>
+    <a href="versioning.html">Versioning</a>
+    <a href="governance.html">Governance</a>
+    <a href="related-work.html" class="active">Related Work</a>
+    <a href="files.html">Files</a>
+    <a href="demo.html">Demo</a>
+    <a href="../references/">References</a>
+  </nav>
+</header>
+
+<main>
+  <div class="crumb">CONTEXT</div>
+  <h1>Related work</h1>
+  <p class="lead">Several efforts address adjacent parts of the same problem, and two of them sit within the PKI Consortium. This section describes how they relate to CBOM profiles, so that an adopter can tell which artifact answers which question and where one depends on another.</p>
+
+  <h2>PQC Maturity Model</h2>
+  <p>The <a href="https://pkic.org/wg/pqc/pqcmm/">PQC Maturity Model</a> is maintained by the PKI Consortium Post-Quantum Cryptography Working Group and is at version 1.0.1 at the time of writing. Unlike most maturity models, which assess an organization's internal posture, the PQCMM assesses products and services in the supply chain. That makes its subject the same as the subject of the interface model used here: a product treated from the outside, by a party that did not build it.</p>
+  <p>The model defines six cumulative levels. A product claiming a level satisfies every requirement of the levels below it.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Level</th><th>Summary</th><th>Bearing on this methodology</th></tr></thead>
+    <tbody>
+      <tr><td><strong>0</strong> None</td><td>No post-quantum capability implemented</td><td></td></tr>
+      <tr><td><strong>1</strong> Initial</td><td>Capabilities available for testing and evaluation</td><td>Corresponds to a <code>capabilityStatus</code> below <code>available</code> in the migration profile</td></tr>
+      <tr><td><strong>2</strong> Foundational</td><td>Production-ready and standards-conformant support</td><td>Corresponds to declared support in the migration profile's <code>Supported</code> attributes</td></tr>
+      <tr><td><strong>3</strong> Advanced</td><td>Cryptographic inventory, SBOM support, cryptographic agility</td><td>The inventory requirement is the subject of <a href="inventory.html">Inventory</a></td></tr>
+      <tr><td><strong>4</strong> Managed</td><td><strong>CBOM support</strong>, hybrid cryptography, zero-legacy capability</td><td>The dependency described below</td></tr>
+      <tr><td><strong>5</strong> Optimized</td><td>Post-quantum by default, benchmarked, certified implementations</td><td></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Where the two efforts meet</h3>
+  <p>PQCMM Level 4 requires CBOM support. It does not define what a CBOM must contain, and no such definition currently exists anywhere. An assessor evaluating a product against Level 4 therefore decides for itself what a sufficient CBOM looks like, and a vendor produces whatever satisfies the assessor in front of it. That is the ambiguity the PQCMM was created to remove from the phrase "quantum-ready", reappearing one level down in the phrase "CBOM support".</p>
+  <p>A profile is a definition of what a CBOM must contain for a stated purpose, expressed so that a document can be checked against it mechanically. That is what a level requirement of this kind needs if it is to be assessed consistently by different assessors.</p>
+  <div class="banner">This is a dependency rather than a general alignment. The two efforts are not competing descriptions of the same thing: one of them requires an artifact the other defines.</div>
+
+  <h3>How the two divide the work</h3>
+  <p>The complement is clean, and the architecture of this methodology already provides for it. <a href="policy-evaluation.html">Policy Evaluation</a> states that derived judgements are computed by external versioned policy from the facts a CBOM discloses, and names cryptographic maturity as one of its examples. The PQCMM is an instance of exactly that external policy.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th></th><th>PQC Maturity Model</th><th>CBOM profiles</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Question answered</strong></td><td>How ready is this product, on a scale of 0 to 5</td><td>Does this document disclose what the purpose requires</td></tr>
+      <tr><td><strong>Result</strong></td><td>A graded level, cumulative</td><td>A verdict per profile: conforms, does not conform, or refused</td></tr>
+      <tr><td><strong>Subject</strong></td><td>A product or service as named, released and shipped</td><td>One revision of one document</td></tr>
+      <tr><td><strong>Assessed by</strong></td><td>Self-assessment, or an accredited third-party assessor</td><td>A validator, mechanically</td></tr>
+      <tr><td><strong>Changes when</strong></td><td>The criteria are revised, or the product advances</td><td>The profile is revised, or a new document revision is produced</td></tr>
+      <tr><td><strong>Role</strong></td><td>Consumes the facts and forms a judgement</td><td>Specifies and supplies the facts</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The relationship runs one way. A maturity level is derived from disclosed facts, so a change in the criteria changes the level without any document changing. That is the property the separation exists to protect, and it is why the level is not recorded as a CBOM attribute. See the treatment of derived judgements in <a href="policy-evaluation.html">Policy Evaluation</a> and decision 0002 in the repository.</p>
+
+  <h3>Attributes that read as evidence</h3>
+  <p>The migration profile was developed from a consumer's planning questions and not from any maturity model. Several of its attributes nevertheless correspond to what an assessment at Levels 2 to 4 appears to require, which is a reasonable indication that the two are addressing the same subject matter.</p>
+  <table>
+    <thead><tr><th>Attribute</th><th>What an assessment could use it for</th></tr></thead>
+    <tbody>
+      <tr><td><code>keyExchangeSupported</code>, <code>authenticationSupported</code></td><td>Which post-quantum algorithms the product can be configured to use</td></tr>
+      <tr><td><code>coexistence</code></td><td>Whether hybrid operation is possible, which Level 4 requires</td></tr>
+      <tr><td><code>enablementMethod</code>, <code>minimumProductVersion</code></td><td>Whether a capability is available in a shipped release, and what a customer must do to reach it</td></tr>
+      <tr><td><code>capabilityStatus</code>, <code>blockedBy</code></td><td>Where a capability stands, and what is preventing it</td></tr>
+      <tr><td><code>implementationPurl</code></td><td>Which library provides the capability, which bears on agility and on zero-legacy claims</td></tr>
+      <tr><td><code>lifecycleStage</code></td><td>Whether a stated fact was intended, implemented, configured or observed, which determines how far the evidence goes</td></tr>
+    </tbody>
+  </table>
+  <p>The mapping above is offered as an observation and has not been agreed with the PQC Working Group. Establishing whether a conforming CBOM could serve as evidence for a PQCMM assessment is work for the two groups together.</p>
+
+  <h3>A difference to reconcile</h3>
+  <p>The two efforts treat external schemes differently, and both positions are correct for their purpose. The PQCMM references schemes such as CycloneDX and Package URL by name and takes whichever version is current, deliberately, so that the model does not age as those schemes are revised. This methodology pins carrier versions with a declared acceptance range, because a validator has to know which structures it can read before it evaluates anything. See <a href="versioning.html">Versioning</a>.</p>
+  <p>The two do not conflict. A maturity criterion asking whether a product supports CBOMs is satisfied by support for the scheme; a validator checking a specific document needs to know the version in front of it. Anyone reading both should not take the difference as a disagreement about how schemes are referenced.</p>
+
+  <h3>Timing</h3>
+  <p>A certification programme is planned, under which independent assessors validate vendor evidence and formal certificates are issued. It is targeted for announcement at the Post-Quantum Cryptography Conference in Amsterdam on 1 to 3 December 2026. Assessment practice for Level 4 will settle as that programme is designed. Work done before then can inform what CBOM support is taken to mean; work done afterwards will be reconciling with an interpretation already in use.</p>
+
+  <h2>PQC Capabilities Matrix</h2>
+  <p>The <a href="https://pkic.org/wg/pqc/pqccm/">PQC Capabilities Matrix</a> is a further output of the same working group, recording which products support which post-quantum capabilities. Its subject overlaps with the declared capability attributes of the migration profile. The relationship has not been examined and is recorded as an open question.</p>
+
+  <h2>PKI Maturity Model</h2>
+  <p>The <a href="https://pkic.org/wg/pkimm/">PKI Maturity Model</a> assesses an organization's PKI operation rather than a product, and includes a post-quantum category within a broader framework. It sits at a different level from both the PQCMM and this methodology. An operator may hold a mature PKI operation and deploy products with no post-quantum capability, and the reverse is equally possible, so the two assessments answer different questions about different subjects.</p>
+
+  <h2>What the working group is asked to decide</h2>
+  <ul>
+    <li>Whether to approach the PQC Working Group about a profile defining what CBOM support means for PQCMM Level 4. This is a commitment between working groups and not a drafting decision.</li>
+    <li>Whether a conforming CBOM should be proposed as evidence within a PQCMM assessment, and if so which profile.</li>
+    <li>Whether the relationship to the PQC Capabilities Matrix needs to be worked out before either effort publishes further.</li>
+  </ul>
+
+  <div class="banner warn">Descriptions of other efforts on this page summarise material published by those efforts at the time of writing and are not agreed positions of either working group. The linked sources are authoritative.</div>
+
+  <div class="pagenav">
+    <a href="governance.html">← Governance</a>
+    <a class="next" href="files.html">Next: Files →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</body>
+</html>

@@ -19,6 +19,7 @@
     <a href="challenges.html" class="active">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="data-exposure.html">Data Exposure</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="conformance.html">Conformance</a>
@@ -29,6 +30,7 @@
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
     <a href="governance.html">Governance</a>
+    <a href="related-work.html">Related Work</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
     <a href="../references/">References</a>
@@ -105,6 +107,23 @@
 
   <h3>10 · Versioning and legacy artifacts</h3>
   <p>Standards are revised (CycloneDX 1.6 to 1.7), profiles are tightened, and a product's CBOM is regenerated over time. Treating "older" as a single concept produces incorrect verdicts; the three version axes must be handled explicitly. See <a href="versioning.html">Versioning</a>.</p>
+
+  <h3>11 · Identifying the same asset across different tools</h3>
+  <p>An inventory is assembled from several sources: a vendor CBOM, a build-time scan, and a runtime discovery tool. Each names things in its own way, and for some classes of asset there is no agreed name at all. Where two records cannot be shown to describe the same asset, the inventory either counts one asset twice or merges two distinct assets into one, and neither error is reported by the process that produces it.</p>
+  <p>The difficulty is not uniform across asset classes. Some have an established identifier and require only that producers use it; others have none.</p>
+  <table>
+    <thead><tr><th>Asset class</th><th>Identity available today</th><th>Assessment</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Software components</strong></td><td>Package URL, and formerly CPE</td><td>Workable. Baseline rule I9 already requires the <code>pkg:</code> form for the implementing library.</td></tr>
+      <tr><td><strong>Certificates</strong></td><td>SHA-256 fingerprint of the DER encoding, or issuer and serial number</td><td>Workable, though tools disagree on which of the two to use, so a consumer may hold two records of one certificate.</td></tr>
+      <tr><td><strong>Keys</strong></td><td>No agreed identifier</td><td>The hard case. A public key can be thumbprinted; a private key held in a hardware module has only a local label or handle; and the same key material present in a module and in a backup is genuinely ambiguous.</td></tr>
+      <tr><td><strong>Algorithms</strong></td><td>Registry identifiers, of which several compete</td><td>An open question, and the subject of item 3 above.</td></tr>
+      <tr><td><strong>Interfaces</strong></td><td><code>interfaceId</code>, chosen by the producer and unconstrained by design</td><td>Undefined across documents. Nothing connects an interface record in one document to an interface record in another.</td></tr>
+    </tbody>
+  </table>
+  <p>The interface row is a consequence of a deliberate decision. The profile does not constrain <code>interfaceId</code>, so that profiles remain independent of any product's internal naming, and the cost of that independence is that the identifier carries no meaning outside the document containing it. A consumer should treat it as a label rather than as a stable cross-organization identifier. See <a href="formats.html">Formats</a>.</p>
+  <p>Correlation has to hold across tools and also across time. An inventory that cannot determine whether today's record describes the same interface as last quarter's cannot report migration progress, which is one of the stated use cases. The same requirement applies to any attempt to link several CBOMs into a picture of a deployment, because the linkage is expressed between identified assets. See <a href="inventory.html">Inventory</a>.</p>
+  <p>There is a constructive position available. A profile can require a particular identifier form, which is what baseline rule I9 does by requiring a <code>pkg:</code> Package URL for the implementing library. Generalized, identity requirements are a profile concern, and a profile intended to feed an inventory states which identifier form it requires for each asset class it covers. That converts a problem with no general solution into a decision taken once per profile. As with the other items in this section, the position described here is the position at the time of writing, and identifier schemes for the classes that lack one may yet be defined.</p>
 
   <div class="banner">These challenges reduce to a small number of requirements that a profile methodology is designed to satisfy: to bound the information that must be disclosed (profiling); to establish both how the information is encoded and what the disclosed values mean (normalization of encoding and of naming); and to represent lifecycle state and cryptographic relationships explicitly. Because the formats continue to develop, the methodology is deliberately kept separate from them. When a specification adds capability, the mapping is updated and the profile is unchanged.</div>
 

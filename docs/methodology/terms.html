@@ -19,6 +19,7 @@
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="data-exposure.html">Data Exposure</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="conformance.html">Conformance</a>
@@ -29,6 +30,7 @@
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
     <a href="governance.html">Governance</a>
+    <a href="related-work.html">Related Work</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
     <a href="../references/">References</a>
@@ -184,7 +186,10 @@
       <tr><td><strong>Fact</strong></td><td>Something a producer observes or declares, recorded in the CBOM.</td><td><a href="policy-evaluation.html">Policy Evaluation</a></td></tr>
       <tr><td><strong>Evaluation</strong><br><span class="na">also: derived judgement</span></td><td>A conclusion drawn from facts against criteria that change over time. Produced by an external policy at the time of asking and dated, never stored as a CBOM attribute.</td><td><a href="policy-evaluation.html">Policy Evaluation</a></td></tr>
       <tr><td><strong>Post-quantum posture</strong></td><td>An evaluation, not an attribute. Whether an interface's algorithms are considered quantum-safe, assessed against current guidance.</td><td><a href="policy-evaluation.html">Policy Evaluation</a></td></tr>
-      <tr><td><strong>Cryptographic maturity</strong></td><td>An evaluation, not an attribute, on the same basis as posture.</td><td><a href="policy-evaluation.html">Policy Evaluation</a></td></tr>
+      <tr><td><strong>Cryptographic maturity</strong></td><td>An evaluation, not an attribute, on the same basis as posture. The <a href="related-work.html">PQC Maturity Model</a> is an instance of this kind of external policy.</td><td><a href="policy-evaluation.html">Policy Evaluation</a></td></tr>
+      <tr><td><strong>Harvest now, decrypt later</strong></td><td>Capturing encrypted traffic or stored ciphertext now, to decrypt once a cryptographically relevant quantum computer exists. The exposure depends on how long the data must stay confidential, so it is not visible in the cryptography alone.</td><td><a href="data-exposure.html">Data Exposure</a></td></tr>
+      <tr><td><strong>Confidentiality lifetime</strong><br><span class="na">proposed</span></td><td>How long data carried over an interface must remain confidential after transmission. Recorded in bands so that it is comparable between organizations. A deployment-scope attribute, not a product one.</td><td><a href="data-exposure.html">Data Exposure</a></td></tr>
+      <tr><td><strong>Urgency ranking</strong></td><td>An evaluation, not an attribute. An ordering of interfaces by exposure to the harvest-now-decrypt-later threat, computed from disclosed facts and an external estimate of when the capability arrives.</td><td><a href="data-exposure.html">Data Exposure</a></td></tr>
     </tbody>
   </table>
 

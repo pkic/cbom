@@ -19,6 +19,7 @@
     <a href="challenges.html">Challenges</a>
     <a href="inventory.html" class="active">Inventory</a>
     <a href="lifecycle.html">Lifecycle Data</a>
+    <a href="data-exposure.html">Data Exposure</a>
     <a href="model.html">Model</a>
     <a href="profile.html">Profile</a>
     <a href="conformance.html">Conformance</a>
@@ -29,6 +30,7 @@
     <a href="formats.html">Formats</a>
     <a href="versioning.html">Versioning</a>
     <a href="governance.html">Governance</a>
+    <a href="related-work.html">Related Work</a>
     <a href="files.html">Files</a>
     <a href="demo.html">Demo</a>
     <a href="../references/">References</a>
@@ -98,6 +100,12 @@
     <figcaption>CBOMs and discovery data are normalized and correlated to form the cryptographic inventory, which then supports risk, compliance, migration, and the handling of supply-chain requests.</figcaption>
   </figure>
 
+  <h2>Correlating records from different sources</h2>
+  <p>The normalization step in the diagram above is drawn as a single box and carries most of the difficulty. Records arriving from a vendor CBOM, a build-time scan and a runtime discovery tool describe overlapping sets of things, and the inventory has to decide which records describe the same thing. Where it decides wrongly, it either counts one asset twice or merges two distinct assets, and neither error announces itself.</p>
+  <p>Identity is the hard part, and it varies by asset class. Software components have Package URL, which works when producers use it. Certificates can be identified by a fingerprint over the encoded form, though tools differ on whether they use that or the issuer and serial number. Keys have no agreed identifier at all: a public key can be thumbprinted, a private key held in a hardware module has only a local label, and the same key material present in a module and in a backup is genuinely ambiguous. Interfaces are the case this methodology creates for itself, since <code>interfaceId</code> is chosen by the producer and deliberately unconstrained, so it carries no meaning outside the document containing it. See <a href="challenges.html">Challenges</a>.</p>
+  <p>Correlation also has to hold across time. Tracking migration progress means comparing this quarter's record against last quarter's, and an inventory that cannot tell whether two records describe the same interface reports movement that did not happen and misses movement that did.</p>
+  <p>A profile is the available lever. A profile can require a particular identifier form for each asset class it covers, which is what baseline rule I9 already does by requiring a <code>pkg:</code> Package URL for the implementing library. An organization that specifies the identifier forms its suppliers must use has converted a problem with no general solution into a procurement requirement it can check mechanically. That does not solve the classes with no scheme, and it removes the classes that have one from the correlation problem entirely.</p>
+
   <h2>Extracting a CBOM from the inventory</h2>
   <p>The inventory is a source of CBOMs as well as a destination for them. A CBOM can be extracted from the inventory to serve a specific consumer. That consumer may be internal, such as a security or architecture team that needs a description of the cryptography in a given system, or external, such as a client, an auditor, or a regulator. A common external case is a supply-chain request, where a customer or partner asks the organization for a CBOM covering a product or service it supplies.</p>
   <p>An extracted CBOM is a scoped snapshot of the inventory. It is generated for a defined subject, such as a product, a service, or a bounded part of the estate. It is filtered to the content the consumer needs, redacted where confidentiality requires it, marked with its provenance (the inventory revision and the time it was drawn from), and signed where appropriate. See <a href="governance.html">Governance</a>.</p>
@@ -141,6 +149,74 @@
   <p>A <strong>central inventory</strong> holds the collected data in one place. Data is gathered from across the estate, normalized on the way in, and queried centrally. Queries that span the estate are straightforward, and normalization happens once. The cost is that the central store must be kept current, and it can become a bottleneck for teams that own the underlying systems.</p>
   <p>A <strong>distributed inventory</strong> leaves the data with the business units, subsidiaries, or regions that own it. Each maintains its own inventory, and estate-wide questions are answered by querying across them or by collecting summaries. This suits organizations where ownership is already devolved, or where data residency or confidentiality rules prevent detail from being pooled. The difficulty is that each participant may normalize differently, so an estate-wide answer is only as good as the agreement between them.</p>
   <p>A common middle position is a federated arrangement: detail stays local, while an agreed subset is published upward for estate-wide reporting. This is where a profile earns its place. If every participant validates against the same profile, the published subsets are comparable even though the underlying inventories are separate and independently run. The profile defines the common denominator, and normalization is applied by each participant rather than once at the centre. Mergers, acquisitions, and outsourced operations tend to push organizations toward this arrangement whether or not it was planned.</p>
+
+  <h2>End-to-end posture across a deployment</h2>
+  <p>A recurring question is how CBOMs are linked to show the posture of a whole transaction path rather than of one product. The answer is that no CBOM can show it, and that assembling it is a function of the inventory.</p>
+  <p>A CBOM describes one subject's boundary. It does not know what sits on the other side of any of its interfaces, and it cannot: the same product is deployed into a different topology at every site, and a document that named its peers would be describing one deployment. That is the same instance-independence constraint that keeps profiles applicable to any product. A product CBOM that carried topology would no longer be a product CBOM.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 290" role="img" aria-label="A four-node transaction path from client through content delivery network and gateway to a service, with three hops. The middle hop is marked classical only and identified as the constraint. A separate bracket shows a signature relationship spanning the whole path. Below, four CBOM documents feed an inventory that holds the topology" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="20" y="52" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"/>
+      <rect x="210" y="52" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"/>
+      <rect x="400" y="52" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"/>
+      <rect x="590" y="52" width="110" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"/>
+      <text x="80" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">Client</text>
+      <text x="270" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">CDN</text>
+      <text x="460" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">Gateway</text>
+      <text x="645" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">Service</text>
+
+      <line x1="140" y1="73" x2="210" y2="73" stroke="#0f7a52" stroke-width="2"/>
+      <line x1="330" y1="73" x2="400" y2="73" stroke="#dc2626" stroke-width="2"/>
+      <line x1="520" y1="73" x2="590" y2="73" stroke="#0f7a52" stroke-width="2"/>
+      <text x="175" y="42" fill="#0f7a52" text-anchor="middle" font-size="10">hybrid ML-KEM</text>
+      <text x="365" y="42" fill="#dc2626" text-anchor="middle" font-size="10" font-weight="700">classical only</text>
+      <text x="555" y="42" fill="#0f7a52" text-anchor="middle" font-size="10">hybrid ML-KEM</text>
+      <text x="365" y="28" fill="#dc2626" text-anchor="middle" font-size="10">the constraint</text>
+
+      <line x1="80" y1="112" x2="645" y2="112" stroke="#6d28d9" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <line x1="80" y1="106" x2="80" y2="118" stroke="#6d28d9" stroke-width="1.5"/>
+      <line x1="645" y1="106" x2="645" y2="118" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="362" y="128" fill="#6d28d9" text-anchor="middle" font-size="10.5">signature relationship, spanning every hop</text>
+
+      <rect x="20" y="160" width="90" height="30" rx="6" fill="#ffffff" stroke="#2563eb"/>
+      <rect x="210" y="160" width="90" height="30" rx="6" fill="#ffffff" stroke="#2563eb"/>
+      <rect x="400" y="160" width="90" height="30" rx="6" fill="#ffffff" stroke="#2563eb"/>
+      <rect x="590" y="160" width="90" height="30" rx="6" fill="#ffffff" stroke="#2563eb"/>
+      <text x="65" y="180" fill="#2563eb" text-anchor="middle" font-size="10.5" font-family="monospace">CBOM</text>
+      <text x="255" y="180" fill="#2563eb" text-anchor="middle" font-size="10.5" font-family="monospace">CBOM</text>
+      <text x="445" y="180" fill="#2563eb" text-anchor="middle" font-size="10.5" font-family="monospace">CBOM</text>
+      <text x="635" y="180" fill="#2563eb" text-anchor="middle" font-size="10.5" font-family="monospace">CBOM</text>
+
+      <g stroke="#c9d3e0" stroke-width="1.5" fill="none">
+        <line x1="65" y1="190" x2="300" y2="222"/>
+        <line x1="255" y1="190" x2="330" y2="222"/>
+        <line x1="445" y1="190" x2="390" y2="222"/>
+        <line x1="635" y1="190" x2="420" y2="222"/>
+      </g>
+
+      <rect x="200" y="224" width="320" height="48" rx="10" fill="#f2f6fc" stroke="#2563eb"/>
+      <text x="360" y="244" fill="#1a2230" text-anchor="middle" font-weight="700">Cryptographic inventory</text>
+      <text x="360" y="262" fill="#5b6472" text-anchor="middle" font-size="10.5">holds the topology; computes posture over the path</text>
+
+      <text x="20" y="212" fill="#5b6472" font-size="10">each product declares only its own boundary</text>
+    </svg>
+    <figcaption>Each CBOM describes one boundary and cannot see the path. The inventory holds the topology, which is deployment knowledge, and the posture of the path is computed from the two together.</figcaption>
+  </figure>
+
+  <h3>What linking requires</h3>
+  <p>Three things are needed, and the methodology currently defines none of them.</p>
+  <ul>
+    <li><strong>Stable identity for the things being linked.</strong> A link is expressed between identified endpoints, and the interface identifier carries no meaning outside its own document. This is the correlation problem described above, and it is the first blocker.</li>
+    <li><strong>A topology record.</strong> Something has to state that this product's interface connects to that product's interface. Only the operator knows that, and it changes when the deployment changes rather than when any product changes.</li>
+    <li><strong>A rule for composing posture along a path.</strong> Given the hops and their cryptography, what is the posture of the whole.</li>
+  </ul>
+
+  <h3>Composition is not simply the weakest hop</h3>
+  <p>For protection in transit, the weakest hop governs: a path is only as protected as its least protected segment, and the diagram above shows a path where two strong hops are made irrelevant by one classical hop in the middle. The <a href="model.html">Model</a> section works through why, and also why the rule does not generalize. Relationships overlap a path instead of partitioning it. A signature applied by the originator and verified by the service spans every hop at once, so its algorithm is not affected by any individual segment, and a path that is adequately protected in transit may still carry a signature that a quantum computer will forge. Composing posture therefore means composing per-relationship, and the relationships have different extents.</p>
+
+  <h3>Where this leaves the methodology</h3>
+  <p>End-to-end posture is an inventory function. CBOMs supply the facts about each boundary, the inventory supplies the topology, and the composition is computed and dated in the same way as any other derived judgement described in <a href="policy-evaluation.html">Policy Evaluation</a>. A service or deployment CBOM extracted from the inventory can legitimately carry linkage, because it describes instances, and the distinction between a product CBOM and a deployment CBOM in <a href="lifecycle.html">Lifecycle Data</a> is what makes that possible without breaking product independence.</p>
+  <div class="banner warn">Whether the methodology should define a topology record itself, or state that it is out of scope and leave it to inventory tooling, has not been decided. Defining one would extend the methodology beyond describing documents; leaving it undefined means every organization builds its own and estate-wide comparison remains out of reach.</div>
 
   <h2>Context data that is not itself cryptographic</h2>
   <p>A cryptographic inventory that records only cryptography is difficult to act on. Knowing that a service negotiates X25519 says nothing about whether that matters. Deciding whether it matters, and how urgently, depends on data that is not cryptographic at all and usually already exists elsewhere in the organization.</p>
