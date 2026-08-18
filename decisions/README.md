@@ -12,12 +12,26 @@ captures one decision; the discussion behind it lives in the linked issue.
 4. A decision is never deleted. If it is reversed, add a new record and set the old one's
    status to `Superseded by NNNN`.
 
+## Records drafted ahead of a decision
+
+Records 0001 to 0007 were written from choices taken while building the worked example in
+`docs/methodology/`. They are marked **Proposed** rather than Accepted: each one is already
+implemented in the example artifacts, so the group is being asked to ratify or reverse a
+position that exists in the drafting, not to decide in the abstract. Reversing one means
+changing the example, and the Consequences section of each record says what that would involve.
+
 ## Index
 
 | # | Title | Aspect | Status | Date |
 |---|---|---|---|---|
-| — | _none yet_ | — | — | — |
+| [0001](./0001-product-independent-profile-rules.md) | Profile rules are product- and instance-independent | 3.1 | Proposed | 2026-08-07 |
+| [0002](./0002-facts-in-cbom-judgements-in-policy.md) | A CBOM records facts; judgements are made by external policy | 3.3 | Proposed | 2026-08-07 |
+| [0003](./0003-three-state-disclosure-model.md) | Absence is distinguished from withholding | 3.4 | Proposed | 2026-08-07 |
+| [0004](./0004-monotonic-profile-extension.md) | A derived profile may add and tighten, never relax | 3.9 | Proposed | 2026-08-07 |
+| [0005](./0005-attribute-naming-conventions.md) | Attribute names state what is disclosed, not what it implies | 3.7 | Proposed | 2026-08-07 |
+| [0006](./0006-carrier-acceptance-range.md) | A profile declares the carrier versions it accepts | 3.2 | Proposed | 2026-08-07 |
+| [0007](./0007-availability-as-status-and-blocker.md) | Forward-looking capability is stated as a status and a blocker, not a date | 3.10 | Proposed | 2026-08-07 |
 
 <!-- Add a row per decision, newest at the bottom:
-| 0001 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |
+| 0008 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |
 -->
