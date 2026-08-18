@@ -1,1 +1,8 @@
 *:Zone.Identifier
+
+# Jekyll build output and local tooling. docs/README.md tells contributors to
+# run `bundle exec jekyll serve`, which produces all of these.
+docs/_site/
+docs/.jekyll-cache/
+.bundle/
+vendor/
