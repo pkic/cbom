@@ -71,7 +71,7 @@ For a deployment-scope profile only. Names follow the existing conventions.
 | Attribute | Purpose | Notes |
 |---|---|---|
 | `confidentialityLifetime` | How long the data carried must remain confidential | The input the threat model needs. Bands rather than dates: under 1 year, 1 to 5, 5 to 15, over 15, indefinite. Bands are comparable across organisations in a way that classification labels are not |
-| `exposure` | Where the traffic runs | `public-internet`, `partner-network`, `private-network`, `physical-local`. Determines whether interception at scale is plausible, which is what makes harvesting a real threat rather than a theoretical one |
+| `exposure` | Where the traffic runs | `public-internet`, `partner-network`, `private-network`, `physical-local`. Determines whether interception at scale is plausible, and so whether harvesting is a practical concern |
 | `dataClassification` | The operator's own classification | Optional, and must name the scheme it comes from. Classification labels are not comparable between organisations or jurisdictions, so this supports internal use and not aggregation |
 | `retentionAtRest` | Whether ciphertext is stored, and for how long | Harvesting applies to stored ciphertext as much as to captured traffic. A storage interface may be the higher risk |
 
@@ -137,13 +137,13 @@ stated use cases.
 
 Three places, in order of importance.
 
-1. **Challenges** — a new numbered challenge, with a short subsection. This is where the existing
+1. **Challenges.** A new numbered challenge, with a short subsection. This is where the existing
    limitations are catalogued and where a reader will look for it. Mark it as a current
    observation, consistent with how the rest of that section is framed.
-2. **Inventory** — expand the normalisation and correlation step. The first diagram already shows
+2. **Inventory.** Expand the normalisation and correlation step. The first diagram already shows
    several sources feeding a normalisation stage, and that stage is where this problem lives. It
    is currently drawn as a box with no discussion of what it has to do.
-3. **Formats** — a paragraph noting that the mapping normalises identity as well as encoding, and
+3. **Formats.** A paragraph noting that the mapping normalises identity as well as encoding, and
    that identity normalisation is the harder of the two.
 
 There is also a constructive answer worth stating: a profile can require a particular identifier
@@ -186,7 +186,7 @@ PQCMM Level 4 requires CBOM support and does not define what a CBOM must contain
 precisely the gap this working group exists to fill. Until it is filled, each assessor decides for
 itself what CBOM support means, and vendors will produce whatever satisfies the assessor in front
 of them. That is the same ambiguity PQCMM was created to remove from the phrase "quantum-ready",
-reappearing one level down.
+and it reappears one level down.
 
 The complement is clean, and the methodology has already provided for it. The Policy Evaluation
 section states that derived judgements, naming cryptographic maturity as an example, are computed
@@ -259,9 +259,9 @@ three things the methodology has not defined.
    wrong for anything spanning the path, and the section already has the worked examples to show
    why.
 
-The honest answer is that end-to-end posture is an **inventory function**, not a CBOM function.
-CBOMs supply per-node facts; the inventory supplies the topology; the composition is computed and
-dated, like any other derived judgement.
+End-to-end posture is an **inventory function**, not a CBOM function. CBOMs supply per-node
+facts; the inventory supplies the topology; the composition is computed and dated, like any other
+derived judgement.
 
 ### Steps
 
@@ -335,9 +335,9 @@ A new part of the Governance section, "Stewardship of profiles and mappings", co
   superseded limitation is recorded.
 - **Succession.** What happens when a working group closes or a sector body withdraws.
 
-Worth noting that PQCMM publishes a version history and describes itself as actively maintained
-with community editing. Whatever this group decides should not contradict how a sibling effort in
-the same consortium operates.
+PQCMM publishes a version history and describes itself as actively maintained with community
+editing. Whatever this group decides should not contradict how a sibling effort in the same
+consortium operates.
 
 ### Steps
 

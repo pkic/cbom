@@ -48,8 +48,8 @@ my inference from how we built the example, not an agreed position.
 ## Workstream 2 — Terminology reconciliation
 
 **Finding.** The baseline profile uses `keyExchange`, `encryption`, `authentication`. The PQC
-Migration profile uses `keyExchangeCurrent` and `keyExchangeSupported`. One concept, two names,
-depending on the section.
+Migration profile uses `keyExchangeCurrent` and `keyExchangeSupported`. The same concept has two
+names, depending on the section.
 
 **Work.** Settle a convention and apply it everywhere. The proposal: a bare attribute name
 denotes present state, and a `*Supported` suffix denotes declared capability. Under that rule

@@ -82,7 +82,7 @@ acceptable values, and more specific identifiers permitted.
 
 ### 2.1 Positions it supports
 
-Four of our existing positions now have authority behind them, which changes how we can argue
+Five of our existing positions now have authority behind them, which changes how we can argue
 them rather than what we say.
 
 **Multiple formats, not one target format.** We revised the challenges page recently to say
@@ -128,7 +128,7 @@ This interacts with our inventory page, which already discusses redaction when a
 extracted for an external consumer. Redaction is exactly the withheld case. We describe the
 practice but provide no way to record it in the document.
 
-### 2.3 A tension worth addressing rather than avoiding
+### 2.3 A tension to address
 
 The Coverage element states that there is no minimum depth and that all components, including
 transitive dependencies, should be included. Our challenges page argues that exhaustive

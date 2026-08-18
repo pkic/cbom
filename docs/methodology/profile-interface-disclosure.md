@@ -144,7 +144,7 @@ reasonably decline to publish the version of an implementing library while still
 disclosure objective. Other profiles will make different choices, and a procurement profile may
 permit no withholding at all.
 
-The combination of level and withholdability is what determines whether the disclosure model
+The combination of level and withholdability determines whether the disclosure model
 affects a verdict. Withholding can only change an outcome on a MUST rule, because a SHOULD rule
 does not decide conformance in the first place. Until v0.3 this profile held I9 at SHOULD while
 marking it withholdable, so the flag was inert and the model was visible only in the report. I9
@@ -208,7 +208,8 @@ numbers are the profile's own and are independent of the carrier version.
 
 The first change exists because of what the comparison in §4.3 describes: no rule in either
 example profile combined MUST with withholdability, and that is the only combination in which
-withholding alters a verdict. The disclosure model was being described rather than exercised.
+withholding alters a verdict. The disclosure model was therefore stated in the profile without
+being applied by any rule.
 
 The derived PQC migration profile pins v0.3 and tightens I9 by removing its withholdability, the
 level being already MUST. Under decision 0004 that tightening is permitted; a subsequent baseline

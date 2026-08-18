@@ -24,7 +24,7 @@ nav: policyeval
 <main>
   <div class="crumb">CONCEPT</div>
   <h1>Policy evaluation</h1>
-  <p class="lead">A CBOM records facts. A judgement about those facts — for example, whether an interface is post-quantum-safe — is a separate matter. Such judgements should be produced by an external policy applied to the facts at evaluation time, rather than stored as attributes within the CBOM, because the criteria on which they depend change over time.</p>
+  <p class="lead">A CBOM records facts. A judgement about those facts (for example, whether an interface is post-quantum-safe) is a separate matter. Such judgements should be produced by an external policy applied to the facts at evaluation time, rather than stored as attributes within the CBOM, because the criteria on which they depend change over time.</p>
 
   <h2>Facts versus evaluations</h2>
   <p>A CBOM states <strong>facts</strong>: the protocols, versions, algorithms, key material, and certificate signature algorithms an interface uses. These are primary data, observed or declared by the producer.</p>
@@ -64,7 +64,7 @@ nav: policyeval
   <h2>Why the evaluation must be external to the data</h2>
   <p>If a derived value such as post-quantum posture is stored as an attribute within the CBOM, three problems follow:</p>
   <ul>
-    <li><strong>The value becomes stale.</strong> When the criteria change — for example, when an algorithm is reclassified — the stored value no longer reflects current guidance, yet the CBOM presents it as though it did.</li>
+    <li><strong>The value becomes stale.</strong> When the criteria change (for example, when an algorithm is reclassified), the stored value no longer reflects current guidance, yet the CBOM presents it as though it did.</li>
     <li><strong>Producers evaluate inconsistently.</strong> Different producers, applying different or outdated criteria, record different verdicts for equivalent facts, which prevents comparison.</li>
     <li><strong>The record and the judgement are conflated.</strong> A CBOM is intended to be a durable record of facts. Embedding a time-dependent judgement in it undermines that role.</li>
   </ul>

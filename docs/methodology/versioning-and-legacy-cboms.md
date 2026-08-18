@@ -3,7 +3,7 @@
 > **Status:** Illustrative design note for the PKIC CBOM Profiles Working Group.
 > Descriptive; not normative. Uses the nginx interface-disclosure example.
 
-The term "older CBOM files" is ambiguous until the versions that change independently are
+The term "older CBOM files" is ambiguous until the versions it may refer to are
 separated. Three items each carry a version, and each changes independently.
 
 ## 1. Three version axes
@@ -11,15 +11,15 @@ separated. Three items each carry a version, and each changes independently.
 | Axis | Example | Owner | Changes when |
 |---|---|---|---|
 | **Carrier format** | CycloneDX `specVersion` 1.6 → **1.7** | CycloneDX / Ecma (ECMA-424) | the SBOM/CBOM standard is revised |
-| **Profile** | `interface-disclosure` v0.1 → v0.2 | the profile author (PKIC or a sector) | the requirements change |
+| **Profile** | `interface-disclosure` v0.2 → v0.3 | the profile author (PKIC or a sector) | the requirements change |
 | **CBOM content revision** | a product's CBOM `version` / `serialNumber` over time | the CBOM producer | the product or a re-scan changes |
 
 Conflating these axes is a common error. A CBOM may be current on one axis and older on
 another: a newly generated CBOM (a new content revision) may still be serialized in
-CycloneDX 1.6 (an older carrier) and evaluated against profile v0.2 (newer rules).
+CycloneDX 1.6 (an older carrier) and evaluated against profile v0.3 (newer rules).
 
 A conformance claim must reference all three: for example, "conforms to `interface-disclosure`
-v0.1, evaluated against a CycloneDX 1.7 CBOM, content revision 3." A claim that omits any of
+v0.3, evaluated against a CycloneDX 1.7 CBOM, content revision 3." A claim that omits any of
 the three is not reproducible.
 
 ## 2. Carrier-format version (the CycloneDX 1.6 to 1.7 case)
@@ -34,7 +34,7 @@ rules file:
 "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } }
 ```
 
-The validator (`validate_cbom.py`, `check_format`) applies a three-band policy:
+The validator (`validate_cbom.py`, `check_format`) applies a four-band policy:
 
 | CBOM `specVersion` | Band | Behaviour |
 |---|---|---|
@@ -106,7 +106,7 @@ evaluated against the profile in force at the time. This is handled as any polic
 ## 6. Content-revision change (staleness)
 
 The CBOM's own `version`, `serialNumber`, and `timestamp` sequence constitutes the audit trail
-on which the PQC progress-tracking use case relies. Two straightforward controls apply:
+on which the PQC progress-tracking use case relies. Two controls apply:
 
 - **Freshness policy:** a consumer may require the CBOM `timestamp` to be within a defined
   interval of the artifact it describes, and otherwise emit a warning; a syntactically valid

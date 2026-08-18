@@ -24,7 +24,7 @@ by a CycloneDX CBOM, an SPDX document, or a future format, provided that a mappi
 
 Three considerations shape the mapping:
 
-1. CycloneDX provides a native cryptographic object model — `cryptographic-asset` components
+1. CycloneDX provides a native cryptographic object model: `cryptographic-asset` components
    with `cryptoProperties`. Most asset attributes correspond to first-class fields.
 2. SPDX 3.0.1 provides no dedicated cryptographic object model. Common practice is to express
    the CBOM in CycloneDX and reference it from the SPDX SBOM as an external artifact. SPDX is
@@ -64,10 +64,10 @@ There is no native object representing the set of interfaces; the count is deriv
 ## Interpretation of the columns
 
 In CycloneDX, the cryptographic assets (I1–I5 and the provider in I9) are represented in
-native fields, which is an area of strength for the format. The interface-level classifiers on
-which the profile depends — `interfaceType` (I7), endpoint roles (I6), and lifecycle stage (I8)
-— have no native field and are carried in `component.properties` under the
-`pkic:profile:` namespace. The `interfaceType` attribute is what makes product rule P2
+native fields, which is an area of strength for the format. The profile also depends on
+interface-level classifiers: `interfaceType` (I7), endpoint roles (I6), and lifecycle stage
+(I8). These have no native field and are carried in `component.properties` under the
+`pkic:profile:` namespace. The `interfaceType` attribute makes product rule P2
 evaluable; without an agreed means of indicating which interface is the management interface, a
 profile cannot require that one exist.
 

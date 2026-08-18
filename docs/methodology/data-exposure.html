@@ -88,8 +88,8 @@ nav: dataexp
 
   <h2>Two kinds of data, with different owners</h2>
   <p>Which party can state these facts depends on which kind of data an interface carries, and the answer is not the same for every interface.</p>
-  <p><strong>Conveyed payload</strong> is whatever the customer chooses to send. A vendor shipping a device does not know what that will be, and the same product carries public information at one site and long-lived personal records at another. A requirement on the vendor to classify it produces a refusal or a guess, and a guess is worse because it will be relied on.</p>
-  <p><strong>Intrinsic data</strong> is what an interface must carry in order to function, and the vendor knows precisely what it is because the vendor designed the interface. A management interface carries administrative credentials. A key management interface carries key material. An update channel carries a signed image and the signature verifying it. An enrolment interface carries device identity and private key material.</p>
+  <p><strong>Conveyed payload</strong> is whatever the customer chooses to send. A vendor shipping a device does not know what that will be, and the same product carries public information at one site and long-lived personal records at another. A requirement on the vendor to classify it produces a refusal or a guess, and the latter is worse because it will be relied on.</p>
+  <p><strong>Intrinsic data</strong> is what an interface must carry to function, and the vendor knows precisely what it is because the vendor designed the interface. A management interface carries administrative credentials. A key management interface carries key material. An update channel carries a signed image and the signature verifying it. An enrolment interface carries device identity and private key material.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Interface</th><th>What it necessarily carries</th><th>Stated by</th></tr></thead>
@@ -104,7 +104,7 @@ nav: dataexp
   </div>
 
   <h3>The intrinsic case carries the worse exposure</h3>
-  <p>It would be convenient if the vendor-knowable half were the less important one. It is the opposite.</p>
+  <p>The exposure in the vendor-knowable half is the greater of the two.</p>
   <p>Take a management session protected by a classical key exchange, carrying a device credential. An adversary records the session now and decrypts it in 2035. If that credential is a certificate with a twenty-year validity, or a key held in hardware that cannot be rotated in the field, the adversary does not obtain stale information. It obtains a working secret. The confidentiality lifetime of that payload equals the lifetime of the credential, and the vendor knows that lifetime because the vendor chose it.</p>
   <p>Ordinary business information loses sensitivity as it ages, which is what makes short confidentiality lifetimes tolerable. Credentials and key material do not, and may still be live when the recording is read. A model that admits only operator knowledge discards the half of the problem where the consequences are most serious.</p>
 
@@ -126,7 +126,7 @@ nav: dataexp
       <tr>
         <td><code>exposure</code></td>
         <td>Where the traffic runs</td>
-        <td>From a controlled vocabulary: <code>public-internet</code>, <code>partner-network</code>, <code>private-network</code>, <code>physical-local</code>. Determines whether interception at scale is plausible, which is what separates a real threat from a theoretical one</td>
+        <td>From a controlled vocabulary: <code>public-internet</code>, <code>partner-network</code>, <code>private-network</code>, <code>physical-local</code>. Determines whether interception at scale is plausible</td>
       </tr>
       <tr>
         <td><code>dataClassification</code></td>
@@ -170,7 +170,7 @@ nav: dataexp
     <li>Whether a deployment-scope profile should be written as an extension of the interface disclosure baseline or as an independent profile. The composition rules in <a href="profile.html">Profile</a> permit either.</li>
   </ul>
 
-  <div class="banner">The cryptography an interface uses is not sufficient to assess this threat. What is missing is a property of the data, which the operator holds and the vendor cannot. Recording it at deployment scope, and leaving the threat estimate to external policy, keeps every fact in the document verifiable by the party that stated it.</div>
+  <div class="banner">The cryptography an interface uses is not sufficient to assess this threat. The missing information is a property of the data, and which party can state it depends on the kind of data: the vendor knows what an interface must carry in order to function, and only the operator knows what is sent across it. Recording each at the scope where it is known, and leaving the threat estimate to external policy, keeps every fact in the document verifiable by the party that stated it.</div>
 
   <div class="pagenav">
     <a href="lifecycle.html">← Lifecycle Data</a>
