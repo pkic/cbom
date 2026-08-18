@@ -1,0 +1,21 @@
+{%- comment -%}
+Section navigation for the methodology. Rendered from _data/methodology_nav.yml.
+
+The page marks itself current by setting 'nav:' in its front matter to the 'id'
+of its entry in the data file.
+
+Layout: a sticky left rail on wide screens, and a plain grouped block above the
+content on narrow ones. Styling is in methodology/styles.css under "section
+navigation". No JavaScript is involved, so the navigation works with scripting
+disabled and degrades to a list.
+{%- endcomment -%}
+<aside class="sidenav" aria-label="Methodology sections">
+  {%- for grp in site.data.methodology_nav %}
+  <div class="sidenav-group">{{ grp.group }}</div>
+  <ul>
+    {%- for item in grp.items %}
+    <li><a href="{{ item.url }}"{% if page.nav == item.id %} class="active" aria-current="page"{% endif %}>{{ item.title }}</a></li>
+    {%- endfor %}
+  </ul>
+  {%- endfor %}
+</aside>

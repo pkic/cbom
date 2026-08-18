@@ -53,11 +53,39 @@ header.site{background:rgba(255,255,255,.86);backdrop-filter:saturate(180%) blur
 .hback{margin-left:auto;font-size:13.5px;color:var(--muted)}
 .hback:hover{color:var(--accent)}
 
+/* Legacy flat tab bar. Retained so that any page not yet converted to the
+   shared navigation include still renders. Remove once none remain. */
 nav.tabs{display:flex;flex-wrap:wrap;gap:4px;max-width:1080px;margin:8px auto 0;padding:0 18px}
 nav.tabs a{font-size:14px;color:var(--muted);font-weight:500;padding:9px 11px;
   border-radius:8px 8px 0 0;border-bottom:2px solid transparent;line-height:1}
 nav.tabs a:hover{background:var(--line-soft);text-decoration:none;color:var(--ink)}
 nav.tabs a.active{color:var(--accent-ink);border-bottom-color:var(--accent);font-weight:600}
+
+/* section navigation
+   Twenty sections presented as a flat tab bar exceeded what a reader can scan,
+   and wrapped to several rows on narrow screens. Grouped instead: a sticky left
+   rail where there is room, and a grouped block above the content where there
+   is not. Rendered from _data/methodology_nav.yml. */
+.shell{max-width:1080px;margin:0 auto}
+.sidenav{padding:14px 24px 0}
+.sidenav-group{font:600 10.5px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--faint);margin:14px 0 7px}
+.sidenav-group:first-child{margin-top:4px}
+.sidenav ul{list-style:none;margin:0 0 4px;padding:0;display:flex;flex-wrap:wrap;gap:4px}
+.sidenav a{display:block;font-size:14px;color:var(--muted);font-weight:500;
+  padding:7px 10px;border-radius:7px;line-height:1.25}
+.sidenav a:hover{background:var(--line-soft);color:var(--ink);text-decoration:none}
+.sidenav a.active{background:var(--accent-soft);color:var(--accent-ink);font-weight:600}
+
+@media (min-width:1100px){
+  .shell{max-width:1320px;display:flex;align-items:flex-start;gap:10px;padding:0 12px}
+  .sidenav{flex:0 0 208px;position:sticky;top:70px;padding:28px 4px 32px 12px;
+    max-height:calc(100vh - 96px);overflow-y:auto}
+  .sidenav ul{display:block}
+  .sidenav a{border-left:2px solid transparent;border-radius:0 7px 7px 0}
+  .sidenav a.active{border-left-color:var(--accent)}
+  .shell main{flex:1 1 auto;min-width:0;max-width:1000px;margin:0}
+}
 
 /* content */
 main{max-width:1080px;margin:0 auto;padding:32px 24px 96px}

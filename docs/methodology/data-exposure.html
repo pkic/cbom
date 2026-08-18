@@ -1,3 +1,6 @@
+---
+nav: dataexp
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,29 +16,10 @@
     <span class="hsep">/</span><span class="hsection">Methodology</span>
     <a class="hback" href="../">&#8592; Working group site</a>
   </div>
-  <nav class="tabs">
-    <a href="index.html">Overview</a>
-    <a href="terms.html">Terms</a>
-    <a href="challenges.html">Challenges</a>
-    <a href="inventory.html">Inventory</a>
-    <a href="lifecycle.html">Lifecycle Data</a>
-    <a href="data-exposure.html" class="active">Data Exposure</a>
-    <a href="model.html">Model</a>
-    <a href="profile.html">Profile</a>
-    <a href="conformance.html">Conformance</a>
-    <a href="policy-evaluation.html">Policy Evaluation</a>
-    <a href="method.html">Method</a>
-    <a href="use-cases.html">Use Cases</a>
-    <a href="pqc-migration.html">PQC Migration</a>
-    <a href="formats.html">Formats</a>
-    <a href="versioning.html">Versioning</a>
-    <a href="governance.html">Governance</a>
-    <a href="related-work.html">Related Work</a>
-    <a href="files.html">Files</a>
-    <a href="demo.html">Demo</a>
-    <a href="../references/">References</a>
-  </nav>
 </header>
+
+<div class="shell">
+{% include methodology-nav.html %}
 
 <main>
   <div class="crumb">BACKGROUND</div>
@@ -102,10 +86,31 @@
   <p>Where the first two added together exceed the third, data being transmitted now will be readable before it stops being sensitive. The organization is already exposed, and the exposure grows with every day the interface continues to operate.</p>
   <p>The methodology supplies the second quantity through the migration profile, which records what a capability requires and what is blocking it. It supplies nothing at all for the first. That is the gap this section addresses.</p>
 
-  <h2>Why these facts cannot sit in a product CBOM</h2>
-  <p>The confidentiality lifetime of the data crossing an interface is not a property of the product. A vendor shipping a device does not know what its customers will send through it, and the same product carries public information at one site and long-lived personal records at another. A requirement on the vendor to declare data sensitivity produces a refusal or a guess, and a guess is worse because it will be relied on.</p>
-  <p>The distinction that resolves this is already in the methodology. <a href="lifecycle.html">Lifecycle Data</a> separates a <strong>product CBOM</strong>, describing what a vendor ships, from a <strong>service or deployment CBOM</strong>, describing what an operator runs in a particular configuration. Facts about data belong to the second. A product CBOM describes an interface that is capable of carrying anything; a deployment CBOM describes an interface that carries something specific.</p>
-  <div class="banner warn">This is a scope rule and not a matter of emphasis. A profile that asks a vendor to classify the data flowing over an interface has asked for something the vendor cannot know, which is a defect in the profile under the procedure in <a href="method.html">Method</a>.</div>
+  <h2>Two kinds of data, with different owners</h2>
+  <p>Which party can state these facts depends on which kind of data an interface carries, and the answer is not the same for every interface.</p>
+  <p><strong>Conveyed payload</strong> is whatever the customer chooses to send. A vendor shipping a device does not know what that will be, and the same product carries public information at one site and long-lived personal records at another. A requirement on the vendor to classify it produces a refusal or a guess, and a guess is worse because it will be relied on.</p>
+  <p><strong>Intrinsic data</strong> is what an interface must carry in order to function, and the vendor knows precisely what it is because the vendor designed the interface. A management interface carries administrative credentials. A key management interface carries key material. An update channel carries a signed image and the signature verifying it. An enrolment interface carries device identity and private key material.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Interface</th><th>What it necessarily carries</th><th>Stated by</th></tr></thead>
+    <tbody>
+      <tr><td>Management or control</td><td>Administrative credentials, configuration secrets</td><td>The vendor</td></tr>
+      <tr><td>Key management</td><td>Key material, wrapped or in the clear</td><td>The vendor</td></tr>
+      <tr><td>Firmware or software update</td><td>Signed images, and the verifying signature</td><td>The vendor</td></tr>
+      <tr><td>Enrolment or provisioning</td><td>Device identity, private key material</td><td>The vendor</td></tr>
+      <tr><td>Application data plane</td><td>Whatever the customer sends</td><td>The operator</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>The intrinsic case carries the worse exposure</h3>
+  <p>It would be convenient if the vendor-knowable half were the less important one. It is the opposite.</p>
+  <p>Take a management session protected by a classical key exchange, carrying a device credential. An adversary records the session now and decrypts it in 2035. If that credential is a certificate with a twenty-year validity, or a key held in hardware that cannot be rotated in the field, the adversary does not obtain stale information. It obtains a working secret. The confidentiality lifetime of that payload equals the lifetime of the credential, and the vendor knows that lifetime because the vendor chose it.</p>
+  <p>Ordinary business information loses sensitivity as it ages, which is what makes short confidentiality lifetimes tolerable. Credentials and key material do not, and may still be live when the recording is read. A model that admits only operator knowledge discards the half of the problem where the consequences are most serious.</p>
+
+  <h2>Where each fact belongs</h2>
+  <p><a href="lifecycle.html">Lifecycle Data</a> separates a <strong>product CBOM</strong>, describing what a vendor ships, from a <strong>service or deployment CBOM</strong>, describing what an operator runs in a particular configuration. The proposal is that intrinsic data is declared in the first and conveyed payload in the second, so that each fact is stated by the party competent to state it. That is the test the methodology applies throughout.</p>
+  <div class="banner warn">Open, and recorded as Q36. An earlier draft of this section placed all facts about data at deployment scope, on the grounds that a vendor cannot know them. That is right for payload and wrong for intrinsic data. Where the boundary falls needs deciding, and some interfaces sit near it: a database connection carries payload in general and credentials at session establishment. The options are set out in <code>design-note-data-and-hndl.md</code>.</div>
 
   <h2>Proposed attributes</h2>
   <p>The following are candidates for a deployment-scope profile. Names follow the conventions in <a href="method.html">Method</a>, and each is a fact the operator can state rather than a judgement about the result.</p>
@@ -173,5 +178,6 @@
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>
+</div>
 </body>
 </html>

@@ -31,8 +31,26 @@ category, status or jurisdiction also needs a display label adding under `labels
 
 `methodology/` holds the working draft of the methodology, explained against a worked example:
 an nginx web server, its CBOM in CycloneDX 1.7, evaluated against a small product-independent
-profile. These are plain HTML files with no front matter, so Jekyll copies them through
-untouched and they are served at `/cbom/methodology/`.
+profile. The pages are hand-written HTML served at `/cbom/methodology/`. Each carries a two-line
+front matter block so that Jekyll processes it, which is what allows the shared navigation
+include to work. No layout is applied, so each page still controls its own markup.
+
+### Navigation
+
+The section navigation lives in one place and is rendered into every page.
+
+| Path | Purpose |
+|---|---|
+| `_data/methodology_nav.yml` | The list of sections, in groups, in reading order. The single source of truth. |
+| `_includes/methodology-nav.html` | Renders the list. Marks the current page from its `nav:` front matter value. |
+| `methodology/styles.css` | Styling, under "section navigation". A left rail at 1100px and above, a grouped block above the content below that. |
+
+**Adding a section** means: create the page with `nav: <id>` in its front matter, wrap its body in
+`<div class="shell">` with `{% include methodology-nav.html %}` before `<main>`, and add one line
+to `_data/methodology_nav.yml`. Nothing else needs touching.
+
+Until August 2026 the navigation was copied into every page, so adding one section meant editing
+twenty files and was done with a script each time. That is why the include exists.
 
 | File | Section |
 |---|---|
@@ -41,18 +59,20 @@ untouched and they are served at `/cbom/methodology/`.
 | `challenges.html` | Challenges with SBOMs and current CBOMs |
 | `inventory.html` | Inventory and CBOMs |
 | `lifecycle.html` | Lifecycle data across development and deployment |
+| `data-exposure.html` | Data exposure and the harvest-now-decrypt-later threat |
 | `model.html` | The cryptographic relationship model |
 | `profile.html` | The profile: rules, dual use, conformance |
+| `conformance.html` | What conformance means, and what a verdict does not assert |
 | `policy-evaluation.html` | Policy evaluation: facts against derived judgements |
 | `method.html` | How to define a CBOM profile (the procedure) |
 | `use-cases.html` | Use cases for profiles |
 | `pqc-migration.html` | PQC migration: worked use case to profile definition |
 | `formats.html` | CycloneDX and SPDX mapping |
 | `versioning.html` | Handling older CBOM files |
-| `governance.html` | Governance: lifecycle, signing, provenance |
+| `governance.html` | Governance: lifecycle, signing, provenance, stewardship |
+| `related-work.html` | Relationship to the PQC Maturity Model and other efforts |
 | `files.html` | Files and how to run them |
 | `demo.html` | Interactive conformance evaluation |
-| `references.html` | References |
 
 Machine-readable artifacts in the same folder:
 
@@ -66,8 +86,12 @@ Machine-readable artifacts in the same folder:
 | `profile-pqc-migration.rules.json` | The PQC migration profile, derived from the baseline via `extends`. |
 | `cbom-pqc-pass.cyclonedx.json` | Conforming example for the migration profile. |
 | `cbom-pqc-fail.cyclonedx.json` | Non-conforming example exercising conditional rules and the tightening. |
-| `validate_cbom.py` | Version-aware validator, with profile composition. |
+| `validate_cbom.py` | Version-aware validator, with profile composition. Checks a document against a profile. |
+| `check_profile.py` | Well-formedness checker. Checks a profile against requirements C1 to C10 of the Conformance section. |
 | `versioning-and-legacy-cboms.md` | Design note on handling older CBOM files. |
+
+Both tools are exercised by `tests/run-profile-tests.sh` in the repository root, which CI runs on
+any change under `docs/methodology/`.
 
 Running the validator:
 
@@ -94,9 +118,13 @@ bundle exec jekyll serve --baseurl /cbom
 `references.md`, `issues.md` and `contributing.md` served as raw Markdown and break the data
 register and the templates. A `.nojekyll` was added here by mistake once and removed.
 
-**Keep `methodology/` free of front matter.** The files are deliberately plain HTML. Adding
-front matter would pull them into the Jekyll build and apply the site layout on top of their
-own, producing two headers.
+**Do not set a default layout for HTML pages.** The `methodology/` pages carry front matter so
+that Jekyll processes them and the navigation include works, but they specify no `layout:` and
+`_config.yml` has no `defaults:` block. If one were added that applied a layout to HTML files,
+every methodology page would be wrapped in the site shell on top of its own markup and would
+render two headers. An earlier version of this file advised keeping the folder free of front
+matter for exactly that reason; the risk is real, and it comes from a default layout rather than
+from front matter itself.
 
 **Links are relative.** Nothing in `methodology/` hard-codes the baseurl, so `../` reaches the
 site root and the section works unchanged if the folder is moved or served elsewhere.
@@ -107,11 +135,13 @@ A change to the design system needs applying in both.
 
 ## Known gaps
 
-- The reference list in `methodology/references.html` duplicates, and will drift from, the
-  register in `_data/references.yml`. Folding the former into the latter and linking to
-  `/references/` would remove the duplication.
 - Diagrams in the methodology sections use hard-coded colours rather than the CSS variables,
   so a palette change does not reach them.
+- The previous and next links at the foot of each page are per-page and hand-maintained. They
+  duplicate the order held in `_data/methodology_nav.yml` and can drift from it. Rendering them
+  from the same data would remove the duplication.
+- The section navigation has not been checked in a browser since it changed from a flat tab bar
+  to a grouped rail. The layout switches at 1100px and both states need looking at.
 
 ## Status
 

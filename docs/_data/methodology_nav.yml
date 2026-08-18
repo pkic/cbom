@@ -1,0 +1,52 @@
+# Navigation for the methodology section.
+#
+# This file is the single source of truth. Adding a section means adding one
+# line here; every page picks it up through _includes/methodology-nav.html.
+# Before this existed the navigation was copied into each page, so adding one
+# section meant editing twenty files.
+#
+# 'id' must match the 'nav:' value in the target page's front matter, which is
+# how the current page is marked. 'url' is relative, since every page in this
+# section sits in the same directory.
+#
+# Order is also the reading order used by the previous and next links at the
+# foot of each page. Changing the order here does not change those links; they
+# are per-page and would need updating to match.
+
+- group: Start here
+  items:
+    - { id: index,       title: Overview,          url: index.html }
+    - { id: terms,       title: Terms,             url: terms.html }
+
+- group: Background
+  items:
+    - { id: challenges,  title: Challenges,        url: challenges.html }
+    - { id: inventory,   title: Inventory,         url: inventory.html }
+    - { id: lifecycle,   title: Lifecycle Data,    url: lifecycle.html }
+    - { id: dataexp,     title: Data Exposure,     url: data-exposure.html }
+
+- group: Concepts
+  items:
+    - { id: model,       title: Model,             url: model.html }
+    - { id: profile,     title: Profile,           url: profile.html }
+    - { id: conformance, title: Conformance,       url: conformance.html }
+    - { id: policyeval,  title: Policy Evaluation, url: policy-evaluation.html }
+
+- group: Applying it
+  items:
+    - { id: method,      title: Method,            url: method.html }
+    - { id: usecases,    title: Use Cases,         url: use-cases.html }
+    - { id: pqc,         title: PQC Migration,     url: pqc-migration.html }
+    - { id: formats,     title: Formats,           url: formats.html }
+
+- group: Operations
+  items:
+    - { id: versioning,  title: Versioning,        url: versioning.html }
+    - { id: governance,  title: Governance,        url: governance.html }
+
+- group: Reference
+  items:
+    - { id: related,     title: Related Work,      url: related-work.html }
+    - { id: files,       title: Files,             url: files.html }
+    - { id: demo,        title: Demo,              url: demo.html }
+    - { id: references,  title: References,        url: ../references/ }
