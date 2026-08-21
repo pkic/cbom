@@ -8,9 +8,9 @@
 - **Decision rule applied:** lazy consensus (pending)
 
 <!--
-Unlike records 0001 to 0007, this one is NOT already implemented in the worked example. Those
-records ratify positions that exist in the drafting; this one asks the group to accept a change
-that would then have to be built. The Consequences section states what building it involves.
+Like records 0001 to 0007, this one is implemented in the worked example, so the group is asked
+to ratify or reverse a position that exists in the drafting rather than to decide in the
+abstract. The Consequences section records what reversing it would involve.
 -->
 
 ## Context
@@ -115,23 +115,37 @@ as a position rather than absorb its reversal inside a rename.
 
 ## Consequences
 
-Two new MUST requirements are a tightening, so this is not a free change.
+Implemented in the worked example. What it took, and what reversing it would cost:
 
-- Both example profiles gain a `scope` object and `decisionOptions`, with changelog entries
-  classified as tightenings under C10.
-- `check_profile.py` gains the C1 extension and C11, and `tests/fixtures/` gains a deliberately
-  defective profile for each, so the new checks are themselves tested.
-- `validate_cbom.py` enforces `scope.lifecycleStages` when evaluating I8, and reports a stage
-  outside the accepted set distinctly from a missing stage.
-- Terms gains `subjectType`, `decisionOptions` and the scope vocabulary; Conformance gains C11
-  and the C1 amendment; Method step 2 cites the vocabulary it already describes.
-- Estimated a day's work, not an afternoon, and it should land before Profile and PQC Migration
-  enter a review batch rather than after.
+- Baseline profile v0.3 → **v0.4**: gains `scope` and `decisionOptions`. Both changes are
+  classified editorial, because the baseline accepts all four lifecycle stages and so no document
+  that conformed to v0.3 stops conforming.
+- Migration profile v0.1 → **v0.2**: gains the same, and narrows the accepted stages to
+  `implemented`, `configured` and `observed`. That narrowing is a **tightening** — an interface
+  reporting `intended` conformed under v0.1 and does not now — and it is the first rule in either
+  profile that discriminates on how the reported data was obtained rather than on what it says.
+  The profile also re-pins its base from v0.3 to v0.4, since a pin names an exact version.
+- `check_profile.py` gains the C1 extension and C11, and `validate_cbom.py` applies
+  `scope.lifecycleStages` by narrowing the enum on the rule that constrains the stage, so an
+  unaccepted stage fails that rule rather than through a parallel check. A stage the methodology
+  defines but the profile excludes is reported distinctly from a value that is not a stage.
+- `check_scope_narrows` rejects a derived profile that widens the accepted stages, or that
+  changes the subject type, with the same profile-error exit code as a relaxing override.
+- Three new fixtures — an unactionable decision, a missing scope, and a derived profile widening
+  the stages — plus a `scope` and `decisionOptions` block added to every existing fixture so that
+  each still fails exactly one requirement. The suite runs 83 tests and passes.
+- Conformance gains C11, the C1 amendment, a table describing the three scope members, and tool
+  requirements T8 and T9. Terms gains profile scope, subject type, accepted lifecycle stages and
+  decision options. Method step 1 asks for the options and step 2 for the scope.
+
+Reversing it means unwinding two profile versions and the tightening in the migration profile,
+which is the expensive half: any document produced against v0.2 was produced under the narrower
+stage set.
 
 Open after this record: whether `scope` should also bound the interface types or domains a
 profile applies to, which the submission raised as part of its tuple and which overlaps the
-product-rule `interfaceType` constraints already available. Left out here because the two
-mechanisms would need reconciling first.
+product-rule `interfaceType` constraints already available. Left out because the two mechanisms
+would need reconciling first.
 
 ## Links
 

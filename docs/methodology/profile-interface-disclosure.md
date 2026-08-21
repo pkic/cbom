@@ -1,4 +1,4 @@
-# CBOM Profile — Interface Disclosure Baseline (Example v0.3)
+# CBOM Profile — Interface Disclosure Baseline (Example v0.4)
 
 > **Status:** Illustrative early-concept artifact for the PKIC CBOM Profiles Working Group.
 > Not a normative deliverable. CycloneDX crypto field names are aligned to v1.7 / ECMA-424
@@ -155,6 +155,27 @@ and a consumer can tell those apart from a document that never addressed it.
 Markers are carried in the CBOM as properties under `pkic:profile:disclosure:`, because neither
 CycloneDX nor SPDX provides a native field for them. The mapping records the convention.
 
+### 4.4 Scope
+
+The profile declares a `scope` object stating what it describes and what it will accept. The
+three members are one boundary and are decided together, which is why they are carried together
+rather than as separate fields.
+
+| Member | This profile | Why |
+|---|---|---|
+| `subjectType` | `product` | The subject is a shipped product held by a consumer who did not build it and cannot inspect it. A profile for a service the consumer operates could ask for more. |
+| `relationshipTypes` | `interface` | Every rule here constrains a communication interface. The declaration is checked against the rules rather than trusted, because a scope statement maintained by hand drifts from what the rules actually say. |
+| `lifecycleStages` | all four | An acceptance constraint, in the same sense as `appliesTo` for carrier versions: an interface reporting a stage outside the set fails I8. |
+
+The third member is the one that changes verdicts, and this profile deliberately does not use it
+to change any. A disclosure baseline should record whatever a producer is able to report,
+including cryptography it has only `intended`, because an intention disclosed is more useful to
+an inventory than an intention withheld. What the field buys the baseline is not a restriction
+but the ability of a derived profile to impose one: the PQC migration profile accepts only
+`implemented`, `configured` and `observed`, on the grounds that a migration plan built on
+intentions is a plan built on an intention. A derived profile may narrow the set and may not
+widen it, for the same reason it may not relax a rule.
+
 ## 5. Expected declaration
 
 A conforming nginx deployment declares at least two interfaces:
@@ -211,10 +232,22 @@ example profile combined MUST with withholdability, and that is the only combina
 withholding alters a verdict. The disclosure model was therefore stated in the profile without
 being applied by any rule.
 
-The derived PQC migration profile pins v0.3 and tightens I9 by removing its withholdability, the
+The derived PQC migration profile pins v0.4 and tightens I9 by removing its withholdability, the
 level being already MUST. Under decision 0004 that tightening is permitted; a subsequent baseline
 revision that relaxed I9 would place the derived profile in conflict, which is why the base is
 pinned by version.
+
+### v0.4 — 2026-08-21
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Added the `scope` object of §4.4: `subjectType`, `relationshipTypes`, and the accepted `lifecycleStages` | editorial | None. This profile accepts all four stages, so no document that conformed to v0.3 stops conforming. The field's effect is on profiles derived from this one, which may now narrow the set |
+| Added `objective.decisionOptions`, listing the three actions the consumer chooses between | editorial | None. The decision text is unchanged; stating the options is what makes the action-choice test in Method step 1 checkable rather than a matter of review |
+
+Both changes are editorial here and neither is elsewhere: the migration profile's v0.2 narrows
+the accepted stages and that is a tightening. The pattern is worth noting when reading a
+changelog, because a field can be introduced without effect in one profile and immediately
+change verdicts in another that derives from it. Recorded as decision 0008.
 
 ### v0.1 — initial draft
 

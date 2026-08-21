@@ -1,14 +1,26 @@
 {
-  "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident. v0.2 added the three-state disclosure model described under 'disclosure'; v0.3 raised I9 to a withholdable MUST, which is the only combination in which that model affects a verdict. See 'changelog'.",
+  "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident. v0.2 added the three-state disclosure model described under 'disclosure'; v0.3 raised I9 to a withholdable MUST, which is the only combination in which that model affects a verdict; v0.4 added the 'scope' object, which declares the subject, the relationship types the rules constrain, and the lifecycle stages the profile accepts. See 'changelog'.",
   "profileId": "pkic.example.interface-disclosure",
   "title": "Interface Disclosure Baseline (Example)",
-  "version": "0.3",
+  "version": "0.4",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
 
   "objective": {
-    "$comment": "C1 of the Conformance section. A profile that does not say who it serves and what decision it supports cannot be argued about, because there is no standard against which to judge whether it asks for the right things.",
+    "$comment": "C1 of the Conformance section. A profile that does not say who it serves and what decision it supports cannot be argued about, because there is no standard against which to judge whether it asks for the right things. 'decisionOptions' makes the action-choice test in Method step 1 mechanical: a decision the consumer cannot act on differently under different answers is not a decision, and a profile written from one grows until it demands everything.",
     "consumer": "An operator or purchaser holding a product it did not build and cannot inspect.",
-    "decision": "Whether the cryptography the product applies at its boundaries, including the interface used to configure it, is disclosed in enough detail to be recorded in a cryptographic inventory and assessed against policy."
+    "decision": "Whether the cryptography the product applies at its boundaries, including the interface used to configure it, is disclosed in enough detail to be recorded in a cryptographic inventory and assessed against policy.",
+    "decisionOptions": [
+      "record the interfaces in the cryptographic inventory and proceed",
+      "request a fuller disclosure from the producer before proceeding",
+      "reject the submission as insufficient to inventory"
+    ]
+  },
+
+  "scope": {
+    "$comment": "C11. The boundary, as one object rather than as scattered fields: what the profile describes, which kinds of cryptographic relationship its rules constrain, and which lifecycle stages of reported data it will accept. 'lifecycleStages' is an acceptance constraint in the same sense as 'appliesTo': an interface reporting a stage outside the set fails I8. This profile accepts all four, because a disclosure baseline should record whatever the producer can report and let a derived profile narrow it. See decision 0008.",
+    "subjectType": "product",
+    "relationshipTypes": ["interface"],
+    "lifecycleStages": ["intended", "implemented", "configured", "observed"]
   },
 
   "appliesTo": {
@@ -88,6 +100,16 @@
           "summary": "Raised I9 implementationPurl from SHOULD to MUST, keeping it withholdable. A document that omits the attribute in silence no longer conforms; a document that declares it withheld does. Until this version no rule combined MUST with withholdability, which is the only combination where the disclosure model affects a verdict, so the model was demonstrated in reporting and never at the point of decision." },
         { "kind": "editorial",
           "summary": "Stated 'withholdable' explicitly on every rule. Behaviour is unchanged, since an absent flag was already treated as false, but a producer can now read the answer from the profile instead of inferring it from a validator's default." }
+      ]
+    },
+    {
+      "version": "0.4",
+      "date": "2026-08-21",
+      "changes": [
+        { "kind": "editorial",
+          "summary": "Added the 'scope' object: subjectType, relationshipTypes, and the lifecycle stages the profile accepts. No document that conformed to v0.3 stops conforming, because this profile accepts all four stages, which is why the change is editorial rather than a tightening. The value of the field is that a derived profile can now narrow the set, and the migration profile does. See decision 0008." },
+        { "kind": "editorial",
+          "summary": "Added 'objective.decisionOptions'. The decision text was already phrased as a choice; stating the options explicitly is what makes the test in Method step 1 checkable by check_profile.py rather than a matter of review." }
       ]
     }
   ]

@@ -20,10 +20,10 @@ implemented in the example artifacts, so the group is being asked to ratify or r
 position that exists in the drafting, not to decide in the abstract. Reversing one means
 changing the example, and the Consequences section of each record says what that would involve.
 
-Record 0008 is Proposed for a different reason. It is **not** implemented in the example: it
-asks the group to accept a change that would then have to be built. Accepting it means work,
-where accepting 0001 to 0007 means leaving the example as it stands. The two kinds of Proposed
-are worth telling apart when setting an agenda.
+Record 0008 was written the same way and is now implemented alongside the others. It differs in
+one respect worth noting on an agenda: 0001 to 0007 describe the example as it was first built,
+whereas 0008 changed it, so reversing 0008 means undoing a tightening that documents may already
+have been produced against.
 
 ## Index
 

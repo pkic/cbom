@@ -145,6 +145,39 @@ expect_output "conditional M5 fires"             "M5" "$M/cbom-pqc-fail.cycloned
 expect_output "conditional M11 fires"           "M11" "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
 expect_output "tightened I9 fires"               "I9" "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
 
+# ------------------------------------------------- accepted lifecycle stages ---
+# scope.lifecycleStages says which stages of reported data a profile will accept.
+# The baseline accepts all four; the migration profile narrows to the three that
+# describe something that exists, because a migration plan built on cryptography
+# a producer merely intends to implement is a plan built on an intention.
+echo
+echo "Accepted lifecycle stages"
+"$PY" - "$M/cbom-pqc-pass.cyclonedx.json" "$TMP" <<'PY'
+import json, sys, os
+bom = json.load(open(sys.argv[1], encoding="utf-8"))
+# Move one interface from 'implemented' to 'intended', changing nothing else.
+for c in bom.get("components", []):
+    for p in c.get("properties", []):
+        if p.get("name") == "pkic:profile:lifecycleStage":
+            p["value"] = "intended"
+            break
+    else:
+        continue
+    break
+json.dump(bom, open(os.path.join(sys.argv[2], "cbom-intended.json"), "w"))
+PY
+expect_exit   "the same document conforms with an accepted stage" 0 \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+expect_exit   "an unaccepted stage fails the migration profile"   1 \
+              "$TMP/cbom-intended.json" "$PQC"
+expect_output "the failure is I8"                "I8" "$TMP/cbom-intended.json" "$PQC"
+expect_output "the report says the stage is out of scope" "outside the stages this profile accepts" \
+              "$TMP/cbom-intended.json" "$PQC"
+# The stage is a real one, so the baseline, which accepts all four, still passes
+# it. The narrowing belongs to the derived profile and not to the vocabulary.
+expect_exit   "the baseline still accepts the same document"      0 \
+              "$TMP/cbom-intended.json" "$BASE"
+
 # ------------------------------------------------------------- composition ---
 echo
 echo "Composition semantics"
@@ -181,9 +214,9 @@ expect_output "reported as undeclared, not withheld" "no disclosure marker" \
 
 # -------------------------------------------------- profile well-formedness ---
 # The second conformance target: a profile checked against the methodology.
-# Requirements C1 to C10 are stated in the Conformance section.
+# Requirements C1 to C11 are stated in the Conformance section.
 echo
-echo "Profile well-formedness (C1-C10)"
+echo "Profile well-formedness (C1-C11)"
 expect_check_exit "baseline profile is well-formed"        0 "$BASE"
 expect_check_exit "derived profile is well-formed"         0 "$PQC"
 expect_check_output "baseline verdict reads WELL-FORMED" "VERDICT : WELL-FORMED" "$BASE"
@@ -212,6 +245,18 @@ expect_check_output "C7 is the failing requirement" "[FAIL] C7" "$FIX/profile-in
 expect_check_output "C7 explains monotonicity" "monotonic" "$FIX/profile-invalid-relaxing.rules.json"
 expect_check_exit   "C7 diverging inherited block is rejected" 1 "$FIX/profile-c7-diverging-block.rules.json"
 expect_check_output "C7 names the diverging block" "disclosure" "$FIX/profile-c7-diverging-block.rules.json"
+expect_check_exit   "C7 widened lifecycle stages are rejected" 1 "$FIX/profile-c7-widening-stages.rules.json"
+expect_check_output "C7 explains the widening" "monotonic" "$FIX/profile-c7-widening-stages.rules.json"
+expect_check_exit   "C1 an unactionable decision is rejected" 1 "$FIX/profile-c1-no-decision-options.rules.json"
+expect_check_output "C1 is the failing requirement" "[FAIL] C1" "$FIX/profile-c1-no-decision-options.rules.json"
+expect_check_output "C1 asks for the actions" "decisionOptions" "$FIX/profile-c1-no-decision-options.rules.json"
+expect_check_exit   "C11 missing scope is rejected"      1 "$FIX/profile-c11-no-scope.rules.json"
+expect_check_output "C11 is the failing requirement" "[FAIL] C11" "$FIX/profile-c11-no-scope.rules.json"
+
+# A widened stage set is rejected before any document is evaluated, in the same
+# way a relaxing override is: the profile is invalid, not the document.
+expect_exit   "widening is a profile error, not a verdict" 3 \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-c7-widening-stages.rules.json"
 
 # SHOULD failures are reported without affecting the verdict, unless --strict.
 echo

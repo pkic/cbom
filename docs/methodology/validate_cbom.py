@@ -13,6 +13,12 @@ product-independent, version-aware, and composable:
                        inherited rule is rejected. Extension is monotonic, so
                        conforming to a derived profile implies conforming to its
                        base.
+  * SCOPE           -- 'scope.lifecycleStages' says which stages of reported
+                       data the profile accepts, in the same sense as
+                       'appliesTo' for carrier versions. It narrows the
+                       lifecycleStage rule, so an interface reporting a stage
+                       outside the set fails that rule. A derived profile may
+                       narrow the set and may not widen it.
   * PRODUCT rules   -- constrain the SET of interfaces and product-level
                        attributes, naming no specific interface.
   * INTERFACE rules -- applied to every declared cryptographic interface, with
@@ -50,6 +56,13 @@ SIG_PRIMS = {"signature"}
 LEVEL_ORDER = {"MAY": 0, "SHOULD": 1, "MUST": 2}
 PROP = "pkic:profile:"
 
+# Methodology-level vocabularies, fixed here rather than declared per profile so
+# that two profiles cannot mean different things by the same word. Both are used
+# by check_profile.py when it checks C11.
+SUBJECT_TYPES = ("product", "service", "component", "estate-subset")
+LIFECYCLE_STAGES = ("intended", "implemented", "configured", "observed")
+STAGE_ATTRIBUTE = "lifecycleStage"
+
 
 def ver_tuple(s):
     return tuple(int(x) for x in str(s).split(".") if x.isdigit())
@@ -71,6 +84,7 @@ def load_profile(path):
     if not ext:
         origin = {r["id"]: prof["profileId"]
                   for r in prof.get("productRules", []) + prof.get("interfaceRules", [])}
+        apply_scope(prof)
         return prof, origin, notes
 
     base_file = ext.get("file")
@@ -96,6 +110,7 @@ def load_profile(path):
     merged["extends"] = ext
 
     check_range_narrows(base, prof)
+    check_scope_narrows(base, prof)
 
     for group in ("productRules", "interfaceRules"):
         inherited = [dict(r) for r in base.get(group, [])]
@@ -119,7 +134,36 @@ def load_profile(path):
     if unmatched:
         raise ProfileError("overrides reference unknown rule(s): %s" % ", ".join(unmatched))
 
+    apply_scope(merged)
     return merged, origin, notes
+
+
+def apply_scope(profile):
+    """Narrow the lifecycle-stage rule to the stages the profile's scope accepts.
+
+    'scope.lifecycleStages' is an acceptance constraint in the same sense as
+    'appliesTo': it says which reported data the profile is prepared to evaluate.
+    Rather than adding a parallel check, it is applied by narrowing the enum on
+    whichever rule constrains lifecycleStage, so a stage outside the set fails
+    that rule and is reported against it. The full vocabulary is kept as
+    'enumFull' so the failure can say the stage is real but out of scope, rather
+    than implying the producer wrote something meaningless.
+
+    Applied to the resolved profile, so a derived profile's narrower set wins.
+    Mutates in place and is idempotent."""
+    stages = (profile.get("scope") or {}).get("lifecycleStages")
+    if not stages:
+        return profile
+    for rule in profile.get("interfaceRules", []):
+        if rule.get("attribute") != STAGE_ATTRIBUTE:
+            continue
+        constraint = dict(rule.get("constraint") or {})
+        if "enum" not in constraint:
+            continue
+        constraint.setdefault("enumFull", list(constraint["enum"]))
+        constraint["enum"] = [s for s in constraint["enumFull"] if s in stages]
+        rule["constraint"] = constraint
+    return profile
 
 
 def check_override_tightens(base_rule, ov, notes):
@@ -152,6 +196,35 @@ def check_range_narrows(base, derived):
         raise ProfileError(
             "derived profile accepts CycloneDX %s, below the base minimum %s"
             % (d["min"], b["min"]))
+
+
+def check_scope_narrows(base, derived):
+    """A derived profile may narrow the accepted lifecycle stages, never widen them.
+
+    Accepting a stage the base rejects would let a document conform to the
+    derived profile while failing the base, which is exactly what monotonic
+    extension exists to prevent. A different subjectType is rejected for a
+    related reason: the inherited rules were written about a different kind of
+    subject, so the result is an independent profile rather than an extension."""
+    b = base.get("scope") or {}
+    d = derived.get("scope") or {}
+    if not d:
+        return
+
+    b_stages, d_stages = b.get("lifecycleStages"), d.get("lifecycleStages")
+    if b_stages and d_stages:
+        widened = [s for s in d_stages if s not in b_stages]
+        if widened:
+            raise ProfileError(
+                "derived profile accepts lifecycle stage(s) %s that the base rejects; "
+                "extension is monotonic" % ", ".join(sorted(widened)))
+
+    if b.get("subjectType") and d.get("subjectType") \
+            and b["subjectType"] != d["subjectType"]:
+        raise ProfileError(
+            "derived profile describes a %r where the base describes a %r; "
+            "a profile with a different subject is an independent profile, "
+            "not an extension" % (d["subjectType"], b["subjectType"]))
 
 
 # --------------------------------------------------------------------------- #
@@ -295,7 +368,15 @@ def check_attr(value, constraint, profile):
     if not present(value):
         return (False, "absent")
     if "enum" in constraint:
-        return (value in constraint["enum"], "= %r" % (value,))
+        if value in constraint["enum"]:
+            return (True, "= %r" % (value,))
+        # A value the methodology defines but this profile's scope excludes is a
+        # different failure from a value that means nothing, and a producer
+        # reading the report needs to be able to tell them apart.
+        if value in constraint.get("enumFull", []):
+            return (False, "= %r, outside the stages this profile accepts (%s)"
+                    % (value, ", ".join(constraint["enum"])))
+        return (False, "= %r" % (value,))
     if "enumRef" in constraint:
         return (value in profile.get(constraint["enumRef"], []), "= %r" % (value,))
     if "startsWith" in constraint:

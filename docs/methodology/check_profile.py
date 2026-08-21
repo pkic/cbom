@@ -2,13 +2,13 @@
 """
 Profile well-formedness checker.
 
-Checks a machine-readable profile against requirements C1 to C10 of the
+Checks a machine-readable profile against requirements C1 to C11 of the
 Conformance section, which state what makes a profile well-formed under this
 methodology. This is the second of the three conformance targets: a CBOM
 document is checked against a profile by validate_cbom.py, and a profile is
 checked against the methodology here.
 
-C1  MUST    states the consumer it serves and the decision it supports
+C1  MUST    states the consumer, the decision, and the options it chooses between
 C2  MUST    carries an identifier and version, and a carrier acceptance range
 C3  MUST    no rule refers to a named product, vendor, or interface instance
 C4  MUST    every rule has an identifier, a level, and a withholdability statement
@@ -18,6 +18,7 @@ C7  MUST    extension pins the base and relaxes nothing
 C8  SHOULD  states what it deliberately excludes, and why
 C9  SHOULD  is accompanied by a mapping and by conforming and non-conforming examples
 C10 SHOULD  carries a changelog classifying each change
+C11 MUST    declares its scope: subject, relationship types, lifecycle stages
 
 Rules are checked as DECLARED in the file under test. A derived profile is not
 re-checked against its base's rules, because the base is checkable on its own;
@@ -40,10 +41,12 @@ import re
 import sys
 
 try:
-    from validate_cbom import load_profile, ProfileError
+    from validate_cbom import (load_profile, ProfileError,
+                               SUBJECT_TYPES, LIFECYCLE_STAGES)
 except ImportError:  # allow running from another directory
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from validate_cbom import load_profile, ProfileError
+    from validate_cbom import (load_profile, ProfileError,
+                               SUBJECT_TYPES, LIFECYCLE_STAGES)
 
 LEVELS = ("MUST", "SHOULD", "MAY")
 CAMEL = re.compile(r"^[a-z][A-Za-z0-9]*$")
@@ -96,11 +99,30 @@ def c1_objective(prof, f):
     if not isinstance(obj, dict):
         f.add("C1", "MUST", False, "no 'objective' object")
         return
+    problems = []
     missing = [k for k in ("consumer", "decision") if not str(obj.get(k, "")).strip()]
     if missing:
-        f.add("C1", "MUST", False, "objective is missing: %s" % ", ".join(missing))
+        problems.append("objective is missing: %s" % ", ".join(missing))
+
+    # The action-choice test from Method step 1, made mechanical. A decision the
+    # consumer cannot answer in more than one way is not a decision, and a
+    # profile written from one has no principled place to stop.
+    options = obj.get("decisionOptions")
+    if not isinstance(options, list):
+        problems.append("no 'decisionOptions'; state the actions the consumer "
+                        "chooses between, so the decision is one that can be acted on")
     else:
-        f.add("C1", "MUST", True, "consumer and decision both stated")
+        stated = [o for o in options if isinstance(o, str) and o.strip()]
+        if len(stated) < 2:
+            problems.append("decisionOptions lists %d option(s); a decision has at "
+                            "least two, or the consumer is not deciding anything"
+                            % len(stated))
+
+    if problems:
+        f.add("C1", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C1", "MUST", True, "consumer, decision, and %d decision option(s) stated"
+              % len(obj["decisionOptions"]))
 
 
 def c2_identity(prof, f):
@@ -285,6 +307,86 @@ def c7_extension(path, prof, f):
           % (ext["profileId"], ext["version"]))
 
 
+def evidenced_relationship_types(prof):
+    """The relationship kinds the profile's rules actually constrain.
+
+    The scope declaration is checked against this rather than trusted, because a
+    scope statement maintained by hand drifts from the rules it claims to
+    describe, and a stale one is worse than none: it reads as authoritative.
+
+    Only 'interface' can be evidenced today, because it is the only refined
+    relationship type the model names. The set grows as the model does."""
+    kinds = set()
+    if prof.get("interfaceRules"):
+        kinds.add("interface")
+    for r in prof.get("productRules", []):
+        c = r.get("constraint") or {}
+        if "minInterfaces" in c or "minInterfacesOfType" in c:
+            kinds.add("interface")
+    return kinds
+
+
+def c11_scope(prof, scope_source, evidence_reliable, f):
+    """C11. The profile declares what it describes and what it will accept.
+
+    'scope_source' is the profile with its base resolved where there is one, so
+    a derived profile that does not restate the scope inherits it rather than
+    failing. Where it does restate it, the resolved value is the derived
+    profile's own, and validate_cbom rejects a restatement that widens the
+    base."""
+    scope = scope_source.get("scope")
+    if not isinstance(scope, dict):
+        f.add("C11", "MUST", False,
+              "no 'scope' object; a profile states the subject it describes and "
+              "the lifecycle stages it accepts")
+        return
+
+    problems = []
+
+    subject = scope.get("subjectType")
+    if not subject:
+        problems.append("no subjectType")
+    elif subject not in SUBJECT_TYPES:
+        problems.append("subjectType %r is not one of %s"
+                        % (subject, "/".join(SUBJECT_TYPES)))
+
+    stages = scope.get("lifecycleStages")
+    if not isinstance(stages, list) or not stages:
+        problems.append("no lifecycleStages; state which stages of reported data "
+                        "the profile accepts")
+    else:
+        unknown = [s for s in stages if s not in LIFECYCLE_STAGES]
+        if unknown:
+            problems.append("lifecycleStages contains %s, not in %s"
+                            % (", ".join(repr(s) for s in unknown),
+                               "/".join(LIFECYCLE_STAGES)))
+
+    declared = scope.get("relationshipTypes")
+    if not isinstance(declared, list) or not declared:
+        problems.append("no relationshipTypes")
+    elif not evidence_reliable:
+        # The base did not resolve, so the inherited rules are not visible and
+        # the declaration cannot be checked against them. C7 reports the
+        # resolution failure; repeating it here would be noise.
+        pass
+    else:
+        evidenced = evidenced_relationship_types(scope_source)
+        undeclared = evidenced - set(declared)
+        unevidenced = set(declared) - evidenced
+        if undeclared:
+            problems.append("rules constrain %s, which scope does not declare"
+                            % ", ".join(sorted(undeclared)))
+        if unevidenced:
+            problems.append("scope declares %s, which no rule constrains"
+                            % ", ".join(sorted(unevidenced)))
+
+    if problems:
+        f.add("C11", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C11", "MUST", True,
+              "subject: %s; accepts %s" % (subject, ", ".join(stages)))
+
+
 def c8_exclusions(prof, f):
     ex = prof.get("exclusions")
     if not isinstance(ex, list) or not ex:
@@ -352,9 +454,12 @@ def check(path):
     # Vocabularies are inherited rather than restated, so resolve the base where
     # there is one. A failure to resolve is not swallowed: C7 reports it.
     vocab_source = prof
+    resolved = True
     if prof.get("extends"):
+        resolved = False
         try:
             vocab_source = load_profile(path)[0]
+            resolved = True
         except (ProfileError, OSError, KeyError):
             pass
 
@@ -369,6 +474,7 @@ def check(path):
     c8_exclusions(prof, f)
     c9_artifacts(path, prof, f)
     c10_changelog(path, prof, f)
+    c11_scope(prof, vocab_source, resolved, f)
     return prof, f
 
 

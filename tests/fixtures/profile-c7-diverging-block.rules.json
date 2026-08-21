@@ -3,24 +3,43 @@
   "profileId": "pkic.test.diverging-block",
   "title": "Fixture - C7 restates an inherited block",
   "version": "0.1",
-
   "objective": {
     "consumer": "A fixture, standing in for a consumer.",
-    "decision": "Whether the checker catches a silently overridden inherited block."
+    "decision": "Whether the checker catches a silently overridden inherited block.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
   },
-
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.3",
+    "version": "0.4",
     "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
   },
-
-  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
-
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
   "disclosure": {
     "markerPrefix": "example:disclosure:",
-    "states": ["unknown", "withheld"]
+    "states": [
+      "unknown",
+      "withheld"
+    ]
   },
-
-  "interfaceRules": []
+  "interfaceRules": [],
+  "scope": {
+    "subjectType": "product",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "intended",
+      "implemented",
+      "configured",
+      "observed"
+    ]
+  }
 }

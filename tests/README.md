@@ -34,7 +34,8 @@ what this suite is an early form of.
 | Derived PQC profile | The conforming CBOM is accepted and the base profile resolves; the non-conforming one trips both conditional rules and the tightened inherited rule. |
 | Composition | The document that fails the derived profile still conforms to the base, which is the tightening doing its work. A fixture with a relaxing override is rejected with exit code 3. |
 | Withholdable MUST | A withheld marker satisfies baseline rule I9; the same document with the marker stripped does not, and is reported as undeclared rather than withheld. This is the only combination in which the disclosure model changes a verdict, and before profile v0.3 no rule exercised it. |
-| Profile well-formedness | Both example profiles satisfy C1 to C10, including under `--strict`. One fixture per MUST requirement confirms that each is enforced and that the right requirement is the one reported. |
+| Accepted lifecycle stages | The conforming migration document, with one interface moved to the `intended` stage, fails rule I8 against the migration profile and is reported as a stage the profile does not accept. The same document still conforms to the baseline, which accepts all four stages, so the narrowing belongs to the derived profile rather than to the vocabulary. |
+| Profile well-formedness | Both example profiles satisfy C1 to C11, including under `--strict`. One fixture per MUST requirement confirms that each is enforced and that the right requirement is the one reported. |
 | SHOULD handling | A profile failing only SHOULD requirements still passes, and `--strict` promotes those failures. |
 
 ## Exit codes
@@ -74,12 +75,16 @@ a real profile.
 | `profile-c5-naming.rules.json` | C5 | Uses the rejected `Current` suffix, and a `Supported` attribute that is not list-valued. |
 | `profile-c6-judgement.rules.json` | C6 | Requires `pqcPosture`, a derived judgement. Reproduces the attribute removed by decision 0002. |
 | `profile-c7-diverging-block.rules.json` | C7 | Extends the baseline and restates `disclosure` with a different marker prefix. Nothing is relaxed and no rule changes, but the base's prefix is overridden silently and every marker would stop being recognised. |
+| `profile-c7-widening-stages.rules.json` | C7, and exit 3 from the validator | Extends the migration profile and accepts the `intended` stage that its base rejects. Widening the accepted stages is a relaxation: a document reporting only intentions would conform here while failing the base. |
+| `profile-c1-no-decision-options.rules.json` | C1 | States a consumer and a decision, but the decision is "to understand our cryptographic position" and no options are listed. The failure the action-choice test in Method step 1 exists to catch. |
+| `profile-c11-no-scope.rules.json` | C11 | Declares no `scope`, so it says neither what kind of subject it describes nor which lifecycle stages it accepts, and a document reporting nothing but intentions would conform. |
 | `profile-should-gaps.rules.json` | C8, C9, C10 only | Satisfies every MUST and no SHOULD. Also the template the others mutate. |
 
-Each of the C1 to C6 fixtures fails exactly one MUST requirement, so a test can
-assert which requirement was reported rather than only that something failed.
-The relaxing fixture also fails C1, which is why its test asserts on C7
-specifically.
+Every fixture fails exactly one MUST requirement, so a test can assert which
+requirement was reported rather than only that something failed. Keeping that
+property is the reason each fixture carries a `scope` object and a set of
+`decisionOptions` it does not otherwise need: without them it would fail C11 and
+C1 as well as the requirement it exists to exercise.
 
 ## Adding a test
 

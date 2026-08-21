@@ -1,16 +1,44 @@
 {
-  "$comment": "TEST FIXTURE — deliberately invalid. This profile extends the interface disclosure baseline and tries to relax an inherited rule, lowering I3 (keyExchange) from MUST to SHOULD and making I1 withholdable. Extension is monotonic, so the validator must reject it with exit code 3 rather than evaluating any CBOM against it. Not a real profile; do not copy.",
+  "$comment": "TEST FIXTURE \u2014 deliberately invalid. This profile extends the interface disclosure baseline and tries to relax an inherited rule, lowering I3 (keyExchange) from MUST to SHOULD and making I1 withholdable. Extension is monotonic, so the validator must reject it with exit code 3 rather than evaluating any CBOM against it. Not a real profile; do not copy.",
   "profileId": "pkic.test.invalid-relaxing",
   "title": "Invalid relaxing profile (test fixture)",
   "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the validator rejects a relaxing override.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.3",
+    "version": "0.4",
     "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
   },
-  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
   "overrides": [
-    { "id": "I3", "level": "SHOULD" }
+    {
+      "id": "I3",
+      "level": "SHOULD"
+    }
   ],
-  "interfaceRules": []
+  "interfaceRules": [],
+  "scope": {
+    "subjectType": "product",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "intended",
+      "implemented",
+      "configured",
+      "observed"
+    ]
+  }
 }
