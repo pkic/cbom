@@ -85,16 +85,21 @@ def build(out_dir: Path) -> int:
         print(f"error: no navigation entries parsed from {NAV}", file=sys.stderr)
         return 1
 
-    if out_dir.exists():
-        shutil.rmtree(out_dir)
-    out_dir.mkdir(parents=True)
+    # Overwrite in place rather than clearing the directory first. Deleting is
+    # not available on every filesystem this repository gets mounted on, and a
+    # rebuild that dies halfway through the delete leaves no output at all.
+    # Anything left over from a previous build is reported instead of removed.
+    before = {p.name for p in out_dir.iterdir()} if out_dir.exists() else set()
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     pages, assets, warnings = 0, 0, []
+    written = set()
     for src in sorted(SRC.iterdir()):
         if src.is_dir():
             continue
         if src.suffix != ".html":
             shutil.copy2(src, out_dir / src.name)  # styles.css, the JSON, the scripts
+            written.add(src.name)
             assets += 1
             continue
 
@@ -121,9 +126,14 @@ def build(out_dir: Path) -> int:
             )
 
         (out_dir / src.name).write_text(text, encoding="utf-8")
+        written.add(src.name)
         pages += 1
 
     print(f"built {pages} pages and {assets} assets into {out_dir.relative_to(ROOT)}/")
+    stale = sorted(before - written)
+    if stale:
+        print(f"  {len(stale)} file(s) left from a previous build and no longer produced: "
+              f"{', '.join(stale)}", file=sys.stderr)
     for w in warnings:
         print(f"  warning: {w}", file=sys.stderr)
     return 0
