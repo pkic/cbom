@@ -22,7 +22,8 @@ nav: index
 {% include methodology-nav.html %}
 
 <main>
-  <h1>CBOM Profiles</h1>
+  <div class="crumb">START HERE</div>
+  <h1>Overview</h1>
   <p class="lead">A Cryptography Bill of Materials (CBOM) profile defines the subset of attributes that a CBOM is required to contain for a stated objective. It establishes a minimum reporting requirement rather than exhaustive coverage. This documentation describes the profile methodology using a worked example: an nginx web server whose CBOM is expressed in CycloneDX 1.7 and evaluated against a small, product-independent profile.</p>
   <div>
     <span class="tag">PKIC CBOM Profiles WG</span>
@@ -31,67 +32,66 @@ nav: index
     <span class="tag">not normative</span>
   </div>
 
-  <h2>Purpose</h2>
-  <p>A CBOM records the cryptography a product uses, together with the location and conditions of its use. Reporting every cryptographic operation in a large product produces a volume of data in which the items relevant to a particular decision are difficult to identify. A profile addresses this by specifying the attributes that a given objective requires, so that a CBOM can be evaluated automatically for completeness against that objective. A single CBOM may satisfy several profiles.</p>
-  <p>The example profile, the Interface Disclosure Baseline, requires a product to declare its cryptographic interfaces, including the interface used to configure the product, and to describe each interface. It does not reference a specific product or interface instance, and therefore applies to any product that terminates TLS, SSH, or IPsec. nginx serves only as the example subject.</p>
+  <div class="banner"><strong>Meeting this for the first time?</strong> Read the <a href="introduction.html">Introduction</a> first. It works one product, one CBOM and one buyer's question end to end, and takes about five minutes. This page is the map, and is more useful once you have read it.</div>
+
+  <h2>Scope of this documentation</h2>
+  <p>The example profile, the Interface Disclosure Baseline, requires a product to declare its cryptographic interfaces, including the interface used to configure the product, and to describe each one. It does not reference a specific product or interface instance, and therefore applies to any product that terminates TLS, SSH, or IPsec. nginx serves only as the example subject. A single CBOM may satisfy several profiles at once.</p>
+  <p>The order of the sections in the sidebar is a <em>reading</em> order: concrete material first, the vocabulary collected under Reference for when a term is unfamiliar. It is deliberately not the clause order of the numbered draft, where Scope, Terms and Conformance appear early because a normative document has to be self-contained. The two orders serve different readers and the working group maintains both.</p>
 
   <h2>Suggested reading paths</h2>
-  <p>The sections are ordered so that each one can be read on its own, which makes the tab bar a poor guide to where to start. The routes below cover the four positions from which the material is usually approached. Each is between five and seven sections, and none requires the others.</p>
+  <p>Sections are written so that each can be read on its own. Reading straight through the sidebar works; the two routes below are shortcuts for the positions from which the material is most often approached, and each assumes the <a href="introduction.html">Introduction</a> has been read.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>If you are</th><th>Read in this order</th><th>Why this route</th></tr></thead>
     <tbody>
       <tr>
         <td><strong>Producing CBOMs</strong><br><span style="color:var(--muted);font-size:13px">a vendor, or a build or release team</span></td>
-        <td><a href="model.html">Model</a> → <a href="profile.html">Profile</a> → <a href="formats.html">Formats</a> → <a href="pqc-migration.html">PQC Migration</a> → <a href="versioning.html">Versioning</a></td>
-        <td>Establishes the vocabulary, then what a profile obliges you to declare, where each attribute is written in a document, and what happens to your existing files when a version changes.</td>
+        <td><a href="model.html">Model</a> → <a href="profile.html">Profile</a> → <a href="formats.html">Formats</a> → <a href="versioning.html">Versioning</a></td>
+        <td>The vocabulary, then what a profile obliges you to declare, where each attribute is written in a document, and what happens to files you have already published when a version changes.</td>
       </tr>
       <tr>
-        <td><strong>Consuming CBOMs</strong><br><span style="color:var(--muted);font-size:13px">an operator, or a buyer assessing a supplier</span></td>
-        <td><a href="challenges.html">Challenges</a> → <a href="inventory.html">Inventory</a> → <a href="lifecycle.html">Lifecycle Data</a> → <a href="profile.html">Profile</a> → <a href="conformance.html">Conformance</a> → <a href="use-cases.html">Use Cases</a> → <a href="demo.html">Demo</a></td>
-        <td>Starts from why the data received today is difficult to use, then how it reaches an inventory, how far each lifecycle stage can be trusted, and what a profile allows you to require. Conformance matters here in particular, because it sets out what a passing verdict does not assert.</td>
+        <td><strong>Requiring and reading CBOMs</strong><br><span style="color:var(--muted);font-size:13px">an operator or buyer assessing a supplier, an auditor or regulator</span></td>
+        <td><a href="use-cases.html">Use Cases</a> → <a href="challenges.html">Challenges</a> → <a href="profile.html">Profile</a> → <a href="conformance.html">Conformance</a> → <a href="governance.html">Governance</a></td>
+        <td>What a profile can be written to require, why the data supplied today is hard to use, and what a passing verdict does and does not assert. Conformance matters most here, and Governance covers the signing, provenance and retention a claim depends on.</td>
       </tr>
       <tr>
         <td><strong>Writing or approving a profile</strong><br><span style="color:var(--muted);font-size:13px">working group members, sector bodies</span></td>
-        <td><a href="terms.html">Terms</a> → <a href="model.html">Model</a> → <a href="method.html">Method</a> → <a href="profile.html">Profile</a> → <a href="conformance.html">Conformance</a> → <a href="pqc-migration.html">PQC Migration</a> → <a href="governance.html">Governance</a></td>
+        <td><a href="model.html">Model</a> → <a href="method.html">Method</a> → <a href="profile.html">Profile</a> → <a href="pqc-migration.html">PQC Migration</a> → <a href="governance.html">Governance</a></td>
         <td>The methodology's own subject matter. Method gives the procedure, PQC Migration works one profile through it end to end, and Governance covers what happens once a profile is published.</td>
-      </tr>
-      <tr>
-        <td><strong>Assessing against policy</strong><br><span style="color:var(--muted);font-size:13px">a regulator, auditor, or compliance function</span></td>
-        <td><a href="challenges.html">Challenges</a> → <a href="data-exposure.html">Data Exposure</a> → <a href="lifecycle.html">Lifecycle Data</a> → <a href="policy-evaluation.html">Policy Evaluation</a> → <a href="governance.html">Governance</a> → <a href="related-work.html">Related Work</a></td>
-        <td>Concentrates on what a CBOM can and cannot substantiate, why derived judgements are kept outside the document, and the signing, provenance and retention controls a claim depends on. Data Exposure sets out the threat that drives most current regulation.</td>
       </tr>
     </tbody>
   </table>
   </div>
-  <p style="font-size:13.5px;color:var(--muted)">A reader with no prior exposure to bills of materials will find <a href="challenges.html">Challenges</a> the least demanding entry point, since it assumes only familiarity with the problem rather than with the formats.</p>
+  <p style="font-size:13.5px;color:var(--muted)">Two sections sit outside these routes and are read when the question arises rather than in sequence: <a href="data-exposure.html">Data Exposure</a>, a design note on the harvest-now-decrypt-later threat and the attributes that would measure it, and <a href="related-work.html">Related Work</a>, on how this fits the consortium's other models.</p>
 
   <h2>Contents</h2>
   <div class="cards">
-    <a class="card" href="terms.html"><div class="num">reference</div><h3>Terms</h3><p>The vocabulary in one place: the model, profile and conformance terms, every attribute and its permitted values, and the terms deliberately not used.</p></a>
+    <a class="card" href="introduction.html"><div class="num">start here</div><h3>Introduction</h3><p>One product, one CBOM and one buyer's question: why the document cannot answer it, and what a profile does about it.</p></a>
+    <a class="card" href="demo.html"><div class="num">interactive</div><h3>Demo</h3><p>Three example documents evaluated against the profile in the browser, including the four disclosure outcomes.</p></a>
+    <a class="card" href="use-cases.html"><div class="num">applied</div><h3>Use Cases</h3><p>Contexts in which profiles apply: PQC readiness, procurement, incident response, compliance reporting, and continuous integration.</p></a>
     <a class="card" href="challenges.html"><div class="num">background</div><h3>Challenges</h3><p>Lessons from SBOM adoption and the limitations of current CBOM standards.</p></a>
     <a class="card" href="inventory.html"><div class="num">background</div><h3>Inventory</h3><p>How CBOMs feed a cryptographic inventory, and how a CBOM is extracted from one for an internal, external, or supply-chain consumer.</p></a>
     <a class="card" href="lifecycle.html"><div class="num">background</div><h3>Lifecycle Data</h3><p>The cryptographic data available at each development and deployment phase, and the differences between phases.</p></a>
-    <a class="card" href="data-exposure.html"><div class="num">background</div><h3>Data Exposure</h3><p>The harvest-now-decrypt-later threat, why the cryptography alone does not measure it, and the data attributes that would.</p></a>
     <a class="card" href="model.html"><div class="num">concept</div><h3>Model</h3><p>Relationships, endpoints and assets — the vocabulary the methodology is written in, with worked examples.</p></a>
     <a class="card" href="profile.html"><div class="num">core</div><h3>Profile</h3><p>The product-level and per-interface rules, the two directions of use, and the basis for a conformance decision.</p></a>
     <a class="card" href="conformance.html"><div class="num">core</div><h3>Conformance</h3><p>What may be assessed, what a verdict means, who may claim it, how a claim is expressed, and what conformance does not assert.</p></a>
+    <a class="card" href="policy-evaluation.html"><div class="num">core</div><h3>Policy Evaluation</h3><p>Why derived judgements such as post-quantum posture are computed by external versioned policy rather than stored in the document.</p></a>
     <a class="card" href="method.html"><div class="num">core</div><h3>Method</h3><p>The procedure for defining a profile, in twelve steps across five stages, with the tests to apply at each and the ways it goes wrong.</p></a>
-    <a class="card" href="use-cases.html"><div class="num">applied</div><h3>Use Cases</h3><p>Contexts in which profiles apply: PQC readiness, procurement, incident response, compliance reporting, and continuous integration.</p></a>
     <a class="card" href="pqc-migration.html"><div class="num">worked use case</div><h3>PQC Migration</h3><p>One use case developed in full, from the consumer's decision to a complete profile definition, for a product treated as a black box.</p></a>
     <a class="card" href="formats.html"><div class="num">mapping</div><h3>Formats</h3><p>The mapping of a single profile onto CycloneDX and SPDX, and the modelling gap common to both.</p></a>
-    <a class="card" href="policy-evaluation.html"><div class="num">core</div><h3>Policy Evaluation</h3><p>Why derived judgements such as post-quantum posture are computed by external versioned policy rather than stored in the document.</p></a>
+    <a class="card" href="data-exposure.html"><div class="num">design note</div><h3>Data Exposure</h3><p>The harvest-now-decrypt-later threat, why the cryptography alone does not measure it, and the data attributes that would.</p></a>
     <a class="card" href="versioning.html"><div class="num">operations</div><h3>Versioning</h3><p>Handling of CBOM files across three version axes, with a machine-checkable acceptance range.</p></a>
     <a class="card" href="governance.html"><div class="num">operations</div><h3>Governance</h3><p>The CBOM lifecycle, signing and provenance, the arrangements for relating a CBOM to an SBOM, change control, and long-term stewardship.</p></a>
-    <a class="card" href="related-work.html"><div class="num">context</div><h3>Related Work</h3><p>How CBOM profiles relate to the PQC Maturity Model and other consortium efforts, and where one depends on the other.</p></a>
-    <a class="card" href="demo.html"><div class="num">interactive</div><h3>Demo</h3><p>An interactive comparison of a conforming and a non-conforming CBOM against the profile.</p></a>
+    <a class="card" href="terms.html"><div class="num">reference</div><h3>Terms</h3><p>The vocabulary in one place: the model, profile and conformance terms, every attribute and its permitted values, and the terms deliberately not used.</p></a>
+    <a class="card" href="related-work.html"><div class="num">reference</div><h3>Related Work</h3><p>How CBOM profiles relate to the PQC Maturity Model and other consortium efforts, and where one depends on the other.</p></a>
+    <a class="card" href="files.html"><div class="num">reference</div><h3>Files</h3><p>The profile rules file, the example CBOMs and the validator, with the commands to reproduce every result shown here.</p></a>
   </div>
 
   <div class="banner">This material is illustrative and is intended to demonstrate the methodology. It is not a normative deliverable of the PKIC CBOM Profiles Working Group. Field names are aligned to CycloneDX v1.7 / ECMA-424 (2nd Edition) and should be validated against the current schema before operational use.</div>
 
   <div class="pagenav">
-    <span></span>
-    <a class="next" href="terms.html">Next: Terms →</a>
+    <a href="introduction.html">← Introduction</a>
+    <a class="next" href="demo.html">Next: Demo →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>

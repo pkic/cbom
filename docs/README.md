@@ -46,16 +46,24 @@ The section navigation lives in one place and is rendered into every page.
 | `methodology/styles.css` | Styling, under "section navigation". A left rail at 1100px and above, a grouped block above the content below that. |
 
 **Adding a section** means: create the page with `nav: <id>` in its front matter, wrap its body in
-`<div class="shell">` with `{% include methodology-nav.html %}` before `<main>`, and add one line
-to `_data/methodology_nav.yml`. Nothing else needs touching.
+`<div class="shell">` with `{% include methodology-nav.html %}` before `<main>`, add one line to
+`_data/methodology_nav.yml`, then run `python3 tools/renumber-pagenav.py` from the repository
+root. The same applies to reordering: the sidebar comes from the data file, but the previous and
+next links at the foot of each page are written into the pages themselves, and the script is what
+keeps the two in step.
+
+The order in `_data/methodology_nav.yml` is a *reading* order, aimed at someone meeting the
+material for the first time. It is deliberately not the clause order of the numbered draft, where
+Scope, Terms and Conformance appear early because a normative document has to be self-contained.
+Both orders are maintained; neither is derived from the other.
 
 Until August 2026 the navigation was copied into every page, so adding one section meant editing
 twenty files and was done with a script each time. That is why the include exists.
 
 | File | Section |
 |---|---|
-| `index.html` | Overview |
-| `terms.html` | Terms and definitions |
+| `introduction.html` | Introduction: the problem, one worked document, and what a profile does |
+| `index.html` | Overview: the map, the reading routes, and the contents |
 | `challenges.html` | Challenges with SBOMs and current CBOMs |
 | `inventory.html` | Inventory and CBOMs |
 | `lifecycle.html` | Lifecycle data across development and deployment |
@@ -73,6 +81,7 @@ twenty files and was done with a script each time. That is why the include exist
 | `related-work.html` | Relationship to the PQC Maturity Model and other efforts |
 | `files.html` | Files and how to run them |
 | `demo.html` | Interactive conformance evaluation |
+| `terms.html` | Terms and definitions (Reference group) |
 
 Machine-readable artifacts in the same folder:
 
