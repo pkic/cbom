@@ -79,9 +79,14 @@ nav.tabs a.active{color:var(--accent-ink);border-bottom-color:var(--accent);font
 
 @media (min-width:1100px){
   .shell{max-width:1320px;display:flex;align-items:flex-start;gap:10px;padding:0 12px}
-  .sidenav{flex:0 0 208px;position:sticky;top:70px;padding:28px 4px 32px 12px;
-    max-height:calc(100vh - 96px);overflow-y:auto}
+  .sidenav{flex:0 0 208px;position:sticky;top:70px;padding:20px 4px 24px 12px;
+    max-height:calc(100vh - 88px);overflow-y:auto}
   .sidenav ul{display:block}
+  /* The rail carries six groups and twenty-one entries. At the earlier rhythm
+     the last group fell below the fold on a 900px viewport and had to be
+     scrolled for, which made Reference easy to miss. */
+  .sidenav .sidenav-group{margin:11px 0 5px}
+  .sidenav a{padding:5px 10px}
   .sidenav a{border-left:2px solid transparent;border-radius:0 7px 7px 0}
   .sidenav a.active{border-left-color:var(--accent)}
   .shell main{flex:1 1 auto;min-width:0;max-width:1000px;margin:0}
