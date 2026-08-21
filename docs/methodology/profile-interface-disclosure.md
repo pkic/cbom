@@ -1,4 +1,4 @@
-# CBOM Profile — Interface Disclosure Baseline (Example v0.4)
+# CBOM Profile — Interface Disclosure Baseline (Example v0.5)
 
 > **Status:** Illustrative early-concept artifact for the PKIC CBOM Profiles Working Group.
 > Not a normative deliverable. CycloneDX crypto field names are aligned to v1.7 / ECMA-424
@@ -163,11 +163,12 @@ rather than as separate fields.
 
 | Member | This profile | Why |
 |---|---|---|
+| `orientation` | `inventory` | This profile reports what interfaces do, not what they could do. Under C12 that forbids it from requiring any forward-looking attribute, which is what keeps a present-state name and a capability name from being read as interchangeable across profiles that share a vocabulary. |
 | `subjectType` | `product` | The subject is a shipped product held by a consumer who did not build it and cannot inspect it. A profile for a service the consumer operates could ask for more. |
 | `relationshipTypes` | `interface` | Every rule here constrains a communication interface. The declaration is checked against the rules rather than trusted, because a scope statement maintained by hand drifts from what the rules actually say. |
 | `lifecycleStages` | all four | An acceptance constraint, in the same sense as `appliesTo` for carrier versions: an interface reporting a stage outside the set fails I8. |
 
-The third member is the one that changes verdicts, and this profile deliberately does not use it
+The lifecycle-stage member is the one that changes verdicts, and this profile deliberately does not use it
 to change any. A disclosure baseline should record whatever a producer is able to report,
 including cryptography it has only `intended`, because an intention disclosed is more useful to
 an inventory than an intention withheld. What the field buys the baseline is not a restriction
@@ -236,6 +237,19 @@ The derived PQC migration profile pins v0.4 and tightens I9 by removing its with
 level being already MUST. Under decision 0004 that tightening is permitted; a subsequent baseline
 revision that relaxed I9 would place the derived profile in conflict, which is why the base is
 pinned by version.
+
+### v0.5 — 2026-08-21
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Added `scope.orientation`, declared here as `inventory` | editorial | None. The constraint falls on the profile, not the document: an inventory profile may not require forward-looking attributes, checked as C12 |
+
+The value of the field is again in what it permits elsewhere. The migration profile declares
+`both`, and C12 then obliges it to require the present-state attribute behind every capability
+attribute it asks for. It already did, by inheriting I2, I3 and I5 from this profile — but
+nothing had required it to, and a migration profile written standalone could have reported
+capability alone. Recorded as decision 0009, which reverses the clause in 0008 that rejected
+orientation.
 
 ### v0.4 — 2026-08-21
 

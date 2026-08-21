@@ -101,6 +101,17 @@ for f in "$M"/*.json "$FIX"/*.json; do
   fi
 done
 
+# A fixture extending a profile pins its base by exact version, which is the
+# behaviour being tested. Bumping a profile version therefore invalidates every
+# fixture pinning it, and without this check the breakage surfaces downstream as
+# a missing word in some unrelated assertion.
+if OUT="$("$PY" "$ROOT/tests/check-fixture-pins.py" "$M" "$FIX" 2>&1)"; then
+  ok "fixtures pin the current base versions"
+else
+  bad "fixtures pin the current base versions" "re-pin these, then re-run:"
+  printf '%s\n' "$OUT"
+fi
+
 for script in validate_cbom.py check_profile.py; do
   if "$PY" -c "import ast,sys; ast.parse(open(sys.argv[1]).read())" "$M/$script" 2>/dev/null; then
     ok "$script parses"
@@ -214,9 +225,9 @@ expect_output "reported as undeclared, not withheld" "no disclosure marker" \
 
 # -------------------------------------------------- profile well-formedness ---
 # The second conformance target: a profile checked against the methodology.
-# Requirements C1 to C11 are stated in the Conformance section.
+# Requirements C1 to C12 are stated in the Conformance section.
 echo
-echo "Profile well-formedness (C1-C11)"
+echo "Profile well-formedness (C1-C12)"
 expect_check_exit "baseline profile is well-formed"        0 "$BASE"
 expect_check_exit "derived profile is well-formed"         0 "$PQC"
 expect_check_output "baseline verdict reads WELL-FORMED" "VERDICT : WELL-FORMED" "$BASE"
@@ -252,6 +263,23 @@ expect_check_output "C1 is the failing requirement" "[FAIL] C1" "$FIX/profile-c1
 expect_check_output "C1 asks for the actions" "decisionOptions" "$FIX/profile-c1-no-decision-options.rules.json"
 expect_check_exit   "C11 missing scope is rejected"      1 "$FIX/profile-c11-no-scope.rules.json"
 expect_check_output "C11 is the failing requirement" "[FAIL] C11" "$FIX/profile-c11-no-scope.rules.json"
+expect_check_exit   "C12 capability without present state is rejected" 1 \
+                    "$FIX/profile-c12-capability-unpaired.rules.json"
+expect_check_output "C12 is the failing requirement" "[FAIL] C12" \
+                    "$FIX/profile-c12-capability-unpaired.rules.json"
+expect_check_output "C12 names the missing counterpart" "expected keyExchange" \
+                    "$FIX/profile-c12-capability-unpaired.rules.json"
+expect_check_exit   "C12 an inventory profile requiring capability is rejected" 1 \
+                    "$FIX/profile-c12-inventory-capability.rules.json"
+expect_check_output "C12 is the failing requirement" "[FAIL] C12" \
+                    "$FIX/profile-c12-inventory-capability.rules.json"
+
+# The migration profile satisfies C12 only through inheritance: it declares the
+# capability attributes itself and takes every present-state attribute from the
+# baseline it extends. That is the normal case, not an edge one, so it is worth
+# asserting rather than assuming.
+expect_check_output "the migration profile is oriented 'both'" "orientation 'both'" "$PQC"
+expect_check_output "the baseline is oriented 'inventory'" "orientation 'inventory'" "$BASE"
 
 # A widened stage set is rejected before any document is evaluated, in the same
 # way a relaxing override is: the profile is invalid, not the document.

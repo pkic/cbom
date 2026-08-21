@@ -43,6 +43,7 @@
   ],
   "scope": {
     "subjectType": "product",
+    "orientation": "inventory",
     "relationshipTypes": [
       "interface"
     ],

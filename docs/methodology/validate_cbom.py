@@ -63,6 +63,42 @@ SUBJECT_TYPES = ("product", "service", "component", "estate-subset")
 LIFECYCLE_STAGES = ("intended", "implemented", "configured", "observed")
 STAGE_ATTRIBUTE = "lifecycleStage"
 
+# Orientation. The same four values the working group already uses to classify
+# its own aspects in _data/aspects.yml, less 'n-a': a profile that is neither
+# about present state nor about migration is not a profile.
+ORIENTATIONS = ("inventory", "migration", "both")
+
+# Forward-looking attributes: those describing what an interface could do or
+# will do, as against what it does. The 'Supported' suffix is the general form
+# fixed by decision 0005; these three are named because they describe a future
+# state without having a present-state counterpart to be suffixed from.
+CAPABILITY_SUFFIX = "Supported"
+ROADMAP_ATTRIBUTES = ("capabilityStatus", "blockedBy", "roadmapRef")
+
+
+def is_forward_looking(attribute):
+    return bool(attribute) and (attribute.endswith(CAPABILITY_SUFFIX)
+                                or attribute in ROADMAP_ATTRIBUTES)
+
+
+def present_state_counterparts(attribute):
+    """The present-state names a capability attribute could be suffixed from.
+
+    'keyExchangeSupported' -> ('keyExchange',). A capability attribute is a set
+    and so is plural, while its present-state counterpart holds one value and is
+    singular, so 'protocolVersionsSupported' -> ('protocolVersions',
+    'protocolVersion'). Both are offered rather than guessed at, because a stem
+    ending in 's' is not always a plural.
+
+    Empty for a roadmap attribute, which describes a future state with no
+    present-state equivalent, and for an attribute that is already present
+    state."""
+    if not attribute or not attribute.endswith(CAPABILITY_SUFFIX) \
+            or len(attribute) == len(CAPABILITY_SUFFIX):
+        return ()
+    stem = attribute[:-len(CAPABILITY_SUFFIX)]
+    return (stem, stem[:-1]) if stem.endswith("s") else (stem,)
+
 
 def ver_tuple(s):
     return tuple(int(x) for x in str(s).split(".") if x.isdigit())

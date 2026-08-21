@@ -2,7 +2,7 @@
   "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident. v0.2 added the three-state disclosure model described under 'disclosure'; v0.3 raised I9 to a withholdable MUST, which is the only combination in which that model affects a verdict; v0.4 added the 'scope' object, which declares the subject, the relationship types the rules constrain, and the lifecycle stages the profile accepts. See 'changelog'.",
   "profileId": "pkic.example.interface-disclosure",
   "title": "Interface Disclosure Baseline (Example)",
-  "version": "0.4",
+  "version": "0.5",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
 
   "objective": {
@@ -17,8 +17,9 @@
   },
 
   "scope": {
-    "$comment": "C11. The boundary, as one object rather than as scattered fields: what the profile describes, which kinds of cryptographic relationship its rules constrain, and which lifecycle stages of reported data it will accept. 'lifecycleStages' is an acceptance constraint in the same sense as 'appliesTo': an interface reporting a stage outside the set fails I8. This profile accepts all four, because a disclosure baseline should record whatever the producer can report and let a derived profile narrow it. See decision 0008.",
+    "$comment": "C11. The boundary, as one object rather than as scattered fields: what the profile describes, which kinds of cryptographic relationship its rules constrain, which lifecycle stages of reported data it will accept, and whether it reports present state, migration capability, or both. 'lifecycleStages' is an acceptance constraint in the same sense as 'appliesTo': an interface reporting a stage outside the set fails I8. This profile accepts all four, because a disclosure baseline should record whatever the producer can report and let a derived profile narrow it. See decision 0008.",
     "subjectType": "product",
+    "orientation": "inventory",
     "relationshipTypes": ["interface"],
     "lifecycleStages": ["intended", "implemented", "configured", "observed"]
   },
@@ -100,6 +101,14 @@
           "summary": "Raised I9 implementationPurl from SHOULD to MUST, keeping it withholdable. A document that omits the attribute in silence no longer conforms; a document that declares it withheld does. Until this version no rule combined MUST with withholdability, which is the only combination where the disclosure model affects a verdict, so the model was demonstrated in reporting and never at the point of decision." },
         { "kind": "editorial",
           "summary": "Stated 'withholdable' explicitly on every rule. Behaviour is unchanged, since an absent flag was already treated as false, but a producer can now read the answer from the profile instead of inferring it from a validator's default." }
+      ]
+    },
+    {
+      "version": "0.5",
+      "date": "2026-08-21",
+      "changes": [
+        { "kind": "editorial",
+          "summary": "Added 'scope.orientation', declared here as 'inventory'. No document verdict changes. The value constrains the profile rather than the document: an inventory profile may not require forward-looking attributes, which is checked as C12. Its purpose is to stop a present-state attribute and a capability attribute being read as interchangeable across profiles that share a vocabulary. See decision 0009." }
       ]
     },
     {

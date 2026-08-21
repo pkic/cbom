@@ -13,8 +13,8 @@ This register collects them in one place so that a meeting agenda can be set fro
 Each question is mapped to one of the thirteen topics the group already tracks as GitHub issues,
 so an item can be posted to the issue that covers it.
 
-Forty-five questions sit under those thirteen topics. Four more do not fit any of them, which is
-itself worth knowing, and they are listed at the end.
+Forty-seven questions sit under those thirteen topics. Four more do not fit any of them, which
+is itself worth knowing, and they are listed at the end.
 
 Q36 to Q44 were added on 9 August 2026 in response to member feedback, covering the
 harvest-now-decrypt-later threat, asset identity, end-to-end posture, long-term stewardship, and
@@ -22,6 +22,11 @@ the relationship to the PQC Maturity Model. The resolution plan for that feedbac
 `plan-feedback-2026-08.md`. Q36 was then restated and Q45 added after review found that the
 original treatment of data facts was wrong for one class of interface; the reasoning is in
 `design-note-data-and-hndl.md`.
+
+Q46 and Q47 were added on 21 August 2026, and Q08 restated, after member feedback on
+financial-sector systems. The feedback attributed the gap to Q08; the reasoning for separating it
+into two cheaper questions, and for leaving Q08 where it stands, is in
+`design-note-multiparty-trust.md`.
 
 ## Who this is written for
 
@@ -72,7 +77,7 @@ deleted.
 |---|---|
 | 3.1 What a profile is for, and its scope | Q01, Q02 |
 | 3.2 Naming and versioning a profile | Q03, Q04 |
-| 3.3 The list of attributes | Q05, Q06, Q07, Q08, Q09, Q34, Q36, Q37, Q45 |
+| 3.3 The list of attributes | Q05, Q06, Q07, Q08, Q09, Q34, Q36, Q37, Q45, Q46, Q47 |
 | 3.4 How binding each rule is | Q10, Q11, Q12 |
 | 3.5 Checking conformance | Q13, Q14, Q15, Q31, Q32 |
 | 3.6 Writing a profile into a file format | Q16, Q17, Q18 |
@@ -312,13 +317,27 @@ the collected reference. No separate document exists.
 **What would have to change.** Whether the Terms section becomes a versioned document, and how
 the rule files point at definitions.
 
-## Q08 — How should the model describe cryptography shared among many parties?
+## Q08 — How should the model describe cryptography under a key shared among many parties?
 
 **Status** open
 
 **The question.** The methodology describes cryptography as something applied between two
 parties. Some systems apply it among many at once, under a shared key, with members joining and
 leaving.
+
+*Restated 21 August 2026.* This question was originally titled "shared among many parties", which
+is broad enough to cover two different situations with very different costs. It covers only the
+first of them:
+
+- **A shared key.** n parties hold one key at one time. Splitting the group into pairs loses the
+  key and the membership, so no pairwise description of the system is true. That is this question.
+- **A shared trust anchor, or one signer and many verifiers.** Many parties, but each holding its
+  own keys under a common anchor, or one signature verified by a population. These decompose into
+  pairwise relationships without loss. Separated out as Q46 and Q47, and much cheaper to settle.
+
+The distinction is set out in `design-note-multiparty-trust.md`. It matters because financial
+messaging and settlement systems were raised as a case for this question and are, on the evidence
+available, an instance of the second kind.
 
 **Why it matters.** This affects which sectors the methodology can serve. Group cryptography is
 normal in broadcast and multicast systems, group messaging, and some industrial, utility and
@@ -343,6 +362,11 @@ rule requires at least two parties.
 **What would have to change.** The definitions in the Model and Terms sections, one rule, the
 file mapping, and any claim that the methodology suits sectors where group cryptography is
 routine.
+
+**What would settle it.** Whether any sector the group intends to serve uses a key held by more
+than two parties at once, as against per-participant keys under a common anchor. Broadcast and
+multicast clearly do. Whether settlement and payment rails do is an open factual question and is
+recorded under Q47.
 
 ## Q09 — Should the file formats gain a proper object for a cryptographic connection?
 
@@ -371,6 +395,82 @@ components. The mismatch is acknowledged in two sections.
 
 **What would have to change.** The Model section, the mapping, and whether the group makes a
 submission to CycloneDX or SPDX. Q17 asks the same question about a different gap.
+
+## Q46 — How should a signature verified by a population, rather than by one counterparty, be described?
+
+**Status** open. Added 21 August 2026 from member feedback on financial-sector systems.
+
+**The question.** A signed message may be verified by many parties rather than one. A settlement
+instruction signed by a participant and verified by every member of a scheme is the case that
+raised it; a signed software release verified by every customer is the same shape.
+
+**Why it matters.** The model's taxonomy sorts relationships by how many parties there are and
+whether they exist at the same time. It has a row for signing, at two parties and not
+simultaneous, and a row for broadcast, at n parties and simultaneous. One signer with many
+verifiers is n parties and *not* simultaneous, and there is no such row. So the case is neither
+represented nor recorded as unrepresented, which is worse than the broadcast limitation, which at
+least is written down.
+
+The practical consequence is that a profile cannot say who is entitled to verify. The signing row
+already notes that "the verifier sets the ceiling": the weakest verifier that must be supported
+fixes what the signer may use. When the verifier is a whole membership, that ceiling is a property
+of the scheme rather than of either party, and nothing in the baseline expresses it.
+
+**Option A: leave it out of scope alongside Q08.** Simple, and treats every one-to-many case the
+same way (trade-off: this case needs no shared key and no membership state at the cryptographic
+layer, so it is much cheaper than Q08. Blocking it behind Q08 blocks a cheap fix behind an
+expensive one).
+
+**Option B: add a verifier-population attribute** to the relationship, naming the population that
+must be able to verify, without generalising the relationship to n endpoints. The relationship
+stays pairwise in the model; what is added is a fact about the ceiling.
+
+**Option C: generalise the relationship**, which is Q08's Option B, and treat this as an instance.
+
+**Where it stands.** Nothing. The taxonomy row is missing and the Model's known-limitation
+paragraph mentions only the shared-key case.
+
+**What would have to change.** The taxonomy table in the Model section, one new attribute in the
+attribute model, its format mapping, and the Terms section. Not the definition of a relationship,
+which is what makes this cheaper than Q08.
+
+## Q47 — Should a profile be able to state that an interface trusts an administered, closed membership?
+
+**Status** open. Added 21 August 2026 from member feedback on financial-sector systems.
+
+**The question.** The baseline records the signature algorithm an interface uses for
+authentication. It does not record whose trust anchor the interface accepts, or whether the set of
+parties holding a credential under that anchor is open or administered.
+
+**Why it matters.** Two interfaces can declare identical algorithms and sit in entirely different
+risk positions, because one accepts any credential under a public CA and the other accepts only
+members admitted by a scheme operator. In closed-membership systems — settlement, payment rails,
+and any consortium PKI — that difference carries most of the security argument, and it is the
+thing a supervisor supervises. A CBOM that omits it describes the cryptography accurately and the
+trust position not at all.
+
+It also blocks Q25. A finance profile built on the general baseline has nowhere to put this fact,
+so it would have to invent a sector attribute for it, which is what building on the baseline is
+meant to avoid.
+
+**Option A: leave it to sector profiles.** Each sector adds its own attribute (trade-off: the
+same concept arrives under several names, and a document stops being readable outside its sector,
+which is the fragmentation the methodology exists to prevent).
+
+**Option B: add a trust-domain attribute to the general model**, naming the anchor and whether
+membership is administered. General enough for consortium PKI, private CAs and scheme operators
+alike.
+
+**Option C: treat it as a property of the endpoint** rather than of the relationship, on the
+grounds that it describes who a party will accept rather than what passes between them.
+
+**Where it stands.** Nothing. Raised in `design-note-multiparty-trust.md`, which also records the
+factual question that would settle Q08's boundary: whether any of these systems use a key shared
+among more than two participants at once, as against per-participant keys under a common anchor.
+
+**What would have to change.** The attribute model, its format mapping, the Terms section, and
+the baseline profile if the attribute is required rather than optional. Possibly the endpoint
+definition in the Model, under Option C.
 
 ## Q34 — Should the completeness statement move into the baseline profile?
 
@@ -1136,6 +1236,14 @@ question and loses the guarantee that makes building on another profile worthwhi
 **What would have to change.** Whether combining is allowed (Q23), the requirement numbering
 scheme (Q33), and whether permitted value lists can be narrowed (Q35).
 
+**A dependency, added 21 August 2026.** Option A is the option that preserves portability, and it
+is conditional on the attribute model being able to express what a sector needs. For finance it
+cannot today: there is no attribute in which to say that an interface trusts a scheme's anchor
+under administered, closed membership (Q47), nor to describe a signature verified by a membership
+rather than by one counterparty (Q46). A finance profile built on the baseline before those are
+settled would have to carry the facts in sector-specific attributes, which is the outcome Option A
+exists to avoid. Note that this does *not* depend on Q08: see `design-note-multiparty-trust.md`.
+
 ## Q33 — How are requirement numbers allocated across a family of profiles?
 
 **Status** open
@@ -1610,7 +1718,7 @@ not depend on a second example.
 |---|---|
 | PQC Migration section | Q05, Q06, Q10, Q25, Q26, Q27, Q28 |
 | Profile section and its rule files | Q02, Q03, Q04, Q11, Q12, Q15, Q17, Q23, Q24, Q33, Q34, Q35 |
-| Model section | Q08, Q09, N02 |
+| Model section | Q08, Q09, Q46, Q47, N02 |
 | Formats section | Q20, Q21 |
 | Governance section | Q14, Q22, Q29 |
 | Challenges section | Q18 |

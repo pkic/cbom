@@ -139,7 +139,7 @@ nav: profile
       <text x="548" y="20" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">EXTENSION</text>
       <rect x="470" y="42" width="156" height="42" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
       <text x="548" y="62" fill="#1a2230" text-anchor="middle" font-size="11.5">base profile</text>
-      <text x="548" y="77" fill="#5b6472" text-anchor="middle" font-size="10">interface disclosure v0.4</text>
+      <text x="548" y="77" fill="#5b6472" text-anchor="middle" font-size="10">interface disclosure v0.5</text>
       <rect x="470" y="120" width="156" height="42" rx="10" fill="#eafaf1" stroke="#0f7a52"/>
       <text x="548" y="140" fill="#1a2230" text-anchor="middle" font-size="11.5">derived profile</text>
       <text x="548" y="155" fill="#5b6472" text-anchor="middle" font-size="10">adds and tightens only</text>
@@ -184,9 +184,9 @@ nav: profile
   <h3>Expressing a conformance claim</h3>
   <p>A claim names every profile evaluated, each with its version, together with the carrier format version and the content revision. For a derived profile the base is named as well, because the derived profile pins a particular version of it and a reader should not have to look that up.</p>
   <pre><code>Conforms to:
-  pkic.example.pqc-migration v0.2
-    extending pkic.example.interface-disclosure v0.4
-  pkic.example.interface-disclosure v0.4   (independently evaluated)
+  pkic.example.pqc-migration v0.3
+    extending pkic.example.interface-disclosure v0.5
+  pkic.example.interface-disclosure v0.5   (independently evaluated)
 Carrier: CycloneDX 1.7
 Content revision: 3</code></pre>
 
@@ -194,8 +194,8 @@ Content revision: 3</code></pre>
   <p>A derived rules file declares its base and lists only its additions and its tightenings.</p>
   <pre><code>{
   "profileId": "pkic.example.pqc-migration",
-  "version": "0.2",
-  "extends": { "profileId": "pkic.example.interface-disclosure", "version": "0.4" },
+  "version": "0.3",
+  "extends": { "profileId": "pkic.example.interface-disclosure", "version": "0.5" },
   "overrides": [
     { "id": "I9", "level": "MUST", "withholdable": false }
   ],

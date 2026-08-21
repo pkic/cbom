@@ -119,7 +119,8 @@ nav: conformance
       <tr><td>C8</td><td>The profile states what it deliberately excludes, and why.</td><td>SHOULD</td></tr>
       <tr><td>C9</td><td>The profile is accompanied by a mapping to at least one carrier format, and by at least one document that conforms and one that does not.</td><td>SHOULD</td></tr>
       <tr><td>C10</td><td>The profile carries a changelog classifying each change as tightening, relaxing, or editorial.</td><td>SHOULD</td></tr>
-      <tr><td>C11</td><td>The profile declares its scope: the type of subject it describes, the relationship types its rules constrain, and the lifecycle stages of reported data it accepts.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C11</td><td>The profile declares its scope: the type of subject it describes, its orientation, the relationship types its rules constrain, and the lifecycle stages of reported data it accepts.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C12</td><td>The rules the profile imposes are consistent with the orientation it declares.</td><td><strong>MUST</strong></td></tr>
     </tbody>
   </table>
   </div>
@@ -133,13 +134,29 @@ nav: conformance
     <tbody>
       <tr><td><code>subjectType</code></td><td><code>product</code>, <code>service</code>, <code>component</code>, <code>estate-subset</code></td><td>Whether the profile applies to the thing a consumer is holding. A profile for a product a consumer cannot inspect can ask for less than one for a service the consumer operates.</td></tr>
       <tr><td><code>relationshipTypes</code></td><td>the relationship types named in <a href="model.html">Model</a>; today only <code>interface</code></td><td>Which kinds of cryptographic relationship the rules constrain. Declared, but checked against the rules rather than trusted: a scope statement that drifts from the rules reads as authoritative and is worse than none.</td></tr>
+      <tr><td><code>orientation</code></td><td><code>inventory</code>, <code>migration</code>, <code>both</code></td><td>Whether the profile reports what an interface does, what it could do, or both. Not a label: C12 holds the rules to it. The same vocabulary the working group uses for its own aspects, less <code>n-a</code>.</td></tr>
       <tr><td><code>lifecycleStages</code></td><td>a subset of <code>intended</code>, <code>implemented</code>, <code>configured</code>, <code>observed</code></td><td>Which stages of reported data the profile will accept, in the same sense that <code>appliesTo</code> settles which carrier versions it will accept. An interface reporting a stage outside the set fails the rule that constrains the stage.</td></tr>
     </tbody>
   </table>
   </div>
-  <p>The last of the three is the one that changes verdicts. Without it a document may report every interface at the <code>intended</code> stage, describing cryptography the producer plans to implement rather than cryptography that exists, and still conform. That is adequate for a disclosure baseline, which is why the example baseline accepts all four stages; it is not adequate for a procurement or migration profile, and the migration example accepts only the three that describe something real. A derived profile may narrow the set and may not widen it, for the same reason it may not relax a rule.</p>
+  <p>The last of the four is the one that changes verdicts. Without it a document may report every interface at the <code>intended</code> stage, describing cryptography the producer plans to implement rather than cryptography that exists, and still conform. That is adequate for a disclosure baseline, which is why the example baseline accepts all four stages; it is not adequate for a procurement or migration profile, and the migration example accepts only the three that describe something real. A derived profile may narrow the set and may not widen it, for the same reason it may not relax a rule.</p>
 
-  <p>C1 to C7 and C11 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
+  <h3>Orientation, and why it constrains rather than labels</h3>
+  <p>Present state and declared capability are reported in the same document, about the same interface, under names that differ by one suffix: <code>keyExchange</code> is what an interface negotiates, <code>keyExchangeSupported</code> is everything it could negotiate. The naming conventions in <a href="method.html">Method</a> keep the two names apart. They do not keep the two <em>obligations</em> apart, and a profile requiring only the capability leaves a consumer with a set of algorithms and no way to tell which is in use. The likely reading of such a document is the wrong one.</p>
+  <p>C12 closes that by giving each orientation an obligation.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Orientation</th><th>The profile's rules must</th></tr></thead>
+    <tbody>
+      <tr><td><code>inventory</code></td><td>Require no forward-looking attribute: nothing with a <code>Supported</code> suffix, and none of <code>capabilityStatus</code>, <code>blockedBy</code> or <code>roadmapRef</code>.</td></tr>
+      <tr><td><code>migration</code></td><td>Require at least one, or the profile reports present state only and is an inventory profile under another name.</td></tr>
+      <tr><td><code>both</code></td><td>Require, for every capability attribute, the present-state attribute it is a capability for.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>C12 is assessed against the resolved profile, so an inherited rule satisfies it. That is the ordinary case rather than a concession: the example migration profile declares the three capability attributes itself and takes their present-state counterparts from the baseline it extends. A profile that declared <code>both</code> and required capability alone would fail, which is the case the requirement exists for.</p>
+
+  <p>C1 to C7, C11 and C12 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
 
   <h2>3. An evaluation tool conforming to this methodology</h2>
   <p>Two tools given the same document, the same profile and the same resolution of any extended base are expected to return the same verdict. The requirements below are what that expectation rests on.</p>
@@ -167,8 +184,8 @@ nav: conformance
   <h3>What a claim cites</h3>
   <p>A claim names the profile and its version, the carrier format and its version, and the content revision of the document assessed. A claim omitting any of the three cannot be reproduced, and a claim that cannot be reproduced cannot be audited. Where a derived profile was used, the base and the version it pins are named as well.</p>
   <pre><code>Conforms to:
-  pkic.example.pqc-migration v0.2
-    extending pkic.example.interface-disclosure v0.4
+  pkic.example.pqc-migration v0.3
+    extending pkic.example.interface-disclosure v0.5
 Carrier: CycloneDX 1.7
 Content revision: 3
 Assessed by: Example Ltd (self-declared)

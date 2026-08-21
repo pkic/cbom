@@ -13,7 +13,7 @@
   },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.4",
+    "version": "0.5",
     "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
   },
   "appliesTo": {
@@ -31,6 +31,7 @@
   "interfaceRules": [],
   "scope": {
     "subjectType": "product",
+    "orientation": "inventory",
     "relationshipTypes": [
       "interface"
     ],

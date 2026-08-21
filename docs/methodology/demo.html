@@ -71,7 +71,7 @@ nav: demo
 <main>
   <div class="crumb">INTERACTIVE</div>
   <h1>Conformance evaluation</h1>
-  <p class="lead">Three example documents, evaluated against the Interface Disclosure Baseline v0.4. The first declares both a service and a management interface and conforms. The second omits the management interface and fails a product rule. The third declares both but exercises each of the four disclosure outcomes. The carrier version selector shows how the profile's declared acceptance range treats documents written to other versions of CycloneDX. This evaluation corresponds to that performed by <code>validate_cbom.py</code>.</p>
+  <p class="lead">Three example documents, evaluated against the Interface Disclosure Baseline v0.5. The first declares both a service and a management interface and conforms. The second omits the management interface and fails a product rule. The third declares both but exercises each of the four disclosure outcomes. The carrier version selector shows how the profile's declared acceptance range treats documents written to other versions of CycloneDX. This evaluation corresponds to that performed by <code>validate_cbom.py</code>.</p>
   <div class="legend">
     <div><span class="k st PASS">PASS</span>value supplied and valid</div>
     <div><span class="k st held">HELD</span>withheld by the producer, permitted for this attribute</div>
@@ -273,7 +273,7 @@ function render(){
     const q = bd.k==="legacy" ? " · legacy carrier, result flagged"
             : bd.k==="newer"  ? " · newer carrier, result qualified" : "";
     vd.textContent=res.conforms
-      ? "✓ CONFORMS to Interface Disclosure Baseline v0.4"+q
+      ? "✓ CONFORMS to Interface Disclosure Baseline v0.5"+q
       : "✕ DOES NOT CONFORM — failed "+reasons.join("; ")+q;
   }
   document.getElementById("productChecks").innerHTML=res.product.map(r=>

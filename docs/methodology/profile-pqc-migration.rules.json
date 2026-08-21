@@ -2,7 +2,7 @@
   "$comment": "Illustrative machine-readable CBOM profile for PQC migration planning. DERIVED: this profile extends the interface disclosure baseline under the composition rules on the Profile page. It inherits every baseline rule, tightens one, and adds twelve per-interface rules and two product-level rules. Extension is monotonic, so a CBOM conforming to this profile also conforms to the baseline. The 'file' hint in 'extends' tells the validator where to resolve the base from; profileId and version are what a conformance claim cites.",
   "profileId": "pkic.example.pqc-migration",
   "title": "PQC Migration Readiness (Example)",
-  "version": "0.2",
+  "version": "0.3",
   "objective": {
     "$comment": "C1. A derived profile states its own consumer and decision; it does not inherit the base's, because the whole reason to derive is that the decision differs. The same applies to decisionOptions: the base's consumer chooses whether to accept a disclosure, and this one chooses what to do about an interface.",
     "consumer": "An operator planning a post-quantum migration across an estate of products it did not build.",
@@ -19,13 +19,14 @@
   "scope": {
     "$comment": "C11. Narrows the base's accepted lifecycle stages, which is a tightening and therefore permitted; widening would be a relaxation and the validator rejects it. 'intended' is excluded because a migration plan built on cryptography a producer intends to implement is a plan built on an intention. The other three describe something that exists: implemented in the shipped product, configured in a deployment, or observed running. Where a producer can only report an intention, the fact belongs to the roadmap attributes M10 to M12, not to a lifecycle stage.",
     "subjectType": "product",
+    "orientation": "both",
     "relationshipTypes": ["interface"],
     "lifecycleStages": ["implemented", "configured", "observed"]
   },
 
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.4",
+    "version": "0.5",
     "file": "profile-interface-disclosure.rules.json"
   },
 
@@ -101,6 +102,16 @@
       "date": "2026-08-07",
       "summary": "Initial draft. Derived from the interface disclosure baseline v0.3: adds product rules P3 and P4 and per-interface rules M1 to M12, and tightens inherited rule I9 by removing its withholdability.",
       "changes": []
+    },
+    {
+      "version": "0.3",
+      "date": "2026-08-21",
+      "changes": [
+        { "kind": "editorial",
+          "summary": "Added 'scope.orientation', declared here as 'both'. This profile reports present state and migration capability together, and under C12 that declaration obliges it to require the present-state counterpart of every capability attribute it requires. It already does, by inheritance: M1 to M3 require protocolVersionsSupported, keyExchangeSupported and authenticationSupported, and I2, I3 and I5 require the present-state attributes those are capabilities for. Declaring 'migration' instead would have been the inaccurate answer, since this profile does not report capability alone. See decision 0009." },
+        { "kind": "editorial",
+          "summary": "Re-pinned the base from v0.4 to v0.5. No inherited rule changed." }
+      ]
     },
     {
       "version": "0.2",

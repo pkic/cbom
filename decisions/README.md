@@ -20,10 +20,14 @@ implemented in the example artifacts, so the group is being asked to ratify or r
 position that exists in the drafting, not to decide in the abstract. Reversing one means
 changing the example, and the Consequences section of each record says what that would involve.
 
-Record 0008 was written the same way and is now implemented alongside the others. It differs in
-one respect worth noting on an agenda: 0001 to 0007 describe the example as it was first built,
-whereas 0008 changed it, so reversing 0008 means undoing a tightening that documents may already
-have been produced against.
+Records 0008 and 0009 were written the same way and are implemented alongside the others. They
+differ in one respect worth noting on an agenda: 0001 to 0007 describe the example as it was
+first built, whereas 0008 and 0009 changed it. Reversing 0008 means undoing a tightening that
+documents may already have been produced against; reversing 0009 costs less, because its
+constraint falls on profiles rather than on documents.
+
+0009 also reverses a clause of 0008, which is the first time one record has revised another.
+Neither is superseded: 0008 is annotated at the clause concerned and otherwise stands.
 
 ## Index
 
@@ -37,6 +41,7 @@ have been produced against.
 | [0006](./0006-carrier-acceptance-range.md) | A profile declares the carrier versions it accepts | 3.2 | Proposed | 2026-08-07 |
 | [0007](./0007-availability-as-status-and-blocker.md) | Forward-looking capability is stated as a status and a blocker, not a date | 3.10 | Proposed | 2026-08-07 |
 | [0008](./0008-profile-scope-declaration.md) | A profile declares its subject, its boundary, and the lifecycle stages it accepts | 3.1 | Proposed | 2026-08-21 |
+| [0009](./0009-orientation-is-declared-and-checked.md) | A profile declares its orientation, and the declaration constrains its rules | 3.1 | Proposed | 2026-08-21 |
 
 <!-- Add a row per decision, newest at the bottom:
 | 0008 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |

@@ -97,6 +97,13 @@ reads as authoritative.
 classifies profiles without any consumer acting on the classification, and if profiles are ever
 catalogued it belongs to the registry rather than to the profile.
 
+> **Revisited, 21 August 2026.** The clause rejecting `orientation` was reversed by
+> [decision 0009](./0009-orientation-is-declared-and-checked.md). It stands here as the record of
+> what was decided and why. The reasoning above holds for a bare classification, which is what was
+> proposed at the time; a second submission argued for orientation as a guard against a shared
+> attribute changing sense between profile kinds, and that version does constrain something. The
+> rest of this record is unaffected.
+
 ## Rationale
 
 The lifecycle-stage constraint is the item that changes outcomes. The other two improve a

@@ -110,7 +110,7 @@ Machine-readable artifacts in the same folder:
 | `cbom-pqc-pass.cyclonedx.json` | Conforming example for the migration profile. |
 | `cbom-pqc-fail.cyclonedx.json` | Non-conforming example exercising conditional rules and the tightening. |
 | `validate_cbom.py` | Version-aware validator, with profile composition. Checks a document against a profile. |
-| `check_profile.py` | Well-formedness checker. Checks a profile against requirements C1 to C11 of the Conformance section. |
+| `check_profile.py` | Well-formedness checker. Checks a profile against requirements C1 to C12 of the Conformance section. |
 | `versioning-and-legacy-cboms.md` | Design note on handling older CBOM files. |
 
 Both tools are exercised by `tests/run-profile-tests.sh` in the repository root, which CI runs on

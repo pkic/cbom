@@ -1,5 +1,5 @@
 {
-  "$comment": "Fixture. Deliberately fails C5 in both ways. I1 uses the rejected 'Current' suffix, which is redundant because a bare name already denotes present state. I2 declares a capability with the 'Supported' suffix but does not mark the rule as list-valued, and a declared capability is always a set.",
+  "$comment": "Fixture. Deliberately fails C5 in both ways. I1 uses the rejected 'Current' suffix, which is redundant because a bare name already denotes present state. I2 declares a capability with the 'Supported' suffix but does not mark the rule as list-valued, and a declared capability is always a set. I3 requires keyExchange, which the fixture does not otherwise need: the orientation is 'both' because I2 is a capability attribute, and C12 then requires the present state that capability is a capability for. Without I3 this fixture would fail C5 and C12 together and could not isolate C5. That it takes I3 rather than I1 to satisfy C12 is the point of the 'Current' suffix being rejected: keyExchangeCurrent looks like present state and is not the name anything else in the methodology pairs with.",
   "profileId": "pkic.test.c5",
   "title": "Fixture - C5 naming conventions",
   "version": "0.1",
@@ -49,10 +49,20 @@
         "present": true
       },
       "withholdable": false
+    },
+    {
+      "id": "I3",
+      "attribute": "keyExchange",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false
     }
   ],
   "scope": {
     "subjectType": "product",
+    "orientation": "both",
     "relationshipTypes": [
       "interface"
     ],

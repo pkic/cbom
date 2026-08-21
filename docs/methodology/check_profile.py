@@ -2,7 +2,7 @@
 """
 Profile well-formedness checker.
 
-Checks a machine-readable profile against requirements C1 to C11 of the
+Checks a machine-readable profile against requirements C1 to C12 of the
 Conformance section, which state what makes a profile well-formed under this
 methodology. This is the second of the three conformance targets: a CBOM
 document is checked against a profile by validate_cbom.py, and a profile is
@@ -19,6 +19,7 @@ C8  SHOULD  states what it deliberately excludes, and why
 C9  SHOULD  is accompanied by a mapping and by conforming and non-conforming examples
 C10 SHOULD  carries a changelog classifying each change
 C11 MUST    declares its scope: subject, relationship types, lifecycle stages
+C12 MUST    its rules are consistent with its declared orientation
 
 Rules are checked as DECLARED in the file under test. A derived profile is not
 re-checked against its base's rules, because the base is checkable on its own;
@@ -42,11 +43,13 @@ import sys
 
 try:
     from validate_cbom import (load_profile, ProfileError,
-                               SUBJECT_TYPES, LIFECYCLE_STAGES)
+                               SUBJECT_TYPES, LIFECYCLE_STAGES, ORIENTATIONS,
+                               is_forward_looking, present_state_counterparts)
 except ImportError:  # allow running from another directory
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     from validate_cbom import (load_profile, ProfileError,
-                               SUBJECT_TYPES, LIFECYCLE_STAGES)
+                               SUBJECT_TYPES, LIFECYCLE_STAGES, ORIENTATIONS,
+                               is_forward_looking, present_state_counterparts)
 
 LEVELS = ("MUST", "SHOULD", "MAY")
 CAMEL = re.compile(r"^[a-z][A-Za-z0-9]*$")
@@ -350,6 +353,14 @@ def c11_scope(prof, scope_source, evidence_reliable, f):
         problems.append("subjectType %r is not one of %s"
                         % (subject, "/".join(SUBJECT_TYPES)))
 
+    orientation = scope.get("orientation")
+    if not orientation:
+        problems.append("no orientation; state whether the profile reports present "
+                        "state, migration capability, or both")
+    elif orientation not in ORIENTATIONS:
+        problems.append("orientation %r is not one of %s"
+                        % (orientation, "/".join(ORIENTATIONS)))
+
     stages = scope.get("lifecycleStages")
     if not isinstance(stages, list) or not stages:
         problems.append("no lifecycleStages; state which stages of reported data "
@@ -384,7 +395,77 @@ def c11_scope(prof, scope_source, evidence_reliable, f):
         f.add("C11", "MUST", False, "; ".join(problems))
     else:
         f.add("C11", "MUST", True,
-              "subject: %s; accepts %s" % (subject, ", ".join(stages)))
+              "%s, %s; accepts %s" % (subject, orientation, ", ".join(stages)))
+
+
+def c12_orientation(prof, resolved, evidence_reliable, f):
+    """C12. The rules a profile imposes match the orientation it declares.
+
+    Orientation exists to stop a shared attribute changing sense between profile
+    kinds. Declaring it is not enough on its own: the value has to constrain
+    something, or it becomes a label that drifts away from the rules while
+    still being read as authoritative.
+
+    Checked against the resolved profile, so an inherited rule counts. That is
+    the normal case rather than an edge one: the migration example declares the
+    capability attributes itself and inherits every present-state attribute from
+    the baseline it extends."""
+    scope = resolved.get("scope") or {}
+    orientation = scope.get("orientation")
+    if orientation not in ORIENTATIONS:
+        f.add("C12", "MUST", True, "no valid orientation to check against (see C11)")
+        return
+    if not evidence_reliable:
+        f.add("C12", "MUST", True, "base did not resolve; not checked (see C7)")
+        return
+
+    rules = list(resolved.get("interfaceRules", [])) + list(resolved.get("productRules", []))
+    required = set()
+    forward = []
+    for r in rules:
+        attr = r.get("attribute") or (r.get("constraint") or {}).get("productAttribute")
+        if not attr:
+            continue
+        required.add(attr)
+        if is_forward_looking(attr):
+            forward.append((r.get("id", "?"), attr))
+
+    problems = []
+
+    if orientation == "inventory" and forward:
+        problems.append(
+            "declares orientation 'inventory' but requires forward-looking "
+            "attribute(s) %s. An inventory profile reports what is; a profile "
+            "reporting what could be is 'migration' or 'both'"
+            % ", ".join("%s (%s)" % (rid, a) for rid, a in forward))
+
+    if orientation == "both":
+        # The guarantee that makes 'both' meaningful: capability never arrives
+        # instead of present state, only alongside it.
+        unpaired = []
+        for rid, attr in forward:
+            candidates = present_state_counterparts(attr)
+            if candidates and not (set(candidates) & required):
+                unpaired.append("%s (%s, expected %s alongside it)"
+                                % (rid, attr, " or ".join(candidates)))
+        if unpaired:
+            problems.append(
+                "declares orientation 'both' but requires capability without "
+                "the present state it is a capability for: %s. A consumer "
+                "reading only the capability cannot tell what the interface "
+                "does today" % "; ".join(unpaired))
+
+    if orientation == "migration" and not forward:
+        problems.append(
+            "declares orientation 'migration' but requires no forward-looking "
+            "attribute, so it reports present state only and is 'inventory'")
+
+    if problems:
+        f.add("C12", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C12", "MUST", True,
+              "orientation '%s' matches the rules: %d forward-looking attribute(s)"
+              % (orientation, len(forward)))
 
 
 def c8_exclusions(prof, f):
@@ -475,6 +556,7 @@ def check(path):
     c9_artifacts(path, prof, f)
     c10_changelog(path, prof, f)
     c11_scope(prof, vocab_source, resolved, f)
+    c12_orientation(prof, vocab_source, resolved, f)
     return prof, f
 
 

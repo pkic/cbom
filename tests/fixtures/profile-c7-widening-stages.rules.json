@@ -3,26 +3,37 @@
   "profileId": "pkic.test.widening-stages",
   "title": "Invalid stage-widening profile (test fixture)",
   "version": "0.0",
-
   "objective": {
     "consumer": "A fixture, standing in for a consumer.",
     "decision": "Whether the validator rejects a widened lifecycle-stage set.",
-    "decisionOptions": ["accept the fixture", "reject the fixture"]
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
   },
-
   "extends": {
     "profileId": "pkic.example.pqc-migration",
-    "version": "0.2",
+    "version": "0.3",
     "file": "../../docs/methodology/profile-pqc-migration.rules.json"
   },
-
   "scope": {
     "subjectType": "product",
-    "relationshipTypes": ["interface"],
-    "lifecycleStages": ["intended", "implemented", "configured", "observed"]
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "intended",
+      "implemented",
+      "configured",
+      "observed"
+    ]
   },
-
-  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
-
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
   "interfaceRules": []
 }

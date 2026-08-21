@@ -334,6 +334,7 @@ nav: model
     <figcaption>A group relationship does not decompose into pairwise edges without losing the shared key and the membership over which it applies.</figcaption>
   </figure>
   <div class="banner warn">The v1 model treats relationships as pairwise, and this case is recorded as a known limitation rather than modelled. Representing it as several pairwise relationships loses the property that matters, which is the shared key and the set of parties holding it. This sits alongside the first-class attributed-edge model as a candidate for a later revision, and should be revisited when a consumer needs to express group membership or per-group posture. See <a href="challenges.html">Challenges</a>.</div>
+  <p>One-to-many is two cases, not one, and only the first is expensive. A <strong>shared key</strong> held by n parties at once is the case above: no pairwise description of it is true, so the model has to change to carry it. A <strong>signature verified by a population</strong> is different. One party signs, many verify, each holding its own keys, and every leg decomposes into a pairwise relationship without loss. What is missing there is not a relationship with n endpoints but a way to name the population that fixes the ceiling, which is a smaller change and is recorded separately as Q46. A closely related gap, naming the trust anchor and whether membership under it is administered, is recorded as Q47. Financial settlement and payment rails were raised as a case for the shared-key limitation and appear to be an instance of these two instead; the reasoning is in the multi-party trust design note.</p>
 
   <h2>Summary: a taxonomy of relationships</h2>
   <p>Taken together the examples vary along four dimensions: how many parties there are, whether those parties exist at the same time, what passes between them, and how far the protection extends. Setting them out in one place shows that the model is more general than the network connection it is usually explained with, and gives a way to test it against a case from a new sector.</p>
@@ -351,6 +352,7 @@ nav: model
       <tr><td>Modern gateway to legacy controller</td><td>2</td><td>yes</td><td>data in transit</td><td>single hop</td><td>the less capable party fixes the posture</td></tr>
       <tr><td>Application to HSM or TEE</td><td>2</td><td>yes</td><td>operation requests; key material confined</td><td>crosses a hardware boundary</td><td>a relationship that transfers no protected data</td></tr>
       <tr><td>Broadcast, multicast, or group messaging</td><td>n</td><td>yes</td><td>data in transit</td><td>one to many</td><td>not represented in v1, as described above</td></tr>
+      <tr><td>Signed message verified by a closed membership</td><td>n</td><td>no</td><td>a signed message is carried</td><td>one to many</td><td>not represented in v1; the ceiling belongs to the membership rather than to either party. Recorded as Q46</td></tr>
     </tbody>
   </table>
   </div>
