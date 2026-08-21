@@ -35,6 +35,20 @@ profile. The pages are hand-written HTML served at `/cbom/methodology/`. Each ca
 front matter block so that Jekyll processes it, which is what allows the shared navigation
 include to work. No layout is applied, so each page still controls its own markup.
 
+### Previewing locally
+
+Because of that front matter and the navigation include, opening a page straight from the
+filesystem shows the front matter as text and no navigation. Two ways to see the real thing:
+
+| | Command | Covers |
+|---|---|---|
+| **Full site** | `bundle install` then `bundle exec jekyll serve --source docs` | Everything, at the versions GitHub Pages builds with. Use this before publishing. |
+| **Methodology pages only** | `python3 tools/preview.py` | The twenty HTML sections, served on `localhost:8000`. No Ruby, no install. Skips the Markdown pages and layouts. |
+
+`tools/preview.py` does only what Jekyll does to these particular pages — strips the front
+matter and expands the one navigation include — and warns rather than guessing if a page grows
+Liquid it does not handle. Re-run it after editing; it does not watch for changes.
+
 ### Navigation
 
 The section navigation lives in one place and is rendered into every page.

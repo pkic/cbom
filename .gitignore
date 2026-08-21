@@ -6,3 +6,6 @@ docs/_site/
 docs/.jekyll-cache/
 .bundle/
 vendor/
+
+# Output of tools/preview.py, the no-Jekyll preview of the methodology pages.
+.preview/
