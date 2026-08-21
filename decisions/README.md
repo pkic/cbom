@@ -20,6 +20,11 @@ implemented in the example artifacts, so the group is being asked to ratify or r
 position that exists in the drafting, not to decide in the abstract. Reversing one means
 changing the example, and the Consequences section of each record says what that would involve.
 
+Record 0008 is Proposed for a different reason. It is **not** implemented in the example: it
+asks the group to accept a change that would then have to be built. Accepting it means work,
+where accepting 0001 to 0007 means leaving the example as it stands. The two kinds of Proposed
+are worth telling apart when setting an agenda.
+
 ## Index
 
 | # | Title | Aspect | Status | Date |
@@ -31,6 +36,7 @@ changing the example, and the Consequences section of each record says what that
 | [0005](./0005-attribute-naming-conventions.md) | Attribute names state what is disclosed, not what it implies | 3.7 | Proposed | 2026-08-07 |
 | [0006](./0006-carrier-acceptance-range.md) | A profile declares the carrier versions it accepts | 3.2 | Proposed | 2026-08-07 |
 | [0007](./0007-availability-as-status-and-blocker.md) | Forward-looking capability is stated as a status and a blocker, not a date | 3.10 | Proposed | 2026-08-07 |
+| [0008](./0008-profile-scope-declaration.md) | A profile declares its subject, its boundary, and the lifecycle stages it accepts | 3.1 | Proposed | 2026-08-21 |
 
 <!-- Add a row per decision, newest at the bottom:
 | 0008 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |
