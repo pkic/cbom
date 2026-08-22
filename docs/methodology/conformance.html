@@ -176,7 +176,7 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>The reference validator distinguishes T5 by exit code: 0 for conforms, 1 for does not conform, 2 for a usage error, and 3 for a profile error such as a relaxing override. What the methodology requires is that the distinction reach the caller. The particular codes are an implementation choice, and another tool may signal it differently.</p>
+  <p>The reference validator distinguishes T5 by exit code: 0 for conforms, 1 for does not conform, 2 for a usage error, 3 for a profile error such as a relaxing override, and 4 for a refusal. The fourth code exists because of T1: a caller that cannot tell refusal from failure will reject a producer for the age of a carrier format. Until August 2026 the validator printed <code>DOES NOT CONFORM</code> and exited 1 on a refusal, merging exactly what this section says must not be merged, and the test suite asserted that exit code, so the defect was pinned rather than caught. What the methodology requires is that the distinction reach the caller. The particular codes are an implementation choice, and another tool may signal it differently.</p>
 
   <h2>Making and recording a claim</h2>
   <p>A conformance claim is a statement by an identified party that a named document revision was assessed against a named profile version and produced a stated verdict.</p>

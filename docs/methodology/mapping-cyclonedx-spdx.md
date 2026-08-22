@@ -47,19 +47,39 @@ There is no native object representing the set of interfaces; the count is deriv
 | I1 | `protocol` | `protocolProperties.type` (`tls`, `ssh`, etc.) | via linked CycloneDX CBOM |
 | I2 | `protocolVersion` | `protocolProperties.version` | via linked CycloneDX CBOM |
 | I3 | `keyExchange` | algorithm component (`primitive = key-agree`/`kem`) referenced by the interface | via linked CycloneDX CBOM |
-| I4 | `encryption` | algorithm component (`primitive = ae`/`aead`) referenced by the interface | via linked CycloneDX CBOM |
+| I4 | `encryption` | algorithm component (`primitive = ae`) referenced by the interface | via linked CycloneDX CBOM |
 | I5 | `authentication` | `certificateProperties.signatureAlgorithmRef` (TLS) or a referenced signature algorithm / host key (SSH) | via linked CycloneDX CBOM |
-| I6 | `endpointRoles` | `component.properties[name="pkic:profile:endpointRole:*"]` (no edge/endpoint model) | `Relationship` records with annotation (approximate) |
-| I7 | `interfaceType` | `component.properties[name="pkic:profile:interfaceType"]` (no native field) | `Annotation` on linked element |
-| I8 | `lifecycleStage` | `component.properties[name="pkic:profile:lifecycleStage"]` (flat lifecycle tag, per lifecycle model v1) | `Annotation` on linked element |
-| I9 | `implementationPurl` | `purl` on the OpenSSL/OpenSSH SBOM component, or a property | native SPDX `Package` with `packageUrl` (SPDX strength) |
+| I6 | `endpointRoles` | `component.properties[name="pkic:profile:endpointRole:*"]` (no edge/endpoint model) | **unresolved** — see below |
+| I7 | `interfaceType` | `component.properties[name="pkic:profile:interfaceType"]` (no native field) | **unresolved** — see below |
+| I8 | `lifecycleStage` | `component.properties[name="pkic:profile:lifecycleStage"]` (flat lifecycle tag, per lifecycle model v1) | **unresolved** — see below |
+| I9 | `implementationPurl` | `purl` on the library component | SPDX `Package` with `packageUrl` |
 
 ## Product-level rule mapping
 
 | # | Product rule | CycloneDX | SPDX |
 |---|---|---|---|
-| P1 | At least one interface declared | count of `cryptographic-asset` components with `assetType: protocol` | count of linked interface elements or annotations |
-| P2 | At least one `management` interface | count of those whose `pkic:profile:interfaceType == management` | count of linked elements annotated `interfaceType=management` |
+| P1 | At least one interface declared | count of `cryptographic-asset` components with `assetType: protocol` **carrying `interfaceType`** | **unresolved** — see below |
+| P2 | At least one `management` interface | count of those whose `pkic:profile:interfaceType == management` | **unresolved** — see below |
+
+### The unresolved SPDX rows
+
+The rows above are marked unresolved rather than filled in, because the entries they previously
+carried do not compose with the rest of the column. I1 to I5 are satisfied *via a linked
+CycloneDX CBOM*: the SPDX document references one external artifact. There is therefore one SPDX
+element, not one per interface — so there is nothing for a per-interface annotation to attach to,
+and no set of elements to count. The earlier entries (`Annotation` on linked element, *count of
+linked elements annotated `interfaceType=management`*) described a structure the linkage
+arrangement does not produce, and never named the SPDX element class involved.
+
+Three ways out are visible and the working group has not chosen between them: represent each
+interface as its own SPDX element and link the CBOM per interface; carry the interface-level
+classifiers as SPDX annotations on the single reference element, encoded so that several
+interfaces can be distinguished within it; or accept that product-level rules cannot be evaluated
+from the SPDX side at all and say so, which would bound what an SPDX-only consumer may claim.
+
+Settling this needs a contributor who works with SPDX 3.x at field level. Recorded as Q48. Note
+what it costs while open: the claim that one profile can be expressed in two formats currently
+holds for the per-interface attributes and not for the product-level rules.
 
 ## Interpretation of the columns
 

@@ -30,7 +30,7 @@ what this suite is an early form of.
 |---|---|
 | Artifacts | Every JSON artifact parses; both Python tools are syntactically valid. |
 | Baseline profile | The conforming CBOM is accepted and its withheld `implementationPurl` is reported as `HELD`; the non-conforming one is rejected on product rule P2. |
-| Carrier version bands | A 1.6 copy is accepted and flagged legacy; a 1.5 copy is refused with an explanation. |
+| Carrier version bands | 1.6 and 1.8 copies are accepted and flagged legacy and newer; a 1.5 copy is refused with exit 4, a REFUSED verdict, no rule results, and a JSON report marking it unassessed. Four bands need four inputs, which is why a 1.8 copy is generated. |
 | Derived PQC profile | The conforming CBOM is accepted and the base profile resolves; the non-conforming one trips both conditional rules and the tightened inherited rule. |
 | Composition | The document that fails the derived profile still conforms to the base, which is the tightening doing its work. A fixture with a relaxing override is rejected with exit code 3. |
 | Withholdable MUST | A withheld marker satisfies baseline rule I9; the same document with the marker stripped does not, and is reported as undeclared rather than withheld. This is the only combination in which the disclosure model changes a verdict, and before profile v0.3 no rule exercised it. |
@@ -48,9 +48,13 @@ what this suite is an early form of.
 | 1 | Does not conform |
 | 2 | Usage error |
 | 3 | Profile error, such as an override that relaxes an inherited rule |
+| 4 | Refused: the carrier version is below the profile's minimum, so nothing was assessed |
 
 The distinction between 1 and 3 matters to these tests: a CBOM failing a profile
 is a normal result, while an invalid profile is a defect in the profile itself.
+The distinction between 1 and 4 matters more, because the Conformance section
+makes it a MUST and the suite previously asserted the wrong one: a refused
+document was never assessed, and may be perfectly adequate.
 
 `check_profile.py`:
 

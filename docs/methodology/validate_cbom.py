@@ -32,6 +32,18 @@ Disclosure states. An attribute is reported as one of:
   undeclared -- neither a value nor a marker
   n/a        -- a conditional rule whose condition does not hold
 
+Verdicts. The Conformance section defines three, and requires that refusal and
+non-conformance be reported distinctly (T1, and "MUST NOT be merged"). They are
+distinct here in the verdict, in the exit code, and in the JSON report:
+
+  conforms          every MUST rule is satisfied at an accepted carrier version
+  does not conform  the document was assessed and at least one MUST rule failed
+  refused           the carrier version is below the profile's declared minimum,
+                    so no assessment was performed. This says nothing about the
+                    document, which may be entirely adequate. Treating it as a
+                    failure penalises a producer for the age of a format rather
+                    than for the content of its disclosure.
+
 Usage:
     python validate_cbom.py <cbom.json> <profile.rules.json> [--json]
 
@@ -40,6 +52,7 @@ Exit codes:
     1  does not conform
     2  usage error
     3  profile error, such as an override that relaxes an inherited rule
+    4  refused: not assessed, as distinct from assessed and found short
 """
 import json
 import os
@@ -49,12 +62,25 @@ import sys
 class ProfileError(Exception):
     """The profile itself is invalid, as distinct from a CBOM failing it."""
 
+# Reader-side sets, deliberately lenient. The CycloneDX value for an
+# authenticated cipher is "ae"; "aead" is accepted because documents in the
+# wild carry it, and refusing to read a document over a spelling would report
+# a missing algorithm rather than a malformed one. The mapping documents "ae"
+# as the value a producer should write.
 ENC_PRIMS = {"ae", "aead", "block-cipher", "stream-cipher"}
 KEX_PRIMS = {"key-agree", "key-agreement", "kem"}
 SIG_PRIMS = {"signature"}
 
 LEVEL_ORDER = {"MAY": 0, "SHOULD": 1, "MUST": 2}
 PROP = "pkic:profile:"
+
+# The three verdicts, their exit codes, and how they are printed. Refusal has
+# its own code because a caller that cannot distinguish it from failure will
+# reject a producer for the age of a carrier format, which is the outcome the
+# Conformance section forbids.
+EXIT_FOR = {"conforms": 0, "does-not-conform": 1, "refused": 4}
+VERDICT_LABEL = {"conforms": "CONFORMS", "does-not-conform": "DOES NOT CONFORM",
+                 "refused": "REFUSED"}
 
 # Methodology-level vocabularies, fixed here rather than declared per profile so
 # that two profiles cannot mean different things by the same word. Both are used
@@ -485,10 +511,20 @@ def check_product(product, interfaces, constraint, profile):
 
 # --------------------------------------------------------------------------- #
 def validate(bom, profile):
+    """Evaluate a CBOM against a profile.
+
+    Returns (verdict, report) where verdict is one of the three the Conformance
+    section defines: 'conforms', 'does-not-conform', or 'refused'.
+
+    Refusal is not a failure and the two must not be merged. A refused document
+    may be entirely adequate; the profile is simply unable to express its rules
+    against that carrier version, so no assessment is performed and the report
+    carries no rule results to summarise. Returning a bare boolean here is what
+    collapsed the two, because there is no false that means 'not assessed'."""
     fmt = check_format(bom, profile)
     report = {"format": fmt, "product": [], "interfaces": []}
     if not fmt["ok"]:
-        return False, report
+        return "refused", report
 
     product = extract_product(bom)
     interfaces = extract_interfaces(bom)
@@ -514,7 +550,7 @@ def validate(bom, profile):
 
     product_ok = all(r["ok"] for r in report["product"] if r["level"] == "MUST")
     ifaces_ok = all(i["conforms"] for i in report["interfaces"])
-    return (product_ok and ifaces_ok), report
+    return ("conforms" if product_ok and ifaces_ok else "does-not-conform"), report
 
 
 def icon_for(row):
@@ -538,12 +574,15 @@ def main(argv):
     except ProfileError as err:
         print("PROFILE ERROR: %s" % err, file=sys.stderr)
         return 3
-    conforms, report = validate(bom, profile)
+    verdict, report = validate(bom, profile)
 
     if as_json:
-        print(json.dumps({"conforms": conforms, "profile": profile.get("profileId"),
+        print(json.dumps({"verdict": verdict,
+                          "conforms": verdict == "conforms",
+                          "assessed": verdict != "refused",
+                          "profile": profile.get("profileId"),
                           "report": report, "origin": origin}, indent=2))
-        return 0 if conforms else 1
+        return EXIT_FOR[verdict]
 
     print("Profile : %s v%s" % (profile["title"], profile["version"]))
     if profile.get("extends"):
@@ -555,11 +594,17 @@ def main(argv):
     print("=" * 70)
     f = report["format"]
     warn = f["status"] in ("legacy", "newer")
-    print("FORMAT  [%s] %s" % ("warn" if warn else ("PASS" if f["ok"] else "FAIL"), f["detail"]))
-    if not f["ok"]:
+    gate = "warn" if warn else ("PASS" if f["ok"] else "STOP")
+    print("FORMAT  [%s] %s" % (gate, f["detail"]))
+    if verdict == "refused":
         print("=" * 70)
-        print("VERDICT : DOES NOT CONFORM  (carrier format/version not accepted)")
-        return 1
+        print("VERDICT : REFUSED  (%s)" % f["detail"])
+        print("          No assessment was performed, so this is not a failure. "
+              "The document may")
+        print("          be adequate; the profile cannot express its rules "
+              "against this carrier")
+        print("          version. Upgrade the CBOM and evaluate again.")
+        return EXIT_FOR[verdict]
 
     print("=" * 70)
     print("PRODUCT-LEVEL RULES")
@@ -581,10 +626,10 @@ def main(argv):
         for r in i["rows"]:
             if not r["ok"] and r["level"] == "MUST":
                 fails.append("%s/%s" % (i["interfaceId"], r["id"]))
-    verdict = "CONFORMS" if conforms else "DOES NOT CONFORM"
     tail = ("  (failed MUST: %s)" % ", ".join(fails)) if fails else ""
-    print("VERDICT : %s%s  [carrier: %s]" % (verdict, tail, report["format"]["status"]))
-    return 0 if conforms else 1
+    print("VERDICT : %s%s  [carrier: %s]"
+          % (VERDICT_LABEL[verdict], tail, report["format"]["status"]))
+    return EXIT_FOR[verdict]
 
 
 if __name__ == "__main__":

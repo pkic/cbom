@@ -29,7 +29,8 @@ nav: usecases
   <h2>Why the use case comes first</h2>
   <p>A profile answers the question "what must be disclosed so that a particular decision can be made", which is a different question from "what cryptography does this contain". The first question cannot be answered in the abstract. An attribute that is indispensable for one purpose is irrelevant to another: a vulnerability responder needs the implementing library and can ignore endpoint roles, while a procurement team checking an interface baseline needs the reverse.</p>
   <p>Starting from the use case also bounds the disclosure. Without a stated purpose there is no principled way to decide where a profile stops, and the result drifts either towards demanding everything, which vendors reasonably resist, or towards a lowest common denominator that supports no decision at all. A profile with a named consumer and a named decision can be assessed on its merits.</p>
-  <p>One CBOM can serve several of these purposes at once. Different consumers apply different profiles to the same unchanged document. A vendor generating a single high-fidelity CBOM may find it evaluated against a procurement profile by one customer, a migration profile by another, and a vulnerability profile internally, with no republication in between.</p>
+  <p>One CBOM can serve several of these purposes at once, within a limit worth stating plainly. Different consumers apply different profiles to the same unchanged document, and a vendor generating a single high-fidelity CBOM may find it evaluated against a procurement profile by one customer and a vulnerability profile internally, with no republication in between. That holds for any profile whose attributes the document already carries.</p>
+  <p>It does not hold across a profile that introduces new attributes. A baseline-conforming document cannot be evaluated against the PQC migration profile at all, because the capability and roadmap attributes are absent. The practical consequence is that "supply a CBOM" is not one request: a buyer has to name the profile, and a vendor generating documents against the baseline alone has not met a migration request by producing more of them.</p>
   <p>The use cases below are described briefly. One of them, PQC migration, is worked through in full on the <a href="pqc-migration.html">PQC Migration</a> tab, where the consumer's decision is turned into a complete profile definition. That section is the template for how the others would be developed.</p>
 
   <h2>The use cases</h2>
@@ -67,25 +68,28 @@ nav: usecases
   <p>Coverage matters more than depth. A broad disclosure across the estate, with the absence of data recorded explicitly rather than left blank, tells the assessor where the risk concentrates: deprecated algorithms still in use, and cryptography bound to hardware that will not be upgraded.</p>
 
   <h2>Attributes emphasised by each use case</h2>
-  <p>The same set of attributes supports all of these purposes, but each purpose makes a different subset mandatory, and that selection is what a profile records.</p>
+  <p>Profiles differ from one another in two ways, and the distinction decides whether one document can serve several of them.</p>
+  <p>Some purposes draw on the <strong>same set of attributes</strong> and differ only in which of them are mandatory. Procurement, vulnerability response and supply-chain transparency are largely of this kind, and the table below shows the emphasis each places. A document rich enough for one is usually evaluable against another without being reissued.</p>
+  <p>Others need attributes that do not exist in the baseline at all. PQC migration is the clearest case: knowing which algorithms an interface uses today answers none of the three questions a migration planner has, so that profile <em>adds</em> fourteen attributes rather than selecting among the nine. A document produced against the baseline cannot be evaluated against it — not because it fails, but because the attributes were never collected. The producer has to generate a richer document, which is what makes the choice of profile a procurement decision rather than a reporting preference.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr>
       <th>Use case</th><th>lifecycleStage</th><th>implementationPurl</th><th>keyExchange / auth</th><th>interfaceType</th><th>disclosure markers</th>
     </tr></thead>
     <tbody>
-      <tr><td>PQC readiness</td><td>●</td><td>○</td><td>●</td><td>○</td><td>○</td></tr>
+      <tr><td>PQC readiness</td><td>●</td><td>●</td><td>●</td><td>●</td><td>○</td></tr>
       <tr><td>Procurement</td><td>○</td><td>○</td><td>●</td><td>●</td><td>○</td></tr>
       <tr><td>Vulnerability / incident</td><td>○</td><td>●</td><td>○</td><td>○</td><td>○</td></tr>
       <tr><td>Compliance reporting</td><td>●</td><td>○</td><td>●</td><td>●</td><td>●</td></tr>
       <tr><td>CI quality gate</td><td>○</td><td>●</td><td>●</td><td>●</td><td>○</td></tr>
       <tr><td>Crypto-agility</td><td>○</td><td>●</td><td>●</td><td>○</td><td>○</td></tr>
-      <tr><td>Supply-chain transparency</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+      <tr><td>Supply-chain transparency</td><td>●</td><td>○</td><td>●</td><td>●</td><td>●</td></tr>
       <tr><td>M&amp;A due diligence</td><td>○</td><td>●</td><td>●</td><td>○</td><td>●</td></tr>
     </tbody>
   </table>
   </div>
   <p style="font-size:13px;color:var(--muted)">● emphasised by a profile for this use case · ○ relevant but not the focus</p>
+  <p style="font-size:13px;color:var(--muted)">Two rows are worth explaining. PQC readiness emphasises <code>implementationPurl</code> because the migration profile is the one place in the worked example that tightens an inherited rule, removing the baseline's permission to withhold it: migration sequencing depends on knowing which library implements an interface. It emphasises <code>interfaceType</code> because product rule P2 turns on it, and an undeclared management interface is the omission a migration plan can least afford. Supply-chain transparency, by contrast, does <em>not</em> emphasise <code>implementationPurl</code>: that use case is bounded by an upper limit on what may be asked, and the library version is the attribute a supplier is most likely to withhold, which is why the baseline marks it withholdable.</p>
 
   <div class="banner">A vendor generates one high-fidelity document, and different consumers evaluate it independently against the profile that matches their decision. This follows from keeping the methodology <a href="formats.html">format-independent</a> and locating the requirements in profiles rather than in the format.</div>
 

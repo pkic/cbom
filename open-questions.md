@@ -13,7 +13,7 @@ This register collects them in one place so that a meeting agenda can be set fro
 Each question is mapped to one of the thirteen topics the group already tracks as GitHub issues,
 so an item can be posted to the issue that covers it.
 
-Forty-seven questions sit under those thirteen topics. Four more do not fit any of them, which
+Forty-eight questions sit under those thirteen topics. Four more do not fit any of them, which
 is itself worth knowing, and they are listed at the end.
 
 Q36 to Q44 were added on 9 August 2026 in response to member feedback, covering the
@@ -27,6 +27,9 @@ Q46 and Q47 were added on 21 August 2026, and Q08 restated, after member feedbac
 financial-sector systems. The feedback attributed the gap to Q08; the reasoning for separating it
 into two cheaper questions, and for leaving Q08 where it stands, is in
 `design-note-multiparty-trust.md`.
+
+Q48 was added on 21 August 2026 after a review found that the SPDX column of the format mapping
+described a structure the linkage arrangement does not produce.
 
 ## Who this is written for
 
@@ -80,7 +83,7 @@ deleted.
 | 3.3 The list of attributes | Q05, Q06, Q07, Q08, Q09, Q34, Q36, Q37, Q45, Q46, Q47 |
 | 3.4 How binding each rule is | Q10, Q11, Q12 |
 | 3.5 Checking conformance | Q13, Q14, Q15, Q31, Q32 |
-| 3.6 Writing a profile into a file format | Q16, Q17, Q18 |
+| 3.6 Writing a profile into a file format | Q16, Q17, Q18, Q48 |
 | 3.7 Agreed names for algorithms and protocols | Q19, Q20, Q21, Q38, Q39 |
 | 3.8 How a CBOM relates to an SBOM | Q22, Q40 |
 | 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35 |
@@ -881,6 +884,46 @@ permanent property.
 
 **What would have to change.** Whether a member with SPDX knowledge can be found, the mapping
 document, and the credibility of the format-independence claim.
+
+## Q48 — How are the product-level rules evaluated from the SPDX side?
+
+**Status** open. Added 21 August 2026, from a review of the format mapping.
+
+**The question.** In the current arrangement an SPDX document satisfies the profile by referencing
+a CycloneDX CBOM as an external artifact. That gives the SPDX document one element for the whole
+CBOM, not one per interface. The per-interface rules are reached through the linked document and
+are fine. The product-level rules are not: P1 counts interfaces and P2 counts interfaces of a
+particular type, and there is no set of SPDX elements to count.
+
+**Why it matters.** Product rules are the ones that catch omission. P2 is what fails a vendor who
+describes its service interface and says nothing about how the product is administered, which is
+the failure the whole worked example is built around. If those rules cannot be evaluated from the
+SPDX side, then an SPDX-only consumer gets the attribute checks and not the completeness check,
+and the claim that one profile can be expressed in two formats holds for half the profile.
+
+The mapping previously filled these rows in — an annotation per interface, a count of annotated
+elements — describing a structure the linkage arrangement does not produce. They are now marked
+unresolved, which is the honest state.
+
+**Option A: one SPDX element per interface**, with the CBOM linked per interface rather than once.
+Gives the product rules something to count (trade-off: multiplies the linkage, and it is not clear
+which SPDX element class should stand for an interface).
+
+**Option B: carry the interface classifiers as annotations on the single reference element**,
+encoded so that several interfaces can be distinguished within it (trade-off: an encoding
+convention invented by this group inside another format's extension point, which is the kind of
+thing harmonisation is supposed to avoid).
+
+**Option C: state that product-level rules are not evaluable from SPDX alone**, and bound what an
+SPDX-only conformance claim may assert (trade-off: honest, and it concedes part of the
+format-independence claim).
+
+**Where it stands.** Unresolved and marked as such in `mapping-cyclonedx-spdx.md` and
+`formats.html`. Nobody in the group has yet worked with SPDX 3.x at field level, which is the
+same gap Workstream 5 of the improvement plan records.
+
+**What would have to change.** The SPDX column of the mapping, the Formats section, and, under
+Option C, the Conformance section, which would need to say what an SPDX-only claim covers.
 
 ## Q17 — Should the group ask the format bodies to add a field for withheld information?
 
@@ -1719,7 +1762,7 @@ not depend on a second example.
 | PQC Migration section | Q05, Q06, Q10, Q25, Q26, Q27, Q28 |
 | Profile section and its rule files | Q02, Q03, Q04, Q11, Q12, Q15, Q17, Q23, Q24, Q33, Q34, Q35 |
 | Model section | Q08, Q09, Q46, Q47, N02 |
-| Formats section | Q20, Q21 |
+| Formats section | Q20, Q21, Q48 |
 | Governance section | Q14, Q22, Q29 |
 | Challenges section | Q18 |
 | Demo section | Q30 |

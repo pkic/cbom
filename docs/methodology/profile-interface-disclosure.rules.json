@@ -1,5 +1,5 @@
 {
-  "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident. v0.2 added the three-state disclosure model described under 'disclosure'; v0.3 raised I9 to a withholdable MUST, which is the only combination in which that model affects a verdict; v0.4 added the 'scope' object, which declares the subject, the relationship types the rules constrain, and the lifecycle stages the profile accepts. See 'changelog'.",
+  "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident. v0.2 added the disclosure model described under 'disclosure', which distinguishes four outcomes for any attribute: a value, a withheld marker, an unknown marker, and undeclared, meaning neither; v0.3 raised I9 to a withholdable MUST, which is the only combination in which that model affects a verdict; v0.4 added the 'scope' object, which declares the subject, the relationship types the rules constrain, and the lifecycle stages the profile accepts. See 'changelog'.",
   "profileId": "pkic.example.interface-disclosure",
   "title": "Interface Disclosure Baseline (Example)",
   "version": "0.5",
@@ -86,7 +86,7 @@
       "date": "2026-08-07",
       "changes": [
         { "kind": "tightening",
-          "summary": "Added the disclosure state model, with the marker prefix and a withholdable flag on every rule. An attribute previously omitted in silence now fails as undeclared; supplying a marker restores conformance." },
+          "summary": "Added the disclosure state model, with the marker prefix and a withholdable flag on every rule. Two markers, withheld and unknown, which with a supplied value and an undeclared attribute make the four outcomes an evaluation reports. An attribute previously omitted in silence now fails as undeclared; supplying a marker restores conformance." },
         { "kind": "editorial",
           "summary": "Added rule I9 implementationPurl at SHOULD level, withholdable. SHOULD rules are reported and do not determine the verdict." },
         { "kind": "editorial",

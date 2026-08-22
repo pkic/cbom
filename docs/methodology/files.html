@@ -55,16 +55,19 @@ python validate_cbom.py cbom-fail.cyclonedx.json profile-interface-disclosure.ru
 python validate_cbom.py cbom-pass.cyclonedx.json profile-interface-disclosure.rules.json --json</code></pre>
 
   <h2>Reproducing the version bands</h2>
-  <pre><code># produce a legacy (1.6) and an unsupported (1.5) copy, then evaluate each
+  <pre><code># four bands need four inputs: 1.7 is the tested version, and these are the rest
 python - &lt;&lt;'PY'
 import json
 b = json.load(open("cbom-pass.cyclonedx.json"))
-for v in ("1.6", "1.5"):
+for v in ("1.8", "1.6", "1.5"):
     b["specVersion"] = v
     json.dump(b, open(f"cbom-{v}.json", "w"))
 PY
-python validate_cbom.py cbom-1.6.json profile-interface-disclosure.rules.json   # legacy: accepted with a warning
-python validate_cbom.py cbom-1.5.json profile-interface-disclosure.rules.json   # unsupported: refused</code></pre>
+python validate_cbom.py cbom-pass.cyclonedx.json profile-interface-disclosure.rules.json  # target:  exit 0
+python validate_cbom.py cbom-1.8.json profile-interface-disclosure.rules.json   # newer:   accepted, review advised, exit 0
+python validate_cbom.py cbom-1.6.json profile-interface-disclosure.rules.json   # legacy:  accepted with a warning,  exit 0
+python validate_cbom.py cbom-1.5.json profile-interface-disclosure.rules.json   # refused: not assessed,            exit 4</code></pre>
+  <p>The last of these is the one worth running. A refusal is not a failure: the document was never assessed, so it exits 4 rather than 1, and no rule result is reported for it. A pipeline that treats any non-zero exit as a rejection will turn the age of a carrier format into a supplier's problem, which is what the distinct code exists to prevent.</p>
 
   <h2>The derived profile</h2>
   <p>The PQC migration profile extends the baseline, so evaluating against it also evaluates every baseline rule. The validator resolves the base, applies the overrides, and rejects any override that would relax an inherited rule.</p>

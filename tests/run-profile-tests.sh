@@ -132,17 +132,47 @@ expect_output "failure is product rule P2"       "P2" "$M/cbom-fail.cyclonedx.js
 # ------------------------------------------------------------ carrier bands ---
 echo
 echo "Carrier version bands"
+# Four bands, so four inputs. Three copies only reach target, legacy and
+# refuse; 'newer' needs a carrier above the profile's tested version, and both
+# versioning documents used to claim four bands from three copies.
 "$PY" - "$M/cbom-pass.cyclonedx.json" "$TMP" <<'PY'
 import json, sys, os
 bom = json.load(open(sys.argv[1], encoding="utf-8"))
-for v in ("1.6", "1.5"):
+for v in ("1.8", "1.6", "1.5"):
     bom["specVersion"] = v
     json.dump(bom, open(os.path.join(sys.argv[2], "cbom-%s.json" % v), "w"))
 PY
 expect_exit   "legacy 1.6 still evaluates"         0 "$TMP/cbom-1.6.json" "$BASE"
 expect_output "legacy 1.6 is flagged"        "legacy" "$TMP/cbom-1.6.json" "$BASE"
-expect_exit   "unsupported 1.5 is refused"         1 "$TMP/cbom-1.5.json" "$BASE"
+expect_exit   "newer 1.8 still evaluates"          0 "$TMP/cbom-1.8.json" "$BASE"
+expect_output "newer 1.8 is flagged"          "newer" "$TMP/cbom-1.8.json" "$BASE"
+
+# Refusal is not failure. The Conformance section makes this a MUST — "Refusal
+# and non-conformance are reported distinctly and MUST NOT be merged", and T1
+# requires refusing without issuing a conformance verdict. Until this was fixed
+# the validator printed DOES NOT CONFORM and exited 1 for a refused document,
+# and the test below asserted that exit code, so the suite pinned the defect.
+expect_exit   "unsupported 1.5 is refused"         4 "$TMP/cbom-1.5.json" "$BASE"
 expect_output "refusal explains why"  "older than min" "$TMP/cbom-1.5.json" "$BASE"
+expect_output "the verdict reads REFUSED"    "REFUSED" "$TMP/cbom-1.5.json" "$BASE"
+expect_output "refusal is not called a failure" "not a failure" \
+              "$TMP/cbom-1.5.json" "$BASE"
+# A refused document is not assessed, so no rule result may be reported for it.
+validate "$TMP/cbom-1.5.json" "$BASE"
+if printf '%s' "$OUT" | grep -q 'PRODUCT-LEVEL RULES\|INTERFACE '; then
+  bad "no rules are evaluated on refusal" "the report contains rule results"
+else
+  ok "no rules are evaluated on refusal"
+fi
+# The distinction has to survive into the machine-readable report, since that is
+# what a pipeline reads.
+OUT="$("$PY" "$M/validate_cbom.py" "$TMP/cbom-1.5.json" "$BASE" --json 2>&1)"; RC=$?
+if [ "$RC" -eq 4 ] && printf '%s' "$OUT" | grep -q '"verdict": "refused"' \
+   && printf '%s' "$OUT" | grep -q '"assessed": false'; then
+  ok "JSON reports refusal distinctly"
+else
+  bad "JSON reports refusal distinctly" "expected exit 4, verdict refused, assessed false"
+fi
 
 # ------------------------------------------------------ derived PQC profile ---
 echo

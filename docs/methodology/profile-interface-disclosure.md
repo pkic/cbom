@@ -14,6 +14,14 @@ must be **product-independent and instance-independent**: it states *structural*
 *attribute* requirements that any conforming product satisfies, without reference to a
 particular product or interface.
 
+The same early draft carried a `pqcPosture` attribute. That is a judgement rather than a fact:
+the criteria behind it change while the product does not, so the same disclosed values would
+yield a different answer next year. It was removed before v0.1 and the profile records the
+algorithms the judgement is derived from instead, leaving the judgement to external versioned
+policy. Recorded as decision 0002 and developed in the Policy Evaluation section. Neither
+correction appears in the changelog in §7, because no document was ever authored against that
+draft and a changelog records changes between published versions.
+
 Accordingly, this profile does not state that an interface named `nginx-https` must exist. It
 states that:
 
@@ -158,7 +166,7 @@ CycloneDX nor SPDX provides a native field for them. The mapping records the con
 ### 4.4 Scope
 
 The profile declares a `scope` object stating what it describes and what it will accept. The
-three members are one boundary and are decided together, which is why they are carried together
+four members are one boundary and are decided together, which is why they are carried together
 rather than as separate fields.
 
 | Member | This profile | Why |
@@ -233,10 +241,22 @@ example profile combined MUST with withholdability, and that is the only combina
 withholding alters a verdict. The disclosure model was therefore stated in the profile without
 being applied by any rule.
 
-The derived PQC migration profile pins v0.4 and tightens I9 by removing its withholdability, the
+The derived PQC migration profile pins v0.5 and tightens I9 by removing its withholdability, the
 level being already MUST. Under decision 0004 that tightening is permitted; a subsequent baseline
 revision that relaxed I9 would place the derived profile in conflict, which is why the base is
 pinned by version.
+
+### v0.4 — 2026-08-21
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Added the `scope` object of §4.4: `subjectType`, `relationshipTypes`, and the accepted `lifecycleStages` | editorial | None. This profile accepts all four stages, so no document that conformed to v0.3 stops conforming. The field's effect is on profiles derived from this one, which may now narrow the set |
+| Added `objective.decisionOptions`, listing the three actions the consumer chooses between | editorial | None. The decision text is unchanged; stating the options is what makes the action-choice test in Method step 1 checkable rather than a matter of review |
+
+Both changes are editorial here and neither is elsewhere: the migration profile's v0.2 narrows
+the accepted stages and that is a tightening. The pattern is worth noting when reading a
+changelog, because a field can be introduced without effect in one profile and immediately
+change verdicts in another that derives from it. Recorded as decision 0008.
 
 ### v0.5 — 2026-08-21
 
@@ -250,18 +270,6 @@ attribute it asks for. It already did, by inheriting I2, I3 and I5 from this pro
 nothing had required it to, and a migration profile written standalone could have reported
 capability alone. Recorded as decision 0009, which reverses the clause in 0008 that rejected
 orientation.
-
-### v0.4 — 2026-08-21
-
-| Change | Kind | Effect on an existing document |
-|---|---|---|
-| Added the `scope` object of §4.4: `subjectType`, `relationshipTypes`, and the accepted `lifecycleStages` | editorial | None. This profile accepts all four stages, so no document that conformed to v0.3 stops conforming. The field's effect is on profiles derived from this one, which may now narrow the set |
-| Added `objective.decisionOptions`, listing the three actions the consumer chooses between | editorial | None. The decision text is unchanged; stating the options is what makes the action-choice test in Method step 1 checkable rather than a matter of review |
-
-Both changes are editorial here and neither is elsewhere: the migration profile's v0.2 narrows
-the accepted stages and that is a tightening. The pattern is worth noting when reading a
-changelog, because a field can be introduced without effect in one profile and immediately
-change verdicts in another that derives from it. Recorded as decision 0008.
 
 ### v0.1 — initial draft
 
