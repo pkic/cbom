@@ -13,7 +13,7 @@
   },
   "extends": {
     "profileId": "pkic.example.pqc-migration",
-    "version": "0.4",
+    "version": "0.5",
     "file": "../../docs/methodology/profile-pqc-migration.rules.json"
   },
   "scope": {

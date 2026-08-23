@@ -121,6 +121,7 @@ nav: conformance
       <tr><td>C10</td><td>The profile carries a changelog classifying each change as tightening, relaxing, or editorial.</td><td>SHOULD</td></tr>
       <tr><td>C11</td><td>The profile declares its scope: the type of subject it describes, its orientation, the relationship types its rules constrain, and the lifecycle stages of reported data it accepts.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C12</td><td>The rules the profile imposes are consistent with the orientation it declares.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C14</td><td>Identifier schemes are declared for every asset class the rules constrain, and no scheme is declared that no rule applies.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C13</td><td>Every group rule is keyed to a declared vocabulary, and a profile that declares a subset of that vocabulary in scope still requires an answer for the rest.</td><td><strong>MUST</strong></td></tr>
     </tbody>
   </table>
@@ -163,7 +164,11 @@ nav: conformance
   <p>A group keyed by a vocabulary the profile does not declare requires an entry for no keys at all. Every document then satisfies it, and the rule reads as passing. C13 rejects the profile instead.</p>
   <p>A group whose <code>coverage</code> is <code>in-scope</code> while the vocabulary is larger lets a profile defer part of the problem and then never ask about it. A staged profile is meant to sequence the <em>depth</em> of an answer, not to remove the question: a purpose the profile has deferred still owes a status, and a blocker where that status is not <code>available</code>. Without that, a supplier conforms while behaving as though a whole class of cryptography does not exist, and each stage becomes a floor rather than a step. C13 is what makes the difference checkable.</p>
 
-  <p>C1 to C7 and C11 to C13 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
+  <h3>Identifier schemes</h3>
+  <p>An inventory assembled from several suppliers has to decide which records describe the same thing, and identity cannot be settled in general because some asset classes have no agreed identifier. It can be settled per profile, which is the lever this methodology has: a profile names the form it requires for each class of asset its rules constrain, and a consumer then knows which naming they are reading.</p>
+  <p>C14 does not check that a value belongs to a registry. The checker does not hold the registry and would be guessing. What it checks is that the declaration and the rules agree in both directions &mdash; every scheme a rule references is declared, and every scheme declared is referenced by some rule &mdash; because a scheme nobody applies drifts from the rules while continuing to read as authoritative. Which registry an algorithm name should come from is <a href="../issues/">Q20</a> and is unsettled; that a profile says which one it means is settled here.</p>
+
+  <p>C1 to C7 and C11 to C14 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
 
   <h2>3. An evaluation tool conforming to this methodology</h2>
   <p>Two tools given the same document, the same profile and the same resolution of any extended base are expected to return the same verdict. The requirements below are what that expectation rests on.</p>
@@ -191,8 +196,8 @@ nav: conformance
   <h3>What a claim cites</h3>
   <p>A claim names the profile and its version, the carrier format and its version, and the content revision of the document assessed. A claim omitting any of the three cannot be reproduced, and a claim that cannot be reproduced cannot be audited. Where a derived profile was used, the base and the version it pins are named as well.</p>
   <pre><code>Conforms to:
-  pkic.example.pqc-migration v0.4
-    extending pkic.example.interface-disclosure v0.5
+  pkic.example.pqc-migration v0.5
+    extending pkic.example.interface-disclosure v0.6
 Carrier: CycloneDX 1.7
 Content revision: 3
 Assessed by: Example Ltd (self-declared)

@@ -3,7 +3,7 @@
   "specVersion": "1.7",
   "serialNumber": "urn:uuid:3c3c3c3c-0000-4000-8000-00000000pass",
   "version": 1,
-  "$comment": "EXAMPLE CBOM — CONFORMS to profile pkic.example.interface-disclosure v0.3. The management interface does not publish its implementing library version and marks it withheld rather than omitting it silently; I9 is withholdable, so the CBOM still conforms. Carrier format: CycloneDX 1.7 (the profile's tested target). Subject: nginx. Declares TWO cryptographic interfaces: a client-facing HTTPS service interface (TLS via OpenSSL) and a management/configuration interface (SSH via OpenSSH). Both fully described, so product rule P2 (a management interface exists) is satisfied. Illustrative; field usage aligned to the CycloneDX 1.6/1.7 crypto model but should be schema-checked before real use. In 1.7, algorithm identity can additionally be anchored to the Cryptography Registry; here algorithms are named for readability. Profile attributes CycloneDX has no first-class field for are carried under component.properties with the pkic:profile: namespace.",
+  "$comment": "EXAMPLE CBOM \u2014 CONFORMS to profile pkic.example.interface-disclosure v0.3. The management interface does not publish its implementing library version and marks it withheld rather than omitting it silently; I9 is withholdable, so the CBOM still conforms. Carrier format: CycloneDX 1.7 (the profile's tested target). Subject: nginx. Declares TWO cryptographic interfaces: a client-facing HTTPS service interface (TLS via OpenSSL) and a management/configuration interface (SSH via OpenSSH). Both fully described, so product rule P2 (a management interface exists) is satisfied. Illustrative; field usage aligned to the CycloneDX 1.6/1.7 crypto model but should be schema-checked before real use. In 1.7, algorithm identity can additionally be anchored to the Cryptography Registry; here algorithms are named for readability. Profile attributes CycloneDX has no first-class field for are carried under component.properties with the pkic:profile: namespace.",
   "metadata": {
     "timestamp": "2026-07-16T09:00:00Z",
     "component": {
@@ -12,7 +12,13 @@
       "name": "nginx",
       "version": "1.27.0",
       "purl": "pkg:generic/nginx@1.27.0",
-      "description": "Web server / reverse proxy (example subject)"
+      "description": "Web server / reverse proxy (example subject)",
+      "properties": [
+        {
+          "name": "pkic:profile:coverage",
+          "value": "all-external"
+        }
+      ]
     }
   },
   "components": [
@@ -50,7 +56,9 @@
                 "crypto:algo:x25519",
                 "crypto:algo:rsa-2048"
               ],
-              "identifiers": ["0x13,0x02"]
+              "identifiers": [
+                "0x13,0x02"
+              ]
             }
           ],
           "cryptoRefArray": [
@@ -62,12 +70,30 @@
         }
       },
       "properties": [
-        { "name": "pkic:profile:interfaceId", "value": "svc-https" },
-        { "name": "pkic:profile:interfaceType", "value": "service" },
-        { "name": "pkic:profile:lifecycleStage", "value": "observed" },
-        { "name": "pkic:profile:endpointRole:client", "value": "endpoint:browser" },
-        { "name": "pkic:profile:endpointRole:server", "value": "endpoint:nginx" },
-        { "name": "pkic:profile:implementationPurl", "value": "pkg:generic/openssl@3.4.0" }
+        {
+          "name": "pkic:profile:interfaceId",
+          "value": "svc-https"
+        },
+        {
+          "name": "pkic:profile:interfaceType",
+          "value": "service"
+        },
+        {
+          "name": "pkic:profile:lifecycleStage",
+          "value": "observed"
+        },
+        {
+          "name": "pkic:profile:endpointRole:client",
+          "value": "endpoint:browser"
+        },
+        {
+          "name": "pkic:profile:endpointRole:server",
+          "value": "endpoint:nginx"
+        },
+        {
+          "name": "pkic:profile:implementationPurl",
+          "value": "pkg:generic/openssl@3.4.0"
+        }
       ]
     },
     {
@@ -88,12 +114,30 @@
         }
       },
       "properties": [
-        { "name": "pkic:profile:interfaceId", "value": "mgmt-ssh" },
-        { "name": "pkic:profile:interfaceType", "value": "management" },
-        { "name": "pkic:profile:lifecycleStage", "value": "configured" },
-        { "name": "pkic:profile:endpointRole:client", "value": "endpoint:admin" },
-        { "name": "pkic:profile:endpointRole:server", "value": "endpoint:host" },
-        { "name": "pkic:profile:disclosure:implementationPurl", "value": "withheld" }
+        {
+          "name": "pkic:profile:interfaceId",
+          "value": "mgmt-ssh"
+        },
+        {
+          "name": "pkic:profile:interfaceType",
+          "value": "management"
+        },
+        {
+          "name": "pkic:profile:lifecycleStage",
+          "value": "configured"
+        },
+        {
+          "name": "pkic:profile:endpointRole:client",
+          "value": "endpoint:admin"
+        },
+        {
+          "name": "pkic:profile:endpointRole:server",
+          "value": "endpoint:host"
+        },
+        {
+          "name": "pkic:profile:disclosure:implementationPurl",
+          "value": "withheld"
+        }
       ]
     },
     {
@@ -106,7 +150,10 @@
           "primitive": "ae",
           "parameterSetIdentifier": "256",
           "mode": "gcm",
-          "cryptoFunctions": ["encrypt", "decrypt"],
+          "cryptoFunctions": [
+            "encrypt",
+            "decrypt"
+          ],
           "nistQuantumSecurityLevel": 1
         }
       }
@@ -120,7 +167,10 @@
         "algorithmProperties": {
           "primitive": "key-agree",
           "curve": "x25519",
-          "cryptoFunctions": ["keygen", "keyagreement"],
+          "cryptoFunctions": [
+            "keygen",
+            "keyagreement"
+          ],
           "nistQuantumSecurityLevel": 0
         }
       }
@@ -134,7 +184,10 @@
         "algorithmProperties": {
           "primitive": "signature",
           "parameterSetIdentifier": "2048",
-          "cryptoFunctions": ["sign", "verify"],
+          "cryptoFunctions": [
+            "sign",
+            "verify"
+          ],
           "nistQuantumSecurityLevel": 0
         }
       }
@@ -162,7 +215,10 @@
         "assetType": "algorithm",
         "algorithmProperties": {
           "primitive": "ae",
-          "cryptoFunctions": ["encrypt", "decrypt"],
+          "cryptoFunctions": [
+            "encrypt",
+            "decrypt"
+          ],
           "nistQuantumSecurityLevel": 1
         }
       }
@@ -176,7 +232,10 @@
         "algorithmProperties": {
           "primitive": "key-agree",
           "curve": "x25519",
-          "cryptoFunctions": ["keygen", "keyagreement"],
+          "cryptoFunctions": [
+            "keygen",
+            "keyagreement"
+          ],
           "nistQuantumSecurityLevel": 0
         }
       }
@@ -190,16 +249,49 @@
         "algorithmProperties": {
           "primitive": "signature",
           "curve": "ed25519",
-          "cryptoFunctions": ["sign", "verify"],
+          "cryptoFunctions": [
+            "sign",
+            "verify"
+          ],
           "nistQuantumSecurityLevel": 0
         }
       }
     }
   ],
   "dependencies": [
-    { "ref": "app:nginx", "dependsOn": ["lib:openssl", "lib:openssh", "crypto:protocol:svc-https", "crypto:protocol:mgmt-ssh"] },
-    { "ref": "crypto:protocol:svc-https", "dependsOn": ["lib:openssl", "crypto:algo:aes-256-gcm", "crypto:algo:x25519", "crypto:algo:rsa-2048", "crypto:cert:server-leaf"] },
-    { "ref": "crypto:protocol:mgmt-ssh", "dependsOn": ["lib:openssh", "crypto:algo:chacha20-poly1305", "crypto:algo:curve25519", "crypto:algo:ed25519"] },
-    { "ref": "crypto:cert:server-leaf", "dependsOn": ["crypto:algo:rsa-2048"] }
+    {
+      "ref": "app:nginx",
+      "dependsOn": [
+        "lib:openssl",
+        "lib:openssh",
+        "crypto:protocol:svc-https",
+        "crypto:protocol:mgmt-ssh"
+      ]
+    },
+    {
+      "ref": "crypto:protocol:svc-https",
+      "dependsOn": [
+        "lib:openssl",
+        "crypto:algo:aes-256-gcm",
+        "crypto:algo:x25519",
+        "crypto:algo:rsa-2048",
+        "crypto:cert:server-leaf"
+      ]
+    },
+    {
+      "ref": "crypto:protocol:mgmt-ssh",
+      "dependsOn": [
+        "lib:openssh",
+        "crypto:algo:chacha20-poly1305",
+        "crypto:algo:curve25519",
+        "crypto:algo:ed25519"
+      ]
+    },
+    {
+      "ref": "crypto:cert:server-leaf",
+      "dependsOn": [
+        "crypto:algo:rsa-2048"
+      ]
+    }
   ]
 }

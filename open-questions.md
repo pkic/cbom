@@ -503,6 +503,13 @@ baseline stricter, so it would need a version increase and would affect every ex
 one row of the Conformance table. This question is bound up with Q02: the completeness statement
 is the disclosure-side answer to the same problem.
 
+**Settled in the drafting, 21 August 2026, and awaiting ratification.** Yes. The coverage statement
+moved from the migration profile into the baseline as P4 in v0.6. Silence about an interface is
+uninterpretable in every use of a CBOM, not only in migration planning, and the Conformance
+section already named this as one of the two non-assertions most likely to cause difficulty in
+procurement. Recorded as decision 0012. Moving it forced the numbering question, Q33, which is
+recorded as decision 0011.
+
 ## Q36 — Where does the boundary fall between vendor-stated and operator-stated data facts?
 
 **Status** open
@@ -1090,6 +1097,16 @@ inventory, and requiring the statement everywhere imposes work with no benefit i
 **What would have to change.** Possibly a new well-formedness requirement in the Conformance
 section, and the checker that enforces those requirements.
 
+
+**Answered for the baseline, 21 August 2026, and awaiting ratification.** Yes, and the answer is
+narrower than the question. A profile declares `identifierSchemes` naming the required form per
+asset class, and C14 checks that the declaration and the rules agree in both directions. It does
+not check that a value belongs to a registry: the checker does not hold the registry and would be
+guessing, which is stated in the profile rather than glossed. The baseline previously constrained
+the form of the least contested identifier — the implementing library, which had to be a purl — and
+left the most contested free, so `protocol: "our secure channel"` conformed. Which registry
+algorithm names should come from is still Q20. Recorded as decision 0012.
+
 ## Q39 — How are keys identified across tools?
 
 **Status** open
@@ -1313,6 +1330,13 @@ family, without either having been chosen.
 
 **What would have to change.** Both rule files, the override declarations, the origin tracking in
 the validator, and any sector profile (Q25).
+
+**Settled in the drafting, 21 August 2026, and awaiting ratification.** The base of a family keeps
+the kind letters `P` and `I`; a derived profile numbers every rule it adds under one letter of its
+own, whatever the kind. Retired ids are not reused, because a stored conformance claim may cite
+one. This stopped being theoretical when the baseline needed a third product rule and found the
+migration profile occupying `P3`: `load_profile` raises a collision error and refuses to evaluate
+anything, so the base could not grow. Recorded as decision 0011.
 
 ## Q35 — May a profile narrow an inherited list of permitted values?
 

@@ -390,7 +390,13 @@ def extract_product(bom):
     single, _multi, markers, _groups, _gm = split_properties(comp)
     providers = [c for c in bom.get("components", [])
                  if c.get("type") == "library" and c.get("purl")]
-    return {"attrs": single, "_disclosure": markers, "providerCount": len(providers)}
+    return {"attrs": single, "_disclosure": markers, "providerCount": len(providers),
+            # The subject's own identifier. A CBOM that does not say which version
+            # of what it describes cannot be matched to a deployment, compared
+            # with last quarter's, or joined to an SBOM.
+            "identifier": comp.get("purl"),
+            "identifierFallback": "%s@%s" % (comp.get("name"), comp.get("version"))
+                                  if comp.get("name") and comp.get("version") else None}
 
 
 def extract_interfaces(bom):
@@ -605,11 +611,49 @@ def check_product(product, interfaces, constraint, profile):
     if "minInterfaces" in constraint:
         n = len(interfaces)
         return (n >= constraint["minInterfaces"], "%d interface(s) declared" % n)
+    if "subjectIdentified" in constraint:
+        spec = constraint["subjectIdentified"]
+        value = product.get("identifier")
+        if present(value):
+            prefix = spec.get("startsWith")
+            if prefix and not str(value).startswith(prefix):
+                return (False, "subject identified as %r, which is not a %s identifier"
+                        % (value, prefix))
+            return (True, "= %r" % (value,))
+        if product.get("identifierFallback"):
+            return (False, "subject named as %r but carries no identifier in the "
+                    "required form; a name and a version are not a stable identifier"
+                    % product["identifierFallback"])
+        return (False, "the document does not say what it describes")
+
     if "minInterfacesOfType" in constraint:
         spec = constraint["minInterfacesOfType"]
         n = sum(1 for i in interfaces if i.get("interfaceType") == spec["interfaceType"])
-        return (n >= spec["min"],
-                "%d of type '%s' (min %d)" % (n, spec["interfaceType"], spec["min"]))
+        if n >= spec["min"]:
+            return (True, "%d of type '%s' (min %d)"
+                    % (n, spec["interfaceType"], spec["min"]))
+
+        # A structural rule is satisfied by presence or by an explicit statement
+        # of absence; silence is neither. A product with no administrative
+        # surface at all — a library, a token, an embedded component — hides
+        # nothing by having no management interface, and should be able to say
+        # so rather than fail. This is the disclosure model applied to structure.
+        absent = constraint.get("orDeclaredAbsent")
+        if absent:
+            reason = product.get("attrs", {}).get(absent)
+            if present(reason):
+                vocab = profile.get(constraint.get("absenceEnumRef"), [])
+                if vocab and reason not in vocab:
+                    return (False, "declared absent as %r, which is not a permitted reason"
+                            % (reason,))
+                return (True, "none declared, stated as %r" % (reason,))
+            marker = product.get("_disclosure", {}).get(absent)
+            if marker:
+                return (False, "no interface of type '%s', and its absence is declared %s "
+                        "rather than explained" % (spec["interfaceType"], marker))
+            return (False, "%d of type '%s' (min %d), and no declared reason for the "
+                    "absence" % (n, spec["interfaceType"], spec["min"]))
+        return (False, "%d of type '%s' (min %d)" % (n, spec["interfaceType"], spec["min"]))
     if "minProviders" in constraint:
         n = product.get("providerCount", 0)
         return (n >= constraint["minProviders"],

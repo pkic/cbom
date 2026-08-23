@@ -1,4 +1,4 @@
-# CBOM Profile — Interface Disclosure Baseline (Example v0.5)
+# CBOM Profile — Interface Disclosure Baseline (Example v0.6)
 
 > **Status:** Illustrative early-concept artifact for the PKIC CBOM Profiles Working Group.
 > Not a normative deliverable. CycloneDX crypto field names are aligned to v1.7 / ECMA-424
@@ -95,7 +95,9 @@ Requirement keywords follow BCP 14 (MUST / SHOULD / MAY). This profile uses two 
 | # | Requirement | Level | Constraint |
 |---|---|---|---|
 | P1 | The product MUST declare at least one cryptographic interface | **MUST** | `minInterfaces: 1` |
-| P2 | The product MUST declare at least one interface of type `management` | **MUST** | `minInterfacesOfType: {management, 1}` |
+| P2 | The product MUST declare at least one interface of type `management`, **or state why it has none** | **MUST** | `minInterfacesOfType: {management, 1}`, `orDeclaredAbsent` |
+| P3 | The document MUST identify the subject it describes | **MUST** | `subjectIdentified: {startsWith: pkg:}` |
+| P4 | The product MUST state how complete its declared interface set is | **MUST** | `productAttribute: coverage` |
 
 P2 corrects the requirement the earlier draft stated incorrectly: rather than naming a specific
 configuration interface, the profile requires that a configuration or management interface
@@ -241,7 +243,7 @@ example profile combined MUST with withholdability, and that is the only combina
 withholding alters a verdict. The disclosure model was therefore stated in the profile without
 being applied by any rule.
 
-The derived PQC migration profile pins v0.5 and tightens I9 by removing its withholdability, the
+The derived PQC migration profile pins v0.6 and tightens I9 by removing its withholdability, the
 level being already MUST. Under decision 0004 that tightening is permitted; a subsequent baseline
 revision that relaxed I9 would place the derived profile in conflict, which is why the base is
 pinned by version.
@@ -270,6 +272,22 @@ attribute it asks for. It already did, by inheriting I2, I3 and I5 from this pro
 nothing had required it to, and a migration profile written standalone could have reported
 capability alone. Recorded as decision 0009, which reverses the clause in 0008 that rejected
 orientation.
+
+### v0.6 — 2026-08-21
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Rewrote the objective. The previous decision was whether the cryptography was "disclosed in enough detail", which is a decision about the document rather than about the product | editorial | None. No rule changes. The decision is now the consumer's actual job — determining which deployed interfaces a published weakness affects, and what has changed since the last record — and every rule traces to it |
+| Added **P3**: the document identifies the subject it describes, in the form the profile names | tightening | A document that did not carry a subject identifier no longer conforms. A name and a version are not sufficient: two documents about the same product have to agree on the identifier for either to be usable as a record |
+| Added **P4**: the product states how complete its declared interface set is. Moved down from the migration profile | tightening | A document carrying no completeness statement no longer conforms. Settles Q34 |
+| Revised **P2**: satisfied by declaring a management interface **or** by stating why there is none | relaxing, deliberately | A subject with no administrative surface — a library, a hardware token, an embedded component — previously failed while hiding nothing. It can now say so. Silence still fails: a stated absence is a fact, and this is the disclosure model applied to structure |
+| Declared `identifierSchemes` and referenced them from I1, I3, I4, I5, I9 and P3 | editorial | None yet. The profile previously constrained the form of the least contested identifier, the implementing library, and left the most contested free, so free text satisfied `protocol` and `keyExchange`. Naming the required scheme is what makes correlation across suppliers possible; whether the algorithm scheme should be the CycloneDX registry is Q20 and is unsettled |
+
+P2 is the only relaxing change in this profile's history, and it is worth being explicit about why
+that is not a weakening. The rule exists to catch omission. A document that omits its management
+interface still fails; what changed is that a subject which genuinely has none can now say so
+instead of being told it is non-conforming for a fact about its own design. Recorded as decision
+0012, alongside 0011 for the rule numbering the two new product rules made necessary.
 
 ### v0.1 — initial draft
 

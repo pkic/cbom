@@ -141,6 +141,64 @@ expect_output "withheld purl reported HELD"    "HELD" "$M/cbom-pass.cyclonedx.js
 expect_exit   "non-conforming CBOM is rejected"    1 "$M/cbom-fail.cyclonedx.json" "$BASE"
 expect_output "failure is product rule P2"       "P2" "$M/cbom-fail.cyclonedx.json" "$BASE"
 
+# ------------------------------------------------- baseline product rules ---
+# v0.6 added two product rules and revised a third. P3 and P4 are what make the
+# document usable as an inventory record at all: without them a CBOM need not
+# say what it describes, nor whether its interface list is the whole list.
+echo
+echo "Baseline product rules"
+expect_output "P3 identifies the subject" "pkg:generic/nginx@1.27.0" \
+              "$M/cbom-pass.cyclonedx.json" "$BASE"
+expect_output "P4 states completeness"   "all-external" \
+              "$M/cbom-pass.cyclonedx.json" "$BASE"
+
+"$PY" - "$M/cbom-pass.cyclonedx.json" "$TMP" <<'PY'
+import json, sys, os
+bom = json.load(open(sys.argv[1], encoding="utf-8"))
+# Strip the subject identifier, leaving a name and a version behind.
+bom["metadata"]["component"].pop("purl", None)
+json.dump(bom, open(os.path.join(sys.argv[2], "cbom-unidentified.json"), "w"))
+
+bom = json.load(open(sys.argv[1], encoding="utf-8"))
+bom["metadata"]["component"]["properties"] = [
+    p for p in bom["metadata"]["component"].get("properties", [])
+    if p.get("name") != "pkic:profile:coverage"]
+json.dump(bom, open(os.path.join(sys.argv[2], "cbom-nocoverage.json"), "w"))
+
+# A subject with no administrative surface: no management interface, and a
+# stated reason. It must conform, where before v0.6 it could not.
+bom = json.load(open(sys.argv[1], encoding="utf-8"))
+bom["components"] = [c for c in bom["components"]
+                     if c.get("bom-ref") != "crypto:protocol:mgmt-ssh"]
+bom["metadata"]["component"].setdefault("properties", []).append(
+    {"name": "pkic:profile:managementInterfaceAbsence", "value": "no-configuration-surface"})
+json.dump(bom, open(os.path.join(sys.argv[2], "cbom-noadmin.json"), "w"))
+
+# The same document without the reason: silence is not a stated absence.
+bom["metadata"]["component"]["properties"] = [
+    p for p in bom["metadata"]["component"]["properties"]
+    if p.get("name") != "pkic:profile:managementInterfaceAbsence"]
+json.dump(bom, open(os.path.join(sys.argv[2], "cbom-noadmin-silent.json"), "w"))
+PY
+expect_exit   "a document that does not say what it describes fails" 1 \
+              "$TMP/cbom-unidentified.json" "$BASE"
+expect_output "and a name and version are not an identifier" "not a stable identifier" \
+              "$TMP/cbom-unidentified.json" "$BASE"
+expect_exit   "a document with no completeness statement fails" 1 \
+              "$TMP/cbom-nocoverage.json" "$BASE"
+
+# The revised P2. A structural rule is satisfied by presence or by a stated
+# absence; silence is neither. Before v0.6 the first of these failed while
+# hiding nothing.
+expect_exit   "no management interface, absence stated, conforms" 0 \
+              "$TMP/cbom-noadmin.json" "$BASE"
+expect_output "and the report says how it was satisfied" "none declared, stated as" \
+              "$TMP/cbom-noadmin.json" "$BASE"
+expect_exit   "no management interface and no reason does not conform" 1 \
+              "$TMP/cbom-noadmin-silent.json" "$BASE"
+expect_output "and says the absence was never explained" "no declared reason for the absence" \
+              "$TMP/cbom-noadmin-silent.json" "$BASE"
+
 # ------------------------------------------------------------ carrier bands ---
 echo
 echo "Carrier version bands"
@@ -306,9 +364,9 @@ expect_output "reported as undeclared, not withheld" "no disclosure marker" \
 
 # -------------------------------------------------- profile well-formedness ---
 # The second conformance target: a profile checked against the methodology.
-# Requirements C1 to C13 are stated in the Conformance section.
+# Requirements C1 to C14 are stated in the Conformance section.
 echo
-echo "Profile well-formedness (C1-C13)"
+echo "Profile well-formedness (C1-C14)"
 expect_check_exit "baseline profile is well-formed"        0 "$BASE"
 expect_check_exit "derived profile is well-formed"         0 "$PQC"
 expect_check_output "baseline verdict reads WELL-FORMED" "VERDICT : WELL-FORMED" "$BASE"

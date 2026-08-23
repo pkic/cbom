@@ -49,6 +49,8 @@ profile widens the vocabulary — so it can be accepted in part.
 | [0008](./0008-profile-scope-declaration.md) | A profile declares its subject, its boundary, and the lifecycle stages it accepts | 3.1 | Proposed | 2026-08-21 |
 | [0009](./0009-orientation-is-declared-and-checked.md) | A profile declares its orientation, and the declaration constrains its rules | 3.1 | Proposed | 2026-08-21 |
 | [0010](./0010-cryptographic-purpose-vocabulary.md) | Capability is stated per cryptographic purpose, from a fixed vocabulary | 3.10 | Proposed | 2026-08-21 |
+| [0011](./0011-rule-numbering-across-a-family.md) | A derived profile numbers its rules in its own space, and retired ids are not reused | 3.2 | Proposed | 2026-08-21 |
+| [0012](./0012-what-a-disclosure-baseline-requires.md) | A disclosure baseline identifies its subject, states its completeness, and names its identifier schemes | 3.1 | Proposed | 2026-08-21 |
 
 <!-- Add a row per decision, newest at the bottom:
 | 0008 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |

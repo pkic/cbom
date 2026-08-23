@@ -78,9 +78,13 @@ nav: profile
     <thead><tr><th>#</th><th>Requirement</th><th>Level</th><th>Constraint</th></tr></thead>
     <tbody>
       <tr><td>P1</td><td>Declare at least one cryptographic interface</td><td><span class="must">MUST</span></td><td><code>minInterfaces: 1</code></td></tr>
-      <tr><td>P2</td><td>Declare at least one <code>management</code> interface</td><td><span class="must">MUST</span></td><td><code>minInterfacesOfType: {management, 1}</code></td></tr>
+      <tr><td>P2</td><td>Declare at least one <code>management</code> interface, <strong>or state why there is none</strong></td><td><span class="must">MUST</span></td><td><code>minInterfacesOfType: {management, 1}</code>, <code>orDeclaredAbsent</code></td></tr>
+      <tr><td>P3</td><td>Identify the subject the document describes</td><td><span class="must">MUST</span></td><td><code>subjectIdentified: {startsWith: pkg:}</code></td></tr>
+      <tr><td>P4</td><td>State how complete the declared interface set is</td><td><span class="must">MUST</span></td><td><code>productAttribute: coverage</code></td></tr>
     </tbody>
   </table>
+  <p>P1 and P2 catch omission, which per-attribute rules cannot: a document describing its service interface accurately while saying nothing about how the product is administered passes every interface rule and fails P2. P2 is satisfied either by declaring such an interface or by stating that the subject has none &mdash; a library or a hardware token with no configuration surface hides nothing by lacking one, and silence is what the rule is really against. That is the <a href="#disclosure">disclosure model</a> applied to structure rather than to an attribute.</p>
+  <p>P3 and P4 are what make the document usable as a record rather than only as a description. Without P3 a CBOM need not say which version of what it describes, so it cannot be matched to a deployment or compared with the same product's record from last quarter. Without P4 a missing interface is uninterpretable: silence could mean the interface does not exist, or that the producer chose not to list it, and those are entirely different. The Conformance section names both of those as the non-assertions most likely to cause difficulty in procurement, and these are the rules that address them.</p>
 
   <h3>Per-interface rules (applied to every interface)</h3>
   <p>Names follow the conventions in <a href="method.html">Method</a>. The bare name denotes present state, so <code>keyExchange</code> is what the interface uses; a profile needing declared capability adds the <code>Supported</code> suffix, as the <a href="pqc-migration.html">PQC Migration</a> profile does.</p>
@@ -106,7 +110,7 @@ nav: profile
   <p>A <strong>group rule</strong> constrains a repeated group keyed by a controlled vocabulary. An interface carries one entry per key, and the rule's member rules are evaluated inside an entry, so a conditional guard refers to that entry rather than to the interface as a whole. The <a href="pqc-migration.html">PQC Migration</a> profile uses one, keyed by <a href="model.html">cryptographic purpose</a>: rule M10 requires an entry per purpose, and its member M10.2 requires a blocker wherever <em>that purpose's</em> status is not <code>available</code>.</p>
   <p>A group rule also declares its <strong>coverage</strong>, which is the part worth attention. Coverage may be every value in the vocabulary, or only those the profile's scope declares. The difference decides whether a profile that addresses part of a problem is a stage or a floor: with full coverage, a purpose the profile defers still owes a status, so a consumer learns where it stands; with coverage limited to what is in scope, the deferred purposes disappear from the document entirely and no later profile has a baseline to improve on. <a href="conformance.html">C13</a> checks this, because both readings load and run.</p>
 
-  <h2>Disclosure states</h2>
+  <h2 id="disclosure">Disclosure states</h2>
   <p>An attribute with no value may be missing for different reasons, and the profile distinguishes them. Following the 2026 SBOM minimum elements, a producer states whether the information is unknown to it or is being withheld.</p>
   <table>
     <thead><tr><th>Outcome</th><th>Meaning</th><th>Effect on a MUST rule</th></tr></thead>
@@ -144,7 +148,7 @@ nav: profile
       <text x="548" y="20" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">EXTENSION</text>
       <rect x="470" y="42" width="156" height="42" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
       <text x="548" y="62" fill="#1a2230" text-anchor="middle" font-size="11.5">base profile</text>
-      <text x="548" y="77" fill="#5b6472" text-anchor="middle" font-size="10">interface disclosure v0.5</text>
+      <text x="548" y="77" fill="#5b6472" text-anchor="middle" font-size="10">interface disclosure v0.6</text>
       <rect x="470" y="120" width="156" height="42" rx="10" fill="#eafaf1" stroke="#0f7a52"/>
       <text x="548" y="140" fill="#1a2230" text-anchor="middle" font-size="11.5">derived profile</text>
       <text x="548" y="155" fill="#5b6472" text-anchor="middle" font-size="10">adds and tightens only</text>
@@ -197,9 +201,9 @@ nav: profile
   <h3>Expressing a conformance claim</h3>
   <p>A claim names every profile evaluated, each with its version, together with the carrier format version and the content revision. For a derived profile the base is named as well, because the derived profile pins a particular version of it and a reader should not have to look that up.</p>
   <pre><code>Conforms to:
-  pkic.example.pqc-migration v0.4
-    extending pkic.example.interface-disclosure v0.5
-  pkic.example.interface-disclosure v0.5   (independently evaluated)
+  pkic.example.pqc-migration v0.5
+    extending pkic.example.interface-disclosure v0.6
+  pkic.example.interface-disclosure v0.6   (independently evaluated)
 Carrier: CycloneDX 1.7
 Content revision: 3</code></pre>
 
@@ -207,8 +211,8 @@ Content revision: 3</code></pre>
   <p>A derived rules file declares its base and lists only its additions and its tightenings.</p>
   <pre><code>{
   "profileId": "pkic.example.pqc-migration",
-  "version": "0.4",
-  "extends": { "profileId": "pkic.example.interface-disclosure", "version": "0.5" },
+  "version": "0.5",
+  "extends": { "profileId": "pkic.example.interface-disclosure", "version": "0.6" },
   "overrides": [
     { "id": "I9", "level": "MUST", "withholdable": false }
   ],

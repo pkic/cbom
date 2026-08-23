@@ -2,7 +2,7 @@
   "$comment": "Illustrative machine-readable CBOM profile for PQC migration planning. DERIVED: this profile extends the interface disclosure baseline under the composition rules on the Profile page. It inherits every baseline rule, tightens one, and adds twelve per-interface rules and two product-level rules. Extension is monotonic, so a CBOM conforming to this profile also conforms to the baseline. The 'file' hint in 'extends' tells the validator where to resolve the base from; profileId and version are what a conformance claim cites.",
   "profileId": "pkic.example.pqc-migration",
   "title": "PQC Migration Readiness (Example)",
-  "version": "0.4",
+  "version": "0.5",
   "objective": {
     "$comment": "C1. A derived profile states its own consumer and decision; it does not inherit the base's, because the whole reason to derive is that the decision differs. The same applies to decisionOptions: the base's consumer chooses whether to accept a disclosure, and this one chooses what to do about an interface.",
     "consumer": "An operator planning a post-quantum migration across an estate of products it did not build.",
@@ -35,7 +35,7 @@
   },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.5",
+    "version": "0.6",
     "file": "profile-interface-disclosure.rules.json"
   },
   "appliesTo": {
@@ -89,11 +89,6 @@
     "exclusive",
     "unknown"
   ],
-  "coverageVocabulary": [
-    "all-external",
-    "all",
-    "partial"
-  ],
   "overrides": [
     {
       "id": "I9",
@@ -104,22 +99,13 @@
   ],
   "productRules": [
     {
-      "id": "P3",
-      "description": "Product states how complete its declared interface set is",
-      "level": "MUST",
-      "constraint": {
-        "productAttribute": "coverage",
-        "enumRef": "coverageVocabulary"
-      },
-      "withholdable": false
-    },
-    {
-      "id": "P4",
+      "id": "M14",
       "description": "Product identifies at least one cryptographic provider",
       "level": "SHOULD",
       "constraint": {
         "minProviders": 1
-      }
+      },
+      "note": "Renumbered from P4 in v0.5 under decision 0011: a derived profile numbers its own rules under its own letter, whatever their kind, so the base is free to grow into P3 and P4. M13 is skipped rather than reused \u2014 see the changelog. The coverage rule that was P3 has moved into the baseline as P4 and is now inherited."
     }
   ],
   "interfaceRules": [
@@ -343,6 +329,20 @@
         {
           "kind": "editorial",
           "summary": "Added cryptographicPurposeVocabulary and scope.cryptographicPurposes. The vocabulary is fixed by the methodology so that two profiles cannot mean different things by the same word; a sector profile widening it raises the mirror of Q35, which is unresolved."
+        }
+      ]
+    },
+    {
+      "version": "0.5",
+      "date": "2026-08-21",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Renumbered the product rules out of the baseline's P-space under decision 0011. P4 (minimum providers) becomes M14. P3 (coverage) is not renumbered because it has moved into the baseline as P4 and is inherited from there. No requirement on any document changes; rule ids appear in reports and claims, not in CBOMs. M11, M12 and M13 are retired or skipped and are not reused: a report or a stored claim may cite M11 against a document evaluated under v0.3, and reusing the id would make that report silently wrong rather than merely stale."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Re-pinned the base to v0.6, which adds P3 (subject identity) and P4 (completeness) and revises P2. Those requirements are inherited, so a document conforming to this profile now has to satisfy them too. The coverage statement this profile used to require itself is unchanged in substance and now arrives from the base."
         }
       ]
     }

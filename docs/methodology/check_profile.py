@@ -2,7 +2,7 @@
 """
 Profile well-formedness checker.
 
-Checks a machine-readable profile against requirements C1 to C13 of the
+Checks a machine-readable profile against requirements C1 to C14 of the
 Conformance section, which state what makes a profile well-formed under this
 methodology. This is the second of the three conformance targets: a CBOM
 document is checked against a profile by validate_cbom.py, and a profile is
@@ -21,6 +21,7 @@ C10 SHOULD  carries a changelog classifying each change
 C11 MUST    declares its scope: subject, relationship types, lifecycle stages
 C12 MUST    its rules are consistent with its declared orientation
 C13 MUST    group rules are keyed to a real vocabulary and cover it
+C14 MUST    identifier schemes are declared and match what the rules reference
 
 Rules are checked as DECLARED in the file under test. A derived profile is not
 re-checked against its base's rules, because the base is checkable on its own;
@@ -545,6 +546,52 @@ def c13_group_rules(prof, resolved, evidence_reliable, f):
               "%d group rule(s), keyed and covered" % len(groups))
 
 
+def c14_identifier_schemes(prof, resolved, f):
+    """C14. Identifier schemes are declared, and the declaration matches the rules.
+
+    Q38's lever. Identity cannot be settled in general, because some asset classes
+    have no agreed identifier; it can be settled per profile, by naming the form
+    required for each class. The check is deliberately not that a value belongs to
+    a registry — the checker does not hold the registry and would be guessing.
+    What it checks is that the declaration and the rules agree, in both
+    directions, because a scheme nobody references and a reference to a scheme
+    nobody declared are the two ways this drifts."""
+    declared = resolved.get("identifierSchemes")
+    referenced = {}
+    for r in declared_rules(resolved):
+        ref = r.get("schemeRef")
+        if ref:
+            referenced.setdefault(ref, []).append(r.get("id", "?"))
+
+    if not referenced and not declared:
+        f.add("C14", "MUST", True, "no identifier schemes declared or referenced")
+        return
+    if not isinstance(declared, dict):
+        f.add("C14", "MUST", False,
+              "rule(s) %s name an identifier scheme, but the profile declares none"
+              % ", ".join(sorted(sum(referenced.values(), []))))
+        return
+
+    problems = []
+    for ref, rules in sorted(referenced.items()):
+        if not str(declared.get(ref, "")).strip():
+            problems.append("%s reference scheme %r, which is not declared"
+                            % (", ".join(rules), ref))
+    unused = [k for k in declared if k not in referenced and not k.startswith("$")]
+    if unused:
+        problems.append("scheme(s) declared for %s, which no rule references; a scheme "
+                        "nobody applies drifts from the rules while reading as authoritative"
+                        % ", ".join(sorted(unused)))
+
+    if problems:
+        f.add("C14", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C14", "MUST", True,
+              "%d scheme(s) declared and referenced: %s"
+              % (len(referenced), ", ".join("%s=%s" % (k, declared[k])
+                                            for k in sorted(referenced))))
+
+
 def c8_exclusions(prof, f):
     ex = prof.get("exclusions")
     if not isinstance(ex, list) or not ex:
@@ -635,6 +682,7 @@ def check(path):
     c11_scope(prof, vocab_source, resolved, f)
     c12_orientation(prof, vocab_source, resolved, f)
     c13_group_rules(prof, vocab_source, resolved, f)
+    c14_identifier_schemes(prof, vocab_source, f)
     return prof, f
 
 
