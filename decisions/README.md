@@ -29,6 +29,12 @@ constraint falls on profiles rather than on documents.
 0009 also reverses a clause of 0008, which is the first time one record has revised another.
 Neither is superseded: 0008 is annotated at the clause concerned and otherwise stands.
 
+Record 0010 is Proposed in the third sense, and the distinction matters when setting an agenda.
+0001 to 0007 describe the example as it was first built. 0008 and 0009 changed it. 0010 is not
+implemented at all: accepting it commits the group to work that has not been done, including new
+validator capability. It also leaves two points open rather than deciding them, so it can be
+accepted in part.
+
 ## Index
 
 | # | Title | Aspect | Status | Date |
@@ -42,6 +48,7 @@ Neither is superseded: 0008 is annotated at the clause concerned and otherwise s
 | [0007](./0007-availability-as-status-and-blocker.md) | Forward-looking capability is stated as a status and a blocker, not a date | 3.10 | Proposed | 2026-08-07 |
 | [0008](./0008-profile-scope-declaration.md) | A profile declares its subject, its boundary, and the lifecycle stages it accepts | 3.1 | Proposed | 2026-08-21 |
 | [0009](./0009-orientation-is-declared-and-checked.md) | A profile declares its orientation, and the declaration constrains its rules | 3.1 | Proposed | 2026-08-21 |
+| [0010](./0010-cryptographic-purpose-vocabulary.md) | Capability is stated per cryptographic purpose, from a fixed vocabulary | 3.10 | Proposed | 2026-08-21 |
 
 <!-- Add a row per decision, newest at the bottom:
 | 0008 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |

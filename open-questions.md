@@ -1335,6 +1335,15 @@ permitted. It is the obvious way to express a sector constraint.
 **Option B: forbid restating and add an explicit narrowing mechanism**, checked against the
 parent. Same expressiveness, without the silent-override hazard.
 
+**A mirror case, added 21 August 2026.** This question is framed around narrowing, which is a
+tightening and therefore permitted. Decision 0010 raises the opposite: a sector profile adding
+`attestation`, `tokenization` or `password-verification` to the cryptographic purpose vocabulary
+would *widen* an inherited list. That is arguably a relaxation, because a document could then claim
+a purpose the base profile has no rule for, and a consumer holding the base profile would have no
+way to evaluate it. Whichever mechanism is chosen has to answer for both directions, and an
+extension point that permits only narrowing would block sector adoption of the purpose vocabulary
+entirely.
+
 **Option C: allow restating and check it**, rejecting any restatement that adds a value the
 parent did not have.
 
@@ -1403,6 +1412,16 @@ interface level anyway. The supplier states the least advanced position, which g
 
 **Option B: one per job.** Reflects how migration actually proceeds. It complicates the dependent
 rule, since the blocker would also become per job.
+
+**A proposed answer, 21 August 2026.** Option B, with "job" fixed as a *cryptographic purpose* from
+a vocabulary the methodology defines, and with a test for what belongs in that vocabulary so
+additions can be argued rather than accumulated. Seven purposes are proposed; `randomness` is left
+open as an eighth. The proposal also names the collision to avoid: `endpointRoles` already means
+which party you are, and CycloneDX `cryptoFunctions` already names *operations*, which is a
+different thing — `sign`/`verify` is one operation covering both a TLS certificate signature and a
+firmware signature, which migrate a decade apart. Recorded as decision 0010, which also shows that
+settling this makes staged profiles nearly free: a profile declares which purposes it requires in
+depth, and the rules are written once and quantified over them.
 
 **Option C: one per interface, with an optional breakdown.**
 
