@@ -24,6 +24,13 @@ product-independent, version-aware, and composable:
   * INTERFACE rules -- applied to every declared cryptographic interface, with
                        support for conditional rules ('requiredWhen') and
                        list-valued attributes ('list': true).
+  * GROUP rules     -- a repeated group keyed by a controlled vocabulary, so an
+                       interface can state one answer per cryptographic purpose
+                       rather than one answer overall. Member rules are
+                       evaluated inside an entry, so a 'requiredWhen' guard
+                       refers to that entry. 'coverage' says whether an entry is
+                       required for every value in the vocabulary or only for
+                       those the profile's scope declares.
 
 Disclosure states. An attribute is reported as one of:
   value      -- supplied and checked against the constraint
@@ -146,6 +153,10 @@ def load_profile(path):
     if not ext:
         origin = {r["id"]: prof["profileId"]
                   for r in prof.get("productRules", []) + prof.get("interfaceRules", [])}
+        for g in prof.get("groupRules", []):
+            origin[g["id"]] = prof["profileId"]
+            for m in g.get("members", []):
+                origin[m["id"]] = prof["profileId"]
         apply_scope(prof)
         return prof, origin, notes
 
@@ -165,7 +176,8 @@ def load_profile(path):
 
     merged = dict(base)
     merged.update({k: v for k, v in prof.items()
-                   if k not in ("productRules", "interfaceRules", "overrides", "extends")})
+                   if k not in ("productRules", "interfaceRules", "groupRules",
+                                "overrides", "extends")})
     merged["profileId"] = prof["profileId"]
     merged["title"] = prof.get("title", base.get("title"))
     merged["version"] = prof.get("version")
@@ -191,6 +203,22 @@ def load_profile(path):
                 raise ProfileError("rule id %s collides with an inherited rule" % r["id"])
             origin[r["id"]] = prof["profileId"]
         merged[group] = inherited + added
+
+    # Group rules are concatenated rather than overridden. A derived profile may
+    # add a group; tightening one member of an inherited group is not yet
+    # expressible, and inventing a syntax for it before anyone needs it would be
+    # guessing. Collisions are still rejected, so the gap is visible.
+    inherited_groups = [dict(g) for g in base.get("groupRules", [])]
+    seen_groups = {g["id"] for g in inherited_groups}
+    for g in prof.get("groupRules", []):
+        if g["id"] in seen_groups:
+            raise ProfileError(
+                "group rule id %s collides with an inherited group rule; "
+                "overriding a group member is not supported" % g["id"])
+        origin[g["id"]] = prof["profileId"]
+        for m in g.get("members", []):
+            origin[m["id"]] = prof["profileId"]
+    merged["groupRules"] = inherited_groups + list(prof.get("groupRules", []))
 
     unmatched = [o["id"] for o in prof.get("overrides", []) if o["id"] not in origin]
     if unmatched:
@@ -328,22 +356,38 @@ def split_properties(component):
     attributes are carried. 'single' keeps the last value seen; 'multi' keeps
     every value in order."""
     single, multi, markers = {}, {}, {}
+    groups, group_markers = {}, {}
     for p in component.get("properties", []):
         name, value = p.get("name", ""), p.get("value")
-        if name.startswith(PROP + "disclosure:"):
-            markers[name.split(":")[-1]] = value
-            continue
         if not name.startswith(PROP):
             continue
-        key = name[len(PROP):]
-        single[key] = value
-        multi.setdefault(key, []).append(value)
-    return single, multi, markers
+        rest = name[len(PROP):]
+
+        # A group entry is written <group>:<key>:<attribute>, following the
+        # endpointRole:<role> convention already in use. Three segments is what
+        # distinguishes it, so the adapter needs no knowledge of which profile
+        # declares which groups.
+        withheld = rest.startswith("disclosure:")
+        if withheld:
+            rest = rest[len("disclosure:"):]
+        parts = rest.split(":")
+
+        if len(parts) == 3:
+            group, key, attr = parts
+            target = group_markers if withheld else groups
+            target.setdefault(group, {}).setdefault(key, {})[attr] = value
+            continue
+        if withheld:
+            markers[parts[-1]] = value
+            continue
+        single[rest] = value
+        multi.setdefault(rest, []).append(value)
+    return single, multi, markers, groups, group_markers
 
 
 def extract_product(bom):
     comp = bom.get("metadata", {}).get("component", {})
-    single, _multi, markers = split_properties(comp)
+    single, _multi, markers, _groups, _gm = split_properties(comp)
     providers = [c for c in bom.get("components", [])
                  if c.get("type") == "library" and c.get("purl")]
     return {"attrs": single, "_disclosure": markers, "providerCount": len(providers)}
@@ -356,7 +400,7 @@ def extract_interfaces(bom):
         cp = c.get("cryptoProperties", {})
         if cp.get("assetType") != "protocol":
             continue
-        single, multi, markers = split_properties(c)
+        single, multi, markers, groups, group_markers = split_properties(c)
         proto = cp.get("protocolProperties", {})
         refs = list(proto.get("cryptoRefArray", []))
         for s in proto.get("cipherSuites", []):
@@ -365,6 +409,8 @@ def extract_interfaces(bom):
 
         iface = {
             "_disclosure": markers,
+            "_groups": groups,
+            "_groupMarkers": group_markers,
             "interfaceId": single.get("interfaceId") or c.get("bom-ref"),
             "interfaceType": single.get("interfaceType"),
             "protocol": (proto.get("type") or "").upper() or None,
@@ -483,6 +529,78 @@ def check_rule(iface, rule, profile):
     return (False, "undeclared", "absent, with no disclosure marker")
 
 
+def required_keys(rule, profile):
+    """The keys a group rule requires an entry for.
+
+    'all-purposes' means every value in the referenced vocabulary, not only the
+    ones the profile takes in scope. That is deliberate and is what stops a
+    staged profile becoming a permanent floor: a profile may require depth for
+    key establishment alone and still oblige a producer to say where
+    authentication stands. 'in-scope' restricts the requirement to the scope
+    member of the same name."""
+    vocab = profile.get(rule.get("keyVocabularyRef"), [])
+    if rule.get("coverage") == "in-scope":
+        scope_key = rule.get("scopeRef") or "cryptographicPurposes"
+        declared = (profile.get("scope") or {}).get(scope_key) or []
+        return [k for k in vocab if k in declared]
+    return list(vocab)
+
+
+def in_scope_keys(rule, profile):
+    scope_key = rule.get("scopeRef") or "cryptographicPurposes"
+    return set((profile.get("scope") or {}).get(scope_key) or [])
+
+
+def check_group_rule(iface, rule, profile):
+    """Evaluate a repeated group keyed by a controlled vocabulary.
+
+    Returns a list of report rows. A missing entry is reported against the group
+    rule and named by its key, because "no status for entity-authentication" is
+    what a reader needs, not "M10 failed". Member rules are evaluated inside the
+    entry, so a 'requiredWhen' guard refers to the entry's own attributes rather
+    than to the interface: the blocker for one purpose depends on the status of
+    that purpose and on nothing else. That was the defect in the per-interface
+    shape, where the guard had no single value to test."""
+    rows = []
+    group = rule["group"]
+    entries = (iface.get("_groups") or {}).get(group, {})
+    entry_markers = (iface.get("_groupMarkers") or {}).get(group, {})
+    scoped = in_scope_keys(rule, profile)
+
+    for key in required_keys(rule, profile):
+        depth = "in scope" if (not scoped or key in scoped) else "status only"
+        values = entries.get(key)
+        if not values:
+            rows.append({"id": rule["id"], "level": rule["level"],
+                         "attribute": "%s[%s]" % (rule["keyedBy"], key),
+                         "ok": False, "state": "undeclared",
+                         "detail": "no entry for this %s (%s)" % (rule["keyedBy"], depth)})
+            continue
+
+        entry = dict(values)
+        entry["_disclosure"] = entry_markers.get(key, {})
+        for member in rule.get("members", []):
+            # Outside the profile's declared scope a purpose owes a status and,
+            # where the status is not already available, a blocker. The optional
+            # members are the depth that scope buys.
+            if scoped and key not in scoped and member.get("level") == "MAY":
+                continue
+            ok, state, detail = check_rule(entry, member, profile)
+            rows.append({"id": "%s[%s]" % (member["id"], key), "level": member["level"],
+                         "attribute": member["attribute"], "ok": ok,
+                         "state": state, "detail": detail})
+    return rows
+
+
+def rule_sort_key(row):
+    """Order rows by rule id, tolerating member ids like 'M10.2[key-establishment]'."""
+    ident = str(row.get("id", ""))
+    prefix = ident[0] if ident else ""
+    digits = "".join(c for c in ident[1:] if c.isdigit() or c == ".").split("[")[0]
+    parts = [int(p) for p in digits.split(".") if p.isdigit()]
+    return (prefix, parts or [0], ident)
+
+
 def check_product(product, interfaces, constraint, profile):
     if "minInterfaces" in constraint:
         n = len(interfaces)
@@ -540,7 +658,9 @@ def validate(bom, profile):
             rows.append({"id": rule["id"], "level": rule["level"],
                          "attribute": rule["attribute"], "ok": ok,
                          "state": state, "detail": detail})
-        rows.sort(key=lambda r: (r["id"][0], int(r["id"][1:] or 0)))
+        for grule in profile.get("groupRules", []):
+            rows.extend(check_group_rule(iface, grule, profile))
+        rows.sort(key=rule_sort_key)
         iface_ok = all(r["ok"] for r in rows if r["level"] == "MUST")
         report["interfaces"].append({
             "interfaceId": iface["interfaceId"],
@@ -617,9 +737,14 @@ def main(argv):
         print("INTERFACE  %s  (type=%s)  ==>  %s"
               % (iface["interfaceId"], iface["interfaceType"],
                  "conforms" if iface["conforms"] else "FAILS"))
+        # Group member ids carry their key, so the column is sized per interface
+        # rather than fixed: 'M10.2[entity-authentication]' should not push every
+        # other row out of alignment.
+        idw = max([len(r["id"]) for r in iface["rows"]] + [4])
+        attrw = max([len(r["attribute"]) for r in iface["rows"]] + [18])
         for r in iface["rows"]:
-            print("  [%s] %-4s %-6s %-26s %s" % (icon_for(r), r["id"], r["level"],
-                                                 r["attribute"], r["detail"]))
+            print("  [%s] %-*s %-6s %-*s %s" % (icon_for(r), idw, r["id"], r["level"],
+                                                attrw, r["attribute"], r["detail"]))
     print("=" * 70)
     fails = [r["id"] for r in report["product"] if not r["ok"] and r["level"] == "MUST"]
     for i in report["interfaces"]:

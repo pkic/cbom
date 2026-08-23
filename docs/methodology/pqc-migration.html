@@ -125,8 +125,8 @@ nav: pqc
       <tr><td>M8</td><td><code>negotiationControl</code></td><td><span class="should">SHOULD</span></td><td>Whether the interface can be configured to require post-quantum key exchange and refuse a classical fallback. Determines whether migration can be enforced or only offered.</td></tr>
       <tr><td>M9</td><td><code>integrationConstraints</code></td><td><span class="should">SHOULD</span></td><td>Known effects of enabling the capability: handshake or record size limits, fragmentation behaviour, certificate size ceilings, intermediary incompatibilities, measured performance impact.</td></tr>
       <tr><td>M10</td><td><code>capabilityStatus</code></td><td><span class="must">MUST</span></td><td><code>available</code> · <code>committed</code> · <code>planned</code> · <code>under-evaluation</code> · <code>not-planned</code>. A commitment class rather than a date. Most sequencing decisions turn on the difference between <code>planned</code> and <code>not-planned</code>, which needs no date at all.</td></tr>
-      <tr><td>M11</td><td><code>blockedBy</code></td><td>conditional</td><td>MUST where <code>capabilityStatus</code> is not <code>available</code>. One of <code>provider</code> · <code>product</code> · <code>hardware</code> · <code>standard</code> · <code>certification</code>. Identifies what has to change and therefore who can change it.</td></tr>
-      <tr><td>M12</td><td><code>roadmapRef</code></td><td>MAY</td><td>Reference to a roadmap entry carrying the target release and, if offered, a date. Interfaces sharing a blocker reference the same entry.</td></tr>
+      <tr><td>M10.2</td><td><code>blockedBy</code></td><td>conditional</td><td>MUST where that purpose's <code>capabilityStatus</code> is not <code>available</code>. One of <code>provider</code> · <code>product</code> · <code>hardware</code> · <code>standard</code> · <code>certification</code>. Identifies what has to change and therefore who can change it.</td></tr>
+      <tr><td>M10.3</td><td><code>roadmapRef</code></td><td>MAY</td><td>Reference to a roadmap entry carrying the target release and, if offered, a date. Interfaces sharing a blocker reference the same entry.</td></tr>
     </tbody>
   </table>
   </div>
@@ -141,7 +141,7 @@ nav: pqc
   <p>Migration planning depends on knowing which library implements an interface, since that determines whether an update exists and when it arrived. A vendor withholding it leaves the consumer unable to sequence the work. This is the only inherited rule this profile changes, and raising a level is permitted because it tightens.</p>
 
   <h3>Conditional rules</h3>
-  <p>Two of the rules above apply only in certain states, which is worth noting in itself. A profile is not limited to a flat list of mandatory fields; a requirement can depend on the value of another attribute. Here, M5 obliges a producer claiming that a capability needs a software update to say which version provides it, and M11 obliges one declaring anything other than present capability to say what is in the way. Both dependencies exist because the unconditional alternatives are unhelpful: requiring a version from every interface would produce noise, and requiring none would leave the useful case unstated.</p>
+  <p>Two of the rules above apply only in certain states, which is worth noting in itself. A profile is not limited to a flat list of mandatory fields; a requirement can depend on the value of another attribute. Here, M5 obliges a producer claiming that a capability needs a software update to say which version provides it, and M10.2 obliges one declaring anything other than present capability for a given purpose to say what is in the way of that purpose. Both dependencies exist because the unconditional alternatives are unhelpful: requiring a version from every interface would produce noise, and requiring none would leave the useful case unstated.</p>
 
   <h3>Availability, and why it is not a date on an interface</h3>
   <p>An earlier draft of this profile put a <code>plannedAvailability</code> date on each interface. It is the obvious design, and it does not hold up. The reason is structural.</p>
@@ -182,15 +182,30 @@ nav: pqc
       <tr><td><code>coexistence</code></td><td><code>simultaneous</code></td></tr>
       <tr><td><code>negotiationControl</code></td><td>configurable to require hybrid</td></tr>
       <tr><td><code>integrationConstraints</code></td><td>larger ClientHello may exceed some middlebox limits; no measured throughput impact</td></tr>
-      <tr><td><code>capabilityStatus</code></td><td><code>available</code> for key exchange; <code>committed</code> for authentication</td></tr>
-      <tr><td><code>blockedBy</code></td><td><code>certification</code>, for the authentication case only</td></tr>
-      <tr><td><code>roadmapRef</code></td><td><code>rm:pqc-auth-2027</code></td></tr>
       <tr><td><code>lifecycleStage</code></td><td><code>implemented</code></td></tr>
     </tbody>
   </table>
   </div>
+
+  <h3>Capability, per purpose</h3>
+  <p>These attributes were a single value per interface until v0.4, and the values below are why that could not hold. Key agreement is done here and identity proof is not, which is the ordinary position rather than an awkward corner, and one status per interface would have to report the worse of the two. Rule M10 now requires an entry per cryptographic purpose, and the conditional blocker in M10.2 is evaluated inside an entry, so the blocker belongs to the purpose it blocks.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Purpose</th><th><code>capabilityStatus</code></th><th><code>blockedBy</code></th><th><code>roadmapRef</code></th><th>In scope</th></tr></thead>
+    <tbody>
+      <tr><td><code>key-establishment</code></td><td><code>available</code></td><td class="na">not applicable</td><td class="na">&mdash;</td><td>yes</td></tr>
+      <tr><td><code>encryption</code></td><td><code>available</code></td><td class="na">not applicable</td><td class="na">&mdash;</td><td>yes</td></tr>
+      <tr><td><code>entity-authentication</code></td><td><code>committed</code></td><td><code>certification</code></td><td><code>rm:pqc-auth-2027</code></td><td>yes</td></tr>
+      <tr><td><code>data-integrity</code></td><td><code>available</code></td><td class="na">not applicable</td><td class="na">&mdash;</td><td>status only</td></tr>
+      <tr><td><code>non-repudiation</code></td><td><code>not-planned</code></td><td><code>product</code></td><td class="na">&mdash;</td><td>status only</td></tr>
+      <tr><td><code>key-protection</code></td><td><code>planned</code></td><td><code>hardware</code></td><td class="na">&mdash;</td><td>status only</td></tr>
+      <tr><td><code>key-derivation</code></td><td><code>available</code></td><td class="na">not applicable</td><td class="na">&mdash;</td><td>status only</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The last four are outside this profile's declared scope and still carry a status. That is the whole of what a deferred purpose owes: one enumerated value, and a blocker where the status is not <code>available</code>. It costs a producer almost nothing and it is what keeps a staged profile from becoming a permanent floor &mdash; the <code>key-protection</code> row above tells a planner that this interface's authentication migration will involve hardware, which is a fact worth having in the first document rather than the third.</p>
   <p>What a planner can now conclude, without seeing inside the product: this interface can be made quantum-safe for key exchange but not yet for authentication; the key-exchange change requires an upgrade to 8.2.0 rather than new hardware; the upgrade can be rolled out before counterparties are ready, because classical and hybrid peers can be served at once; there is a specific interoperability risk to test for; and the authentication half is waiting on certification, so a scheme controls that date and pressing the vendor for it in a tender will achieve little. An inventory of the algorithms in use today yields none of these conclusions.</p>
-  <p>The example also shows why key exchange and authentication carry separate capability statements. They migrate on different schedules and for different reasons, and a single per-interface status would have to report the worse of the two, losing the fact that half the work can proceed now.</p>
+  <p>A purpose is not an operation, and the distinction is what makes the vocabulary worth having. CycloneDX already records operations: this interface's certificate signature carries <code>cryptoFunctions: ["sign", "verify"]</code>, and so would a firmware signature on the same product. One is entity authentication that migrates when the PKI does; the other must still verify years after it was written and migrates when the last verifier in the field is upgraded. Same operation, different decade, different work. A vocabulary of operations would restate a field the format already has and answer no planning question. See <a href="terms.html">Terms</a> for the four-part test an entry has to pass, and decision 0010 for the reasoning.</p>
 
   <h2>What the profile deliberately excludes</h2>
   <p>The profile omits three kinds of information, in each case deliberately.</p>

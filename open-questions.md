@@ -1413,15 +1413,19 @@ interface level anyway. The supplier states the least advanced position, which g
 **Option B: one per job.** Reflects how migration actually proceeds. It complicates the dependent
 rule, since the blocker would also become per job.
 
-**A proposed answer, 21 August 2026.** Option B, with "job" fixed as a *cryptographic purpose* from
+**Answered in the drafting, 21 August 2026, and awaiting ratification.** Option B, with "job" fixed as a *cryptographic purpose* from
 a vocabulary the methodology defines, and with a test for what belongs in that vocabulary so
 additions can be argued rather than accumulated. Seven purposes are proposed; `randomness` is left
 open as an eighth. The proposal also names the collision to avoid: `endpointRoles` already means
 which party you are, and CycloneDX `cryptoFunctions` already names *operations*, which is a
 different thing — `sign`/`verify` is one operation covering both a TLS certificate signature and a
-firmware signature, which migrate a decade apart. Recorded as decision 0010, which also shows that
-settling this makes staged profiles nearly free: a profile declares which purposes it requires in
-depth, and the rules are written once and quantified over them.
+firmware signature, which migrate a decade apart. Recorded as decision 0010 and implemented: the migration
+profile is at v0.4 with a group rule keyed by purpose, and the worked interface now states
+`available` for key establishment and `committed`, blocked on certification, for entity
+authentication — the position that was not expressible before. Settling it also makes staged
+profiles nearly free: a profile declares which purposes it requires in depth, the rules are
+written once and quantified over them, and every purpose the profile defers still owes a
+status, which is what keeps a stage from becoming a floor.
 
 **Option C: one per interface, with an optional breakdown.**
 

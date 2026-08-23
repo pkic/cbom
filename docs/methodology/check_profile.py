@@ -2,7 +2,7 @@
 """
 Profile well-formedness checker.
 
-Checks a machine-readable profile against requirements C1 to C12 of the
+Checks a machine-readable profile against requirements C1 to C13 of the
 Conformance section, which state what makes a profile well-formed under this
 methodology. This is the second of the three conformance targets: a CBOM
 document is checked against a profile by validate_cbom.py, and a profile is
@@ -20,6 +20,7 @@ C9  SHOULD  is accompanied by a mapping and by conforming and non-conforming exa
 C10 SHOULD  carries a changelog classifying each change
 C11 MUST    declares its scope: subject, relationship types, lifecycle stages
 C12 MUST    its rules are consistent with its declared orientation
+C13 MUST    group rules are keyed to a real vocabulary and cover it
 
 Rules are checked as DECLARED in the file under test. A derived profile is not
 re-checked against its base's rules, because the base is checkable on its own;
@@ -81,8 +82,15 @@ class Findings:
 
 
 def declared_rules(prof):
-    """Every rule the file declares itself, product and interface alike."""
-    return list(prof.get("productRules", [])) + list(prof.get("interfaceRules", []))
+    """Every rule the file declares itself, product and interface alike.
+
+    Group members count: they are rules, and C3 to C6 apply to them exactly as
+    to any other. The group shell is excluded because it constrains coverage
+    rather than an attribute, and C13 checks it instead."""
+    rules = list(prof.get("productRules", [])) + list(prof.get("interfaceRules", []))
+    for g in prof.get("groupRules", []):
+        rules.extend(g.get("members", []))
+    return rules
 
 
 def vocabularies(prof):
@@ -420,6 +428,10 @@ def c12_orientation(prof, resolved, evidence_reliable, f):
         return
 
     rules = list(resolved.get("interfaceRules", [])) + list(resolved.get("productRules", []))
+    # Group members are rules and are usually the forward-looking ones, so
+    # orientation has to govern them or the check misses what it exists for.
+    for g in resolved.get("groupRules", []):
+        rules.extend(g.get("members", []))
     required = set()
     forward = []
     for r in rules:
@@ -466,6 +478,71 @@ def c12_orientation(prof, resolved, evidence_reliable, f):
         f.add("C12", "MUST", True,
               "orientation '%s' matches the rules: %d forward-looking attribute(s)"
               % (orientation, len(forward)))
+
+
+def c13_group_rules(prof, resolved, evidence_reliable, f):
+    """C13. A group rule is well-formed, and a declared scope for it is honoured.
+
+    Two failures are worth catching separately. A group rule keyed by a
+    vocabulary that does not exist evaluates against nothing and silently
+    requires no entries at all, which reads as conformance. And a profile whose
+    status rule covers only the purposes it took in scope has built a floor: a
+    supplier can conform while saying nothing at all about the purposes the
+    profile deferred, which is the outcome staging exists to avoid."""
+    groups = resolved.get("groupRules") or []
+    scope = resolved.get("scope") or {}
+
+    if not groups:
+        if scope.get("cryptographicPurposes"):
+            f.add("C13", "MUST", False,
+                  "scope declares cryptographicPurposes but no group rule is keyed "
+                  "by them, so the declaration constrains nothing")
+        else:
+            f.add("C13", "MUST", True, "no group rules")
+        return
+    if not evidence_reliable:
+        f.add("C13", "MUST", True, "base did not resolve; not checked (see C7)")
+        return
+
+    problems = []
+    for g in groups:
+        gid = g.get("id", "?")
+        for key in ("group", "keyedBy", "keyVocabularyRef", "level"):
+            if not g.get(key):
+                problems.append("%s has no '%s'" % (gid, key))
+        if not g.get("members"):
+            problems.append("%s declares no members, so it requires an entry with "
+                            "nothing in it" % gid)
+
+        ref = g.get("keyVocabularyRef")
+        vocab = resolved.get(ref) if ref else None
+        if ref and not isinstance(vocab, list):
+            problems.append("%s is keyed by %r, which is not a declared vocabulary; "
+                            "the rule would require no entries" % (gid, ref))
+            continue
+
+        coverage = g.get("coverage")
+        if coverage not in ("all-purposes", "in-scope"):
+            problems.append("%s has coverage %r, expected all-purposes or in-scope"
+                            % (gid, coverage))
+
+        declared = scope.get("cryptographicPurposes")
+        if declared:
+            unknown = [p for p in declared if vocab and p not in vocab]
+            if unknown:
+                problems.append("scope.cryptographicPurposes contains %s, absent from %s"
+                                % (", ".join(repr(u) for u in unknown), ref))
+            if coverage == "in-scope" and len(declared) < len(vocab or []):
+                problems.append(
+                    "%s covers only the %d purpose(s) in scope while the vocabulary "
+                    "has %d. A purpose the profile defers still owes a status, or the "
+                    "profile is a floor rather than a stage" % (gid, len(declared), len(vocab or [])))
+
+    if problems:
+        f.add("C13", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C13", "MUST", True,
+              "%d group rule(s), keyed and covered" % len(groups))
 
 
 def c8_exclusions(prof, f):
@@ -557,6 +634,7 @@ def check(path):
     c10_changelog(path, prof, f)
     c11_scope(prof, vocab_source, resolved, f)
     c12_orientation(prof, vocab_source, resolved, f)
+    c13_group_rules(prof, vocab_source, resolved, f)
     return prof, f
 
 

@@ -8,9 +8,9 @@
 - **Decision rule applied:** lazy consensus (pending)
 
 <!--
-Unlike 0008 and 0009, this record is NOT implemented in the worked example. It asks the group to
-accept a change that would then have to be built. The Consequences section states what building it
-involves, and two points are left open rather than decided here.
+Implemented in the worked example, like 0008 and 0009, so the group is asked to ratify or reverse a
+position that exists in the drafting rather than to decide in the abstract. Two points are still
+left open rather than decided here, so the record can be accepted in part.
 -->
 
 ## Context
@@ -152,19 +152,31 @@ out-of-scope statuses across suppliers is a readiness signal nothing else produc
 
 ## Consequences
 
-Not implemented. Building it involves:
+Implemented. What it took:
 
-- A new `cryptographicPurposeVocabulary`, declared and extensible in the same way as
-  `interfaceTypeVocabulary` and the other vocabularies.
-- M10, M11 and M12 replaced by a repeated group, which is new validator capability rather than
-  configuration: `check_rule` currently evaluates one attribute per rule against one value.
-- `scope.cryptographicPurposes`, and a C-requirement holding the rules to it, in the same shape as
-  C12 holds them to the declared orientation.
-- The worked interface in the PQC Migration section, which currently states a compound value, becomes
-  expressible and should be reissued as the demonstration of the new shape.
-- The exclusion in the migration rules file that defers this is removed, and the profile version
-  bumped. Whether the change is a tightening depends on the out-of-scope status rule: adding a
-  required attribute is a tightening, so a document conforming today would not conform after.
+- `cryptographicPurposeVocabulary` with the seven purposes, declared like every other vocabulary
+  in the file, and `scope.cryptographicPurposes` naming the three this profile takes in depth.
+- M10, M11 and M12 replaced by one group rule M10 with members M10.1 to M10.3. This is new
+  validator capability rather than configuration: `check_rule` evaluated one attribute against one
+  value, and a group needs coverage per key, member evaluation inside an entry, and a
+  `requiredWhen` guard that resolves against the entry rather than the interface.
+- **C13**, holding a group rule to two things that would otherwise pass silently: a group keyed by
+  a vocabulary that does not exist requires an entry for no keys, and a group covering only the
+  purposes in scope lets a profile defer a question and never ask it again.
+- Group members counted as rules by C3 to C6 and by C12, since they are rules and are usually the
+  forward-looking ones.
+- Carriage in CycloneDX as `pkic:profile:capabilityByPurpose:<purpose>:<attribute>`, following the
+  `endpointRole:<role>` convention. Three segments after the prefix marks a group entry, so the
+  adapter needs no profile knowledge. The SPDX column stays unresolved with the rest of the
+  per-interface rows (Q48).
+- Migration profile v0.3 → **v0.4**, a **tightening**: a document carrying one status per interface
+  does not conform to v0.4. Both example documents reissued, the worked interface on the PQC
+  Migration page rewritten as the demonstration, and the deferring exclusion replaced with the
+  narrower one that survives — per-*algorithm* status is still excluded, now for a stated reason
+  rather than pending this question.
+- Two fixtures, and six tests covering the group, including one that strips the deferred purposes
+  from a conforming document and asserts it stops conforming. That obligation is the ratchet, so
+  it is asserted rather than assumed. The suite runs 114 tests and passes.
 
 Two points are **left open for the group rather than decided here**:
 

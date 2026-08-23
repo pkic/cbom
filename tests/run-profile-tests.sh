@@ -55,6 +55,18 @@ expect_output() {
   fi
 }
 
+# expect_output_fixed <label> <literal-needle> <cbom> <profile>
+# Group member ids such as M10.2[key-establishment] contain [ and ].
+expect_output_fixed() {
+  local label=$1 needle=$2 cbom=$3 prof=$4
+  validate "$cbom" "$prof"
+  if printf '%s' "$OUT" | grep -qF -- "$needle"; then
+    ok "$label"
+  else
+    bad "$label" "output did not contain: $needle"
+  fi
+}
+
 # checkprof <args...> -> writes output to $OUT, sets $RC
 checkprof() {
   OUT="$("$PY" "$M/check_profile.py" "$@" 2>&1)"
@@ -183,8 +195,47 @@ expect_output "inapplicable conditional is skipped" "not applicable" \
               "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
 expect_exit   "non-conforming CBOM is rejected"    1 "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
 expect_output "conditional M5 fires"             "M5" "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
-expect_output "conditional M11 fires"           "M11" "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
+expect_output_fixed "conditional blocker fires within a purpose entry" "M10.2[key-establishment]" \
+              "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
 expect_output "tightened I9 fires"               "I9" "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
+
+# --------------------------------------------------- capability per purpose ---
+# Q27: readiness was one value per interface, which cannot express the ordinary
+# position of key agreement done and identity proof not yet. It is now a group
+# keyed by cryptographic purpose. Coverage is the whole vocabulary rather than
+# only the purposes in scope, which is what stops a staged profile becoming a
+# permanent floor.
+echo
+echo "Capability per cryptographic purpose"
+expect_output_fixed "status is stated per purpose" "M10.1[entity-authentication]" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+expect_output "one interface holds two different statuses" "= 'committed'" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+expect_output_fixed "the blocker is evaluated inside the entry" "M10.2[entity-authentication]" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+expect_output "an available purpose needs no blocker" "not applicable (capabilityStatus='available')" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+expect_output_fixed "a missing in-scope purpose is named" "purpose[entity-authentication]" \
+              "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
+expect_output "a missing out-of-scope purpose still fails" "no entry for this purpose (status only)" \
+              "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
+
+# Out-of-scope purposes owe a status, not the full attribute set. Strip every
+# out-of-scope entry from the conforming document and it must stop conforming;
+# that obligation is the ratchet, so it is worth asserting rather than assuming.
+"$PY" - "$M/cbom-pqc-pass.cyclonedx.json" "$TMP" <<'PY'
+import json, sys, os
+bom = json.load(open(sys.argv[1], encoding="utf-8"))
+deferred = ("data-integrity", "non-repudiation", "key-protection", "key-derivation")
+for c in bom.get("components", []):
+    c["properties"] = [p for p in c.get("properties", [])
+                       if not any(":%s:" % d in p.get("name", "") for d in deferred)]
+json.dump(bom, open(os.path.join(sys.argv[2], "cbom-no-deferred.json"), "w"))
+PY
+expect_exit   "dropping the deferred purposes breaks conformance" 1 \
+              "$TMP/cbom-no-deferred.json" "$PQC"
+expect_output "and the baseline is unaffected by any of it" "CONFORMS" \
+              "$TMP/cbom-no-deferred.json" "$BASE"
 
 # ------------------------------------------------- accepted lifecycle stages ---
 # scope.lifecycleStages says which stages of reported data a profile will accept.
@@ -255,9 +306,9 @@ expect_output "reported as undeclared, not withheld" "no disclosure marker" \
 
 # -------------------------------------------------- profile well-formedness ---
 # The second conformance target: a profile checked against the methodology.
-# Requirements C1 to C12 are stated in the Conformance section.
+# Requirements C1 to C13 are stated in the Conformance section.
 echo
-echo "Profile well-formedness (C1-C12)"
+echo "Profile well-formedness (C1-C13)"
 expect_check_exit "baseline profile is well-formed"        0 "$BASE"
 expect_check_exit "derived profile is well-formed"         0 "$PQC"
 expect_check_output "baseline verdict reads WELL-FORMED" "VERDICT : WELL-FORMED" "$BASE"
@@ -291,6 +342,16 @@ expect_check_output "C7 explains the widening" "monotonic" "$FIX/profile-c7-wide
 expect_check_exit   "C1 an unactionable decision is rejected" 1 "$FIX/profile-c1-no-decision-options.rules.json"
 expect_check_output "C1 is the failing requirement" "[FAIL] C1" "$FIX/profile-c1-no-decision-options.rules.json"
 expect_check_output "C1 asks for the actions" "decisionOptions" "$FIX/profile-c1-no-decision-options.rules.json"
+expect_check_exit   "C13 a group covering only the in-scope purposes is rejected" 1 \
+                    "$FIX/profile-c13-uncovered-purposes.rules.json"
+expect_check_output "C13 is the failing requirement" "[FAIL] C13" \
+                    "$FIX/profile-c13-uncovered-purposes.rules.json"
+expect_check_output "C13 says why it is a floor" "floor rather than a stage" \
+                    "$FIX/profile-c13-uncovered-purposes.rules.json"
+expect_check_exit   "C13 a group keyed by nothing is rejected" 1 \
+                    "$FIX/profile-c13-unkeyed-group.rules.json"
+expect_check_output "C13 says the rule would require no entries" "would require no entries" \
+                    "$FIX/profile-c13-unkeyed-group.rules.json"
 expect_check_exit   "C11 missing scope is rejected"      1 "$FIX/profile-c11-no-scope.rules.json"
 expect_check_output "C11 is the failing requirement" "[FAIL] C11" "$FIX/profile-c11-no-scope.rules.json"
 expect_check_exit   "C12 capability without present state is rejected" 1 \

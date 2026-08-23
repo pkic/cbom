@@ -34,8 +34,9 @@ what this suite is an early form of.
 | Derived PQC profile | The conforming CBOM is accepted and the base profile resolves; the non-conforming one trips both conditional rules and the tightened inherited rule. |
 | Composition | The document that fails the derived profile still conforms to the base, which is the tightening doing its work. A fixture with a relaxing override is rejected with exit code 3. |
 | Withholdable MUST | A withheld marker satisfies baseline rule I9; the same document with the marker stripped does not, and is reported as undeclared rather than withheld. This is the only combination in which the disclosure model changes a verdict, and before profile v0.3 no rule exercised it. |
+| Capability per cryptographic purpose | The conforming migration document states a different status for key establishment and for entity authentication on one interface, which is the position a single per-interface status could not express. The conditional blocker resolves inside a purpose entry. A missing entry is reported against the purpose it is missing for, whether that purpose is in scope or deferred, and stripping the deferred purposes from a conforming document breaks conformance — that obligation is the ratchet, so it is asserted rather than assumed. |
 | Accepted lifecycle stages | The conforming migration document, with one interface moved to the `intended` stage, fails rule I8 against the migration profile and is reported as a stage the profile does not accept. The same document still conforms to the baseline, which accepts all four stages, so the narrowing belongs to the derived profile rather than to the vocabulary. |
-| Profile well-formedness | Both example profiles satisfy C1 to C12, including under `--strict`. One fixture per MUST requirement confirms that each is enforced and that the right requirement is the one reported. |
+| Profile well-formedness | Both example profiles satisfy C1 to C13, including under `--strict`. One fixture per MUST requirement confirms that each is enforced and that the right requirement is the one reported. |
 | SHOULD handling | A profile failing only SHOULD requirements still passes, and `--strict` promotes those failures. |
 
 ## Exit codes
@@ -82,6 +83,10 @@ a real profile.
 | `profile-c7-widening-stages.rules.json` | C7, and exit 3 from the validator | Extends the migration profile and accepts the `intended` stage that its base rejects. Widening the accepted stages is a relaxation: a document reporting only intentions would conform here while failing the base. |
 | `profile-c1-no-decision-options.rules.json` | C1 | States a consumer and a decision, but the decision is "to understand our cryptographic position" and no options are listed. The failure the action-choice test in Method step 1 exists to catch. |
 | `profile-c11-no-scope.rules.json` | C11 | Declares no `scope`, so it says neither what kind of subject it describes nor which lifecycle stages it accepts, and a document reporting nothing but intentions would conform. |
+| `profile-c12-capability-unpaired.rules.json` | C12 | Orientation `both`, requiring `keyExchangeSupported` and not `keyExchange`, so a consumer sees what an interface could negotiate and never what it does. |
+| `profile-c12-inventory-capability.rules.json` | C12 | Orientation `inventory` while requiring `capabilityStatus`, so statements about a future state arrive under a label that promises present state. |
+| `profile-c13-uncovered-purposes.rules.json` | C13 | A group rule covering only the purposes in scope, so a supplier conforms while saying nothing at all about the four the profile deferred. The floor a staged profile is meant not to become. |
+| `profile-c13-unkeyed-group.rules.json` | C13 | A group keyed by a vocabulary the profile does not declare. It requires an entry for no keys, so every document passes it and the rule reads as satisfied — silent success rather than a loud failure. |
 | `profile-should-gaps.rules.json` | C8, C9, C10 only | Satisfies every MUST and no SHOULD. Also the template the others mutate. |
 
 Every fixture fails exactly one MUST requirement, so a test can assert which

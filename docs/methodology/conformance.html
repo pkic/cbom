@@ -121,6 +121,7 @@ nav: conformance
       <tr><td>C10</td><td>The profile carries a changelog classifying each change as tightening, relaxing, or editorial.</td><td>SHOULD</td></tr>
       <tr><td>C11</td><td>The profile declares its scope: the type of subject it describes, its orientation, the relationship types its rules constrain, and the lifecycle stages of reported data it accepts.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C12</td><td>The rules the profile imposes are consistent with the orientation it declares.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C13</td><td>Every group rule is keyed to a declared vocabulary, and a profile that declares a subset of that vocabulary in scope still requires an answer for the rest.</td><td><strong>MUST</strong></td></tr>
     </tbody>
   </table>
   </div>
@@ -156,7 +157,13 @@ nav: conformance
   </div>
   <p>C12 is assessed against the resolved profile, so an inherited rule satisfies it. That is the ordinary case rather than a concession: the example migration profile declares the three capability attributes itself and takes their present-state counterparts from the baseline it extends. A profile that declared <code>both</code> and required capability alone would fail, which is the case the requirement exists for.</p>
 
-  <p>C1 to C7, C11 and C12 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
+  <h3>Group rules, and why coverage is checked</h3>
+  <p>A rule normally constrains one attribute of an interface. A <strong>group rule</strong> constrains a repeated group keyed by a controlled vocabulary, so an interface can give one answer per key rather than one answer overall. The migration example uses it for capability: an interface states where it stands for each cryptographic purpose, because key agreement and identity proof migrate on different timetables and a single status would have to report the worse of the two.</p>
+  <p>Two properties of a group rule are checked, and each has a failure mode that would otherwise pass silently.</p>
+  <p>A group keyed by a vocabulary the profile does not declare requires an entry for no keys at all. Every document then satisfies it, and the rule reads as passing. C13 rejects the profile instead.</p>
+  <p>A group whose <code>coverage</code> is <code>in-scope</code> while the vocabulary is larger lets a profile defer part of the problem and then never ask about it. A staged profile is meant to sequence the <em>depth</em> of an answer, not to remove the question: a purpose the profile has deferred still owes a status, and a blocker where that status is not <code>available</code>. Without that, a supplier conforms while behaving as though a whole class of cryptography does not exist, and each stage becomes a floor rather than a step. C13 is what makes the difference checkable.</p>
+
+  <p>C1 to C7 and C11 to C13 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
 
   <h2>3. An evaluation tool conforming to this methodology</h2>
   <p>Two tools given the same document, the same profile and the same resolution of any extended base are expected to return the same verdict. The requirements below are what that expectation rests on.</p>
@@ -184,7 +191,7 @@ nav: conformance
   <h3>What a claim cites</h3>
   <p>A claim names the profile and its version, the carrier format and its version, and the content revision of the document assessed. A claim omitting any of the three cannot be reproduced, and a claim that cannot be reproduced cannot be audited. Where a derived profile was used, the base and the version it pins are named as well.</p>
   <pre><code>Conforms to:
-  pkic.example.pqc-migration v0.3
+  pkic.example.pqc-migration v0.4
     extending pkic.example.interface-disclosure v0.5
 Carrier: CycloneDX 1.7
 Content revision: 3

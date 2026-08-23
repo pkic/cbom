@@ -1,0 +1,60 @@
+{
+  "$comment": "Fixture. Deliberately fails C13: the group rule covers only the purposes the profile took in scope, so a supplier conforms while saying nothing at all about the four purposes the profile deferred. That is the floor a staged profile is meant not to become — the point of staging is to sequence the depth of an answer, not to remove the question. Everything else is well-formed.",
+  "profileId": "pkic.test.c13-uncovered",
+  "title": "Fixture - C13 group covers only the purposes in scope",
+  "version": "0.1",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the checker requires a status for a deferred purpose.",
+    "decisionOptions": ["accept the fixture", "reject the fixture"]
+  },
+
+  "scope": {
+    "subjectType": "product",
+    "orientation": "both",
+    "relationshipTypes": ["interface"],
+    "lifecycleStages": ["implemented", "configured", "observed"],
+    "cryptographicPurposes": ["key-establishment", "encryption"]
+  },
+
+  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
+
+  "interfaceTypeVocabulary": ["management", "service"],
+  "capabilityStatusVocabulary": ["available", "committed", "planned", "under-evaluation", "not-planned"],
+  "cryptographicPurposeVocabulary": [
+    "key-establishment",
+    "encryption",
+    "entity-authentication",
+    "data-integrity",
+    "non-repudiation",
+    "key-protection",
+    "key-derivation"
+  ],
+
+  "productRules": [
+    { "id": "P1", "description": "Product declares at least one cryptographic interface", "level": "MUST", "constraint": { "minInterfaces": 1 } }
+  ],
+
+  "interfaceRules": [
+    { "id": "I1", "attribute": "protocol", "level": "MUST", "constraint": { "present": true }, "withholdable": false },
+    { "id": "I3", "attribute": "keyExchange", "level": "MUST", "constraint": { "present": true }, "withholdable": false },
+    { "id": "X1", "attribute": "keyExchangeSupported", "level": "MUST", "list": true, "constraint": { "minCount": 1 }, "withholdable": false }
+  ],
+
+  "groupRules": [
+    {
+      "id": "G1",
+      "group": "capabilityByPurpose",
+      "keyedBy": "purpose",
+      "keyVocabularyRef": "cryptographicPurposeVocabulary",
+      "coverage": "in-scope",
+      "level": "MUST",
+      "description": "Every purpose in scope has an entry stating its capability status",
+      "members": [
+        { "id": "G1.1", "attribute": "capabilityStatus", "level": "MUST", "constraint": { "enumRef": "capabilityStatusVocabulary" }, "withholdable": false }
+      ]
+    }
+  ]
+}

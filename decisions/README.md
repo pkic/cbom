@@ -29,11 +29,11 @@ constraint falls on profiles rather than on documents.
 0009 also reverses a clause of 0008, which is the first time one record has revised another.
 Neither is superseded: 0008 is annotated at the clause concerned and otherwise stands.
 
-Record 0010 is Proposed in the third sense, and the distinction matters when setting an agenda.
-0001 to 0007 describe the example as it was first built. 0008 and 0009 changed it. 0010 is not
-implemented at all: accepting it commits the group to work that has not been done, including new
-validator capability. It also leaves two points open rather than deciding them, so it can be
-accepted in part.
+Record 0010 is now implemented alongside 0008 and 0009. It is the largest of the three: it
+introduces a rule shape the validator did not have, and it tightens the migration profile, so a
+document conforming to the previous version does not conform to this one. It also leaves two
+points open rather than deciding them — whether `randomness` is a purpose, and how a sector
+profile widens the vocabulary — so it can be accepted in part.
 
 ## Index
 

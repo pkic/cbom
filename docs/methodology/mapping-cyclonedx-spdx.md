@@ -54,6 +54,27 @@ There is no native object representing the set of interfaces; the count is deriv
 | I8 | `lifecycleStage` | `component.properties[name="pkic:profile:lifecycleStage"]` (flat lifecycle tag, per lifecycle model v1) | **unresolved** — see below |
 | I9 | `implementationPurl` | `purl` on the library component | SPDX `Package` with `packageUrl` |
 
+### Group attributes
+
+Capability is stated per cryptographic purpose (rule M10), which needs a repeated group rather
+than a single value. CycloneDX properties are flat name/value pairs, so the group is carried in
+the name, following the `endpointRole:<role>` convention already in use:
+
+    pkic:profile:capabilityByPurpose:<purpose>:<attribute>
+
+For example `pkic:profile:capabilityByPurpose:entity-authentication:blockedBy`. Three segments
+after the prefix is what marks a group entry, so a reader needs no knowledge of which profile
+declares which groups. A disclosure marker on a group attribute takes the same shape with the
+marker prefix in front.
+
+Note what the group is *not* mapped to. CycloneDX `cryptoFunctions` records operations —
+`sign`, `verify`, `encrypt` — and a purpose is not an operation: one `sign`/`verify` covers both
+a certificate signature and a firmware signature, which migrate a decade apart. Reusing that
+field would lose the distinction the group exists to carry.
+
+The SPDX column for these rows is **unresolved** for the same reason as the rest of the
+per-interface attributes: see above.
+
 ## Product-level rule mapping
 
 | # | Product rule | CycloneDX | SPDX |
