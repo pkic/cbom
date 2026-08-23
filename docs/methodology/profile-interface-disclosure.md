@@ -88,7 +88,7 @@ counterpart in a transport profile.
 
 ## 4. Rules
 
-Requirement keywords follow BCP 14 (MUST / SHOULD / MAY). There are two rule groups.
+Requirement keywords follow BCP 14 (MUST / SHOULD / MAY). This profile uses two of the three kinds of rule the methodology defines: product-level rules constraining the set of interfaces, and per-interface rules applied to each. It uses no group rule, because it reports present state and present state has one answer per attribute. The migration profile derived from it does use one, for capability per cryptographic purpose.
 
 ### 4.1 Product-level rules (cardinality; product-independent)
 

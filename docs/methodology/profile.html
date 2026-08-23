@@ -50,7 +50,7 @@ nav: profile
     <figcaption>The profile serves as a specification for the party that generates the CBOM and as a conformance checklist for the party that consumes it.</figcaption>
   </figure>
 
-  <h2>Two rule groups</h2>
+  <h2>Three kinds of rule</h2>
   <figure>
     <svg viewBox="0 0 720 250" role="img" aria-label="A product outline for nginx 1.27.0 containing two interface cards, an HTTPS service interface and an SSH management interface, each giving its protocol, library and endpoint roles" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="13">
       <rect x="40" y="20" width="640" height="210" rx="16" fill="#f2f6fc" stroke="#c9d3e0" stroke-dasharray="6 5"/>
@@ -100,6 +100,11 @@ nav: profile
   </table>
   <div class="banner good">A CBOM conforms if and only if the carrier format is accepted, every product-level MUST rule holds, and every declared interface satisfies every per-interface MUST rule. <code>interfaceId</code> is an instance label chosen by the producer and is not constrained by the profile. The full statement of what conformance means, including what a passing verdict does not assert, is in <a href="conformance.html">Conformance</a>.</div>
   <p>Derived evaluations such as post-quantum posture are deliberately not profile attributes. They are computed by an external policy from the disclosed facts, because the criteria on which they depend change over time. See <a href="policy-evaluation.html">Policy Evaluation</a>.</p>
+
+  <h3>Group rules (one answer per key, within an interface)</h3>
+  <p>The two kinds above each produce one answer: a product rule answers about the set of interfaces, a per-interface rule answers about one attribute of one interface. Some questions have no single answer. Asked whether an interface can be made quantum-safe, a producer whose key agreement is done and whose identity proof is waiting on a certificate authority has two answers, and forcing one would report the worse of them &mdash; from which a planner concludes that nothing can proceed when half of it can.</p>
+  <p>A <strong>group rule</strong> constrains a repeated group keyed by a controlled vocabulary. An interface carries one entry per key, and the rule's member rules are evaluated inside an entry, so a conditional guard refers to that entry rather than to the interface as a whole. The <a href="pqc-migration.html">PQC Migration</a> profile uses one, keyed by <a href="model.html">cryptographic purpose</a>: rule M10 requires an entry per purpose, and its member M10.2 requires a blocker wherever <em>that purpose's</em> status is not <code>available</code>.</p>
+  <p>A group rule also declares its <strong>coverage</strong>, which is the part worth attention. Coverage may be every value in the vocabulary, or only those the profile's scope declares. The difference decides whether a profile that addresses part of a problem is a stage or a floor: with full coverage, a purpose the profile defers still owes a status, so a consumer learns where it stands; with coverage limited to what is in scope, the deferred purposes disappear from the document entirely and no later profile has a baseline to improve on. <a href="conformance.html">C13</a> checks this, because both readings load and run.</p>
 
   <h2>Disclosure states</h2>
   <p>An attribute with no value may be missing for different reasons, and the profile distinguishes them. Following the 2026 SBOM minimum elements, a producer states whether the information is unknown to it or is being withheld.</p>
@@ -172,6 +177,14 @@ nav: profile
     </tbody>
   </table>
   <p>A profile that genuinely needs to relax a base requirement is not an extension of it. It is an independent profile, and should be written and claimed as one. Treating that as a restriction rather than an inconvenience keeps conformance claims meaningful.</p>
+
+  <h3>Two things extension is used for</h3>
+  <p>Extension expresses two different intentions, and conflating them produces profiles that are hard to argue about.</p>
+  <p><strong>Depth.</strong> The derived profile asks for more detail about the same subject matter. The migration profile's relationship to the baseline is of this kind: the same interfaces, described more fully.</p>
+  <p><strong>Coverage.</strong> The derived profile brings more subject matter into scope at the same depth. A profile addressing key establishment, extended later by one that adds entity authentication, is of this kind. Here the rules often do not change at all: they are written once and quantified over whichever purposes the scope declares, so the two profiles differ by a line of scope rather than by a second set of rules.</p>
+  <p>Both are monotonic and both are permitted. The distinction matters when a family is planned, because the two are sequenced differently: depth is added when producers can supply it, and coverage when the consumer needs it. Naming which one a derived profile is doing saves the argument about why it exists.</p>
+
+  <div class="banner warn"><strong>An unsettled case.</strong> The table above covers narrowing an inherited list of permitted values, which is a tightening. It does not cover <em>widening</em> one. A sector profile adding a cryptographic purpose the base does not define &mdash; attestation, tokenization, credential verification &mdash; would widen an inherited vocabulary, and a document could then claim a purpose the base profile has no rule for, which looks like a relaxation. Whether the mechanism permits it, and under what constraint, is recorded as Q35 and is unresolved. It is worth settling before a sector body adopts the purpose vocabulary, because a mechanism permitting only narrowing would block that adoption outright.</div>
 
   <h3>Pinning, ranges and identifiers</h3>
   <ul>
