@@ -347,7 +347,8 @@ def load_profile(path):
     # Group rules are concatenated rather than overridden. A derived profile may
     # add a group; tightening one member of an inherited group is not yet
     # expressible, and inventing a syntax for it before anyone needs it would be
-    # guessing. The gap is recorded rather than hidden.
+    # guessing. Recorded as Q49, because a limitation that shapes what a derived
+    # profile can express does not belong only in a source comment.
     inherited_groups = [dict(g) for g in base.get("groupRules", [])]
     seen_groups = {g["_qid"] for g in inherited_groups}
     for g in prof.get("groupRules", []):

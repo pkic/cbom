@@ -79,6 +79,38 @@ members rather than silence.**
 - An aspect gains an owner. Twelve unassigned aspects is the more serious of the two governance
   gaps, because ratification without an owner produces no one to maintain what was ratified.
 
+## Closing a batch
+
+The window closing is the only moment at which lazy consensus produces anything, and it is the
+step most easily left half-done — a record marked Accepted while the README still says
+Deliberating, or an issue commented on and never relabelled. The result is a project whose own
+records disagree about what was decided, which is worse than not having ratified at all. So the
+closing is a checklist, and it is one commit.
+
+For each record in the batch with **no unresolved objection**:
+
+1. `Status: Proposed` → `Status: Accepted`, and add `- **Ratified:** <date>, lazy consensus,
+   <n>-day window opened <date>` under it. Keep `Deciders` as it stands: it records who drafted,
+   not who assented.
+2. Any question the record settles moves from *settled by decision NNNN, awaiting ratification* to
+   *settled by decision NNNN*. Batch A settles none directly; batches B and C settle Q27, Q33, Q34
+   and Q38.
+3. The aspect's row in the README moves `Deliberating` → `Converging`. **Not** `Decided` — an
+   aspect is Decided only when it owns no open questions, and none of the twelve does today.
+4. A comment on the aspect's tracking issue saying the record was ratified, with the date. The
+   issue stays open.
+
+For each record **with** an unresolved objection: it stays `Proposed`, and the objection is
+summarised in the record itself under a `## Objections raised` heading, with who raised it and
+what would resolve it. That heading is the useful artifact — a record that was contested and says
+why is worth more than one that was ratified quietly.
+
+Then one commit, message naming the batch, the window and which records moved. Not several: the
+README table and the record statuses have to change together or they will not change together.
+
+Finally, post the outcome back to the Discussion. A ratification nobody is told about has the same
+practical effect as none.
+
 ## What this does not propose
 
 Nothing about the 41 open questions. Ratifying a decision does not close a question the decision

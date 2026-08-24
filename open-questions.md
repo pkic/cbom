@@ -86,7 +86,7 @@ deleted.
 | 3.6 Writing a profile into a file format | Q16, Q17, Q18, Q48 |
 | 3.7 Agreed names for algorithms and protocols | Q19, Q20, Q21, Q38, Q39 |
 | 3.8 How a CBOM relates to an SBOM | Q22, Q40 |
-| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35 |
+| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35, Q49 |
 | 3.10 Statements about the future | Q26, Q27, Q28 |
 | 3.11 Governing a profile over time | Q29, Q41, Q42 |
 | 3.12 Fitting regulation and policy | Q43, Q44 |
@@ -931,6 +931,49 @@ same gap Workstream 5 of the improvement plan records.
 
 **What would have to change.** The SPDX column of the mapping, the Formats section, and, under
 Option C, the Conformance section, which would need to say what an SPDX-only claim covers.
+
+## Q49 — Can a derived profile tighten one member of an inherited group rule?
+
+**Status** open. Added 24 August 2026, from a gap that existed only as a comment in the validator.
+
+**The question.** A group rule constrains a repeated group keyed by a controlled vocabulary, and
+its member rules are evaluated inside an entry. A derived profile may add a whole group and may
+tighten an ordinary inherited rule. It cannot tighten one *member* of an inherited group: group
+rules are concatenated rather than overridden, and an override naming a member is rejected.
+
+**Why it matters.** It is the first thing a sector profile will want. The migration profile's
+capability group requires a status for every cryptographic purpose and the full attribute set only
+for the purposes in scope. A settlement or telecom profile deriving from it would ordinarily want
+to raise one member — make `roadmapRef` a MUST rather than a MAY for the purposes it cares about,
+or require a blocker where the base requires one only conditionally — and there is no way to say
+so. The alternatives available today are both bad: restate the whole group, which silently
+overrides the base's coverage and defeats the point of inheriting it, or add a second parallel
+group, which asks a producer for the same fact twice under two names.
+
+The gap is currently recorded only in a code comment, which is the wrong place for a limitation
+that shapes what a derived profile can express.
+
+**Option A: leave it.** A derived profile that needs a stricter member declares its own group
+(trade-off: two groups over the same vocabulary, and a report that shows both. The coverage
+guarantee the base group carries does not transfer, so the derived profile has to restate it).
+
+**Option B: allow an override to name a member**, as `<profileTag>#G1.3`, tightened under the same
+monotonicity rules as any other rule (trade-off: a member's `requiredWhen` guard refers to its
+entry, so tightening a guard is a different operation from tightening a constraint and needs its
+own comparison. Coverage stays with the base group, which is the property worth keeping).
+
+**Option C: allow a derived profile to raise the coverage of an inherited group** without touching
+its members — turning `in-scope` into `all`, or widening the purposes in scope (trade-off: solves
+the case that motivated the group rule and not the case a sector profile actually raises, which is
+depth per member rather than breadth).
+
+**Where it stands.** Option A, by omission rather than by choice. The validator rejects a
+colliding group id with a message saying member overriding is not supported, and decision 0010
+recorded the shape without recording the limitation as a question.
+
+**What would have to change.** `load_profile`'s group composition, `check_override_tightens` for
+the guard case, C13 if coverage becomes overridable, and the composition section of the Profile
+page. Depends on nothing; blocks Q25, since a sector profile is where the need arises.
 
 ## Q17 — Should the group ask the format bodies to add a field for withheld information?
 
@@ -1825,3 +1868,4 @@ not depend on a second example.
 | Conformance section | Q13, Q31, Q32 |
 | Improvement plan | Q01, Q16, Q19, N01, N03, N04 |
 | Decision index | Q07 |
+| Validator source, where the limitation was recorded as a comment | Q49 |
