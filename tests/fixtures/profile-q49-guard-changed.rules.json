@@ -1,0 +1,47 @@
+{
+  "$comment": "TEST FIXTURE \u2014 deliberately invalid. Narrows an inherited guard: the base requires a blocker wherever a purpose's status is not 'available', and this would require one only where the status is 'planned', dropping 'committed', 'under-evaluation' and 'not-planned'. Whether one condition is broader than another depends on values the profile does not hold, so a changed guard is refused rather than compared. Not a real profile; do not copy.",
+  "profileId": "pkic.test.q49-guard-changed",
+  "profileTag": "q49-guard-changed",
+  "title": "Changing a guard on an inherited rule (test fixture)",
+  "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the validator holds monotonicity for an inherited group.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.pqc-migration",
+    "version": "0.6",
+    "file": "../../docs/methodology/profile-pqc-migration.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured",
+      "observed"
+    ]
+  },
+  "overrides": [
+    {
+      "id": "pqc-migration#G1.2",
+      "requiredWhen": {
+        "attribute": "capabilityStatus",
+        "equals": "planned"
+      }
+    }
+  ],
+  "interfaceRules": []
+}

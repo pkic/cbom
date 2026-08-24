@@ -1,5 +1,5 @@
 {
-  "$comment": "TEST FIXTURE — valid, and the point of it is the numbering. This is a third-level profile: it extends the PQC migration profile, which extends the interface disclosure baseline. It declares its own P1 and its own I1, both of which are already used as local ids by BOTH ancestors. Under decision 0011 that is not a collision, because an id is local to the profile that declares it and is cited as '<profileTag>#<ruleId>'. A report against this profile therefore shows interface-disclosure#I1, pqc-migration#I1 and sector-settlement#I1 side by side. Not a published profile; it exists to prove the scheme survives three levels.",
+  "$comment": "TEST FIXTURE \u2014 valid, and the point of it is the numbering. This is a third-level profile: it extends the PQC migration profile, which extends the interface disclosure baseline. It declares its own P1 and its own I1, both of which are already used as local ids by BOTH ancestors. Under decision 0011 that is not a collision, because an id is local to the profile that declares it and is cited as '<profileTag>#<ruleId>'. A report against this profile therefore shows interface-disclosure#I1, pqc-migration#I1 and sector-settlement#I1 side by side. It also tightens one member of a group rule it inherits from its parent, which is the case decision 0014 added. Not a published profile; it exists to prove the scheme survives three levels.",
   "profileId": "pkic.test.sector-settlement",
   "profileTag": "sector-settlement",
   "title": "Settlement operator procurement (test fixture)",
@@ -42,6 +42,12 @@
       "level": "MUST",
       "withholdable": false,
       "note": "Tightened against the immediate parent, named by its tag. A rail operator that cannot see how algorithm negotiation is controlled cannot reason about downgrade between two members it does not both control."
+    },
+    {
+      "id": "pqc-migration#G1.3",
+      "level": "MUST",
+      "withholdable": false,
+      "note": "Tightening one member of an inherited group, which is what Q49 asked for. A rail operator sequencing a cutover across members needs the roadmap entry for every purpose, not only where a supplier volunteers one. The group's coverage and its other two members are inherited unchanged, which is the point: restating the group would have replaced the base's coverage silently."
     }
   ],
   "productRules": [

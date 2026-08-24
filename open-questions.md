@@ -934,7 +934,7 @@ Option C, the Conformance section, which would need to say what an SPDX-only cla
 
 ## Q49 — Can a derived profile tighten one member of an inherited group rule?
 
-**Status** open. Added 24 August 2026, from a gap that existed only as a comment in the validator.
+**Status** settled by decision 0014, awaiting adoption
 
 **The question.** A group rule constrains a repeated group keyed by a controlled vocabulary, and
 its member rules are evaluated inside an entry. A derived profile may add a whole group and may
@@ -967,13 +967,16 @@ its members — turning `in-scope` into `all`, or widening the purposes in scope
 the case that motivated the group rule and not the case a sector profile actually raises, which is
 depth per member rather than breadth).
 
-**Where it stands.** Option A, by omission rather than by choice. The validator rejects a
-colliding group id with a message saying member overriding is not supported, and decision 0010
-recorded the shape without recording the limitation as a question.
+**How it was settled.** Options B and C together, as decision 0014 — they are the two halves of
+one question, depth per member and breadth across keys. A member is overridden by qualified id
+(`pqc-migration#G1.3`) and compared exactly as any other rule. The group shell is overridden by its
+own id, where the only field an override may change is `coverage`, which may be widened and never
+narrowed. A `requiredWhen` guard may be removed, which makes a rule apply always; adding one where
+the base has none is refused, and changing an existing one is refused rather than compared, because
+whether one condition is broader than another depends on values the profile does not hold.
 
-**What would have to change.** `load_profile`'s group composition, `check_override_tightens` for
-the guard case, C13 if coverage becomes overridable, and the composition section of the Profile
-page. Depends on nothing; blocks Q25, since a sector profile is where the need arises.
+**What it leaves.** Nothing of this question. It removes one of Q25's blockers: a finance profile
+can now sharpen the capability group rather than restate it and lose the base's coverage.
 
 ## Q17 — Should the group ask the format bodies to add a field for withheld information?
 

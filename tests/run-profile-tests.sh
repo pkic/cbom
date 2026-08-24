@@ -516,6 +516,46 @@ expect_exit   "a rule with no constraint is a profile error, not a traceback" 3 
 expect_output "and it says the rule can neither pass nor fail" "neither pass nor fail" \
               "$M/cbom-pass.cyclonedx.json" "$TMP/profile-no-constraint.rules.json"
 
+# ------------------------------------------- tightening an inherited group ---
+# Decision 0014, settling Q49. A derived profile may tighten one member of a
+# group it inherited, and may widen that group's coverage. Without this the only
+# ways to ask for more depth were to restate the group, which silently replaces
+# the base's coverage, or to add a parallel group, which asks a producer for the
+# same fact twice under two names.
+echo
+echo "Tightening an inherited group"
+L3="$FIX/profile-l3-settlement.rules.json"
+
+expect_output "a member of an inherited group can be tightened" \
+              "override pqc-migration#G1.3: level raised MAY -> MUST" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$L3"
+expect_output "and the tightening reaches every entry in the group" \
+              "roadmapRef" "$M/cbom-pqc-pass.cyclonedx.json" "$L3"
+# The group shell is inherited, not restated, so its coverage still comes from
+# the parent. That is the property restating the group would have destroyed.
+expect_output_fixed "the group's own coverage is still the parent's" \
+              "pqc-migration#G1.1[non-repudiation]" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$L3"
+
+# A guard says when a rule applies. Removing one makes a rule apply always and is
+# a tightening; adding or narrowing one is a relaxation that is nearly invisible
+# on the page, because the rule is still listed and still reported.
+expect_exit   "adding a guard where the base has none is rejected" 3 \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-q49-guard-added.rules.json"
+expect_output "and it says the rule would apply less often" "apply less often" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-q49-guard-added.rules.json"
+expect_exit   "narrowing an inherited guard is rejected"     3 \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-q49-guard-changed.rules.json"
+expect_output "and it offers the two legitimate alternatives" "remove the guard" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-q49-guard-changed.rules.json"
+
+# Coverage may be widened and never narrowed: narrowing it is how a staged
+# profile becomes the permanent floor decision 0010 exists to prevent.
+expect_exit   "narrowing an inherited group's coverage is rejected" 3 \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-q49-coverage-narrowed.rules.json"
+expect_output "and it says a producer would owe fewer answers" "answer for fewer keys" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-q49-coverage-narrowed.rules.json"
+
 # ------------------------------------------------------------ rule numbering ---
 # Decision 0011. A rule id is local to the profile that declares it, and the
 # citable form is '<profileTag>#<ruleId>'. The point of the scheme is that three

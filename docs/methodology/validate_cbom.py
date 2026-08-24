@@ -344,13 +344,34 @@ def load_profile(path):
             merged["_introducedBy"][r["_qid"]] = prof["profileId"]
         merged[section] = inherited + added
 
-    # Group rules are concatenated rather than overridden. A derived profile may
-    # add a group; tightening one member of an inherited group is not yet
-    # expressible, and inventing a syntax for it before anyone needs it would be
-    # guessing. Recorded as Q49, because a limitation that shapes what a derived
-    # profile can express does not belong only in a source comment.
-    inherited_groups = [dict(g) for g in base.get("groupRules", [])]
+    # A derived profile may add a group, and may tighten one member of a group it
+    # inherited, or widen that group's coverage. Settling Q49: without member
+    # overrides the only ways to ask for more depth were to restate the group,
+    # which silently replaces the base's coverage, or to add a parallel group,
+    # which asks a producer for the same fact twice under two names.
+    inherited_groups = []
+    for g in base.get("groupRules", []):
+        g = dict(g)
+        g["members"] = [dict(m) for m in g.get("members", [])]
+        inherited_groups.append(g)
     seen_groups = {g["_qid"] for g in inherited_groups}
+    group_by_qid = {g["_qid"]: g for g in inherited_groups}
+    member_by_qid = {m["_qid"]: (g, m)
+                     for g in inherited_groups for m in g.get("members", [])}
+
+    for ov in prof.get("overrides", []):
+        oid = ov.get("id")
+        if oid in group_by_qid:
+            check_coverage_tightens(oid, group_by_qid[oid], ov, notes)
+            group_by_qid[oid].update({k: v for k, v in ov.items()
+                                      if k not in ("note", "id", "members")})
+            merged["_tightenedBy"].setdefault(oid, []).append(tag)
+        elif oid in member_by_qid:
+            _group, target = member_by_qid[oid]
+            check_override_tightens(target, ov, notes, base, prof)
+            target.update({k: v for k, v in ov.items() if k not in ("note", "id")})
+            merged["_tightenedBy"].setdefault(oid, []).append(tag)
+
     for g in prof.get("groupRules", []):
         if g["_qid"] in seen_groups:
             raise ProfileError("group rule id %s is declared twice in %s" % (g["id"], tag))
@@ -515,6 +536,59 @@ def check_constraint_tightens(rid, base_rule, ov, base, derived, notes):
             notes.append("%s: %s tightened, %s" % (rid, key, how))
 
 
+# A group's coverage says which keys must have an entry. Widening it obliges a
+# producer to answer for more keys, so it is a tightening; narrowing it is how a
+# staged profile would quietly become a permanent floor, which is the thing
+# decision 0010 exists to prevent.
+COVERAGE_STRENGTH = {"in-scope": 0, "all-purposes": 1, "all": 1}
+
+
+def check_guard_tightens(rid, base_rule, ov, notes):
+    """A 'requiredWhen' guard may be removed, and may not be added or changed.
+
+    The guard says when a rule applies. Removing it makes the rule apply always,
+    which is strictly more demanding. Adding one where the base had none makes it
+    apply less often, which is a relaxation wearing the clothes of a refinement:
+    the rule is still listed, still reported, and quietly stops firing. Changing
+    an existing guard is refused rather than compared, because whether one
+    condition is broader than another depends on values the profile does not
+    hold."""
+    if "requiredWhen" not in ov:
+        return
+    old, new = base_rule.get("requiredWhen"), ov["requiredWhen"]
+    if new in (None, {}):
+        if old:
+            notes.append("%s: guard removed, the rule now applies always" % rid)
+        return
+    if not old:
+        raise ProfileError(
+            "override on %s adds a 'requiredWhen' guard where the base has none, so the "
+            "rule would apply less often than in the base; extension is monotonic" % rid)
+    if old != new:
+        raise ProfileError(
+            "override on %s changes the 'requiredWhen' guard, which cannot be shown to "
+            "widen the base's; remove the guard to apply the rule always, or add a new "
+            "rule under this profile's own id" % rid)
+
+
+def check_coverage_tightens(rid, base_group, ov, notes):
+    """A group's coverage may be widened, never narrowed."""
+    if "coverage" not in ov:
+        return
+    old, new = base_group.get("coverage"), ov["coverage"]
+    if old == new:
+        return
+    o, n = COVERAGE_STRENGTH.get(old), COVERAGE_STRENGTH.get(new)
+    if o is None or n is None:
+        raise ProfileError("override on %s sets coverage %r, which is not a known coverage"
+                           % (rid, new))
+    if n < o:
+        raise ProfileError(
+            "override on %s narrows coverage from %r to %r, so a producer would owe an "
+            "answer for fewer keys; extension is monotonic" % (rid, old, new))
+    notes.append("%s: coverage widened, %s -> %s" % (rid, old, new))
+
+
 def check_override_tightens(base_rule, ov, notes, base=None, derived=None):
     """Reject an override that relaxes an inherited rule."""
     rid = base_rule.get("_qid", base_rule["id"])
@@ -523,6 +597,7 @@ def check_override_tightens(base_rule, ov, notes, base=None, derived=None):
             "override on %s renames the attribute from %r to %r; that is a different rule, "
             "which a derived profile adds under its own id rather than overriding"
             % (rid, base_rule.get("attribute"), ov["attribute"]))
+    check_guard_tightens(rid, base_rule, ov, notes)
     check_constraint_tightens(rid, base_rule, ov, base or {}, derived or {}, notes)
     if "level" in ov:
         old, new = base_rule.get("level", "MAY"), ov["level"]
