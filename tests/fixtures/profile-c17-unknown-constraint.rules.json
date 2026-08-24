@@ -1,0 +1,28 @@
+{
+  "$comment": "TEST FIXTURE — deliberately invalid. The constraint key is misspelled: 'startswith' rather than 'startsWith'. The evaluator recognises nothing in the constraint and, until decision 0013, reported the rule as 'ok' against every value. A rule that cannot fail is worse than a missing rule, because the report says it passed. C17 must fail and the validator must refuse the profile. Not a real profile; do not copy.",
+  "profileId": "pkic.test.c17-unknown-constraint",
+  "profileTag": "c17-unknown-constraint",
+  "title": "Unimplemented constraint key (test fixture)",
+  "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether a rule that cannot fail is rejected.",
+    "decisionOptions": ["accept the fixture", "reject the fixture"]
+  },
+  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "inventory",
+    "relationshipTypes": ["interface"],
+    "lifecycleStages": ["intended", "implemented", "configured", "observed"]
+  },
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "implementationPurl",
+      "level": "MUST",
+      "withholdable": false,
+      "constraint": { "startswith": "pkg:" }
+    }
+  ]
+}

@@ -477,7 +477,7 @@ definition in the Model, under Option C.
 
 ## Q34 — Should the completeness statement move into the baseline profile?
 
-**Status** open
+**Status** settled by decision 0012, awaiting ratification
 
 **The question.** One attribute records how complete a supplier's list of interfaces is: all of
 them, all external ones, or only some. It currently sits in the migration profile.
@@ -1073,7 +1073,7 @@ comparison use cases, which assume suppliers can be compared.
 
 ## Q38 — Should a profile be required to state an identifier scheme per asset class?
 
-**Status** open
+**Status** settled by decision 0012, awaiting ratification
 
 **The question.** An inventory built from several tools has to decide which records describe the
 same thing. Should a profile be obliged to say which identifier form it requires for each class
@@ -1310,7 +1310,7 @@ exists to avoid. Note that this does *not* depend on Q08: see `design-note-multi
 
 ## Q33 — How are requirement numbers allocated across a family of profiles?
 
-**Status** settled by decision 0011
+**Status** settled by decision 0011, awaiting ratification
 
 **The question.** The baseline numbered its requirements P1, P2 and I1 to I9. The migration
 profile continued the P sequence at P3 and started a new letter at M1. A third profile had
@@ -1428,7 +1428,7 @@ verified.
 
 ## Q27 — Should readiness be stated once per interface, or separately for each job cryptography does?
 
-**Status** open
+**Status** settled by decision 0010, awaiting ratification
 
 **The question.** The migration profile asks for one readiness status per interface. In practice
 the two main jobs cryptography does at an interface, agreeing keys and proving identity, migrate

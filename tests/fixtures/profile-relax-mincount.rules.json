@@ -1,0 +1,48 @@
+{
+  "$comment": "TEST FIXTURE \u2014 deliberately invalid. Lowers the inherited endpointRoles minimum from 2 to 1. Until decision 0013 only 'level' and 'withholdable' were compared, so this was accepted and the document was evaluated against a weaker rule than the base's while the report claimed no override relaxed anything. Not a real profile; do not copy.",
+  "profileId": "pkic.test.relax-mincount",
+  "profileTag": "relax-mincount",
+  "title": "Relaxing a minimum count (test fixture)",
+  "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the validator holds the monotonicity guarantee for constraints.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.7",
+    "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "intended",
+      "implemented",
+      "configured",
+      "observed"
+    ]
+  },
+  "overrides": [
+    {
+      "id": "interface-disclosure#I6",
+      "constraint": {
+        "minCount": 1
+      }
+    }
+  ],
+  "interfaceRules": []
+}

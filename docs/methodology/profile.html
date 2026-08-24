@@ -171,7 +171,9 @@ nav: profile
     <thead><tr><th>Operation on an inherited rule</th><th>Permitted</th><th>Why</th></tr></thead>
     <tbody>
       <tr><td>Raise the level, SHOULD to MUST</td><td><span class="must">yes</span></td><td>Tightening. Anything satisfying the derived rule satisfies the base rule.</td></tr>
-      <tr><td>Narrow a constraint, such as restricting an enumeration to a subset or raising a minimum count</td><td><span class="must">yes</span></td><td>Tightening.</td></tr>
+      <tr><td>Narrow a constraint, such as restricting an enumeration to a subset or raising a minimum count</td><td><span class="must">yes</span></td><td>Tightening. Compared kind by kind, and an override carrying a constraint the comparison does not recognise is refused rather than assumed safe.</td></tr>
+      <tr><td>Add a constraint the base did not carry, such as requiring an identifier form where the base required only presence</td><td><span class="must">yes</span></td><td>Tightening. Recorded as a composition note, so a reader of a report can see what the derived profile added.</td></tr>
+      <tr><td>Drop a constraint the base carried, or replace an identifier-form requirement with a bare presence check</td><td>no</td><td>Relaxation, and the one most easily written by accident, because the rule still looks present in the file.</td></tr>
       <tr><td>Make a withholdable attribute non-withholdable</td><td><span class="must">yes</span></td><td>Tightening.</td></tr>
       <tr><td>Add a new attribute or structural rule</td><td><span class="must">yes</span></td><td>Extension proper.</td></tr>
       <tr><td>Lower the level, MUST to SHOULD</td><td><span class="na">no</span></td><td>Relaxing. Breaks the implication that derived conformance means base conformance.</td></tr>
@@ -233,6 +235,8 @@ Content revision: 3</code></pre>
 }</code></pre>
   <p>The override names its target in full. A bare <code>I9</code> would be this profile's own ninth interface rule, which is a different rule, so the validator rejects an unqualified override rather than guessing.</p>
   <p>A validator loading such a file resolves the base, applies the overrides, and rejects any override that relaxes an inherited rule. That check is worth implementing early, because a relaxing override is easy to write by accident and its effect on a conformance claim is not obvious from reading the file.</p>
+  <p><strong>What &ldquo;relaxes&rdquo; means for a constraint.</strong> Comparing levels is easy and comparing constraints is where the guarantee is actually won or lost, so each kind of constraint is compared on its own terms: a minimum may rise and not fall, a list of permitted values may shrink and not grow, a required prefix may lengthen and not shorten, and an override may add an obligation the base did not carry but may not drop one it did. Changing which attribute a rule is about is not an override at all &mdash; it is a different rule, which a derived profile adds under its own id.</p>
+  <p>The rule that matters most is what happens to a constraint the comparison does not recognise: the override is <em>refused</em> rather than assumed monotonic. A checker that waves through what it cannot assess gives the same green report as one that has checked, which is the worse of the two failures. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0013-monotonicity-covers-constraints.md">decision 0013</a>.</p>
 
   <h2>Conformance pipeline</h2>
   <p>The validator applies four stages in sequence. The content stages are evaluated only if the format stage accepts the CBOM.</p>

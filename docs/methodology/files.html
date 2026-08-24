@@ -39,7 +39,7 @@ nav: files
       <tr><td><a href="cbom-pqc-pass.cyclonedx.json">cbom-pqc-pass.cyclonedx.json</a></td><td>Conforming example for the migration profile; three interfaces at different readiness stages</td></tr>
       <tr><td><a href="cbom-pqc-fail.cyclonedx.json">cbom-pqc-fail.cyclonedx.json</a></td><td>Non-conforming example exercising both conditional rules and the inherited-rule tightening</td></tr>
       <tr><td><a href="validate_cbom.py">validate_cbom.py</a></td><td>Version-aware validator with profile composition. Checks a document against a profile</td></tr>
-      <tr><td><a href="check_profile.py">check_profile.py</a></td><td>Well-formedness checker. Checks a profile against requirements C1 to C16 of <a href="conformance.html">Conformance</a></td></tr>
+      <tr><td><a href="check_profile.py">check_profile.py</a></td><td>Well-formedness checker. Checks a profile against requirements C1 to C17 of <a href="conformance.html">Conformance</a></td></tr>
       <tr><td><a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a></td><td>Treatment of older CBOM files</td></tr>
     </tbody>
   </table>
@@ -81,7 +81,7 @@ python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-pqc-migration.rules
 python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-interface-disclosure.rules.json</code></pre>
 
   <h2>Checking a profile</h2>
-  <p>A profile is itself checkable, against requirements C1 to C16 of <a href="conformance.html">Conformance</a>. C1 to C7 and C11 to C16 are MUST requirements and determine the result; C8 to C10 are reported as warnings unless <code>--strict</code> is given.</p>
+  <p>A profile is itself checkable, against requirements C1 to C17 of <a href="conformance.html">Conformance</a>. C1 to C7 and C11 to C17 are MUST requirements and determine the result; C8 to C10 are reported as warnings unless <code>--strict</code> is given.</p>
   <pre><code># both example profiles are well-formed
 python check_profile.py profile-interface-disclosure.rules.json
 python check_profile.py profile-pqc-migration.rules.json

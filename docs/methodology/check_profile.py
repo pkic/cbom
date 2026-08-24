@@ -2,7 +2,7 @@
 """
 Profile well-formedness checker.
 
-Checks a machine-readable profile against requirements C1 to C16 of the
+Checks a machine-readable profile against requirements C1 to C17 of the
 Conformance section, which state what makes a profile well-formed under this
 methodology. This is the second of the three conformance targets: a CBOM
 document is checked against a profile by validate_cbom.py, and a profile is
@@ -24,6 +24,7 @@ C13 MUST    group rules are keyed to a real vocabulary and cover it
 C14 MUST    identifier schemes are declared and match what the rules reference
 C15 MUST    carries a profile tag, unique along its inheritance chain
 C16 MUST    rule ids are local and carry the kind letter of the section they sit in
+C17 MUST    every rule can actually pass and fail a document
 
 Rules are checked as DECLARED in the file under test. A derived profile is not
 re-checked against its base's rules, because the base is checkable on its own;
@@ -48,11 +49,13 @@ import sys
 try:
     from validate_cbom import (load_profile, ProfileError, profile_tag,
                                SUBJECT_TYPES, LIFECYCLE_STAGES, ORIENTATIONS,
+                               ATTRIBUTE_CONSTRAINTS, PRODUCT_CONSTRAINTS, VOCABULARY_REFS,
                                is_forward_looking, present_state_counterparts)
 except ImportError:  # allow running from another directory
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     from validate_cbom import (load_profile, ProfileError, profile_tag,
                                SUBJECT_TYPES, LIFECYCLE_STAGES, ORIENTATIONS,
+                               ATTRIBUTE_CONSTRAINTS, PRODUCT_CONSTRAINTS, VOCABULARY_REFS,
                                is_forward_looking, present_state_counterparts)
 
 LEVELS = ("MUST", "SHOULD", "MAY")
@@ -700,6 +703,56 @@ def c16_rule_ids(prof, f):
           "%d declared rule id(s) well-formed and local" % counted)
 
 
+def c17_evaluable(prof, resolved_prof, f):
+    """Every rule declared here can pass a document and can fail one.
+
+    A rule that cannot fail is worse than a missing rule, because the report
+    says it passed. Three ways to write one, all of which used to go unnoticed:
+    give it no constraint at all, misspell the constraint key so the evaluator
+    recognises nothing and reports 'ok', or point it at a vocabulary that does
+    not exist so it instead fails every value without saying why. C13 already
+    catches the third for group keys; this catches all three everywhere else.
+
+    Rules are checked as declared in this file, but vocabularies resolve against
+    the base where there is one, because a derived profile inherits them rather
+    than restating them. See decision 0013."""
+    problems = []
+    source = resolved_prof if resolved_prof is not None else prof
+
+    def one(rule, section, rid):
+        constraint = rule.get("constraint")
+        if not isinstance(constraint, dict) or not constraint:
+            problems.append("%s has no constraint, so no document can fail it" % rid)
+            return
+        allowed = PRODUCT_CONSTRAINTS if section == "productRules" else ATTRIBUTE_CONSTRAINTS
+        for key in constraint:
+            if key not in allowed:
+                problems.append(
+                    "%s constrains %r, which the evaluator does not implement, so the rule "
+                    "reports 'ok' against every value" % (rid, key))
+        for key in VOCABULARY_REFS:
+            ref = constraint.get(key)
+            if ref and not source.get(ref):
+                problems.append(
+                    "%s references the vocabulary %r, which is declared nowhere, so the rule "
+                    "fails every value without saying why" % (rid, ref))
+
+    counted = 0
+    for section in ("productRules", "interfaceRules"):
+        for rule in prof.get(section, []):
+            one(rule, section, rule.get("id", "?"))
+            counted += 1
+    for group in prof.get("groupRules", []):
+        for member in group.get("members", []):
+            one(member, "groupRules", member.get("id", "?"))
+            counted += 1
+
+    if problems:
+        f.add("C17", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C17", "MUST", True, "%d rule(s) can pass and fail a document" % counted)
+
+
 def c8_exclusions(prof, f):
     ex = prof.get("exclusions")
     if not isinstance(ex, list) or not ex:
@@ -793,6 +846,7 @@ def check(path):
     c14_identifier_schemes(prof, vocab_source, f)
     c15_profile_tag(path, prof, f)
     c16_rule_ids(prof, f)
+    c17_evaluable(prof, vocab_source if resolved else None, f)
     return prof, f
 
 

@@ -140,6 +140,73 @@ def ver_tuple(s):
 # --------------------------------------------------------------------------- #
 # Profile loading and composition                                             #
 # --------------------------------------------------------------------------- #
+# Every constraint kind the evaluator can actually apply. A key outside these
+# sets is a typo or an invention, and a rule carrying one constrains nothing
+# while reporting 'ok' against every value — silent success, which is the
+# failure mode this methodology is least able to tolerate. C13 already rejects
+# it for group keys; C17 rejects it everywhere else. See decision 0013.
+ATTRIBUTE_CONSTRAINTS = ("present", "minCount", "enum", "enumFull", "enumRef",
+                         "startsWith")
+PRODUCT_CONSTRAINTS = ("minInterfaces", "minInterfacesOfType", "minProviders",
+                       "subjectIdentified", "productAttribute", "enumRef",
+                       "orDeclaredAbsent", "absenceEnumRef")
+# Keys naming a vocabulary the profile must declare. An unresolvable reference
+# is the mirror defect: instead of passing everything it fails everything, and
+# the report says only that the value was not accepted.
+VOCABULARY_REFS = ("enumRef", "absenceEnumRef", "keyVocabularyRef")
+
+
+def constraint_kinds(rule, section):
+    allowed = PRODUCT_CONSTRAINTS if section == "productRules" else ATTRIBUTE_CONSTRAINTS
+    return allowed
+
+
+def check_evaluable(profile):
+    """Every rule must be capable of failing a document and of passing one.
+
+    Run on the resolved profile, so an inherited vocabulary counts as declared.
+    Three defects are caught here, and all three are silent without it: a rule
+    with no constraint (which used to raise an exception mid-evaluation rather
+    than refusing the profile), a constraint key the evaluator does not
+    implement, and a reference to a vocabulary that does not exist."""
+    problems = []
+
+    def check_one(rule, section, label):
+        constraint = rule.get("constraint")
+        if not isinstance(constraint, dict) or not constraint:
+            problems.append("%s has no constraint, so it can neither pass nor fail a document"
+                            % label)
+            return
+        allowed = constraint_kinds(rule, section)
+        for key in constraint:
+            if key not in allowed:
+                problems.append(
+                    "%s constrains %r, which the evaluator does not implement; the rule "
+                    "would report 'ok' against every value" % (label, key))
+        for key in VOCABULARY_REFS:
+            ref = constraint.get(key)
+            if ref and not profile.get(ref):
+                problems.append(
+                    "%s references the vocabulary %r, which the profile does not declare; "
+                    "the rule would fail every value without saying why" % (label, ref))
+
+    for section in ("productRules", "interfaceRules"):
+        for rule in profile.get(section, []):
+            check_one(rule, section, rule.get("_qid", rule.get("id", "?")))
+    for group in profile.get("groupRules", []):
+        ref = group.get("keyVocabularyRef")
+        if ref and not profile.get(ref):
+            problems.append("%s is keyed by the vocabulary %r, which the profile does not "
+                            "declare; the group would require no entries"
+                            % (group.get("_qid", group.get("id", "?")), ref))
+        for member in group.get("members", []):
+            check_one(member, "groupRules", member.get("_qid", member.get("id", "?")))
+
+    if problems:
+        raise ProfileError("; ".join(problems))
+    return profile
+
+
 def profile_tag(profile):
     """The short handle a rule id is cited against.
 
@@ -207,6 +274,7 @@ def load_profile(path):
         prof["_introducedBy"] = {q: prof["profileId"] for q in all_qids(prof)}
         prof["_tightenedBy"] = {}
         apply_scope(prof)
+        check_evaluable(prof)
         return prof, origin_map(prof), notes
 
     base_file = ext.get("file")
@@ -261,7 +329,7 @@ def load_profile(path):
                     "local to the profile that declared it" % ov.get("id"))
             if ov["id"] in by_qid:
                 target = by_qid[ov["id"]]
-                check_override_tightens(target, ov, notes)
+                check_override_tightens(target, ov, notes, base, prof)
                 # The id is not copied: a tightened rule keeps the id, and the
                 # tag, of the profile that introduced it. That is what lets a
                 # claim citing it stay meaningful three levels down.
@@ -297,6 +365,7 @@ def load_profile(path):
         raise ProfileError("overrides reference unknown rule(s): %s" % ", ".join(unmatched))
 
     apply_scope(merged)
+    check_evaluable(merged)
     return merged, origin_map(merged), notes
 
 
@@ -328,9 +397,132 @@ def apply_scope(profile):
     return profile
 
 
-def check_override_tightens(base_rule, ov, notes):
+# An override's constraint has to impose at least everything the base's did.
+# Each comparator answers one question: is the new value at least as demanding
+# as the old one? Anything this table cannot answer is refused rather than
+# assumed, which is what makes the guarantee hold for constraints a later
+# version invents.
+def _num_tightens(old, new):
+    return (new >= old, "%s -> %s" % (old, new))
+
+
+def _subset_tightens(old, new):
+    o, n = set(old or []), set(new or [])
+    return (n <= o, "%d value(s) -> %d" % (len(o), len(n)))
+
+
+def _prefix_tightens(old, new):
+    return (str(new).startswith(str(old)), "%r -> %r" % (old, new))
+
+
+def _present_tightens(old, new):
+    # Requiring presence is stricter than requiring absence-or-anything.
+    return ((not old) or bool(new), "%s -> %s" % (old, new))
+
+
+def _min_of_type_tightens(old, new):
+    if old.get("interfaceType") != new.get("interfaceType"):
+        return (False, "constrains a different interface type")
+    return (new.get("min", 0) >= old.get("min", 0),
+            "min %s -> %s" % (old.get("min"), new.get("min")))
+
+
+def _subject_tightens(old, new):
+    return _prefix_tightens(old.get("startsWith", ""), new.get("startsWith", ""))
+
+
+def _equal_only(old, new):
+    return (old == new, "%r -> %r" % (old, new))
+
+
+CONSTRAINT_COMPARATORS = {
+    "present": _present_tightens,
+    "minCount": _num_tightens,
+    "minInterfaces": _num_tightens,
+    "minProviders": _num_tightens,
+    "minInterfacesOfType": _min_of_type_tightens,
+    "subjectIdentified": _subject_tightens,
+    "enum": _subset_tightens,
+    "startsWith": _prefix_tightens,
+    "productAttribute": _equal_only,
+}
+# Removing one of these removes an escape hatch, which is a tightening. Adding
+# one where the base had none is a relaxation, and is caught by the general rule.
+RELEASABLE_KEYS = ("orDeclaredAbsent", "absenceEnumRef")
+
+
+def check_constraint_tightens(rid, base_rule, ov, base, derived, notes):
+    """Reject an override whose constraint imposes less than the base's.
+
+    Until this existed, only 'level' and 'withholdable' were compared, so a
+    derived profile could lower a minimum count or replace an identifier-form
+    requirement with a bare presence check and still be accepted. Monotonic
+    extension is the guarantee the whole composition model rests on — conformance
+    to the derived profile implies conformance to the base — and it was being
+    enforced for two fields out of the set that determines a verdict."""
+    if "constraint" not in ov:
+        return
+    old = base_rule.get("constraint") or {}
+    new = ov["constraint"] or {}
+    if not new:
+        raise ProfileError("override on %s supplies an empty constraint, which imposes "
+                           "nothing where the base imposed something" % rid)
+
+    for key in old:
+        if key in ("enumFull",) or key in RELEASABLE_KEYS:
+            continue
+        if key not in new:
+            raise ProfileError(
+                "override on %s drops the base's %r constraint; extension is monotonic, "
+                "so an override may add obligations and may not remove one" % (rid, key))
+    for key in RELEASABLE_KEYS:
+        if key in old and key not in new:
+            notes.append("%s: %s removed, so the rule is satisfied by presence alone" % (rid, key))
+
+    for key, value in new.items():
+        if key == "enumFull":
+            continue
+        if key not in old:
+            if key in RELEASABLE_KEYS:
+                raise ProfileError(
+                    "override on %s adds %r, which lets the rule be satisfied without the "
+                    "thing the base required; extension is monotonic" % (rid, key))
+            notes.append("%s: constraint %r added" % (rid, key))
+            continue
+        if key == "enumRef":
+            # Vocabularies are inherited, so both sides resolve against the
+            # profile that declared them rather than against the merged result.
+            ok, how = _subset_tightens(base.get(old[key], []),
+                                       derived.get(value, base.get(value, [])))
+            if not ok:
+                raise ProfileError(
+                    "override on %s repoints %r from %r to %r, which admits values the base "
+                    "does not; extension is monotonic" % (rid, key, old[key], value))
+            if how.split(" -> ")[0] != how.split(" -> ")[-1]:
+                notes.append("%s: vocabulary narrowed, %s" % (rid, how))
+            continue
+        comparator = CONSTRAINT_COMPARATORS.get(key)
+        if comparator is None:
+            raise ProfileError(
+                "override on %s changes %r, which cannot be shown to tighten the base; "
+                "an override is refused rather than assumed monotonic" % (rid, key))
+        ok, how = comparator(old[key], value)
+        if not ok:
+            raise ProfileError(
+                "override on %s relaxes %r (%s); extension is monotonic" % (rid, key, how))
+        if old[key] != value:
+            notes.append("%s: %s tightened, %s" % (rid, key, how))
+
+
+def check_override_tightens(base_rule, ov, notes, base=None, derived=None):
     """Reject an override that relaxes an inherited rule."""
     rid = base_rule.get("_qid", base_rule["id"])
+    if "attribute" in ov and ov["attribute"] != base_rule.get("attribute"):
+        raise ProfileError(
+            "override on %s renames the attribute from %r to %r; that is a different rule, "
+            "which a derived profile adds under its own id rather than overriding"
+            % (rid, base_rule.get("attribute"), ov["attribute"]))
+    check_constraint_tightens(rid, base_rule, ov, base or {}, derived or {}, notes)
     if "level" in ov:
         old, new = base_rule.get("level", "MAY"), ov["level"]
         if LEVEL_ORDER.get(new, 0) < LEVEL_ORDER.get(old, 0):
@@ -567,7 +759,10 @@ def check_attr(value, constraint, profile):
         return (value in profile.get(constraint["enumRef"], []), "= %r" % (value,))
     if "startsWith" in constraint:
         return (str(value).startswith(constraint["startsWith"]), "= %r" % (value,))
-    return (True, "ok")
+    # Unreachable: check_evaluable refuses a profile whose constraint the
+    # evaluator does not implement. Kept loud rather than returning a pass,
+    # because this returning True is what made a typo'd key look satisfied.
+    raise ProfileError("no evaluable constraint in %r" % (constraint,))
 
 
 def condition_holds(rule, iface):
@@ -754,7 +949,7 @@ def check_product(product, interfaces, constraint, profile):
         if "enumRef" in constraint:
             return (value in profile.get(constraint["enumRef"], []), "= %r" % (value,))
         return (True, "= %r" % (value,))
-    return (True, "ok")
+    raise ProfileError("no evaluable constraint in %r" % (constraint,))
 
 
 # --------------------------------------------------------------------------- #
@@ -828,7 +1023,11 @@ def main(argv):
     except ProfileError as err:
         print("PROFILE ERROR: %s" % err, file=sys.stderr)
         return 3
-    verdict, report = validate(bom, profile)
+    try:
+        verdict, report = validate(bom, profile)
+    except ProfileError as err:
+        print("PROFILE ERROR: %s" % err, file=sys.stderr)
+        return 3
 
     if as_json:
         print(json.dumps({"verdict": verdict,

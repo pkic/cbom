@@ -373,9 +373,9 @@ expect_output "reported as undeclared, not withheld" "no disclosure marker" \
 
 # -------------------------------------------------- profile well-formedness ---
 # The second conformance target: a profile checked against the methodology.
-# Requirements C1 to C16 are stated in the Conformance section.
+# Requirements C1 to C17 are stated in the Conformance section.
 echo
-echo "Profile well-formedness (C1-C16)"
+echo "Profile well-formedness (C1-C17)"
 expect_check_exit "baseline profile is well-formed"        0 "$BASE"
 expect_check_exit "derived profile is well-formed"         0 "$PQC"
 expect_check_output "baseline verdict reads WELL-FORMED" "VERDICT : WELL-FORMED" "$BASE"
@@ -451,6 +451,71 @@ expect_check_exit   "SHOULD gaps alone still pass"       0 "$FIX/profile-should-
 expect_check_output "the warnings are reported" "warn" "$FIX/profile-should-gaps.rules.json"
 expect_check_exit   "--strict promotes them to failures" 1 "$FIX/profile-should-gaps.rules.json" --strict
 
+# --------------------------------------------------- constraint monotonicity ---
+# Decision 0013. Extension is monotonic: conformance to a derived profile has to
+# imply conformance to its base. Until this check existed only 'level' and
+# 'withholdable' were compared, so an override could lower a minimum count or
+# replace an identifier-form requirement with a bare presence check and still be
+# accepted — while the report said no override relaxed anything.
+echo
+echo "Constraint monotonicity"
+expect_exit   "lowering an inherited minimum is rejected" 3 \
+              "$M/cbom-pass.cyclonedx.json" "$FIX/profile-relax-mincount.rules.json"
+expect_output "and the rejection names the count it lowered" "relaxes 'minCount' (2 -> 1)" \
+              "$M/cbom-pass.cyclonedx.json" "$FIX/profile-relax-mincount.rules.json"
+expect_exit   "replacing an identifier form with a presence check is rejected" 3 \
+              "$M/cbom-pass.cyclonedx.json" "$FIX/profile-relax-identifier.rules.json"
+expect_output "and the rejection says an obligation may not be dropped" \
+              "may not remove one" \
+              "$M/cbom-pass.cyclonedx.json" "$FIX/profile-relax-identifier.rules.json"
+expect_check_output "C7 reports the same relaxation" "[FAIL] C7" \
+                    "$FIX/profile-relax-mincount.rules.json"
+
+# The counterpart. A check that rejects relaxations is only worth having if it
+# still admits the tightenings the mechanism exists for, so assert both.
+expect_check_exit "raising the same minimum is accepted"   0 \
+                  "$FIX/profile-tighten-constraint.rules.json"
+expect_output "the tightening is recorded as a composition note" \
+              "minCount tightened, 2 -> 3" \
+              "$M/cbom-pass.cyclonedx.json" "$FIX/profile-tighten-constraint.rules.json"
+expect_exit   "and the tightened rule actually bites"      1 \
+              "$M/cbom-pass.cyclonedx.json" "$FIX/profile-tighten-constraint.rules.json"
+
+# ------------------------------------------------------- rules that can fail ---
+# C17. A rule that cannot fail is worse than a missing rule, because the report
+# says it passed. Both fixtures were accepted before decision 0013: one reported
+# 'ok' against every value, the other failed every value without saying why.
+echo
+echo "Rules that can pass and fail"
+expect_check_exit   "an unimplemented constraint key is rejected" 1 \
+                    "$FIX/profile-c17-unknown-constraint.rules.json"
+expect_check_output "C17 is the failing requirement" "[FAIL] C17" \
+                    "$FIX/profile-c17-unknown-constraint.rules.json"
+expect_check_output "C17 says what the rule would do" "reports 'ok' against every value" \
+                    "$FIX/profile-c17-unknown-constraint.rules.json"
+expect_exit   "and the validator refuses the profile rather than issuing a verdict" 3 \
+              "$M/cbom-pass.cyclonedx.json" "$FIX/profile-c17-unknown-constraint.rules.json"
+expect_check_exit   "a vocabulary reference that resolves to nothing is rejected" 1 \
+                    "$FIX/profile-c17-unresolved-vocabulary.rules.json"
+expect_check_output "C17 is the failing requirement" "[FAIL] C17" \
+                    "$FIX/profile-c17-unresolved-vocabulary.rules.json"
+expect_exit   "and the validator refuses that profile too" 3 \
+              "$M/cbom-pass.cyclonedx.json" "$FIX/profile-c17-unresolved-vocabulary.rules.json"
+
+# A rule with no constraint used to raise an exception part-way through an
+# evaluation, so the two tools disagreed and the validator broke its own exit
+# contract. It is now a profile error like any other.
+"$PY" - "$M/profile-interface-disclosure.rules.json" "$TMP" <<'PY'
+import json, sys, os
+prof = json.load(open(sys.argv[1], encoding="utf-8"))
+prof["interfaceRules"][0].pop("constraint", None)
+json.dump(prof, open(os.path.join(sys.argv[2], "profile-no-constraint.rules.json"), "w"))
+PY
+expect_exit   "a rule with no constraint is a profile error, not a traceback" 3 \
+              "$M/cbom-pass.cyclonedx.json" "$TMP/profile-no-constraint.rules.json"
+expect_output "and it says the rule can neither pass nor fail" "neither pass nor fail" \
+              "$M/cbom-pass.cyclonedx.json" "$TMP/profile-no-constraint.rules.json"
+
 # ------------------------------------------------------------ rule numbering ---
 # Decision 0011. A rule id is local to the profile that declares it, and the
 # citable form is '<profileTag>#<ruleId>'. The point of the scheme is that three
@@ -519,6 +584,8 @@ expect_check_output "C16 is the failing requirement" "[FAIL] C16" \
                     "$FIX/profile-c16-wrong-letter.rules.json"
 expect_check_output "C16 says which letter the section takes" "so it takes the letter P" \
                     "$FIX/profile-c16-wrong-letter.rules.json"
+expect_check_output "C17 passes on both example profiles" "[PASS] C17" "$BASE"
+expect_check_output "C17 passes on the derived profile too" "[PASS] C17" "$PQC"
 
 # ------------------------------------------------------------------ summary ---
 echo
