@@ -1,4 +1,4 @@
-# CBOM Profile — Interface Disclosure Baseline (Example v0.3)
+# CBOM Profile — Interface Disclosure Baseline (Example v0.7)
 
 > **Status:** Illustrative early-concept artifact for the PKIC CBOM Profiles Working Group.
 > Not a normative deliverable. CycloneDX crypto field names are aligned to v1.7 / ECMA-424
@@ -13,6 +13,14 @@ An earlier draft of this example bound a rule to a specific product and interfac
 must be **product-independent and instance-independent**: it states *structural* and
 *attribute* requirements that any conforming product satisfies, without reference to a
 particular product or interface.
+
+The same early draft carried a `pqcPosture` attribute. That is a judgement rather than a fact:
+the criteria behind it change while the product does not, so the same disclosed values would
+yield a different answer next year. It was removed before v0.1 and the profile records the
+algorithms the judgement is derived from instead, leaving the judgement to external versioned
+policy. Recorded as decision 0002 and developed in the Policy Evaluation section. Neither
+correction appears in the changelog in §7, because no document was ever authored against that
+draft and a changelog records changes between published versions.
 
 Accordingly, this profile does not state that an interface named `nginx-https` must exist. It
 states that:
@@ -80,14 +88,21 @@ counterpart in a transport profile.
 
 ## 4. Rules
 
-Requirement keywords follow BCP 14 (MUST / SHOULD / MAY). There are two rule groups.
+Requirement keywords follow BCP 14 (MUST / SHOULD / MAY). This profile uses two of the three kinds of rule the methodology defines: product-level rules constraining the set of interfaces, and per-interface rules applied to each. It uses no group rule, because it reports present state and present state has one answer per attribute. The migration profile derived from it does use one, for capability per cryptographic purpose.
+
+Rule identifiers are local to this profile and are cited against its tag: `P1` below is
+`interface-disclosure#P1` when it appears in a report or a claim. The letter says how often the
+rule is evaluated — `P` once per product, `I` once per declared interface — and a profile derived
+from this one numbers its own rules from `P1` and `I1` in its own space. See decision 0011.
 
 ### 4.1 Product-level rules (cardinality; product-independent)
 
 | # | Requirement | Level | Constraint |
 |---|---|---|---|
 | P1 | The product MUST declare at least one cryptographic interface | **MUST** | `minInterfaces: 1` |
-| P2 | The product MUST declare at least one interface of type `management` | **MUST** | `minInterfacesOfType: {management, 1}` |
+| P2 | The product MUST declare at least one interface of type `management`, **or state why it has none** | **MUST** | `minInterfacesOfType: {management, 1}`, `orDeclaredAbsent` |
+| P3 | The document MUST identify the subject it describes | **MUST** | `subjectIdentified: {startsWith: pkg:}` |
+| P4 | The product MUST state how complete its declared interface set is | **MUST** | `productAttribute: coverage` |
 
 P2 corrects the requirement the earlier draft stated incorrectly: rather than naming a specific
 configuration interface, the profile requires that a configuration or management interface
@@ -155,6 +170,28 @@ and a consumer can tell those apart from a document that never addressed it.
 Markers are carried in the CBOM as properties under `pkic:profile:disclosure:`, because neither
 CycloneDX nor SPDX provides a native field for them. The mapping records the convention.
 
+### 4.4 Scope
+
+The profile declares a `scope` object stating what it describes and what it will accept. The
+four members are one boundary and are decided together, which is why they are carried together
+rather than as separate fields.
+
+| Member | This profile | Why |
+|---|---|---|
+| `orientation` | `inventory` | This profile reports what interfaces do, not what they could do. Under C12 that forbids it from requiring any forward-looking attribute, which is what keeps a present-state name and a capability name from being read as interchangeable across profiles that share a vocabulary. |
+| `subjectType` | `product` | The subject is a shipped product held by a consumer who did not build it and cannot inspect it. A profile for a service the consumer operates could ask for more. |
+| `relationshipTypes` | `interface` | Every rule here constrains a communication interface. The declaration is checked against the rules rather than trusted, because a scope statement maintained by hand drifts from what the rules actually say. |
+| `lifecycleStages` | all four | An acceptance constraint, in the same sense as `appliesTo` for carrier versions: an interface reporting a stage outside the set fails I8. |
+
+The lifecycle-stage member is the one that changes verdicts, and this profile deliberately does not use it
+to change any. A disclosure baseline should record whatever a producer is able to report,
+including cryptography it has only `intended`, because an intention disclosed is more useful to
+an inventory than an intention withheld. What the field buys the baseline is not a restriction
+but the ability of a derived profile to impose one: the PQC migration profile accepts only
+`implemented`, `configured` and `observed`, on the grounds that a migration plan built on
+intentions is a plan built on an intention. A derived profile may narrow the set and may not
+widen it, for the same reason it may not relax a rule.
+
 ## 5. Expected declaration
 
 A conforming nginx deployment declares at least two interfaces:
@@ -211,10 +248,57 @@ example profile combined MUST with withholdability, and that is the only combina
 withholding alters a verdict. The disclosure model was therefore stated in the profile without
 being applied by any rule.
 
-The derived PQC migration profile pins v0.3 and tightens I9 by removing its withholdability, the
+The derived PQC migration profile pins v0.7 and tightens `interface-disclosure#I9` by removing its withholdability, the
 level being already MUST. Under decision 0004 that tightening is permitted; a subsequent baseline
 revision that relaxed I9 would place the derived profile in conflict, which is why the base is
 pinned by version.
+
+### v0.4 — 2026-08-21
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Added the `scope` object of §4.4: `subjectType`, `relationshipTypes`, and the accepted `lifecycleStages` | editorial | None. This profile accepts all four stages, so no document that conformed to v0.3 stops conforming. The field's effect is on profiles derived from this one, which may now narrow the set |
+| Added `objective.decisionOptions`, listing the three actions the consumer chooses between | editorial | None. The decision text is unchanged; stating the options is what makes the action-choice test in Method step 1 checkable rather than a matter of review |
+
+Both changes are editorial here and neither is elsewhere: the migration profile's v0.2 narrows
+the accepted stages and that is a tightening. The pattern is worth noting when reading a
+changelog, because a field can be introduced without effect in one profile and immediately
+change verdicts in another that derives from it. Recorded as decision 0008.
+
+### v0.5 — 2026-08-21
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Added `scope.orientation`, declared here as `inventory` | editorial | None. The constraint falls on the profile, not the document: an inventory profile may not require forward-looking attributes, checked as C12 |
+
+The value of the field is again in what it permits elsewhere. The migration profile declares
+`both`, and C12 then obliges it to require the present-state attribute behind every capability
+attribute it asks for. It already did, by inheriting I2, I3 and I5 from this profile — but
+nothing had required it to, and a migration profile written standalone could have reported
+capability alone. Recorded as decision 0009, which reverses the clause in 0008 that rejected
+orientation.
+
+### v0.6 — 2026-08-21
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Rewrote the objective. The previous decision was whether the cryptography was "disclosed in enough detail", which is a decision about the document rather than about the product | editorial | None. No rule changes. The decision is now the consumer's actual job — determining which deployed interfaces a published weakness affects, and what has changed since the last record — and every rule traces to it |
+| Added **P3**: the document identifies the subject it describes, in the form the profile names | tightening | A document that did not carry a subject identifier no longer conforms. A name and a version are not sufficient: two documents about the same product have to agree on the identifier for either to be usable as a record |
+| Added **P4**: the product states how complete its declared interface set is. Moved down from the migration profile | tightening | A document carrying no completeness statement no longer conforms. Settles Q34 |
+| Revised **P2**: satisfied by declaring a management interface **or** by stating why there is none | relaxing, deliberately | A subject with no administrative surface — a library, a hardware token, an embedded component — previously failed while hiding nothing. It can now say so. Silence still fails: a stated absence is a fact, and this is the disclosure model applied to structure |
+| Declared `identifierSchemes` and referenced them from I1, I3, I4, I5, I9 and P3 | editorial | None yet. The profile previously constrained the form of the least contested identifier, the implementing library, and left the most contested free, so free text satisfied `protocol` and `keyExchange`. Naming the required scheme is what makes correlation across suppliers possible; whether the algorithm scheme should be the CycloneDX registry is Q20 and is unsettled |
+
+P2 is the only relaxing change in this profile's history, and it is worth being explicit about why
+that is not a weakening. The rule exists to catch omission. A document that omits its management
+interface still fails; what changed is that a subject which genuinely has none can now say so
+instead of being told it is non-conforming for a fact about its own design. Recorded as decision
+0012, alongside 0011 for the rule numbering the two new product rules made necessary.
+
+### v0.7 — 2026-08-24
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Added `profileTag`, `interface-disclosure` | editorial | None. No rule id changes. A rule id is local to the profile that declares it, so the citable form of a rule is now `interface-disclosure#I9` rather than `I9`. This profile is the base of its family and already used the kind letters `P` and `I`; what changes is that a profile deriving from it may number its own rules from `P1` and `I1` without colliding, at any depth. Recorded as decision 0011 |
 
 ### v0.1 — initial draft
 

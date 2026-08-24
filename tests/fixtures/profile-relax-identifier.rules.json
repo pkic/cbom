@@ -1,0 +1,48 @@
+{
+  "$comment": "TEST FIXTURE \u2014 deliberately invalid. Replaces the inherited requirement that implementationPurl be a pkg: Package URL with a bare presence check, so free text would satisfy it. This is the relaxation that matters most in practice, because identifier form is what makes a record correlatable across suppliers. Not a real profile; do not copy.",
+  "profileId": "pkic.test.relax-identifier",
+  "profileTag": "relax-identifier",
+  "title": "Relaxing an identifier form (test fixture)",
+  "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the validator holds the monotonicity guarantee for constraints.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.7",
+    "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "intended",
+      "implemented",
+      "configured",
+      "observed"
+    ]
+  },
+  "overrides": [
+    {
+      "id": "interface-disclosure#I9",
+      "constraint": {
+        "present": true
+      }
+    }
+  ],
+  "interfaceRules": []
+}

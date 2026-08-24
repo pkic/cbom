@@ -61,7 +61,7 @@ nav: versioning
     </svg>
     <figcaption>A declared range provides a migration window, so that existing 1.6 CBOMs are not invalidated when 1.7 is published, together with a defined lower bound below which evaluation could produce an incorrect verdict.</figcaption>
   </figure>
-  <p>The validator reports the band in which the CBOM falls. All four bands can be observed by evaluating the example CBOM at version 1.7 and at 1.6 and 1.5 copies.</p>
+  <p>The validator reports the band in which the CBOM falls. All four bands can be observed by evaluating the example CBOM at 1.7 and at 1.8, 1.6 and 1.5 copies. Four bands need four inputs: 1.7 is the tested version, 1.8 is newer than tested, 1.6 falls in the legacy window, and 1.5 is below the minimum and is refused.</p>
 
   <h2>Supporting recommendations</h2>
   <ul>
@@ -75,7 +75,7 @@ nav: versioning
   <div class="banner">The full treatment is provided in <a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a>, and the acceptance range is enforced by the format gate in <code>validate_cbom.py</code>; see <a href="files.html">Files</a>.</div>
 
   <div class="pagenav">
-    <a href="formats.html">← Formats</a>
+    <a href="data-exposure.html">← Data Exposure</a>
     <a class="next" href="governance.html">Next: Governance →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>

@@ -50,5 +50,6 @@ register.
 
 ## Links
 
-- PQC Migration section of the methodology documentation, rules M10 to M12.
+- PQC Migration section of the methodology documentation, the capability rules (now the group
+  rule `pqc-migration#G1` — see decision 0011 for the renumbering).
 - Open questions register, aspect 3.10.

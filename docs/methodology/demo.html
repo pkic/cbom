@@ -71,7 +71,7 @@ nav: demo
 <main>
   <div class="crumb">INTERACTIVE</div>
   <h1>Conformance evaluation</h1>
-  <p class="lead">Three example documents, evaluated against the Interface Disclosure Baseline v0.3. The first declares both a service and a management interface and conforms. The second omits the management interface and fails a product rule. The third declares both but exercises each of the four disclosure outcomes. The carrier version selector shows how the profile's declared acceptance range treats documents written to other versions of CycloneDX. This evaluation corresponds to that performed by <code>validate_cbom.py</code>.</p>
+  <p class="lead">Four example documents, evaluated against the Interface Disclosure Baseline v0.7. The first declares both a service and a management interface and conforms. The second omits the management interface and fails a product rule. The third declares both but exercises each of the four disclosure outcomes. The fourth is a subject with no administrative surface at all, which satisfies the management-interface rule by saying so rather than by having one: a structural rule is satisfied by presence or by a stated absence, and silence is neither. The carrier version selector shows how the profile's declared acceptance range treats documents written to other versions of CycloneDX. This evaluation corresponds to that performed by <code>validate_cbom.py</code>.</p>
   <div class="legend">
     <div><span class="k st PASS">PASS</span>value supplied and valid</div>
     <div><span class="k st held">HELD</span>withheld by the producer, permitted for this attribute</div>
@@ -88,6 +88,7 @@ nav: demo
         <button data-v="pass" class="on">✓ Conforming</button>
         <button data-v="fail">✕ Missing interface</button>
         <button data-v="disclosure">◐ Disclosure states</button>
+        <button data-v="noadmin">⊘ No management interface</button>
       </div>
     </div>
     <div class="grp">
@@ -120,8 +121,8 @@ nav: demo
   </div>
 
   <div class="pagenav">
-    <a href="files.html">← Files</a>
-    <a class="next" href="../references/">Next: the reference register →</a>
+    <a href="index.html">← Overview</a>
+    <a class="next" href="use-cases.html">Next: Use Cases →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>
@@ -129,11 +130,18 @@ nav: demo
 
 <script>
 const PROFILE = {
+  // A rule id is local to the profile that declares it, so the citable form is
+  // '<profileTag>#<ruleId>'. This demo shows one profile, but it prints the
+  // qualified form anyway, because that is what a report carries and because a
+  // derived profile would have an I1 of its own. See decision 0011.
+  profileTag: "interface-disclosure",
   appliesTo: {cyclonedx:{min:"1.6", tested:"1.7"}},
   interfaceTypeVocabulary: ["management","service","interconnect","peer","storage"],
   productRules: [
     {id:"P1", level:"MUST", description:"Product declares at least one cryptographic interface", constraint:{minInterfaces:1}},
-    {id:"P2", level:"MUST", description:"Product declares at least one management (configuration) interface", constraint:{minInterfacesOfType:{interfaceType:"management",min:1}}}
+    {id:"P2", level:"MUST", description:"Product declares at least one management (configuration) interface, or states why it has none", constraint:{minInterfacesOfType:{interfaceType:"management",min:1}, orDeclaredAbsent:"managementInterfaceAbsence", absenceEnumRef:"managementAbsenceVocabulary"}},
+    {id:"P3", level:"MUST", description:"Document identifies the subject it describes", constraint:{subjectIdentified:{startsWith:"pkg:"}}},
+    {id:"P4", level:"MUST", description:"Product states how complete its declared interface set is", constraint:{productAttribute:"coverage", enumRef:"coverageVocabulary"}}
   ],
   interfaceRules: [
     {id:"I1", attribute:"protocol", level:"MUST", constraint:{present:true}},
@@ -145,7 +153,9 @@ const PROFILE = {
     {id:"I7", attribute:"interfaceType", level:"MUST", constraint:{enumRef:"interfaceTypeVocabulary"}},
     {id:"I8", attribute:"lifecycleStage", level:"MUST", constraint:{enum:["intended","implemented","configured","observed"]}},
     {id:"I9", attribute:"implementationPurl", level:"MUST", constraint:{startsWith:"pkg:"}, withholdable:true}
-  ]
+  ],
+  coverageVocabulary:["all-external","all","partial"],
+  managementAbsenceVocabulary:["no-configuration-surface","configured-out-of-band","not-applicable-to-subject"]
 };
 const SVC = {interfaceId:"svc-https", interfaceType:"service", protocol:"TLS", protocolVersion:"1.3",
   keyExchange:"X25519", encryption:"AES-256-GCM", authentication:"RSA-2048",
@@ -163,7 +173,25 @@ const MIXED = {interfaceId:"mgmt-ssh", interfaceType:"management", protocol:"SSH
   endpointRoles:["client","server"], lifecycleStage:"configured",
   _disclosure:{implementationPurl:"withheld", encryption:"unknown"},
   nm:"Management interface (SSH 2.0)", via:"OpenSSH (version withheld)"};
-const CBOMS = { pass:[SVC, MGMT], fail:[SVC], disclosure:[SVC, MIXED] };
+// Fourth example: a subject with no administrative surface at all. Before v0.6
+// it failed P2 while hiding nothing; it now satisfies the rule by saying so.
+const LIB = {interfaceId:"svc-tls", interfaceType:"service", protocol:"TLS", protocolVersion:"1.3",
+  keyExchange:"X25519", encryption:"AES-256-GCM", authentication:"ECDSA-P256",
+  endpointRoles:["client","server"], lifecycleStage:"implemented",
+  implementationPurl:"pkg:generic/openssl@3.4.0", nm:"TLS client interface (TLS 1.3)", via:"OpenSSL 3.4.0"};
+
+// Product-level facts, which v0.6 added rules about: what the document describes
+// (P3) and how complete its interface list is (P4).
+const PRODUCTS = {
+  pass:      {identifier:"pkg:generic/nginx@1.27.0",       attrs:{coverage:"all-external"}},
+  fail:      {identifier:"pkg:generic/nginx@1.27.0",       attrs:{coverage:"partial"}},
+  disclosure:{identifier:"pkg:generic/nginx@1.27.0",       attrs:{coverage:"all-external"}},
+  noadmin:   {identifier:"pkg:generic/libexample@2.1.0",   attrs:{coverage:"all", managementInterfaceAbsence:"no-configuration-surface"}}
+};
+const CBOMS = { pass:[SVC, MGMT], fail:[SVC], disclosure:[SVC, MIXED], noadmin:[LIB] };
+
+// A rule is cited against the tag of the profile that declared it.
+function qid(id){ return PROFILE.profileTag + "#" + id; }
 
 // --- carrier version bands -------------------------------------------------
 function cmpVer(a,b){
@@ -201,11 +229,40 @@ function checkAttr(value, c){
   if("startsWith" in c) return [String(value).startsWith(c.startsWith), "= '"+value+"'"];
   return [true,"ok"];
 }
-function checkProduct(ifaces, c){
+function checkProduct(ifaces, c, product){
+  product = product || {attrs:{}};
   if("minInterfaces" in c){const n=ifaces.length;return [n>=c.minInterfaces, n+" interface(s) declared"];}
+  if("subjectIdentified" in c){
+    const v=product.identifier;
+    if(!present(v)) return [false,"the document does not say what it describes"];
+    const pfx=c.subjectIdentified.startsWith;
+    if(pfx && !String(v).startsWith(pfx))
+      return [false,"identified as '"+v+"', which is not a "+pfx+" identifier"];
+    return [true,"= '"+v+"'"];
+  }
+  if("productAttribute" in c){
+    const v=(product.attrs||{})[c.productAttribute];
+    if(!present(v)) return [false, c.productAttribute+" absent"];
+    if("enumRef" in c) return [(PROFILE[c.enumRef]||[]).includes(v), "= '"+v+"'"];
+    return [true,"= '"+v+"'"];
+  }
   if("minInterfacesOfType" in c){const s=c.minInterfacesOfType;
     const n=ifaces.filter(i=>i.interfaceType===s.interfaceType).length;
-    return [n>=s.min, n+" of type '"+s.interfaceType+"' (min "+s.min+")"];}
+    if(n>=s.min) return [true, n+" of type '"+s.interfaceType+"' (min "+s.min+")"];
+    // A structural rule is satisfied by presence or by an explicit statement of
+    // absence. Silence is neither, which is the disclosure model applied to
+    // structure rather than to an attribute.
+    if(c.orDeclaredAbsent){
+      const why=(product.attrs||{})[c.orDeclaredAbsent];
+      if(present(why)){
+        const vocab=PROFILE[c.absenceEnumRef]||[];
+        if(vocab.length && !vocab.includes(why))
+          return [false,"declared absent as '"+why+"', which is not a permitted reason"];
+        return [true,"none declared, stated as '"+why+"'"];
+      }
+      return [false, n+" of type '"+s.interfaceType+"' (min "+s.min+"), and no declared reason for the absence"];
+    }
+    return [false, n+" of type '"+s.interfaceType+"' (min "+s.min+")"];}
   return [true,"ok"];
 }
 function checkRule(iface, r){
@@ -220,7 +277,7 @@ function checkRule(iface, r){
   return [false,"undeclared","absent, with no disclosure marker"];
 }
 function validate(ifaces){
-  const product=PROFILE.productRules.map(r=>{const [ok,d]=checkProduct(ifaces,r.constraint);return {...r,ok,d};});
+  const product=PROFILE.productRules.map(r=>{const [ok,d]=checkProduct(ifaces,r.constraint,PRODUCTS[curVariant]);return {...r,ok,d};});
   const interfaces=ifaces.map(f=>{
     const rows=PROFILE.interfaceRules.map(r=>{const [ok,state,d]=checkRule(f,r);return {...r,ok,state,d};});
     return {iface:f, conforms:rows.every(r=>r.level!=="MUST"||r.ok), rows};
@@ -255,7 +312,8 @@ function render(){
   if(v==="fail") strip += `<div class="missing">no <b>management</b> interface declared<br>— the configuration interface is not described</div>`;
   document.getElementById("ifaceStrip").innerHTML=strip;
   document.getElementById("plabel").textContent =
-    "Product · nginx 1.27.0 — declared cryptographic interfaces · CycloneDX "+curVer+" CBOM";
+    "Product · "+((PRODUCTS[curVariant]||{}).identifier||"unidentified")+
+    " — declared cryptographic interfaces · CycloneDX "+curVer+" CBOM";
 
   const vd=document.getElementById("verdict");
   if(!bd.evaluate){
@@ -264,24 +322,24 @@ function render(){
   } else {
     vd.className="verdict "+(res.conforms?"pass":"fail");
     const reasons=[];
-    const pf=res.product.filter(r=>!r.ok&&r.level==="MUST").map(r=>r.id);
+    const pf=res.product.filter(r=>!r.ok&&r.level==="MUST").map(r=>qid(r.id));
     if(pf.length) reasons.push("product rule "+pf.join(", "));
     res.interfaces.filter(i=>!i.conforms).forEach(i=>{
-      const ids=i.rows.filter(r=>!r.ok&&r.level==="MUST").map(r=>r.id);
+      const ids=i.rows.filter(r=>!r.ok&&r.level==="MUST").map(r=>qid(r.id));
       reasons.push(i.iface.interfaceId+" ("+ids.join(", ")+")");
     });
     const q = bd.k==="legacy" ? " · legacy carrier, result flagged"
             : bd.k==="newer"  ? " · newer carrier, result qualified" : "";
     vd.textContent=res.conforms
-      ? "✓ CONFORMS to Interface Disclosure Baseline v0.3"+q
+      ? "✓ CONFORMS to Interface Disclosure Baseline v0.7"+q
       : "✕ DOES NOT CONFORM — failed "+reasons.join("; ")+q;
   }
   document.getElementById("productChecks").innerHTML=res.product.map(r=>
     `<li class="product ${!r.ok?'fail':''}">${stItem(r)}<span class="pill">${r.level}</span>
-      <span><span class="attr">${r.id}</span> — ${r.description} <span class="detail">→ ${r.d}</span></span></li>`).join("");
+      <span><span class="attr">${qid(r.id)}</span> — ${r.description} <span class="detail">→ ${r.d}</span></span></li>`).join("");
   document.getElementById("ifaceChecks").innerHTML=res.interfaces.map(it=>{
     const rows=it.rows.map(r=>`<li class="${!r.ok&&r.level==='MUST'?'fail':''}">${stItem(r)}
-        <span class="pill">${r.level}</span><span class="attr">${r.id} · ${r.attribute}</span>
+        <span class="pill">${r.level}</span><span class="attr">${qid(r.id)} · ${r.attribute}</span>
         <span class="detail">${r.d}</span></li>`).join("");
     return `<div class="ihead"><span class="dot ${it.iface.interfaceType==='management'?'management':'svc'}"></span>
        Interface <span class="attr">${it.iface.interfaceId}</span> (type ${it.iface.interfaceType}) —

@@ -13,8 +13,8 @@ This register collects them in one place so that a meeting agenda can be set fro
 Each question is mapped to one of the thirteen topics the group already tracks as GitHub issues,
 so an item can be posted to the issue that covers it.
 
-Forty-five questions sit under those thirteen topics. Four more do not fit any of them, which is
-itself worth knowing, and they are listed at the end.
+Forty-eight questions sit under those thirteen topics. Four more do not fit any of them, which
+is itself worth knowing, and they are listed at the end.
 
 Q36 to Q44 were added on 9 August 2026 in response to member feedback, covering the
 harvest-now-decrypt-later threat, asset identity, end-to-end posture, long-term stewardship, and
@@ -22,6 +22,14 @@ the relationship to the PQC Maturity Model. The resolution plan for that feedbac
 `plan-feedback-2026-08.md`. Q36 was then restated and Q45 added after review found that the
 original treatment of data facts was wrong for one class of interface; the reasoning is in
 `design-note-data-and-hndl.md`.
+
+Q46 and Q47 were added on 21 August 2026, and Q08 restated, after member feedback on
+financial-sector systems. The feedback attributed the gap to Q08; the reasoning for separating it
+into two cheaper questions, and for leaving Q08 where it stands, is in
+`design-note-multiparty-trust.md`.
+
+Q48 was added on 21 August 2026 after a review found that the SPDX column of the format mapping
+described a structure the linkage arrangement does not produce.
 
 ## Who this is written for
 
@@ -72,10 +80,10 @@ deleted.
 |---|---|
 | 3.1 What a profile is for, and its scope | Q01, Q02 |
 | 3.2 Naming and versioning a profile | Q03, Q04 |
-| 3.3 The list of attributes | Q05, Q06, Q07, Q08, Q09, Q34, Q36, Q37, Q45 |
+| 3.3 The list of attributes | Q05, Q06, Q07, Q08, Q09, Q34, Q36, Q37, Q45, Q46, Q47 |
 | 3.4 How binding each rule is | Q10, Q11, Q12 |
 | 3.5 Checking conformance | Q13, Q14, Q15, Q31, Q32 |
-| 3.6 Writing a profile into a file format | Q16, Q17, Q18 |
+| 3.6 Writing a profile into a file format | Q16, Q17, Q18, Q48 |
 | 3.7 Agreed names for algorithms and protocols | Q19, Q20, Q21, Q38, Q39 |
 | 3.8 How a CBOM relates to an SBOM | Q22, Q40 |
 | 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35 |
@@ -312,13 +320,27 @@ the collected reference. No separate document exists.
 **What would have to change.** Whether the Terms section becomes a versioned document, and how
 the rule files point at definitions.
 
-## Q08 — How should the model describe cryptography shared among many parties?
+## Q08 — How should the model describe cryptography under a key shared among many parties?
 
 **Status** open
 
 **The question.** The methodology describes cryptography as something applied between two
 parties. Some systems apply it among many at once, under a shared key, with members joining and
 leaving.
+
+*Restated 21 August 2026.* This question was originally titled "shared among many parties", which
+is broad enough to cover two different situations with very different costs. It covers only the
+first of them:
+
+- **A shared key.** n parties hold one key at one time. Splitting the group into pairs loses the
+  key and the membership, so no pairwise description of the system is true. That is this question.
+- **A shared trust anchor, or one signer and many verifiers.** Many parties, but each holding its
+  own keys under a common anchor, or one signature verified by a population. These decompose into
+  pairwise relationships without loss. Separated out as Q46 and Q47, and much cheaper to settle.
+
+The distinction is set out in `design-note-multiparty-trust.md`. It matters because financial
+messaging and settlement systems were raised as a case for this question and are, on the evidence
+available, an instance of the second kind.
 
 **Why it matters.** This affects which sectors the methodology can serve. Group cryptography is
 normal in broadcast and multicast systems, group messaging, and some industrial, utility and
@@ -343,6 +365,11 @@ rule requires at least two parties.
 **What would have to change.** The definitions in the Model and Terms sections, one rule, the
 file mapping, and any claim that the methodology suits sectors where group cryptography is
 routine.
+
+**What would settle it.** Whether any sector the group intends to serve uses a key held by more
+than two parties at once, as against per-participant keys under a common anchor. Broadcast and
+multicast clearly do. Whether settlement and payment rails do is an open factual question and is
+recorded under Q47.
 
 ## Q09 — Should the file formats gain a proper object for a cryptographic connection?
 
@@ -372,9 +399,85 @@ components. The mismatch is acknowledged in two sections.
 **What would have to change.** The Model section, the mapping, and whether the group makes a
 submission to CycloneDX or SPDX. Q17 asks the same question about a different gap.
 
+## Q46 — How should a signature verified by a population, rather than by one counterparty, be described?
+
+**Status** open. Added 21 August 2026 from member feedback on financial-sector systems.
+
+**The question.** A signed message may be verified by many parties rather than one. A settlement
+instruction signed by a participant and verified by every member of a scheme is the case that
+raised it; a signed software release verified by every customer is the same shape.
+
+**Why it matters.** The model's taxonomy sorts relationships by how many parties there are and
+whether they exist at the same time. It has a row for signing, at two parties and not
+simultaneous, and a row for broadcast, at n parties and simultaneous. One signer with many
+verifiers is n parties and *not* simultaneous, and there is no such row. So the case is neither
+represented nor recorded as unrepresented, which is worse than the broadcast limitation, which at
+least is written down.
+
+The practical consequence is that a profile cannot say who is entitled to verify. The signing row
+already notes that "the verifier sets the ceiling": the weakest verifier that must be supported
+fixes what the signer may use. When the verifier is a whole membership, that ceiling is a property
+of the scheme rather than of either party, and nothing in the baseline expresses it.
+
+**Option A: leave it out of scope alongside Q08.** Simple, and treats every one-to-many case the
+same way (trade-off: this case needs no shared key and no membership state at the cryptographic
+layer, so it is much cheaper than Q08. Blocking it behind Q08 blocks a cheap fix behind an
+expensive one).
+
+**Option B: add a verifier-population attribute** to the relationship, naming the population that
+must be able to verify, without generalising the relationship to n endpoints. The relationship
+stays pairwise in the model; what is added is a fact about the ceiling.
+
+**Option C: generalise the relationship**, which is Q08's Option B, and treat this as an instance.
+
+**Where it stands.** Nothing. The taxonomy row is missing and the Model's known-limitation
+paragraph mentions only the shared-key case.
+
+**What would have to change.** The taxonomy table in the Model section, one new attribute in the
+attribute model, its format mapping, and the Terms section. Not the definition of a relationship,
+which is what makes this cheaper than Q08.
+
+## Q47 — Should a profile be able to state that an interface trusts an administered, closed membership?
+
+**Status** open. Added 21 August 2026 from member feedback on financial-sector systems.
+
+**The question.** The baseline records the signature algorithm an interface uses for
+authentication. It does not record whose trust anchor the interface accepts, or whether the set of
+parties holding a credential under that anchor is open or administered.
+
+**Why it matters.** Two interfaces can declare identical algorithms and sit in entirely different
+risk positions, because one accepts any credential under a public CA and the other accepts only
+members admitted by a scheme operator. In closed-membership systems — settlement, payment rails,
+and any consortium PKI — that difference carries most of the security argument, and it is the
+thing a supervisor supervises. A CBOM that omits it describes the cryptography accurately and the
+trust position not at all.
+
+It also blocks Q25. A finance profile built on the general baseline has nowhere to put this fact,
+so it would have to invent a sector attribute for it, which is what building on the baseline is
+meant to avoid.
+
+**Option A: leave it to sector profiles.** Each sector adds its own attribute (trade-off: the
+same concept arrives under several names, and a document stops being readable outside its sector,
+which is the fragmentation the methodology exists to prevent).
+
+**Option B: add a trust-domain attribute to the general model**, naming the anchor and whether
+membership is administered. General enough for consortium PKI, private CAs and scheme operators
+alike.
+
+**Option C: treat it as a property of the endpoint** rather than of the relationship, on the
+grounds that it describes who a party will accept rather than what passes between them.
+
+**Where it stands.** Nothing. Raised in `design-note-multiparty-trust.md`, which also records the
+factual question that would settle Q08's boundary: whether any of these systems use a key shared
+among more than two participants at once, as against per-participant keys under a common anchor.
+
+**What would have to change.** The attribute model, its format mapping, the Terms section, and
+the baseline profile if the attribute is required rather than optional. Possibly the endpoint
+definition in the Model, under Option C.
+
 ## Q34 — Should the completeness statement move into the baseline profile?
 
-**Status** open
+**Status** settled by decision 0012, awaiting ratification
 
 **The question.** One attribute records how complete a supplier's list of interfaces is: all of
 them, all external ones, or only some. It currently sits in the migration profile.
@@ -399,6 +502,13 @@ baseline stricter, so it would need a version increase and would affect every ex
 **What would have to change.** Three rules, both baseline examples, the baseline changelog, and
 one row of the Conformance table. This question is bound up with Q02: the completeness statement
 is the disclosure-side answer to the same problem.
+
+**Settled in the drafting, 21 August 2026, and awaiting ratification.** Yes. The coverage statement
+moved from the migration profile into the baseline as P4 in v0.6. Silence about an interface is
+uninterpretable in every use of a CBOM, not only in migration planning, and the Conformance
+section already named this as one of the two non-assertions most likely to cause difficulty in
+procurement. Recorded as decision 0012. Moving it forced the numbering question, Q33, which is
+recorded as decision 0011.
 
 ## Q36 — Where does the boundary fall between vendor-stated and operator-stated data facts?
 
@@ -782,6 +892,46 @@ permanent property.
 **What would have to change.** Whether a member with SPDX knowledge can be found, the mapping
 document, and the credibility of the format-independence claim.
 
+## Q48 — How are the product-level rules evaluated from the SPDX side?
+
+**Status** open. Added 21 August 2026, from a review of the format mapping.
+
+**The question.** In the current arrangement an SPDX document satisfies the profile by referencing
+a CycloneDX CBOM as an external artifact. That gives the SPDX document one element for the whole
+CBOM, not one per interface. The per-interface rules are reached through the linked document and
+are fine. The product-level rules are not: P1 counts interfaces and P2 counts interfaces of a
+particular type, and there is no set of SPDX elements to count.
+
+**Why it matters.** Product rules are the ones that catch omission. P2 is what fails a vendor who
+describes its service interface and says nothing about how the product is administered, which is
+the failure the whole worked example is built around. If those rules cannot be evaluated from the
+SPDX side, then an SPDX-only consumer gets the attribute checks and not the completeness check,
+and the claim that one profile can be expressed in two formats holds for half the profile.
+
+The mapping previously filled these rows in — an annotation per interface, a count of annotated
+elements — describing a structure the linkage arrangement does not produce. They are now marked
+unresolved, which is the honest state.
+
+**Option A: one SPDX element per interface**, with the CBOM linked per interface rather than once.
+Gives the product rules something to count (trade-off: multiplies the linkage, and it is not clear
+which SPDX element class should stand for an interface).
+
+**Option B: carry the interface classifiers as annotations on the single reference element**,
+encoded so that several interfaces can be distinguished within it (trade-off: an encoding
+convention invented by this group inside another format's extension point, which is the kind of
+thing harmonisation is supposed to avoid).
+
+**Option C: state that product-level rules are not evaluable from SPDX alone**, and bound what an
+SPDX-only conformance claim may assert (trade-off: honest, and it concedes part of the
+format-independence claim).
+
+**Where it stands.** Unresolved and marked as such in `mapping-cyclonedx-spdx.md` and
+`formats.html`. Nobody in the group has yet worked with SPDX 3.x at field level, which is the
+same gap Workstream 5 of the improvement plan records.
+
+**What would have to change.** The SPDX column of the mapping, the Formats section, and, under
+Option C, the Conformance section, which would need to say what an SPDX-only claim covers.
+
 ## Q17 — Should the group ask the format bodies to add a field for withheld information?
 
 **Status** open
@@ -923,7 +1073,7 @@ comparison use cases, which assume suppliers can be compared.
 
 ## Q38 — Should a profile be required to state an identifier scheme per asset class?
 
-**Status** open
+**Status** settled by decision 0012, awaiting ratification
 
 **The question.** An inventory built from several tools has to decide which records describe the
 same thing. Should a profile be obliged to say which identifier form it requires for each class
@@ -946,6 +1096,16 @@ inventory, and requiring the statement everywhere imposes work with no benefit i
 
 **What would have to change.** Possibly a new well-formedness requirement in the Conformance
 section, and the checker that enforces those requirements.
+
+
+**Answered for the baseline, 21 August 2026, and awaiting ratification.** Yes, and the answer is
+narrower than the question. A profile declares `identifierSchemes` naming the required form per
+asset class, and C14 checks that the declaration and the rules agree in both directions. It does
+not check that a value belongs to a registry: the checker does not hold the registry and would be
+guessing, which is stated in the profile rather than glossed. The baseline previously constrained
+the form of the least contested identifier — the implementing library, which had to be a purl — and
+left the most contested free, so `protocol: "our secure channel"` conformed. Which registry
+algorithm names should come from is still Q20. Recorded as decision 0012.
 
 ## Q39 — How are keys identified across tools?
 
@@ -1069,8 +1229,10 @@ which wins, and any answer will surprise somebody. One parent keeps the guarante
 the stricter profile automatically means meeting the one it builds on.
 
 **Option B: allow two or more, taking the strictest of any conflict.** The result is then at
-least as strict as every parent, so the guarantee still holds against all of them. It requires
-requirement numbering to be managed across profile families, which is Q33.
+least as strict as every parent, so the guarantee still holds against all of them. Under the
+numbering settled in decision 0011 the rule ids themselves compose without difficulty, because
+each is local to its own profile; what has to hold is that no two profiles in the merged chains
+share a tag, and nothing today registers tags across families.
 
 **Option C: no combining, but allow a profile to declare that it is always checked alongside
 named others**, each producing its own result. This is already possible; the option is to make it
@@ -1133,35 +1295,57 @@ question and loses the guarantee that makes building on another profile worthwhi
 
 **Where it stands.** Nothing. No sector profile exists.
 
-**What would have to change.** Whether combining is allowed (Q23), the requirement numbering
-scheme (Q33), and whether permitted value lists can be narrowed (Q35).
+**What would have to change.** Whether combining is allowed (Q23), and whether permitted value
+lists can be narrowed (Q35). The numbering half is settled: decision 0011 makes a rule citable as
+`<profileTag>#<ruleId>`, so a claim naming several profiles has to carry their tags for a report
+attached to it to be readable.
+
+**A dependency, added 21 August 2026.** Option A is the option that preserves portability, and it
+is conditional on the attribute model being able to express what a sector needs. For finance it
+cannot today: there is no attribute in which to say that an interface trusts a scheme's anchor
+under administered, closed membership (Q47), nor to describe a signature verified by a membership
+rather than by one counterparty (Q46). A finance profile built on the baseline before those are
+settled would have to carry the facts in sector-specific attributes, which is the outcome Option A
+exists to avoid. Note that this does *not* depend on Q08: see `design-note-multiparty-trust.md`.
 
 ## Q33 — How are requirement numbers allocated across a family of profiles?
 
-**Status** open
+**Status** settled by decision 0011, awaiting ratification
 
-**The question.** The baseline numbers its requirements P1, P2 and I1 to I9. The migration
-profile continues the P sequence at P3 but starts a new letter at M1. A third profile has nothing
-to follow.
+**The question.** The baseline numbered its requirements P1, P2 and I1 to I9. The migration
+profile continued the P sequence at P3 and started a new letter at M1. A third profile had
+nothing to follow.
 
-**Why it matters.** Requirement numbers appear in failure reports and in a supplier's remediation
-work, so they are part of a profile's public interface. Two conventions are already in use within
-one family, which is a small problem now and a confusing one once several bodies publish.
+**Why it mattered.** Requirement numbers appear in failure reports and in a supplier's
+remediation work, so they are part of a profile's public interface. Two conventions were in use
+within one family, and the base could not add a product rule at all while a derived profile held
+an id in the base's space — a hard validator error rather than an untidiness.
 
-**Option A: a letter per profile.** A failure report shows immediately which profile imposed a
-requirement. Single letters run out, and nothing guides the choice.
+**How it was settled.** A rule id is local to the profile that declares it, and the citable form
+is `<profileTag>#<ruleId>`. Every profile numbers from 1 in each kind — `P` per product, `I` per
+interface, `G` per group, members as `G1.2` — at every level of a family. The uniqueness
+requirement moves off the ids, which an author cannot coordinate across a family, and onto the
+tag, which an author chooses once: C15 rejects a tag an ancestor already uses, and C16 fixes the
+letter to the section the rule sits in. A rule keeps the id of the profile that introduced it
+however far down it is later tightened, so an override names its target in full.
 
-**Option B: continue the sequence.** Requirements are numbered within a family whoever adds them,
-as the P sequence already does. No collisions by construction. A reader cannot tell the origin
-from the number, so reports must name the profile separately, which they already do.
+Nothing had been released when this was settled, so the whole family was renumbered clean and no
+id is retired. From here on a released id is never reused, and gaps in a sequence are correct.
 
-**Option C: put the profile name in the number.** Unambiguous, and verbose in every report.
-
-**Where it stands.** Option A for one kind of requirement and Option B for the other, in the same
-family, without either having been chosen.
+**What it leaves.** Q24 depends on this: a claim naming several profiles at once has to carry the
+tags, because a report attached to it cites rules by tag. Nothing in the scheme registers tags
+across bodies, which is only a problem if two profiles from different families are ever composed —
+and single inheritance means they cannot be today.
 
 **What would have to change.** Both rule files, the override declarations, the origin tracking in
 the validator, and any sector profile (Q25).
+
+**Settled in the drafting, 21 August 2026, and awaiting ratification.** The base of a family keeps
+the kind letters `P` and `I`; a derived profile numbers every rule it adds under one letter of its
+own, whatever the kind. Retired ids are not reused, because a stored conformance claim may cite
+one. This stopped being theoretical when the baseline needed a third product rule and found the
+migration profile occupying `P3`: `load_profile` raises a collision error and refuses to evaluate
+anything, so the base could not grow. Recorded as decision 0011.
 
 ## Q35 — May a profile narrow an inherited list of permitted values?
 
@@ -1183,6 +1367,15 @@ permitted. It is the obvious way to express a sector constraint.
 
 **Option B: forbid restating and add an explicit narrowing mechanism**, checked against the
 parent. Same expressiveness, without the silent-override hazard.
+
+**A mirror case, added 21 August 2026.** This question is framed around narrowing, which is a
+tightening and therefore permitted. Decision 0010 raises the opposite: a sector profile adding
+`attestation`, `tokenization` or `password-verification` to the cryptographic purpose vocabulary
+would *widen* an inherited list. That is arguably a relaxation, because a document could then claim
+a purpose the base profile has no rule for, and a consumer holding the base profile would have no
+way to evaluate it. Whichever mechanism is chosen has to answer for both directions, and an
+extension point that permits only narrowing would block sector adoption of the purpose vocabulary
+entirely.
 
 **Option C: allow restating and check it**, rejecting any restatement that adds a value the
 parent did not have.
@@ -1235,7 +1428,7 @@ verified.
 
 ## Q27 — Should readiness be stated once per interface, or separately for each job cryptography does?
 
-**Status** open
+**Status** settled by decision 0010, awaiting ratification
 
 **The question.** The migration profile asks for one readiness status per interface. In practice
 the two main jobs cryptography does at an interface, agreeing keys and proving identity, migrate
@@ -1252,6 +1445,20 @@ interface level anyway. The supplier states the least advanced position, which g
 
 **Option B: one per job.** Reflects how migration actually proceeds. It complicates the dependent
 rule, since the blocker would also become per job.
+
+**Answered in the drafting, 21 August 2026, and awaiting ratification.** Option B, with "job" fixed as a *cryptographic purpose* from
+a vocabulary the methodology defines, and with a test for what belongs in that vocabulary so
+additions can be argued rather than accumulated. Seven purposes are proposed; `randomness` is left
+open as an eighth. The proposal also names the collision to avoid: `endpointRoles` already means
+which party you are, and CycloneDX `cryptoFunctions` already names *operations*, which is a
+different thing — `sign`/`verify` is one operation covering both a TLS certificate signature and a
+firmware signature, which migrate a decade apart. Recorded as decision 0010 and implemented: the migration
+profile is at v0.4 with a group rule keyed by purpose, and the worked interface now states
+`available` for key establishment and `committed`, blocked on certification, for entity
+authentication — the position that was not expressible before. Settling it also makes staged
+profiles nearly free: a profile declares which purposes it requires in depth, the rules are
+written once and quantified over them, and every purpose the profile defers still owes a
+status, which is what keeps a stage from becoming a floor.
 
 **Option C: one per interface, with an optional breakdown.**
 
@@ -1610,8 +1817,8 @@ not depend on a second example.
 |---|---|
 | PQC Migration section | Q05, Q06, Q10, Q25, Q26, Q27, Q28 |
 | Profile section and its rule files | Q02, Q03, Q04, Q11, Q12, Q15, Q17, Q23, Q24, Q33, Q34, Q35 |
-| Model section | Q08, Q09, N02 |
-| Formats section | Q20, Q21 |
+| Model section | Q08, Q09, Q46, Q47, N02 |
+| Formats section | Q20, Q21, Q48 |
 | Governance section | Q14, Q22, Q29 |
 | Challenges section | Q18 |
 | Demo section | Q30 |

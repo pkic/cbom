@@ -1,0 +1,96 @@
+---
+nav: introduction
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Introduction</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include methodology-nav.html %}
+
+<main>
+  <div class="crumb">START HERE</div>
+  <h1>Introduction</h1>
+  <p class="lead">This section assumes no prior knowledge of bills of materials. It takes one product, one CBOM and one buyer's question, shows why the CBOM cannot answer the question, and shows what a profile does about it. Every other section elaborates on something that happens here.</p>
+
+  <h2>A document that is correct and still unusable</h2>
+  <p>A vendor supplies an nginx web server and, with it, a CBOM. Reading it, you learn that the product uses AES-256-GCM, X25519 and RSA-2048, that it holds a server certificate for <code>example.com</code>, and that the cryptography is implemented by OpenSSL 3.4.0. Every statement in the document is true.</p>
+  <p>Now the question you actually have to answer before you deploy it: <em>when an administrator logs in to configure this product, what protects that session?</em></p>
+  <p>The document does not say. Not because the vendor was careless — the interface it described, it described well — but because nothing required it to describe that other one. A CBOM format specifies what <em>may</em> be recorded. It does not specify what <em>must</em> be.</p>
+
+  <pre><code>components
+  HTTPS service interface (TLS 1.3)     described in full
+  AES-256-GCM, X25519, RSA-2048         the algorithms it uses
+  example.com server certificate
+  OpenSSL 3.4.0                         the implementing library
+
+                                        (nothing about administrative access)</code></pre>
+
+  <p>This is not an unusual document. It is the normal outcome of asking a supplier for a CBOM without stating what the CBOM is for.</p>
+
+  <h2>Completeness depends on the question</h2>
+  <p>The obvious remedy — ask for everything — makes the problem worse. A large product performs thousands of cryptographic operations, and a document that lists all of them buries the two or three facts on which any particular decision turns. Exhaustive coverage is not useful coverage.</p>
+  <p>There is no absolute standard of completeness for a CBOM. A CBOM is complete <em>relative to a purpose</em>. So the question worth asking is not "does this document contain everything", which has no answer, but "does it contain what this decision needs", which does — provided the decision has been written down first, in a form something other than a person can check.</p>
+
+  <h2>A profile is that written-down form</h2>
+  <p>A profile is a short list of rules stating which attributes a CBOM must carry to support one stated decision, for one stated reader. It is a minimum reporting requirement, not a schema and not a format.</p>
+  <p>The example used throughout this documentation is the <strong>Interface Disclosure Baseline</strong>. Its consumer is an operator or purchaser holding a product it did not build and cannot inspect. Its decision is whether the cryptography the product applies at its boundaries, including the interface used to configure it, is disclosed in enough detail to be recorded in an inventory and assessed against policy.</p>
+  <p>It has two kinds of rule. <strong>Product rules</strong> constrain the set of interfaces as a whole:</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Rule</th><th>Requirement</th><th>Level</th></tr></thead>
+    <tbody>
+      <tr><td>P1</td><td>The product declares at least one cryptographic interface</td><td><span class="must">MUST</span></td></tr>
+      <tr><td>P2</td><td>The product declares at least one management (configuration) interface</td><td><span class="must">MUST</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>Interface rules</strong> then apply uniformly to every interface that has been declared: the protocol and its version, the key exchange, the encryption, the authentication, both endpoint roles, the interface type, the lifecycle stage the report describes, and the implementing library.</p>
+  <p>Eleven rules in total. That is the entire profile. It is short on purpose: it names the minimum that supports one decision and stops there, which is what makes it possible for a vendor to satisfy it and for a buyer to insist on it.</p>
+  <p>Note what the profile does not contain. There is no rule about whether the cryptography is any good. Whether a product is post-quantum ready is not a fact about the product; it is a judgement made against criteria that change over time, and it is kept outside the document in versioned <a href="policy-evaluation.html">policy</a>. The CBOM carries facts. The policy makes the judgement.</p>
+
+  <h2>What happens when the rules are run</h2>
+  <p>Two nginx CBOMs, evaluated against that profile.</p>
+  <p>The first declares an HTTPS service interface and an SSH management interface, and describes both. It conforms.</p>
+  <p>The second is the document at the top of this page. Its HTTPS interface is described accurately and in full — every interface rule passes — and it fails, on P2, because no management interface was declared at all.</p>
+  <div class="banner">The failing document contains no false statement. It fails because conformance is measured against a decision rather than against truth. An accurate document that omits the one thing the reader needs is precisely the failure a profile exists to catch, and no check the format alone can perform will find it.</div>
+  <p>The <a href="demo.html">Demo</a> runs both of these, and a third, in the browser.</p>
+
+  <h2>Withheld is not the same as missing</h2>
+  <p>One refinement is worth meeting early, because it recurs throughout. In the conforming document, the management interface does not name its implementing library. It carries a marker saying the value is <em>withheld</em>. Rule I9 allows this: the attribute is required and withholdable, so the marker satisfies the rule where silent omission would not.</p>
+  <p>The distinction matters to whoever reads the document. A withheld value is a position the producer has taken deliberately and can be challenged in a negotiation. An absent value could be anything — unknown to the producer, not applicable, or simply forgotten. The first can be acted on; the second can only be guessed at. The methodology therefore distinguishes four outcomes for any attribute — supplied, withheld, unknown, undeclared — where the formats offer only present or absent.</p>
+
+  <h2>Where to go next</h2>
+  <p>Nothing above depends on the rest of the documentation, and the rest of the documentation is an expansion of it.</p>
+  <div class="cards">
+    <a class="card" href="demo.html"><div class="num">interactive</div><h3>Demo</h3><p>Run three documents against the profile and watch each rule resolve, including the four disclosure outcomes.</p></a>
+    <a class="card" href="index.html"><div class="num">map</div><h3>Overview</h3><p>What each section covers, and two suggested routes through the material depending on why you are here.</p></a>
+    <a class="card" href="challenges.html"><div class="num">background</div><h3>Challenges</h3><p>Why CBOMs behave the way the failing document did, and what SBOM adoption already established about it.</p></a>
+    <a class="card" href="method.html"><div class="num">procedure</div><h3>Method</h3><p>The twelve steps for defining a profile, if you are here to write one rather than to read one.</p></a>
+  </div>
+  <p><a href="terms.html">Terms</a> is a glossary and sits in the Reference group. It is there for when a word is unfamiliar, not something to read first.</p>
+
+  <p style="font-size:13px;color:var(--muted)">This documentation works a single example, an nginx web server expressed in CycloneDX 1.7, all the way through. The material is illustrative and demonstrates the methodology; it is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>
+
+  <div class="pagenav">
+    <span></span>
+    <a class="next" href="index.html">Next: Overview →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</div>
+</body>
+</html>

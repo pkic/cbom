@@ -22,7 +22,7 @@ nav: dataexp
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">BACKGROUND</div>
+  <div class="crumb">DESIGN NOTE</div>
   <h1>Data exposure and the harvest-now-decrypt-later threat</h1>
   <p class="lead">An adversary able to record encrypted traffic today can decrypt it once a cryptographically relevant quantum computer exists. The exposure this creates is not visible in the cryptography a CBOM currently discloses, because it depends on how long the data carried must remain confidential and on whether the traffic can be captured at all. This section sets out what has to be recorded to make that exposure assessable, and where those facts belong.</p>
   <div class="banner warn">Illustrative. The attributes proposed here are a draft for working group discussion. They are not part of the example profiles, and the scope decision they rest on is recorded as an open question.</div>
@@ -173,8 +173,8 @@ nav: dataexp
   <div class="banner">The cryptography an interface uses is not sufficient to assess this threat. The missing information is a property of the data, and which party can state it depends on the kind of data: the vendor knows what an interface must carry in order to function, and only the operator knows what is sent across it. Recording each at the scope where it is known, and leaving the threat estimate to external policy, keeps every fact in the document verifiable by the party that stated it.</div>
 
   <div class="pagenav">
-    <a href="lifecycle.html">← Lifecycle Data</a>
-    <a class="next" href="model.html">Next: Model →</a>
+    <a href="formats.html">← Formats</a>
+    <a class="next" href="versioning.html">Next: Versioning →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>

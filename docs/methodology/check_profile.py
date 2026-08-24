@@ -2,13 +2,13 @@
 """
 Profile well-formedness checker.
 
-Checks a machine-readable profile against requirements C1 to C10 of the
+Checks a machine-readable profile against requirements C1 to C17 of the
 Conformance section, which state what makes a profile well-formed under this
 methodology. This is the second of the three conformance targets: a CBOM
 document is checked against a profile by validate_cbom.py, and a profile is
 checked against the methodology here.
 
-C1  MUST    states the consumer it serves and the decision it supports
+C1  MUST    states the consumer, the decision, and the options it chooses between
 C2  MUST    carries an identifier and version, and a carrier acceptance range
 C3  MUST    no rule refers to a named product, vendor, or interface instance
 C4  MUST    every rule has an identifier, a level, and a withholdability statement
@@ -18,6 +18,13 @@ C7  MUST    extension pins the base and relaxes nothing
 C8  SHOULD  states what it deliberately excludes, and why
 C9  SHOULD  is accompanied by a mapping and by conforming and non-conforming examples
 C10 SHOULD  carries a changelog classifying each change
+C11 MUST    declares its scope: subject, relationship types, lifecycle stages
+C12 MUST    its rules are consistent with its declared orientation
+C13 MUST    group rules are keyed to a real vocabulary and cover it
+C14 MUST    identifier schemes are declared and match what the rules reference
+C15 MUST    carries a profile tag, unique along its inheritance chain
+C16 MUST    rule ids are local and carry the kind letter of the section they sit in
+C17 MUST    every rule can actually pass and fail a document
 
 Rules are checked as DECLARED in the file under test. A derived profile is not
 re-checked against its base's rules, because the base is checkable on its own;
@@ -40,13 +47,27 @@ import re
 import sys
 
 try:
-    from validate_cbom import load_profile, ProfileError
+    from validate_cbom import (load_profile, ProfileError, profile_tag,
+                               SUBJECT_TYPES, LIFECYCLE_STAGES, ORIENTATIONS,
+                               ATTRIBUTE_CONSTRAINTS, PRODUCT_CONSTRAINTS, VOCABULARY_REFS,
+                               is_forward_looking, present_state_counterparts)
 except ImportError:  # allow running from another directory
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from validate_cbom import load_profile, ProfileError
+    from validate_cbom import (load_profile, ProfileError, profile_tag,
+                               SUBJECT_TYPES, LIFECYCLE_STAGES, ORIENTATIONS,
+                               ATTRIBUTE_CONSTRAINTS, PRODUCT_CONSTRAINTS, VOCABULARY_REFS,
+                               is_forward_looking, present_state_counterparts)
 
 LEVELS = ("MUST", "SHOULD", "MAY")
 CAMEL = re.compile(r"^[a-z][A-Za-z0-9]*$")
+
+# C15/C16. A rule id is local to the profile that declares it and is cited as
+# '<profileTag>#<ruleId>'. The tag is the half that must be unique along the
+# chain; the id only has to be unique within its own file. See decision 0011.
+TAG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+RULE_ID = re.compile(r"^[A-Z][0-9]+$")
+MEMBER_ID = re.compile(r"^[A-Z][0-9]+\.[0-9]+$")
+KIND_LETTER = {"productRules": "P", "interfaceRules": "I", "groupRules": "G"}
 
 # C6. Substrings that indicate a name is asserting a conclusion rather than
 # disclosing a fact. The criteria behind each of these change over time, so the
@@ -75,8 +96,15 @@ class Findings:
 
 
 def declared_rules(prof):
-    """Every rule the file declares itself, product and interface alike."""
-    return list(prof.get("productRules", [])) + list(prof.get("interfaceRules", []))
+    """Every rule the file declares itself, product and interface alike.
+
+    Group members count: they are rules, and C3 to C6 apply to them exactly as
+    to any other. The group shell is excluded because it constrains coverage
+    rather than an attribute, and C13 checks it instead."""
+    rules = list(prof.get("productRules", [])) + list(prof.get("interfaceRules", []))
+    for g in prof.get("groupRules", []):
+        rules.extend(g.get("members", []))
+    return rules
 
 
 def vocabularies(prof):
@@ -96,11 +124,30 @@ def c1_objective(prof, f):
     if not isinstance(obj, dict):
         f.add("C1", "MUST", False, "no 'objective' object")
         return
+    problems = []
     missing = [k for k in ("consumer", "decision") if not str(obj.get(k, "")).strip()]
     if missing:
-        f.add("C1", "MUST", False, "objective is missing: %s" % ", ".join(missing))
+        problems.append("objective is missing: %s" % ", ".join(missing))
+
+    # The action-choice test from Method step 1, made mechanical. A decision the
+    # consumer cannot answer in more than one way is not a decision, and a
+    # profile written from one has no principled place to stop.
+    options = obj.get("decisionOptions")
+    if not isinstance(options, list):
+        problems.append("no 'decisionOptions'; state the actions the consumer "
+                        "chooses between, so the decision is one that can be acted on")
     else:
-        f.add("C1", "MUST", True, "consumer and decision both stated")
+        stated = [o for o in options if isinstance(o, str) and o.strip()]
+        if len(stated) < 2:
+            problems.append("decisionOptions lists %d option(s); a decision has at "
+                            "least two, or the consumer is not deciding anything"
+                            % len(stated))
+
+    if problems:
+        f.add("C1", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C1", "MUST", True, "consumer, decision, and %d decision option(s) stated"
+              % len(obj["decisionOptions"]))
 
 
 def c2_identity(prof, f):
@@ -285,6 +332,427 @@ def c7_extension(path, prof, f):
           % (ext["profileId"], ext["version"]))
 
 
+def evidenced_relationship_types(prof):
+    """The relationship kinds the profile's rules actually constrain.
+
+    The scope declaration is checked against this rather than trusted, because a
+    scope statement maintained by hand drifts from the rules it claims to
+    describe, and a stale one is worse than none: it reads as authoritative.
+
+    Only 'interface' can be evidenced today, because it is the only refined
+    relationship type the model names. The set grows as the model does."""
+    kinds = set()
+    if prof.get("interfaceRules"):
+        kinds.add("interface")
+    for r in prof.get("productRules", []):
+        c = r.get("constraint") or {}
+        if "minInterfaces" in c or "minInterfacesOfType" in c:
+            kinds.add("interface")
+    return kinds
+
+
+def c11_scope(prof, scope_source, evidence_reliable, f):
+    """C11. The profile declares what it describes and what it will accept.
+
+    'scope_source' is the profile with its base resolved where there is one, so
+    a derived profile that does not restate the scope inherits it rather than
+    failing. Where it does restate it, the resolved value is the derived
+    profile's own, and validate_cbom rejects a restatement that widens the
+    base."""
+    scope = scope_source.get("scope")
+    if not isinstance(scope, dict):
+        f.add("C11", "MUST", False,
+              "no 'scope' object; a profile states the subject it describes and "
+              "the lifecycle stages it accepts")
+        return
+
+    problems = []
+
+    subject = scope.get("subjectType")
+    if not subject:
+        problems.append("no subjectType")
+    elif subject not in SUBJECT_TYPES:
+        problems.append("subjectType %r is not one of %s"
+                        % (subject, "/".join(SUBJECT_TYPES)))
+
+    orientation = scope.get("orientation")
+    if not orientation:
+        problems.append("no orientation; state whether the profile reports present "
+                        "state, migration capability, or both")
+    elif orientation not in ORIENTATIONS:
+        problems.append("orientation %r is not one of %s"
+                        % (orientation, "/".join(ORIENTATIONS)))
+
+    stages = scope.get("lifecycleStages")
+    if not isinstance(stages, list) or not stages:
+        problems.append("no lifecycleStages; state which stages of reported data "
+                        "the profile accepts")
+    else:
+        unknown = [s for s in stages if s not in LIFECYCLE_STAGES]
+        if unknown:
+            problems.append("lifecycleStages contains %s, not in %s"
+                            % (", ".join(repr(s) for s in unknown),
+                               "/".join(LIFECYCLE_STAGES)))
+
+    declared = scope.get("relationshipTypes")
+    if not isinstance(declared, list) or not declared:
+        problems.append("no relationshipTypes")
+    elif not evidence_reliable:
+        # The base did not resolve, so the inherited rules are not visible and
+        # the declaration cannot be checked against them. C7 reports the
+        # resolution failure; repeating it here would be noise.
+        pass
+    else:
+        evidenced = evidenced_relationship_types(scope_source)
+        undeclared = evidenced - set(declared)
+        unevidenced = set(declared) - evidenced
+        if undeclared:
+            problems.append("rules constrain %s, which scope does not declare"
+                            % ", ".join(sorted(undeclared)))
+        if unevidenced:
+            problems.append("scope declares %s, which no rule constrains"
+                            % ", ".join(sorted(unevidenced)))
+
+    if problems:
+        f.add("C11", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C11", "MUST", True,
+              "%s, %s; accepts %s" % (subject, orientation, ", ".join(stages)))
+
+
+def c12_orientation(prof, resolved, evidence_reliable, f):
+    """C12. The rules a profile imposes match the orientation it declares.
+
+    Orientation exists to stop a shared attribute changing sense between profile
+    kinds. Declaring it is not enough on its own: the value has to constrain
+    something, or it becomes a label that drifts away from the rules while
+    still being read as authoritative.
+
+    Checked against the resolved profile, so an inherited rule counts. That is
+    the normal case rather than an edge one: the migration example declares the
+    capability attributes itself and inherits every present-state attribute from
+    the baseline it extends."""
+    scope = resolved.get("scope") or {}
+    orientation = scope.get("orientation")
+    if orientation not in ORIENTATIONS:
+        f.add("C12", "MUST", True, "no valid orientation to check against (see C11)")
+        return
+    if not evidence_reliable:
+        f.add("C12", "MUST", True, "base did not resolve; not checked (see C7)")
+        return
+
+    rules = list(resolved.get("interfaceRules", [])) + list(resolved.get("productRules", []))
+    # Group members are rules and are usually the forward-looking ones, so
+    # orientation has to govern them or the check misses what it exists for.
+    for g in resolved.get("groupRules", []):
+        rules.extend(g.get("members", []))
+    required = set()
+    forward = []
+    for r in rules:
+        attr = r.get("attribute") or (r.get("constraint") or {}).get("productAttribute")
+        if not attr:
+            continue
+        required.add(attr)
+        if is_forward_looking(attr):
+            forward.append((r.get("id", "?"), attr))
+
+    problems = []
+
+    if orientation == "inventory" and forward:
+        problems.append(
+            "declares orientation 'inventory' but requires forward-looking "
+            "attribute(s) %s. An inventory profile reports what is; a profile "
+            "reporting what could be is 'migration' or 'both'"
+            % ", ".join("%s (%s)" % (rid, a) for rid, a in forward))
+
+    if orientation == "both":
+        # The guarantee that makes 'both' meaningful: capability never arrives
+        # instead of present state, only alongside it.
+        unpaired = []
+        for rid, attr in forward:
+            candidates = present_state_counterparts(attr)
+            if candidates and not (set(candidates) & required):
+                unpaired.append("%s (%s, expected %s alongside it)"
+                                % (rid, attr, " or ".join(candidates)))
+        if unpaired:
+            problems.append(
+                "declares orientation 'both' but requires capability without "
+                "the present state it is a capability for: %s. A consumer "
+                "reading only the capability cannot tell what the interface "
+                "does today" % "; ".join(unpaired))
+
+    if orientation == "migration" and not forward:
+        problems.append(
+            "declares orientation 'migration' but requires no forward-looking "
+            "attribute, so it reports present state only and is 'inventory'")
+
+    if problems:
+        f.add("C12", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C12", "MUST", True,
+              "orientation '%s' matches the rules: %d forward-looking attribute(s)"
+              % (orientation, len(forward)))
+
+
+def c13_group_rules(prof, resolved, evidence_reliable, f):
+    """C13. A group rule is well-formed, and a declared scope for it is honoured.
+
+    Two failures are worth catching separately. A group rule keyed by a
+    vocabulary that does not exist evaluates against nothing and silently
+    requires no entries at all, which reads as conformance. And a profile whose
+    status rule covers only the purposes it took in scope has built a floor: a
+    supplier can conform while saying nothing at all about the purposes the
+    profile deferred, which is the outcome staging exists to avoid."""
+    groups = resolved.get("groupRules") or []
+    scope = resolved.get("scope") or {}
+
+    if not groups:
+        if scope.get("cryptographicPurposes"):
+            f.add("C13", "MUST", False,
+                  "scope declares cryptographicPurposes but no group rule is keyed "
+                  "by them, so the declaration constrains nothing")
+        else:
+            f.add("C13", "MUST", True, "no group rules")
+        return
+    if not evidence_reliable:
+        f.add("C13", "MUST", True, "base did not resolve; not checked (see C7)")
+        return
+
+    problems = []
+    for g in groups:
+        gid = g.get("id", "?")
+        for key in ("group", "keyedBy", "keyVocabularyRef", "level"):
+            if not g.get(key):
+                problems.append("%s has no '%s'" % (gid, key))
+        if not g.get("members"):
+            problems.append("%s declares no members, so it requires an entry with "
+                            "nothing in it" % gid)
+
+        ref = g.get("keyVocabularyRef")
+        vocab = resolved.get(ref) if ref else None
+        if ref and not isinstance(vocab, list):
+            problems.append("%s is keyed by %r, which is not a declared vocabulary; "
+                            "the rule would require no entries" % (gid, ref))
+            continue
+
+        coverage = g.get("coverage")
+        if coverage not in ("all-purposes", "in-scope"):
+            problems.append("%s has coverage %r, expected all-purposes or in-scope"
+                            % (gid, coverage))
+
+        declared = scope.get("cryptographicPurposes")
+        if declared:
+            unknown = [p for p in declared if vocab and p not in vocab]
+            if unknown:
+                problems.append("scope.cryptographicPurposes contains %s, absent from %s"
+                                % (", ".join(repr(u) for u in unknown), ref))
+            if coverage == "in-scope" and len(declared) < len(vocab or []):
+                problems.append(
+                    "%s covers only the %d purpose(s) in scope while the vocabulary "
+                    "has %d. A purpose the profile defers still owes a status, or the "
+                    "profile is a floor rather than a stage" % (gid, len(declared), len(vocab or [])))
+
+    if problems:
+        f.add("C13", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C13", "MUST", True,
+              "%d group rule(s), keyed and covered" % len(groups))
+
+
+def c14_identifier_schemes(prof, resolved, f):
+    """C14. Identifier schemes are declared, and the declaration matches the rules.
+
+    Q38's lever. Identity cannot be settled in general, because some asset classes
+    have no agreed identifier; it can be settled per profile, by naming the form
+    required for each class. The check is deliberately not that a value belongs to
+    a registry — the checker does not hold the registry and would be guessing.
+    What it checks is that the declaration and the rules agree, in both
+    directions, because a scheme nobody references and a reference to a scheme
+    nobody declared are the two ways this drifts."""
+    declared = resolved.get("identifierSchemes")
+    referenced = {}
+    for r in declared_rules(resolved):
+        ref = r.get("schemeRef")
+        if ref:
+            referenced.setdefault(ref, []).append(r.get("id", "?"))
+
+    if not referenced and not declared:
+        f.add("C14", "MUST", True, "no identifier schemes declared or referenced")
+        return
+    if not isinstance(declared, dict):
+        f.add("C14", "MUST", False,
+              "rule(s) %s name an identifier scheme, but the profile declares none"
+              % ", ".join(sorted(sum(referenced.values(), []))))
+        return
+
+    problems = []
+    for ref, rules in sorted(referenced.items()):
+        if not str(declared.get(ref, "")).strip():
+            problems.append("%s reference scheme %r, which is not declared"
+                            % (", ".join(rules), ref))
+    unused = [k for k in declared if k not in referenced and not k.startswith("$")]
+    if unused:
+        problems.append("scheme(s) declared for %s, which no rule references; a scheme "
+                        "nobody applies drifts from the rules while reading as authoritative"
+                        % ", ".join(sorted(unused)))
+
+    if problems:
+        f.add("C14", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C14", "MUST", True,
+              "%d scheme(s) declared and referenced: %s"
+              % (len(referenced), ", ".join("%s=%s" % (k, declared[k])
+                                            for k in sorted(referenced))))
+
+
+def c15_profile_tag(path, prof, f):
+    """The profile carries a tag, and no ancestor already uses it.
+
+    Rule ids are local, so 'I9' names a rule only once a reader knows which
+    profile declared it. The tag is that handle. It is the one identifier that
+    has to be unique along a chain, and moving the uniqueness requirement here
+    from the rule ids is what lets a derived profile number from I1 and lets a
+    family go three levels deep without a reservation scheme. See decision 0011."""
+    tag = prof.get("profileTag")
+    if tag is None:
+        derived = profile_tag(prof)
+        f.add("C15", "MUST", False,
+              "no profileTag; every rule this profile declares would have to be cited "
+              "as %r, inferred from the profileId rather than stated" % ("%s#..." % derived))
+        return
+    if not TAG.match(str(tag)):
+        f.add("C15", "MUST", False,
+              "profileTag %r is not a lowercase kebab-case token; it appears in every "
+              "citation of every rule, so it has to be typeable and stable" % tag)
+        return
+    ext = prof.get("extends")
+    if not ext:
+        f.add("C15", "MUST", True, "tag %r, base of its family" % tag)
+        return
+
+    # The base is resolved here rather than the composed profile, because a
+    # colliding tag is exactly what stops the composed profile from resolving.
+    # Reading the answer off the failure would report this as C7's problem and
+    # leave C15 saying nothing about the one thing it is for.
+    try:
+        base_path = os.path.join(os.path.dirname(os.path.abspath(path)), ext["file"])
+        chain = list(load_profile(base_path)[0].get("_chain", []))
+    except (ProfileError, OSError, KeyError) as err:
+        f.add("C15", "MUST", True,
+              "tag %r is well-formed; uniqueness along the chain was not checked "
+              "because the base did not resolve (%s)" % (tag, err))
+        return
+    if tag in chain:
+        f.add("C15", "MUST", False,
+              "profileTag %r is already used by an ancestor; the chain above this "
+              "profile is %s, and a repeated tag makes every citation in it ambiguous"
+              % (tag, " -> ".join(chain)))
+        return
+    f.add("C15", "MUST", True,
+          "tag %r, unique in chain %s" % (tag, " -> ".join(chain + [tag])))
+
+
+def c16_rule_ids(prof, f):
+    """Rule ids are local, and the letter says which kind of rule it is.
+
+    Because an id is always cited against a tag, the letter is free to carry the
+    thing a reader actually wants from it: whether the rule is evaluated once
+    per product, once per interface, or once per entry in a group. So the letter
+    is fixed by the section the rule sits in rather than chosen by the author.
+
+    Ids are not required to be contiguous. Decision 0011 says a released id is
+    never reused, which means gaps are correct and a checker that demanded a
+    dense sequence would forbid the thing the rule exists to allow."""
+    problems = []
+    for section, letter in KIND_LETTER.items():
+        for rule in prof.get(section, []):
+            rid = str(rule.get("id", ""))
+            if "#" in rid:
+                problems.append(
+                    "%s declares its id qualified; a profile writes its own ids bare "
+                    "and readers qualify them with the tag" % rid)
+                continue
+            if not RULE_ID.match(rid):
+                problems.append("%r is not of the form <letter><number>" % rid)
+                continue
+            if rid[0] != letter:
+                problems.append(
+                    "%s sits in %s, so it takes the letter %s; %s is the letter for %s"
+                    % (rid, section, letter, rid[0],
+                       {v: k for k, v in KIND_LETTER.items()}.get(rid[0], "no section")))
+            if section == "groupRules":
+                for member in rule.get("members", []):
+                    mid = str(member.get("id", ""))
+                    if not MEMBER_ID.match(mid) or not mid.startswith(rid + "."):
+                        problems.append(
+                            "group member id %r should be %s.<number>" % (mid, rid))
+
+    for ov in prof.get("overrides", []):
+        oid = str(ov.get("id", ""))
+        if "#" not in oid:
+            problems.append(
+                "override on %r is not qualified; an override names the rule it tightens "
+                "as <profileTag>#<ruleId>, because the target belongs to another profile"
+                % oid)
+
+    if problems:
+        f.add("C16", "MUST", False, "; ".join(problems))
+        return
+    counted = sum(len(prof.get(s, [])) for s in KIND_LETTER)
+    f.add("C16", "MUST", True,
+          "%d declared rule id(s) well-formed and local" % counted)
+
+
+def c17_evaluable(prof, resolved_prof, f):
+    """Every rule declared here can pass a document and can fail one.
+
+    A rule that cannot fail is worse than a missing rule, because the report
+    says it passed. Three ways to write one, all of which used to go unnoticed:
+    give it no constraint at all, misspell the constraint key so the evaluator
+    recognises nothing and reports 'ok', or point it at a vocabulary that does
+    not exist so it instead fails every value without saying why. C13 already
+    catches the third for group keys; this catches all three everywhere else.
+
+    Rules are checked as declared in this file, but vocabularies resolve against
+    the base where there is one, because a derived profile inherits them rather
+    than restating them. See decision 0013."""
+    problems = []
+    source = resolved_prof if resolved_prof is not None else prof
+
+    def one(rule, section, rid):
+        constraint = rule.get("constraint")
+        if not isinstance(constraint, dict) or not constraint:
+            problems.append("%s has no constraint, so no document can fail it" % rid)
+            return
+        allowed = PRODUCT_CONSTRAINTS if section == "productRules" else ATTRIBUTE_CONSTRAINTS
+        for key in constraint:
+            if key not in allowed:
+                problems.append(
+                    "%s constrains %r, which the evaluator does not implement, so the rule "
+                    "reports 'ok' against every value" % (rid, key))
+        for key in VOCABULARY_REFS:
+            ref = constraint.get(key)
+            if ref and not source.get(ref):
+                problems.append(
+                    "%s references the vocabulary %r, which is declared nowhere, so the rule "
+                    "fails every value without saying why" % (rid, ref))
+
+    counted = 0
+    for section in ("productRules", "interfaceRules"):
+        for rule in prof.get(section, []):
+            one(rule, section, rule.get("id", "?"))
+            counted += 1
+    for group in prof.get("groupRules", []):
+        for member in group.get("members", []):
+            one(member, "groupRules", member.get("id", "?"))
+            counted += 1
+
+    if problems:
+        f.add("C17", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C17", "MUST", True, "%d rule(s) can pass and fail a document" % counted)
+
+
 def c8_exclusions(prof, f):
     ex = prof.get("exclusions")
     if not isinstance(ex, list) or not ex:
@@ -352,9 +820,12 @@ def check(path):
     # Vocabularies are inherited rather than restated, so resolve the base where
     # there is one. A failure to resolve is not swallowed: C7 reports it.
     vocab_source = prof
+    resolved = True
     if prof.get("extends"):
+        resolved = False
         try:
             vocab_source = load_profile(path)[0]
+            resolved = True
         except (ProfileError, OSError, KeyError):
             pass
 
@@ -369,6 +840,13 @@ def check(path):
     c8_exclusions(prof, f)
     c9_artifacts(path, prof, f)
     c10_changelog(path, prof, f)
+    c11_scope(prof, vocab_source, resolved, f)
+    c12_orientation(prof, vocab_source, resolved, f)
+    c13_group_rules(prof, vocab_source, resolved, f)
+    c14_identifier_schemes(prof, vocab_source, f)
+    c15_profile_tag(path, prof, f)
+    c16_rule_ids(prof, f)
+    c17_evaluable(prof, vocab_source if resolved else None, f)
     return prof, f
 
 

@@ -1,0 +1,28 @@
+{
+  "$comment": "TEST FIXTURE — deliberately invalid. The rule references a vocabulary the profile does not declare, which is the mirror of the unimplemented-key defect: instead of passing every value the rule fails every value, and the report says only that the value was not accepted. C17 must fail and the validator must refuse the profile rather than issuing a verdict nobody can act on. Not a real profile; do not copy.",
+  "profileId": "pkic.test.c17-unresolved-vocabulary",
+  "profileTag": "c17-unresolved-vocabulary",
+  "title": "Unresolvable vocabulary reference (test fixture)",
+  "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether a rule nothing can satisfy is rejected.",
+    "decisionOptions": ["accept the fixture", "reject the fixture"]
+  },
+  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "inventory",
+    "relationshipTypes": ["interface"],
+    "lifecycleStages": ["intended", "implemented", "configured", "observed"]
+  },
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "interfaceType",
+      "level": "MUST",
+      "withholdable": false,
+      "constraint": { "enumRef": "interfaceTypeVocabluary" }
+    }
+  ]
+}

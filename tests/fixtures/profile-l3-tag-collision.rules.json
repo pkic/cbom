@@ -1,0 +1,38 @@
+{
+  "$comment": "TEST FIXTURE — deliberately invalid. A third-level profile that takes the tag its grandparent already uses. Rule ids are local, so the tag is the only thing that has to be unique along a chain: with two 'interface-disclosure' tags in one family, the citation interface-disclosure#I1 names two different rules. The validator must reject this with exit code 3, and C15 must fail. Not a real profile; do not copy.",
+  "profileId": "pkic.test.tag-collision",
+  "profileTag": "interface-disclosure",
+  "title": "Colliding tag profile (test fixture)",
+  "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the validator rejects a tag already used by an ancestor.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.pqc-migration",
+    "version": "0.6",
+    "file": "../../docs/methodology/profile-pqc-migration.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured",
+      "observed"
+    ]
+  },
+  "interfaceRules": []
+}

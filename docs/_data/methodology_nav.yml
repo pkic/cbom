@@ -10,43 +10,51 @@
 # section sits in the same directory.
 #
 # Order is also the reading order used by the previous and next links at the
-# foot of each page. Changing the order here does not change those links; they
-# are per-page and would need updating to match.
+# foot of each page. The two are kept in step by tools/renumber-pagenav.py,
+# which rewrites every page's footer links from this file. Run it after any
+# change to the order below.
+#
+# This order is a READING order, for someone meeting the material for the
+# first time. It is deliberately not the clause order of the numbered draft,
+# where Scope, Terms and Conformance appear early because a normative document
+# has to be self-contained. Concrete before abstract here; self-contained
+# there. See docs/methodology/index.html.
 
 - group: Start here
   items:
-    - { id: index,       title: Overview,          url: index.html }
-    - { id: terms,       title: Terms,             url: terms.html }
+    - { id: introduction, title: Introduction,      url: introduction.html }
+    - { id: index,        title: Overview,          url: index.html }
+    - { id: demo,         title: Demo,              url: demo.html }
+    - { id: usecases,     title: Use Cases,         url: use-cases.html }
 
 - group: Background
   items:
-    - { id: challenges,  title: Challenges,        url: challenges.html }
-    - { id: inventory,   title: Inventory,         url: inventory.html }
-    - { id: lifecycle,   title: Lifecycle Data,    url: lifecycle.html }
-    - { id: dataexp,     title: Data Exposure,     url: data-exposure.html }
+    - { id: challenges,   title: Challenges,        url: challenges.html }
+    - { id: inventory,    title: Inventory,         url: inventory.html }
+    - { id: lifecycle,    title: Lifecycle Data,    url: lifecycle.html }
 
 - group: Concepts
   items:
-    - { id: model,       title: Model,             url: model.html }
-    - { id: profile,     title: Profile,           url: profile.html }
-    - { id: conformance, title: Conformance,       url: conformance.html }
-    - { id: policyeval,  title: Policy Evaluation, url: policy-evaluation.html }
+    - { id: model,        title: Model,             url: model.html }
+    - { id: profile,      title: Profile,           url: profile.html }
+    - { id: conformance,  title: Conformance,       url: conformance.html }
+    - { id: policyeval,   title: Policy Evaluation, url: policy-evaluation.html }
 
 - group: Applying it
   items:
-    - { id: method,      title: Method,            url: method.html }
-    - { id: usecases,    title: Use Cases,         url: use-cases.html }
-    - { id: pqc,         title: PQC Migration,     url: pqc-migration.html }
-    - { id: formats,     title: Formats,           url: formats.html }
+    - { id: method,       title: Method,            url: method.html }
+    - { id: pqc,          title: PQC Migration,     url: pqc-migration.html }
+    - { id: formats,      title: Formats,           url: formats.html }
+    - { id: dataexp,      title: Data Exposure,     url: data-exposure.html }
 
 - group: Operations
   items:
-    - { id: versioning,  title: Versioning,        url: versioning.html }
-    - { id: governance,  title: Governance,        url: governance.html }
+    - { id: versioning,   title: Versioning,        url: versioning.html }
+    - { id: governance,   title: Governance,        url: governance.html }
 
 - group: Reference
   items:
-    - { id: related,     title: Related Work,      url: related-work.html }
-    - { id: files,       title: Files,             url: files.html }
-    - { id: demo,        title: Demo,              url: demo.html }
-    - { id: references,  title: References,        url: ../references/ }
+    - { id: terms,        title: Terms,             url: terms.html }
+    - { id: related,      title: Related Work,      url: related-work.html }
+    - { id: files,        title: Files,             url: files.html }
+    - { id: references,   title: References,        url: ../references/ }

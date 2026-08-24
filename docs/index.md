@@ -20,7 +20,7 @@ title: Overview
       CycloneDX and SPDX.
     </p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="{{ '/methodology/' | relative_url }}">Read the methodology</a>
+      <a class="btn btn-primary" href="{{ '/methodology/introduction.html' | relative_url }}">Read the methodology</a>
       <a class="btn btn-ghost" href="{{ '/issues/' | relative_url }}">See what we're working on</a>
       <a class="btn btn-ghost" href="{{ site.wg.charter }}">Read the charter</a>
     </div>
@@ -73,7 +73,8 @@ title: Overview
         It covers the vocabulary the methodology rests on, how a profile is written and validated,
         how the same profile maps onto CycloneDX and SPDX, what happens to older CBOM files, and
         how profiles are governed over time. Start with
-        <a href="{{ '/methodology/model.html' | relative_url }}">the model</a>, the
+        <a href="{{ '/methodology/introduction.html' | relative_url }}">the introduction</a>, the
+        <a href="{{ '/methodology/model.html' | relative_url }}">model</a>, the
         <a href="{{ '/methodology/profile.html' | relative_url }}">profile itself</a>, or the
         <a href="{{ '/methodology/demo.html' | relative_url }}">interactive conformance check</a>.
       </p>

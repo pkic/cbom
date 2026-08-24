@@ -1,0 +1,44 @@
+{
+  "$comment": "TEST FIXTURE — deliberately invalid. A third-level profile that reaches past its parent to relax a rule the BASE introduced: interface-disclosure#I9 was made non-withholdable by the migration profile, and this profile tries to make it withholdable again. Monotonic extension holds transitively, so the validator must reject this with exit code 3. It also proves that a qualified override resolves two levels up. Not a real profile; do not copy.",
+  "profileId": "pkic.test.l3-relaxing",
+  "profileTag": "l3-relaxing",
+  "title": "Third-level relaxing profile (test fixture)",
+  "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the validator rejects a relaxation reaching two levels up.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.pqc-migration",
+    "version": "0.6",
+    "file": "../../docs/methodology/profile-pqc-migration.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured",
+      "observed"
+    ]
+  },
+  "overrides": [
+    {
+      "id": "interface-disclosure#I9",
+      "withholdable": true
+    }
+  ],
+  "interfaceRules": []
+}

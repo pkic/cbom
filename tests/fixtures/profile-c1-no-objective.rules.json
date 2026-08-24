@@ -1,18 +1,51 @@
 {
   "$comment": "Fixture. Deliberately fails C1: no 'objective', so the profile does not say who it serves or what decision it supports. Everything else is well-formed.",
   "profileId": "pkic.test.c1",
+  "profileTag": "c1",
   "title": "Fixture - C1 no objective",
   "version": "0.1",
-
-  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
-
-  "interfaceTypeVocabulary": ["management", "service"],
-
-  "productRules": [
-    { "id": "P1", "description": "Product declares at least one cryptographic interface", "level": "MUST", "constraint": { "minInterfaces": 1 } }
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "interfaceTypeVocabulary": [
+    "management",
+    "service"
   ],
-
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Product declares at least one cryptographic interface",
+      "level": "MUST",
+      "constraint": {
+        "minInterfaces": 1
+      }
+    }
+  ],
   "interfaceRules": [
-    { "id": "I1", "attribute": "protocol", "level": "MUST", "constraint": { "present": true }, "withholdable": false }
-  ]
+    {
+      "id": "I1",
+      "attribute": "protocol",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false
+    }
+  ],
+  "scope": {
+    "subjectType": "product",
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "intended",
+      "implemented",
+      "configured",
+      "observed"
+    ]
+  }
 }

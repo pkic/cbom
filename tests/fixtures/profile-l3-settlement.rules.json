@@ -1,0 +1,79 @@
+{
+  "$comment": "TEST FIXTURE — valid, and the point of it is the numbering. This is a third-level profile: it extends the PQC migration profile, which extends the interface disclosure baseline. It declares its own P1 and its own I1, both of which are already used as local ids by BOTH ancestors. Under decision 0011 that is not a collision, because an id is local to the profile that declares it and is cited as '<profileTag>#<ruleId>'. A report against this profile therefore shows interface-disclosure#I1, pqc-migration#I1 and sector-settlement#I1 side by side. Not a published profile; it exists to prove the scheme survives three levels.",
+  "profileId": "pkic.test.sector-settlement",
+  "profileTag": "sector-settlement",
+  "title": "Settlement operator procurement (test fixture)",
+  "version": "0.1",
+  "objective": {
+    "consumer": "A settlement operator admitting a product to a payment rail it operates.",
+    "decision": "Whether the product can be admitted to the rail as it stands, and if not what has to change first.",
+    "decisionOptions": [
+      "admit the product to the rail",
+      "admit it subject to a named configuration change",
+      "defer admission until a stated capability arrives",
+      "reject the submission"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.pqc-migration",
+    "version": "0.6",
+    "file": "../../docs/methodology/profile-pqc-migration.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured",
+      "observed"
+    ]
+  },
+  "overrides": [
+    {
+      "id": "pqc-migration#I8",
+      "level": "MUST",
+      "withholdable": false,
+      "note": "Tightened against the immediate parent, named by its tag. A rail operator that cannot see how algorithm negotiation is controlled cannot reason about downgrade between two members it does not both control."
+    }
+  ],
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Product declares at least one interconnect interface",
+      "level": "MUST",
+      "constraint": {
+        "minInterfacesOfType": {
+          "interfaceType": "interconnect",
+          "min": 1
+        }
+      },
+      "note": "P1 in this profile's own space. The baseline's P1 and the migration profile's P1 are inherited and keep their own ids; the three are told apart by their tags."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "counterpartyTrustAnchor",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "note": "I1 in this profile's own space, alongside an inherited interface-disclosure#I1 and pqc-migration#I1. On a rail, the trust anchor an interface accepts is a fact about a shared arrangement rather than about the product alone, which is why a sector profile is where it belongs."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "Membership status on the rail",
+      "reason": "A fact about the operator's own register, not about the product, and it changes without the product changing."
+    }
+  ]
+}

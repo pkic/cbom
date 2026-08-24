@@ -43,7 +43,7 @@ The validator (`validate_cbom.py`, `check_format`) applies a four-band policy:
 | v == `tested` (1.7) | **target** | Accept. |
 | above `tested` | **newer** | Accept with a note; a reviewer should assess whether new fields affect the result. |
 
-The four bands can be observed by evaluating the CBOM at 1.7 and at 1.6 and 1.5 copies.
+The four bands can be observed by evaluating the CBOM at 1.7 and at 1.8, 1.6 and 1.5 copies. Three copies reach only three bands; `newer` needs a carrier above the tested version.
 
 A declared range is preferred to a single fixed version because rejecting every 1.6 CBOM on the
 day 1.7 is published would invalidate a supply chain's existing artifacts; a range provides a

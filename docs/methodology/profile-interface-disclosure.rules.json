@@ -1,66 +1,229 @@
 {
-  "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident. v0.2 added the three-state disclosure model described under 'disclosure'; v0.3 raised I9 to a withholdable MUST, which is the only combination in which that model affects a verdict. See 'changelog'.",
+  "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident. v0.2 added the disclosure model described under 'disclosure', which distinguishes four outcomes for any attribute: a value, a withheld marker, an unknown marker, and undeclared, meaning neither; v0.3 raised I9 to a withholdable MUST, which is the only combination in which that model affects a verdict; v0.4 added the 'scope' object, which declares the subject, the relationship types the rules constrain, and the lifecycle stages the profile accepts. See 'changelog'.",
   "profileId": "pkic.example.interface-disclosure",
+  "profileTag": "interface-disclosure",
   "title": "Interface Disclosure Baseline (Example)",
-  "version": "0.3",
+  "version": "0.7",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
-
   "objective": {
-    "$comment": "C1 of the Conformance section. A profile that does not say who it serves and what decision it supports cannot be argued about, because there is no standard against which to judge whether it asks for the right things.",
-    "consumer": "An operator or purchaser holding a product it did not build and cannot inspect.",
-    "decision": "Whether the cryptography the product applies at its boundaries, including the interface used to configure it, is disclosed in enough detail to be recorded in a cryptographic inventory and assessed against policy."
+    "$comment": "C1. Rewritten in v0.6. The previous decision \u2014 whether the cryptography is 'disclosed in enough detail to be recorded in an inventory and assessed against policy' \u2014 was circular: it was a decision about the document rather than about the product, so no attribute could be derived from it. Method step 3 says derive the questions from the decision, and a decision whose answer is 'whatever this profile requires' generates no questions. The decision below is the consumer's actual job, and every rule in this profile traces to it.",
+    "consumer": "An operator or purchaser holding a product it did not build and cannot inspect, maintaining a cryptographic inventory across an estate.",
+    "decision": "When a weakness is published against an algorithm, a protocol version, or a library, which of the deployed interfaces are affected \u2014 and, holding this record beside the one from last quarter, what has changed.",
+    "decisionOptions": [
+      "record the interfaces in the inventory and take no further action",
+      "act on an affected interface: reconfigure, upgrade, or isolate it",
+      "request a fuller disclosure from the producer, where the record cannot answer the question",
+      "reject the submission as insufficient to inventory"
+    ],
+    "$note": "The profile permits a producer to withhold implementationPurl (I9). A consumer should read a conforming document that exercises that permission as answering the second half of the decision and not the first: library-level vulnerability matching is the use this profile is built for, and a withheld library removes it. The verdict remains 'conforms'; the conformance report states the disclosure state of every rule, which is where that fact is visible. A procurement profile deriving from this one should tighten I9, as the migration profile does."
   },
-
+  "scope": {
+    "$comment": "C11. The boundary, as one object rather than as scattered fields: what the profile describes, which kinds of cryptographic relationship its rules constrain, which lifecycle stages of reported data it will accept, and whether it reports present state, migration capability, or both. 'lifecycleStages' is an acceptance constraint in the same sense as 'appliesTo': an interface reporting a stage outside the set fails I8. This profile accepts all four, because a disclosure baseline should record whatever the producer can report and let a derived profile narrow it. See decision 0008.",
+    "subjectType": "product",
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "intended",
+      "implemented",
+      "configured",
+      "observed"
+    ]
+  },
   "appliesTo": {
     "$comment": "Carrier-format acceptance. 'min' = oldest spec version the adapter is known to read; below it, evaluation is refused (unsupported). 'tested' = version the profile was authored/validated against; between min and tested the CBOM is accepted but flagged legacy. Newer-than-tested is accepted with a note.",
-    "cyclonedx": { "min": "1.6", "tested": "1.7" }
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
   },
-
   "disclosure": {
     "$comment": "An attribute that carries no value is not necessarily the same as an attribute that was never considered. Following the 2026 SBOM minimum elements, a producer states whether missing information is unknown to it or is being withheld. Neither CycloneDX nor SPDX has a native field for this, so the marker is carried as a property and the convention is fixed here. A rule with 'withholdable': true is satisfied by a 'withheld' marker; otherwise withholding fails the rule. 'unknown' never satisfies a MUST rule, but is reported separately from silent omission.",
     "markerPrefix": "pkic:profile:disclosure:",
-    "states": ["unknown", "withheld"]
+    "states": [
+      "unknown",
+      "withheld"
+    ]
   },
-
-  "interfaceTypeVocabulary": ["management", "service", "interconnect", "peer", "storage"],
-
+  "interfaceTypeVocabulary": [
+    "management",
+    "service",
+    "interconnect",
+    "peer",
+    "storage"
+  ],
   "productRules": [
-    { "id": "P1", "description": "Product declares at least one cryptographic interface", "level": "MUST", "constraint": { "minInterfaces": 1 } },
-    { "id": "P2", "description": "Product declares at least one management (configuration) interface", "level": "MUST", "constraint": { "minInterfacesOfType": { "interfaceType": "management", "min": 1 } } }
+    {
+      "id": "P1",
+      "description": "Product declares at least one cryptographic interface",
+      "level": "MUST",
+      "constraint": {
+        "minInterfaces": 1
+      }
+    },
+    {
+      "id": "P2",
+      "description": "Product declares at least one management (configuration) interface, or states why it has none",
+      "level": "MUST",
+      "constraint": {
+        "minInterfacesOfType": {
+          "interfaceType": "management",
+          "min": 1
+        },
+        "orDeclaredAbsent": "managementInterfaceAbsence",
+        "absenceEnumRef": "managementAbsenceVocabulary"
+      },
+      "note": "Revised in v0.6. The rule exists to catch omission: the administrative interface is the one most often left out. But a library, a hardware token or an embedded component with no configuration surface hides nothing by having none, and previously failed. A structural rule is now satisfied by presence or by an explicit statement of absence, and silence is neither \u2014 the disclosure model applied to structure rather than to an attribute."
+    },
+    {
+      "id": "P3",
+      "description": "Document identifies the subject it describes",
+      "level": "MUST",
+      "constraint": {
+        "subjectIdentified": {
+          "startsWith": "pkg:"
+        }
+      },
+      "withholdable": false,
+      "note": "New in v0.6. Nothing previously required a CBOM to say what it described. A document for 'nginx' with no version cannot be matched to a deployment, compared with the same product's record from last quarter, or joined to an SBOM \u2014 which is the whole of the decision this profile serves. A name and a version are not enough: the identifier has to be in the form the profile names, so that two documents about the same product agree.",
+      "schemeRef": "subject"
+    },
+    {
+      "id": "P4",
+      "description": "Product states how complete its declared interface set is",
+      "level": "MUST",
+      "constraint": {
+        "productAttribute": "coverage",
+        "enumRef": "coverageVocabulary"
+      },
+      "withholdable": false,
+      "note": "Moved down from the migration profile in v0.6, settling Q34. Without it a missing interface is uninterpretable: silence could mean the interface does not exist or that the producer chose not to list it, and those are entirely different. The Conformance section names 'that the document is complete' and 'that every relevant interface was declared' as the two non-assertions most likely to cause difficulty in procurement, and this is the rule that addresses them. It belongs in every use of a CBOM, not only in migration planning."
+    }
   ],
-
   "interfaceRules": [
-    { "id": "I1", "attribute": "protocol",           "level": "MUST",   "constraint": { "present": true }, "withholdable": false },
-    { "id": "I2", "attribute": "protocolVersion",    "level": "MUST",   "constraint": { "present": true }, "withholdable": false },
-    { "id": "I3", "attribute": "keyExchange",        "level": "MUST",   "constraint": { "present": true }, "withholdable": false },
-    { "id": "I4", "attribute": "encryption",         "level": "MUST",   "constraint": { "present": true }, "withholdable": false },
-    { "id": "I5", "attribute": "authentication",     "level": "MUST",   "constraint": { "present": true }, "withholdable": false, "note": "Server/host authentication signature: certificate signature (TLS) or host key (SSH)." },
-    { "id": "I6", "attribute": "endpointRoles",      "level": "MUST",   "constraint": { "minCount": 2 }, "withholdable": false },
-    { "id": "I7", "attribute": "interfaceType",      "level": "MUST",   "constraint": { "enumRef": "interfaceTypeVocabulary" }, "withholdable": false },
-    { "id": "I8", "attribute": "lifecycleStage",     "level": "MUST",   "constraint": { "enum": ["intended", "implemented", "configured", "observed"] }, "withholdable": false },
-    { "id": "I9", "attribute": "implementationPurl", "level": "MUST",   "constraint": { "startsWith": "pkg:" }, "withholdable": true, "note": "Required, and withholdable. A producer unwilling to publish the implementing library says so with a 'withheld' marker, which satisfies the rule; silent omission does not. This is the one rule in the baseline where the disclosure model affects the verdict, which is the point of having it." }
+    {
+      "id": "I1",
+      "attribute": "protocol",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "schemeRef": "protocol"
+    },
+    {
+      "id": "I2",
+      "attribute": "protocolVersion",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I3",
+      "attribute": "keyExchange",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "schemeRef": "algorithm"
+    },
+    {
+      "id": "I4",
+      "attribute": "encryption",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "schemeRef": "algorithm"
+    },
+    {
+      "id": "I5",
+      "attribute": "authentication",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "note": "Server/host authentication signature: certificate signature (TLS) or host key (SSH).",
+      "schemeRef": "algorithm"
+    },
+    {
+      "id": "I6",
+      "attribute": "endpointRoles",
+      "level": "MUST",
+      "constraint": {
+        "minCount": 2
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I7",
+      "attribute": "interfaceType",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "interfaceTypeVocabulary"
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I8",
+      "attribute": "lifecycleStage",
+      "level": "MUST",
+      "constraint": {
+        "enum": [
+          "intended",
+          "implemented",
+          "configured",
+          "observed"
+        ]
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I9",
+      "attribute": "implementationPurl",
+      "level": "MUST",
+      "constraint": {
+        "startsWith": "pkg:"
+      },
+      "withholdable": true,
+      "note": "Required, and withholdable. A producer unwilling to publish the implementing library says so with a 'withheld' marker, which satisfies the rule; silent omission does not. This is the one rule in the baseline where the disclosure model affects the verdict, which is the point of having it.",
+      "schemeRef": "library"
+    }
   ],
-
   "exclusions": [
-    { "item": "Internal cryptographic operations not reachable at an interface",
-      "reason": "The subject is treated as a black box. A consumer cannot verify internal operations and a vendor will not disclose them, so requiring them would produce a profile no one can satisfy." },
-    { "item": "Derived judgements such as post-quantum posture or cryptographic maturity",
-      "reason": "The criteria behind such judgements change while the product does not. The profile records the facts they are derived from and leaves the judgement to external versioned policy. See decision 0002." },
-    { "item": "Forward-looking capability and roadmap information",
-      "reason": "This profile records present state. A consumer needing planning information uses a derived profile, such as the PQC migration example, which adds it." },
-    { "item": "Properties of the conveyed payload crossing an interface, such as its confidentiality lifetime or its classification",
-      "reason": "A vendor does not know what a customer will send through its product, and the same product carries public information at one site and long-lived personal records at another. These facts are known to the operator and belong to a deployment-scope profile. Note the limit of this exclusion: data that an interface must carry in order to function, such as the credentials on a management interface or the key material on a key management interface, is a design property the vendor does know, and whether the baseline should require it is recorded as Q36. Both are required to assess the harvest-now-decrypt-later threat, which the cryptography alone does not measure." },
-    { "item": "Key material, secrets, and certificate private components",
-      "reason": "Never disclosed in a bill of materials under any profile." }
+    {
+      "item": "Internal cryptographic operations not reachable at an interface",
+      "reason": "The subject is treated as a black box. A consumer cannot verify internal operations and a vendor will not disclose them, so requiring them would produce a profile no one can satisfy."
+    },
+    {
+      "item": "Derived judgements such as post-quantum posture or cryptographic maturity",
+      "reason": "The criteria behind such judgements change while the product does not. The profile records the facts they are derived from and leaves the judgement to external versioned policy. See decision 0002."
+    },
+    {
+      "item": "Forward-looking capability and roadmap information",
+      "reason": "This profile records present state. A consumer needing planning information uses a derived profile, such as the PQC migration example, which adds it."
+    },
+    {
+      "item": "Properties of the conveyed payload crossing an interface, such as its confidentiality lifetime or its classification",
+      "reason": "A vendor does not know what a customer will send through its product, and the same product carries public information at one site and long-lived personal records at another. These facts are known to the operator and belong to a deployment-scope profile. Note the limit of this exclusion: data that an interface must carry in order to function, such as the credentials on a management interface or the key material on a key management interface, is a design property the vendor does know, and whether the baseline should require it is recorded as Q36. Both are required to assess the harvest-now-decrypt-later threat, which the cryptography alone does not measure."
+    },
+    {
+      "item": "Key material, secrets, and certificate private components",
+      "reason": "Never disclosed in a bill of materials under any profile."
+    }
   ],
-
   "artifacts": {
     "$comment": "C9. The mapping demonstrates that the profile is satisfiable in a concrete format, and the two example documents demonstrate that the rules discriminate.",
     "mapping": "mapping-cyclonedx-spdx.md",
     "conformingExample": "cbom-pass.cyclonedx.json",
     "nonConformingExample": "cbom-fail.cyclonedx.json"
   },
-
   "changelog": [
     {
       "version": "0.1",
@@ -72,23 +235,84 @@
       "version": "0.2",
       "date": "2026-08-07",
       "changes": [
-        { "kind": "tightening",
-          "summary": "Added the disclosure state model, with the marker prefix and a withholdable flag on every rule. An attribute previously omitted in silence now fails as undeclared; supplying a marker restores conformance." },
-        { "kind": "editorial",
-          "summary": "Added rule I9 implementationPurl at SHOULD level, withholdable. SHOULD rules are reported and do not determine the verdict." },
-        { "kind": "editorial",
-          "summary": "Recorded the carrier acceptance range as CycloneDX min 1.6, tested 1.7. Documents at 1.6 are evaluated and flagged legacy rather than refused." }
+        {
+          "kind": "tightening",
+          "summary": "Added the disclosure state model, with the marker prefix and a withholdable flag on every rule. Two markers, withheld and unknown, which with a supplied value and an undeclared attribute make the four outcomes an evaluation reports. An attribute previously omitted in silence now fails as undeclared; supplying a marker restores conformance."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added rule I9 implementationPurl at SHOULD level, withholdable. SHOULD rules are reported and do not determine the verdict."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Recorded the carrier acceptance range as CycloneDX min 1.6, tested 1.7. Documents at 1.6 are evaluated and flagged legacy rather than refused."
+        }
       ]
     },
     {
       "version": "0.3",
       "date": "2026-08-09",
       "changes": [
-        { "kind": "tightening",
-          "summary": "Raised I9 implementationPurl from SHOULD to MUST, keeping it withholdable. A document that omits the attribute in silence no longer conforms; a document that declares it withheld does. Until this version no rule combined MUST with withholdability, which is the only combination where the disclosure model affects a verdict, so the model was demonstrated in reporting and never at the point of decision." },
-        { "kind": "editorial",
-          "summary": "Stated 'withholdable' explicitly on every rule. Behaviour is unchanged, since an absent flag was already treated as false, but a producer can now read the answer from the profile instead of inferring it from a validator's default." }
+        {
+          "kind": "tightening",
+          "summary": "Raised I9 implementationPurl from SHOULD to MUST, keeping it withholdable. A document that omits the attribute in silence no longer conforms; a document that declares it withheld does. Until this version no rule combined MUST with withholdability, which is the only combination where the disclosure model affects a verdict, so the model was demonstrated in reporting and never at the point of decision."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Stated 'withholdable' explicitly on every rule. Behaviour is unchanged, since an absent flag was already treated as false, but a producer can now read the answer from the profile instead of inferring it from a validator's default."
+        }
+      ]
+    },
+    {
+      "version": "0.5",
+      "date": "2026-08-21",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Added 'scope.orientation', declared here as 'inventory'. No document verdict changes. The value constrains the profile rather than the document: an inventory profile may not require forward-looking attributes, which is checked as C12. Its purpose is to stop a present-state attribute and a capability attribute being read as interchangeable across profiles that share a vocabulary. See decision 0009."
+        }
+      ]
+    },
+    {
+      "version": "0.4",
+      "date": "2026-08-21",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Added the 'scope' object: subjectType, relationshipTypes, and the lifecycle stages the profile accepts. No document that conformed to v0.3 stops conforming, because this profile accepts all four stages, which is why the change is editorial rather than a tightening. The value of the field is that a derived profile can now narrow the set, and the migration profile does. See decision 0008."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added 'objective.decisionOptions'. The decision text was already phrased as a choice; stating the options explicitly is what makes the test in Method step 1 checkable by check_profile.py rather than a matter of review."
+        }
+      ]
+    },
+    {
+      "version": "0.7",
+      "date": "2026-08-24",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Added 'profileTag'. Rule ids are local to the profile that declares them, so the citable form of a rule is '<profileTag>#<ruleId>' \u2014 'interface-disclosure#I9', not 'I9'. No id in this profile changes and no requirement on any document changes: this profile is the base of its family and its rules were already numbered P for product and I for per-interface. What changes is that a derived profile is now free to number its own rules from P1 and I1 without colliding, and that a conformance report prints the qualified form. See decision 0011."
+        }
       ]
     }
+  ],
+  "$commentIdentifierSchemes": "Q38. Identity cannot be settled in general, because some asset classes have no agreed identifier. It can be settled per profile, and this is the lever the methodology has. The baseline previously constrained the form of the least contested identifier \u2014 the implementing library, which had to be a purl \u2014 and left the most contested ones free, so 'our secure channel' and 'elliptic curve' were conforming values for protocol and keyExchange. An inventory built from twelve suppliers cannot correlate on free text. Whether the algorithm scheme should be the CycloneDX Cryptography Registry or another is Q20 and is unsettled; what this profile settles is that a scheme is named, so a consumer knows which naming they are reading. The validator cannot verify membership of a registry it does not hold, and does not pretend to: it checks that a scheme is declared for every asset class the rules constrain.",
+  "identifierSchemes": {
+    "algorithm": "cyclonedx-cryptography-registry",
+    "protocol": "cyclonedx-cryptography-registry",
+    "library": "purl",
+    "subject": "purl"
+  },
+  "coverageVocabulary": [
+    "all-external",
+    "all",
+    "partial"
+  ],
+  "managementAbsenceVocabulary": [
+    "no-configuration-surface",
+    "configured-out-of-band",
+    "not-applicable-to-subject"
   ]
 }

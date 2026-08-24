@@ -87,13 +87,13 @@ nav: pqc
   <h2>The profile definition</h2>
   <p>Keywords follow BCP 14. The profile is product-independent: no rule names a product, a vendor or an interface instance. It builds on the interface disclosure baseline described in the <a href="profile.html">Profile</a> section and adds the capability and enablement attributes migration requires.</p>
   <p>Attribute names follow the conventions in <a href="method.html">Method</a>. Where an attribute also appears in the baseline profile it keeps the same name and meaning: <code>keyExchange</code> and <code>authentication</code> denote what the interface uses now, and the <code>Supported</code> suffix denotes what it is able to use.</p>
-  <p>This profile <strong>extends</strong> the interface disclosure baseline at version 0.3, under the composition rules in <a href="profile.html">Profile</a>. It inherits every baseline rule, adds the capability and enablement attributes below, and tightens one inherited rule. Because extension is monotonic, a CBOM conforming to this profile also conforms to the baseline.</p>
+  <p>This profile <strong>extends</strong> the interface disclosure baseline at version 0.7, under the composition rules in <a href="profile.html">Profile</a>. It inherits every baseline rule, adds the capability and enablement attributes below, and tightens one inherited rule. Because extension is monotonic, a CBOM conforming to this profile also conforms to the baseline.</p>
   <table>
     <thead><tr><th>Relationship to the baseline</th><th>Rules</th></tr></thead>
     <tbody>
-      <tr><td><strong>Inherited unchanged</strong></td><td>P1, P2 at product level; I1 to I8 per interface, covering interface identity, protocol, current key exchange, encryption, current authentication, endpoint roles, interface type and lifecycle stage.</td></tr>
-      <tr><td><strong>Tightened</strong></td><td>I9 <code>implementationPurl</code> is no longer withholdable. The baseline already requires it at MUST and accepts a <code>withheld</code> marker in place of a value; this profile removes that option. Migration planning depends on knowing which library implements an interface, since that determines whether an update is available at all.</td></tr>
-      <tr><td><strong>Added</strong></td><td>P3 and P4 at product level; M1 to M12 per interface, listed below. The M prefix distinguishes them from the baseline's I rules, so a failure report identifies which profile imposed a requirement.</td></tr>
+      <tr><td><strong>Inherited unchanged</strong></td><td>P1 to P4 at product level; I1 to I8 per interface, covering protocol, protocol version, present-state key exchange, encryption and authentication, endpoint roles, interface type and lifecycle stage. Note that no rule constrains <code>interfaceId</code>: it is an instance label chosen by the producer, so a profile cannot require a particular value for it.</td></tr>
+      <tr><td><strong>Tightened</strong></td><td><code>interface-disclosure#I9</code> <code>implementationPurl</code> is no longer withholdable. The baseline already requires it at MUST and accepts a <code>withheld</code> marker in place of a value; this profile removes that option. Migration planning depends on knowing which library implements an interface, since that determines whether an update is available at all.</td></tr>
+      <tr><td><strong>Added</strong></td><td>One product rule, nine per-interface rules and one group rule, listed below. They are numbered in this profile's own space, from <code>P1</code>, <code>I1</code> and <code>G1</code>, and cited against this profile's tag: <code>pqc-migration#I1</code> is a different rule from <code>interface-disclosure#I1</code>, and a failure report shows both in full. See <a href="profile.html">Profile</a> for the scheme.</td></tr>
     </tbody>
   </table>
   <p>The tables that follow list the added and tightened rules. Inherited rules are not restated, and the baseline remains authoritative for them.</p>
@@ -102,31 +102,32 @@ nav: pqc
   <table>
     <thead><tr><th>#</th><th>Requirement</th><th>Level</th><th>Note</th></tr></thead>
     <tbody>
-      <tr><td>P1</td><td>Declare at least one cryptographic interface</td><td><span class="must">MUST</span></td><td>As in the baseline profile.</td></tr>
-      <tr><td>P2</td><td>Declare at least one interface of type <code>management</code></td><td><span class="must">MUST</span></td><td>Administrative access is migrated too, and is the interface most often omitted.</td></tr>
-      <tr><td>P3</td><td>State the completeness of the interface set</td><td><span class="must">MUST</span></td><td><code>coverage</code> is one of <code>all-external</code>, <code>all</code>, or <code>partial</code>. A planner needs to know whether the list is exhaustive; a partial list that looks complete produces a plan with silent gaps.</td></tr>
-      <tr><td>P4</td><td>Identify the cryptographic providers the product uses</td><td>SHOULD</td><td>Lets a consumer reason about update paths shared across interfaces.</td></tr>
+      <tr><td><code>interface-disclosure#P1</code></td><td>Declare at least one cryptographic interface</td><td><span class="must">MUST</span></td><td>Inherited from the baseline.</td></tr>
+      <tr><td><code>interface-disclosure#P2</code></td><td>Declare at least one interface of type <code>management</code>, or state why there is none</td><td><span class="must">MUST</span></td><td>Inherited. Administrative access is migrated too, and is the interface most often omitted.</td></tr>
+      <tr><td><code>interface-disclosure#P3</code></td><td>Identify the subject the document describes</td><td><span class="must">MUST</span></td><td>Inherited. A plan is drawn against a deployment, so the record has to name which product and version it is about.</td></tr>
+      <tr><td><code>interface-disclosure#P4</code></td><td>State the completeness of the interface set</td><td><span class="must">MUST</span></td><td>Inherited since baseline v0.6. <code>coverage</code> is one of <code>all-external</code>, <code>all</code>, or <code>partial</code>. A planner needs to know whether the list is exhaustive; a partial list that looks complete produces a plan with silent gaps.</td></tr>
+      <tr><td><code>pqc-migration#P1</code></td><td>Identify the cryptographic providers the product uses</td><td>SHOULD</td><td>This profile's own first product rule, and the only one it adds. Lets a consumer reason about update paths shared across interfaces.</td></tr>
     </tbody>
   </table>
 
   <h3>Per-interface rules added here</h3>
-  <p>Applied to every declared interface, alongside the inherited baseline rules I1 to I9. The M prefix marks a rule as belonging to this profile, so a failure report shows which profile imposed it.</p>
+  <p>Applied to every declared interface, alongside the inherited baseline rules <code>interface-disclosure#I1</code> to <code>#I9</code>. This profile numbers its own from <code>I1</code>; the two sets are told apart by the tag they are cited against, not by the letter.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>#</th><th>Attribute</th><th>Level</th><th>Values and purpose</th></tr></thead>
     <tbody>
-      <tr><td>M1</td><td><code>protocolVersionsSupported</code></td><td><span class="must">MUST</span></td><td>All versions the interface can negotiate, not only the default. Post-quantum key exchange is unavailable on older versions of some protocols, so the version set bounds what is possible.</td></tr>
-      <tr><td>M2</td><td><code>keyExchangeSupported</code></td><td><span class="must">MUST</span></td><td>The full set the interface can negotiate, including hybrid constructions. This is the attribute that answers whether the interface can be made quantum-safe.</td></tr>
-      <tr><td>M3</td><td><code>authenticationSupported</code></td><td><span class="must">MUST</span></td><td>Authentication migrates separately from key exchange and usually later, because it depends on what a certificate authority will issue.</td></tr>
-      <tr><td>M4</td><td><code>enablementMethod</code></td><td><span class="must">MUST</span></td><td><code>already-enabled</code> · <code>configuration</code> · <code>software-update</code> · <code>hardware-change</code> · <code>licence</code> · <code>not-available</code>. This single attribute separates the cheap changes from the expensive ones and drives sequencing more than any other.</td></tr>
-      <tr><td>M5</td><td><code>minimumProductVersion</code></td><td>conditional</td><td>MUST where <code>enablementMethod</code> is <code>software-update</code>. Without it the consumer knows an update is needed but not to what.</td></tr>
-      <tr><td>M6</td><td><code>providerLocation</code></td><td><span class="must">MUST</span></td><td><code>software</code> · <code>hsm</code> · <code>tee</code> · <code>unspecified</code>. Where key operations execute determines whether a new algorithm is a software matter at all.</td></tr>
-      <tr><td>M7</td><td><code>coexistence</code></td><td><span class="must">MUST</span></td><td><code>simultaneous</code> · <code>exclusive</code> · <code>unknown</code>. Whether the interface can serve classical and post-quantum peers at the same time. An <code>exclusive</code> interface forces a coordinated cutover with every counterparty.</td></tr>
-      <tr><td>M8</td><td><code>negotiationControl</code></td><td><span class="should">SHOULD</span></td><td>Whether the interface can be configured to require post-quantum key exchange and refuse a classical fallback. Determines whether migration can be enforced or only offered.</td></tr>
-      <tr><td>M9</td><td><code>integrationConstraints</code></td><td><span class="should">SHOULD</span></td><td>Known effects of enabling the capability: handshake or record size limits, fragmentation behaviour, certificate size ceilings, intermediary incompatibilities, measured performance impact.</td></tr>
-      <tr><td>M10</td><td><code>capabilityStatus</code></td><td><span class="must">MUST</span></td><td><code>available</code> · <code>committed</code> · <code>planned</code> · <code>under-evaluation</code> · <code>not-planned</code>. A commitment class rather than a date. Most sequencing decisions turn on the difference between <code>planned</code> and <code>not-planned</code>, which needs no date at all.</td></tr>
-      <tr><td>M11</td><td><code>blockedBy</code></td><td>conditional</td><td>MUST where <code>capabilityStatus</code> is not <code>available</code>. One of <code>provider</code> · <code>product</code> · <code>hardware</code> · <code>standard</code> · <code>certification</code>. Identifies what has to change and therefore who can change it.</td></tr>
-      <tr><td>M12</td><td><code>roadmapRef</code></td><td>MAY</td><td>Reference to a roadmap entry carrying the target release and, if offered, a date. Interfaces sharing a blocker reference the same entry.</td></tr>
+      <tr><td>I1</td><td><code>protocolVersionsSupported</code></td><td><span class="must">MUST</span></td><td>All versions the interface can negotiate, not only the default. Post-quantum key exchange is unavailable on older versions of some protocols, so the version set bounds what is possible.</td></tr>
+      <tr><td>I2</td><td><code>keyExchangeSupported</code></td><td><span class="must">MUST</span></td><td>The full set the interface can negotiate, including hybrid constructions. This is the attribute that answers whether the interface can be made quantum-safe.</td></tr>
+      <tr><td>I3</td><td><code>authenticationSupported</code></td><td><span class="must">MUST</span></td><td>Authentication migrates separately from key exchange and usually later, because it depends on what a certificate authority will issue.</td></tr>
+      <tr><td>I4</td><td><code>enablementMethod</code></td><td><span class="must">MUST</span></td><td><code>already-enabled</code> · <code>configuration</code> · <code>software-update</code> · <code>hardware-change</code> · <code>licence</code> · <code>not-available</code>. This single attribute separates the cheap changes from the expensive ones and drives sequencing more than any other.</td></tr>
+      <tr><td>I5</td><td><code>minimumProductVersion</code></td><td>conditional</td><td>MUST where <code>enablementMethod</code> is <code>software-update</code>. Without it the consumer knows an update is needed but not to what.</td></tr>
+      <tr><td>I6</td><td><code>providerLocation</code></td><td><span class="must">MUST</span></td><td><code>software</code> · <code>hsm</code> · <code>tee</code> · <code>unspecified</code>. Where key operations execute determines whether a new algorithm is a software matter at all.</td></tr>
+      <tr><td>I7</td><td><code>coexistence</code></td><td><span class="must">MUST</span></td><td><code>simultaneous</code> · <code>exclusive</code> · <code>unknown</code>. Whether the interface can serve classical and post-quantum peers at the same time. An <code>exclusive</code> interface forces a coordinated cutover with every counterparty.</td></tr>
+      <tr><td>I8</td><td><code>negotiationControl</code></td><td><span class="should">SHOULD</span></td><td>Whether the interface can be configured to require post-quantum key exchange and refuse a classical fallback. Determines whether migration can be enforced or only offered.</td></tr>
+      <tr><td>I9</td><td><code>integrationConstraints</code></td><td><span class="should">SHOULD</span></td><td>Known effects of enabling the capability: handshake or record size limits, fragmentation behaviour, certificate size ceilings, intermediary incompatibilities, measured performance impact.</td></tr>
+      <tr><td>G1.1</td><td><code>capabilityStatus</code></td><td><span class="must">MUST</span></td><td><code>available</code> · <code>committed</code> · <code>planned</code> · <code>under-evaluation</code> · <code>not-planned</code>. A commitment class rather than a date. Most sequencing decisions turn on the difference between <code>planned</code> and <code>not-planned</code>, which needs no date at all.</td></tr>
+      <tr><td>G1.2</td><td><code>blockedBy</code></td><td>conditional</td><td>MUST where that purpose's <code>capabilityStatus</code> is not <code>available</code>. One of <code>provider</code> · <code>product</code> · <code>hardware</code> · <code>standard</code> · <code>certification</code>. Identifies what has to change and therefore who can change it.</td></tr>
+      <tr><td>G1.3</td><td><code>roadmapRef</code></td><td>MAY</td><td>Reference to a roadmap entry carrying the target release and, if offered, a date. Interfaces sharing a blocker reference the same entry.</td></tr>
     </tbody>
   </table>
   </div>
@@ -141,7 +142,7 @@ nav: pqc
   <p>Migration planning depends on knowing which library implements an interface, since that determines whether an update exists and when it arrived. A vendor withholding it leaves the consumer unable to sequence the work. This is the only inherited rule this profile changes, and raising a level is permitted because it tightens.</p>
 
   <h3>Conditional rules</h3>
-  <p>Two of the rules above apply only in certain states, which is worth noting in itself. A profile is not limited to a flat list of mandatory fields; a requirement can depend on the value of another attribute. Here, M5 obliges a producer claiming that a capability needs a software update to say which version provides it, and M11 obliges one declaring anything other than present capability to say what is in the way. Both dependencies exist because the unconditional alternatives are unhelpful: requiring a version from every interface would produce noise, and requiring none would leave the useful case unstated.</p>
+  <p>Two of the rules above apply only in certain states, which is worth noting in itself. A profile is not limited to a flat list of mandatory fields; a requirement can depend on the value of another attribute. Here, <code>I5</code> obliges a producer claiming that a capability needs a software update to say which version provides it, and <code>G1.2</code> obliges one declaring anything other than present capability for a given purpose to say what is in the way of that purpose. Both dependencies exist because the unconditional alternatives are unhelpful: requiring a version from every interface would produce noise, and requiring none would leave the useful case unstated.</p>
 
   <h3>Availability, and why it is not a date on an interface</h3>
   <p>An earlier draft of this profile put a <code>plannedAvailability</code> date on each interface. It is the obvious design, and it does not hold up. The reason is structural.</p>
@@ -160,7 +161,7 @@ nav: pqc
   <p>The distinction that matters most is the fourth row. An interface blocked on a protocol standard cannot be given a credible date by any vendor, and a consumer who understands that stops waiting and considers compensating controls instead. Recording it as "planned, date to follow" alongside a case that is genuinely scheduled for the next release conflates two situations that call for opposite responses.</p>
   <p>Where a date or release is offered, the profile keeps it out of the interface and out of the CBOM. Target release and date sit in a roadmap entry that interfaces reference through <code>roadmapRef</code>, so that interfaces sharing a blocker point at one entry. Two reasons: a CBOM revision is an immutable point-in-time record, so a slipping date either goes stale inside an authoritative-looking document or forces CBOM republication when nothing about the product has changed; and roadmap data has a different owner and a different cadence from the rest of the document, which is the same argument the <a href="governance.html">Governance</a> section makes for keeping separately-lifecycled artifacts apart.</p>
   <p>A target release is also preferable to a calendar date. Releases are the vendor's own unit of change, and the statement "this lands in 9.x" survives slippage in a way that a date does not.</p>
-  <div class="banner">Three existing parts of the methodology carry this without additions. Forward-looking capability is <code>intended</code> in the lifecycle model, so the stage attribute already marks it as a statement about the future. A vendor that shares roadmap detail only under agreement records <code>roadmapRef</code> as <code>withheld</code>, which is more informative than an empty field. And the freshness policy in <a href="versioning.html">Versioning</a> applies to the roadmap entry, so a consumer can tell a current commitment from one nobody has revisited.</div>
+  <div class="banner">Three existing parts of the methodology carry this without additions. Forward-looking capability is carried by <code>capabilityStatus</code>, <code>blockedBy</code> and <code>roadmapRef</code>, not by the lifecycle stage. This profile accepts only <code>implemented</code>, <code>configured</code> and <code>observed</code>, so an interface may not report its present state as <code>intended</code>: a migration plan built on cryptography a producer intends to implement is a plan built on an intention. The stage says how the reported present state was obtained; the three attributes above say what is coming. A vendor that shares roadmap detail only under agreement records <code>roadmapRef</code> as <code>withheld</code>, which is more informative than an empty field. And the freshness policy in <a href="versioning.html">Versioning</a> applies to the roadmap entry, so a consumer can tell a current commitment from one nobody has revisited.</div>
 
   <h2>A worked interface</h2>
   <p>One interface of a hypothetical product, declared under this profile. The values are illustrative.</p>
@@ -182,15 +183,30 @@ nav: pqc
       <tr><td><code>coexistence</code></td><td><code>simultaneous</code></td></tr>
       <tr><td><code>negotiationControl</code></td><td>configurable to require hybrid</td></tr>
       <tr><td><code>integrationConstraints</code></td><td>larger ClientHello may exceed some middlebox limits; no measured throughput impact</td></tr>
-      <tr><td><code>capabilityStatus</code></td><td><code>available</code> for key exchange; <code>committed</code> for authentication</td></tr>
-      <tr><td><code>blockedBy</code></td><td><code>certification</code>, for the authentication case only</td></tr>
-      <tr><td><code>roadmapRef</code></td><td><code>rm:pqc-auth-2027</code></td></tr>
       <tr><td><code>lifecycleStage</code></td><td><code>implemented</code></td></tr>
     </tbody>
   </table>
   </div>
+
+  <h3>Capability, per purpose</h3>
+  <p>These attributes were a single value per interface until v0.4, and the values below are why that could not hold. Key agreement is done here and identity proof is not, which is the ordinary position rather than an awkward corner, and one status per interface would have to report the worse of the two. Rule <code>G1</code> now requires an entry per cryptographic purpose, and the conditional blocker in <code>G1.2</code> is evaluated inside an entry, so the blocker belongs to the purpose it blocks.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Purpose</th><th><code>capabilityStatus</code></th><th><code>blockedBy</code></th><th><code>roadmapRef</code></th><th>In scope</th></tr></thead>
+    <tbody>
+      <tr><td><code>key-establishment</code></td><td><code>available</code></td><td class="na">not applicable</td><td class="na">&mdash;</td><td>yes</td></tr>
+      <tr><td><code>encryption</code></td><td><code>available</code></td><td class="na">not applicable</td><td class="na">&mdash;</td><td>yes</td></tr>
+      <tr><td><code>entity-authentication</code></td><td><code>committed</code></td><td><code>certification</code></td><td><code>rm:pqc-auth-2027</code></td><td>yes</td></tr>
+      <tr><td><code>data-integrity</code></td><td><code>available</code></td><td class="na">not applicable</td><td class="na">&mdash;</td><td>status only</td></tr>
+      <tr><td><code>non-repudiation</code></td><td><code>not-planned</code></td><td><code>product</code></td><td class="na">&mdash;</td><td>status only</td></tr>
+      <tr><td><code>key-protection</code></td><td><code>planned</code></td><td><code>hardware</code></td><td class="na">&mdash;</td><td>status only</td></tr>
+      <tr><td><code>key-derivation</code></td><td><code>available</code></td><td class="na">not applicable</td><td class="na">&mdash;</td><td>status only</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The last four are outside this profile's declared scope and still carry a status. That is the whole of what a deferred purpose owes: one enumerated value, and a blocker where the status is not <code>available</code>. It costs a producer almost nothing and it is what keeps a staged profile from becoming a permanent floor &mdash; the <code>key-protection</code> row above tells a planner that this interface's authentication migration will involve hardware, which is a fact worth having in the first document rather than the third.</p>
   <p>What a planner can now conclude, without seeing inside the product: this interface can be made quantum-safe for key exchange but not yet for authentication; the key-exchange change requires an upgrade to 8.2.0 rather than new hardware; the upgrade can be rolled out before counterparties are ready, because classical and hybrid peers can be served at once; there is a specific interoperability risk to test for; and the authentication half is waiting on certification, so a scheme controls that date and pressing the vendor for it in a tender will achieve little. An inventory of the algorithms in use today yields none of these conclusions.</p>
-  <p>The example also shows why key exchange and authentication carry separate capability statements. They migrate on different schedules and for different reasons, and a single per-interface status would have to report the worse of the two, losing the fact that half the work can proceed now.</p>
+  <p>A purpose is not an operation, and the distinction is what makes the vocabulary worth having. CycloneDX already records operations: this interface's certificate signature carries <code>cryptoFunctions: ["sign", "verify"]</code>, and so would a firmware signature on the same product. One is entity authentication that migrates when the PKI does; the other must still verify years after it was written and migrates when the last verifier in the field is upgraded. Same operation, different decade, different work. A vocabulary of operations would restate a field the format already has and answer no planning question. See <a href="terms.html">Terms</a> for the four-part test an entry has to pass, and decision 0010 for the reasoning.</p>
 
   <h2>What the profile deliberately excludes</h2>
   <p>The profile omits three kinds of information, in each case deliberately.</p>
@@ -201,7 +217,7 @@ nav: pqc
 
   <h2>Expressing it in a CBOM</h2>
   <p>The attributes above are format-independent. Several map onto native CycloneDX fields, and the remainder are carried as properties under the <code>pkic:profile:</code> namespace, in the same manner as the baseline profile. The capability attributes hold lists where the baseline holds single values, which is the main structural difference between the two and the point at which the mapping needs care: a consumer must be able to distinguish an empty list from an absent one, and both from a withheld one. See <a href="formats.html">Formats</a> for the encoding conventions and <a href="challenges.html">Challenges</a> for why that distinction matters.</p>
-  <p>Where an attribute is unavailable, the three disclosure states apply. A vendor may withhold <code>implementationPurl</code> and still conform. A vendor that does not know whether an interface can coexist should record <code>coexistence</code> as <code>unknown</code> instead of guessing, because a wrong answer here produces a migration plan that fails at cutover.</p>
+  <p>Where an attribute is unavailable, the four disclosure outcomes apply. A vendor may <em>not</em> withhold <code>implementationPurl</code> under this profile and still conform: the baseline permits it, and this profile removes that permission, because migration sequencing depends on knowing which library implements an interface. Withholding it here fails <code>interface-disclosure#I9</code> &mdash; the rule keeps the id of the profile that introduced it, even though this profile is the one that tightened it. A vendor that does not know whether an interface can coexist should record <code>coexistence</code> as <code>unknown</code> instead of guessing, because a wrong answer here produces a migration plan that fails at cutover.</p>
 
   <h2>Recorded decisions</h2>
   <p>Two choices in this profile were made against the more obvious alternative. Each is written up as a decision record in the repository, with the options considered, the rationale and what reversing it would involve. The records are the authoritative statement; the summaries below are for orientation.</p>
@@ -220,7 +236,7 @@ nav: pqc
       </tr>
     </tbody>
   </table>
-  <p>Rules M1 to M12 also depend on decisions taken elsewhere in the methodology: <a href="https://github.com/pkic/cbom/blob/main/decisions/0004-monotonic-profile-extension.md">0004</a> for what this profile is permitted to change in the baseline it extends, and <a href="https://github.com/pkic/cbom/blob/main/decisions/0005-attribute-naming-conventions.md">0005</a> for the <code>Supported</code> suffix. The full index is in <a href="https://github.com/pkic/cbom/tree/main/decisions">decisions/</a>.</p>
+  <p>The rules above also depend on decisions taken elsewhere in the methodology: <a href="https://github.com/pkic/cbom/blob/main/decisions/0004-monotonic-profile-extension.md">0004</a> for what this profile is permitted to change in the baseline it extends, and <a href="https://github.com/pkic/cbom/blob/main/decisions/0005-attribute-naming-conventions.md">0005</a> for the <code>Supported</code> suffix. The full index is in <a href="https://github.com/pkic/cbom/tree/main/decisions">decisions/</a>.</p>
 
   <h2>Open questions for the working group</h2>
   <p>These are also carried in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a>, which collects the unresolved items from every section and maps each to the methodology aspect that tracks it.</p>
@@ -236,7 +252,7 @@ nav: pqc
   <div class="banner">The pattern to take from this section: name the consumer and the decision, derive the questions that decision raises, and turn each question into an attribute that can be declared at the boundary. The list of attributes is the output of that analysis. Beginning instead from the fields a format happens to offer produces a profile with no stated purpose, and no way to argue about whether it asks for the right things.</div>
 
   <div class="pagenav">
-    <a href="use-cases.html">← Use Cases</a>
+    <a href="method.html">← Method</a>
     <a class="next" href="formats.html">Next: Formats →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>

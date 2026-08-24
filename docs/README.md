@@ -35,6 +35,20 @@ profile. The pages are hand-written HTML served at `/cbom/methodology/`. Each ca
 front matter block so that Jekyll processes it, which is what allows the shared navigation
 include to work. No layout is applied, so each page still controls its own markup.
 
+### Previewing locally
+
+Because of that front matter and the navigation include, opening a page straight from the
+filesystem shows the front matter as text and no navigation. Two ways to see the real thing:
+
+| | Command | Covers |
+|---|---|---|
+| **Full site** | `bundle install` then `bundle exec jekyll serve --source docs` | Everything, at the versions GitHub Pages builds with. Use this before publishing. |
+| **Methodology pages only** | `python3 tools/preview.py` | The twenty HTML sections, served on `localhost:8000`. No Ruby, no install. Skips the Markdown pages and layouts. |
+
+`tools/preview.py` does only what Jekyll does to these particular pages — strips the front
+matter and expands the one navigation include — and warns rather than guessing if a page grows
+Liquid it does not handle. Re-run it after editing; it does not watch for changes.
+
 ### Navigation
 
 The section navigation lives in one place and is rendered into every page.
@@ -46,16 +60,24 @@ The section navigation lives in one place and is rendered into every page.
 | `methodology/styles.css` | Styling, under "section navigation". A left rail at 1100px and above, a grouped block above the content below that. |
 
 **Adding a section** means: create the page with `nav: <id>` in its front matter, wrap its body in
-`<div class="shell">` with `{% include methodology-nav.html %}` before `<main>`, and add one line
-to `_data/methodology_nav.yml`. Nothing else needs touching.
+`<div class="shell">` with `{% include methodology-nav.html %}` before `<main>`, add one line to
+`_data/methodology_nav.yml`, then run `python3 tools/renumber-pagenav.py` from the repository
+root. The same applies to reordering: the sidebar comes from the data file, but the previous and
+next links at the foot of each page are written into the pages themselves, and the script is what
+keeps the two in step.
+
+The order in `_data/methodology_nav.yml` is a *reading* order, aimed at someone meeting the
+material for the first time. It is deliberately not the clause order of the numbered draft, where
+Scope, Terms and Conformance appear early because a normative document has to be self-contained.
+Both orders are maintained; neither is derived from the other.
 
 Until August 2026 the navigation was copied into every page, so adding one section meant editing
 twenty files and was done with a script each time. That is why the include exists.
 
 | File | Section |
 |---|---|
-| `index.html` | Overview |
-| `terms.html` | Terms and definitions |
+| `introduction.html` | Introduction: the problem, one worked document, and what a profile does |
+| `index.html` | Overview: the map, the reading routes, and the contents |
 | `challenges.html` | Challenges with SBOMs and current CBOMs |
 | `inventory.html` | Inventory and CBOMs |
 | `lifecycle.html` | Lifecycle data across development and deployment |
@@ -73,6 +95,7 @@ twenty files and was done with a script each time. That is why the include exist
 | `related-work.html` | Relationship to the PQC Maturity Model and other efforts |
 | `files.html` | Files and how to run them |
 | `demo.html` | Interactive conformance evaluation |
+| `terms.html` | Terms and definitions (Reference group) |
 
 Machine-readable artifacts in the same folder:
 
@@ -87,7 +110,7 @@ Machine-readable artifacts in the same folder:
 | `cbom-pqc-pass.cyclonedx.json` | Conforming example for the migration profile. |
 | `cbom-pqc-fail.cyclonedx.json` | Non-conforming example exercising conditional rules and the tightening. |
 | `validate_cbom.py` | Version-aware validator, with profile composition. Checks a document against a profile. |
-| `check_profile.py` | Well-formedness checker. Checks a profile against requirements C1 to C10 of the Conformance section. |
+| `check_profile.py` | Well-formedness checker. Checks a profile against requirements C1 to C17 of the Conformance section. |
 | `versioning-and-legacy-cboms.md` | Design note on handling older CBOM files. |
 
 Both tools are exercised by `tests/run-profile-tests.sh` in the repository root, which CI runs on

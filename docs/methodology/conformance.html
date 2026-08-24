@@ -109,7 +109,7 @@ nav: conformance
   <table>
     <thead><tr><th>#</th><th>Requirement</th><th>Level</th></tr></thead>
     <tbody>
-      <tr><td>C1</td><td>The profile states the consumer it serves and the decision it supports.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C1</td><td>The profile states the consumer it serves, the decision it supports, and the options the consumer chooses between.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C2</td><td>The profile carries an identifier and a version, and declares an acceptance range for every carrier format it supports.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C3</td><td>No rule refers to a named product, vendor, or interface instance.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C4</td><td>Every rule carries a stable identifier, an obligation level, and a statement of whether withholding satisfies it.</td><td><strong>MUST</strong></td></tr>
@@ -119,11 +119,67 @@ nav: conformance
       <tr><td>C8</td><td>The profile states what it deliberately excludes, and why.</td><td>SHOULD</td></tr>
       <tr><td>C9</td><td>The profile is accompanied by a mapping to at least one carrier format, and by at least one document that conforms and one that does not.</td><td>SHOULD</td></tr>
       <tr><td>C10</td><td>The profile carries a changelog classifying each change as tightening, relaxing, or editorial.</td><td>SHOULD</td></tr>
+      <tr><td>C11</td><td>The profile declares its scope: the type of subject it describes, its orientation, the relationship types its rules constrain, and the lifecycle stages of reported data it accepts.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C12</td><td>The rules the profile imposes are consistent with the orientation it declares.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C14</td><td>Identifier schemes are declared for every asset class the rules constrain, and no scheme is declared that no rule applies.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C15</td><td>The profile carries a tag, and no profile it inherits from already uses that tag.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C16</td><td>Rule identifiers are local to the profile, and each carries the letter of the section it sits in.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C17</td><td>Every rule can pass a document and can fail one: it has a constraint, the constraint is one the evaluator implements, and any vocabulary it names is declared.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C13</td><td>Every group rule is keyed to a declared vocabulary, and a profile that declares a subset of that vocabulary in scope still requires an answer for the rest.</td><td><strong>MUST</strong></td></tr>
     </tbody>
   </table>
   </div>
   <p>C3, C6 and C7 are the three that a review most often has to enforce, because each is easy to violate while producing a rules file that loads and runs. A profile naming an instance still evaluates documents; it simply evaluates them for one deployment.</p>
-  <p>C1 to C7 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
+
+  <h3>The scope declaration</h3>
+  <p>C11 asks for one object rather than a set of scattered fields, because the subject, the relationship types and the accepted lifecycle stages are one boundary and are decided together in <a href="method.html">Method</a> step 2.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Member</th><th>Values</th><th>What it settles</th></tr></thead>
+    <tbody>
+      <tr><td><code>subjectType</code></td><td><code>product</code>, <code>service</code>, <code>component</code>, <code>estate-subset</code></td><td>Whether the profile applies to the thing a consumer is holding. A profile for a product a consumer cannot inspect can ask for less than one for a service the consumer operates.</td></tr>
+      <tr><td><code>relationshipTypes</code></td><td>the relationship types named in <a href="model.html">Model</a>; today only <code>interface</code></td><td>Which kinds of cryptographic relationship the rules constrain. Declared, but checked against the rules rather than trusted: a scope statement that drifts from the rules reads as authoritative and is worse than none.</td></tr>
+      <tr><td><code>orientation</code></td><td><code>inventory</code>, <code>migration</code>, <code>both</code></td><td>Whether the profile reports what an interface does, what it could do, or both. Not a label: C12 holds the rules to it. The same vocabulary the working group uses for its own aspects, less <code>n-a</code>.</td></tr>
+      <tr><td><code>lifecycleStages</code></td><td>a subset of <code>intended</code>, <code>implemented</code>, <code>configured</code>, <code>observed</code></td><td>Which stages of reported data the profile will accept, in the same sense that <code>appliesTo</code> settles which carrier versions it will accept. An interface reporting a stage outside the set fails the rule that constrains the stage.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The last of the four is the one that changes verdicts. Without it a document may report every interface at the <code>intended</code> stage, describing cryptography the producer plans to implement rather than cryptography that exists, and still conform. That is adequate for a disclosure baseline, which is why the example baseline accepts all four stages; it is not adequate for a procurement or migration profile, and the migration example accepts only the three that describe something real. A derived profile may narrow the set and may not widen it, for the same reason it may not relax a rule.</p>
+
+  <h3>Orientation, and why it constrains rather than labels</h3>
+  <p>Present state and declared capability are reported in the same document, about the same interface, under names that differ by one suffix: <code>keyExchange</code> is what an interface negotiates, <code>keyExchangeSupported</code> is everything it could negotiate. The naming conventions in <a href="method.html">Method</a> keep the two names apart. They do not keep the two <em>obligations</em> apart, and a profile requiring only the capability leaves a consumer with a set of algorithms and no way to tell which is in use. The likely reading of such a document is the wrong one.</p>
+  <p>C12 closes that by giving each orientation an obligation.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Orientation</th><th>The profile's rules must</th></tr></thead>
+    <tbody>
+      <tr><td><code>inventory</code></td><td>Require no forward-looking attribute: nothing with a <code>Supported</code> suffix, and none of <code>capabilityStatus</code>, <code>blockedBy</code> or <code>roadmapRef</code>.</td></tr>
+      <tr><td><code>migration</code></td><td>Require at least one, or the profile reports present state only and is an inventory profile under another name.</td></tr>
+      <tr><td><code>both</code></td><td>Require, for every capability attribute, the present-state attribute it is a capability for.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>C12 is assessed against the resolved profile, so an inherited rule satisfies it. That is the ordinary case rather than a concession: the example migration profile declares the three capability attributes itself and takes their present-state counterparts from the baseline it extends. A profile that declared <code>both</code> and required capability alone would fail, which is the case the requirement exists for.</p>
+
+  <h3>Group rules, and why coverage is checked</h3>
+  <p>A rule normally constrains one attribute of an interface. A <strong>group rule</strong> constrains a repeated group keyed by a controlled vocabulary, so an interface can give one answer per key rather than one answer overall. The migration example uses it for capability: an interface states where it stands for each cryptographic purpose, because key agreement and identity proof migrate on different timetables and a single status would have to report the worse of the two.</p>
+  <p>Two properties of a group rule are checked, and each has a failure mode that would otherwise pass silently.</p>
+  <p>A group keyed by a vocabulary the profile does not declare requires an entry for no keys at all. Every document then satisfies it, and the rule reads as passing. C13 rejects the profile instead.</p>
+  <p>A group whose <code>coverage</code> is <code>in-scope</code> while the vocabulary is larger lets a profile defer part of the problem and then never ask about it. A staged profile is meant to sequence the <em>depth</em> of an answer, not to remove the question: a purpose the profile has deferred still owes a status, and a blocker where that status is not <code>available</code>. Without that, a supplier conforms while behaving as though a whole class of cryptography does not exist, and each stage becomes a floor rather than a step. C13 is what makes the difference checkable.</p>
+
+  <h3>Identifier schemes</h3>
+  <p>An inventory assembled from several suppliers has to decide which records describe the same thing, and identity cannot be settled in general because some asset classes have no agreed identifier. It can be settled per profile, which is the lever this methodology has: a profile names the form it requires for each class of asset its rules constrain, and a consumer then knows which naming they are reading.</p>
+  <p>C14 does not check that a value belongs to a registry. The checker does not hold the registry and would be guessing. What it checks is that the declaration and the rules agree in both directions &mdash; every scheme a rule references is declared, and every scheme declared is referenced by some rule &mdash; because a scheme nobody applies drifts from the rules while continuing to read as authoritative. Which registry an algorithm name should come from is <a href="../issues/">Q20</a> and is unsettled; that a profile says which one it means is settled here.</p>
+
+  <h3>C15 and C16: identifiers that can be cited</h3>
+  <p>A rule identifier is local to the profile that declares it, so a rule is named as <code>&lt;profileTag&gt;#&lt;ruleId&gt;</code> and three profiles in one family may each declare an <code>I1</code>. That moves the uniqueness requirement off the rule identifiers, which an author cannot coordinate across a family, and onto the tag, which an author chooses once. C15 is that check. Without it a citation resolves to two different rules and a stored conformance claim stops meaning anything; with it, a base profile can add a rule without first asking what its derived profiles have taken.</p>
+  <p>C16 fixes the letter to the kind of rule rather than leaving it to the author: <code>P</code> once per product, <code>I</code> once per declared interface, <code>G</code> once per entry in a group. Because the tag already says which profile a rule belongs to, the letter is free to carry the thing a reader actually wants from it. C16 does not require the numbering to be dense: a released identifier is never reused, so gaps are correct, and a checker demanding a contiguous sequence would forbid the thing that rule exists to permit. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0011-rule-numbering-across-a-family.md">decision 0011</a>.</p>
+
+  <h3>C17: a rule that cannot fail</h3>
+  <p>A rule that cannot fail is worse than a missing rule, because the report says it passed and a reader has no way to tell the difference. There are three ways to write one, and all three used to survive review: give the rule no constraint at all, misspell the constraint key so the evaluator recognises nothing and reports <code>ok</code> against every value, or point it at a vocabulary that does not exist &mdash; which is the mirror defect, failing every value while saying only that the value was not accepted. C13 already rejected the third case for group keys; C17 covers the rest, and the validator refuses such a profile rather than issuing a verdict against it.</p>
+  <p>This is the same principle as C13's, applied more widely: a profile must be able to be wrong. It is stated as a requirement rather than left to review because none of the three is visible when reading the file &mdash; each one produces a rule that looks entirely ordinary.</p>
+
+  <p>C1 to C7 and C11 to C17 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
 
   <h2>3. An evaluation tool conforming to this methodology</h2>
   <p>Two tools given the same document, the same profile and the same resolution of any extended base are expected to return the same verdict. The requirements below are what that expectation rests on.</p>
@@ -138,10 +194,12 @@ nav: conformance
       <tr><td>T5</td><td>Distinguish, in whatever channel the caller consumes, between a conformance failure and an invalid profile.</td><td><strong>MUST</strong></td></tr>
       <tr><td>T6</td><td>Evaluate rules at SHOULD and MAY level and report them without allowing them to determine the verdict.</td><td><strong>MUST</strong></td></tr>
       <tr><td>T7</td><td>Produce identical output for identical inputs, with no dependence on ordering within the document.</td><td>SHOULD</td></tr>
+      <tr><td>T8</td><td>Apply the profile's accepted lifecycle stages, and reject, before evaluating any document, a derived profile that accepts a stage its base rejects.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>T9</td><td>Distinguish, when a stage is rejected, a stage the methodology defines that this profile does not accept from a value that is not a stage at all.</td><td>SHOULD</td></tr>
     </tbody>
   </table>
   </div>
-  <p>The reference validator distinguishes T5 by exit code: 0 for conforms, 1 for does not conform, 2 for a usage error, and 3 for a profile error such as a relaxing override. What the methodology requires is that the distinction reach the caller. The particular codes are an implementation choice, and another tool may signal it differently.</p>
+  <p>The reference validator distinguishes T5 by exit code: 0 for conforms, 1 for does not conform, 2 for a usage error, 3 for a profile error such as a relaxing override, and 4 for a refusal. The fourth code exists because of T1: a caller that cannot tell refusal from failure will reject a producer for the age of a carrier format. Until August 2026 the validator printed <code>DOES NOT CONFORM</code> and exited 1 on a refusal, merging exactly what this section says must not be merged, and the test suite asserted that exit code, so the defect was pinned rather than caught. What the methodology requires is that the distinction reach the caller. The particular codes are an implementation choice, and another tool may signal it differently.</p>
 
   <h2>Making and recording a claim</h2>
   <p>A conformance claim is a statement by an identified party that a named document revision was assessed against a named profile version and produced a stated verdict.</p>
@@ -149,8 +207,8 @@ nav: conformance
   <h3>What a claim cites</h3>
   <p>A claim names the profile and its version, the carrier format and its version, and the content revision of the document assessed. A claim omitting any of the three cannot be reproduced, and a claim that cannot be reproduced cannot be audited. Where a derived profile was used, the base and the version it pins are named as well.</p>
   <pre><code>Conforms to:
-  pkic.example.pqc-migration v0.1
-    extending pkic.example.interface-disclosure v0.3
+  pkic.example.pqc-migration v0.6
+    extending pkic.example.interface-disclosure v0.7
 Carrier: CycloneDX 1.7
 Content revision: 3
 Assessed by: Example Ltd (self-declared)

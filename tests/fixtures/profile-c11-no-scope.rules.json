@@ -1,0 +1,47 @@
+{
+  "$comment": "Fixture. Deliberately fails C11: no 'scope' object, so the profile does not say what kind of subject it describes or which lifecycle stages of reported data it will accept. A consumer cannot tell whether it applies to the thing they hold, and a document reporting nothing but intentions would conform. Everything else is well-formed.",
+  "profileId": "pkic.test.c11",
+  "profileTag": "c11",
+  "title": "Fixture - C11 no scope",
+  "version": "0.1",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the checker requires a scope declaration.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "interfaceTypeVocabulary": [
+    "management",
+    "service"
+  ],
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Product declares at least one cryptographic interface",
+      "level": "MUST",
+      "constraint": {
+        "minInterfaces": 1
+      }
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "protocol",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false
+    }
+  ]
+}

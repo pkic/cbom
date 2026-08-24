@@ -1,0 +1,52 @@
+{
+  "$comment": "TEST FIXTURE — deliberately invalid. The letter on a rule id says which kind of rule it is: P is evaluated once per product, I once per interface, G once per entry in a group. This fixture puts a rule numbered I1 in productRules and a rule numbered P1 in interfaceRules, and gives a group member an id that does not sit under its group. C16 must fail. Not a real profile; do not copy.",
+  "profileId": "pkic.test.c16-wrong-letter",
+  "profileTag": "c16-wrong-letter",
+  "title": "Wrong kind letter (test fixture)",
+  "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the checker rejects a rule id whose letter contradicts its section.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented"
+    ]
+  },
+  "productRules": [
+    {
+      "id": "I1",
+      "description": "Product declares at least one cryptographic interface",
+      "level": "MUST",
+      "constraint": {
+        "minInterfaces": 1
+      }
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "P1",
+      "attribute": "protocol",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false
+    }
+  ]
+}

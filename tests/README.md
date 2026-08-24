@@ -30,12 +30,17 @@ what this suite is an early form of.
 |---|---|
 | Artifacts | Every JSON artifact parses; both Python tools are syntactically valid. |
 | Baseline profile | The conforming CBOM is accepted and its withheld `implementationPurl` is reported as `HELD`; the non-conforming one is rejected on product rule P2. |
-| Carrier version bands | A 1.6 copy is accepted and flagged legacy; a 1.5 copy is refused with an explanation. |
+| Carrier version bands | 1.6 and 1.8 copies are accepted and flagged legacy and newer; a 1.5 copy is refused with exit 4, a REFUSED verdict, no rule results, and a JSON report marking it unassessed. Four bands need four inputs, which is why a 1.8 copy is generated. |
 | Derived PQC profile | The conforming CBOM is accepted and the base profile resolves; the non-conforming one trips both conditional rules and the tightened inherited rule. |
 | Composition | The document that fails the derived profile still conforms to the base, which is the tightening doing its work. A fixture with a relaxing override is rejected with exit code 3. |
 | Withholdable MUST | A withheld marker satisfies baseline rule I9; the same document with the marker stripped does not, and is reported as undeclared rather than withheld. This is the only combination in which the disclosure model changes a verdict, and before profile v0.3 no rule exercised it. |
-| Profile well-formedness | Both example profiles satisfy C1 to C10, including under `--strict`. One fixture per MUST requirement confirms that each is enforced and that the right requirement is the one reported. |
+| Capability per cryptographic purpose | The conforming migration document states a different status for key establishment and for entity authentication on one interface, which is the position a single per-interface status could not express. The conditional blocker resolves inside a purpose entry. A missing entry is reported against the purpose it is missing for, whether that purpose is in scope or deferred, and stripping the deferred purposes from a conforming document breaks conformance — that obligation is the ratchet, so it is asserted rather than assumed. |
+| Accepted lifecycle stages | The conforming migration document, with one interface moved to the `intended` stage, fails rule I8 against the migration profile and is reported as a stage the profile does not accept. The same document still conforms to the baseline, which accepts all four stages, so the narrowing belongs to the derived profile rather than to the vocabulary. |
+| Profile well-formedness | Both example profiles satisfy C1 to C17, including under `--strict`. One fixture per MUST requirement confirms that each is enforced and that the right requirement is the one reported. |
 | SHOULD handling | A profile failing only SHOULD requirements still passes, and `--strict` promotes those failures. |
+| Constraint monotonicity | An override may raise an inherited minimum and may not lower it, may narrow a permitted-value list and may not widen it, may lengthen a required prefix and may not shorten it, and may add an obligation but not drop one. A constraint kind the comparison does not recognise is refused rather than assumed safe. The counterpart is asserted too: the raised minimum is accepted, recorded as a composition note, and then fails a document. |
+| Rules that can pass and fail | A rule with an unimplemented constraint key used to report `ok` against every value; one naming a vocabulary that does not exist failed every value without saying why; one with no constraint tracebacked the validator. All three are now C17 failures and profile errors. |
+| Rule numbering | A rule id is local to the profile that declares it and is cited as `<profileTag>#<ruleId>`. Three profiles in one chain each number from `I1`, and one report shows `interface-disclosure#I1`, `pqc-migration#I1` and `sector-settlement#I1` together. A tightened rule keeps the id of the profile that introduced it. A third-level profile may not relax a rule its *grandparent* introduced, and may not take a tag an ancestor already uses. |
 
 ## Exit codes
 
@@ -47,9 +52,13 @@ what this suite is an early form of.
 | 1 | Does not conform |
 | 2 | Usage error |
 | 3 | Profile error, such as an override that relaxes an inherited rule |
+| 4 | Refused: the carrier version is below the profile's minimum, so nothing was assessed |
 
 The distinction between 1 and 3 matters to these tests: a CBOM failing a profile
 is a normal result, while an invalid profile is a defect in the profile itself.
+The distinction between 1 and 4 matters more, because the Conformance section
+makes it a MUST and the suite previously asserted the wrong one: a refused
+document was never assessed, and may be perfectly adequate.
 
 `check_profile.py`:
 
@@ -74,12 +83,29 @@ a real profile.
 | `profile-c5-naming.rules.json` | C5 | Uses the rejected `Current` suffix, and a `Supported` attribute that is not list-valued. |
 | `profile-c6-judgement.rules.json` | C6 | Requires `pqcPosture`, a derived judgement. Reproduces the attribute removed by decision 0002. |
 | `profile-c7-diverging-block.rules.json` | C7 | Extends the baseline and restates `disclosure` with a different marker prefix. Nothing is relaxed and no rule changes, but the base's prefix is overridden silently and every marker would stop being recognised. |
+| `profile-c7-widening-stages.rules.json` | C7, and exit 3 from the validator | Extends the migration profile and accepts the `intended` stage that its base rejects. Widening the accepted stages is a relaxation: a document reporting only intentions would conform here while failing the base. |
+| `profile-c1-no-decision-options.rules.json` | C1 | States a consumer and a decision, but the decision is "to understand our cryptographic position" and no options are listed. The failure the action-choice test in Method step 1 exists to catch. |
+| `profile-c11-no-scope.rules.json` | C11 | Declares no `scope`, so it says neither what kind of subject it describes nor which lifecycle stages it accepts, and a document reporting nothing but intentions would conform. |
+| `profile-c12-capability-unpaired.rules.json` | C12 | Orientation `both`, requiring `keyExchangeSupported` and not `keyExchange`, so a consumer sees what an interface could negotiate and never what it does. |
+| `profile-c12-inventory-capability.rules.json` | C12 | Orientation `inventory` while requiring `capabilityStatus`, so statements about a future state arrive under a label that promises present state. |
+| `profile-c13-uncovered-purposes.rules.json` | C13 | A group rule covering only the purposes in scope, so a supplier conforms while saying nothing at all about the four the profile deferred. The floor a staged profile is meant not to become. |
+| `profile-c13-unkeyed-group.rules.json` | C13 | A group keyed by a vocabulary the profile does not declare. It requires an entry for no keys, so every document passes it and the rule reads as satisfied — silent success rather than a loud failure. |
+| `profile-relax-mincount.rules.json` | C7, and exit 3 from the validator | Lowers the inherited `endpointRoles` minimum from 2 to 1. Accepted before decision 0013, while C7 reported *no override relaxes it*. |
+| `profile-relax-identifier.rules.json` | C7, and exit 3 from the validator | Replaces the inherited requirement that `implementationPurl` be a `pkg:` Package URL with a bare presence check, so free text would satisfy the rule that exists to make records correlatable. |
+| `profile-tighten-constraint.rules.json` | none — valid | Raises the same minimum from 2 to 3. The counterpart to the two above: a check that rejects relaxations is only worth having if it still admits the tightenings the mechanism exists for. |
+| `profile-c17-unknown-constraint.rules.json` | C17, and exit 3 from the validator | `startswith` instead of `startsWith`. The evaluator recognised nothing and reported the rule as `ok` against every value — a rule that cannot fail, which is worse than a missing rule. |
+| `profile-c17-unresolved-vocabulary.rules.json` | C17, and exit 3 from the validator | An `enumRef` naming a vocabulary the profile does not declare. The mirror defect: every value fails, and the report says only that the value was not accepted. |
+| `profile-l3-settlement.rules.json` | none — valid | A third-level profile, extending the migration profile. It declares its own `P1` and its own `I1`, both of which *both* ancestors already use, which is the case the numbering scheme exists to make ordinary. |
+| `profile-l3-relaxes-grandparent.rules.json` | C7, and exit 3 from the validator | A third-level profile making an attribute withholdable again that the base introduced and the parent tightened. Monotonicity holds transitively, and a qualified override resolves two levels up. |
+| `profile-l3-tag-collision.rules.json` | C15, and exit 3 from the validator | A third-level profile taking its grandparent's tag. With two `interface-disclosure` tags in one family, the citation `interface-disclosure#I1` names two different rules. |
+| `profile-c16-wrong-letter.rules.json` | C16 | A product rule numbered `I1` and an interface rule numbered `P1`. The letter is fixed by the section a rule sits in, because it is what tells a reader how often the rule is evaluated. |
 | `profile-should-gaps.rules.json` | C8, C9, C10 only | Satisfies every MUST and no SHOULD. Also the template the others mutate. |
 
-Each of the C1 to C6 fixtures fails exactly one MUST requirement, so a test can
-assert which requirement was reported rather than only that something failed.
-The relaxing fixture also fails C1, which is why its test asserts on C7
-specifically.
+Every fixture fails exactly one MUST requirement, so a test can assert which
+requirement was reported rather than only that something failed. Keeping that
+property is the reason each fixture carries a `scope` object and a set of
+`decisionOptions` it does not otherwise need: without them it would fail C11 and
+C1 as well as the requirement it exists to exercise.
 
 ## Adding a test
 

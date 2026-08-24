@@ -3,7 +3,7 @@
   "specVersion": "1.7",
   "serialNumber": "urn:uuid:5e5e5e5e-0000-4000-8000-0000000pqcok",
   "version": 1,
-  "$comment": "EXAMPLE CBOM — CONFORMS to pkic.example.pqc-migration v0.1, which extends pkic.example.interface-disclosure v0.3. A hypothetical product with three interfaces at different stages of post-quantum readiness: one already capable, one committed and blocked on product work, one not planned and blocked on a protocol standard. List-valued attributes are carried as repeated properties of the same name, which CycloneDX permits.",
+  "$comment": "EXAMPLE CBOM \u2014 CONFORMS to pkic.example.pqc-migration v0.6, which extends pkic.example.interface-disclosure v0.7. A hypothetical product with three interfaces at different stages of post-quantum readiness: one already capable, one committed and blocked on product work, one not planned and blocked on a protocol standard. List-valued attributes are carried as repeated properties of the same name, which CycloneDX permits. Capability is stated per cryptographic purpose under group rule pqc-migration#G1: each interface carries an entry for all seven purposes, with the full attribute set for the three the profile takes in scope and a status, plus a blocker where needed, for the four it defers. svc-api-tls is the case the group exists for \u2014 key establishment available, entity authentication committed and blocked on certification, which one status per interface could not express.",
   "metadata": {
     "timestamp": "2026-08-07T09:00:00Z",
     "component": {
@@ -14,14 +14,28 @@
       "purl": "pkg:generic/example-gateway@9.0.4",
       "description": "Illustrative product treated as a black box",
       "properties": [
-        { "name": "pkic:profile:coverage", "value": "all-external" }
+        {
+          "name": "pkic:profile:coverage",
+          "value": "all-external"
+        }
       ]
     }
   },
   "components": [
-    { "type": "library", "bom-ref": "lib:openssl", "name": "OpenSSL", "version": "3.5.0", "purl": "pkg:generic/openssl@3.5.0" },
-    { "type": "library", "bom-ref": "lib:openssh", "name": "OpenSSH", "version": "9.6", "purl": "pkg:generic/openssh@9.6" },
-
+    {
+      "type": "library",
+      "bom-ref": "lib:openssl",
+      "name": "OpenSSL",
+      "version": "3.5.0",
+      "purl": "pkg:generic/openssl@3.5.0"
+    },
+    {
+      "type": "library",
+      "bom-ref": "lib:openssh",
+      "name": "OpenSSH",
+      "version": "9.6",
+      "purl": "pkg:generic/openssh@9.6"
+    },
     {
       "type": "cryptographic-asset",
       "bom-ref": "crypto:protocol:svc-api-tls",
@@ -31,31 +45,128 @@
         "protocolProperties": {
           "type": "tls",
           "version": "1.3",
-          "cryptoRefArray": ["crypto:algo:aes-256-gcm", "crypto:algo:x25519", "crypto:cert:server-leaf"]
+          "cryptoRefArray": [
+            "crypto:algo:aes-256-gcm",
+            "crypto:algo:x25519",
+            "crypto:cert:server-leaf"
+          ]
         }
       },
       "properties": [
-        { "name": "pkic:profile:interfaceId", "value": "svc-api-tls" },
-        { "name": "pkic:profile:interfaceType", "value": "service" },
-        { "name": "pkic:profile:lifecycleStage", "value": "implemented" },
-        { "name": "pkic:profile:endpointRole:client", "value": "endpoint:consumer" },
-        { "name": "pkic:profile:endpointRole:server", "value": "endpoint:gateway" },
-        { "name": "pkic:profile:implementationPurl", "value": "pkg:generic/openssl@3.5.0" },
-        { "name": "pkic:profile:protocolVersionsSupported", "value": "1.2" },
-        { "name": "pkic:profile:protocolVersionsSupported", "value": "1.3" },
-        { "name": "pkic:profile:keyExchangeSupported", "value": "X25519" },
-        { "name": "pkic:profile:keyExchangeSupported", "value": "X25519MLKEM768" },
-        { "name": "pkic:profile:authenticationSupported", "value": "RSA-2048" },
-        { "name": "pkic:profile:authenticationSupported", "value": "ECDSA-P256" },
-        { "name": "pkic:profile:enablementMethod", "value": "configuration" },
-        { "name": "pkic:profile:providerLocation", "value": "software" },
-        { "name": "pkic:profile:coexistence", "value": "simultaneous" },
-        { "name": "pkic:profile:negotiationControl", "value": "can be configured to require hybrid" },
-        { "name": "pkic:profile:integrationConstraints", "value": "larger ClientHello may exceed some middlebox limits" },
-        { "name": "pkic:profile:capabilityStatus", "value": "available" }
+        {
+          "name": "pkic:profile:interfaceId",
+          "value": "svc-api-tls"
+        },
+        {
+          "name": "pkic:profile:interfaceType",
+          "value": "service"
+        },
+        {
+          "name": "pkic:profile:lifecycleStage",
+          "value": "implemented"
+        },
+        {
+          "name": "pkic:profile:endpointRole:client",
+          "value": "endpoint:consumer"
+        },
+        {
+          "name": "pkic:profile:endpointRole:server",
+          "value": "endpoint:gateway"
+        },
+        {
+          "name": "pkic:profile:implementationPurl",
+          "value": "pkg:generic/openssl@3.5.0"
+        },
+        {
+          "name": "pkic:profile:protocolVersionsSupported",
+          "value": "1.2"
+        },
+        {
+          "name": "pkic:profile:protocolVersionsSupported",
+          "value": "1.3"
+        },
+        {
+          "name": "pkic:profile:keyExchangeSupported",
+          "value": "X25519"
+        },
+        {
+          "name": "pkic:profile:keyExchangeSupported",
+          "value": "X25519MLKEM768"
+        },
+        {
+          "name": "pkic:profile:authenticationSupported",
+          "value": "RSA-2048"
+        },
+        {
+          "name": "pkic:profile:authenticationSupported",
+          "value": "ECDSA-P256"
+        },
+        {
+          "name": "pkic:profile:enablementMethod",
+          "value": "configuration"
+        },
+        {
+          "name": "pkic:profile:providerLocation",
+          "value": "software"
+        },
+        {
+          "name": "pkic:profile:coexistence",
+          "value": "simultaneous"
+        },
+        {
+          "name": "pkic:profile:negotiationControl",
+          "value": "can be configured to require hybrid"
+        },
+        {
+          "name": "pkic:profile:integrationConstraints",
+          "value": "larger ClientHello may exceed some middlebox limits"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+          "value": "available"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+          "value": "available"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+          "value": "committed"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+          "value": "certification"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:entity-authentication:roadmapRef",
+          "value": "https://example.test/pqc#tls-auth"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+          "value": "available"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+          "value": "not-planned"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+          "value": "product"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+          "value": "planned"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-protection:blockedBy",
+          "value": "hardware"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+          "value": "available"
+        }
       ]
     },
-
     {
       "type": "cryptographic-asset",
       "bom-ref": "crypto:protocol:mgmt-ssh",
@@ -65,31 +176,120 @@
         "protocolProperties": {
           "type": "ssh",
           "version": "2.0",
-          "cryptoRefArray": ["crypto:algo:chacha20-poly1305", "crypto:algo:curve25519", "crypto:algo:ed25519"]
+          "cryptoRefArray": [
+            "crypto:algo:chacha20-poly1305",
+            "crypto:algo:curve25519",
+            "crypto:algo:ed25519"
+          ]
         }
       },
       "properties": [
-        { "name": "pkic:profile:interfaceId", "value": "mgmt-ssh" },
-        { "name": "pkic:profile:interfaceType", "value": "management" },
-        { "name": "pkic:profile:lifecycleStage", "value": "implemented" },
-        { "name": "pkic:profile:endpointRole:client", "value": "endpoint:admin" },
-        { "name": "pkic:profile:endpointRole:server", "value": "endpoint:gateway" },
-        { "name": "pkic:profile:implementationPurl", "value": "pkg:generic/openssh@9.6" },
-        { "name": "pkic:profile:protocolVersionsSupported", "value": "2.0" },
-        { "name": "pkic:profile:keyExchangeSupported", "value": "curve25519-sha256" },
-        { "name": "pkic:profile:authenticationSupported", "value": "Ed25519" },
-        { "name": "pkic:profile:enablementMethod", "value": "software-update" },
-        { "name": "pkic:profile:minimumProductVersion", "value": "9.1.0" },
-        { "name": "pkic:profile:providerLocation", "value": "software" },
-        { "name": "pkic:profile:coexistence", "value": "simultaneous" },
-        { "name": "pkic:profile:negotiationControl", "value": "not configurable to require PQC" },
-        { "name": "pkic:profile:integrationConstraints", "value": "no known constraints" },
-        { "name": "pkic:profile:capabilityStatus", "value": "committed" },
-        { "name": "pkic:profile:blockedBy", "value": "product" },
-        { "name": "pkic:profile:roadmapRef", "value": "rm:ssh-pqc-9.1" }
+        {
+          "name": "pkic:profile:interfaceId",
+          "value": "mgmt-ssh"
+        },
+        {
+          "name": "pkic:profile:interfaceType",
+          "value": "management"
+        },
+        {
+          "name": "pkic:profile:lifecycleStage",
+          "value": "implemented"
+        },
+        {
+          "name": "pkic:profile:endpointRole:client",
+          "value": "endpoint:admin"
+        },
+        {
+          "name": "pkic:profile:endpointRole:server",
+          "value": "endpoint:gateway"
+        },
+        {
+          "name": "pkic:profile:implementationPurl",
+          "value": "pkg:generic/openssh@9.6"
+        },
+        {
+          "name": "pkic:profile:protocolVersionsSupported",
+          "value": "2.0"
+        },
+        {
+          "name": "pkic:profile:keyExchangeSupported",
+          "value": "curve25519-sha256"
+        },
+        {
+          "name": "pkic:profile:authenticationSupported",
+          "value": "Ed25519"
+        },
+        {
+          "name": "pkic:profile:enablementMethod",
+          "value": "software-update"
+        },
+        {
+          "name": "pkic:profile:minimumProductVersion",
+          "value": "9.1.0"
+        },
+        {
+          "name": "pkic:profile:providerLocation",
+          "value": "software"
+        },
+        {
+          "name": "pkic:profile:coexistence",
+          "value": "simultaneous"
+        },
+        {
+          "name": "pkic:profile:negotiationControl",
+          "value": "not configurable to require PQC"
+        },
+        {
+          "name": "pkic:profile:integrationConstraints",
+          "value": "no known constraints"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+          "value": "available"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+          "value": "available"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+          "value": "planned"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+          "value": "standard"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:entity-authentication:roadmapRef",
+          "value": "https://example.test/pqc#ssh-auth"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+          "value": "available"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+          "value": "not-planned"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+          "value": "product"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+          "value": "under-evaluation"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-protection:blockedBy",
+          "value": "provider"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+          "value": "available"
+        }
       ]
     },
-
     {
       "type": "cryptographic-asset",
       "bom-ref": "crypto:protocol:ic-ipsec",
@@ -99,49 +299,244 @@
         "protocolProperties": {
           "type": "ipsec",
           "version": "2.0",
-          "cryptoRefArray": ["crypto:algo:aes-256-gcm", "crypto:algo:dh-group14", "crypto:algo:ecdsa-p256"]
+          "cryptoRefArray": [
+            "crypto:algo:aes-256-gcm",
+            "crypto:algo:dh-group14",
+            "crypto:algo:ecdsa-p256"
+          ]
         }
       },
       "properties": [
-        { "name": "pkic:profile:interfaceId", "value": "ic-ipsec" },
-        { "name": "pkic:profile:interfaceType", "value": "interconnect" },
-        { "name": "pkic:profile:lifecycleStage", "value": "implemented" },
-        { "name": "pkic:profile:endpointRole:initiator", "value": "endpoint:gateway" },
-        { "name": "pkic:profile:endpointRole:responder", "value": "endpoint:peer" },
-        { "name": "pkic:profile:implementationPurl", "value": "pkg:generic/openssl@3.5.0" },
-        { "name": "pkic:profile:protocolVersionsSupported", "value": "2.0" },
-        { "name": "pkic:profile:keyExchangeSupported", "value": "DH-group14" },
-        { "name": "pkic:profile:authenticationSupported", "value": "ECDSA-P256" },
-        { "name": "pkic:profile:enablementMethod", "value": "not-available" },
-        { "name": "pkic:profile:providerLocation", "value": "hsm" },
-        { "name": "pkic:profile:coexistence", "value": "unknown" },
-        { "name": "pkic:profile:negotiationControl", "value": "not applicable while unavailable" },
-        { "name": "pkic:profile:integrationConstraints", "value": "hardware module would require replacement" },
-        { "name": "pkic:profile:capabilityStatus", "value": "not-planned" },
-        { "name": "pkic:profile:blockedBy", "value": "standard" }
+        {
+          "name": "pkic:profile:interfaceId",
+          "value": "ic-ipsec"
+        },
+        {
+          "name": "pkic:profile:interfaceType",
+          "value": "interconnect"
+        },
+        {
+          "name": "pkic:profile:lifecycleStage",
+          "value": "implemented"
+        },
+        {
+          "name": "pkic:profile:endpointRole:initiator",
+          "value": "endpoint:gateway"
+        },
+        {
+          "name": "pkic:profile:endpointRole:responder",
+          "value": "endpoint:peer"
+        },
+        {
+          "name": "pkic:profile:implementationPurl",
+          "value": "pkg:generic/openssl@3.5.0"
+        },
+        {
+          "name": "pkic:profile:protocolVersionsSupported",
+          "value": "2.0"
+        },
+        {
+          "name": "pkic:profile:keyExchangeSupported",
+          "value": "DH-group14"
+        },
+        {
+          "name": "pkic:profile:authenticationSupported",
+          "value": "ECDSA-P256"
+        },
+        {
+          "name": "pkic:profile:enablementMethod",
+          "value": "not-available"
+        },
+        {
+          "name": "pkic:profile:providerLocation",
+          "value": "hsm"
+        },
+        {
+          "name": "pkic:profile:coexistence",
+          "value": "unknown"
+        },
+        {
+          "name": "pkic:profile:negotiationControl",
+          "value": "not applicable while unavailable"
+        },
+        {
+          "name": "pkic:profile:integrationConstraints",
+          "value": "hardware module would require replacement"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+          "value": "committed"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
+          "value": "provider"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+          "value": "available"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+          "value": "planned"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+          "value": "standard"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+          "value": "available"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+          "value": "not-planned"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+          "value": "product"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+          "value": "planned"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-protection:blockedBy",
+          "value": "hardware"
+        },
+        {
+          "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+          "value": "available"
+        }
       ]
     },
-
-    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:aes-256-gcm", "name": "AES-256-GCM",
-      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "ae", "parameterSetIdentifier": "256", "mode": "gcm", "nistQuantumSecurityLevel": 1 } } },
-    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:x25519", "name": "X25519",
-      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "key-agree", "curve": "x25519", "nistQuantumSecurityLevel": 0 } } },
-    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:rsa-2048", "name": "RSA-2048",
-      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "signature", "parameterSetIdentifier": "2048", "nistQuantumSecurityLevel": 0 } } },
-    { "type": "cryptographic-asset", "bom-ref": "crypto:cert:server-leaf", "name": "API server certificate",
-      "cryptoProperties": { "assetType": "certificate", "certificateProperties": { "subjectName": "CN=api.example.com", "certificateFormat": "X.509", "signatureAlgorithmRef": "crypto:algo:rsa-2048" } } },
-    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:chacha20-poly1305", "name": "ChaCha20-Poly1305",
-      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "ae", "nistQuantumSecurityLevel": 1 } } },
-    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:curve25519", "name": "curve25519-sha256",
-      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "key-agree", "curve": "x25519", "nistQuantumSecurityLevel": 0 } } },
-    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:ed25519", "name": "Ed25519 host key",
-      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "signature", "curve": "ed25519", "nistQuantumSecurityLevel": 0 } } },
-    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:dh-group14", "name": "DH group 14",
-      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "key-agree", "parameterSetIdentifier": "2048", "nistQuantumSecurityLevel": 0 } } },
-    { "type": "cryptographic-asset", "bom-ref": "crypto:algo:ecdsa-p256", "name": "ECDSA P-256",
-      "cryptoProperties": { "assetType": "algorithm", "algorithmProperties": { "primitive": "signature", "curve": "secp256r1", "nistQuantumSecurityLevel": 0 } } }
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:aes-256-gcm",
+      "name": "AES-256-GCM",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "ae",
+          "parameterSetIdentifier": "256",
+          "mode": "gcm",
+          "nistQuantumSecurityLevel": 1
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:x25519",
+      "name": "X25519",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "key-agree",
+          "curve": "x25519",
+          "nistQuantumSecurityLevel": 0
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:rsa-2048",
+      "name": "RSA-2048",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "parameterSetIdentifier": "2048",
+          "nistQuantumSecurityLevel": 0
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:server-leaf",
+      "name": "API server certificate",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "CN=api.example.com",
+          "certificateFormat": "X.509",
+          "signatureAlgorithmRef": "crypto:algo:rsa-2048"
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:chacha20-poly1305",
+      "name": "ChaCha20-Poly1305",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "ae",
+          "nistQuantumSecurityLevel": 1
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:curve25519",
+      "name": "curve25519-sha256",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "key-agree",
+          "curve": "x25519",
+          "nistQuantumSecurityLevel": 0
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:ed25519",
+      "name": "Ed25519 host key",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "curve": "ed25519",
+          "nistQuantumSecurityLevel": 0
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:dh-group14",
+      "name": "DH group 14",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "key-agree",
+          "parameterSetIdentifier": "2048",
+          "nistQuantumSecurityLevel": 0
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:ecdsa-p256",
+      "name": "ECDSA P-256",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "curve": "secp256r1",
+          "nistQuantumSecurityLevel": 0
+        }
+      }
+    }
   ],
   "dependencies": [
-    { "ref": "app:gateway", "dependsOn": ["lib:openssl", "lib:openssh", "crypto:protocol:svc-api-tls", "crypto:protocol:mgmt-ssh", "crypto:protocol:ic-ipsec"] }
+    {
+      "ref": "app:gateway",
+      "dependsOn": [
+        "lib:openssl",
+        "lib:openssh",
+        "crypto:protocol:svc-api-tls",
+        "crypto:protocol:mgmt-ssh",
+        "crypto:protocol:ic-ipsec"
+      ]
+    }
   ]
 }

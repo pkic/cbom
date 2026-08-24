@@ -23,8 +23,8 @@ nav: formats
 
 <main>
   <div class="crumb">MAPPING</div>
-  <h1>A single profile expressed in two formats</h1>
-  <p class="lead">The profile is defined independently of any format. A mapping locates each attribute, and the interface count, within a concrete document. CycloneDX provides a native cryptographic model. SPDX 3.0.1 does not, so a CBOM is currently expressed in CycloneDX and referenced from an SPDX SBOM, though SPDX is adding a cryptographic object model and that position will change.</p>
+  <h1>One profile against two formats</h1>
+  <p class="lead">The profile is defined independently of any format. A mapping locates each attribute, and the interface count, within a concrete document. CycloneDX provides a native cryptographic model. SPDX 3.0.1 does not, so a CBOM is currently expressed in CycloneDX and referenced from an SPDX SBOM. The SPDX community has indicated that a cryptographic object model is planned, so this position is expected to change; the working group has not verified the current state at field level, and the SPDX column below is hedged accordingly.</p>
   <p>Because both formats permit the same information to be encoded in more than one valid way, the mapping also serves to normalize encoding: it defines a single, canonical location for each attribute. A consumer that relies on the mapping extracts the required information from one place rather than accommodating every valid variant, which reduces parsing complexity. See <a href="challenges.html">Challenges</a>.</p>
   <div class="banner warn">The format comparisons in this section describe the position at the time of writing. Both specifications are being developed actively. When a format gains capability, the mapping is revised and the profile is unaffected, which is the practical benefit of keeping the profile separate from any format.</div>
 
@@ -84,7 +84,7 @@ nav: formats
 
   <h2>Representation of an interface</h2>
   <p>An interface, meaning a cryptographic relationship, is represented as a <code>cryptographic-asset</code> component with <code>assetType: protocol</code>. It is worth setting out how this works, because the profile's model and the format's model do not align at this point.</p>
-  <p>The format treats the protocol as an asset, in the same category as an algorithm or a certificate. The profile treats the interface as a relationship between endpoints. The mapping bridges the two by using the protocol asset as the carrier for the relationship and attaching the relationship's attributes to it as properties. Both formats support this today, but it is a convention agreed in the mapping rather than a structure the format enforces.</p>
+  <p>The format treats the protocol as an asset, in the same category as an algorithm or a certificate. The profile treats the interface as a relationship between endpoints. The mapping bridges the two by using the protocol asset as the carrier for the relationship and attaching the relationship's attributes to it as properties. CycloneDX supports this today: it has a <code>cryptographic-asset</code> component with an <code>assetType</code> of <code>protocol</code> to serve as the carrier. SPDX 3.0.1 has neither, which is why the SPDX column reaches the same attributes through a linked CycloneDX document rather than natively. In both cases the attachment of relationship attributes to the carrier is a convention agreed in the mapping, not a structure either format enforces.</p>
   <p>This has several consequences for an implementation:</p>
   <ul>
     <li>The set of interfaces is derived, not declared. A consumer enumerates the components with <code>assetType: protocol</code> and counts them. Product rules P1 and P2 are evaluated against that derived set, including the count of components carrying <code>interfaceType = management</code>.</li>
@@ -100,20 +100,24 @@ nav: formats
   <table>
     <thead><tr><th>#</th><th>Requirement</th><th>CycloneDX 1.7 <span class="na">(illustrative)</span></th><th>SPDX 3.0.1</th></tr></thead>
     <tbody>
-      <tr><td>P1</td><td>≥1 interface</td><td>count of <code>assetType:protocol</code> components</td><td>count of linked interface elements</td></tr>
-      <tr><td>P2</td><td>≥1 <code>management</code></td><td>count where <code>interfaceType==management</code></td><td>count of elements annotated management</td></tr>
+      <tr><td>P1</td><td>≥1 interface</td><td>count of <code>assetType:protocol</code> components carrying <code>interfaceType</code></td><td class="na">unresolved</td></tr>
+      <tr><td>P2</td><td>≥1 <code>management</code></td><td>count where <code>interfaceType==management</code></td><td class="na">unresolved</td></tr>
       <tr><td>I1</td><td>protocol</td><td><code>protocolProperties.type</code></td><td>via linked CBOM</td></tr>
       <tr><td>I2</td><td>protocolVersion</td><td><code>protocolProperties.version</code></td><td>via linked CBOM</td></tr>
       <tr><td>I3</td><td>keyExchange</td><td>algorithm <code>primitive=key-agree/kem</code></td><td>via linked CBOM</td></tr>
-      <tr><td>I4</td><td>encryption</td><td>algorithm <code>primitive=ae/aead</code></td><td>via linked CBOM</td></tr>
+      <tr><td>I4</td><td>encryption</td><td>algorithm <code>primitive=ae</code></td><td>via linked CBOM</td></tr>
       <tr><td>I5</td><td>authentication</td><td>certificate <code>signatureAlgorithmRef</code> or host key</td><td>via linked CBOM</td></tr>
-      <tr><td>I6</td><td>endpointRoles</td><td><code>properties[endpointRole:*]</code> <span class="na">(no edge model)</span></td><td><code>Relationship</code> and annotation</td></tr>
-      <tr><td>I7</td><td>interfaceType</td><td><code>properties[interfaceType]</code> <span class="na">(no native field)</span></td><td>annotation</td></tr>
-      <tr><td>I8</td><td>lifecycleStage</td><td><code>properties[lifecycleStage]</code></td><td>annotation</td></tr>
-      <tr><td>I9</td><td>implementationPurl</td><td><code>purl</code> on library component</td><td>native <code>packageUrl</code> <span class="na">(SPDX strength)</span></td></tr>
+      <tr><td>I6</td><td>endpointRoles</td><td><code>properties[endpointRole:*]</code> <span class="na">(no edge model)</span></td><td class="na">unresolved</td></tr>
+      <tr><td>I7</td><td>interfaceType</td><td><code>properties[interfaceType]</code> <span class="na">(no native field)</span></td><td class="na">unresolved</td></tr>
+      <tr><td>I8</td><td>lifecycleStage</td><td><code>properties[lifecycleStage]</code></td><td class="na">unresolved</td></tr>
+      <tr><td>G1</td><td>capabilityStatus, blockedBy, roadmapRef <span class="na">(per purpose)</span></td><td><code>properties[capabilityByPurpose:&lt;purpose&gt;:&lt;attribute&gt;]</code></td><td class="na">unresolved</td></tr>
+      <tr><td>&mdash;</td><td>interfaceId <span class="na">(carried, not constrained)</span></td><td><code>properties[interfaceId]</code>, defaulting to <code>bom-ref</code></td><td class="na">unresolved</td></tr>
+      <tr><td>I9</td><td>implementationPurl</td><td><code>purl</code> on library component</td><td><code>packageUrl</code> on a <code>Package</code></td></tr>
     </tbody>
   </table>
   </div>
+
+  <div class="banner warn"><strong>Five rows are unresolved.</strong> I1 to I5 reach their values <em>via a linked CycloneDX CBOM</em>, which means the SPDX document references one external artifact. There is therefore one SPDX element and not one per interface, so there is nothing for a per-interface annotation to attach to and no set of elements to count. The entries these rows previously carried described a structure the linkage arrangement does not produce. The options, and the contributor expertise needed to choose between them, are set out in the <a href="mapping-cyclonedx-spdx.md">mapping document</a> and recorded as Q48. Until it is settled, the per-interface attributes are expressible in both formats and the product-level rules are not.</div>
 
   <h2>Interpretation of the columns</h2>
   <p>In <strong>CycloneDX</strong>, the cryptographic assets (I1–I5 and the provider in I9) are represented in native fields, which is an area of strength for the format. The interface-level classifiers on which the profile depends — <code>interfaceType</code> (I7), endpoint roles (I6), and lifecycle stage (I8) — have no native field and are carried in <code>component.properties</code> under the <code>pkic:profile:</code> namespace. The <code>interfaceType</code> attribute is what makes product rule P2 evaluable.</p>
@@ -156,8 +160,8 @@ nav: formats
   <p>The mapping therefore specifies the expected form for protocol type and version, and the adapter normalizes what it receives before any rule is evaluated. Where a registry provides protocol identifiers, those are preferred for the same reasons they are preferred for algorithms.</p>
 
   <div class="pagenav">
-    <a href="use-cases.html">← Use Cases</a>
-    <a class="next" href="versioning.html">Next: Versioning →</a>
+    <a href="pqc-migration.html">← PQC Migration</a>
+    <a class="next" href="data-exposure.html">Next: Data Exposure →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>

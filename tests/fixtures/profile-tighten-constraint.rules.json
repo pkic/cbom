@@ -1,0 +1,49 @@
+{
+  "$comment": "TEST FIXTURE \u2014 valid, and the counterpart to the two relaxing fixtures. Raises the inherited endpointRoles minimum from 2 to 3, which is a tightening and is permitted, and narrows the accepted interface types. The validator must accept it and record the tightening as a composition note, so that the check added by decision 0013 is shown to reject relaxations without also rejecting the extensions the mechanism exists for.",
+  "profileId": "pkic.test.tighten-constraint",
+  "profileTag": "tighten-constraint",
+  "title": "Tightening a constraint (test fixture)",
+  "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the validator holds the monotonicity guarantee for constraints.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.7",
+    "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "intended",
+      "implemented",
+      "configured",
+      "observed"
+    ]
+  },
+  "overrides": [
+    {
+      "id": "interface-disclosure#I6",
+      "constraint": {
+        "minCount": 3
+      },
+      "note": "A rail interface has at least three declared endpoint roles."
+    }
+  ],
+  "interfaceRules": []
+}

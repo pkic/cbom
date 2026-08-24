@@ -3,7 +3,7 @@
   "specVersion": "1.7",
   "serialNumber": "urn:uuid:4d4d4d4d-0000-4000-8000-00000000fail",
   "version": 1,
-  "$comment": "EXAMPLE CBOM — DOES NOT CONFORM to profile pkic.example.interface-disclosure v0.3. Carrier format: CycloneDX 1.7. The product declares ONLY its client-facing HTTPS service interface (fully described) and omits the management/configuration interface entirely, so product rule P2 (at least one interface of type 'management') fails. The service interface it DID declare passes every per-interface rule — the failure is a missing mandatory ELEMENT at the product level, not a missing attribute.",
+  "$comment": "EXAMPLE CBOM \u2014 DOES NOT CONFORM to profile pkic.example.interface-disclosure v0.7. Carrier format: CycloneDX 1.7. The product declares ONLY its client-facing HTTPS service interface (fully described) and omits the management/configuration interface entirely, so product rule P2 (at least one interface of type 'management') fails. The service interface it DID declare passes every per-interface rule \u2014 the failure is a missing mandatory ELEMENT at the product level, not a missing attribute.",
   "metadata": {
     "timestamp": "2026-07-16T09:05:00Z",
     "component": {
@@ -12,7 +12,13 @@
       "name": "nginx",
       "version": "1.27.0",
       "purl": "pkg:generic/nginx@1.27.0",
-      "description": "Web server / reverse proxy (example subject)"
+      "description": "Web server / reverse proxy (example subject)",
+      "properties": [
+        {
+          "name": "pkic:profile:coverage",
+          "value": "partial"
+        }
+      ]
     }
   },
   "components": [
@@ -42,7 +48,9 @@
                 "crypto:algo:x25519",
                 "crypto:algo:rsa-2048"
               ],
-              "identifiers": ["0x13,0x02"]
+              "identifiers": [
+                "0x13,0x02"
+              ]
             }
           ],
           "cryptoRefArray": [
@@ -54,12 +62,30 @@
         }
       },
       "properties": [
-        { "name": "pkic:profile:interfaceId", "value": "svc-https" },
-        { "name": "pkic:profile:interfaceType", "value": "service" },
-        { "name": "pkic:profile:lifecycleStage", "value": "observed" },
-        { "name": "pkic:profile:endpointRole:client", "value": "endpoint:browser" },
-        { "name": "pkic:profile:endpointRole:server", "value": "endpoint:nginx" },
-        { "name": "pkic:profile:implementationPurl", "value": "pkg:generic/openssl@3.4.0" }
+        {
+          "name": "pkic:profile:interfaceId",
+          "value": "svc-https"
+        },
+        {
+          "name": "pkic:profile:interfaceType",
+          "value": "service"
+        },
+        {
+          "name": "pkic:profile:lifecycleStage",
+          "value": "observed"
+        },
+        {
+          "name": "pkic:profile:endpointRole:client",
+          "value": "endpoint:browser"
+        },
+        {
+          "name": "pkic:profile:endpointRole:server",
+          "value": "endpoint:nginx"
+        },
+        {
+          "name": "pkic:profile:implementationPurl",
+          "value": "pkg:generic/openssl@3.4.0"
+        }
       ]
     },
     {
@@ -72,7 +98,10 @@
           "primitive": "ae",
           "parameterSetIdentifier": "256",
           "mode": "gcm",
-          "cryptoFunctions": ["encrypt", "decrypt"],
+          "cryptoFunctions": [
+            "encrypt",
+            "decrypt"
+          ],
           "nistQuantumSecurityLevel": 1
         }
       }
@@ -86,7 +115,10 @@
         "algorithmProperties": {
           "primitive": "key-agree",
           "curve": "x25519",
-          "cryptoFunctions": ["keygen", "keyagreement"],
+          "cryptoFunctions": [
+            "keygen",
+            "keyagreement"
+          ],
           "nistQuantumSecurityLevel": 0
         }
       }
@@ -100,7 +132,10 @@
         "algorithmProperties": {
           "primitive": "signature",
           "parameterSetIdentifier": "2048",
-          "cryptoFunctions": ["sign", "verify"],
+          "cryptoFunctions": [
+            "sign",
+            "verify"
+          ],
           "nistQuantumSecurityLevel": 0
         }
       }
@@ -122,8 +157,28 @@
     }
   ],
   "dependencies": [
-    { "ref": "app:nginx", "dependsOn": ["lib:openssl", "crypto:protocol:svc-https"] },
-    { "ref": "crypto:protocol:svc-https", "dependsOn": ["lib:openssl", "crypto:algo:aes-256-gcm", "crypto:algo:x25519", "crypto:algo:rsa-2048", "crypto:cert:server-leaf"] },
-    { "ref": "crypto:cert:server-leaf", "dependsOn": ["crypto:algo:rsa-2048"] }
+    {
+      "ref": "app:nginx",
+      "dependsOn": [
+        "lib:openssl",
+        "crypto:protocol:svc-https"
+      ]
+    },
+    {
+      "ref": "crypto:protocol:svc-https",
+      "dependsOn": [
+        "lib:openssl",
+        "crypto:algo:aes-256-gcm",
+        "crypto:algo:x25519",
+        "crypto:algo:rsa-2048",
+        "crypto:cert:server-leaf"
+      ]
+    },
+    {
+      "ref": "crypto:cert:server-leaf",
+      "dependsOn": [
+        "crypto:algo:rsa-2048"
+      ]
+    }
   ]
 }

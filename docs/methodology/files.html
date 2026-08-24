@@ -39,7 +39,7 @@ nav: files
       <tr><td><a href="cbom-pqc-pass.cyclonedx.json">cbom-pqc-pass.cyclonedx.json</a></td><td>Conforming example for the migration profile; three interfaces at different readiness stages</td></tr>
       <tr><td><a href="cbom-pqc-fail.cyclonedx.json">cbom-pqc-fail.cyclonedx.json</a></td><td>Non-conforming example exercising both conditional rules and the inherited-rule tightening</td></tr>
       <tr><td><a href="validate_cbom.py">validate_cbom.py</a></td><td>Version-aware validator with profile composition. Checks a document against a profile</td></tr>
-      <tr><td><a href="check_profile.py">check_profile.py</a></td><td>Well-formedness checker. Checks a profile against requirements C1 to C10 of <a href="conformance.html">Conformance</a></td></tr>
+      <tr><td><a href="check_profile.py">check_profile.py</a></td><td>Well-formedness checker. Checks a profile against requirements C1 to C17 of <a href="conformance.html">Conformance</a></td></tr>
       <tr><td><a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a></td><td>Treatment of older CBOM files</td></tr>
     </tbody>
   </table>
@@ -55,16 +55,19 @@ python validate_cbom.py cbom-fail.cyclonedx.json profile-interface-disclosure.ru
 python validate_cbom.py cbom-pass.cyclonedx.json profile-interface-disclosure.rules.json --json</code></pre>
 
   <h2>Reproducing the version bands</h2>
-  <pre><code># produce a legacy (1.6) and an unsupported (1.5) copy, then evaluate each
+  <pre><code># four bands need four inputs: 1.7 is the tested version, and these are the rest
 python - &lt;&lt;'PY'
 import json
 b = json.load(open("cbom-pass.cyclonedx.json"))
-for v in ("1.6", "1.5"):
+for v in ("1.8", "1.6", "1.5"):
     b["specVersion"] = v
     json.dump(b, open(f"cbom-{v}.json", "w"))
 PY
-python validate_cbom.py cbom-1.6.json profile-interface-disclosure.rules.json   # legacy: accepted with a warning
-python validate_cbom.py cbom-1.5.json profile-interface-disclosure.rules.json   # unsupported: refused</code></pre>
+python validate_cbom.py cbom-pass.cyclonedx.json profile-interface-disclosure.rules.json  # target:  exit 0
+python validate_cbom.py cbom-1.8.json profile-interface-disclosure.rules.json   # newer:   accepted, review advised, exit 0
+python validate_cbom.py cbom-1.6.json profile-interface-disclosure.rules.json   # legacy:  accepted with a warning,  exit 0
+python validate_cbom.py cbom-1.5.json profile-interface-disclosure.rules.json   # refused: not assessed,            exit 4</code></pre>
+  <p>The last of these is the one worth running. A refusal is not a failure: the document was never assessed, so it exits 4 rather than 1, and no rule result is reported for it. A pipeline that treats any non-zero exit as a rejection will turn the age of a carrier format into a supplier's problem, which is what the distinct code exists to prevent.</p>
 
   <h2>The derived profile</h2>
   <p>The PQC migration profile extends the baseline, so evaluating against it also evaluates every baseline rule. The validator resolves the base, applies the overrides, and rejects any override that would relax an inherited rule.</p>
@@ -73,12 +76,12 @@ python validate_cbom.py cbom-pqc-pass.cyclonedx.json profile-pqc-migration.rules
 
 # does not conform, for three separate reasons
 python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-pqc-migration.rules.json</code></pre>
-  <p>The failing document is worth reading alongside its verdict. Two failures come from conditional rules: an interface claiming enablement by software update without naming the version (M5), and one declaring a capability committed without saying what blocks it (M11). The third arises from the extension itself. Its interconnect interface withholds <code>implementationPurl</code>, which the baseline permits. Evaluated against the baseline alone that document conforms; it fails here only because the derived profile removed withholdability from that rule.</p>
+  <p>The failing document is worth reading alongside its verdict. Two failures come from conditional rules: an interface claiming enablement by software update without naming the version (<code>pqc-migration#I5</code>), and one declaring a capability committed for key establishment without saying what blocks it (<code>pqc-migration#G1.2</code>). Two more come from the group rule: a purpose the profile takes in scope with no entry at all, and a purpose it defers with no entry either &mdash; a deferred purpose still owes a status. The last arises from the extension itself. Its interconnect interface withholds <code>implementationPurl</code>, which the baseline permits. Evaluated against the baseline alone that document conforms; it fails here only because the derived profile removed withholdability from that rule.</p>
   <pre><code># the same document against the base profile, which permits the withheld value
 python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-interface-disclosure.rules.json</code></pre>
 
   <h2>Checking a profile</h2>
-  <p>A profile is itself checkable, against requirements C1 to C10 of <a href="conformance.html">Conformance</a>. C1 to C7 are MUST requirements and determine the result; C8 to C10 are reported as warnings unless <code>--strict</code> is given.</p>
+  <p>A profile is itself checkable, against requirements C1 to C17 of <a href="conformance.html">Conformance</a>. C1 to C7 and C11 to C17 are MUST requirements and determine the result; C8 to C10 are reported as warnings unless <code>--strict</code> is given.</p>
   <pre><code># both example profiles are well-formed
 python check_profile.py profile-interface-disclosure.rules.json
 python check_profile.py profile-pqc-migration.rules.json
@@ -94,7 +97,7 @@ python check_profile.py profile-pqc-migration.rules.json --json</code></pre>
 
   <div class="pagenav">
     <a href="related-work.html">← Related Work</a>
-    <a class="next" href="demo.html">Next: Demo →</a>
+    <a class="next" href="../references/">Next: the reference register →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>
