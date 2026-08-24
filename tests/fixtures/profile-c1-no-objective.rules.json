@@ -1,6 +1,7 @@
 {
   "$comment": "Fixture. Deliberately fails C1: no 'objective', so the profile does not say who it serves or what decision it supports. Everything else is well-formed.",
   "profileId": "pkic.test.c1",
+  "profileTag": "c1",
   "title": "Fixture - C1 no objective",
   "version": "0.1",
   "appliesTo": {

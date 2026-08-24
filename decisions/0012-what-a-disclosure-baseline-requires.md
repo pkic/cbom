@@ -128,6 +128,10 @@ formality to be worked around.
 - Migration profile v0.4 → v0.5: re-pins the base, and drops its own coverage rule, which it now
   inherits. Its remaining product rule is renumbered under decision 0011, because the baseline
   needed the P-space back — the collision is a hard `ProfileError`, not a tidiness question.
+  Decision 0011 was subsequently settled in a different form, and the renumbering it now prescribes
+  moved the baseline to v0.7 and the migration profile to v0.6. The substance of this record is
+  unaffected: the baseline holds `P1` to `P4`, and the migration profile's remaining product rule
+  is `pqc-migration#P1`.
 - `validate_cbom` gains two constraint kinds: `subjectIdentified`, and `orDeclaredAbsent` on a
   structural rule. `check_profile` gains C14.
 - All four example documents gain the product-level facts. The failing baseline example declares

@@ -1,6 +1,7 @@
 {
   "$comment": "Fixture. Deliberately fails C2: no 'appliesTo', so the profile does not say which carrier formats and versions it accepts. A validator would have no basis for the format gate.",
   "profileId": "pkic.test.c2",
+  "profileTag": "c2",
   "title": "Fixture - C2 no acceptance range",
   "version": "0.1",
   "objective": {

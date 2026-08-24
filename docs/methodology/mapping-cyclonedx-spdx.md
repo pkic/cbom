@@ -56,7 +56,7 @@ There is no native object representing the set of interfaces; the count is deriv
 
 ### Group attributes
 
-Capability is stated per cryptographic purpose (rule M10), which needs a repeated group rather
+Capability is stated per cryptographic purpose (rule `pqc-migration#G1`), which needs a repeated group rather
 than a single value. CycloneDX properties are flat name/value pairs, so the group is carried in
 the name, following the `endpointRole:<role>` convention already in use:
 

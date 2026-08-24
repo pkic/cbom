@@ -1,6 +1,7 @@
 {
   "$comment": "TEST FIXTURE - deliberately invalid. Extends the PQC migration profile, which accepts implemented, configured and observed, and tries to accept 'intended' as well. Widening the accepted lifecycle stages is a relaxation: a document reporting only intentions would conform to this profile while failing the base, which is what monotonic extension exists to prevent. The validator must reject it with exit code 3 rather than evaluating any CBOM against it, and check_profile must fail C7. Not a real profile; do not copy.",
   "profileId": "pkic.test.widening-stages",
+  "profileTag": "widening-stages",
   "title": "Invalid stage-widening profile (test fixture)",
   "version": "0.0",
   "objective": {
@@ -13,7 +14,7 @@
   },
   "extends": {
     "profileId": "pkic.example.pqc-migration",
-    "version": "0.5",
+    "version": "0.6",
     "file": "../../docs/methodology/profile-pqc-migration.rules.json"
   },
   "scope": {

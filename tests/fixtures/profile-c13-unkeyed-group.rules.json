@@ -1,38 +1,87 @@
 {
-  "$comment": "Fixture. Deliberately fails C13: the group rule is keyed by a vocabulary the profile does not declare. The failure mode is the reason C13 checks this rather than trusting the reference — a group keyed by nothing requires an entry for no keys, so every document passes it and the rule reads as satisfied. Silent success is worse than a loud failure. Everything else is well-formed.",
+  "$comment": "Fixture. Deliberately fails C13: the group rule is keyed by a vocabulary the profile does not declare. The failure mode is the reason C13 checks this rather than trusting the reference \u2014 a group keyed by nothing requires an entry for no keys, so every document passes it and the rule reads as satisfied. Silent success is worse than a loud failure. Everything else is well-formed.",
   "profileId": "pkic.test.c13-unkeyed",
+  "profileTag": "c13-unkeyed",
   "title": "Fixture - C13 group keyed by a vocabulary that does not exist",
   "version": "0.1",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
-
   "objective": {
     "consumer": "A fixture, standing in for a consumer.",
     "decision": "Whether the checker rejects a group keyed by nothing.",
-    "decisionOptions": ["accept the fixture", "reject the fixture"]
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
   },
-
   "scope": {
     "subjectType": "product",
     "orientation": "both",
-    "relationshipTypes": ["interface"],
-    "lifecycleStages": ["implemented", "configured", "observed"]
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented",
+      "configured",
+      "observed"
+    ]
   },
-
-  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
-
-  "interfaceTypeVocabulary": ["management", "service"],
-  "capabilityStatusVocabulary": ["available", "committed", "planned", "under-evaluation", "not-planned"],
-
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "interfaceTypeVocabulary": [
+    "management",
+    "service"
+  ],
+  "capabilityStatusVocabulary": [
+    "available",
+    "committed",
+    "planned",
+    "under-evaluation",
+    "not-planned"
+  ],
   "productRules": [
-    { "id": "P1", "description": "Product declares at least one cryptographic interface", "level": "MUST", "constraint": { "minInterfaces": 1 } }
+    {
+      "id": "P1",
+      "description": "Product declares at least one cryptographic interface",
+      "level": "MUST",
+      "constraint": {
+        "minInterfaces": 1
+      }
+    }
   ],
-
   "interfaceRules": [
-    { "id": "I1", "attribute": "protocol", "level": "MUST", "constraint": { "present": true }, "withholdable": false },
-    { "id": "I3", "attribute": "keyExchange", "level": "MUST", "constraint": { "present": true }, "withholdable": false },
-    { "id": "X1", "attribute": "keyExchangeSupported", "level": "MUST", "list": true, "constraint": { "minCount": 1 }, "withholdable": false }
+    {
+      "id": "I1",
+      "attribute": "protocol",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I3",
+      "attribute": "keyExchange",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false
+    },
+    {
+      "id": "X1",
+      "attribute": "keyExchangeSupported",
+      "level": "MUST",
+      "list": true,
+      "constraint": {
+        "minCount": 1
+      },
+      "withholdable": false
+    }
   ],
-
   "groupRules": [
     {
       "id": "G1",
@@ -43,7 +92,15 @@
       "level": "MUST",
       "description": "Every cryptographic purpose has an entry stating its capability status",
       "members": [
-        { "id": "G1.1", "attribute": "capabilityStatus", "level": "MUST", "constraint": { "enumRef": "capabilityStatusVocabulary" }, "withholdable": false }
+        {
+          "id": "G1.1",
+          "attribute": "capabilityStatus",
+          "level": "MUST",
+          "constraint": {
+            "enumRef": "capabilityStatusVocabulary"
+          },
+          "withholdable": false
+        }
       ]
     }
   ]

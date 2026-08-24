@@ -1229,8 +1229,10 @@ which wins, and any answer will surprise somebody. One parent keeps the guarante
 the stricter profile automatically means meeting the one it builds on.
 
 **Option B: allow two or more, taking the strictest of any conflict.** The result is then at
-least as strict as every parent, so the guarantee still holds against all of them. It requires
-requirement numbering to be managed across profile families, which is Q33.
+least as strict as every parent, so the guarantee still holds against all of them. Under the
+numbering settled in decision 0011 the rule ids themselves compose without difficulty, because
+each is local to its own profile; what has to hold is that no two profiles in the merged chains
+share a tag, and nothing today registers tags across families.
 
 **Option C: no combining, but allow a profile to declare that it is always checked alongside
 named others**, each producing its own result. This is already possible; the option is to make it
@@ -1293,8 +1295,10 @@ question and loses the guarantee that makes building on another profile worthwhi
 
 **Where it stands.** Nothing. No sector profile exists.
 
-**What would have to change.** Whether combining is allowed (Q23), the requirement numbering
-scheme (Q33), and whether permitted value lists can be narrowed (Q35).
+**What would have to change.** Whether combining is allowed (Q23), and whether permitted value
+lists can be narrowed (Q35). The numbering half is settled: decision 0011 makes a rule citable as
+`<profileTag>#<ruleId>`, so a claim naming several profiles has to carry their tags for a report
+attached to it to be readable.
 
 **A dependency, added 21 August 2026.** Option A is the option that preserves portability, and it
 is conditional on the attribute model being able to express what a sector needs. For finance it
@@ -1306,27 +1310,32 @@ exists to avoid. Note that this does *not* depend on Q08: see `design-note-multi
 
 ## Q33 — How are requirement numbers allocated across a family of profiles?
 
-**Status** open
+**Status** settled by decision 0011
 
-**The question.** The baseline numbers its requirements P1, P2 and I1 to I9. The migration
-profile continues the P sequence at P3 but starts a new letter at M1. A third profile has nothing
-to follow.
+**The question.** The baseline numbered its requirements P1, P2 and I1 to I9. The migration
+profile continued the P sequence at P3 and started a new letter at M1. A third profile had
+nothing to follow.
 
-**Why it matters.** Requirement numbers appear in failure reports and in a supplier's remediation
-work, so they are part of a profile's public interface. Two conventions are already in use within
-one family, which is a small problem now and a confusing one once several bodies publish.
+**Why it mattered.** Requirement numbers appear in failure reports and in a supplier's
+remediation work, so they are part of a profile's public interface. Two conventions were in use
+within one family, and the base could not add a product rule at all while a derived profile held
+an id in the base's space — a hard validator error rather than an untidiness.
 
-**Option A: a letter per profile.** A failure report shows immediately which profile imposed a
-requirement. Single letters run out, and nothing guides the choice.
+**How it was settled.** A rule id is local to the profile that declares it, and the citable form
+is `<profileTag>#<ruleId>`. Every profile numbers from 1 in each kind — `P` per product, `I` per
+interface, `G` per group, members as `G1.2` — at every level of a family. The uniqueness
+requirement moves off the ids, which an author cannot coordinate across a family, and onto the
+tag, which an author chooses once: C15 rejects a tag an ancestor already uses, and C16 fixes the
+letter to the section the rule sits in. A rule keeps the id of the profile that introduced it
+however far down it is later tightened, so an override names its target in full.
 
-**Option B: continue the sequence.** Requirements are numbered within a family whoever adds them,
-as the P sequence already does. No collisions by construction. A reader cannot tell the origin
-from the number, so reports must name the profile separately, which they already do.
+Nothing had been released when this was settled, so the whole family was renumbered clean and no
+id is retired. From here on a released id is never reused, and gaps in a sequence are correct.
 
-**Option C: put the profile name in the number.** Unambiguous, and verbose in every report.
-
-**Where it stands.** Option A for one kind of requirement and Option B for the other, in the same
-family, without either having been chosen.
+**What it leaves.** Q24 depends on this: a claim naming several profiles at once has to carry the
+tags, because a report attached to it cites rules by tag. Nothing in the scheme registers tags
+across bodies, which is only a problem if two profiles from different families are ever composed —
+and single inheritance means they cannot be today.
 
 **What would have to change.** Both rule files, the override declarations, the origin tracking in
 the validator, and any sector profile (Q25).

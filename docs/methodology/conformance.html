@@ -122,6 +122,8 @@ nav: conformance
       <tr><td>C11</td><td>The profile declares its scope: the type of subject it describes, its orientation, the relationship types its rules constrain, and the lifecycle stages of reported data it accepts.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C12</td><td>The rules the profile imposes are consistent with the orientation it declares.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C14</td><td>Identifier schemes are declared for every asset class the rules constrain, and no scheme is declared that no rule applies.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C15</td><td>The profile carries a tag, and no profile it inherits from already uses that tag.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C16</td><td>Rule identifiers are local to the profile, and each carries the letter of the section it sits in.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C13</td><td>Every group rule is keyed to a declared vocabulary, and a profile that declares a subset of that vocabulary in scope still requires an answer for the rest.</td><td><strong>MUST</strong></td></tr>
     </tbody>
   </table>
@@ -168,7 +170,11 @@ nav: conformance
   <p>An inventory assembled from several suppliers has to decide which records describe the same thing, and identity cannot be settled in general because some asset classes have no agreed identifier. It can be settled per profile, which is the lever this methodology has: a profile names the form it requires for each class of asset its rules constrain, and a consumer then knows which naming they are reading.</p>
   <p>C14 does not check that a value belongs to a registry. The checker does not hold the registry and would be guessing. What it checks is that the declaration and the rules agree in both directions &mdash; every scheme a rule references is declared, and every scheme declared is referenced by some rule &mdash; because a scheme nobody applies drifts from the rules while continuing to read as authoritative. Which registry an algorithm name should come from is <a href="../issues/">Q20</a> and is unsettled; that a profile says which one it means is settled here.</p>
 
-  <p>C1 to C7 and C11 to C14 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
+  <h3>C15 and C16: identifiers that can be cited</h3>
+  <p>A rule identifier is local to the profile that declares it, so a rule is named as <code>&lt;profileTag&gt;#&lt;ruleId&gt;</code> and three profiles in one family may each declare an <code>I1</code>. That moves the uniqueness requirement off the rule identifiers, which an author cannot coordinate across a family, and onto the tag, which an author chooses once. C15 is that check. Without it a citation resolves to two different rules and a stored conformance claim stops meaning anything; with it, a base profile can add a rule without first asking what its derived profiles have taken.</p>
+  <p>C16 fixes the letter to the kind of rule rather than leaving it to the author: <code>P</code> once per product, <code>I</code> once per declared interface, <code>G</code> once per entry in a group. Because the tag already says which profile a rule belongs to, the letter is free to carry the thing a reader actually wants from it. C16 does not require the numbering to be dense: a released identifier is never reused, so gaps are correct, and a checker demanding a contiguous sequence would forbid the thing that rule exists to permit. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0011-rule-numbering-across-a-family.md">decision 0011</a>.</p>
+
+  <p>C1 to C7 and C11 to C16 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
 
   <h2>3. An evaluation tool conforming to this methodology</h2>
   <p>Two tools given the same document, the same profile and the same resolution of any extended base are expected to return the same verdict. The requirements below are what that expectation rests on.</p>
@@ -196,8 +202,8 @@ nav: conformance
   <h3>What a claim cites</h3>
   <p>A claim names the profile and its version, the carrier format and its version, and the content revision of the document assessed. A claim omitting any of the three cannot be reproduced, and a claim that cannot be reproduced cannot be audited. Where a derived profile was used, the base and the version it pins are named as well.</p>
   <pre><code>Conforms to:
-  pkic.example.pqc-migration v0.5
-    extending pkic.example.interface-disclosure v0.6
+  pkic.example.pqc-migration v0.6
+    extending pkic.example.interface-disclosure v0.7
 Carrier: CycloneDX 1.7
 Content revision: 3
 Assessed by: Example Ltd (self-declared)

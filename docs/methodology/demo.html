@@ -71,7 +71,7 @@ nav: demo
 <main>
   <div class="crumb">INTERACTIVE</div>
   <h1>Conformance evaluation</h1>
-  <p class="lead">Four example documents, evaluated against the Interface Disclosure Baseline v0.6. The first declares both a service and a management interface and conforms. The second omits the management interface and fails a product rule. The third declares both but exercises each of the four disclosure outcomes. The fourth is a subject with no administrative surface at all, which satisfies the management-interface rule by saying so rather than by having one: a structural rule is satisfied by presence or by a stated absence, and silence is neither. The carrier version selector shows how the profile's declared acceptance range treats documents written to other versions of CycloneDX. This evaluation corresponds to that performed by <code>validate_cbom.py</code>.</p>
+  <p class="lead">Four example documents, evaluated against the Interface Disclosure Baseline v0.7. The first declares both a service and a management interface and conforms. The second omits the management interface and fails a product rule. The third declares both but exercises each of the four disclosure outcomes. The fourth is a subject with no administrative surface at all, which satisfies the management-interface rule by saying so rather than by having one: a structural rule is satisfied by presence or by a stated absence, and silence is neither. The carrier version selector shows how the profile's declared acceptance range treats documents written to other versions of CycloneDX. This evaluation corresponds to that performed by <code>validate_cbom.py</code>.</p>
   <div class="legend">
     <div><span class="k st PASS">PASS</span>value supplied and valid</div>
     <div><span class="k st held">HELD</span>withheld by the producer, permitted for this attribute</div>
@@ -130,6 +130,11 @@ nav: demo
 
 <script>
 const PROFILE = {
+  // A rule id is local to the profile that declares it, so the citable form is
+  // '<profileTag>#<ruleId>'. This demo shows one profile, but it prints the
+  // qualified form anyway, because that is what a report carries and because a
+  // derived profile would have an I1 of its own. See decision 0011.
+  profileTag: "interface-disclosure",
   appliesTo: {cyclonedx:{min:"1.6", tested:"1.7"}},
   interfaceTypeVocabulary: ["management","service","interconnect","peer","storage"],
   productRules: [
@@ -184,6 +189,9 @@ const PRODUCTS = {
   noadmin:   {identifier:"pkg:generic/libexample@2.1.0",   attrs:{coverage:"all", managementInterfaceAbsence:"no-configuration-surface"}}
 };
 const CBOMS = { pass:[SVC, MGMT], fail:[SVC], disclosure:[SVC, MIXED], noadmin:[LIB] };
+
+// A rule is cited against the tag of the profile that declared it.
+function qid(id){ return PROFILE.profileTag + "#" + id; }
 
 // --- carrier version bands -------------------------------------------------
 function cmpVer(a,b){
@@ -314,24 +322,24 @@ function render(){
   } else {
     vd.className="verdict "+(res.conforms?"pass":"fail");
     const reasons=[];
-    const pf=res.product.filter(r=>!r.ok&&r.level==="MUST").map(r=>r.id);
+    const pf=res.product.filter(r=>!r.ok&&r.level==="MUST").map(r=>qid(r.id));
     if(pf.length) reasons.push("product rule "+pf.join(", "));
     res.interfaces.filter(i=>!i.conforms).forEach(i=>{
-      const ids=i.rows.filter(r=>!r.ok&&r.level==="MUST").map(r=>r.id);
+      const ids=i.rows.filter(r=>!r.ok&&r.level==="MUST").map(r=>qid(r.id));
       reasons.push(i.iface.interfaceId+" ("+ids.join(", ")+")");
     });
     const q = bd.k==="legacy" ? " · legacy carrier, result flagged"
             : bd.k==="newer"  ? " · newer carrier, result qualified" : "";
     vd.textContent=res.conforms
-      ? "✓ CONFORMS to Interface Disclosure Baseline v0.6"+q
+      ? "✓ CONFORMS to Interface Disclosure Baseline v0.7"+q
       : "✕ DOES NOT CONFORM — failed "+reasons.join("; ")+q;
   }
   document.getElementById("productChecks").innerHTML=res.product.map(r=>
     `<li class="product ${!r.ok?'fail':''}">${stItem(r)}<span class="pill">${r.level}</span>
-      <span><span class="attr">${r.id}</span> — ${r.description} <span class="detail">→ ${r.d}</span></span></li>`).join("");
+      <span><span class="attr">${qid(r.id)}</span> — ${r.description} <span class="detail">→ ${r.d}</span></span></li>`).join("");
   document.getElementById("ifaceChecks").innerHTML=res.interfaces.map(it=>{
     const rows=it.rows.map(r=>`<li class="${!r.ok&&r.level==='MUST'?'fail':''}">${stItem(r)}
-        <span class="pill">${r.level}</span><span class="attr">${r.id} · ${r.attribute}</span>
+        <span class="pill">${r.level}</span><span class="attr">${qid(r.id)} · ${r.attribute}</span>
         <span class="detail">${r.d}</span></li>`).join("");
     return `<div class="ihead"><span class="dot ${it.iface.interfaceType==='management'?'management':'svc'}"></span>
        Interface <span class="attr">${it.iface.interfaceId}</span> (type ${it.iface.interfaceType}) —

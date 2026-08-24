@@ -14,6 +14,8 @@ left open rather than decided here, so the record can be accepted in part.
 -->
 
 ## Context
+> **Numbering.** Rule ids in this record predate decision 0011, which renumbered the family. `M1` to `M9` are now `pqc-migration#I1` to `#I9`; the capability group `M10` and its members are `pqc-migration#G1` and `G1.1` to `G1.3`; the rules recorded here as `M11` and `M12` were replaced before release and have no successor.
+
 
 Q27 asks whether readiness is stated once per interface or separately for each job cryptography
 does, and gives its own answer to why it matters: post-quantum key agreement can be deployed now

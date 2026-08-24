@@ -1,6 +1,7 @@
 {
   "$comment": "Fixture. Deliberately fails C6: rule I1 requires 'pqcPosture', a derived judgement whose criteria sit outside the document and change with guidance. This reproduces the attribute removed by decision 0002. The facts a posture is derived from belong in the CBOM; the posture itself belongs to external versioned policy.",
   "profileId": "pkic.test.c6",
+  "profileTag": "c6",
   "title": "Fixture - C6 requires a derived judgement",
   "version": "0.1",
   "objective": {

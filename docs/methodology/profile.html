@@ -107,7 +107,7 @@ nav: profile
 
   <h3>Group rules (one answer per key, within an interface)</h3>
   <p>The two kinds above each produce one answer: a product rule answers about the set of interfaces, a per-interface rule answers about one attribute of one interface. Some questions have no single answer. Asked whether an interface can be made quantum-safe, a producer whose key agreement is done and whose identity proof is waiting on a certificate authority has two answers, and forcing one would report the worse of them &mdash; from which a planner concludes that nothing can proceed when half of it can.</p>
-  <p>A <strong>group rule</strong> constrains a repeated group keyed by a controlled vocabulary. An interface carries one entry per key, and the rule's member rules are evaluated inside an entry, so a conditional guard refers to that entry rather than to the interface as a whole. The <a href="pqc-migration.html">PQC Migration</a> profile uses one, keyed by <a href="model.html">cryptographic purpose</a>: rule M10 requires an entry per purpose, and its member M10.2 requires a blocker wherever <em>that purpose's</em> status is not <code>available</code>.</p>
+  <p>A <strong>group rule</strong> constrains a repeated group keyed by a controlled vocabulary. An interface carries one entry per key, and the rule's member rules are evaluated inside an entry, so a conditional guard refers to that entry rather than to the interface as a whole. The <a href="pqc-migration.html">PQC Migration</a> profile uses one, keyed by <a href="model.html">cryptographic purpose</a>: rule <code>pqc-migration#G1</code> requires an entry per purpose, and its member <code>G1.2</code> requires a blocker wherever <em>that purpose's</em> status is not <code>available</code>.</p>
   <p>A group rule also declares its <strong>coverage</strong>, which is the part worth attention. Coverage may be every value in the vocabulary, or only those the profile's scope declares. The difference decides whether a profile that addresses part of a problem is a stage or a floor: with full coverage, a purpose the profile defers still owes a status, so a consumer learns where it stands; with coverage limited to what is in scope, the deferred purposes disappear from the document entirely and no later profile has a baseline to improve on. <a href="conformance.html">C13</a> checks this, because both readings load and run.</p>
 
   <h2 id="disclosure">Disclosure states</h2>
@@ -148,7 +148,7 @@ nav: profile
       <text x="548" y="20" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">EXTENSION</text>
       <rect x="470" y="42" width="156" height="42" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
       <text x="548" y="62" fill="#1a2230" text-anchor="middle" font-size="11.5">base profile</text>
-      <text x="548" y="77" fill="#5b6472" text-anchor="middle" font-size="10">interface disclosure v0.6</text>
+      <text x="548" y="77" fill="#5b6472" text-anchor="middle" font-size="10">interface disclosure v0.7</text>
       <rect x="470" y="120" width="156" height="42" rx="10" fill="#eafaf1" stroke="#0f7a52"/>
       <text x="548" y="140" fill="#1a2230" text-anchor="middle" font-size="11.5">derived profile</text>
       <text x="548" y="155" fill="#5b6472" text-anchor="middle" font-size="10">adds and tightens only</text>
@@ -194,36 +194,50 @@ nav: profile
   <ul>
     <li><strong>The base version is pinned.</strong> A derived profile names the base profile and the exact version it extends. A later release of the base has no effect until the derived profile's author re-pins and re-checks, which follows the general treatment of profile versions in <a href="versioning.html">Versioning</a>.</li>
     <li><strong>The carrier acceptance range may narrow, never widen.</strong> A derived profile cannot accept a format version the base excludes, since the base's adapter may be unable to read it.</li>
-    <li><strong>Inherited rules keep the base's identifiers.</strong> A report can then say that I3 comes from the baseline and M9 was added by the derived profile, and a reader can trace any failure to the profile that imposed it.</li>
+    <li><strong>Inherited rules keep the identifiers the base gave them.</strong> A report can then trace any failure to the profile that imposed it. How identifiers are allocated is set out below.</li>
     <li><strong>Single inheritance only, for now.</strong> A profile extends at most one base. Multiple inheritance raises conflicts between bases that would need resolution rules, and no case requiring it has arisen.</li>
   </ul>
+
+  <h3>Rule identifiers</h3>
+  <p>A rule identifier is local to the profile that declares it. The citable form is the profile's tag followed by the identifier &mdash; <code>interface-disclosure#I9</code> &mdash; and nothing shorter names a rule. Three profiles in one family may each declare an <code>I1</code>, and in the worked example three of them do.</p>
+  <p>The letter says how often the rule is evaluated, and it is fixed by the section the rule sits in rather than chosen by the author: <code>P</code> once per product, <code>I</code> once per declared interface, <code>G</code> once per entry in a group, with members numbered under their group as <code>G1.2</code>. Numbering restarts at 1 in every profile, at every level of a family.</p>
+  <p>Two consequences are worth stating plainly.</p>
+  <ul>
+    <li><strong>A rule keeps the identifier of the profile that introduced it</strong>, however far down the family it is later tightened. When the migration profile removes the withholdability of the baseline's <code>implementationPurl</code> rule, that rule is still <code>interface-disclosure#I9</code>; the tightening is recorded against it, and a report names both the rule and who tightened it.</li>
+    <li><strong>The tag is the only thing that has to be unique</strong> along a chain. That is what lets a base profile add a rule without first asking what its derived profiles have taken, and what lets a family go three levels deep with no reserved ranges and no registry. A tag an ancestor already uses is rejected before any document is evaluated.</li>
+  </ul>
+  <p>Identifiers are not reused. Once a version is released, an identifier retired in a later version stays retired and the numbering carries a gap, because a conformance report or a stored claim may cite it against a document evaluated under the earlier version; reusing it would make that report silently wrong rather than merely stale.</p>
+  <p>Identifiers do not appear in CBOM documents at all. They appear in conformance reports and in claims, which is why they have to be stable and why they have to say which profile they came from. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0011-rule-numbering-across-a-family.md">decision 0011</a>.</p>
 
   <h3>Expressing a conformance claim</h3>
   <p>A claim names every profile evaluated, each with its version, together with the carrier format version and the content revision. For a derived profile the base is named as well, because the derived profile pins a particular version of it and a reader should not have to look that up.</p>
   <pre><code>Conforms to:
-  pkic.example.pqc-migration v0.5
-    extending pkic.example.interface-disclosure v0.6
-  pkic.example.interface-disclosure v0.6   (independently evaluated)
+  pkic.example.pqc-migration v0.6            (tag: pqc-migration)
+    extending pkic.example.interface-disclosure v0.7   (tag: interface-disclosure)
+  pkic.example.interface-disclosure v0.7     (independently evaluated)
 Carrier: CycloneDX 1.7
 Content revision: 3</code></pre>
+  <p>The tags are part of the claim rather than decoration: a report attached to it cites rules as <code>pqc-migration#I4</code>, and a reader needs the claim to say which profile that tag belongs to.</p>
 
   <h3>Machine-readable form</h3>
   <p>A derived rules file declares its base and lists only its additions and its tightenings.</p>
   <pre><code>{
   "profileId": "pkic.example.pqc-migration",
-  "version": "0.5",
-  "extends": { "profileId": "pkic.example.interface-disclosure", "version": "0.6" },
+  "profileTag": "pqc-migration",
+  "version": "0.6",
+  "extends": { "profileId": "pkic.example.interface-disclosure", "version": "0.7" },
   "overrides": [
-    { "id": "I9", "level": "MUST", "withholdable": false }
+    { "id": "interface-disclosure#I9", "level": "MUST", "withholdable": false }
   ],
-  "interfaceRules": [ ... rules added by this profile ... ]
+  "interfaceRules": [ ... numbered from I1 in this profile's own space ... ]
 }</code></pre>
+  <p>The override names its target in full. A bare <code>I9</code> would be this profile's own ninth interface rule, which is a different rule, so the validator rejects an unqualified override rather than guessing.</p>
   <p>A validator loading such a file resolves the base, applies the overrides, and rejects any override that relaxes an inherited rule. That check is worth implementing early, because a relaxing override is easy to write by accident and its effect on a conformance claim is not obvious from reading the file.</p>
 
   <h2>Conformance pipeline</h2>
   <p>The validator applies four stages in sequence. The content stages are evaluated only if the format stage accepts the CBOM.</p>
   <figure>
-    <svg viewBox="0 0 720 150" role="img" aria-label="Five boxes chained by arrows: a CycloneDX 1.7 CBOM, a format gate checking the version band, product rules P1 and P2, interface rules I1 to I9, and a verdict" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+    <svg viewBox="0 0 720 150" role="img" aria-label="Five boxes chained by arrows: a CycloneDX 1.7 CBOM, a format gate checking the version band, product rules P1 to P4, interface rules I1 to I9, and a verdict" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <g font-size="12">
         <rect x="10" y="55" width="110" height="52" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
         <text x="65" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">CBOM</text>
@@ -233,7 +247,7 @@ Content revision: 3</code></pre>
         <text x="215" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">version band</text>
         <rect x="310" y="55" width="130" height="52" rx="10" fill="#ffffff" stroke="#c9d3e0"/>
         <text x="375" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">Product rules</text>
-        <text x="375" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">P1 · P2</text>
+        <text x="375" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">P1–P4</text>
         <rect x="470" y="55" width="130" height="52" rx="10" fill="#ffffff" stroke="#c9d3e0"/>
         <text x="535" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">Interface rules</text>
         <text x="535" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">I1–I9 × each</text>

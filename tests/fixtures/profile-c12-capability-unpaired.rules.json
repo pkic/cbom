@@ -1,33 +1,69 @@
 {
   "$comment": "Fixture. Deliberately fails C12: declares orientation 'both' and requires keyExchangeSupported without requiring keyExchange, so it reports what the interface could negotiate and never what it does. A consumer reading the document would see a set of algorithms with no way to tell which of them is in use, and the capability attribute would quietly be read as present state. This is the failure orientation exists to catch. Everything else is well-formed.",
   "profileId": "pkic.test.c12-unpaired",
+  "profileTag": "c12-unpaired",
   "title": "Fixture - C12 capability without present state",
   "version": "0.1",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
-
   "objective": {
     "consumer": "A fixture, standing in for a consumer.",
     "decision": "Whether the checker requires present state alongside capability.",
-    "decisionOptions": ["accept the fixture", "reject the fixture"]
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
   },
-
   "scope": {
     "subjectType": "product",
     "orientation": "both",
-    "relationshipTypes": ["interface"],
-    "lifecycleStages": ["implemented", "configured", "observed"]
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented",
+      "configured",
+      "observed"
+    ]
   },
-
-  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
-
-  "interfaceTypeVocabulary": ["management", "service"],
-
-  "productRules": [
-    { "id": "P1", "description": "Product declares at least one cryptographic interface", "level": "MUST", "constraint": { "minInterfaces": 1 } }
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "interfaceTypeVocabulary": [
+    "management",
+    "service"
   ],
-
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Product declares at least one cryptographic interface",
+      "level": "MUST",
+      "constraint": {
+        "minInterfaces": 1
+      }
+    }
+  ],
   "interfaceRules": [
-    { "id": "I1", "attribute": "protocol", "level": "MUST", "constraint": { "present": true }, "withholdable": false },
-    { "id": "X1", "attribute": "keyExchangeSupported", "level": "MUST", "list": true, "constraint": { "present": true }, "withholdable": false }
+    {
+      "id": "I1",
+      "attribute": "protocol",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false
+    },
+    {
+      "id": "X1",
+      "attribute": "keyExchangeSupported",
+      "level": "MUST",
+      "list": true,
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false
+    }
   ]
 }

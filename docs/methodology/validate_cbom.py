@@ -140,31 +140,80 @@ def ver_tuple(s):
 # --------------------------------------------------------------------------- #
 # Profile loading and composition                                             #
 # --------------------------------------------------------------------------- #
+def profile_tag(profile):
+    """The short handle a rule id is cited against.
+
+    A rule id is local to the profile that declared it, so 'I3' on its own does
+    not name a rule: the citable form is '<profileTag>#<ruleId>'. The tag
+    defaults to the last dotted segment of the profileId, which is already the
+    part a reader says aloud. See decision 0011."""
+    tag = profile.get("profileTag")
+    if not tag:
+        tag = str(profile.get("profileId", "")).split(".")[-1]
+    return tag
+
+
+def stamp_qids(profile, tag):
+    """Attach the qualified id to every rule this profile declares."""
+    for section in ("productRules", "interfaceRules"):
+        for rule in profile.get(section, []):
+            rule["_qid"] = "%s#%s" % (tag, rule["id"])
+    for group in profile.get("groupRules", []):
+        group["_qid"] = "%s#%s" % (tag, group["id"])
+        for member in group.get("members", []):
+            member["_qid"] = "%s#%s" % (tag, member["id"])
+
+
+def all_qids(profile):
+    out = [r["_qid"] for r in profile.get("productRules", [])
+           + profile.get("interfaceRules", [])]
+    for group in profile.get("groupRules", []):
+        out.append(group["_qid"])
+        out += [m["_qid"] for m in group.get("members", [])]
+    return out
+
+
+def origin_map(profile):
+    """Map every qualified rule id to the profile that imposed it.
+
+    A rule keeps the id of the profile that introduced it however far down the
+    chain it is later tightened, so the origin names the introducer first and
+    then the tighteners in the order they applied."""
+    introduced = profile.get("_introducedBy", {})
+    tightened = profile.get("_tightenedBy", {})
+    out = {}
+    for qid, who in introduced.items():
+        tags = tightened.get(qid)
+        out[qid] = ("%s (tightened by %s)" % (who, ", ".join(tags))) if tags else who
+    return out
+
+
 def load_profile(path):
     """Load a profile, resolving 'extends' and applying 'overrides'.
 
-    Returns (profile, origin, notes) where origin maps a rule id to the
-    profileId that imposed it, and notes records composition events."""
+    Returns (profile, origin, notes) where origin maps a qualified rule id to
+    the profileId that imposed it, and notes records composition events."""
     with open(path, encoding="utf-8") as fh:
         prof = json.load(fh)
     notes = []
 
+    tag = profile_tag(prof)
+    stamp_qids(prof, tag)
+
     ext = prof.get("extends")
     if not ext:
-        origin = {r["id"]: prof["profileId"]
-                  for r in prof.get("productRules", []) + prof.get("interfaceRules", [])}
-        for g in prof.get("groupRules", []):
-            origin[g["id"]] = prof["profileId"]
-            for m in g.get("members", []):
-                origin[m["id"]] = prof["profileId"]
+        prof["profileTag"] = tag
+        prof["_chain"] = [tag]
+        prof["_introducedBy"] = {q: prof["profileId"] for q in all_qids(prof)}
+        prof["_tightenedBy"] = {}
         apply_scope(prof)
-        return prof, origin, notes
+        return prof, origin_map(prof), notes
 
     base_file = ext.get("file")
     if not base_file:
         raise ProfileError("extends: no 'file' hint, cannot resolve base profile")
     base_path = os.path.join(os.path.dirname(os.path.abspath(path)), base_file)
-    base, origin, base_notes = load_profile(base_path)
+    base, _base_origin, base_notes = load_profile(base_path)
     notes += base_notes
 
     if base.get("profileId") != ext.get("profileId"):
@@ -174,58 +223,81 @@ def load_profile(path):
         raise ProfileError("extends: base is version %s, profile pins %s"
                          % (base.get("version"), ext.get("version")))
 
+    # Rule ids are local to the profile that declares them, so nothing stops a
+    # derived profile from calling its first interface rule I1 as well. What
+    # must be unique along the chain is the tag, because that is what makes a
+    # citation unambiguous. This is the check that replaces the old rule-id
+    # collision error, and it is the reason the scheme survives three levels.
+    if tag in base.get("_chain", []):
+        raise ProfileError(
+            "profile tag %r is already used in this family (%s); the tag is the "
+            "handle every rule this profile introduces is cited against, so it "
+            "must be unique along the chain" % (tag, " -> ".join(base["_chain"])))
+
     merged = dict(base)
     merged.update({k: v for k, v in prof.items()
                    if k not in ("productRules", "interfaceRules", "groupRules",
                                 "overrides", "extends")})
     merged["profileId"] = prof["profileId"]
+    merged["profileTag"] = tag
     merged["title"] = prof.get("title", base.get("title"))
     merged["version"] = prof.get("version")
     merged["extends"] = ext
+    merged["_chain"] = list(base.get("_chain", [])) + [tag]
+    merged["_introducedBy"] = dict(base.get("_introducedBy", {}))
+    merged["_tightenedBy"] = {k: list(v) for k, v in base.get("_tightenedBy", {}).items()}
 
     check_range_narrows(base, prof)
     check_scope_narrows(base, prof)
 
-    for group in ("productRules", "interfaceRules"):
-        inherited = [dict(r) for r in base.get(group, [])]
-        by_id = {r["id"]: r for r in inherited}
+    for section in ("productRules", "interfaceRules"):
+        inherited = [dict(r) for r in base.get(section, [])]
+        by_qid = {r["_qid"]: r for r in inherited}
         for ov in prof.get("overrides", []):
-            if ov["id"] in by_id:
-                target = by_id[ov["id"]]
-                if target.get("_group", group) == group or ov["id"] in by_id:
-                    check_override_tightens(target, ov, notes)
-                    target.update({k: v for k, v in ov.items() if k != "note"})
-                    origin[ov["id"]] = "%s (tightened by %s)" % (
-                        base["profileId"], prof["profileId"])
-        added = prof.get(group, [])
+            if "#" not in str(ov.get("id", "")):
+                raise ProfileError(
+                    "override %r is not qualified: an override names the rule it "
+                    "tightens as '<profileTag>#<ruleId>', because a bare id is "
+                    "local to the profile that declared it" % ov.get("id"))
+            if ov["id"] in by_qid:
+                target = by_qid[ov["id"]]
+                check_override_tightens(target, ov, notes)
+                # The id is not copied: a tightened rule keeps the id, and the
+                # tag, of the profile that introduced it. That is what lets a
+                # claim citing it stay meaningful three levels down.
+                target.update({k: v for k, v in ov.items()
+                               if k not in ("note", "id")})
+                merged["_tightenedBy"].setdefault(ov["id"], []).append(tag)
+        added = prof.get(section, [])
         for r in added:
-            if r["id"] in by_id:
-                raise ProfileError("rule id %s collides with an inherited rule" % r["id"])
-            origin[r["id"]] = prof["profileId"]
-        merged[group] = inherited + added
+            if r["_qid"] in by_qid:
+                raise ProfileError("rule id %s is declared twice in %s" % (r["id"], tag))
+            by_qid[r["_qid"]] = r
+            merged["_introducedBy"][r["_qid"]] = prof["profileId"]
+        merged[section] = inherited + added
 
     # Group rules are concatenated rather than overridden. A derived profile may
     # add a group; tightening one member of an inherited group is not yet
     # expressible, and inventing a syntax for it before anyone needs it would be
-    # guessing. Collisions are still rejected, so the gap is visible.
+    # guessing. The gap is recorded rather than hidden.
     inherited_groups = [dict(g) for g in base.get("groupRules", [])]
-    seen_groups = {g["id"] for g in inherited_groups}
+    seen_groups = {g["_qid"] for g in inherited_groups}
     for g in prof.get("groupRules", []):
-        if g["id"] in seen_groups:
-            raise ProfileError(
-                "group rule id %s collides with an inherited group rule; "
-                "overriding a group member is not supported" % g["id"])
-        origin[g["id"]] = prof["profileId"]
+        if g["_qid"] in seen_groups:
+            raise ProfileError("group rule id %s is declared twice in %s" % (g["id"], tag))
+        seen_groups.add(g["_qid"])
+        merged["_introducedBy"][g["_qid"]] = prof["profileId"]
         for m in g.get("members", []):
-            origin[m["id"]] = prof["profileId"]
+            merged["_introducedBy"][m["_qid"]] = prof["profileId"]
     merged["groupRules"] = inherited_groups + list(prof.get("groupRules", []))
 
-    unmatched = [o["id"] for o in prof.get("overrides", []) if o["id"] not in origin]
+    unmatched = [o["id"] for o in prof.get("overrides", [])
+                 if o["id"] not in merged["_introducedBy"]]
     if unmatched:
         raise ProfileError("overrides reference unknown rule(s): %s" % ", ".join(unmatched))
 
     apply_scope(merged)
-    return merged, origin, notes
+    return merged, origin_map(merged), notes
 
 
 def apply_scope(profile):
@@ -258,7 +330,7 @@ def apply_scope(profile):
 
 def check_override_tightens(base_rule, ov, notes):
     """Reject an override that relaxes an inherited rule."""
-    rid = base_rule["id"]
+    rid = base_rule.get("_qid", base_rule["id"])
     if "level" in ov:
         old, new = base_rule.get("level", "MAY"), ov["level"]
         if LEVEL_ORDER.get(new, 0) < LEVEL_ORDER.get(old, 0):
@@ -562,7 +634,7 @@ def check_group_rule(iface, rule, profile):
 
     Returns a list of report rows. A missing entry is reported against the group
     rule and named by its key, because "no status for entity-authentication" is
-    what a reader needs, not "M10 failed". Member rules are evaluated inside the
+    what a reader needs, not "G1 failed". Member rules are evaluated inside the
     entry, so a 'requiredWhen' guard refers to the entry's own attributes rather
     than to the interface: the blocker for one purpose depends on the status of
     that purpose and on nothing else. That was the defect in the per-interface
@@ -577,7 +649,7 @@ def check_group_rule(iface, rule, profile):
         depth = "in scope" if (not scoped or key in scoped) else "status only"
         values = entries.get(key)
         if not values:
-            rows.append({"id": rule["id"], "level": rule["level"],
+            rows.append({"id": rule["_qid"], "level": rule["level"],
                          "attribute": "%s[%s]" % (rule["keyedBy"], key),
                          "ok": False, "state": "undeclared",
                          "detail": "no entry for this %s (%s)" % (rule["keyedBy"], depth)})
@@ -592,19 +664,33 @@ def check_group_rule(iface, rule, profile):
             if scoped and key not in scoped and member.get("level") == "MAY":
                 continue
             ok, state, detail = check_rule(entry, member, profile)
-            rows.append({"id": "%s[%s]" % (member["id"], key), "level": member["level"],
+            rows.append({"id": "%s[%s]" % (member["_qid"], key), "level": member["level"],
                          "attribute": member["attribute"], "ok": ok,
                          "state": state, "detail": detail})
     return rows
 
 
-def rule_sort_key(row):
-    """Order rows by rule id, tolerating member ids like 'M10.2[key-establishment]'."""
+KIND_ORDER = {"P": 0, "I": 1, "G": 2}
+
+
+def rule_sort_key(row, chain=()):
+    """Order rows for reading: base profile first, then by kind and number.
+
+    Ids are qualified now, so a plain alphabetic sort would interleave two
+    profiles' rules by tag rather than by where they came from. A reader works
+    outward from the base, so the chain position leads, then the kind letter,
+    then the number. Member ids like 'pqc-migration#G1.2[key-establishment]'
+    sort under their group."""
     ident = str(row.get("id", ""))
-    prefix = ident[0] if ident else ""
-    digits = "".join(c for c in ident[1:] if c.isdigit() or c == ".").split("[")[0]
+    tag, _, local = ident.rpartition("#")
+    try:
+        depth = list(chain).index(tag)
+    except ValueError:
+        depth = len(chain)
+    kind = KIND_ORDER.get(local[:1], len(KIND_ORDER))
+    digits = local[1:].split("[")[0]
     parts = [int(p) for p in digits.split(".") if p.isdigit()]
-    return (prefix, parts or [0], ident)
+    return (depth, kind, parts or [0], ident)
 
 
 def check_product(product, interfaces, constraint, profile):
@@ -691,20 +777,24 @@ def validate(bom, profile):
     product = extract_product(bom)
     interfaces = extract_interfaces(bom)
 
+    chain = profile.get("_chain", [])
+
     for rule in profile.get("productRules", []):
         ok, detail = check_product(product, interfaces, rule["constraint"], profile)
-        report["product"].append(dict(rule, ok=ok, detail=detail))
+        row = dict(rule, id=rule.get("_qid", rule["id"]), ok=ok, detail=detail)
+        row.pop("_qid", None)
+        report["product"].append(row)
 
     for iface in interfaces:
         rows = []
         for rule in profile.get("interfaceRules", []):
             ok, state, detail = check_rule(iface, rule, profile)
-            rows.append({"id": rule["id"], "level": rule["level"],
+            rows.append({"id": rule["_qid"], "level": rule["level"],
                          "attribute": rule["attribute"], "ok": ok,
                          "state": state, "detail": detail})
         for grule in profile.get("groupRules", []):
             rows.extend(check_group_rule(iface, grule, profile))
-        rows.sort(key=rule_sort_key)
+        rows.sort(key=lambda r: rule_sort_key(r, chain))
         iface_ok = all(r["ok"] for r in rows if r["level"] == "MUST")
         report["interfaces"].append({
             "interfaceId": iface["interfaceId"],
@@ -745,13 +835,17 @@ def main(argv):
                           "conforms": verdict == "conforms",
                           "assessed": verdict != "refused",
                           "profile": profile.get("profileId"),
+                          "profileTag": profile_tag(profile),
+                          "chain": profile.get("_chain", []),
                           "report": report, "origin": origin}, indent=2))
         return EXIT_FOR[verdict]
 
-    print("Profile : %s v%s" % (profile["title"], profile["version"]))
+    print("Profile : %s v%s  (tag: %s)"
+          % (profile["title"], profile["version"], profile_tag(profile)))
     if profile.get("extends"):
         e = profile["extends"]
         print("          extends %s v%s" % (e["profileId"], e["version"]))
+        print("          chain   %s" % " -> ".join(profile.get("_chain", [])))
         for n in notes:
             print("          override %s" % n)
     print("CBOM    : %s" % args[0])
@@ -772,18 +866,20 @@ def main(argv):
 
     print("=" * 70)
     print("PRODUCT-LEVEL RULES")
+    pidw = max([len(r["id"]) for r in report["product"]] + [4])
     for r in report["product"]:
-        print("  [%s] %-3s %-6s %s" % ("PASS" if r["ok"] else "FAIL",
-                                       r["id"], r["level"], r["description"]))
+        print("  [%s] %-*s %-6s %s" % ("PASS" if r["ok"] else "FAIL",
+                                       pidw, r["id"], r["level"], r["description"]))
         print("         -> %s   [%s]" % (r["detail"], origin.get(r["id"], "?")))
     for iface in report["interfaces"]:
         print("-" * 70)
         print("INTERFACE  %s  (type=%s)  ==>  %s"
               % (iface["interfaceId"], iface["interfaceType"],
                  "conforms" if iface["conforms"] else "FAILS"))
-        # Group member ids carry their key, so the column is sized per interface
-        # rather than fixed: 'M10.2[entity-authentication]' should not push every
-        # other row out of alignment.
+        # Ids are qualified and group member ids carry their key, so the column
+        # is sized per interface rather than fixed:
+        # 'pqc-migration#G1.2[entity-authentication]' should not push every other
+        # row out of alignment.
         idw = max([len(r["id"]) for r in iface["rows"]] + [4])
         attrw = max([len(r["attribute"]) for r in iface["rows"]] + [18])
         for r in iface["rows"]:

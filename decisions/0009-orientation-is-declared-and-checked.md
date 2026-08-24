@@ -24,7 +24,7 @@ Decision 0005 and requirement C5 police the *names*: a bare name denotes present
 `Supported` suffix denotes declared capability, and the `Current` suffix is rejected. Nothing
 polices whether a profile requiring the capability form also requires the present-state form.
 The migration example requires `protocolVersionsSupported`, `keyExchangeSupported` and
-`authenticationSupported` in rules M1 to M3, and obtains their present-state counterparts only
+`authenticationSupported` in rules M1 to M3 (now `pqc-migration#I1` to `#I3`; see decision 0011), and obtains their present-state counterparts only
 by inheriting I2, I3 and I5 from the baseline. A migration profile written standalone, or
 extending something else, could require capability alone and pass every requirement from C1 to
 C11. A consumer reading `keyExchangeSupported: [ML-KEM, X25519]` would have no way to tell what

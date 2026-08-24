@@ -1,6 +1,7 @@
 {
   "$comment": "Fixture. Deliberately fails C7 without relaxing anything. It extends the baseline and restates the inherited 'disclosure' block with a different markerPrefix. Because a derived profile's top-level keys are merged over the base's, the base's prefix is overridden silently: no override is rejected, no rule changes, and every disclosure marker written by a producer following the base would stop being recognised. Documents would then fail as undeclared with nothing in the output pointing at the cause. Not a real profile; do not copy.",
   "profileId": "pkic.test.diverging-block",
+  "profileTag": "diverging-block",
   "title": "Fixture - C7 restates an inherited block",
   "version": "0.1",
   "objective": {
@@ -13,7 +14,7 @@
   },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.6",
+    "version": "0.7",
     "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
   },
   "appliesTo": {

@@ -56,7 +56,8 @@ expect_output() {
 }
 
 # expect_output_fixed <label> <literal-needle> <cbom> <profile>
-# Group member ids such as M10.2[key-establishment] contain [ and ].
+# Qualified group member ids such as pqc-migration#G1.2[key-establishment]
+# contain [ and ].
 expect_output_fixed() {
   local label=$1 needle=$2 cbom=$3 prof=$4
   validate "$cbom" "$prof"
@@ -139,7 +140,8 @@ expect_exit   "conforming CBOM is accepted"        0 "$M/cbom-pass.cyclonedx.jso
 expect_output "verdict reads CONFORMS"     "CONFORMS" "$M/cbom-pass.cyclonedx.json" "$BASE"
 expect_output "withheld purl reported HELD"    "HELD" "$M/cbom-pass.cyclonedx.json" "$BASE"
 expect_exit   "non-conforming CBOM is rejected"    1 "$M/cbom-fail.cyclonedx.json" "$BASE"
-expect_output "failure is product rule P2"       "P2" "$M/cbom-fail.cyclonedx.json" "$BASE"
+expect_output "failure is product rule P2" "interface-disclosure#P2" \
+              "$M/cbom-fail.cyclonedx.json" "$BASE"
 
 # ------------------------------------------------- baseline product rules ---
 # v0.6 added two product rules and revised a third. P3 and P4 are what make the
@@ -252,10 +254,13 @@ expect_output "base profile is resolved"     "extends" "$M/cbom-pqc-pass.cyclone
 expect_output "inapplicable conditional is skipped" "not applicable" \
               "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
 expect_exit   "non-conforming CBOM is rejected"    1 "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
-expect_output "conditional M5 fires"             "M5" "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
-expect_output_fixed "conditional blocker fires within a purpose entry" "M10.2[key-establishment]" \
+expect_output "conditional I5 fires"  "pqc-migration#I5" \
               "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
-expect_output "tightened I9 fires"               "I9" "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
+expect_output_fixed "conditional blocker fires within a purpose entry" \
+              "pqc-migration#G1.2[key-establishment]" \
+              "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
+expect_output "tightened I9 fires" "interface-disclosure#I9" \
+              "$M/cbom-pqc-fail.cyclonedx.json" "$PQC"
 
 # --------------------------------------------------- capability per purpose ---
 # Q27: readiness was one value per interface, which cannot express the ordinary
@@ -265,11 +270,13 @@ expect_output "tightened I9 fires"               "I9" "$M/cbom-pqc-fail.cycloned
 # permanent floor.
 echo
 echo "Capability per cryptographic purpose"
-expect_output_fixed "status is stated per purpose" "M10.1[entity-authentication]" \
+expect_output_fixed "status is stated per purpose" \
+              "pqc-migration#G1.1[entity-authentication]" \
               "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
 expect_output "one interface holds two different statuses" "= 'committed'" \
               "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
-expect_output_fixed "the blocker is evaluated inside the entry" "M10.2[entity-authentication]" \
+expect_output_fixed "the blocker is evaluated inside the entry" \
+              "pqc-migration#G1.2[entity-authentication]" \
               "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
 expect_output "an available purpose needs no blocker" "not applicable (capabilityStatus='available')" \
               "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
@@ -320,7 +327,8 @@ expect_exit   "the same document conforms with an accepted stage" 0 \
               "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
 expect_exit   "an unaccepted stage fails the migration profile"   1 \
               "$TMP/cbom-intended.json" "$PQC"
-expect_output "the failure is I8"                "I8" "$TMP/cbom-intended.json" "$PQC"
+expect_output "the failure is I8" "interface-disclosure#I8" \
+              "$TMP/cbom-intended.json" "$PQC"
 expect_output "the report says the stage is out of scope" "outside the stages this profile accepts" \
               "$TMP/cbom-intended.json" "$PQC"
 # The stage is a real one, so the baseline, which accepts all four, still passes
@@ -358,15 +366,16 @@ json.dump(bom, open(os.path.join(sys.argv[2], "cbom-no-marker.json"), "w"))
 PY
 expect_exit   "a withheld marker satisfies the MUST"       0 "$M/cbom-pass.cyclonedx.json" "$BASE"
 expect_exit   "silent omission of the same attribute does not" 1 "$TMP/cbom-no-marker.json" "$BASE"
-expect_output "the failure is I9"                       "I9" "$TMP/cbom-no-marker.json" "$BASE"
+expect_output "the failure is I9" "interface-disclosure#I9" \
+              "$TMP/cbom-no-marker.json" "$BASE"
 expect_output "reported as undeclared, not withheld" "no disclosure marker" \
               "$TMP/cbom-no-marker.json" "$BASE"
 
 # -------------------------------------------------- profile well-formedness ---
 # The second conformance target: a profile checked against the methodology.
-# Requirements C1 to C14 are stated in the Conformance section.
+# Requirements C1 to C16 are stated in the Conformance section.
 echo
-echo "Profile well-formedness (C1-C14)"
+echo "Profile well-formedness (C1-C16)"
 expect_check_exit "baseline profile is well-formed"        0 "$BASE"
 expect_check_exit "derived profile is well-formed"         0 "$PQC"
 expect_check_output "baseline verdict reads WELL-FORMED" "VERDICT : WELL-FORMED" "$BASE"
@@ -441,6 +450,75 @@ echo "SHOULD requirements and --strict"
 expect_check_exit   "SHOULD gaps alone still pass"       0 "$FIX/profile-should-gaps.rules.json"
 expect_check_output "the warnings are reported" "warn" "$FIX/profile-should-gaps.rules.json"
 expect_check_exit   "--strict promotes them to failures" 1 "$FIX/profile-should-gaps.rules.json" --strict
+
+# ------------------------------------------------------------ rule numbering ---
+# Decision 0011. A rule id is local to the profile that declares it, and the
+# citable form is '<profileTag>#<ruleId>'. The point of the scheme is that three
+# profiles in one chain can each number from I1 and a reader can still tell the
+# three apart, so that is what these assert.
+echo
+echo "Rule numbering across a family"
+L3="$FIX/profile-l3-settlement.rules.json"
+
+expect_output_fixed "the report qualifies an inherited rule id" "interface-disclosure#I1" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+expect_output_fixed "a derived profile numbers its own rules from I1" "pqc-migration#I1" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+expect_output_fixed "and its product rules from P1, beside the base's P1" "pqc-migration#P1" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+expect_output_fixed "the base's own P1 is still there and distinct" "interface-disclosure#P1" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+expect_output_fixed "a group rule takes the G letter" "pqc-migration#G1.1[encryption]" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+expect_output "the chain is printed above the report" "interface-disclosure -> pqc-migration" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+# A tightened rule keeps the id, and the tag, of the profile that introduced it.
+# That is what lets a stored claim citing it stay meaningful further down.
+expect_output_fixed "a tightened rule keeps its introducer's id" \
+              "override interface-disclosure#I9" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$PQC"
+
+# Three levels. The fixture declares its own P1 and its own I1, both of which
+# are local ids that BOTH ancestors already use.
+expect_check_exit "a third-level profile is well-formed" 0 "$L3"
+expect_check_output "C15 prints the whole chain" \
+                    "interface-disclosure -> pqc-migration -> sector-settlement" "$L3"
+expect_output_fixed "the third level numbers from I1 as well" "sector-settlement#I1" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$L3"
+expect_output_fixed "and all three I1 rules appear in one report" "pqc-migration#I1" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$L3"
+expect_output_fixed "the failure names the profile that imposed it" \
+              "sector-settlement#I1" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$L3"
+
+# Monotonicity holds transitively: a third-level profile may not relax a rule
+# the base introduced, even though it is the grandparent rather than the parent.
+expect_exit   "relaxing a grandparent rule is rejected" 3 \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-l3-relaxes-grandparent.rules.json"
+expect_output "and the rejection names monotonicity" "monotonic" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-l3-relaxes-grandparent.rules.json"
+expect_output_fixed "and names the grandparent's rule, two levels up" \
+              "interface-disclosure#I9" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-l3-relaxes-grandparent.rules.json"
+
+# The tag is the one identifier that has to be unique along a chain. It is what
+# replaced the old rule-id collision check, so it is checked in both tools.
+expect_exit   "a tag an ancestor already uses is rejected" 3 \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-l3-tag-collision.rules.json"
+expect_output "and says why a tag must be unique" "unique along the chain" \
+              "$M/cbom-pqc-pass.cyclonedx.json" "$FIX/profile-l3-tag-collision.rules.json"
+expect_check_exit   "C15 rejects the same profile" 1 "$FIX/profile-l3-tag-collision.rules.json"
+expect_check_output "C15 is the failing requirement" "[FAIL] C15" \
+                    "$FIX/profile-l3-tag-collision.rules.json"
+
+# The letter is fixed by the section a rule sits in, because that is the fact a
+# reader wants from it: once per product, once per interface, once per entry.
+expect_check_exit   "C16 rejects a letter that contradicts its section" 1 \
+                    "$FIX/profile-c16-wrong-letter.rules.json"
+expect_check_output "C16 is the failing requirement" "[FAIL] C16" \
+                    "$FIX/profile-c16-wrong-letter.rules.json"
+expect_check_output "C16 says which letter the section takes" "so it takes the letter P" \
+                    "$FIX/profile-c16-wrong-letter.rules.json"
 
 # ------------------------------------------------------------------ summary ---
 echo

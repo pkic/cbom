@@ -36,8 +36,9 @@ what this suite is an early form of.
 | Withholdable MUST | A withheld marker satisfies baseline rule I9; the same document with the marker stripped does not, and is reported as undeclared rather than withheld. This is the only combination in which the disclosure model changes a verdict, and before profile v0.3 no rule exercised it. |
 | Capability per cryptographic purpose | The conforming migration document states a different status for key establishment and for entity authentication on one interface, which is the position a single per-interface status could not express. The conditional blocker resolves inside a purpose entry. A missing entry is reported against the purpose it is missing for, whether that purpose is in scope or deferred, and stripping the deferred purposes from a conforming document breaks conformance — that obligation is the ratchet, so it is asserted rather than assumed. |
 | Accepted lifecycle stages | The conforming migration document, with one interface moved to the `intended` stage, fails rule I8 against the migration profile and is reported as a stage the profile does not accept. The same document still conforms to the baseline, which accepts all four stages, so the narrowing belongs to the derived profile rather than to the vocabulary. |
-| Profile well-formedness | Both example profiles satisfy C1 to C14, including under `--strict`. One fixture per MUST requirement confirms that each is enforced and that the right requirement is the one reported. |
+| Profile well-formedness | Both example profiles satisfy C1 to C16, including under `--strict`. One fixture per MUST requirement confirms that each is enforced and that the right requirement is the one reported. |
 | SHOULD handling | A profile failing only SHOULD requirements still passes, and `--strict` promotes those failures. |
+| Rule numbering | A rule id is local to the profile that declares it and is cited as `<profileTag>#<ruleId>`. Three profiles in one chain each number from `I1`, and one report shows `interface-disclosure#I1`, `pqc-migration#I1` and `sector-settlement#I1` together. A tightened rule keeps the id of the profile that introduced it. A third-level profile may not relax a rule its *grandparent* introduced, and may not take a tag an ancestor already uses. |
 
 ## Exit codes
 
@@ -87,6 +88,10 @@ a real profile.
 | `profile-c12-inventory-capability.rules.json` | C12 | Orientation `inventory` while requiring `capabilityStatus`, so statements about a future state arrive under a label that promises present state. |
 | `profile-c13-uncovered-purposes.rules.json` | C13 | A group rule covering only the purposes in scope, so a supplier conforms while saying nothing at all about the four the profile deferred. The floor a staged profile is meant not to become. |
 | `profile-c13-unkeyed-group.rules.json` | C13 | A group keyed by a vocabulary the profile does not declare. It requires an entry for no keys, so every document passes it and the rule reads as satisfied — silent success rather than a loud failure. |
+| `profile-l3-settlement.rules.json` | none — valid | A third-level profile, extending the migration profile. It declares its own `P1` and its own `I1`, both of which *both* ancestors already use, which is the case the numbering scheme exists to make ordinary. |
+| `profile-l3-relaxes-grandparent.rules.json` | C7, and exit 3 from the validator | A third-level profile making an attribute withholdable again that the base introduced and the parent tightened. Monotonicity holds transitively, and a qualified override resolves two levels up. |
+| `profile-l3-tag-collision.rules.json` | C15, and exit 3 from the validator | A third-level profile taking its grandparent's tag. With two `interface-disclosure` tags in one family, the citation `interface-disclosure#I1` names two different rules. |
+| `profile-c16-wrong-letter.rules.json` | C16 | A product rule numbered `I1` and an interface rule numbered `P1`. The letter is fixed by the section a rule sits in, because it is what tells a reader how often the rule is evaluated. |
 | `profile-should-gaps.rules.json` | C8, C9, C10 only | Satisfies every MUST and no SHOULD. Also the template the others mutate. |
 
 Every fixture fails exactly one MUST requirement, so a test can assert which

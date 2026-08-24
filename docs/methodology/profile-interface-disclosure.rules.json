@@ -1,8 +1,9 @@
 {
   "$comment": "Illustrative machine-readable CBOM profile. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Product-level rules constrain the SET of interfaces (cardinality, incl. a required management interface). Per-interface rules apply uniformly to EVERY declared interface. Protocol-neutral. A format adapter (see validate_cbom.py) extracts abstract attributes from a concrete CBOM (CycloneDX here). 'appliesTo' declares which carrier formats/versions this profile accepts, so older CBOMs are handled deliberately rather than by accident. v0.2 added the disclosure model described under 'disclosure', which distinguishes four outcomes for any attribute: a value, a withheld marker, an unknown marker, and undeclared, meaning neither; v0.3 raised I9 to a withholdable MUST, which is the only combination in which that model affects a verdict; v0.4 added the 'scope' object, which declares the subject, the relationship types the rules constrain, and the lifecycle stages the profile accepts. See 'changelog'.",
   "profileId": "pkic.example.interface-disclosure",
+  "profileTag": "interface-disclosure",
   "title": "Interface Disclosure Baseline (Example)",
-  "version": "0.6",
+  "version": "0.7",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
   "objective": {
     "$comment": "C1. Rewritten in v0.6. The previous decision \u2014 whether the cryptography is 'disclosed in enough detail to be recorded in an inventory and assessed against policy' \u2014 was circular: it was a decision about the document rather than about the product, so no attribute could be derived from it. Method step 3 says derive the questions from the decision, and a decision whose answer is 'whatever this profile requires' generates no questions. The decision below is the consumer's actual job, and every rule in this profile traces to it.",
@@ -283,6 +284,16 @@
         {
           "kind": "editorial",
           "summary": "Added 'objective.decisionOptions'. The decision text was already phrased as a choice; stating the options explicitly is what makes the test in Method step 1 checkable by check_profile.py rather than a matter of review."
+        }
+      ]
+    },
+    {
+      "version": "0.7",
+      "date": "2026-08-24",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Added 'profileTag'. Rule ids are local to the profile that declares them, so the citable form of a rule is '<profileTag>#<ruleId>' \u2014 'interface-disclosure#I9', not 'I9'. No id in this profile changes and no requirement on any document changes: this profile is the base of its family and its rules were already numbered P for product and I for per-interface. What changes is that a derived profile is now free to number its own rules from P1 and I1 without colliding, and that a conformance report prints the qualified form. See decision 0011."
         }
       ]
     }

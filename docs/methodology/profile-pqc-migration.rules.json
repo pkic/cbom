@@ -1,8 +1,9 @@
 {
-  "$comment": "Illustrative machine-readable CBOM profile for PQC migration planning. DERIVED: this profile extends the interface disclosure baseline under the composition rules on the Profile page. It inherits every baseline rule, tightens one, and adds twelve per-interface rules and two product-level rules. Extension is monotonic, so a CBOM conforming to this profile also conforms to the baseline. The 'file' hint in 'extends' tells the validator where to resolve the base from; profileId and version are what a conformance claim cites.",
+  "$comment": "Illustrative machine-readable CBOM profile for PQC migration planning. DERIVED: this profile extends the interface disclosure baseline under the composition rules on the Profile page. It inherits every baseline rule, tightens one, and adds nine per-interface rules, one group rule and one product-level rule. Its own rules are numbered from I1, G1 and P1 in its own space: an id is local to the profile that declares it and is cited as 'pqc-migration#I1'. See decision 0011. Extension is monotonic, so a CBOM conforming to this profile also conforms to the baseline. The 'file' hint in 'extends' tells the validator where to resolve the base from; profileId and version are what a conformance claim cites.",
   "profileId": "pkic.example.pqc-migration",
+  "profileTag": "pqc-migration",
   "title": "PQC Migration Readiness (Example)",
-  "version": "0.5",
+  "version": "0.6",
   "objective": {
     "$comment": "C1. A derived profile states its own consumer and decision; it does not inherit the base's, because the whole reason to derive is that the decision differs. The same applies to decisionOptions: the base's consumer chooses whether to accept a disclosure, and this one chooses what to do about an interface.",
     "consumer": "An operator planning a post-quantum migration across an estate of products it did not build.",
@@ -16,7 +17,7 @@
     ]
   },
   "scope": {
-    "$comment": "C11. Narrows the base's accepted lifecycle stages, which is a tightening and therefore permitted; widening would be a relaxation and the validator rejects it. 'intended' is excluded because a migration plan built on cryptography a producer intends to implement is a plan built on an intention. The other three describe something that exists: implemented in the shipped product, configured in a deployment, or observed running. Where a producer can only report an intention, the fact belongs to the capability group M10, not to a lifecycle stage. 'cryptographicPurposes' declares which purposes this profile requires in depth; every purpose in the vocabulary still owes a status under M10, which is what keeps a staged profile from becoming a floor. See decision 0010.",
+    "$comment": "C11. Narrows the base's accepted lifecycle stages, which is a tightening and therefore permitted; widening would be a relaxation and the validator rejects it. 'intended' is excluded because a migration plan built on cryptography a producer intends to implement is a plan built on an intention. The other three describe something that exists: implemented in the shipped product, configured in a deployment, or observed running. Where a producer can only report an intention, the fact belongs to the capability group G1, not to a lifecycle stage. 'cryptographicPurposes' declares which purposes this profile requires in depth; every purpose in the vocabulary still owes a status under G1, which is what keeps a staged profile from becoming a floor. See decision 0010.",
     "subjectType": "product",
     "orientation": "both",
     "relationshipTypes": [
@@ -35,7 +36,7 @@
   },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.6",
+    "version": "0.7",
     "file": "profile-interface-disclosure.rules.json"
   },
   "appliesTo": {
@@ -91,7 +92,7 @@
   ],
   "overrides": [
     {
-      "id": "I9",
+      "id": "interface-disclosure#I9",
       "level": "MUST",
       "withholdable": false,
       "note": "Tightened by removing withholdability. The base already requires implementationPurl at MUST and accepts a 'withheld' marker in place of a value. Migration sequencing depends on knowing which library implements an interface, so this profile removes that option and requires the value itself. Level is restated as MUST for readability and is unchanged from the base."
@@ -99,18 +100,18 @@
   ],
   "productRules": [
     {
-      "id": "M14",
+      "id": "P1",
       "description": "Product identifies at least one cryptographic provider",
       "level": "SHOULD",
       "constraint": {
         "minProviders": 1
       },
-      "note": "Renumbered from P4 in v0.5 under decision 0011: a derived profile numbers its own rules under its own letter, whatever their kind, so the base is free to grow into P3 and P4. M13 is skipped rather than reused \u2014 see the changelog. The coverage rule that was P3 has moved into the baseline as P4 and is now inherited."
+      "note": "This profile's only product-level rule, and therefore P1 in its own space. The baseline's P1 to P4 are inherited and keep their own ids: the two are told apart as 'pqc-migration#P1' and 'interface-disclosure#P1', which is what a report and a conformance claim print. The coverage rule this profile used to carry has moved into the baseline and is now inherited. See decision 0011."
     }
   ],
   "interfaceRules": [
     {
-      "id": "M1",
+      "id": "I1",
       "attribute": "protocolVersionsSupported",
       "level": "MUST",
       "constraint": {
@@ -120,7 +121,7 @@
       "withholdable": false
     },
     {
-      "id": "M2",
+      "id": "I2",
       "attribute": "keyExchangeSupported",
       "level": "MUST",
       "constraint": {
@@ -130,7 +131,7 @@
       "withholdable": false
     },
     {
-      "id": "M3",
+      "id": "I3",
       "attribute": "authenticationSupported",
       "level": "MUST",
       "constraint": {
@@ -140,7 +141,7 @@
       "withholdable": false
     },
     {
-      "id": "M4",
+      "id": "I4",
       "attribute": "enablementMethod",
       "level": "MUST",
       "constraint": {
@@ -149,7 +150,7 @@
       "withholdable": false
     },
     {
-      "id": "M5",
+      "id": "I5",
       "attribute": "minimumProductVersion",
       "level": "MUST",
       "constraint": {
@@ -163,7 +164,7 @@
       "note": "Conditional. Applies only where the capability is enabled by a software update."
     },
     {
-      "id": "M6",
+      "id": "I6",
       "attribute": "providerLocation",
       "level": "MUST",
       "constraint": {
@@ -172,7 +173,7 @@
       "withholdable": false
     },
     {
-      "id": "M7",
+      "id": "I7",
       "attribute": "coexistence",
       "level": "MUST",
       "constraint": {
@@ -181,7 +182,7 @@
       "withholdable": false
     },
     {
-      "id": "M8",
+      "id": "I8",
       "attribute": "negotiationControl",
       "level": "SHOULD",
       "constraint": {
@@ -191,7 +192,7 @@
       "note": "Whether the far end can be pinned or forced is sometimes contractual; a producer may decline to publish it."
     },
     {
-      "id": "M9",
+      "id": "I9",
       "attribute": "integrationConstraints",
       "level": "SHOULD",
       "constraint": {
@@ -202,8 +203,8 @@
   ],
   "groupRules": [
     {
-      "$comment": "Settles Q27. Readiness was a single value per interface, which cannot express the ordinary position: key agreement done, identity proof not yet. It is now a repeated group keyed by cryptographic purpose, so an interface states a status for each job its cryptography does. M11's guard is evaluated inside a group member rather than across the interface, which is what makes it evaluable again. See decision 0010.",
-      "id": "M10",
+      "$comment": "Settles Q27. Readiness was a single value per interface, which cannot express the ordinary position: key agreement done, identity proof not yet. It is now a repeated group keyed by cryptographic purpose, so an interface states a status for each job its cryptography does. The blocker's guard is evaluated inside a group member rather than across the interface, which is what makes it evaluable again: it asks about the status of one purpose rather than about the interface as a whole. See decision 0010.",
+      "id": "G1",
       "group": "capabilityByPurpose",
       "keyedBy": "purpose",
       "keyVocabularyRef": "cryptographicPurposeVocabulary",
@@ -213,7 +214,7 @@
       "note": "Coverage is the whole vocabulary and not only the purposes this profile takes in scope. In-scope purposes owe the full attribute set; the rest owe a status and, where the status is not 'available', a blocker. That is close to the cheapest obligation a profile can impose, and it is what stops a staged profile becoming a permanent floor: a supplier cannot conform while behaving as though authentication does not exist, and a buyer sees the long-lead blockers in the first document rather than the third.",
       "members": [
         {
-          "id": "M10.1",
+          "id": "G1.1",
           "attribute": "capabilityStatus",
           "level": "MUST",
           "constraint": {
@@ -222,7 +223,7 @@
           "withholdable": false
         },
         {
-          "id": "M10.2",
+          "id": "G1.2",
           "attribute": "blockedBy",
           "level": "MUST",
           "constraint": {
@@ -236,7 +237,7 @@
           "note": "Conditional within the entry. Applies wherever this purpose's capability is not already available."
         },
         {
-          "id": "M10.3",
+          "id": "G1.3",
           "attribute": "roadmapRef",
           "level": "MAY",
           "constraint": {
@@ -266,7 +267,7 @@
     },
     {
       "item": "Per-algorithm capability status within a single interface",
-      "reason": "Still excluded, but for a different reason than before. Status is now stated per cryptographic purpose (M10), which is the granularity at which timetables actually differ; per algorithm is finer than any planner acts on, and breaks where one algorithm serves two purposes. What was deferred here as Q27 is settled by decision 0010."
+      "reason": "Still excluded, but for a different reason than before. Status is now stated per cryptographic purpose (G1), which is the granularity at which timetables actually differ; per algorithm is finer than any planner acts on, and breaks where one algorithm serves two purposes. What was deferred here as Q27 is settled by decision 0010."
     }
   ],
   "artifacts": {
@@ -275,6 +276,7 @@
     "conformingExample": "cbom-pqc-pass.cyclonedx.json",
     "nonConformingExample": "cbom-pqc-fail.cyclonedx.json"
   },
+  "$commentChangelog": "Entries before v0.6 cite the pre-0.6 rule numbering, in which this profile's own rules ran M1 to M14 and its product rules continued the baseline's P-sequence. The v0.6 entry carries the mapping. Nothing was released under the old numbering, so no id is retired and none is held back from reuse; the no-reuse rule in decision 0011 starts from v0.6.",
   "changelog": [
     {
       "version": "0.1",
@@ -338,11 +340,41 @@
       "changes": [
         {
           "kind": "editorial",
-          "summary": "Renumbered the product rules out of the baseline's P-space under decision 0011. P4 (minimum providers) becomes M14. P3 (coverage) is not renumbered because it has moved into the baseline as P4 and is inherited from there. No requirement on any document changes; rule ids appear in reports and claims, not in CBOMs. M11, M12 and M13 are retired or skipped and are not reused: a report or a stored claim may cite M11 against a document evaluated under v0.3, and reusing the id would make that report silently wrong rather than merely stale."
+          "summary": "Renumbered the product rules out of the baseline's P-space, under the first form of decision 0011. Superseded in v0.6, which renumbers the whole profile under the settled scheme; this entry is kept because it is what the v0.5 file did."
         },
         {
           "kind": "tightening",
           "summary": "Re-pinned the base to v0.6, which adds P3 (subject identity) and P4 (completeness) and revises P2. Those requirements are inherited, so a document conforming to this profile now has to satisfy them too. The coverage statement this profile used to require itself is unchanged in substance and now arrives from the base."
+        }
+      ]
+    },
+    {
+      "version": "0.6",
+      "date": "2026-08-24",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Renumbered every rule this profile declares into its own local space under the settled decision 0011. Ids are local to the declaring profile and are cited as '<profileTag>#<ruleId>', so this profile numbers from I1, G1 and P1 without colliding with the baseline's I1 to I9 and P1 to P4, which it inherits unchanged. No requirement on any document changes and no rule changes meaning: rule ids appear in reports and claims, not in CBOMs. The override on the baseline's implementationPurl rule now names its target as 'interface-disclosure#I9', because a tightened rule keeps the id of the profile that introduced it.",
+          "mapping": {
+            "M1": "I1",
+            "M2": "I2",
+            "M3": "I3",
+            "M4": "I4",
+            "M5": "I5",
+            "M6": "I6",
+            "M7": "I7",
+            "M8": "I8",
+            "M9": "I9",
+            "M10": "G1",
+            "M10.1": "G1.1",
+            "M10.2": "G1.2",
+            "M10.3": "G1.3",
+            "M14": "P1"
+          }
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added 'profileTag'. Re-pinned the base to v0.7, which adds the same field and changes no rule."
         }
       ]
     }

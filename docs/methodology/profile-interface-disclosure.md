@@ -1,4 +1,4 @@
-# CBOM Profile — Interface Disclosure Baseline (Example v0.6)
+# CBOM Profile — Interface Disclosure Baseline (Example v0.7)
 
 > **Status:** Illustrative early-concept artifact for the PKIC CBOM Profiles Working Group.
 > Not a normative deliverable. CycloneDX crypto field names are aligned to v1.7 / ECMA-424
@@ -89,6 +89,11 @@ counterpart in a transport profile.
 ## 4. Rules
 
 Requirement keywords follow BCP 14 (MUST / SHOULD / MAY). This profile uses two of the three kinds of rule the methodology defines: product-level rules constraining the set of interfaces, and per-interface rules applied to each. It uses no group rule, because it reports present state and present state has one answer per attribute. The migration profile derived from it does use one, for capability per cryptographic purpose.
+
+Rule identifiers are local to this profile and are cited against its tag: `P1` below is
+`interface-disclosure#P1` when it appears in a report or a claim. The letter says how often the
+rule is evaluated — `P` once per product, `I` once per declared interface — and a profile derived
+from this one numbers its own rules from `P1` and `I1` in its own space. See decision 0011.
 
 ### 4.1 Product-level rules (cardinality; product-independent)
 
@@ -243,7 +248,7 @@ example profile combined MUST with withholdability, and that is the only combina
 withholding alters a verdict. The disclosure model was therefore stated in the profile without
 being applied by any rule.
 
-The derived PQC migration profile pins v0.6 and tightens I9 by removing its withholdability, the
+The derived PQC migration profile pins v0.7 and tightens `interface-disclosure#I9` by removing its withholdability, the
 level being already MUST. Under decision 0004 that tightening is permitted; a subsequent baseline
 revision that relaxed I9 would place the derived profile in conflict, which is why the base is
 pinned by version.
@@ -288,6 +293,12 @@ that is not a weakening. The rule exists to catch omission. A document that omit
 interface still fails; what changed is that a subject which genuinely has none can now say so
 instead of being told it is non-conforming for a fact about its own design. Recorded as decision
 0012, alongside 0011 for the rule numbering the two new product rules made necessary.
+
+### v0.7 — 2026-08-24
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Added `profileTag`, `interface-disclosure` | editorial | None. No rule id changes. A rule id is local to the profile that declares it, so the citable form of a rule is now `interface-disclosure#I9` rather than `I9`. This profile is the base of its family and already used the kind letters `P` and `I`; what changes is that a profile deriving from it may number its own rules from `P1` and `I1` without colliding, at any depth. Recorded as decision 0011 |
 
 ### v0.1 — initial draft
 

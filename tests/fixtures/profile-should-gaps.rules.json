@@ -1,6 +1,7 @@
 {
   "$comment": "Fixture. Satisfies every MUST requirement C1 to C7 and none of the SHOULD requirements C8 to C10. Used to check that SHOULD failures are reported as warnings without affecting the verdict, and that --strict promotes them. This file is also the template the other checker fixtures mutate: each of those changes exactly one thing so that exactly one MUST fails.",
   "profileId": "pkic.test.should-gaps",
+  "profileTag": "should-gaps",
   "title": "Fixture - SHOULD gaps only",
   "version": "0.1",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",

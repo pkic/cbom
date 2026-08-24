@@ -1,33 +1,68 @@
 {
   "$comment": "Fixture. Deliberately fails C12 the other way: declares orientation 'inventory' while requiring capabilityStatus, a forward-looking attribute. An inventory profile reports what is. A consumer who selected this profile because it was labelled inventory would receive statements about a future state under that label. Everything else is well-formed.",
   "profileId": "pkic.test.c12-inventory",
+  "profileTag": "c12-inventory",
   "title": "Fixture - C12 inventory profile requiring capability",
   "version": "0.1",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
-
   "objective": {
     "consumer": "A fixture, standing in for a consumer.",
     "decision": "Whether the checker holds an inventory profile to present state.",
-    "decisionOptions": ["accept the fixture", "reject the fixture"]
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
   },
-
   "scope": {
     "subjectType": "product",
     "orientation": "inventory",
-    "relationshipTypes": ["interface"],
-    "lifecycleStages": ["implemented", "configured", "observed"]
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented",
+      "configured",
+      "observed"
+    ]
   },
-
-  "appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } },
-
-  "interfaceTypeVocabulary": ["management", "service"],
-
-  "productRules": [
-    { "id": "P1", "description": "Product declares at least one cryptographic interface", "level": "MUST", "constraint": { "minInterfaces": 1 } }
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "interfaceTypeVocabulary": [
+    "management",
+    "service"
   ],
-
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Product declares at least one cryptographic interface",
+      "level": "MUST",
+      "constraint": {
+        "minInterfaces": 1
+      }
+    }
+  ],
   "interfaceRules": [
-    { "id": "I1", "attribute": "protocol", "level": "MUST", "constraint": { "present": true }, "withholdable": false },
-    { "id": "X1", "attribute": "capabilityStatus", "level": "MUST", "constraint": { "present": true }, "withholdable": false }
+    {
+      "id": "I1",
+      "attribute": "protocol",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false
+    },
+    {
+      "id": "X1",
+      "attribute": "capabilityStatus",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false
+    }
   ]
 }

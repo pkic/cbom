@@ -2,7 +2,7 @@
 """
 Profile well-formedness checker.
 
-Checks a machine-readable profile against requirements C1 to C14 of the
+Checks a machine-readable profile against requirements C1 to C16 of the
 Conformance section, which state what makes a profile well-formed under this
 methodology. This is the second of the three conformance targets: a CBOM
 document is checked against a profile by validate_cbom.py, and a profile is
@@ -22,6 +22,8 @@ C11 MUST    declares its scope: subject, relationship types, lifecycle stages
 C12 MUST    its rules are consistent with its declared orientation
 C13 MUST    group rules are keyed to a real vocabulary and cover it
 C14 MUST    identifier schemes are declared and match what the rules reference
+C15 MUST    carries a profile tag, unique along its inheritance chain
+C16 MUST    rule ids are local and carry the kind letter of the section they sit in
 
 Rules are checked as DECLARED in the file under test. A derived profile is not
 re-checked against its base's rules, because the base is checkable on its own;
@@ -44,17 +46,25 @@ import re
 import sys
 
 try:
-    from validate_cbom import (load_profile, ProfileError,
+    from validate_cbom import (load_profile, ProfileError, profile_tag,
                                SUBJECT_TYPES, LIFECYCLE_STAGES, ORIENTATIONS,
                                is_forward_looking, present_state_counterparts)
 except ImportError:  # allow running from another directory
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from validate_cbom import (load_profile, ProfileError,
+    from validate_cbom import (load_profile, ProfileError, profile_tag,
                                SUBJECT_TYPES, LIFECYCLE_STAGES, ORIENTATIONS,
                                is_forward_looking, present_state_counterparts)
 
 LEVELS = ("MUST", "SHOULD", "MAY")
 CAMEL = re.compile(r"^[a-z][A-Za-z0-9]*$")
+
+# C15/C16. A rule id is local to the profile that declares it and is cited as
+# '<profileTag>#<ruleId>'. The tag is the half that must be unique along the
+# chain; the id only has to be unique within its own file. See decision 0011.
+TAG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+RULE_ID = re.compile(r"^[A-Z][0-9]+$")
+MEMBER_ID = re.compile(r"^[A-Z][0-9]+\.[0-9]+$")
+KIND_LETTER = {"productRules": "P", "interfaceRules": "I", "groupRules": "G"}
 
 # C6. Substrings that indicate a name is asserting a conclusion rather than
 # disclosing a fact. The criteria behind each of these change over time, so the
@@ -592,6 +602,104 @@ def c14_identifier_schemes(prof, resolved, f):
                                             for k in sorted(referenced))))
 
 
+def c15_profile_tag(path, prof, f):
+    """The profile carries a tag, and no ancestor already uses it.
+
+    Rule ids are local, so 'I9' names a rule only once a reader knows which
+    profile declared it. The tag is that handle. It is the one identifier that
+    has to be unique along a chain, and moving the uniqueness requirement here
+    from the rule ids is what lets a derived profile number from I1 and lets a
+    family go three levels deep without a reservation scheme. See decision 0011."""
+    tag = prof.get("profileTag")
+    if tag is None:
+        derived = profile_tag(prof)
+        f.add("C15", "MUST", False,
+              "no profileTag; every rule this profile declares would have to be cited "
+              "as %r, inferred from the profileId rather than stated" % ("%s#..." % derived))
+        return
+    if not TAG.match(str(tag)):
+        f.add("C15", "MUST", False,
+              "profileTag %r is not a lowercase kebab-case token; it appears in every "
+              "citation of every rule, so it has to be typeable and stable" % tag)
+        return
+    ext = prof.get("extends")
+    if not ext:
+        f.add("C15", "MUST", True, "tag %r, base of its family" % tag)
+        return
+
+    # The base is resolved here rather than the composed profile, because a
+    # colliding tag is exactly what stops the composed profile from resolving.
+    # Reading the answer off the failure would report this as C7's problem and
+    # leave C15 saying nothing about the one thing it is for.
+    try:
+        base_path = os.path.join(os.path.dirname(os.path.abspath(path)), ext["file"])
+        chain = list(load_profile(base_path)[0].get("_chain", []))
+    except (ProfileError, OSError, KeyError) as err:
+        f.add("C15", "MUST", True,
+              "tag %r is well-formed; uniqueness along the chain was not checked "
+              "because the base did not resolve (%s)" % (tag, err))
+        return
+    if tag in chain:
+        f.add("C15", "MUST", False,
+              "profileTag %r is already used by an ancestor; the chain above this "
+              "profile is %s, and a repeated tag makes every citation in it ambiguous"
+              % (tag, " -> ".join(chain)))
+        return
+    f.add("C15", "MUST", True,
+          "tag %r, unique in chain %s" % (tag, " -> ".join(chain + [tag])))
+
+
+def c16_rule_ids(prof, f):
+    """Rule ids are local, and the letter says which kind of rule it is.
+
+    Because an id is always cited against a tag, the letter is free to carry the
+    thing a reader actually wants from it: whether the rule is evaluated once
+    per product, once per interface, or once per entry in a group. So the letter
+    is fixed by the section the rule sits in rather than chosen by the author.
+
+    Ids are not required to be contiguous. Decision 0011 says a released id is
+    never reused, which means gaps are correct and a checker that demanded a
+    dense sequence would forbid the thing the rule exists to allow."""
+    problems = []
+    for section, letter in KIND_LETTER.items():
+        for rule in prof.get(section, []):
+            rid = str(rule.get("id", ""))
+            if "#" in rid:
+                problems.append(
+                    "%s declares its id qualified; a profile writes its own ids bare "
+                    "and readers qualify them with the tag" % rid)
+                continue
+            if not RULE_ID.match(rid):
+                problems.append("%r is not of the form <letter><number>" % rid)
+                continue
+            if rid[0] != letter:
+                problems.append(
+                    "%s sits in %s, so it takes the letter %s; %s is the letter for %s"
+                    % (rid, section, letter, rid[0],
+                       {v: k for k, v in KIND_LETTER.items()}.get(rid[0], "no section")))
+            if section == "groupRules":
+                for member in rule.get("members", []):
+                    mid = str(member.get("id", ""))
+                    if not MEMBER_ID.match(mid) or not mid.startswith(rid + "."):
+                        problems.append(
+                            "group member id %r should be %s.<number>" % (mid, rid))
+
+    for ov in prof.get("overrides", []):
+        oid = str(ov.get("id", ""))
+        if "#" not in oid:
+            problems.append(
+                "override on %r is not qualified; an override names the rule it tightens "
+                "as <profileTag>#<ruleId>, because the target belongs to another profile"
+                % oid)
+
+    if problems:
+        f.add("C16", "MUST", False, "; ".join(problems))
+        return
+    counted = sum(len(prof.get(s, [])) for s in KIND_LETTER)
+    f.add("C16", "MUST", True,
+          "%d declared rule id(s) well-formed and local" % counted)
+
+
 def c8_exclusions(prof, f):
     ex = prof.get("exclusions")
     if not isinstance(ex, list) or not ex:
@@ -683,6 +791,8 @@ def check(path):
     c12_orientation(prof, vocab_source, resolved, f)
     c13_group_rules(prof, vocab_source, resolved, f)
     c14_identifier_schemes(prof, vocab_source, f)
+    c15_profile_tag(path, prof, f)
+    c16_rule_ids(prof, f)
     return prof, f
 
 
