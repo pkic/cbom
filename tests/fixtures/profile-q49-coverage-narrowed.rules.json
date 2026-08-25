@@ -1,0 +1,44 @@
+{
+  "$comment": "TEST FIXTURE \u2014 deliberately invalid. Narrows the inherited capability group's coverage from the whole purpose vocabulary to the purposes in scope, so a supplier would conform while saying nothing at all about the purposes the profile defers. That is precisely the floor decision 0010 exists to prevent, arriving by a different route. Not a real profile; do not copy.",
+  "profileId": "pkic.test.q49-coverage-narrowed",
+  "profileTag": "q49-coverage-narrowed",
+  "title": "Narrowing an inherited group's coverage (test fixture)",
+  "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the validator holds monotonicity for an inherited group.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.pqc-migration",
+    "version": "0.6",
+    "file": "../../docs/methodology/profile-pqc-migration.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured",
+      "observed"
+    ]
+  },
+  "overrides": [
+    {
+      "id": "pqc-migration#G1",
+      "coverage": "in-scope"
+    }
+  ],
+  "interfaceRules": []
+}

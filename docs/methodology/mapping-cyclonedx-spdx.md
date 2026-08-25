@@ -92,15 +92,29 @@ and no set of elements to count. The earlier entries (`Annotation` on linked ele
 linked elements annotated `interfaceType=management`*) described a structure the linkage
 arrangement does not produce, and never named the SPDX element class involved.
 
-Three ways out are visible and the working group has not chosen between them: represent each
-interface as its own SPDX element and link the CBOM per interface; carry the interface-level
-classifiers as SPDX annotations on the single reference element, encoded so that several
-interfaces can be distinguished within it; or accept that product-level rules cannot be evaluated
-from the SPDX side at all and say so, which would bound what an SPDX-only consumer may claim.
+Three ways out were visible: represent each interface as its own SPDX element and link the CBOM
+per interface; carry the interface-level classifiers as SPDX annotations on the single reference
+element, encoded so that several interfaces can be distinguished within it; or accept that
+product-level rules cannot be evaluated from the SPDX side at all and say so.
 
-Settling this needs a contributor who works with SPDX 3.x at field level. Recorded as Q48. Note
-what it costs while open: the claim that one profile can be expressed in two formats currently
-holds for the per-interface attributes and not for the product-level rules.
+**Decision 0016 takes the third, and the rows above stay unresolved deliberately.** The first two
+would have this group invent something inside a format it does not own — a modelling convention
+SPDX has not adopted, or an encoding inside an extension point — producing documents only our tools
+can read. That is the fragmentation this methodology exists to prevent, arriving under the banner
+of format independence.
+
+What changed is where the limitation is written down. A conformance claim now carries
+`evaluableFromCarrier`, which for SPDX in this arrangement sets `productRules: false`, and each
+kind of rule that is not evaluable adds a line to the claim's `notAsserted` list. So the bound is
+visible to the person deciding whether to accept a submission, rather than only to whoever reads
+this document. A prose caveat here is read by people implementing the mapping; a field in the claim
+is read by the person the misunderstanding would otherwise cost.
+
+The honest summary stands: the claim that one profile can be expressed in two formats holds for the
+per-interface attributes and not for the product-level rules. If SPDX's cryptographic modelling
+grows a structure carrying interfaces as distinct elements, decision 0016 is superseded and
+`CARRIER_CAPABILITY` in the validator is the single table that changes. Settling *that* still needs
+a contributor who works with SPDX 3.x at field level.
 
 ## Interpretation of the columns
 

@@ -86,7 +86,7 @@ deleted.
 | 3.6 Writing a profile into a file format | Q16, Q17, Q18, Q48 |
 | 3.7 Agreed names for algorithms and protocols | Q19, Q20, Q21, Q38, Q39 |
 | 3.8 How a CBOM relates to an SBOM | Q22, Q40 |
-| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35 |
+| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35, Q49 |
 | 3.10 Statements about the future | Q26, Q27, Q28 |
 | 3.11 Governing a profile over time | Q29, Q41, Q42 |
 | 3.12 Fitting regulation and policy | Q43, Q44 |
@@ -894,7 +894,7 @@ document, and the credibility of the format-independence claim.
 
 ## Q48 — How are the product-level rules evaluated from the SPDX side?
 
-**Status** open. Added 21 August 2026, from a review of the format mapping.
+**Status** settled by decision 0016, awaiting adoption
 
 **The question.** In the current arrangement an SPDX document satisfies the profile by referencing
 a CycloneDX CBOM as an external artifact. That gives the SPDX document one element for the whole
@@ -921,16 +921,68 @@ encoded so that several interfaces can be distinguished within it (trade-off: an
 convention invented by this group inside another format's extension point, which is the kind of
 thing harmonisation is supposed to avoid).
 
-**Option C: state that product-level rules are not evaluable from SPDX alone**, and bound what an
-SPDX-only conformance claim may assert (trade-off: honest, and it concedes part of the
-format-independence claim).
+**How it was settled.** Option C, as decision 0016, made machine-readable rather than left in
+prose. A claim carries `evaluableFromCarrier`, saying which kinds of rule the carrier holds enough
+structure to evaluate — for SPDX in the linkage arrangement, `productRules: false` — and each kind
+that is not evaluable adds a line to the claim's `notAsserted` list. The bound is therefore visible
+to whoever is holding the claim rather than to whoever reads the mapping document.
 
-**Where it stands.** Unresolved and marked as such in `mapping-cyclonedx-spdx.md` and
-`formats.html`. Nobody in the group has yet worked with SPDX 3.x at field level, which is the
-same gap Workstream 5 of the improvement plan records.
+Options A and B were rejected for the same reason: both would have this group invent something
+inside a format it does not own, producing documents only our tools can read. That is the
+fragmentation the methodology exists to prevent, arriving under the banner of format independence.
 
-**What would have to change.** The SPDX column of the mapping, the Formats section, and, under
-Option C, the Conformance section, which would need to say what an SPDX-only claim covers.
+The mapping document's rows stay marked unresolved, which is the honest state. If SPDX's
+cryptographic modelling grows a structure carrying interfaces as distinct elements, this is
+superseded and `CARRIER_CAPABILITY` is the one table that changes.
+
+**What it leaves.** The claim "one profile, two formats" holds for the attribute rules and not for
+the product rules, and now says so. Q16 to Q18 on the mapping generally are untouched.
+
+## Q49 — Can a derived profile tighten one member of an inherited group rule?
+
+**Status** settled by decision 0014, awaiting adoption
+
+**The question.** A group rule constrains a repeated group keyed by a controlled vocabulary, and
+its member rules are evaluated inside an entry. A derived profile may add a whole group and may
+tighten an ordinary inherited rule. It cannot tighten one *member* of an inherited group: group
+rules are concatenated rather than overridden, and an override naming a member is rejected.
+
+**Why it matters.** It is the first thing a sector profile will want. The migration profile's
+capability group requires a status for every cryptographic purpose and the full attribute set only
+for the purposes in scope. A settlement or telecom profile deriving from it would ordinarily want
+to raise one member — make `roadmapRef` a MUST rather than a MAY for the purposes it cares about,
+or require a blocker where the base requires one only conditionally — and there is no way to say
+so. The alternatives available today are both bad: restate the whole group, which silently
+overrides the base's coverage and defeats the point of inheriting it, or add a second parallel
+group, which asks a producer for the same fact twice under two names.
+
+The gap is currently recorded only in a code comment, which is the wrong place for a limitation
+that shapes what a derived profile can express.
+
+**Option A: leave it.** A derived profile that needs a stricter member declares its own group
+(trade-off: two groups over the same vocabulary, and a report that shows both. The coverage
+guarantee the base group carries does not transfer, so the derived profile has to restate it).
+
+**Option B: allow an override to name a member**, as `<profileTag>#G1.3`, tightened under the same
+monotonicity rules as any other rule (trade-off: a member's `requiredWhen` guard refers to its
+entry, so tightening a guard is a different operation from tightening a constraint and needs its
+own comparison. Coverage stays with the base group, which is the property worth keeping).
+
+**Option C: allow a derived profile to raise the coverage of an inherited group** without touching
+its members — turning `in-scope` into `all`, or widening the purposes in scope (trade-off: solves
+the case that motivated the group rule and not the case a sector profile actually raises, which is
+depth per member rather than breadth).
+
+**How it was settled.** Options B and C together, as decision 0014 — they are the two halves of
+one question, depth per member and breadth across keys. A member is overridden by qualified id
+(`pqc-migration#G1.3`) and compared exactly as any other rule. The group shell is overridden by its
+own id, where the only field an override may change is `coverage`, which may be widened and never
+narrowed. A `requiredWhen` guard may be removed, which makes a rule apply always; adding one where
+the base has none is refused, and changing an existing one is refused rather than compared, because
+whether one condition is broader than another depends on values the profile does not hold.
+
+**What it leaves.** Nothing of this question. It removes one of Q25's blockers: a finance profile
+can now sharpen the capability group rather than restate it and lose the base's coverage.
 
 ## Q17 — Should the group ask the format bodies to add a field for withheld information?
 
@@ -1245,7 +1297,7 @@ profiles, the composition section, and Q33 and Q24.
 
 ## Q24 — How does a claim describe conformance to several profiles at once?
 
-**Status** open
+**Status** settled by decision 0015, awaiting adoption
 
 **The question.** A document can be checked against several profiles, each giving its own result.
 The methodology shows an example of how to write that down. It does not set a rule.
@@ -1264,10 +1316,25 @@ weaker as an audit record, because silence cannot be distinguished from not havi
 **Option C: a claim covers a declared set**, listing everything checked and the result of each,
 so that a profile's absence means it was not assessed.
 
-**Where it stands.** The worked example follows Option C's shape without a rule being stated.
+**How it was settled.** Option C, as decision 0015, and the claim is now a machine-readable
+document with a published schema. Every profile evaluated is listed with its own verdict, its whole
+inheritance chain and the versions pinned; a profile's absence means it was not assessed. Verdicts
+are not combined, because a document can conform to one profile and fail another and a single
+overall answer would have to choose which question it was answering.
 
-**What would have to change.** The claim format in two sections, and whether a claim becomes a
-machine-readable document with its own schema.
+Answering it turned up three gaps that mattered more than the original question. A claim was not
+bound to any particular document, so it could not be falsified by the wrong one — it now carries a
+`sha-256` digest. A verdict alone lost the disclosure state, so `conforms` with the implementing
+library withheld read the same as `conforms` with it supplied — the four outcomes now travel with
+the verdict. And a claim carried no statement of what it does not assert, which is now inside the
+claim rather than referenced from it.
+
+`--verify-claim` re-runs the evaluation, so a consumer can establish without trusting the issuer
+that this is the document evaluated and that the verdicts still hold. What it cannot establish is
+that the disclosed values are true; that is in `notAsserted` and always will be.
+
+**What it leaves.** Nothing of this question. Whether a claim should be signed, and by whom, is a
+separate matter that nobody has raised yet.
 
 ## Q25 — How would a sector profile fit alongside these?
 
@@ -1825,3 +1892,4 @@ not depend on a second example.
 | Conformance section | Q13, Q31, Q32 |
 | Improvement plan | Q01, Q16, Q19, N01, N03, N04 |
 | Decision index | Q07 |
+| Validator source, where the limitation was recorded as a comment | Q49 |

@@ -52,19 +52,27 @@ profile widens the vocabulary — so it can be accepted in part.
 | [0011](./0011-rule-numbering-across-a-family.md) | A rule id is local to its profile and is cited against a profile tag | 3.2 | Proposed | 2026-08-24 |
 | [0012](./0012-what-a-disclosure-baseline-requires.md) | A disclosure baseline identifies its subject, states its completeness, and names its identifier schemes | 3.1 | Proposed | 2026-08-21 |
 | [0013](./0013-monotonicity-covers-constraints.md) | Monotonicity is checked for constraints, and a rule that cannot fail is not a rule | 3.9 | Proposed | 2026-08-24 |
+| [0014](./0014-tightening-an-inherited-group.md) | A derived profile may tighten one member of an inherited group, and widen its coverage | 3.9 | Proposed | 2026-08-24 |
+| [0015](./0015-a-conformance-claim-is-checkable.md) | A conformance claim is bound to a document, lists each profile separately, and can be re-checked | 3.5 | Proposed | 2026-08-24 |
+| [0016](./0016-what-an-spdx-only-claim-asserts.md) | Product-level rules are not evaluable from SPDX alone, and a claim says so | 3.6 | Proposed | 2026-08-24 |
+| [0017](./0017-published-schemas.md) | The rules file and the claim have published schemas, and a schema is not a conformance checker | 3.13 | Proposed | 2026-08-24 |
 
 <!-- Add a row per decision, newest at the bottom:
 | 0008 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |
 -->
 
-## Nothing here has been ratified
+## Why every record says Proposed
 
-All thirteen records carry the status **Proposed**. The decision rule is lazy consensus, and lazy
-consensus needs something a member can be silent *about* — a stated set, a stated window, and a
-stated consequence when the window closes. None of the three has been set, so the records have
-accumulated rather than settled, and the worked example implements thirteen positions the group has
-never been asked to hold.
+All seventeen carry the status **Proposed**, and for an alpha that is the correct status rather than
+a backlog.
 
-A proposal for how to run that, in three batches with the genuinely arguable points put as
-questions rather than presented as settled, is in
-[ratification-round-1.md](./ratification-round-1.md).
+These records are written while building the methodology and its worked example, so that the
+reasoning behind a choice survives the choice. Writing one is not a request for a decision; it is a
+way of making a choice arguable later, by whoever inherits it. A record says what was rejected and
+why, which is the half that is normally lost.
+
+Adoption comes per aspect, as each one stops moving, and it is not close for most of them: 41 of the
+48 open questions are open, and every aspect is unassigned. What *ready* means — no open question
+that would change a rule, the suite covering it, no open defect in the tools touching it, and an
+owner — and how a batch runs once an aspect is ready, is set out in
+[adoption-and-readiness.md](./adoption-and-readiness.md). Nothing is currently open for adoption.

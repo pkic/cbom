@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pkic.org/cbom/schema/profile.schema.json",
+  "title": "CBOM profile rules file",
+  "$comment": "Structural schema for a machine-readable profile. It says what shape a rules file has; it does not say whether the profile is well-formed under the methodology, which is C1 to C17 and is checked by check_profile.py. The two are deliberately separate: a schema can see that 'objective' is an object with a 'decision' string, and cannot see that the decision is one a consumer could act on. Published so that a third party can validate a profile without running our checker. See decision 0017.",
+  "type": "object",
+  "required": ["profileId", "version", "objective", "appliesTo", "scope"],
+  "properties": {
+    "profileId": {"type": "string", "minLength": 1},
+    "profileTag": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "$comment": "C15. The handle a rule id is cited against: 'interface-disclosure#I9'. Must be unique along an inheritance chain, which a schema cannot check because it cannot resolve the chain."
+    },
+    "title": {"type": "string"},
+    "version": {"type": "string"},
+    "objective": {
+      "type": "object",
+      "required": ["consumer", "decision"],
+      "properties": {
+        "consumer": {"type": "string", "minLength": 1},
+        "decision": {"type": "string", "minLength": 1},
+        "decisionOptions": {"type": "array", "items": {"type": "string"}, "minItems": 2}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["subjectType", "relationshipTypes", "lifecycleStages"],
+      "properties": {
+        "subjectType": {"enum": ["product", "service", "component", "deployment", "system"]},
+        "orientation": {"enum": ["inventory", "migration", "both"]},
+        "relationshipTypes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "lifecycleStages": {
+          "type": "array", "minItems": 1,
+          "items": {"enum": ["intended", "implemented", "configured", "observed"]}
+        },
+        "cryptographicPurposes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "appliesTo": {
+      "type": "object",
+      "minProperties": 1,
+      "$comment": "One entry per carrier format. '$comment' keys are permitted anywhere in a rules file and carry the reasoning; they are data for a reader, not for the evaluator.",
+      "properties": {"$comment": {"type": "string"}},
+      "additionalProperties": {
+        "type": "object",
+        "required": ["min", "tested"],
+        "properties": {
+          "$comment": {"type": "string"},
+          "min": {"type": "string"},
+          "tested": {"type": "string"}
+        }
+      }
+    },
+    "extends": {
+      "type": "object",
+      "required": ["profileId", "version"],
+      "properties": {
+        "profileId": {"type": "string"},
+        "version": {"type": "string"},
+        "file": {"type": "string", "$comment": "Resolution hint only. profileId and version are what a conformance claim cites."}
+      }
+    },
+    "overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*#[A-Z][0-9]+(\\.[0-9]+)?$",
+            "$comment": "C16. An override names its target in full, because a bare id is local to the profile that declared it."
+          },
+          "level": {"$ref": "#/definitions/level"},
+          "withholdable": {"type": "boolean"},
+          "constraint": {"$ref": "#/definitions/constraint"},
+          "requiredWhen": {"$ref": "#/definitions/requiredWhen"},
+          "coverage": {"$ref": "#/definitions/coverage"},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "productRules": {"type": "array", "items": {"$ref": "#/definitions/productRule"}},
+    "interfaceRules": {"type": "array", "items": {"$ref": "#/definitions/interfaceRule"}},
+    "groupRules": {"type": "array", "items": {"$ref": "#/definitions/groupRule"}},
+    "identifierSchemes": {"type": "object", "additionalProperties": {"type": "string"}},
+    "disclosure": {"type": "object"},
+    "conformanceKeywords": {"type": ["object", "string"]},
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item", "reason"],
+        "properties": {"item": {"type": "string"}, "reason": {"type": "string"}}
+      }
+    },
+    "artifacts": {"type": "object"},
+    "changelog": {"type": "array", "items": {"type": "object"}}
+  },
+  "definitions": {
+    "level": {"enum": ["MUST", "SHOULD", "MAY"]},
+    "ruleId": {
+      "type": "string",
+      "pattern": "^[PIG][0-9]+$",
+      "$comment": "C16. Local to the declaring profile; the letter is fixed by the section the rule sits in. A schema cannot check that the letter matches its section, which is why C16 exists as well."
+    },
+    "coverage": {"enum": ["in-scope", "all-purposes", "all"]},
+    "requiredWhen": {
+      "type": "object",
+      "required": ["attribute"],
+      "properties": {
+        "attribute": {"type": "string"},
+        "equals": {},
+        "notEquals": {}
+      }
+    },
+    "constraint": {
+      "type": "object",
+      "minProperties": 1,
+      "$comment": "C17. Every key here is one the evaluator implements. A key outside this set produces a rule that reports 'ok' against every value, which is silent success. additionalProperties is false for exactly that reason.",
+      "additionalProperties": false,
+      "properties": {
+        "present": {"type": "boolean"},
+        "minCount": {"type": "integer", "minimum": 0},
+        "enum": {"type": "array", "items": {"type": "string"}},
+        "enumFull": {"type": "array", "items": {"type": "string"}},
+        "enumRef": {"type": "string"},
+        "startsWith": {"type": "string"},
+        "minInterfaces": {"type": "integer", "minimum": 0},
+        "minProviders": {"type": "integer", "minimum": 0},
+        "minInterfacesOfType": {
+          "type": "object",
+          "required": ["interfaceType", "min"],
+          "properties": {"interfaceType": {"type": "string"}, "min": {"type": "integer", "minimum": 0}}
+        },
+        "subjectIdentified": {"type": "object", "properties": {"startsWith": {"type": "string"}}},
+        "productAttribute": {"type": "string"},
+        "orDeclaredAbsent": {"type": "string"},
+        "absenceEnumRef": {"type": "string"}
+      }
+    },
+    "productRule": {
+      "type": "object",
+      "required": ["id", "level", "constraint"],
+      "properties": {
+        "id": {"$ref": "#/definitions/ruleId"},
+        "description": {"type": "string"},
+        "level": {"$ref": "#/definitions/level"},
+        "constraint": {"$ref": "#/definitions/constraint"},
+        "withholdable": {"type": "boolean"},
+        "schemeRef": {"type": "string"},
+        "note": {"type": "string"}
+      }
+    },
+    "interfaceRule": {
+      "type": "object",
+      "required": ["id", "attribute", "level", "constraint"],
+      "properties": {
+        "id": {"$ref": "#/definitions/ruleId"},
+        "attribute": {"type": "string", "pattern": "^[a-z][A-Za-z0-9]*$"},
+        "level": {"$ref": "#/definitions/level"},
+        "constraint": {"$ref": "#/definitions/constraint"},
+        "withholdable": {"type": "boolean"},
+        "list": {"type": "boolean"},
+        "requiredWhen": {"$ref": "#/definitions/requiredWhen"},
+        "schemeRef": {"type": "string"},
+        "note": {"type": "string"}
+      }
+    },
+    "groupRule": {
+      "type": "object",
+      "required": ["id", "group", "keyedBy", "keyVocabularyRef", "coverage", "level", "members"],
+      "properties": {
+        "id": {"$ref": "#/definitions/ruleId"},
+        "group": {"type": "string"},
+        "keyedBy": {"type": "string"},
+        "keyVocabularyRef": {"type": "string"},
+        "coverage": {"$ref": "#/definitions/coverage"},
+        "level": {"$ref": "#/definitions/level"},
+        "description": {"type": "string"},
+        "note": {"type": "string"},
+        "members": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "attribute", "level", "constraint"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^[PIG][0-9]+\\.[0-9]+$"},
+              "attribute": {"type": "string", "pattern": "^[a-z][A-Za-z0-9]*$"},
+              "level": {"$ref": "#/definitions/level"},
+              "constraint": {"$ref": "#/definitions/constraint"},
+              "withholdable": {"type": "boolean"},
+              "requiredWhen": {"$ref": "#/definitions/requiredWhen"},
+              "note": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

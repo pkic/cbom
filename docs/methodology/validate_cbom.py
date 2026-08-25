@@ -51,8 +51,19 @@ distinct here in the verdict, in the exit code, and in the JSON report:
                     failure penalises a producer for the age of a format rather
                     than for the content of its disclosure.
 
+Conformance claims. A claim is the artifact that crosses an organisational
+boundary: a producer hands it to a consumer, who was not present when the
+evaluation ran. It names every profile evaluated with its whole chain and
+version, binds itself to one document by digest, records the disclosure state of
+what was assessed, and carries the list of what a verdict does not assert. A
+claim that cannot be re-checked is a press release, so '--verify-claim' re-runs
+the evaluation and reports where the claim and the document disagree. See
+decision 0015.
+
 Usage:
     python validate_cbom.py <cbom.json> <profile.rules.json> [--json]
+    python validate_cbom.py <cbom.json> <profile.rules.json>... --claim
+    python validate_cbom.py <cbom.json> <claim.json> --verify-claim [--profiles-dir DIR]
 
 Exit codes:
     0  conforms
@@ -60,7 +71,10 @@ Exit codes:
     2  usage error
     3  profile error, such as an override that relaxes an inherited rule
     4  refused: not assessed, as distinct from assessed and found short
+    5  a claim does not match the document or the profiles it names
 """
+import datetime
+import hashlib
 import json
 import os
 import sys
@@ -86,6 +100,7 @@ PROP = "pkic:profile:"
 # reject a producer for the age of a carrier format, which is the outcome the
 # Conformance section forbids.
 EXIT_FOR = {"conforms": 0, "does-not-conform": 1, "refused": 4}
+EXIT_CLAIM_MISMATCH = 5
 VERDICT_LABEL = {"conforms": "CONFORMS", "does-not-conform": "DOES NOT CONFORM",
                  "refused": "REFUSED"}
 
@@ -344,12 +359,34 @@ def load_profile(path):
             merged["_introducedBy"][r["_qid"]] = prof["profileId"]
         merged[section] = inherited + added
 
-    # Group rules are concatenated rather than overridden. A derived profile may
-    # add a group; tightening one member of an inherited group is not yet
-    # expressible, and inventing a syntax for it before anyone needs it would be
-    # guessing. The gap is recorded rather than hidden.
-    inherited_groups = [dict(g) for g in base.get("groupRules", [])]
+    # A derived profile may add a group, and may tighten one member of a group it
+    # inherited, or widen that group's coverage. Settling Q49: without member
+    # overrides the only ways to ask for more depth were to restate the group,
+    # which silently replaces the base's coverage, or to add a parallel group,
+    # which asks a producer for the same fact twice under two names.
+    inherited_groups = []
+    for g in base.get("groupRules", []):
+        g = dict(g)
+        g["members"] = [dict(m) for m in g.get("members", [])]
+        inherited_groups.append(g)
     seen_groups = {g["_qid"] for g in inherited_groups}
+    group_by_qid = {g["_qid"]: g for g in inherited_groups}
+    member_by_qid = {m["_qid"]: (g, m)
+                     for g in inherited_groups for m in g.get("members", [])}
+
+    for ov in prof.get("overrides", []):
+        oid = ov.get("id")
+        if oid in group_by_qid:
+            check_coverage_tightens(oid, group_by_qid[oid], ov, notes)
+            group_by_qid[oid].update({k: v for k, v in ov.items()
+                                      if k not in ("note", "id", "members")})
+            merged["_tightenedBy"].setdefault(oid, []).append(tag)
+        elif oid in member_by_qid:
+            _group, target = member_by_qid[oid]
+            check_override_tightens(target, ov, notes, base, prof)
+            target.update({k: v for k, v in ov.items() if k not in ("note", "id")})
+            merged["_tightenedBy"].setdefault(oid, []).append(tag)
+
     for g in prof.get("groupRules", []):
         if g["_qid"] in seen_groups:
             raise ProfileError("group rule id %s is declared twice in %s" % (g["id"], tag))
@@ -514,6 +551,59 @@ def check_constraint_tightens(rid, base_rule, ov, base, derived, notes):
             notes.append("%s: %s tightened, %s" % (rid, key, how))
 
 
+# A group's coverage says which keys must have an entry. Widening it obliges a
+# producer to answer for more keys, so it is a tightening; narrowing it is how a
+# staged profile would quietly become a permanent floor, which is the thing
+# decision 0010 exists to prevent.
+COVERAGE_STRENGTH = {"in-scope": 0, "all-purposes": 1, "all": 1}
+
+
+def check_guard_tightens(rid, base_rule, ov, notes):
+    """A 'requiredWhen' guard may be removed, and may not be added or changed.
+
+    The guard says when a rule applies. Removing it makes the rule apply always,
+    which is strictly more demanding. Adding one where the base had none makes it
+    apply less often, which is a relaxation wearing the clothes of a refinement:
+    the rule is still listed, still reported, and quietly stops firing. Changing
+    an existing guard is refused rather than compared, because whether one
+    condition is broader than another depends on values the profile does not
+    hold."""
+    if "requiredWhen" not in ov:
+        return
+    old, new = base_rule.get("requiredWhen"), ov["requiredWhen"]
+    if new in (None, {}):
+        if old:
+            notes.append("%s: guard removed, the rule now applies always" % rid)
+        return
+    if not old:
+        raise ProfileError(
+            "override on %s adds a 'requiredWhen' guard where the base has none, so the "
+            "rule would apply less often than in the base; extension is monotonic" % rid)
+    if old != new:
+        raise ProfileError(
+            "override on %s changes the 'requiredWhen' guard, which cannot be shown to "
+            "widen the base's; remove the guard to apply the rule always, or add a new "
+            "rule under this profile's own id" % rid)
+
+
+def check_coverage_tightens(rid, base_group, ov, notes):
+    """A group's coverage may be widened, never narrowed."""
+    if "coverage" not in ov:
+        return
+    old, new = base_group.get("coverage"), ov["coverage"]
+    if old == new:
+        return
+    o, n = COVERAGE_STRENGTH.get(old), COVERAGE_STRENGTH.get(new)
+    if o is None or n is None:
+        raise ProfileError("override on %s sets coverage %r, which is not a known coverage"
+                           % (rid, new))
+    if n < o:
+        raise ProfileError(
+            "override on %s narrows coverage from %r to %r, so a producer would owe an "
+            "answer for fewer keys; extension is monotonic" % (rid, old, new))
+    notes.append("%s: coverage widened, %s -> %s" % (rid, old, new))
+
+
 def check_override_tightens(base_rule, ov, notes, base=None, derived=None):
     """Reject an override that relaxes an inherited rule."""
     rid = base_rule.get("_qid", base_rule["id"])
@@ -522,6 +612,7 @@ def check_override_tightens(base_rule, ov, notes, base=None, derived=None):
             "override on %s renames the attribute from %r to %r; that is a different rule, "
             "which a derived profile adds under its own id rather than overriding"
             % (rid, base_rule.get("attribute"), ov["attribute"]))
+    check_guard_tightens(rid, base_rule, ov, notes)
     check_constraint_tightens(rid, base_rule, ov, base or {}, derived or {}, notes)
     if "level" in ov:
         old, new = base_rule.get("level", "MAY"), ov["level"]
@@ -1002,6 +1093,225 @@ def validate(bom, profile):
     return ("conforms" if product_ok and ifaces_ok else "does-not-conform"), report
 
 
+CLAIM_FORMAT = "pkic.cbom.conformance-claim"
+CLAIM_FORMAT_VERSION = "0.1"
+
+# What a verdict does not assert. The Conformance section carries this list, and
+# a consumer reading a claim months later will not have read the Conformance
+# section. Restating it inside the claim is the difference between a consumer
+# who knows what they are holding and one who infers more from the word
+# "conforms" than the word can carry.
+NOT_ASSERTED = [
+    "that the disclosed values are true; a profile constrains what is stated, not whether it is so",
+    "that the document is complete, beyond whatever completeness rule the profile carries",
+    "that every relevant interface was declared",
+    "that the cryptography is adequate, now or later; that judgement belongs to versioned policy",
+    "anything about a withheld value beyond the fact that withholding was permitted here",
+]
+
+
+# Q48. Which kinds of rule a carrier can carry enough structure to evaluate.
+# CycloneDX gives one component per interface, so all three kinds are evaluable.
+# In the current SPDX arrangement an SPDX document satisfies a profile by
+# referencing a CycloneDX CBOM as an external artifact, which gives the SPDX side
+# one element for the whole product: the attribute rules are evaluable through
+# the reference and the product-level rules are not, because there is nothing on
+# the SPDX side to count. A claim says so rather than leaving a consumer to
+# assume a verdict covers more than it does. See decision 0016.
+CARRIER_CAPABILITY = {
+    "cyclonedx": {"productRules": True, "interfaceRules": True, "groupRules": True},
+    "spdx": {"productRules": False, "interfaceRules": True, "groupRules": True},
+}
+
+
+def carrier_capability(carrier_format):
+    return CARRIER_CAPABILITY.get(str(carrier_format).lower(),
+                                  {"productRules": False, "interfaceRules": False,
+                                   "groupRules": False})
+
+
+def digest_of(path):
+    with open(path, "rb") as fh:
+        return {"alg": "sha-256", "value": hashlib.sha256(fh.read()).hexdigest()}
+
+
+def chain_of(profile):
+    """The whole inheritance chain, each link with the version that was pinned.
+
+    A claim naming only the profile evaluated is not reproducible: the derived
+    profile pins a base version, and a reader has to be able to resolve exactly
+    what was applied without going and looking it up."""
+    links = []
+    prof = profile
+    ext = prof.get("extends")
+    if ext:
+        links.append({"profileId": ext.get("profileId"), "version": str(ext.get("version"))})
+    links.append({"profileId": prof.get("profileId"), "version": str(prof.get("version")),
+                  "profileTag": profile_tag(prof)})
+    return links
+
+
+def rule_states(report):
+    """Summarise what was assessed, by disclosure state rather than by count alone.
+
+    'Conforms' with the implementing library withheld and 'conforms' with it
+    supplied are materially different answers to the question a consumer asked.
+    A claim that reports only the verdict throws that away, so the states travel
+    with it."""
+    buckets = {"failed": [], "withheld": [], "unknown": [], "undeclared": []}
+    total = 0
+    for row in report.get("product", []):
+        total += 1
+        if not row.get("ok") and row.get("level") == "MUST":
+            buckets["failed"].append(row["id"])
+    for iface in report.get("interfaces", []):
+        for row in iface.get("rows", []):
+            total += 1
+            ref = "%s/%s" % (iface["interfaceId"], row["id"])
+            if not row.get("ok") and row.get("level") == "MUST":
+                buckets["failed"].append(ref)
+            state = row.get("state")
+            if state in ("withheld", "unknown", "undeclared"):
+                buckets[state].append(ref)
+    return dict(buckets, assessed=total)
+
+
+def build_claim(bom_path, bom, evaluations, issued=None):
+    """Assemble a claim over one document and one or more profiles.
+
+    Several profiles in one claim is the case Q24 asked about. They are listed
+    rather than combined: each carries its own verdict, because a document can
+    conform to one profile and not another and a single overall answer would
+    have to choose which question it was answering."""
+    product = extract_product(bom)
+    capability = carrier_capability("cyclonedx")
+    not_asserted = list(NOT_ASSERTED)
+    for kind, evaluable in sorted(capability.items()):
+        if not evaluable:
+            not_asserted.append(
+                "anything a %s constrains; this carrier does not carry the structure to "
+                "evaluate them, so they were not assessed" % kind)
+    entries = []
+    for profile, verdict, report in evaluations:
+        entry = {
+            "profileId": profile.get("profileId"),
+            "profileTag": profile_tag(profile),
+            "version": str(profile.get("version")),
+            "chain": chain_of(profile),
+            "assessed": verdict != "refused",
+            "verdict": verdict,
+            "carrierBand": report["format"]["status"],
+        }
+        # A refused evaluation carries no rule results to summarise, and saying
+        # "0 failed" about a document nobody assessed is the merge of refusal
+        # and failure the Conformance section forbids.
+        if verdict != "refused":
+            entry["rules"] = rule_states(report)
+        else:
+            entry["refusedBecause"] = report["format"]["detail"]
+        entries.append(entry)
+
+    return {
+        "claimFormat": CLAIM_FORMAT,
+        "claimFormatVersion": CLAIM_FORMAT_VERSION,
+        "issued": issued or datetime.datetime.now(datetime.timezone.utc)
+                              .replace(microsecond=0).isoformat(),
+        "subject": {"identifier": product.get("identifier"),
+                    "identifierFallback": product.get("identifierFallback")},
+        "document": {
+            "file": os.path.basename(bom_path),
+            "digest": digest_of(bom_path),
+            "carrier": {"format": "cyclonedx", "version": str(bom.get("specVersion"))},
+        },
+        "profiles": entries,
+        "evaluableFromCarrier": capability,
+        "assertedBy": {"tool": "validate_cbom.py", "claimFormat": CLAIM_FORMAT},
+        "notAsserted": not_asserted,
+    }
+
+
+def verify_claim(claim, bom_path, bom, search_dirs):
+    """Re-run everything the claim asserts and report where it disagrees.
+
+    This is what separates a claim from an assertion. A consumer holding a claim
+    and the document it names can establish, without trusting the issuer, that
+    the document is the one evaluated and that the profiles still produce the
+    verdicts recorded. What it cannot establish is that the disclosed values are
+    true, which is in 'notAsserted' and always will be."""
+    problems = []
+    if claim.get("claimFormat") != CLAIM_FORMAT:
+        problems.append("not a %s document" % CLAIM_FORMAT)
+        return problems
+
+    want = (claim.get("document") or {}).get("digest") or {}
+    got = digest_of(bom_path)
+    if want.get("value") != got["value"]:
+        problems.append(
+            "digest mismatch: the claim is about a document with %s %s..., this document is %s..."
+            % (want.get("alg"), str(want.get("value"))[:16], got["value"][:16]))
+        # Everything below would compare a claim against a document it was never
+        # about, so the mismatch is reported alone rather than with its symptoms.
+        return problems
+
+    carrier = ((claim.get("document") or {}).get("carrier") or {}).get("version")
+    if carrier and str(carrier) != str(bom.get("specVersion")):
+        problems.append("carrier version mismatch: claim says %s, document says %s"
+                        % (carrier, bom.get("specVersion")))
+
+    for entry in claim.get("profiles", []):
+        pid, tag = entry.get("profileId"), entry.get("profileTag")
+        path = find_profile(search_dirs, pid, tag)
+        if not path:
+            problems.append(
+                "%s: no rules file declaring %s was found in %s, so the claim could not be "
+                "re-checked. This is a gap in the verifier's inputs rather than a defect in "
+                "the claim; point it at the profile with --profiles-dir."
+                % (tag or pid, pid, ", ".join(search_dirs)))
+            continue
+        try:
+            profile, _origin, _notes = load_profile(path)
+        except ProfileError as err:
+            problems.append("%s: profile no longer loads (%s)" % (tag or pid, err))
+            continue
+        if str(profile.get("version")) != str(entry.get("version")):
+            problems.append("%s: claim cites v%s, the file here is v%s"
+                            % (tag or pid, entry.get("version"), profile.get("version")))
+            continue
+        try:
+            verdict, _report = validate(bom, profile)
+        except ProfileError as err:
+            problems.append("%s: could not re-evaluate (%s)" % (tag or pid, err))
+            continue
+        if verdict != entry.get("verdict"):
+            problems.append("%s: claim says %r, re-evaluation says %r"
+                            % (tag or pid, entry.get("verdict"), verdict))
+    return problems
+
+
+def find_profile(search_dirs, profile_id, tag):
+    """Locate the rules file declaring a profileId.
+
+    Found by reading candidates and comparing the declared profileId, rather than
+    by guessing at a filename convention the methodology does not impose. A claim
+    cites a profile by identity; where the file sits is the verifier's problem,
+    not the claim's."""
+    for base_dir in search_dirs:
+        if not os.path.isdir(base_dir):
+            continue
+        for name in sorted(os.listdir(base_dir)):
+            if not name.endswith(".rules.json"):
+                continue
+            path = os.path.join(base_dir, name)
+            try:
+                with open(path, encoding="utf-8") as fh:
+                    candidate = json.load(fh)
+            except (OSError, ValueError):
+                continue
+            if candidate.get("profileId") == profile_id:
+                return path
+    return None
+
+
 def icon_for(row):
     if row["ok"]:
         return {"withheld": "HELD", "n/a": " -- "}.get(row.get("state"), "PASS")
@@ -1016,18 +1326,84 @@ def main(argv):
         print(__doc__)
         return 2
     as_json = "--json" in argv
+    as_claim = "--claim" in argv
+    verifying = "--verify-claim" in argv
 
     bom = json.load(open(args[0], encoding="utf-8"))
+
+    # --- verify a claim against this document -------------------------------
+    if verifying:
+        claim_path = args[1]
+        with open(claim_path, encoding="utf-8") as fh:
+            claim = json.load(fh)
+        # A claim names profiles by identity, so the verifier has to be told
+        # where to look. The document's own directory first, because a producer
+        # who ships a CBOM and a claim together usually ships the profile too.
+        dirs = [os.path.dirname(os.path.abspath(args[0])) or ".",
+                os.path.dirname(os.path.abspath(claim_path)) or ".", os.getcwd()]
+        for i, a in enumerate(argv):
+            if a == "--profiles-dir" and i + 1 < len(argv):
+                dirs.insert(0, argv[i + 1])
+            elif a.startswith("--profiles-dir="):
+                dirs.insert(0, a.split("=", 1)[1])
+        seen, search_dirs = set(), []
+        for d in dirs:
+            if d not in seen:
+                seen.add(d)
+                search_dirs.append(d)
+        problems = verify_claim(claim, args[0], bom, search_dirs)
+        if as_json:
+            print(json.dumps({"verified": not problems, "problems": problems}, indent=2))
+        else:
+            print("CLAIM   : %s" % claim_path)
+            print("CBOM    : %s" % args[0])
+            print("=" * 70)
+            if problems:
+                print("MISMATCH")
+                for pr in problems:
+                    print("  - %s" % pr)
+                print("=" * 70)
+                print("The claim does not describe this document, or no longer holds against")
+                print("the profiles it names. That is a finding about the claim, not a verdict")
+                print("on the document: evaluate the document directly to get one.")
+            else:
+                n = len(claim.get("profiles", []))
+                print("VERIFIED  the document matches the claim's digest, and re-evaluating")
+                print("          %d profile(s) reproduces every verdict the claim records." % n)
+                print("          What is still not asserted is listed in the claim itself.")
+        return EXIT_CLAIM_MISMATCH if problems else 0
+
+    # --- evaluate against one or more profiles ------------------------------
+    profile_paths = args[1:] if as_claim else args[1:2]
+    evaluations = []
+    for path in profile_paths:
+        try:
+            prof, orig, nts = load_profile(path)
+            vd, rp = validate(bom, prof)
+        except ProfileError as err:
+            print("PROFILE ERROR: %s" % err, file=sys.stderr)
+            return 3
+        evaluations.append((prof, vd, rp))
+
+    if as_claim:
+        claim = build_claim(args[0], bom, evaluations)
+        print(json.dumps(claim, indent=2))
+        # A document that fails one profile and is refused by another has failed:
+        # refusal says nothing happened, and something did.
+        verdicts = [v for _p, v, _r in evaluations]
+        if "does-not-conform" in verdicts:
+            return EXIT_FOR["does-not-conform"]
+        if "refused" in verdicts:
+            return EXIT_FOR["refused"]
+        return EXIT_FOR["conforms"]
+
+    profile, origin, notes = evaluations[0][0], None, None
     try:
         profile, origin, notes = load_profile(args[1])
     except ProfileError as err:
         print("PROFILE ERROR: %s" % err, file=sys.stderr)
         return 3
-    try:
-        verdict, report = validate(bom, profile)
-    except ProfileError as err:
-        print("PROFILE ERROR: %s" % err, file=sys.stderr)
-        return 3
+    verdict, report = evaluations[0][1], evaluations[0][2]
 
     if as_json:
         print(json.dumps({"verdict": verdict,

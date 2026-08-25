@@ -1,0 +1,94 @@
+{
+  "claimFormat": "pkic.cbom.conformance-claim",
+  "claimFormatVersion": "0.1",
+  "issued": "2026-08-24T15:19:38+00:00",
+  "subject": {
+    "identifier": "pkg:generic/example-gateway@9.0.4",
+    "identifierFallback": "Example Gateway@9.0.4"
+  },
+  "document": {
+    "file": "cbom-pqc-pass.cyclonedx.json",
+    "digest": {
+      "alg": "sha-256",
+      "value": "ebf058629a37e057f41be88eb166870d25db2984a31770af3263ec7ea6f89826"
+    },
+    "carrier": {
+      "format": "cyclonedx",
+      "version": "1.7"
+    }
+  },
+  "profiles": [
+    {
+      "profileId": "pkic.example.interface-disclosure",
+      "profileTag": "interface-disclosure",
+      "version": "0.7",
+      "chain": [
+        {
+          "profileId": "pkic.example.interface-disclosure",
+          "version": "0.7",
+          "profileTag": "interface-disclosure"
+        }
+      ],
+      "assessed": true,
+      "verdict": "conforms",
+      "carrierBand": "target",
+      "rules": {
+        "failed": [],
+        "withheld": [],
+        "unknown": [],
+        "undeclared": [],
+        "assessed": 31
+      }
+    },
+    {
+      "profileId": "pkic.example.pqc-migration",
+      "profileTag": "pqc-migration",
+      "version": "0.6",
+      "chain": [
+        {
+          "profileId": "pkic.example.interface-disclosure",
+          "version": "0.7"
+        },
+        {
+          "profileId": "pkic.example.pqc-migration",
+          "version": "0.6",
+          "profileTag": "pqc-migration"
+        }
+      ],
+      "assessed": true,
+      "verdict": "conforms",
+      "carrierBand": "target",
+      "rules": {
+        "failed": [],
+        "withheld": [],
+        "unknown": [],
+        "undeclared": [
+          "svc-api-tls/pqc-migration#G1.3[encryption]",
+          "svc-api-tls/pqc-migration#G1.3[key-establishment]",
+          "mgmt-ssh/pqc-migration#G1.3[encryption]",
+          "mgmt-ssh/pqc-migration#G1.3[key-establishment]",
+          "ic-ipsec/pqc-migration#G1.3[encryption]",
+          "ic-ipsec/pqc-migration#G1.3[entity-authentication]",
+          "ic-ipsec/pqc-migration#G1.3[key-establishment]"
+        ],
+        "assessed": 110
+      }
+    }
+  ],
+  "evaluableFromCarrier": {
+    "productRules": true,
+    "interfaceRules": true,
+    "groupRules": true
+  },
+  "assertedBy": {
+    "tool": "validate_cbom.py",
+    "claimFormat": "pkic.cbom.conformance-claim"
+  },
+  "notAsserted": [
+    "that the disclosed values are true; a profile constrains what is stated, not whether it is so",
+    "that the document is complete, beyond whatever completeness rule the profile carries",
+    "that every relevant interface was declared",
+    "that the cryptography is adequate, now or later; that judgement belongs to versioned policy",
+    "anything about a withheld value beyond the fact that withholding was permitted here"
+  ]
+}

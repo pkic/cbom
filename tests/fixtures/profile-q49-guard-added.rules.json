@@ -1,0 +1,47 @@
+{
+  "$comment": "TEST FIXTURE \u2014 deliberately invalid. Adds a 'requiredWhen' guard to an inherited group member that has none, so a capability status would be required only where the status is 'planned' \u2014 a condition that reads its own answer. This is the relaxation hardest to see by reading: the rule is still listed, still appears in every report, and quietly stops firing for most entries. Not a real profile; do not copy.",
+  "profileId": "pkic.test.q49-guard-added",
+  "profileTag": "q49-guard-added",
+  "title": "Adding a guard to an inherited rule (test fixture)",
+  "version": "0.0",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the validator holds monotonicity for an inherited group.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.pqc-migration",
+    "version": "0.6",
+    "file": "../../docs/methodology/profile-pqc-migration.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "scope": {
+    "subjectType": "product",
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured",
+      "observed"
+    ]
+  },
+  "overrides": [
+    {
+      "id": "pqc-migration#G1.1",
+      "requiredWhen": {
+        "attribute": "capabilityStatus",
+        "equals": "planned"
+      }
+    }
+  ],
+  "interfaceRules": []
+}

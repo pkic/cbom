@@ -30,5 +30,11 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install the schema validator
+        # Only the published-schema checks need it. tests/check-schemas.py skips
+        # itself with a message when it is absent, so a contributor without it
+        # can still run the rest of the suite.
+        run: python -m pip install --quiet jsonschema
+
       - name: Run profile tests
         run: bash tests/run-profile-tests.sh
