@@ -627,6 +627,111 @@ expect_check_output "C16 says which letter the section takes" "so it takes the l
 expect_check_output "C17 passes on both example profiles" "[PASS] C17" "$BASE"
 expect_check_output "C17 passes on the derived profile too" "[PASS] C17" "$PQC"
 
+# ------------------------------------------------------- conformance claims ---
+# Decision 0015, settling Q24. A claim is the artifact that crosses an
+# organisational boundary. It is bound to one document by digest, names every
+# profile with its chain, and can be re-checked by whoever receives it.
+echo
+echo "Conformance claims"
+CLAIM="$TMP/claim.json"
+
+"$PY" "$M/validate_cbom.py" "$M/cbom-pqc-pass.cyclonedx.json" \
+      "$M/profile-interface-disclosure.rules.json" "$M/profile-pqc-migration.rules.json" \
+      --claim > "$CLAIM" 2>/dev/null
+RC=$?
+if [ "$RC" -eq 0 ] && "$PY" -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if len(d['profiles'])==2 else 1)" "$CLAIM"; then
+  ok "a claim covers several profiles at once"
+else
+  bad "a claim covers several profiles at once" "expected exit 0 and two profile entries, got exit $RC"
+fi
+
+# The digest is what binds a claim to a document. Without it a claim is about
+# whatever document someone later puts beside it.
+if "$PY" -c "
+import json,sys,hashlib
+c=json.load(open(sys.argv[1]))
+want=c['document']['digest']['value']
+got=hashlib.sha256(open(sys.argv[2],'rb').read()).hexdigest()
+sys.exit(0 if want==got else 1)" "$CLAIM" "$M/cbom-pqc-pass.cyclonedx.json"; then
+  ok "the claim's digest is the document's digest"
+else
+  bad "the claim's digest is the document's digest" "digest does not match"
+fi
+
+for field in claimFormat notAsserted evaluableFromCarrier; do
+  if "$PY" -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if sys.argv[2] in d else 1)" "$CLAIM" "$field"; then
+    ok "the claim carries '$field'"
+  else
+    bad "the claim carries '$field'" "field absent"
+  fi
+done
+
+# A claim that cannot be re-checked is a press release.
+OUT="$("$PY" "$M/validate_cbom.py" "$M/cbom-pqc-pass.cyclonedx.json" "$CLAIM" \
+       --verify-claim --profiles-dir "$M" 2>&1)"; RC=$?
+if [ "$RC" -eq 0 ] && printf '%s' "$OUT" | grep -q "VERIFIED"; then
+  ok "a claim verifies against the document it names"
+else
+  bad "a claim verifies against the document it names" "expected exit 0 and VERIFIED, got exit $RC"
+fi
+
+# Point the same claim at a different document and it must not verify. Exit 5,
+# because this is a finding about the claim and not a verdict on the document.
+OUT="$("$PY" "$M/validate_cbom.py" "$M/cbom-pqc-fail.cyclonedx.json" "$CLAIM" \
+       --verify-claim --profiles-dir "$M" 2>&1)"; RC=$?
+if [ "$RC" -eq 5 ] && printf '%s' "$OUT" | grep -q "digest mismatch"; then
+  ok "the same claim does not verify against a different document"
+else
+  bad "the same claim does not verify against a different document" "expected exit 5 and a digest mismatch, got exit $RC"
+fi
+
+# A tampered verdict is caught by re-evaluation rather than by trusting the issuer.
+"$PY" - "$CLAIM" "$TMP" <<'PY'
+import json, sys, os
+c = json.load(open(sys.argv[1], encoding="utf-8"))
+c["profiles"][0]["verdict"] = "does-not-conform"
+json.dump(c, open(os.path.join(sys.argv[2], "claim-tampered.json"), "w"))
+PY
+OUT="$("$PY" "$M/validate_cbom.py" "$M/cbom-pqc-pass.cyclonedx.json" "$TMP/claim-tampered.json" \
+       --verify-claim --profiles-dir "$M" 2>&1)"; RC=$?
+if [ "$RC" -eq 5 ] && printf '%s' "$OUT" | grep -q "re-evaluation says"; then
+  ok "a verdict that no longer holds is caught"
+else
+  bad "a verdict that no longer holds is caught" "expected exit 5 and a re-evaluation mismatch, got exit $RC"
+fi
+
+# A refused evaluation appears in the claim as refused, carrying no rule results.
+# Merging refusal into failure is what T1 forbids, and a claim is where that
+# merge would do the most damage.
+"$PY" - "$M/cbom-pass.cyclonedx.json" "$TMP" <<'PY'
+import json, sys, os
+bom = json.load(open(sys.argv[1], encoding="utf-8"))
+bom["specVersion"] = "1.5"
+json.dump(bom, open(os.path.join(sys.argv[2], "cbom-1.5-claim.json"), "w"))
+PY
+"$PY" "$M/validate_cbom.py" "$TMP/cbom-1.5-claim.json" "$M/profile-interface-disclosure.rules.json" \
+      --claim > "$TMP/claim-refused.json" 2>/dev/null
+RC=$?
+if [ "$RC" -eq 4 ] && "$PY" -c "
+import json,sys
+e=json.load(open(sys.argv[1]))['profiles'][0]
+sys.exit(0 if e['verdict']=='refused' and e['assessed'] is False and 'rules' not in e else 1)" "$TMP/claim-refused.json"; then
+  ok "a refused evaluation is refused in the claim, with no rule results"
+else
+  bad "a refused evaluation is refused in the claim, with no rule results" "expected exit 4 and a refused entry carrying no rules, got exit $RC"
+fi
+
+# --------------------------------------------------------- published schemas ---
+echo
+echo "Published schemas"
+OUT="$("$PY" "$ROOT/tests/check-schemas.py" 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then
+  passed=$((passed + 1))
+else
+  failed=$((failed + 1))
+fi
+
 # ------------------------------------------------------------------ summary ---
 echo
 echo "=================="

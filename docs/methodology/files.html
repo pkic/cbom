@@ -32,6 +32,9 @@ nav: files
     <tbody>
       <tr><td><a href="profile-interface-disclosure.md">profile-interface-disclosure.md</a></td><td>Prose profile specification (product-level and per-interface rules)</td></tr>
       <tr><td><a href="profile-interface-disclosure.rules.json">profile-interface-disclosure.rules.json</a></td><td>Machine-readable rules, including the <code>appliesTo</code> version range</td></tr>
+      <tr><td><a href="profile.schema.json">profile.schema.json</a></td><td>The shape of a rules file, so a third party can validate a profile without our checker. Not a substitute for C1 to C17: a schema can see that <code>objective</code> has a <code>decision</code> string, not whether the decision is one a consumer could act on</td></tr>
+      <tr><td><a href="claim.schema.json">claim.schema.json</a></td><td>The shape of a conformance claim, including the two consistency rules a schema can enforce &mdash; a refused entry carries no rule results, and an entry claiming conformance may not list a failed MUST</td></tr>
+      <tr><td><a href="claim-example.json">claim-example.json</a></td><td>A worked claim over both example profiles at once, bound to <code>cbom-pqc-pass</code> by digest</td></tr>
       <tr><td><a href="mapping-cyclonedx-spdx.md">mapping-cyclonedx-spdx.md</a></td><td>Complete requirement-to-format mapping</td></tr>
       <tr><td><a href="cbom-pass.cyclonedx.json">cbom-pass.cyclonedx.json</a></td><td>Conforming example CBOM (CycloneDX 1.7)</td></tr>
       <tr><td><a href="cbom-fail.cyclonedx.json">cbom-fail.cyclonedx.json</a></td><td>Non-conforming example; omits the management interface</td></tr>

@@ -53,6 +53,9 @@ profile widens the vocabulary — so it can be accepted in part.
 | [0012](./0012-what-a-disclosure-baseline-requires.md) | A disclosure baseline identifies its subject, states its completeness, and names its identifier schemes | 3.1 | Proposed | 2026-08-21 |
 | [0013](./0013-monotonicity-covers-constraints.md) | Monotonicity is checked for constraints, and a rule that cannot fail is not a rule | 3.9 | Proposed | 2026-08-24 |
 | [0014](./0014-tightening-an-inherited-group.md) | A derived profile may tighten one member of an inherited group, and widen its coverage | 3.9 | Proposed | 2026-08-24 |
+| [0015](./0015-a-conformance-claim-is-checkable.md) | A conformance claim is bound to a document, lists each profile separately, and can be re-checked | 3.5 | Proposed | 2026-08-24 |
+| [0016](./0016-what-an-spdx-only-claim-asserts.md) | Product-level rules are not evaluable from SPDX alone, and a claim says so | 3.6 | Proposed | 2026-08-24 |
+| [0017](./0017-published-schemas.md) | The rules file and the claim have published schemas, and a schema is not a conformance checker | 3.13 | Proposed | 2026-08-24 |
 
 <!-- Add a row per decision, newest at the bottom:
 | 0008 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |
@@ -60,7 +63,7 @@ profile widens the vocabulary — so it can be accepted in part.
 
 ## Why every record says Proposed
 
-All thirteen carry the status **Proposed**, and for an alpha that is the correct status rather than
+All seventeen carry the status **Proposed**, and for an alpha that is the correct status rather than
 a backlog.
 
 These records are written while building the methodology and its worked example, so that the

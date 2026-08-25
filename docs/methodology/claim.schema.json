@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pkic.org/cbom/schema/claim.schema.json",
+  "title": "CBOM conformance claim",
+  "$comment": "A claim is the artifact that crosses an organisational boundary: a producer hands it to a consumer who was not present when the evaluation ran. It is bound to one document by digest, names every profile evaluated with its whole chain, records the disclosure state of what was assessed, and carries what a verdict does not assert. See decision 0015.",
+  "type": "object",
+  "required": ["claimFormat", "claimFormatVersion", "subject", "document", "profiles", "notAsserted"],
+  "properties": {
+    "claimFormat": {"const": "pkic.cbom.conformance-claim"},
+    "claimFormatVersion": {"type": "string"},
+    "issued": {"type": "string", "$comment": "When the evaluation ran. A claim does not expire, but the document it describes can be superseded, which is why the digest rather than the date is what binds it."},
+    "subject": {
+      "type": "object",
+      "required": ["identifier"],
+      "properties": {
+        "identifier": {"type": ["string", "null"], "$comment": "What the document says it describes, in the form the profile's identifierSchemes name. Null where the document identifies nothing, which a profile carrying a subject-identity rule would have failed."},
+        "identifierFallback": {"type": ["string", "null"]}
+      }
+    },
+    "document": {
+      "type": "object",
+      "required": ["digest", "carrier"],
+      "properties": {
+        "file": {"type": "string", "$comment": "A convenience. The digest is what identifies the document; a filename is not an identifier."},
+        "digest": {
+          "type": "object",
+          "required": ["alg", "value"],
+          "properties": {"alg": {"type": "string"}, "value": {"type": "string", "minLength": 16}}
+        },
+        "carrier": {
+          "type": "object",
+          "required": ["format", "version"],
+          "properties": {"format": {"type": "string"}, "version": {"type": "string"}}
+        }
+      }
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "$comment": "Several profiles are listed rather than combined. A document can conform to one and not another, and a single overall answer would have to choose which question it was answering. This is what Q24 asked.",
+      "items": {
+        "type": "object",
+        "required": ["profileId", "version", "chain", "assessed", "verdict", "carrierBand"],
+        "properties": {
+          "profileId": {"type": "string"},
+          "profileTag": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+          "version": {"type": "string"},
+          "chain": {
+            "type": "array",
+            "minItems": 1,
+            "$comment": "Every link with the version that was pinned, so a reader can resolve exactly what was applied without looking it up.",
+            "items": {
+              "type": "object",
+              "required": ["profileId", "version"],
+              "properties": {
+                "profileId": {"type": "string"},
+                "version": {"type": "string"},
+                "profileTag": {"type": "string"}
+              }
+            }
+          },
+          "assessed": {"type": "boolean"},
+          "verdict": {"enum": ["conforms", "does-not-conform", "refused"]},
+          "carrierBand": {"enum": ["target", "legacy", "newer", "unsupported"]},
+          "refusedBecause": {"type": "string"},
+          "rules": {
+            "type": "object",
+            "$comment": "Present only where the document was assessed. A refused evaluation has no rule results, and reporting '0 failed' about a document nobody assessed is the merge of refusal and failure the Conformance section forbids.",
+            "required": ["assessed", "failed", "withheld", "unknown", "undeclared"],
+            "properties": {
+              "assessed": {"type": "integer", "minimum": 0},
+              "failed": {"type": "array", "items": {"type": "string"}},
+              "withheld": {"type": "array", "items": {"type": "string"}},
+              "unknown": {"type": "array", "items": {"type": "string"}},
+              "undeclared": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"verdict": {"const": "refused"}}, "required": ["verdict"]},
+            "then": {
+              "properties": {"assessed": {"const": false}},
+              "not": {"required": ["rules"]},
+              "$comment": "T1. Refusal and non-conformance must not be merged. A refused entry carries no rule results and asserts assessed:false."
+            }
+          },
+          {
+            "if": {"properties": {"verdict": {"const": "conforms"}}, "required": ["verdict"]},
+            "then": {
+              "required": ["rules"],
+              "properties": {"rules": {"properties": {"failed": {"maxItems": 0}}}},
+              "$comment": "A claim of conformance with a failed MUST in the same entry is internally inconsistent, and a schema can say so."
+            }
+          }
+        ]
+      }
+    },
+    "evaluableFromCarrier": {
+      "type": "object",
+      "$comment": "Q48. Which kinds of rule the carrier carries enough structure to evaluate. An SPDX-only claim sets productRules false, because in the linkage arrangement the SPDX side has one element for the whole product and nothing to count.",
+      "properties": {
+        "productRules": {"type": "boolean"},
+        "interfaceRules": {"type": "boolean"},
+        "groupRules": {"type": "boolean"}
+      }
+    },
+    "assertedBy": {"type": "object"},
+    "notAsserted": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string"},
+      "$comment": "Carried inside the claim rather than referenced, because a consumer reading it months later will not have read the Conformance section, and 'conforms' invites more inference than the word can carry."
+    }
+  }
+}

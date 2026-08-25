@@ -894,7 +894,7 @@ document, and the credibility of the format-independence claim.
 
 ## Q48 — How are the product-level rules evaluated from the SPDX side?
 
-**Status** open. Added 21 August 2026, from a review of the format mapping.
+**Status** settled by decision 0016, awaiting adoption
 
 **The question.** In the current arrangement an SPDX document satisfies the profile by referencing
 a CycloneDX CBOM as an external artifact. That gives the SPDX document one element for the whole
@@ -921,16 +921,22 @@ encoded so that several interfaces can be distinguished within it (trade-off: an
 convention invented by this group inside another format's extension point, which is the kind of
 thing harmonisation is supposed to avoid).
 
-**Option C: state that product-level rules are not evaluable from SPDX alone**, and bound what an
-SPDX-only conformance claim may assert (trade-off: honest, and it concedes part of the
-format-independence claim).
+**How it was settled.** Option C, as decision 0016, made machine-readable rather than left in
+prose. A claim carries `evaluableFromCarrier`, saying which kinds of rule the carrier holds enough
+structure to evaluate — for SPDX in the linkage arrangement, `productRules: false` — and each kind
+that is not evaluable adds a line to the claim's `notAsserted` list. The bound is therefore visible
+to whoever is holding the claim rather than to whoever reads the mapping document.
 
-**Where it stands.** Unresolved and marked as such in `mapping-cyclonedx-spdx.md` and
-`formats.html`. Nobody in the group has yet worked with SPDX 3.x at field level, which is the
-same gap Workstream 5 of the improvement plan records.
+Options A and B were rejected for the same reason: both would have this group invent something
+inside a format it does not own, producing documents only our tools can read. That is the
+fragmentation the methodology exists to prevent, arriving under the banner of format independence.
 
-**What would have to change.** The SPDX column of the mapping, the Formats section, and, under
-Option C, the Conformance section, which would need to say what an SPDX-only claim covers.
+The mapping document's rows stay marked unresolved, which is the honest state. If SPDX's
+cryptographic modelling grows a structure carrying interfaces as distinct elements, this is
+superseded and `CARRIER_CAPABILITY` is the one table that changes.
+
+**What it leaves.** The claim "one profile, two formats" holds for the attribute rules and not for
+the product rules, and now says so. Q16 to Q18 on the mapping generally are untouched.
 
 ## Q49 — Can a derived profile tighten one member of an inherited group rule?
 
@@ -1291,7 +1297,7 @@ profiles, the composition section, and Q33 and Q24.
 
 ## Q24 — How does a claim describe conformance to several profiles at once?
 
-**Status** open
+**Status** settled by decision 0015, awaiting adoption
 
 **The question.** A document can be checked against several profiles, each giving its own result.
 The methodology shows an example of how to write that down. It does not set a rule.
@@ -1310,10 +1316,25 @@ weaker as an audit record, because silence cannot be distinguished from not havi
 **Option C: a claim covers a declared set**, listing everything checked and the result of each,
 so that a profile's absence means it was not assessed.
 
-**Where it stands.** The worked example follows Option C's shape without a rule being stated.
+**How it was settled.** Option C, as decision 0015, and the claim is now a machine-readable
+document with a published schema. Every profile evaluated is listed with its own verdict, its whole
+inheritance chain and the versions pinned; a profile's absence means it was not assessed. Verdicts
+are not combined, because a document can conform to one profile and fail another and a single
+overall answer would have to choose which question it was answering.
 
-**What would have to change.** The claim format in two sections, and whether a claim becomes a
-machine-readable document with its own schema.
+Answering it turned up three gaps that mattered more than the original question. A claim was not
+bound to any particular document, so it could not be falsified by the wrong one — it now carries a
+`sha-256` digest. A verdict alone lost the disclosure state, so `conforms` with the implementing
+library withheld read the same as `conforms` with it supplied — the four outcomes now travel with
+the verdict. And a claim carried no statement of what it does not assert, which is now inside the
+claim rather than referenced from it.
+
+`--verify-claim` re-runs the evaluation, so a consumer can establish without trusting the issuer
+that this is the document evaluated and that the verdicts still hold. What it cannot establish is
+that the disclosed values are true; that is in `notAsserted` and always will be.
+
+**What it leaves.** Nothing of this question. Whether a claim should be signed, and by whom, is a
+separate matter that nobody has raised yet.
 
 ## Q25 — How would a sector profile fit alongside these?
 

@@ -214,7 +214,8 @@ nav: profile
   <p>Identifiers do not appear in CBOM documents at all. They appear in conformance reports and in claims, which is why they have to be stable and why they have to say which profile they came from. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0011-rule-numbering-across-a-family.md">decision 0011</a>.</p>
 
   <h3>Expressing a conformance claim</h3>
-  <p>A claim names every profile evaluated, each with its version, together with the carrier format version and the content revision. For a derived profile the base is named as well, because the derived profile pins a particular version of it and a reader should not have to look that up.</p>
+  <p>A claim is the artifact that crosses an organisational boundary: a producer hands it to a consumer who was not present when the evaluation ran, and who may read it months later. It is a machine-readable document with <a href="claim.schema.json">its own schema</a>, and the shape below is the illustrative form &mdash; <a href="claim-example.json">claim-example.json</a> is a real one, over both example profiles at once.</p>
+  <p>Four properties do the work. It is <strong>bound to one document by digest</strong>, so putting it beside a different CBOM contradicts it. It <strong>lists every profile separately</strong> with its own verdict and its whole pinned chain, because a document can conform to one profile and fail another. It carries the <strong>disclosure states</strong> alongside the verdict, since &ldquo;conforms&rdquo; with the implementing library withheld is a different answer from &ldquo;conforms&rdquo; with it supplied. And it carries <strong>what it does not assert</strong> inside itself rather than by reference. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0015-a-conformance-claim-is-checkable.md">decision 0015</a>.</p>
   <pre><code>Conforms to:
   pkic.example.pqc-migration v0.6            (tag: pqc-migration)
     extending pkic.example.interface-disclosure v0.7   (tag: interface-disclosure)
@@ -222,6 +223,8 @@ nav: profile
 Carrier: CycloneDX 1.7
 Content revision: 3</code></pre>
   <p>The tags are part of the claim rather than decoration: a report attached to it cites rules as <code>pqc-migration#I4</code>, and a reader needs the claim to say which profile that tag belongs to.</p>
+  <p><strong>A claim that cannot be re-checked is a press release.</strong> A consumer holding the claim and the document runs <code>validate_cbom.py &lt;cbom&gt; &lt;claim&gt; --verify-claim</code>, which confirms the digest and re-runs every profile the claim names, reporting where the two disagree. A mismatch exits <code>5</code> rather than <code>1</code>, because it is a finding about the claim and not a verdict on the document &mdash; someone holding a bad claim and a good document should evaluate the document, and an exit code reading &ldquo;does not conform&rdquo; would send them the wrong way.</p>
+  <p>What verification cannot establish is that the disclosed values are true. A producer stating <code>TLS 1.3</code> for an interface running <code>TLS 1.2</code> produces a claim that verifies perfectly. That is in the claim's own <code>notAsserted</code> list and always will be: attestation is a different problem, and implying otherwise would be the most damaging thing this format could do.</p>
 
   <h3>Machine-readable form</h3>
   <p>A derived rules file declares its base and lists only its additions and its tightenings.</p>
