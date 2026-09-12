@@ -16,16 +16,34 @@ Data-driven pages built by Jekyll from Markdown and Liquid templates.
 | `index.md` | Overview and landing page. |
 | `references.md` | The reference register, rendered from `_data/references.yml`. |
 | `issues.md` | The methodology aspects. |
+| `meetings.md` | Meetings, rendered from `_data/meetings.yml`. |
+| `presentations.md` | Presentations, rendered from `_data/presentations.yml`. |
 | `contributing.md` | How to take part. |
 | `_data/references.yml` | Reference sources, with category, status and jurisdiction. |
 | `_data/aspects.yml` | The methodology aspects. |
+| `_data/meetings.yml` | Meetings, their agendas and their recordings. |
+| `_data/presentations.yml` | Presentations, and where each deck is held. |
 | `_layouts/`, `_includes/` | Page shells and the shared header and footer. |
 | `assets/css/style.css` | The design system: palette, typography, components. |
 | `assets/js/references.js` | Filtering for the reference register. |
+| `assets/js/presentations.js` | Search and grouping for the presentations page. |
+| `assets/presentations/` | Presentation files served at `/cbom/assets/presentations/`. |
 
 To add a reference or an aspect, edit the relevant file in `_data/`. Adding a new value for a
 category, status or jurisdiction also needs a display label adding under `labels:` in
 `_config.yml`.
+
+Meetings and presentations work the same way and are documented in
+[CONTRIBUTING-meetings.md](../CONTRIBUTING-meetings.md). Two things about them are worth knowing
+here. A meeting is Upcoming or Previous according to its `date`, worked out **at build time**, so
+the split only moves when the site is rebuilt — in practice the push that adds the recording. And
+a presentation's file size field is called `filesize`, not `size`, because `size` is a reserved
+Liquid property that would render the number of fields on any entry lacking the key.
+
+`python3 tests/check-site-data.py` checks both files: that a download link points at a file that
+is actually committed, that a presentation's `meeting:` matches a real meeting, and that an entry
+has exactly one of `file:` and `url:`. Jekyll fails on none of these — it builds the broken link
+and serves it.
 
 ## 2. The methodology documentation (static HTML)
 
@@ -138,8 +156,8 @@ bundle exec jekyll serve --baseurl /cbom
 ## Conventions worth keeping
 
 **Do not add a `.nojekyll` file.** It disables Jekyll processing, which would leave `index.md`,
-`references.md`, `issues.md` and `contributing.md` served as raw Markdown and break the data
-register and the templates. A `.nojekyll` was added here by mistake once and removed.
+`references.md`, `issues.md`, `meetings.md`, `presentations.md` and `contributing.md` served as
+raw Markdown and break the data registers and the templates. A `.nojekyll` was added here by mistake once and removed.
 
 **Do not set a default layout for HTML pages.** The `methodology/` pages carry front matter so
 that Jekyll processes them and the navigation include works, but they specify no `layout:` and

@@ -1,0 +1,73 @@
+# CBOM Profiles Working Group — meetings
+#
+# Single source of truth for the meetings page. The published page is generated
+# from this data; no HTML or templates are involved. See CONTRIBUTING-meetings.md.
+#
+# Upcoming and past are NOT recorded as a status field — they are derived from
+# `date` when the site is built. A meeting moves to Past on the first build after
+# its date, which in practice is the commit that adds its recording.
+#
+# Fields:
+#   number     (required) meeting number. Sequential, never reused.
+#   date       (required) YYYY-MM-DD.
+#   title      (required) what the meeting is about, in a few words.
+#   time       (optional) HH:MM in `timezone`. Omit only if genuinely unset.
+#   timezone   (optional) the zone `time` is stated in. Defaults to meta.timezone.
+#   duration   (optional) minutes.
+#   agenda     (optional) list of items. Expected on an upcoming meeting.
+#   join       (optional) link to join. Upcoming meetings only — remove it afterwards.
+#   recording  (optional) link to the recording. Past meetings; omit if none was made.
+#   no_recording (optional) true if the meeting was deliberately not recorded, so the
+#              page says so rather than implying one is still coming.
+#   minutes    (optional) link to the minutes or notes.
+#   summary    (optional) one to three sentences on what was settled. Past meetings.
+#   example    (optional) true marks a placeholder entry. Renders a visible badge and
+#              is reported by tests/check-site-data.py. Delete these once real
+#              meetings exist.
+#
+# Presentations are not listed here. A presentation entry in presentations.yml
+# names its meeting with `meeting: <number>`, and both pages link to each other.
+
+meta:
+  updated: 2026-09-12
+  timezone: UTC
+  # Shown above the list so a newcomer knows when to turn up. Free text.
+  cadence: Check the working group page for the current schedule.
+
+meetings:
+
+  # ----------------------------------------------------------------- upcoming
+  - number: 2
+    date: 2026-10-14
+    time: "15:00"
+    timezone: UTC
+    duration: 60
+    title: Example — an upcoming meeting
+    example: true
+    join: https://pkic.org/wg/cbom/
+    agenda:
+      - Welcome, apologies, and approval of the previous minutes
+      - "Q19 — does the specs category in the reference register stay?"
+      - "Q20 — whose names for algorithms should a CBOM use?"
+      - Review of the expanded reference register
+      - Any other business
+    summary: >-
+      This is a placeholder so the page renders and the shape of an entry is visible.
+      Replace it with a real meeting, or delete it.
+
+  # --------------------------------------------------------------------- past
+  - number: 1
+    date: 2026-08-19
+    time: "15:00"
+    timezone: UTC
+    duration: 60
+    title: Example — a past meeting
+    example: true
+    recording: https://pkic.org/wg/cbom/
+    minutes: https://github.com/pkic/cbom/discussions
+    agenda:
+      - Scope of the methodology onramp
+      - Conformance claims as checkable artifacts
+    summary: >-
+      This is a placeholder so the past-meeting layout renders, including the recording
+      and minutes links. Replace it with a real meeting, or delete it.

@@ -86,6 +86,19 @@ To make the suggestion easy to add, please include:
   for you.
 </p>
 
+## Come to a meeting
+
+The [Meetings]({{ '/meetings/' | relative_url }}) page lists what is coming up and what the group
+has already worked through. An upcoming meeting carries its agenda, so you can see whether a
+topic you care about is being taken before you decide to attend; a past one carries the recording
+where one was made, and the [slides]({{ '/presentations/' | relative_url }}) presented, which you
+can download.
+
+Meetings are open to working group members — see the [working group page]({{ site.wg.url }}) for
+how to join. Nothing on this page other than this section needs a meeting: the aspects, the
+discussions and the reference suggestions all work asynchronously, and that is where most of the
+work happens.
+
 ## Edit the specification (optional, later)
 
 When there is draft specification text to improve, you can propose a change straight from the
@@ -100,4 +113,8 @@ line.
   <a href="{{ site.repo.url }}/blob/main/docs/_data/references.yml"><code>docs/_data/references.yml</code></a>.
   Mailing-list suggestions are vetted and added following the field definitions and house rules
   in <a href="{{ site.repo.url }}/blob/main/CONTRIBUTING-references.md">CONTRIBUTING-references.md</a>.
+  Meetings and presentations work the same way, from
+  <a href="{{ site.repo.url }}/blob/main/docs/_data/meetings.yml"><code>docs/_data/meetings.yml</code></a> and
+  <a href="{{ site.repo.url }}/blob/main/docs/_data/presentations.yml"><code>docs/_data/presentations.yml</code></a>,
+  under <a href="{{ site.repo.url }}/blob/main/CONTRIBUTING-meetings.md">CONTRIBUTING-meetings.md</a>.
 </p>

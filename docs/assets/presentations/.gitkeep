@@ -1,0 +1,7 @@
+Presentation files served by GitHub Pages at /cbom/assets/presentations/.
+
+Drop a deck here and reference it from docs/_data/presentations.yml with
+`file: <name>`. Keep the filename lowercase, hyphenated and dated, e.g.
+2026-09-16-profile-conformance.pdf. See CONTRIBUTING-meetings.md.
+
+A deck hosted elsewhere does not go here — give the entry a `url:` instead.

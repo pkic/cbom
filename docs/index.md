@@ -85,7 +85,7 @@ title: Overview
 <section class="wrap cards-section">
   <div class="section-head">
     <h2>Explore the project</h2>
-    <p>Five places to dig in.</p>
+    <p>Six places to dig in.</p>
   </div>
   <div class="card-grid">
     <a class="feature-card" href="{{ '/methodology/' | relative_url }}">
@@ -108,6 +108,13 @@ title: Overview
       <p>The evidence base — standards, regulation and guidance the methodology aligns to,
          filterable by category, status and jurisdiction.</p>
       <span class="card-cta">Browse the register &#8594;</span>
+    </a>
+    <a class="feature-card" href="{{ '/meetings/' | relative_url }}">
+      <span class="card-kicker">Agendas and recordings</span>
+      <h3>Meetings</h3>
+      <p>When the group meets and what it plans to settle. Upcoming meetings carry an agenda;
+         past ones carry the recording and the slides presented, ready to download.</p>
+      <span class="card-cta">See the schedule &#8594;</span>
     </a>
     <a class="feature-card" href="{{ '/contributing/' | relative_url }}">
       <span class="card-kicker">No install required</span>
