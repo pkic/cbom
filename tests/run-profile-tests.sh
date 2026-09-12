@@ -371,6 +371,45 @@ expect_output "the failure is I9" "interface-disclosure#I9" \
 expect_output "reported as undeclared, not withheld" "no disclosure marker" \
               "$TMP/cbom-no-marker.json" "$BASE"
 
+# ------------------------------------------- the four disclosure outcomes ---
+# T2: withheld, unknown and undeclared are three different statements, and a
+# tool must not collapse them. Until these two documents existed the site's
+# demonstration described four example documents and the repository held two,
+# so the two cases that exercise this were illustrated and not evaluable.
+echo
+echo "Four disclosure outcomes in one document"
+expect_exit   "the disclosure document is rejected"        1 "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+expect_output "withheld is reported HELD, and permitted" "HELD" \
+              "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+expect_output "unknown is reported UNKN, distinctly"    "UNKN" \
+              "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+expect_output "undeclared is reported as such"  "no disclosure marker" \
+              "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+expect_output "the two failures are I4 and I5" "interface-disclosure#I4, mgmt-ssh/interface-disclosure#I5" \
+              "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+expect_output "the service interface still conforms" "svc-https  (type=service)  ==>  conforms" \
+              "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+
+# A subject with no administrative surface satisfies P2 by saying so. The rule
+# exists to catch omission, and a library with nothing to configure omits
+# nothing; silence would still fail, which is the case below it.
+expect_exit   "a declared absence satisfies P2"            0 "$M/cbom-noadmin.cyclonedx.json" "$BASE"
+expect_output "the reason is reported" "stated as 'no-configuration-surface'" \
+              "$M/cbom-noadmin.cyclonedx.json" "$BASE"
+"$PY" - "$M/cbom-noadmin.cyclonedx.json" "$TMP" <<'PY'
+import json, sys, os
+bom = json.load(open(sys.argv[1], encoding="utf-8"))
+# Drop the stated reason, leaving a document with no management interface and
+# nothing said about why: silence, which is neither presence nor declared absence.
+comp = bom["metadata"]["component"]
+comp["properties"] = [p for p in comp.get("properties", [])
+                      if p.get("name") != "pkic:profile:managementInterfaceAbsence"]
+json.dump(bom, open(os.path.join(sys.argv[2], "cbom-noadmin-silent.json"), "w"))
+PY
+expect_exit   "silence about the same absence does not"    1 "$TMP/cbom-noadmin-silent.json" "$BASE"
+expect_output "the failure is P2" "interface-disclosure#P2" \
+              "$TMP/cbom-noadmin-silent.json" "$BASE"
+
 # -------------------------------------------------- profile well-formedness ---
 # The second conformance target: a profile checked against the methodology.
 # Requirements C1 to C17 are stated in the Conformance section.
@@ -719,6 +758,20 @@ sys.exit(0 if e['verdict']=='refused' and e['assessed'] is False and 'rules' not
   ok "a refused evaluation is refused in the claim, with no rule results"
 else
   bad "a refused evaluation is refused in the claim, with no rule results" "expected exit 4 and a refused entry carrying no rules, got exit $RC"
+fi
+
+# ------------------------------------------------------- demonstration page ---
+# The site's interactive page is a second implementation of the evaluation
+# semantics, and it told readers its results matched the reference tool's while
+# nothing checked that. See decision 0018.
+echo
+echo "Demonstration page"
+OUT="$("$PY" "$ROOT/tests/check-demo.py" 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then
+  passed=$((passed + 1))
+else
+  failed=$((failed + 1))
 fi
 
 # --------------------------------------------------------- published schemas ---

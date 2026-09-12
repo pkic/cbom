@@ -71,7 +71,7 @@ nav: demo
 <main>
   <div class="crumb">INTERACTIVE</div>
   <h1>Conformance evaluation</h1>
-  <p class="lead">Four example documents, evaluated against the Interface Disclosure Baseline v0.7. The first declares both a service and a management interface and conforms. The second omits the management interface and fails a product rule. The third declares both but exercises each of the four disclosure outcomes. The fourth is a subject with no administrative surface at all, which satisfies the management-interface rule by saying so rather than by having one: a structural rule is satisfied by presence or by a stated absence, and silence is neither. The carrier version selector shows how the profile's declared acceptance range treats documents written to other versions of CycloneDX. This evaluation corresponds to that performed by <code>validate_cbom.py</code>.</p>
+  <p class="lead">Four example documents, evaluated against the Interface Disclosure Baseline <span id="pver">(loading…)</span>. The first declares both a service and a management interface and conforms. The second omits the management interface and fails a product rule. The third declares both but exercises each of the four disclosure outcomes. The fourth is a subject with no administrative surface at all, which satisfies the management-interface rule by saying so rather than by having one: a structural rule is satisfied by presence or by a stated absence, and silence is neither. The carrier version selector shows how the profile's declared acceptance range treats documents written to other versions of CycloneDX. Each of the four is a document committed alongside this page, and the rules come from the published rules file rather than a transcription of it. The results shown are tested against <code>validate_cbom.py</code>'s on the same four documents, so this page and the reference tool cannot quietly disagree.</p>
   <div class="legend">
     <div><span class="k st PASS">PASS</span>value supplied and valid</div>
     <div><span class="k st held">HELD</span>withheld by the producer, permitted for this attribute</div>
@@ -129,43 +129,27 @@ nav: demo
 </div>
 
 <script>
-const PROFILE = {
-  // A rule id is local to the profile that declares it, so the citable form is
-  // '<profileTag>#<ruleId>'. This demo shows one profile, but it prints the
-  // qualified form anyway, because that is what a report carries and because a
-  // derived profile would have an I1 of its own. See decision 0011.
-  profileTag: "interface-disclosure",
-  appliesTo: {cyclonedx:{min:"1.6", tested:"1.7"}},
-  interfaceTypeVocabulary: ["management","service","interconnect","peer","storage"],
-  productRules: [
-    {id:"P1", level:"MUST", description:"Product declares at least one cryptographic interface", constraint:{minInterfaces:1}},
-    {id:"P2", level:"MUST", description:"Product declares at least one management (configuration) interface, or states why it has none", constraint:{minInterfacesOfType:{interfaceType:"management",min:1}, orDeclaredAbsent:"managementInterfaceAbsence", absenceEnumRef:"managementAbsenceVocabulary"}},
-    {id:"P3", level:"MUST", description:"Document identifies the subject it describes", constraint:{subjectIdentified:{startsWith:"pkg:"}}},
-    {id:"P4", level:"MUST", description:"Product states how complete its declared interface set is", constraint:{productAttribute:"coverage", enumRef:"coverageVocabulary"}}
-  ],
-  interfaceRules: [
-    {id:"I1", attribute:"protocol", level:"MUST", constraint:{present:true}},
-    {id:"I2", attribute:"protocolVersion", level:"MUST", constraint:{present:true}},
-    {id:"I3", attribute:"keyExchange", level:"MUST", constraint:{present:true}},
-    {id:"I4", attribute:"encryption", level:"MUST", constraint:{present:true}},
-    {id:"I5", attribute:"authentication", level:"MUST", constraint:{present:true}},
-    {id:"I6", attribute:"endpointRoles", level:"MUST", constraint:{minCount:2}},
-    {id:"I7", attribute:"interfaceType", level:"MUST", constraint:{enumRef:"interfaceTypeVocabulary"}},
-    {id:"I8", attribute:"lifecycleStage", level:"MUST", constraint:{enum:["intended","implemented","configured","observed"]}},
-    {id:"I9", attribute:"implementationPurl", level:"MUST", constraint:{startsWith:"pkg:"}, withholdable:true}
-  ],
-  coverageVocabulary:["all-external","all","partial"],
-  managementAbsenceVocabulary:["no-configuration-surface","configured-out-of-band","not-applicable-to-subject"]
-};
+// The rules are loaded from the published rules file at the bottom of this
+// script, not transcribed here. See the note above boot().
+let PROFILE = null;
+// --- the four documents, as the reference adapter extracts them ------------
+// Each record below is what validate_cbom.py's CycloneDX adapter produces from
+// the committed CBOM named above it, and tests/check-demo.py fails if it stops
+// being that. The extra 'nm' and 'via' keys are for the cards at the top of the
+// page and are not profile attributes.
+//
+// cbom-pass.cyclonedx.json, and cbom-fail.cyclonedx.json, which declares this
+// interface and no other.
 const SVC = {interfaceId:"svc-https", interfaceType:"service", protocol:"TLS", protocolVersion:"1.3",
   keyExchange:"X25519", encryption:"AES-256-GCM", authentication:"RSA-2048",
   endpointRoles:["client","server"], lifecycleStage:"observed",
   implementationPurl:"pkg:generic/openssl@3.4.0", nm:"HTTPS service interface (TLS 1.3)", via:"OpenSSL 3.4.0"};
+// cbom-pass.cyclonedx.json.
 const MGMT = {interfaceId:"mgmt-ssh", interfaceType:"management", protocol:"SSH", protocolVersion:"2.0",
   keyExchange:"curve25519-sha256", encryption:"ChaCha20-Poly1305", authentication:"Ed25519 host key",
   endpointRoles:["client","server"], lifecycleStage:"configured",
   _disclosure:{implementationPurl:"withheld"}, nm:"Management interface (SSH 2.0)", via:"OpenSSH (version withheld)"};
-// Third example: one interface exercising all four disclosure outcomes at once.
+// cbom-disclosure.cyclonedx.json. One interface exercising all four disclosure outcomes at once.
 // implementationPurl is withheld and permitted; encryption is declared unknown;
 // authentication carries neither a value nor a marker.
 const MIXED = {interfaceId:"mgmt-ssh", interfaceType:"management", protocol:"SSH", protocolVersion:"2.0",
@@ -173,7 +157,7 @@ const MIXED = {interfaceId:"mgmt-ssh", interfaceType:"management", protocol:"SSH
   endpointRoles:["client","server"], lifecycleStage:"configured",
   _disclosure:{implementationPurl:"withheld", encryption:"unknown"},
   nm:"Management interface (SSH 2.0)", via:"OpenSSH (version withheld)"};
-// Fourth example: a subject with no administrative surface at all. Before v0.6
+// cbom-noadmin.cyclonedx.json. A subject with no administrative surface at all. Before v0.6
 // it failed P2 while hiding nothing; it now satisfies the rule by saying so.
 const LIB = {interfaceId:"svc-tls", interfaceType:"service", protocol:"TLS", protocolVersion:"1.3",
   keyExchange:"X25519", encryption:"AES-256-GCM", authentication:"ECDSA-P256",
@@ -189,8 +173,13 @@ const PRODUCTS = {
   noadmin:   {identifier:"pkg:generic/libexample@2.1.0",   attrs:{coverage:"all", managementInterfaceAbsence:"no-configuration-surface"}}
 };
 const CBOMS = { pass:[SVC, MGMT], fail:[SVC], disclosure:[SVC, MIXED], noadmin:[LIB] };
+const DOCUMENTS = { pass:"cbom-pass.cyclonedx.json", fail:"cbom-fail.cyclonedx.json",
+  disclosure:"cbom-disclosure.cyclonedx.json", noadmin:"cbom-noadmin.cyclonedx.json" };
 
-// A rule is cited against the tag of the profile that declared it.
+// A rule id is local to the profile that declares it, so the citable form is
+// '<profileTag>#<ruleId>'. This page shows one profile and prints the qualified
+// form anyway, because that is what a report carries and because a derived
+// profile would have an I1 of its own. See decision 0011.
 function qid(id){ return PROFILE.profileTag + "#" + id; }
 
 // --- carrier version bands -------------------------------------------------
@@ -276,8 +265,8 @@ function checkRule(iface, r){
   if(marker==="unknown") return [false,"unknown","declared unknown to producer"];
   return [false,"undeclared","absent, with no disclosure marker"];
 }
-function validate(ifaces){
-  const product=PROFILE.productRules.map(r=>{const [ok,d]=checkProduct(ifaces,r.constraint,PRODUCTS[curVariant]);return {...r,ok,d};});
+function validate(ifaces, subject){
+  const product=PROFILE.productRules.map(r=>{const [ok,d]=checkProduct(ifaces,r.constraint,subject);return {...r,ok,d};});
   const interfaces=ifaces.map(f=>{
     const rows=PROFILE.interfaceRules.map(r=>{const [ok,state,d]=checkRule(f,r);return {...r,ok,state,d};});
     return {iface:f, conforms:rows.every(r=>r.level!=="MUST"||r.ok), rows};
@@ -300,7 +289,7 @@ let curVariant="pass", curVer="1.7";
 
 function render(){
   const v=curVariant;
-  const ifaces=CBOMS[v];const res=validate(ifaces);
+  const ifaces=CBOMS[v];const res=validate(ifaces, PRODUCTS[v]);
   const bd=band(curVer);
   document.getElementById("bandNotice").innerHTML =
     `<div class="band ${bd.k}">${bd.t}</div>`;
@@ -331,7 +320,7 @@ function render(){
     const q = bd.k==="legacy" ? " · legacy carrier, result flagged"
             : bd.k==="newer"  ? " · newer carrier, result qualified" : "";
     vd.textContent=res.conforms
-      ? "✓ CONFORMS to Interface Disclosure Baseline v0.7"+q
+      ? "✓ CONFORMS to "+PROFILE.title+" v"+PROFILE.version+q
       : "✕ DOES NOT CONFORM — failed "+reasons.join("; ")+q;
   }
   document.getElementById("productChecks").innerHTML=res.product.map(r=>
@@ -357,9 +346,60 @@ function wire(id, attr, set){
     render();
   });
 }
-wire("toggle","v",   x=>{curVariant=x;});
-wire("vtoggle","ver",x=>{curVer=x;});
-render();
+// --- the profile is loaded, not transcribed --------------------------------
+// This page used to carry its own copy of the rules. Nothing checked the copy
+// against the file, and the two had already diverged once: when the baseline
+// was tightened, the copy had to be edited separately, and nothing would have
+// caught the omission. The page now fetches the published rules file, so there
+// is one statement of the rules and this page cannot disagree with it about
+// what they say.
+//
+// The checking logic below is still a second implementation of the evaluation
+// semantics, because a static page cannot run the reference tool. That part is
+// not fixed by loading a file, so it is tested instead: tests/check-demo.py
+// drives the functions in this script under Node and requires the same
+// per-rule outcomes and the same verdict as validate_cbom.py, on the same four
+// example documents. See decision 0018.
+const RULES_URL = "profile-interface-disclosure.rules.json";
+
+// A visible failure, rather than an empty page or a stale copy. The likeliest
+// cause is opening this file directly: a browser blocks fetch over file://.
+function loadFailed(why){
+  document.getElementById("bandNotice").innerHTML =
+    `<div class="band refused">The rules could not be loaded from
+     <b>${RULES_URL}</b> (${why}), so nothing is evaluated here. This page reads the published
+     rules file rather than carrying a copy of it, which means it cannot fall out of step with
+     the profile and cannot run without it. If you opened this file from disk, a browser blocks
+     the request: serve the site instead, with <b>bundle exec jekyll serve --source docs</b>.</div>`;
+  document.getElementById("verdict").style.display = "none";
+  document.getElementById("ruleArea").className = "dim";
+  document.getElementById("plabel").textContent = "profile not loaded";
+  document.getElementById("pver").textContent = "(version unavailable)";
+  document.getElementById("ifaceStrip").innerHTML = "";
+  ["toggle","vtoggle"].forEach(id=>document.getElementById(id).classList.add("dim"));
+}
+
+async function boot(){
+  try{
+    const res = await fetch(RULES_URL, {cache:"no-store"});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    PROFILE = await res.json();
+  }catch(err){
+    loadFailed(err && err.message ? err.message : String(err));
+    return;
+  }
+  document.getElementById("pver").textContent = "v"+PROFILE.version;
+  wire("toggle","v",   x=>{curVariant=x;});
+  wire("vtoggle","ver",x=>{curVer=x;});
+  render();
+}
+const READY = boot();
+
+// The seam the test harness drives. `module` is undefined in a browser, so this
+// is inert on the published page.
+if (typeof module !== "undefined") {
+  module.exports = {READY, validate, band, CBOMS, PRODUCTS, DOCUMENTS, profile: () => PROFILE};
+}
 </script>
 </body>
 </html>

@@ -8,7 +8,11 @@ Automated checks for the methodology's example profiles, CBOMs and validator.
 bash tests/run-profile-tests.sh
 ```
 
-Python 3 is the only requirement. Set `PYTHON` to use a specific interpreter:
+Python 3 is the only requirement for most of the suite. One check needs more:
+`check-demo.py` runs the site's demonstration page under **Node** to compare it
+with the reference validator, and skips itself with a message where Node is
+absent. A green run without Node is therefore a slightly smaller suite than CI's,
+which installs it. Set `PYTHON` to use a specific interpreter:
 
 ```bash
 PYTHON=python3.12 bash tests/run-profile-tests.sh
@@ -40,6 +44,8 @@ what this suite is an early form of.
 | SHOULD handling | A profile failing only SHOULD requirements still passes, and `--strict` promotes those failures. |
 | Constraint monotonicity | An override may raise an inherited minimum and may not lower it, may narrow a permitted-value list and may not widen it, may lengthen a required prefix and may not shorten it, and may add an obligation but not drop one. A constraint kind the comparison does not recognise is refused rather than assumed safe. The counterpart is asserted too: the raised minimum is accepted, recorded as a composition note, and then fails a document. |
 | Rules that can pass and fail | A rule with an unimplemented constraint key used to report `ok` against every value; one naming a vocabulary that does not exist failed every value without saying why; one with no constraint tracebacked the validator. All three are now C17 failures and profile errors. |
+| Four disclosure outcomes | One document carries all four on a single interface: a withheld library, an encryption algorithm declared unknown, an undeclared authentication algorithm, and a key exchange disclosed normally. Withheld satisfies I9, the other two absences fail their rules, and the three are reported distinctly, which is what T2 forbids collapsing. A subject with no administrative surface satisfies product rule P2 by stating the absence; stripping the statement leaves silence, which fails. |
+| Demonstration page | The site's interactive page is a second implementation of the evaluation semantics, and it told readers its results matched the reference tool's. `check-demo.py` runs the page's own functions under Node over the four example documents and requires the same verdict, the same outcome for every rule, the same disclosure state for every value, and the same carrier band. It also requires that the interface records the page shows are what the reference adapter extracts from the document each one names, and that the page still holds no copy of the rules. Checked against four deliberate divergences before being trusted: a fixture edited away from its document, a marker state treated as passing, a copy of the rules restored, and an unloadable rules file. See decision 0018. |
 | Rule numbering | A rule id is local to the profile that declares it and is cited as `<profileTag>#<ruleId>`. Three profiles in one chain each number from `I1`, and one report shows `interface-disclosure#I1`, `pqc-migration#I1` and `sector-settlement#I1` together. A tightened rule keeps the id of the profile that introduced it. A third-level profile may not relax a rule its *grandparent* introduced, and may not take a tag an ancestor already uses. |
 
 ## Exit codes

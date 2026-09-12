@@ -38,6 +38,8 @@ nav: files
       <tr><td><a href="mapping-cyclonedx-spdx.md">mapping-cyclonedx-spdx.md</a></td><td>Complete requirement-to-format mapping</td></tr>
       <tr><td><a href="cbom-pass.cyclonedx.json">cbom-pass.cyclonedx.json</a></td><td>Conforming example CBOM (CycloneDX 1.7)</td></tr>
       <tr><td><a href="cbom-fail.cyclonedx.json">cbom-fail.cyclonedx.json</a></td><td>Non-conforming example; omits the management interface</td></tr>
+      <tr><td><a href="cbom-disclosure.cyclonedx.json">cbom-disclosure.cyclonedx.json</a></td><td>Non-conforming example exercising all four disclosure outcomes on one interface: a withheld library (permitted), an encryption algorithm declared unknown, an undeclared authentication algorithm, and a key exchange disclosed normally</td></tr>
+      <tr><td><a href="cbom-noadmin.cyclonedx.json">cbom-noadmin.cyclonedx.json</a></td><td>Conforming example with no management interface at all: a library with no configuration surface, satisfying product rule P2 by stating the absence rather than by having one</td></tr>
       <tr><td><a href="profile-pqc-migration.rules.json">profile-pqc-migration.rules.json</a></td><td>The PQC migration profile, derived from the baseline via <code>extends</code></td></tr>
       <tr><td><a href="cbom-pqc-pass.cyclonedx.json">cbom-pqc-pass.cyclonedx.json</a></td><td>Conforming example for the migration profile; three interfaces at different readiness stages</td></tr>
       <tr><td><a href="cbom-pqc-fail.cyclonedx.json">cbom-pqc-fail.cyclonedx.json</a></td><td>Non-conforming example exercising both conditional rules and the inherited-rule tightening</td></tr>
@@ -96,7 +98,7 @@ python check_profile.py profile-interface-disclosure.rules.json --strict
 python check_profile.py profile-pqc-migration.rules.json --json</code></pre>
   <p>The test suite carries one deliberately defective profile per MUST requirement, so that each check is itself tested. See <code>tests/fixtures/</code> and <code>tests/README.md</code> in the repository.</p>
 
-  <div class="banner">The <a href="demo.html">Demo</a> section performs the same evaluation in the browser for the baseline profile. Standards, regulation and specifications cited across this documentation are listed in the <a href="../references/">reference register</a>.</div>
+  <div class="banner">The <a href="demo.html">Demo</a> section performs the same evaluation in the browser for the baseline profile, over the four baseline documents above. It reads the rules file rather than a copy of it, and <code>tests/check-demo.py</code> requires its results to match this validator's, rule by rule, on all four. Standards, regulation and specifications cited across this documentation are listed in the <a href="../references/">reference register</a>.</div>
 
   <div class="pagenav">
     <a href="related-work.html">← Related Work</a>

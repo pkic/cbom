@@ -1748,7 +1748,7 @@ Tracked as issue #13.
 
 ## Q30 — The interactive demonstration contains its own copy of the rules
 
-**Status** open
+**Status** settled by decision 0018, awaiting adoption
 
 **The question.** The website has an interactive page that checks a document against the baseline
 in the browser. It contains its own copy of the rules and its own checking logic, because a
@@ -1770,11 +1770,28 @@ leaves a published page that can still be wrong.
 automatically, or run both over the example documents and compare results. This is the only
 option that would have caught the drift that already happened.
 
-**Where it stands.** Neither. The page carries its own copy and asserts that it matches.
+**Where it stands.** A and C together, under decision 0018, on the grounds that the two halves of
+the problem have different fixes. Duplicated data can be deleted, so it was: the page fetches the
+rules file and holds no copy of the rule set, the vocabularies, the carrier range or the profile
+version, and shows a visible failure rather than falling back to anything when the file cannot be
+loaded. Duplicated logic cannot be deleted, because a static page cannot run the reference tool, so
+it is tested: `tests/check-demo.py` runs the page's own functions under Node over the four example
+documents and requires the same verdict, the same outcome for every rule, the same disclosure state
+for every value and the same carrier band. B was the position the repository was already in, and the
+drift happened anyway.
 
-**What would have to change.** The demonstration page, the automated test setup, and one of the
-tool requirements in the Conformance section, which expects consistent results and which the
-demonstration is not tested against.
+Settling it turned up two further gaps of the same kind. Two of the four example documents the page
+described did not exist as documents, so the only two cases exercising the four-outcome model and
+the stated-absence rule were the two no tool could evaluate; both are now committed. And the
+interface records the page displays were a third copy, transcribed from those documents, which the
+test now holds to what the reference adapter extracts.
+
+**What changed.** The demonstration page, two new example CBOMs, a new check wired into the suite
+and into CI, and a paragraph in the Conformance section, which now says where its two-tools
+expectation is exercised. **What is left.** The check needs a JavaScript runtime and skips itself
+where there is none, so a contributor's green run is not quite CI's. Whether a tool requirement
+should generalise the position — that a second implementation published alongside a profile is
+tested against the reference — is left open: one instance is not evidence for a requirement.
 
 ---
 

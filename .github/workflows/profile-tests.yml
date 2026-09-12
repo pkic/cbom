@@ -30,6 +30,15 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Set up Node
+        # tests/check-demo.py runs the demonstration page's own script to compare
+        # its results with the reference validator's. It skips itself with a
+        # message when Node is absent, which is right for a contributor's machine
+        # and would quietly drop a check here.
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Install the schema validator
         # Only the published-schema checks need it. tests/check-schemas.py skips
         # itself with a message when it is absent, so a contributor without it
