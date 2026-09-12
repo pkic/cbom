@@ -79,6 +79,7 @@ nav: policyeval
     </tbody>
   </table>
   <p>Both evaluations draw on the same kind of primary data and are subject to the same consideration: the criteria are not fixed, so the evaluation must be applied externally and dated, rather than frozen into the CBOM.</p>
+  <p>Vulnerability status is a third case and the one where the pressure to store a verdict is strongest, because the format offers a place to put it. It differs from the two above in that the criteria are not merely revisable but held by someone else entirely: whether an interface is affected depends on an advisory a third party publishes. The reasoning is the same and the consequences are developed in <a href="vulnerabilities.html">Vulnerabilities</a>, which also sets out what a profile must require so that a CBOM and an advisory can be put together at all.</p>
 
   <h2>Consequence for this profile</h2>
   <p>For this reason, <code>pqcPosture</code> has been removed from the profile's attributes. It was carried in an early working draft, before v0.1, and no document was ever authored against that draft; the removal therefore appears in the profile specification's revision rationale rather than in its changelog, which records changes between published versions. Recorded as decision 0002. The profile requires disclosure of the facts from which posture is derived — the protocol, key exchange, encryption, and authentication algorithms, and the implementing library — while the posture itself is computed by an external policy at evaluation time. The same applies to any cryptographic maturity assessment.</p>
@@ -90,7 +91,7 @@ nav: policyeval
 
   <div class="pagenav">
     <a href="confidentiality.html">← Confidentiality</a>
-    <a class="next" href="method.html">Next: Method →</a>
+    <a class="next" href="vulnerabilities.html">Next: Vulnerabilities →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>

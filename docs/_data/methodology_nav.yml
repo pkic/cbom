@@ -41,11 +41,11 @@
     - { id: maturity,     title: Maturity,          url: maturity.html }
     - { id: confidentiality, title: Confidentiality, url: confidentiality.html }
     - { id: policyeval,   title: Policy Evaluation, url: policy-evaluation.html }
+    - { id: vulns,        title: Vulnerabilities,   url: vulnerabilities.html }
 
 - group: Applying it
   items:
     - { id: method,       title: Method,            url: method.html }
-    - { id: pqc,          title: PQC Migration,     url: pqc-migration.html }
     - { id: formats,      title: Formats,           url: formats.html }
     - { id: dataexp,      title: Data Exposure,     url: data-exposure.html }
 
@@ -60,3 +60,12 @@
     - { id: related,      title: Related Work,      url: related-work.html }
     - { id: files,        title: Files,             url: files.html }
     - { id: references,   title: References,        url: ../references/ }
+
+# A pointer out of the section, kept last so that no page's previous or next
+# link lands on it: tools/renumber-pagenav.py skips entries whose url is not a
+# local .html page, and the page before a skipped entry keeps the neighbour it
+# had. Worked use cases live in their own section; see use-cases/index.html for
+# why.
+- group: Other sections
+  items:
+    - { id: ucsection,    title: Worked use cases,  url: ../use-cases/ }

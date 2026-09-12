@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
-"""Preview the methodology pages without installing Jekyll.
+"""Preview the hand-written documentation sections without installing Jekyll.
 
-The pages under docs/methodology/ are hand-written HTML with a two-line front
-matter block and exactly one Liquid tag: {% include methodology-nav.html %}.
-Opening them straight from the filesystem therefore shows the front matter as
-text and no navigation, which is why this exists.
+Two sections of the site are hand-written HTML rather than Markdown: the
+methodology under docs/methodology/, and the worked use cases under
+docs/use-cases/. Each page carries a two-line front matter block and exactly
+one Liquid tag, the navigation include for its own section. Opening them
+straight from the filesystem therefore shows the front matter as text and no
+navigation, which is why this exists.
 
 This script does the two things Jekyll does to those pages — strip the front
-matter, expand the navigation include from _data/methodology_nav.yml — writes
-the result to .preview/ and serves it. It is NOT a Jekyll substitute: it does
-not render the Markdown pages (index.md, issues.md, contributing.md,
-references.md), does not apply layouts, and does not resolve relative_url. For
-those, and before publishing anything, use Jekyll:
+matter, expand the navigation include from the section's data file — writes the
+result to .preview/ under the same directory names, and serves it. Keeping the
+directory names is what makes the cross-section links (../methodology/… and
+../use-cases/…) resolve in the preview as they do on the published site.
+
+It is NOT a Jekyll substitute: it does not render the Markdown pages (index.md,
+issues.md, contributing.md, references.md), does not apply layouts, and does not
+resolve relative_url. For those, and before publishing anything, use Jekyll:
 
     bundle install
     bundle exec jekyll serve --source docs
 
-If a methodology page ever grows a second kind of Liquid tag, this script says
-so rather than rendering it wrongly.
+If a page ever grows a second kind of Liquid tag, this script says so rather
+than rendering it wrongly.
 
     python3 tools/preview.py              # build and serve on :8000
     python3 tools/preview.py --port 4000
@@ -36,9 +41,16 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "docs" / "methodology"
-NAV = ROOT / "docs" / "_data" / "methodology_nav.yml"
-INCLUDE = "{% include methodology-nav.html %}"
+DOCS = ROOT / "docs"
+
+# One entry per hand-written section: its directory under docs/, the data file
+# holding its navigation, the include tag its pages call, and the aria-label the
+# real include renders. Adding a section means adding a line here.
+SECTIONS = (
+    ("methodology", "methodology_nav.yml", "{% include methodology-nav.html %}", "Methodology sections"),
+    ("use-cases", "usecases_nav.yml", "{% include usecases-nav.html %}", "Use case sections"),
+)
+LANDING = "methodology/introduction.html"
 
 FRONT_MATTER = re.compile(r"\A---\s*\n(.*?)\n---\s*\n", re.DOTALL)
 NAV_ID = re.compile(r"^nav:\s*([\w-]+)", re.MULTILINE)
@@ -49,12 +61,15 @@ ITEM = re.compile(
     r"\s*url:\s*(?P<url>\S+?)\s*\}\s*$"
 )
 LIQUID = re.compile(r"\{%.*?%\}|\{\{.*?\}\}", re.DOTALL)
+# A redirect stub left behind at a published URL whose page has moved. It has no
+# front matter and no navigation, deliberately, and is copied through.
+REDIRECT = re.compile(r'<meta\s+http-equiv="refresh"', re.IGNORECASE)
 
 
-def read_nav() -> list[tuple[str, list[tuple[str, str, str]]]]:
-    """Return [(group title, [(id, title, url), ...]), ...] from the data file."""
+def read_nav(nav: Path) -> list[tuple[str, list[tuple[str, str, str]]]]:
+    """Return [(group title, [(id, title, url), ...]), ...] from a data file."""
     groups: list[tuple[str, list]] = []
-    for line in NAV.read_text(encoding="utf-8").splitlines():
+    for line in nav.read_text(encoding="utf-8").splitlines():
         g = GROUP.match(line)
         if g:
             groups.append((g.group(1), []))
@@ -65,9 +80,9 @@ def read_nav() -> list[tuple[str, list[tuple[str, str, str]]]]:
     return groups
 
 
-def render_nav(groups, current: str | None) -> str:
-    """Reproduce _includes/methodology-nav.html for one page."""
-    out = ['<aside class="sidenav" aria-label="Methodology sections">']
+def render_nav(groups, current: str | None, label: str) -> str:
+    """Reproduce a section's navigation include for one page."""
+    out = [f'<aside class="sidenav" aria-label="{label}">']
     for name, items in groups:
         out.append(f'  <div class="sidenav-group">{name}</div>')
         out.append("  <ul>")
@@ -79,11 +94,13 @@ def render_nav(groups, current: str | None) -> str:
     return "\n".join(out)
 
 
-def build(out_dir: Path) -> int:
-    groups = read_nav()
+def build_section(name: str, nav_file: str, include: str, label: str,
+                  out_dir: Path, warnings: list[str]) -> tuple[int, int]:
+    src = DOCS / name
+    groups = read_nav(DOCS / "_data" / nav_file)
     if not groups:
-        print(f"error: no navigation entries parsed from {NAV}", file=sys.stderr)
-        return 1
+        warnings.append(f"{nav_file}: no navigation entries parsed")
+        return 0, 0
 
     # Overwrite in place rather than clearing the directory first. Deleting is
     # not available on every filesystem this repository gets mounted on, and a
@@ -92,18 +109,23 @@ def build(out_dir: Path) -> int:
     before = {p.name for p in out_dir.iterdir()} if out_dir.exists() else set()
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    pages, assets, warnings = 0, 0, []
-    written = set()
-    for src in sorted(SRC.iterdir()):
-        if src.is_dir():
+    pages, assets, written = 0, 0, set()
+    for path in sorted(src.iterdir()):
+        if path.is_dir():
             continue
-        if src.suffix != ".html":
-            shutil.copy2(src, out_dir / src.name)  # styles.css, the JSON, the scripts
-            written.add(src.name)
+        if path.suffix != ".html":
+            shutil.copy2(path, out_dir / path.name)  # styles.css, the JSON, the scripts
+            written.add(path.name)
             assets += 1
             continue
 
-        text = src.read_text(encoding="utf-8")
+        text = path.read_text(encoding="utf-8")
+        if REDIRECT.search(text):
+            shutil.copy2(path, out_dir / path.name)
+            written.add(path.name)
+            assets += 1
+            continue
+
         fm = FRONT_MATTER.match(text)
         current = None
         if fm:
@@ -111,29 +133,48 @@ def build(out_dir: Path) -> int:
             current = found.group(1) if found else None
             text = text[fm.end():]
         else:
-            warnings.append(f"{src.name}: no front matter, so no page is marked current")
+            warnings.append(f"{name}/{path.name}: no front matter, so no page is marked current")
 
-        if INCLUDE in text:
-            text = text.replace(INCLUDE, render_nav(groups, current))
+        if include in text:
+            text = text.replace(include, render_nav(groups, current, label))
         else:
-            warnings.append(f"{src.name}: no navigation include")
+            warnings.append(f"{name}/{path.name}: no navigation include")
 
         leftover = {t.strip() for t in LIQUID.findall(text)}
         if leftover:
             warnings.append(
-                f"{src.name}: Liquid this script does not handle, shown raw: "
+                f"{name}/{path.name}: Liquid this script does not handle, shown raw: "
                 + ", ".join(sorted(leftover)[:3])
             )
 
-        (out_dir / src.name).write_text(text, encoding="utf-8")
-        written.add(src.name)
+        (out_dir / path.name).write_text(text, encoding="utf-8")
+        written.add(path.name)
         pages += 1
 
-    print(f"built {pages} pages and {assets} assets into {out_dir.relative_to(ROOT)}/")
     stale = sorted(before - written)
     if stale:
-        print(f"  {len(stale)} file(s) left from a previous build and no longer produced: "
-              f"{', '.join(stale)}", file=sys.stderr)
+        warnings.append(f"{name}/: {len(stale)} file(s) left from a previous build and no longer "
+                        f"produced: {', '.join(stale)}")
+    return pages, assets
+
+
+def build(out_dir: Path) -> int:
+    warnings: list[str] = []
+    total_pages = total_assets = 0
+    for name, nav_file, include, label in SECTIONS:
+        pages, assets = build_section(name, nav_file, include, label, out_dir / name, warnings)
+        total_pages += pages
+        total_assets += assets
+        print(f"  {name}/: {pages} pages, {assets} assets")
+
+    if not total_pages:
+        print("error: no pages were built", file=sys.stderr)
+        for w in warnings:
+            print(f"  warning: {w}", file=sys.stderr)
+        return 1
+
+    print(f"built {total_pages} pages and {total_assets} assets into "
+          f"{out_dir.relative_to(ROOT) if out_dir.is_relative_to(ROOT) else out_dir}/")
     for w in warnings:
         print(f"  warning: {w}", file=sys.stderr)
     return 0
@@ -144,7 +185,7 @@ def serve(out_dir: Path, port: int) -> int:
     socketserver.TCPServer.allow_reuse_address = True
     try:
         with socketserver.TCPServer(("127.0.0.1", port), handler) as httpd:
-            print(f"\n  http://localhost:{port}/introduction.html")
+            print(f"\n  http://localhost:{port}/{LANDING}")
             print("  Ctrl-C to stop. Re-run this script after editing a page.\n")
             httpd.serve_forever()
     except KeyboardInterrupt:

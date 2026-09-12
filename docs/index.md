@@ -71,7 +71,8 @@ title: Overview
       </p>
       <p>
         It covers the vocabulary the methodology rests on, how a profile is written and validated,
-        how the same profile maps onto CycloneDX and SPDX, what happens to older CBOM files, and
+        how the same profile maps onto CycloneDX and SPDX, how cryptographic weakness is
+        communicated alongside a CBOM rather than inside one, what happens to older CBOM files, and
         how profiles are governed over time. Start with
         <a href="{{ '/methodology/introduction.html' | relative_url }}">the introduction</a>, the
         <a href="{{ '/methodology/model.html' | relative_url }}">model</a>, the
@@ -85,7 +86,7 @@ title: Overview
 <section class="wrap cards-section">
   <div class="section-head">
     <h2>Explore the project</h2>
-    <p>Five places to dig in.</p>
+    <p>Six places to dig in.</p>
   </div>
   <div class="card-grid">
     <a class="feature-card" href="{{ '/methodology/' | relative_url }}">
@@ -94,6 +95,13 @@ title: Overview
       <p>The deliverable itself — profiles, the relationship model, format mappings and
          governance — with a worked nginx example and a conformance check you can run.</p>
       <span class="card-cta">Read the methodology &#8594;</span>
+    </a>
+    <a class="feature-card" href="{{ '/use-cases/' | relative_url }}">
+      <span class="card-kicker">1 of 8 developed</span>
+      <h3>Use cases</h3>
+      <p>Use cases carried through from a consumer's decision to a finished profile. PQC migration
+         is developed in full; the other seven purposes are described and waiting.</p>
+      <span class="card-cta">See the use cases &#8594;</span>
     </a>
     <a class="feature-card" href="{{ '/issues/' | relative_url }}">
       <span class="card-kicker">{{ naspects }} aspects</span>

@@ -826,6 +826,46 @@ structural rule.
 
 ---
 
+## Q57 — Must a vulnerability-response profile forbid withholding the implementing library?
+
+**Status** open. Added 12 September 2026 with the Vulnerabilities section.
+
+**The question.** `I9`, the implementing library as a Package URL, is a MUST that the disclosure
+baseline marks withholdable: a document supplying the marker instead of a value conforms. Incident
+response depends on that one attribute almost to the exclusion of the others. Must a profile written
+for that use case remove the permission, and if it must, is the consequence acceptable?
+
+**Why it matters.** Removing withholdability is mechanically trivial — it is a tightening, it is
+monotone, the validator enforces it, and the migration profile already does it to this very rule. The
+difficulty is what follows. A profile permitting no withholding on `I9` can be cleared only by a
+restricted variant in the sense of the Confidentiality section, so the most time-critical consumer
+becomes the one a published document cannot serve. And the responder who most needs the data is
+typically the one with no agreement in place: a downstream operator reading a vendor's public CBOM
+while an advisory is live. Left as it is, the conforming answer to the most urgent question in the
+catalogue is a withheld marker.
+
+**Option A: remove withholdability and accept the audience.** The vulnerability profile is a
+restricted-audience profile, stated plainly. Honest, and it concedes that public CBOMs do not support
+incident response.
+
+**Option B: permit a coarser identifier in the public variant.** The package without the version —
+`pkg:generic/openssl` rather than the exact release — tells a responder which interfaces could be
+implicated and not whether this build is in the advisory's range. Half an answer in hours against a
+whole one under agreement. It needs the group to decide whether a version-less purl is a redaction of
+`I9` or a different attribute, and it interacts with Q55, because `partial` would again be carrying
+two meanings.
+
+**Option C: leave it withholdable and let the VEX statement carry the answer.** The producer does the
+matching itself and publishes affectedness rather than the input. Confidentiality is preserved, the
+consumer loses the ability to check the conclusion, and a product whose producer has gone quiet
+yields nothing at all.
+
+**Where it stands.** `I9` remains withholdable in the baseline and no vulnerability-response profile
+exists. The use case is listed as undeveloped in the Use Cases section and blocked on this question.
+
+**What would have to change.** A new profile and its documents; the Use Cases table; and, under
+Option B, either the baseline's disclosure convention or the attribute list.
+
 # 3.5 Checking conformance
 
 Tracked as issue #7.
@@ -1160,6 +1200,43 @@ profiles if a release changes what the mapping can rely on.
 
 ---
 
+## Q58 — May a conforming document also carry vulnerability assertions, and does a verdict cover them?
+
+**Status** open. Added 12 September 2026 with the Vulnerabilities section.
+
+**The question.** CycloneDX permits a BOM to carry a `vulnerabilities` array, so one file can hold a
+cryptographic inventory and a set of VEX assertions at once. May a document evaluated against a
+profile contain them, and does a passing verdict say anything about them?
+
+**Why it matters.** A consumer holding one file and one verdict will tend to read the verdict as
+covering the file. If the assertions are stale, self-serving or simply absent, a reader who took the
+verdict as an endorsement of them has been misled by an artifact that was correct. The opposite
+failure is also available: forbidding the array would be a ceiling, and a profile sets a floor and
+cannot set a ceiling, so the prohibition could not be expressed even if the group wanted it.
+
+**The format asymmetry.** The question cannot be answered as a constraint on a file, because the file
+differs by carrier. CycloneDX can hold both; SPDX 3.0.1 expresses vulnerability assessment through
+its own security relationships, and a CBOM referenced from an SPDX SBOM is a separate document
+already. This is the shape decision 0016 dealt with for claims: a statement true in one carrier and
+meaningless in the other.
+
+**Option A: silence.** A profile neither requires nor forbids the array, its rules do not constrain
+it, and conformance asserts nothing about it. What the draft says.
+
+**Option B: require a claim to disclose it.** The claim states whether the assessed document
+contained vulnerability assertions, so a reader can see that the verdict's subject held material the
+verdict did not cover. One field, and it makes the boundary visible at the point where it is
+misread.
+
+**Option C: require a profile to declare a position.** Rejected on the floor-and-ceiling argument
+above, and recorded so that the argument is not re-run.
+
+**Where it stands.** Option A. The Vulnerabilities section states the three consequences in prose,
+and nothing mechanical enforces or records them.
+
+**What would have to change.** Under Option B: the claim schema, the claim example, and the list of
+what a verdict does not assert in the Conformance section.
+
 # 3.7 Agreed names for algorithms and protocols
 
 Tracked as issue #3.
@@ -1308,6 +1385,40 @@ what it does and where it lives. Stable and it makes the same material in two pl
 declared.
 
 ---
+
+## Q59 — Does a weakness found from a CBOM need an identifier of its own?
+
+**Status** open. Added 12 September 2026 with the Vulnerabilities section.
+
+**The question.** An implementation defect has a CVE, so a finding against it can be cited in a
+ticket, suppressed with a reason, deduplicated between tools, and proved later to have been decided.
+A finding of the other kind — this interface signs with SHA-1, this one negotiates a 1024-bit group —
+has no identifier at all. Should there be one?
+
+**Why it matters.** Without an identifier the output of a policy evaluation cannot be tracked to
+closure or compared between tools, and two scanners will report the same finding in two incomparable
+ways. This is the part of the vulnerability ecosystem a CBOM is supposed to improve on, and the part
+where it currently produces the least tractable output. It also decides whether the methodology
+acquires a registry, which is a long-lived obligation.
+
+**Option A: none.** A finding is identified by the policy version, the date, and the facts it was
+applied to, which is reproducible and auditable. It is not citable the way a CVE is, and a
+remediation programme has to track it in whatever system it already uses.
+
+**Option B: a class plus an instance.** CWE gives the class — CWE-327 for a broken or risky
+algorithm, CWE-326 for inadequate strength, CWE-328 for a weak hash — and the subject plus the
+interface identity gives the instance. Nothing new is registered. Whether an interface identity is
+stable enough across CBOM revisions to carry this is unproven.
+
+**Option C: define a finding identifier and run a register.** Citable and comparable, and it makes
+the consortium the operator of an identifier space. It is not a CNA and the cost of becoming
+something like one should be stated before anyone proposes it.
+
+**Where it stands.** Option A, by default rather than by decision. No policy evaluation output format
+exists in the repository, so there is nothing for an identifier to go in yet.
+
+**What would have to change.** The Policy Evaluation and Vulnerabilities sections, and an output
+schema for an evaluation report, which would be a new artifact.
 
 # 3.8 How a CBOM relates to an SBOM
 
@@ -1917,6 +2028,40 @@ assigning them.
 
 ---
 
+## Q60 — When a CBOM revision is superseded, what happens to statements bound to it?
+
+**Status** open. Added 12 September 2026 with the Vulnerabilities section.
+
+**The question.** A conformance claim binds a document by digest, and a VEX statement can be bound
+the same way, which is what makes either re-checkable. When the product is patched and a new CBOM
+revision is published, every statement bound to the previous digest refers to something that is no
+longer current. Is anyone obliged to re-issue them, and who?
+
+**Why it matters.** It is the practical difference between a consumer who can tell that an assessment
+is out of date and one who reads a two-year-old *not affected* as a current position. The same
+question applies to conformance claims, and the governance of profiles does not answer it: the
+Governance section covers the retention of profiles, not of statements made about documents.
+
+**Option A: nothing, and say so.** A statement names the revision it was made against; a reader
+compares digests and draws its own conclusion. Cheapest, and it puts the work on the party least
+equipped to do it.
+
+**Option B: a producer obligation to re-issue on each revision.** Accurate and expensive, and mostly
+redundant: most revisions do not change the facts a given statement turned on.
+
+**Option C: bind to the subject and a version range instead of a digest.** Statements then survive
+revisions, and re-checkability is lost, which was the point of binding by digest in decision 0015.
+
+**Option D: a freshness policy, as Versioning already applies to roadmap entries.** A statement
+carries the date it was made and a consumer applies its own staleness threshold. No obligation on the
+producer, and the consumer can tell old from current.
+
+**Where it stands.** Undefined. Claims bind by digest and nothing says what a superseded binding
+means.
+
+**What would have to change.** The Governance section, the freshness policy in Versioning, and
+possibly the claim schema.
+
 # 3.12 Fitting regulation and policy
 
 Tracked as issue #12.
@@ -2171,3 +2316,4 @@ not depend on a second example.
 | Validator source, where the limitation was recorded as a comment | Q49 |
 | Maturity section, drafted from a member's request for a reachable first profile | Q50, Q51, Q52, Q53 |
 | Confidentiality section | Q54, Q55, Q56 |
+| Vulnerabilities section | Q57, Q58, Q59, Q60 |

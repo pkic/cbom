@@ -1,0 +1,23 @@
+{%- comment -%}
+Section navigation for the Use Cases section. Rendered from
+_data/usecases_nav.yml.
+
+A copy of methodology-nav.html against a different data file rather than one
+parameterised include, because the two sections are navigated independently and
+a shared include would have to be passed both the data and the label. The page
+marks itself current by setting 'nav:' in its front matter to the 'id' of its
+entry in the data file.
+
+Styling is the methodology's, in methodology/styles.css under "section
+navigation", which these pages link directly.
+{%- endcomment -%}
+<aside class="sidenav" aria-label="Use case sections">
+  {%- for grp in site.data.usecases_nav %}
+  <div class="sidenav-group">{{ grp.group }}</div>
+  <ul>
+    {%- for item in grp.items %}
+    <li><a href="{{ item.url }}"{% if page.nav == item.id %} class="active" aria-current="page"{% endif %}>{{ item.title }}</a></li>
+    {%- endfor %}
+  </ul>
+  {%- endfor %}
+</aside>
