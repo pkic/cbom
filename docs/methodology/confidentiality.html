@@ -1,0 +1,203 @@
+---
+nav: confidentiality
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Confidentiality</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include methodology-nav.html %}
+
+<main>
+  <div class="crumb">CONCEPT</div>
+  <h1>Confidentiality</h1>
+  <p class="lead">A CBOM says where a product's cryptography is and what it is made of, which is useful to an operator for the same reasons it is useful to an attacker, and is commercially sensitive besides. Most producers will therefore end up with two documents about one product: one they will publish, and one they will release under an agreement. This section is about what those two documents are to each other, how the difference is reflected in a profile, and what a consumer can tell from the document in its hand.</p>
+
+  <h2>Two documents, one product</h2>
+  <p>Two <strong>variants</strong> of a CBOM are meant throughout, distinguished by who may hold them rather than by what they contain.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Variant</th><th>Who receives it</th><th>What governs what it contains</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Public variant</strong></td>
+        <td>Anyone who asks. The audience is unbounded, cannot be enumerated afterwards, and the release cannot be revoked.</td>
+        <td>The producer's disclosure policy, with no counterparty to negotiate with. The floor is whatever profile the producer wants to be able to claim in public.</td>
+      </tr>
+      <tr>
+        <td><strong>Restricted variant</strong></td>
+        <td>A named recipient on stated terms: a customer under a non-disclosure agreement, an auditor, a regulator, a supply-chain partner.</td>
+        <td>The agreement, and the profile the recipient asked for. The producer knows who holds it and on what basis, which is what makes a deeper floor reachable.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Nothing limits this to two. In principle it is a spectrum, and in practice it is a small number of tiers, because every additional tier is another document that has to stay consistent with the others. Both variants are extracts, in the sense <a href="inventory.html">Inventory</a> uses: the inventory is the asset, and a CBOM is a scoped, filtered, redacted snapshot taken from it for a particular consumer. The variants are the same extraction run at two redaction settings, which is where the difference belongs &mdash; a public variant produced by editing a restricted one by hand is a third document with no source.</p>
+
+  <h2>What this section does not mean by confidentiality</h2>
+  <p>The word is already in use in this documentation for something else, and the two are easy to conflate because both are about secrecy and both bear on disclosure.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Term</th><th>Already means</th></tr></thead>
+    <tbody>
+      <tr><td>confidentiality lifetime</td><td>How long the data crossing an interface must stay secret &mdash; a property of the <em>traffic</em>, proposed as <code>confidentialityLifetime</code> in <a href="data-exposure.html">Data Exposure</a>, and the thing that makes harvest-now-decrypt-later urgent or not.</td></tr>
+      <tr><td>disclosure</td><td>What a producer tells a consumer about the product: the four <a href="profile.html#disclosure">disclosure states</a>, and the Interface Disclosure Baseline named after them.</td></tr>
+      <tr><td>confidentiality, here</td><td>The protection of the CBOM <em>document</em>: who may hold it, and what it therefore may contain.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The words used normatively below are <strong>variant</strong>, for one of the documents, and <strong>audience</strong>, for who may hold it. "Confidentiality" is kept as the title of the section because it is what a reader arrives looking for.</p>
+
+  <h2>Redaction is declared, never performed silently</h2>
+  <p>This is settled and is the foundation the rest rests on. Decision 0003 established that an attribute with no value carries a marker saying <em>why</em> it has none, and <a href="profile.html#disclosure">Profile</a> sets out the four outcomes. Applied to a variant pair, it has one consequence worth stating on its own: <strong>a public variant is not a smaller document. It is the same document with values replaced by markers.</strong></p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Two ways to redact</th><th>What the recipient sees</th></tr></thead>
+    <tbody>
+      <tr><td><strong>By deletion.</strong> The attribute is simply not there.</td><td><code>undeclared</code>. It fails the rule, and it says the document was not built against the profile. A policy decision, a limitation in the producer's tooling and an oversight are indistinguishable.</td></tr>
+      <tr><td><strong>By marker.</strong> The attribute carries <code>withheld</code>.</td><td>The fact exists, the producer holds it, and it is not being released on these terms. The rule is satisfied where the profile permits withholding, so the document can conform while redacting.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The cost is real and is accepted deliberately: a marker confirms existence. A producer withholding <code>implementationPurl</code> has confirmed that it knows which library implements the interface. The methodology treats that as information the consumer is entitled to &mdash; it is what tells a buyer there is a conversation to open rather than a gap to write off &mdash; and the alternative, silence, does not conform.</p>
+
+  <h2>A profile sets a floor and cannot set a ceiling</h2>
+  <p>No rule form in this methodology is failed by a document containing <em>more</em>: more attributes, more interfaces, more detail than the rule asked for. Every count in the constraint vocabulary is a minimum &mdash; <code>minCount</code>, <code>minInterfaces</code>, <code>minInterfacesOfType</code>, <code>minProviders</code> &mdash; and there is no maximum of any kind. There is therefore no way to write "do not disclose X" into a profile, and that is deliberate for three reasons.</p>
+  <ul>
+    <li><strong>It would break monotonicity.</strong> Extension adds and tightens and never relaxes, which is what makes conformance to a derived profile carry conformance to its base. A ceiling rule could not be tightened by a deeper profile, and a document could satisfy the derived profile while failing the base by containing something extra. Conformance would stop being monotone in the document as well as in the profile.</li>
+    <li><strong>It is not the methodology's business.</strong> A profile is a minimum reporting requirement. What a producer may not say is a matter for its own policy and for the contract it is disclosing under, and a reporting standard that told producers what to conceal would be a different instrument.</li>
+    <li><strong>It would be unenforceable by the party that wants it.</strong> The consumer holds the document and runs the evaluation. A producer cannot rely on a consumer's validator to protect the producer's secrets.</li>
+  </ul>
+  <p>So the confidentiality control is applied where the document is produced &mdash; the <em>select &middot; filter &middot; redact</em> step in <a href="inventory.html">Inventory</a> &mdash; and the profile is the acceptance test applied at release. What the profile expresses is the other side of the same decision: not "this must not be disclosed", but "this rule may be satisfied by a marker".</p>
+
+  <h2>Reflecting the difference in a profile</h2>
+  <p>That per-rule permission is <code>withholdable</code>, and it is where the confidentiality negotiation actually lands. Decision 0003 says so in as many words: deciding withholdability for each rule is a substantive negotiation between producers and consumers rather than a formatting detail. Two profiles follow from one rule set:</p>
+  <ul>
+    <li>a profile whose sensitive rules are <code>withholdable</code> is one that a lawfully redacted <strong>public</strong> variant can clear;</li>
+    <li>a profile that permits no withholding on those rules is one that only a <strong>restricted</strong> variant can clear.</li>
+  </ul>
+  <p>Removing withholdability is a tightening, and the validator already treats it as one: an override that makes a non-withholdable attribute withholdable is refused as relaxing, and the reverse is accepted and recorded. So <strong>the restricted profile is a derived profile of the public one</strong>, and the pair needs no new machinery at all. Conformance to the restricted profile carries conformance to the public one, which is the property a consumer wants: a supplier's restricted disclosure is never <em>less</em> acceptable than its public one, and a consumer holding a restricted claim does not have to re-evaluate against the public profile to know where it stands.</p>
+  <p>The shape already exists in this documentation. The migration profile tightens the baseline's <code>implementationPurl</code> rule in exactly this way:</p>
+  <pre><code>{
+  "id": "interface-disclosure#I9",
+  "level": "MUST",
+  "withholdable": false,
+  "note": "Tightened by removing withholdability. The base already requires
+           implementationPurl at MUST and accepts a 'withheld' marker in place
+           of a value. Migration sequencing depends on knowing which library
+           implements an interface, so this profile removes that option and
+           requires the value itself. Level is restated as MUST for readability
+           and is unchanged from the base."
+}</code></pre>
+  <p>That is the block as it stands in <code>profile-pqc-migration.rules.json</code>, with the note wrapped to fit.</p>
+  <p>It does it for a migration reason rather than an audience reason. The mechanism does not know the difference, which is convenient here and is the subject of the next two headings.</p>
+
+  <h3>The direction surprises people</h3>
+  <p>The <em>public</em> profile is the base and the <em>restricted</em> profile derives from it. Documents get smaller as the audience widens; profiles get larger as the audience narrows. A reader who expects the confidential profile to be the complete one, with the public profile as a cut-down of it, has the arrow the wrong way round &mdash; and would write an extension that adds withholdability, which is a relaxation and which the validator refuses before it evaluates any document.</p>
+
+  <h2>Audience is a third relation, beside depth and branch</h2>
+  <p><a href="maturity.html">Maturity</a> gives a practical test for what a derived profile is: if its <code>objective</code> states the same decision and its <code>scope.orientation</code> is the same, it is a greater <em>depth</em>; if either differs, it is a <em>branch</em>. A restricted variant profile passes that test &mdash; same consumer, same decision, same orientation &mdash; and is not a depth.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Relation</th><th>What differs</th><th>What moves a producer</th><th>What a buyer should read into it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Depth</strong></td><td>How much is asked about the same decision.</td><td>Engineering: instrumenting a build, extending a scanner, learning something about its own product it did not previously record.</td><td>How far the supplier's own visibility reaches.</td></tr>
+      <tr><td><strong>Branch</strong></td><td>The decision itself, and usually the orientation.</td><td>Answering a different question.</td><td>Nothing comparable. Two suppliers on different branches are not ranked by it.</td></tr>
+      <tr><td><strong>Audience</strong></td><td>Who may hold the document.</td><td>A signature on an agreement. No engineering change is involved, and none is implied.</td><td>What the supplier will say <em>to this recipient</em>, which is not the same as what the supplier knows.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Keeping the third apart from the first matters for a reason the methodology has already decided elsewhere. <em>Cannot tell you</em> and <em>will not tell you</em> are different findings, and at the grain of a single rule the disclosure states keep them apart: <code>unknown</code> and <code>withheld</code> are reported separately and listed separately in a conformance claim, because an unknown value points at the producing process and a withheld one points at a policy. A family that presents an audience step as the next rung merges them again at the grain of a whole profile. It would rank a supplier contractually barred from naming a library below one whose scanner cannot see hardware cryptography, or the reverse, depending only on how the rungs were ordered &mdash; and both may be true of the same supplier, for different rules, in the same document.</p>
+  <p>The practical consequence is in how the pair is published and asked for. An audience step is published as a <em>pair at one depth</em>, not as the rung above it, and a consumer's requirement names the two separately: which profile, and on what terms it will be received.</p>
+
+  <h2>What a profile cannot yet say</h2>
+  <p>Nothing in a rules file records which audience its withholding permissions were set for. Two profiles with an identical rule set &mdash; one drafted as a public floor, one as a restricted floor &mdash; are indistinguishable as artifacts, and the pair described above are told apart today only by their titles and their prose.</p>
+  <p>The obvious fix is to declare it, and there is one trap worth recording before anyone tries. It cannot live in the <code>disclosure</code> block. C7 requires that an inherited block be identical along a chain, on the explicit reasoning that <code>disclosure</code> and <code>conformanceKeywords</code> carry no requirement of their own, so a divergence between a base and a derived profile can only be a mistake &mdash; there is a fixture for it. A derived restricted profile declaring a different audience in that block would fail C7, correctly by the letter of the check and wrongly by its intent. <code>scope</code> is the plausible home instead: it already narrows down a chain, C11 already checks it, and who a profile is written to be read by is part of the boundary it draws.</p>
+  <div class="banner">Everything above this heading works with the tooling as it stands. Nothing in this heading does: no schema, checker or validator knows what an audience is. The distinction is kept sharp deliberately, because the value of the mechanism is that it is already checked. Recorded as Q54.</div>
+
+  <h2>What the document says about itself</h2>
+  <p>A recipient should not have to infer which variant it is holding, and today it may have no way to. A public variant whose producer happened to redact nothing looks exactly like a restricted one; two documents with the same subject and different digests give no account of why they differ. A declared variant on the product would close it &mdash; a fact about the document, in the same family as P3's subject identity and P4's completeness statement, and expressible with the product-rule machinery that already exists.</p>
+  <p>There is an adjacent defect that should be separated from it rather than folded in. P4 requires a completeness statement from a three-value vocabulary: <code>all-external</code>, <code>all</code>, <code>partial</code>. <code>partial</code> is doing two jobs. It says "we did not enumerate everything", and it says "we are not telling you about everything". Those are ignorance and policy &mdash; precisely the collapse the four disclosure states exist to prevent, reappearing one level up at the structural grain, inside a vocabulary. A buyer reading <code>partial</code> cannot tell whether to press the supplier on its tooling or to open a commercial conversation, which is the same loss decision 0003 was taken to avoid. Recorded as Q55.</p>
+
+  <h2>Withholding structure</h2>
+  <p>The marker model covers attributes. An interface omitted for confidentiality has no attribute on which to carry a marker, and structure is where a variant pair most often differs: it is easier to argue that a management interface should not be advertised than that a protocol version should not be.</p>
+  <p>A producer has two honest moves today and one position with none.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Situation</th><th>What the producer can do</th></tr></thead>
+    <tbody>
+      <tr><td>An interface may be named but its detail may not</td><td>Declare the interface and withhold the attributes the profile permits withholding. The preferred shape: the count stays honest and the recipient sees what exists.</td></tr>
+      <tr><td>An interface may not be named at all, and no product rule requires its kind</td><td>Omit it and state <code>coverage: partial</code>. Conforming, and it loses the reason &mdash; see the heading above.</td></tr>
+      <tr><td>An interface may not be named at all, and a product rule requires its kind</td><td>Nothing. P2 is satisfied by declaring a management interface or by stating an absence from <code>no-configuration-surface</code>, <code>configured-out-of-band</code>, <code>not-applicable-to-subject</code>. None of those means "exists, and is not disclosed". The producer must disclose it, state something untrue, or fail.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The last row is the disclosure model's own argument left unapplied. P2 was revised in baseline v0.6 exactly so that a subject with nothing to hide could say so rather than fail, on the reasoning that a rule which cannot be satisfied honestly by a legitimate subject is not strict but wrong. The same argument reaches a subject that has something it may not say. Whether a structural rule may be satisfied by a declared withholding is not a free change &mdash; it would make <code>minInterfaces</code> and <code>minInterfacesOfType</code> lower bounds on the <em>declared</em> set rather than on the product, which is a weaker statement than they make today, and it hands a producer a way to satisfy a structural rule without declaring anything. Recorded as Q56.</p>
+
+  <h2>What the two variants owe each other</h2>
+  <p>These are obligations on the producer. None of them is checkable by any artifact in this repository, and a consumer holding only one variant cannot test any of them, which is why they are written down.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Obligation</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>One subject, one revision</td><td>Both carry the same subject identifier and the same content revision. They describe one product at one moment; a variant is not a fresh observation, and a pair that disagrees about the product is not a redaction.</td></tr>
+      <tr><td>A redaction and nothing else</td><td>Every value the public variant carries is the value the restricted one carries. Redaction replaces a value with a marker. It does not change a value, and it does not add one. Otherwise "variant" is a polite word for two accounts of the same product, and the one that circulates freely is the one nobody checked.</td></tr>
+      <tr><td>One source</td><td>Both extracted from the inventory at two redaction settings, not produced by editing one into the other. Two pipelines drift, and the drift surfaces as a breach of the row above &mdash; usually months later, in front of an auditor holding both.</td></tr>
+      <tr><td>Both signed</td><td>So that a recipient holding both can establish that they agree and that both are the producer's, and so that a restricted variant which escapes is attributable. See <a href="governance.html">Governance</a>.</td></tr>
+      <tr><td>A variant is not a version</td><td><a href="versioning.html">Versioning</a> tracks three axes &mdash; carrier format, profile, and content revision &mdash; and audience is none of them. Distinguishing variants by revision number makes a public document issued on Tuesday look like a correction of the restricted one issued on Monday.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>What a claim already reveals</h2>
+  <p>A conformance claim binds to one document by digest and lists, for each profile evaluated, the rules whose values were <code>withheld</code>, <code>unknown</code> and <code>undeclared</code>. Two claims for the same subject with different digests and different withheld lists therefore <em>are</em> the two variants, told apart with no new field and no new vocabulary: the difference between the lists is the redaction, named rule by rule.</p>
+  <p>What a claim does not carry is the audience the document was prepared for, or any indication that a fuller variant exists. A buyer comparing two suppliers on the verdict alone compares a public document with a restricted one and finds them equal. <a href="conformance.html">Conformance</a> already warns that a consumer acting on the verdict alone discards the part of the result most likely to matter commercially; the variant pair is that warning's sharpest case, because both documents conform, neither producer has done anything wrong, and only one of them has answered the question.</p>
+
+  <h2>What confidentiality is not a reason for</h2>
+  <p><strong>Dropping the marker.</strong> Silent redaction is <code>undeclared</code>, which fails, and which tells the recipient the document was not built against the profile. A producer that will not disclose a value and will not admit to holding it has chosen the one option that costs it conformance.</p>
+  <p><strong>Publishing nothing.</strong> "We cannot publish our library versions" is an argument about one rule, not about the document. The entry profile in <a href="maturity.html">Maturity</a> exists so that there is a bar low enough to be reachable, and the interfaces a product exposes, the protocols they speak and the versions of those protocols are not usually the sensitive part.</p>
+  <p><strong>A floor set to nothing.</strong> If every contested rule in the public profile is withholdable, a conforming public variant answers no question and the family has a public profile in name only. The test is the one every profile already has to pass: state the consumer's decision and the options it chooses between, and check that a conforming document &mdash; exercising every withholding the profile permits &mdash; still discriminates between them.</p>
+  <p><strong>Keeping secrets out.</strong> Key material, private keys and seeds are outside every profile at every depth and in every variant. That is a permanent exclusion, not a confidentiality decision, and it is not what a restricted variant is for: a restricted variant is the one with the library versions in it, not the one with the keys in it.</p>
+
+  <h2>One document is not the exposure</h2>
+  <p>The argument against publishing a CBOM is rarely about one CBOM. A single product's document describes what its datasheet and its release notes largely describe already. The exposure is in the join: an estate's worth of documents, correlated on the identifier schemes a profile exists to make correlatable, is a target list ordered by weakness. That joined artifact is the inventory, which is why <a href="inventory.html">Inventory</a> treats the inventory as the asset and the CBOM as an extract from it, and why a distributed inventory is a confidentiality arrangement as much as an organisational one.</p>
+  <p>The second effect is in time rather than in breadth. Two public variants of consecutive releases disclose what changed between them. A producer publishing a CBOM on every release is operating, incidentally, a channel that announces its own cryptographic fixes &mdash; including ones it has not announced, and before its customers have deployed them.</p>
+  <p>Neither is a profile problem and a profile cannot help with either: it cannot make a disclosed fact less true, and the facts involved are individually innocuous. Both are distribution and retention questions, and they belong with the registry access control and the immutable-revision arrangement in <a href="governance.html">Governance</a>. They are recorded here because they are the reason a producer gives for refusing to publish at all, and a methodology that only ever argues for more disclosure will not be believed on the point.</p>
+
+  <h2>What is not settled</h2>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Question</th><th>What turns on it</th></tr></thead>
+    <tbody>
+      <tr><td>Whether a profile declares the audience its withholding permissions assume</td><td>Two profiles with identical rules and opposite intentions are indistinguishable as artifacts, and the <code>disclosure</code> block cannot carry it without breaking C7's reasoning. Recorded as Q54.</td></tr>
+      <tr><td>Whether a document declares which variant it is, and whether the completeness vocabulary separates ignorance from policy</td><td>A recipient cannot always tell which document it holds, and <code>partial</code> carries two opposite meanings. Recorded as Q55.</td></tr>
+      <tr><td>Whether a structural rule can be satisfied by a declared withholding</td><td>A product whose management interface is confidential has no honest conforming move. The change would weaken what an interface count asserts. Recorded as Q56.</td></tr>
+      <tr><td>Whether a withheld answer must say why</td><td>Already recorded as Q12, and it is what turns a refusal into a starting point: a contractual bar, a commercial sensitivity and a security concern about naming an exact version call for three different responses from the buyer.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="banner">In summary: a public and a restricted variant are one document redacted two ways; the redaction is declared rather than performed silently; and the difference is reflected in a profile by which rules are withholdable, which makes the restricted profile a derived profile of the public one and needs no new machinery. What is missing is the labelling. Nothing yet records which audience a profile was drafted for or which variant a document is &mdash; and a family must not present an audience step as a rung, because <em>cannot tell you</em> and <em>will not tell you</em> are different answers and the methodology already keeps them apart everywhere else.</div>
+
+  <div class="pagenav">
+    <a href="maturity.html">← Maturity</a>
+    <a class="next" href="policy-evaluation.html">Next: Policy Evaluation →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</div>
+</body>
+</html>

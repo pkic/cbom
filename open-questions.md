@@ -703,6 +703,127 @@ setting per rule.
 **What would have to change.** The disclosure settings in the rule format, the file mapping, part
 of the validator, and one table in the Conformance section.
 
+## Q54 — Should a profile declare the audience its withholding permissions assume?
+
+**Status** open. Added 12 September 2026 with the Confidentiality section.
+
+**The question.** A profile decides, rule by rule, whether an answer may be withheld. That decision
+is taken with an audience in mind: a floor a supplier can clear in a document it publishes to the
+world is not the floor it can clear in a document released to a named customer under an agreement.
+Nothing in a rules file records which of the two was meant.
+
+**Why it matters.** Two profiles with an identical rule set, one drafted as a public floor and one
+as a restricted floor, are indistinguishable as artifacts; today the pair is told apart only by
+their titles. A buyer writing a requirement has to say two things — which profile, and on what terms
+the document will be received — and can only cite the first. The substance already works without
+this: removing withholdability is a tightening, so a restricted profile is a derived profile of the
+public one and the validator already enforces the relation. What is missing is the label.
+
+**Why not the obvious place.** It cannot go in the `disclosure` block. C7 requires that an inherited
+block be identical along a chain, on the reasoning that `disclosure` and `conformanceKeywords` carry
+no requirement of their own, so a divergence can only be a mistake — there is a fixture for exactly
+that. A derived restricted profile declaring its own audience there would fail C7 correctly by the
+letter of the check and wrongly by its intent.
+
+**Option A: declare it in `scope`.** The scope already narrows down a chain, is already checked by
+C11, and who a profile is written to be read by is part of the boundary it draws. One enum, one
+check, and a line in the scope table.
+
+**Option B: leave it to the title and the objective.** A profile's consumer statement can say
+"under an agreement" in words. Nothing mechanical depends on it, and the register would carry the
+fact where a family is recorded (Q50).
+
+**Option C: derive it.** A profile with no withholdable rule is restricted by construction; one with
+several is public by construction. Cheap, and wrong at the edges: a public profile may permit no
+withholding on rules nobody contests, and a restricted profile may still permit some.
+
+**Where it stands.** Option B, as the state that exists. The Confidentiality section states plainly
+that nothing in the tooling knows what an audience is.
+
+**What would have to change.** The scope object, the published profile schema, C11, and the scope
+table in the Conformance section.
+
+## Q55 — Should a document say which variant it is, and should `partial` separate ignorance from policy?
+
+**Status** open. Added 12 September 2026 with the Confidentiality section.
+
+**The question.** Two related gaps in what a document says about itself. A recipient cannot always
+tell whether it holds a public or a restricted variant — a public one whose producer happened to
+redact nothing looks exactly like a restricted one. And the completeness statement P4 requires,
+from `all-external`, `all` and `partial`, uses one value for two opposite situations: the producer
+did not enumerate everything, and the producer is not disclosing everything.
+
+**Why it matters.** The second is the collapse decision 0003 was taken to prevent, reappearing one
+level up. At the grain of an attribute the methodology insists that `unknown` and `withheld` be
+distinguishable, because one points at the producing process and the other at a policy, and they
+call for different responses. At the grain of the interface set, `partial` merges them again. A
+buyer reading it cannot tell whether to press the supplier on its tooling or to open a commercial
+conversation.
+
+**Option A: both, as product-level facts.** A declared variant, and a completeness vocabulary that
+separates the two kinds of incompleteness. Both are expressible with the product-rule machinery
+that exists, and both are facts about the document in the same family as P3's subject identity.
+It widens a published vocabulary and moves the baseline's version.
+
+**Option B: the completeness vocabulary only.** The narrower fix, and the one that repairs an
+inconsistency rather than adding a capability. A variant can then be inferred from the marker
+pattern in most real cases.
+
+**Option C: the variant only.** A recipient that knows which variant it holds can interpret
+`partial` from context, since a public variant's incompleteness is likelier to be policy.
+
+**Option D: neither.** Both are matters for the exchange in which the document is handed over.
+
+**Where it stands.** Option D, by omission. No profile requires a variant statement and the
+completeness vocabulary is as published.
+
+**What would have to change.** The coverage vocabulary and P4's note in the baseline, its version, a
+new product rule if a variant is required, the Terms and Conformance tables, and the example
+documents.
+
+## Q56 — May a structural rule be satisfied by a declared withholding?
+
+**Status** open. Added 12 September 2026 with the Confidentiality section.
+
+**The question.** The disclosure states apply to attributes. A whole interface withheld for
+confidentiality has no attribute on which to carry a marker. Product rule P2 requires a management
+interface, or a statement of absence from `no-configuration-surface`, `configured-out-of-band` and
+`not-applicable-to-subject`. None of those means "it exists and I am not disclosing it".
+
+**Why it matters.** A producer whose administrative interface is genuinely confidential has no
+honest conforming move: disclose it, state something untrue, or fail. That is the position P2 was
+revised in baseline v0.6 to get a legitimate subject out of — the argument then was that a rule
+which cannot be satisfied honestly by a legitimate subject is not strict but wrong, and it reaches
+this case too. The management interface is also the one most often left out, which is why the rule
+exists, so the change is not free.
+
+**Option A: permit a withheld structural declaration**, from the same vocabulary as an absence, so
+the three answers are "here it is", "there is none, because…", and "there is one and I am not
+naming it". A consumer sees the difference and a profile can forbid the third by making the rule
+non-withholdable, which is the existing mechanism.
+
+**Option B: leave it.** A structural rule is the only defence against omission, and an omission the
+producer is permitted to declare is still an omission. A consumer needing the interface named
+should require a profile that does not permit it — which is Option A's own answer, so the argument
+turns on what the baseline's default should be.
+
+**Option C: require the interface but permit every attribute on it to be withheld.** The producer
+declares that a management interface exists and says nothing else about it. No new mechanism at
+all, and it keeps the count honest, but it discloses the existence the producer may be trying to
+conceal.
+
+**What it costs.** Under Option A, `minInterfaces` and `minInterfacesOfType` become lower bounds on
+the *declared* set rather than on the product, which is a weaker statement than they make today,
+and a producer could satisfy a structural rule without declaring anything.
+
+**Where it stands.** Option B, as the state that exists. Option C is available to any producer now
+and is what the Confidentiality section recommends where the profile permits it.
+
+**What would have to change.** The `orDeclaredAbsent` handling in the validator, the absence
+vocabularies, P2's note, the baseline's version, and the disclosure-state tables in Profile,
+Conformance and Terms, which currently describe four outcomes for an attribute and none for a
+structural rule.
+
 ---
 
 # 3.5 Checking conformance
@@ -2049,3 +2170,4 @@ not depend on a second example.
 | Decision index | Q07 |
 | Validator source, where the limitation was recorded as a comment | Q49 |
 | Maturity section, drafted from a member's request for a reachable first profile | Q50, Q51, Q52, Q53 |
+| Confidentiality section | Q54, Q55, Q56 |

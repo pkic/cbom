@@ -39,6 +39,7 @@
     - { id: profile,      title: Profile,           url: profile.html }
     - { id: conformance,  title: Conformance,       url: conformance.html }
     - { id: maturity,     title: Maturity,          url: maturity.html }
+    - { id: confidentiality, title: Confidentiality, url: confidentiality.html }
     - { id: policyeval,   title: Policy Evaluation, url: policy-evaluation.html }
 
 - group: Applying it
