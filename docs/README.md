@@ -85,6 +85,7 @@ twenty files and was done with a script each time. That is why the include exist
 | `model.html` | The cryptographic relationship model |
 | `profile.html` | The profile: rules, dual use, conformance |
 | `conformance.html` | What conformance means, and what a verdict does not assert |
+| `maturity.html` | Profile maturity: a family of profiles ordered by depth, and the entry profile |
 | `policy-evaluation.html` | Policy evaluation: facts against derived judgements |
 | `method.html` | How to define a CBOM profile (the procedure) |
 | `use-cases.html` | Use cases for profiles |
@@ -101,16 +102,23 @@ Machine-readable artifacts in the same folder:
 
 | File | Purpose |
 |---|---|
+| `profile-interface-enumeration.rules.json` | The entry profile of the interface family: the shallowest rules that still give a usable inventory record. |
 | `profile-interface-disclosure.md` | The profile specification, including the relationship taxonomy. |
 | `profile-interface-disclosure.rules.json` | The same profile as machine-readable rules. |
 | `mapping-cyclonedx-spdx.md` | Requirement-to-format mapping for both formats. |
 | `cbom-pass.cyclonedx.json` | Conforming example CBOM. |
-| `cbom-fail.cyclonedx.json` | Non-conforming example; omits the management interface. |
+| `cbom-fail.cyclonedx.json` | Non-conforming example; omits the management interface. Conforms at the family's entry depth. |
+| `cbom-disclosure.cyclonedx.json` | Non-conforming example exercising all four disclosure outcomes on one interface. |
+| `cbom-noadmin.cyclonedx.json` | Conforming example with no management interface, satisfying P2 by stating the absence. |
+| `cbom-entry-fail.cyclonedx.json` | Roughly what a scanner emits with no profile in mind; below even the entry profile. |
 | `profile-pqc-migration.rules.json` | The PQC migration profile, derived from the baseline via `extends`. |
 | `cbom-pqc-pass.cyclonedx.json` | Conforming example for the migration profile. |
 | `cbom-pqc-fail.cyclonedx.json` | Non-conforming example exercising conditional rules and the tightening. |
 | `validate_cbom.py` | Version-aware validator, with profile composition. Checks a document against a profile. |
 | `check_profile.py` | Well-formedness checker. Checks a profile against requirements C1 to C17 of the Conformance section. |
+| `profile.schema.json` | The shape of a rules file, so a third party can validate a profile without our checker. |
+| `claim.schema.json` | The shape of a conformance claim. |
+| `claim-example.json` | A worked claim over two profiles at once, bound to a document by digest. |
 | `versioning-and-legacy-cboms.md` | Design note on handling older CBOM files. |
 
 Both tools are exercised by `tests/run-profile-tests.sh` in the repository root, which CI runs on

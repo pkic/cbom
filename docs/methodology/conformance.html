@@ -184,7 +184,7 @@ nav: conformance
   <p>A rule that cannot fail is worse than a missing rule, because the report says it passed and a reader has no way to tell the difference. There are three ways to write one, and all three used to survive review: give the rule no constraint at all, misspell the constraint key so the evaluator recognises nothing and reports <code>ok</code> against every value, or point it at a vocabulary that does not exist &mdash; which is the mirror defect, failing every value while saying only that the value was not accepted. C13 already rejected the third case for group keys; C17 covers the rest, and the validator refuses such a profile rather than issuing a verdict against it.</p>
   <p>This is the same principle as C13's, applied more widely: a profile must be able to be wrong. It is stated as a requirement rather than left to review because none of the three is visible when reading the file &mdash; each one produces a rule that looks entirely ordinary.</p>
 
-  <p>C1 to C7 and C11 to C17 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. Both example profiles pass, and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
+  <p>C1 to C7 and C11 to C17 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. All three example profiles pass &mdash; the entry profile of the interface family, the disclosure baseline and the migration profile &mdash; and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
 
   <h2>3. An evaluation tool conforming to this methodology</h2>
   <p>Two tools given the same document, the same profile and the same resolution of any extended base are expected to return the same verdict. The requirements below are what that expectation rests on.</p>
@@ -251,7 +251,7 @@ Tool: validate_cbom.py 0.2</code></pre>
 
   <div class="pagenav">
     <a href="profile.html">← Profile</a>
-    <a class="next" href="policy-evaluation.html">Next: Policy Evaluation →</a>
+    <a class="next" href="maturity.html">Next: Maturity →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>

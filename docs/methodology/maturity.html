@@ -1,0 +1,141 @@
+---
+nav: maturity
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Maturity</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include methodology-nav.html %}
+
+<main>
+  <div class="crumb">CONCEPT</div>
+  <h1>Profile maturity</h1>
+  <p class="lead">A profile states one bar, and a document either clears it or does not. That is the right shape for a conformance decision and the wrong shape for adoption: a producer that can enumerate its interfaces this quarter, and cannot attribute algorithms to them until it has instrumented its build, conforms to nothing at all. Maturity is the discipline of publishing a <strong>family</strong> of profiles ordered by depth, so that the first step is reachable, the last is demanding, and a consumer can tell which one a supplier has taken.</p>
+
+  <h2>This is not new machinery</h2>
+  <p>Everything a family of increasing depth needs is already decided and already checked. <a href="profile.html#composition">Profile</a> defines extension and its two kinds, depth and coverage. Extension is monotonic: a derived profile adds rules and tightens inherited ones and may never relax them, which is what makes conformance to the derived profile carry conformance to the base. A rule id belongs to the profile that declares it and is cited against that profile's tag, so the same rule keeps its number as a family grows. An inherited group may be sharpened in place.</p>
+  <p>So a depth is not a new kind of object. <strong>A depth is a profile.</strong> There is no new field, no new artifact type and no new verdict. A conformance claim already names each profile it covers by identity and version, which means a claim already says which depth was met, and a report already lists the rules that were assessed to reach it. What is missing is not mechanism. It is that the family's shallowest profile has to actually exist, has to be reachable, and has to be published as part of a family rather than as a competing baseline.</p>
+  <div class="banner">The contribution of this section is a discipline, not a feature: set the entry depth where a producer starting today can reach it, order the family so that each depth contains the one below it, and require the consumer to name the depth it is asking for.</div>
+
+  <h2>Why these are not called maturity levels</h2>
+  <p>"Maturity level" is already in use in this documentation, for the thing a profile deliberately is not. <a href="related-work.html">Related Work</a> sets out the relationship with the consortium's <a href="https://pkic.org/wg/pqc/pqcmm/">PQC Maturity Model</a>, whose subject is the same as this methodology's: a product assessed from the outside. A PQCMM level is a <em>judgement</em>, derived by an external versioned policy from the facts a document discloses, and <a href="policy-evaluation.html">Policy Evaluation</a> is explicit that such judgements are computed at evaluation time and are not recorded as attributes, because the criteria change while the product does not.</p>
+  <p>A profile is the other half of that arrangement: it is what the judgement reads. Using one phrase for both would put two meanings of "maturity level" in one body of documentation, one of which is excluded on principle. This project has paid for a terminology clash once already, and the cheaper moment to settle it is before anyone cites the numbering.</p>
+  <p>The normative word used here is <strong>depth</strong>: a family ordered by depth, whose shallowest member is the <strong>entry profile</strong>. "Maturity" is kept as the title of this section because it is what a reader arrives looking for. The obvious alternatives are all spoken for:</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Word</th><th>Already means</th></tr></thead>
+    <tbody>
+      <tr><td><code>level</code></td><td>How binding one rule is: MUST, SHOULD or MAY. It is a field in every rules file.</td></tr>
+      <tr><td><code>stage</code></td><td><code>lifecycleStage</code>: where the reported fact came from — intended, implemented, configured or observed.</td></tr>
+      <tr><td><code>band</code></td><td>The carrier acceptance ranges in <a href="versioning.html">Versioning</a>: target, legacy, newer, refused.</td></tr>
+      <tr><td>tier</td><td>Position in a supply chain, and a pattern of profile ownership in <a href="governance.html">Governance</a>.</td></tr>
+      <tr><td>maturity level</td><td>A judgement derived from disclosed facts by external policy, which a profile is not.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>The family as it stands</h2>
+  <p>Two profiles, one branch, and a document between the two depths.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Profile</th><th>Asks for</th><th>Rules</th><th>Position</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><a href="profile-interface-enumeration.rules.json">Interface Enumeration</a> v0.1</td>
+        <td>What the product is, which interfaces it exposes, what each speaks and at which version, how the report was taken, and whether the list is the whole list.</td>
+        <td>P1, P3, P4, I1, I2, I7, I8</td>
+        <td>The entry profile. Nothing below it.</td>
+      </tr>
+      <tr>
+        <td><a href="profile-interface-disclosure.md">Interface Disclosure Baseline</a> v0.7</td>
+        <td>Everything above, and the algorithms for each cryptographic job, the endpoint roles, the implementing library, and a management interface or a stated reason there is none.</td>
+        <td>adds P2, I3, I4, I5, I6, I9</td>
+        <td>One depth deeper. Six rules added, seven shared and unchanged.</td>
+      </tr>
+      <tr>
+        <td><a href="pqc-migration.html">PQC Migration</a> v0.6</td>
+        <td>Per-interface capability by cryptographic purpose, what enabling it requires, and what is blocking it.</td>
+        <td>adds a group rule and its members</td>
+        <td>A <strong>branch</strong>, not a greater depth. See below.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The entry profile declares each shared rule under the id the baseline uses for the same rule, so the gaps in its numbering &mdash; no P2, no I3 to I6, no I9 &mdash; are exactly where the next depth adds. That is legible rather than ambiguous only because an id is cited against a profile tag: the same rule appears in a report as <code>interface-enumeration#I1</code> at one depth and <code>interface-disclosure#I1</code> at the other, and a reader can see which bar was applied.</p>
+  <p>The demonstration that the entry depth is worth having is a document that was already in the repository. <code>cbom-fail</code> is named for the verdict the baseline gives it: it omits the management interface and fails product rule P2. It conforms to the entry profile. A producer in that position is not producing nothing, and before the entry profile existed there was nothing for it to conform to. At the other end, <code>cbom-entry-fail</code> &mdash; roughly what a scanner emits with no profile in mind, recording a TLS asset it found and nothing about what the interface is for &mdash; conforms to neither. That is where the entry depth is set: above untargeted output, below the full disclosure bar.</p>
+
+  <h2>Depth and branch are different relations</h2>
+  <p>Both are monotonic extension and the mechanism does not distinguish them, but a family is planned and read differently depending on which one is happening.</p>
+  <p><strong>Depth</strong> asks more about the same decision. The entry profile and the baseline serve one consumer with one question &mdash; which interfaces does a published weakness reach &mdash; and differ in how much they demand before that question can be answered. Both declare orientation <code>inventory</code>. A producer moves between them by disclosing more about the same interfaces.</p>
+  <p><strong>A branch</strong> changes the decision. The migration profile derives from the baseline, and its consumer is planning a migration rather than maintaining an inventory: it declares orientation <code>both</code> and asks for statements about a future state. Reaching it is not a matter of disclosing more of the same facts, and a supplier at the entry depth is not two steps from it. Presenting a branch as a rung would tell a producer to work in the wrong order and tell a buyer that one number ranks suppliers who are answering different questions.</p>
+  <p>The practical test: if the derived profile's <code>objective</code> states the same decision and its <code>scope.orientation</code> is the same, it is a depth. If either differs, it is a branch.</p>
+
+  <h2>What makes a family one ladder</h2>
+  <p>Publishing profiles in an order is not the same as publishing a ladder. The claim a family makes is that conformance at a depth carries conformance at every depth below it, and that claim holds only under the conditions below.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Condition</th><th>Why, and what goes wrong without it</th></tr></thead>
+    <tbody>
+      <tr><td>A deeper profile drops no rule</td><td>Otherwise a document can conform deeper and fail shallower, and the word "deeper" is doing misleading work.</td></tr>
+      <tr><td>A shared rule is identical, or tightened through an <code>overrides</code> block</td><td>Two rules with the same id and different constraints are two rules, and a citation stops identifying one requirement.</td></tr>
+      <tr><td>The vocabularies a shared rule resolves against are identical</td><td><code>enumRef</code> resolves against the profile that declares it, so the same rule text can permit different values at two depths. This is invisible on the page and the likeliest way a family drifts.</td></tr>
+      <tr><td>The disclosure marker convention is identical</td><td>A marker written for one depth would not be recognised at the other, and a producer's "withheld" would read as silence.</td></tr>
+      <tr><td>Scope and carrier range do not widen</td><td>The same rules as monotonic extension: accepting a lifecycle stage or a carrier version a shallower profile rejects lets a document conform deeper while failing shallower.</td></tr>
+      <tr><td>Orientation is the same</td><td>If it is not, this is a branch, and the ladder claim was never available.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Where one profile declares <code>extends</code> on another, the validator enforces most of this already and refuses a relaxing profile before it evaluates any document. The two profiles here are <em>siblings</em>: the baseline was published first and does not name the entry profile as its base, because re-parenting it would move seven rule ids to another profile tag and change every citation of them in this documentation, in the test suite, and in any report already issued. Whether to pay that is the working group's call. Until it is taken, the ladder is an assertion about two independent profiles, and an assertion in this repository gets a check: <code>tests/check-family.py</code> requires every condition in the table above, and requires that every committed document conforming to the baseline conforms to the entry profile. It also reports the documents that sit between the two depths, because a family where every document conforms everywhere has one rung whatever it declares.</p>
+
+  <h2>What a depth must not become</h2>
+  <p><strong>A ceiling.</strong> The obvious objection to an entry profile is that suppliers will stop there. Nothing in the artifact can prevent that, and it is not the artifact's job: a profile states a bar, and what bar to require is the consumer's decision. The control is in the ask. A buyer names the profile and version it requires, and a date by which the deeper one is required; the grace-window question in <a href="versioning.html">Versioning</a> is the same question. A claim names the profile it met, so "conforms" is never ambiguous about which depth was reached &mdash; which is precisely what a family makes visible and a single baseline does not.</p>
+  <p><strong>A floor.</strong> An entry depth set too high is the failure this section exists to correct. It is also the state this methodology was in: the shallowest thing to conform to required nine facts about every declared interface, the implementing library among them, and four about the product. A producer who could supply the first four of the nine had no way to say so and no verdict to show for it.</p>
+  <p><strong>A relabelling of obligation levels.</strong> A depth is not the SHOULD rules of one profile renamed. The two answer different questions: a SHOULD is reported and does not decide a verdict, so a document satisfying only the MUSTs still conforms, and nothing says the rest was expected. A shallower profile's requirements are MUSTs, and a document that fails them does not conform. Moving a SHOULD to MUST inside one profile changes the verdict on documents already published without changing the documents, which is what version discipline exists to control; adding a depth does not, because the deeper profile is a new profile with its own version.</p>
+  <p><strong>An enumeration of what comes later.</strong> A shallower profile cannot list what deeper profiles will require. Those profiles do not exist when it is published, and making it name them would mean re-releasing the entry profile every time the family grew &mdash; inverting the direction of extension, so that the base depended on its derivatives. The family therefore lives in the register described in <a href="governance.html">Governance</a>, not in the rules files. Each profile still says what <em>it</em> defers and why, in its <code>exclusions</code>, which is the honest half a profile can carry on its own.</p>
+  <p>One wrinkle follows from that. A rules file has a single <code>exclusions</code> list, and it is used both for what is excluded permanently &mdash; key material at every depth of every profile, derived judgements on principle &mdash; and for what is merely not asked at this depth. Those are different statements to a consumer, and nothing distinguishes them mechanically. The entry profile marks each of its own as "deferred, not excluded" or "permanently excluded" in prose, which a reader can follow and a tool cannot.</p>
+
+  <h2>Climbing, and asking</h2>
+  <p>The useful property of building the family this way is that the work list is generated rather than negotiated. A producer conforming at the entry depth runs the deeper profile against the same document, and the failing rule ids are the gap, named and countable:</p>
+  <pre><code>cbom-fail.cyclonedx.json conforms to interface-enumeration,
+  and interface-disclosure#P2 stands between it and interface-disclosure</code></pre>
+  <p>That is a line from the test suite, not an illustration. The same holds for the document exercising the disclosure states, which sits one interface's worth of missing algorithms below the baseline.</p>
+  <p>The pattern already appears inside a single profile, one grain down. The migration profile takes three cryptographic purposes in depth and still requires a status for all seven, so a supplier cannot conform while behaving as though entity authentication does not exist, and a buyer sees the long-lead blockers in the first document rather than the third. A family ordered by depth is that same idea at the grain of a profile: the shallow depth is cheap to reach and says openly what it does not cover, and what it does not cover does not become invisible.</p>
+
+  <h2>What is not settled</h2>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Question</th><th>What turns on it</th></tr></thead>
+    <tbody>
+      <tr><td>Where a family is recorded, if not in its profiles</td><td>A consumer holding an entry-profile claim cannot see from the artifact that deeper profiles exist. Recorded as Q50.</td></tr>
+      <tr><td>Whether the baseline is re-parented to extend the entry profile</td><td>It would make the ladder structural and retire most of a test. It moves seven rule ids to another tag and changes every citation of them. Recorded as Q51.</td></tr>
+      <tr><td>Whether a rules file should distinguish a deferral from a permanent exclusion</td><td>One field currently carries both. Recorded as Q52.</td></tr>
+      <tr><td>Whether depths are numbered, and whether a consortium profile may be published as an entry depth at all</td><td>A number invites the ranking this section argues against; a name is harder to demand in a contract. Recorded as Q53.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="banner">In summary: a depth is a profile, a family is a set of profiles ordered so that each contains the one below it, and maturity is the decision to publish the family with its entry depth low enough to be reachable. The mechanism is the monotonic extension already defined in <a href="profile.html">Profile</a>; what this section adds is the obligation to check that the order really holds, and to name the depth when asking for one.</div>
+
+  <div class="pagenav">
+    <a href="conformance.html">← Conformance</a>
+    <a class="next" href="policy-evaluation.html">Next: Policy Evaluation →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</div>
+</body>
+</html>

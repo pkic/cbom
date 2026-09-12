@@ -62,7 +62,9 @@ def main():
                 print("     %s %s" % (list(e.path), e.message[:160]))
 
     # The published profiles and the third-level fixture must validate.
-    for f in ("profile-interface-disclosure.rules.json", "profile-pqc-migration.rules.json"):
+    for f in ("profile-interface-enumeration.rules.json",
+              "profile-interface-disclosure.rules.json",
+              "profile-pqc-migration.rules.json"):
         check(os.path.join(M, f), profile_schema, "%s validates" % f)
     check(os.path.join(FIX, "profile-l3-settlement.rules.json"), profile_schema,
           "a third-level profile validates")

@@ -57,6 +57,7 @@ profile widens the vocabulary — so it can be accepted in part.
 | [0016](./0016-what-an-spdx-only-claim-asserts.md) | Product-level rules are not evaluable from SPDX alone, and a claim says so | 3.6 | Proposed | 2026-08-24 |
 | [0017](./0017-published-schemas.md) | The rules file and the claim have published schemas, and a schema is not a conformance checker | 3.13 | Proposed | 2026-08-24 |
 | [0018](./0018-the-demonstration-is-checked-against-the-tool.md) | The demonstration loads the published rules and is checked against the reference tool | 3.13 | Proposed | 2026-09-12 |
+| [0019](./0019-a-family-ordered-by-depth.md) | Adoption is staged by a family of profiles ordered by depth, not by a maturity field | 3.9 | Proposed | 2026-09-12 |
 
 <!-- Add a row per decision, newest at the bottom:
 | 0008 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |
@@ -64,7 +65,7 @@ profile widens the vocabulary — so it can be accepted in part.
 
 ## Why every record says Proposed
 
-All eighteen carry the status **Proposed**, and for an alpha that is the correct status rather than
+All nineteen carry the status **Proposed**, and for an alpha that is the correct status rather than
 a backlog.
 
 These records are written while building the methodology and its worked example, so that the
@@ -72,9 +73,12 @@ reasoning behind a choice survives the choice. Writing one is not a request for 
 way of making a choice arguable later, by whoever inherits it. A record says what was rejected and
 why, which is the half that is normally lost.
 
-Adoption comes per aspect, as each one stops moving, and it is not close for most of them: of the 53
-items in the open-questions register, 41 are still open and eight are settled by a record here and
-waiting on the group, and every aspect is unassigned. What *ready* means — no open question
+Adoption comes per aspect, as each one stops moving, and it is not close for most of them: of the 57
+items in the open-questions register, 45 are still open and eight are settled by a record here and
+waiting on the group, and every aspect is unassigned. Four of those open items were opened by the
+newest record rather than closed by it, which is the normal shape of a decision that adds an
+artifact: 0019 settles what shape staged adoption takes and leaves where a family is recorded, and
+whether its depths are numbered, to the group. What *ready* means — no open question
 that would change a rule, the suite covering it, no open defect in the tools touching it, and an
 owner — and how a batch runs once an aspect is ready, is set out in
 [adoption-and-readiness.md](./adoption-and-readiness.md). Nothing is currently open for adoption.

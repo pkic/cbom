@@ -410,6 +410,46 @@ expect_exit   "silence about the same absence does not"    1 "$TMP/cbom-noadmin-
 expect_output "the failure is P2" "interface-disclosure#P2" \
               "$TMP/cbom-noadmin-silent.json" "$BASE"
 
+# ------------------------------------------------- entry profile and family ---
+# The shallowest profile of the interface family. Its reason to exist is that a
+# producer who cannot yet satisfy the disclosure baseline is not producing
+# nothing, so the case that matters is cbom-fail: the document named for the
+# verdict the baseline gives it, conforming here. See decision 0019.
+echo
+echo "Entry profile and the family ladder"
+ENTRY="$M/profile-interface-enumeration.rules.json"
+expect_check_exit "entry profile is well-formed"           0 "$ENTRY"
+expect_check_exit "and under --strict"                     0 "$ENTRY" --strict
+expect_check_output "it declares no forward-looking rules" "orientation 'inventory'" "$ENTRY"
+expect_exit   "the baseline's failing document conforms here" 0 "$M/cbom-fail.cyclonedx.json" "$ENTRY"
+expect_exit   "so does the one failing on disclosure states" 0 "$M/cbom-disclosure.cyclonedx.json" "$ENTRY"
+expect_exit   "and both documents that conform to the baseline" 0 "$M/cbom-pass.cyclonedx.json" "$ENTRY"
+expect_exit   "the untargeted scanner output does not"       1 "$M/cbom-entry-fail.cyclonedx.json" "$ENTRY"
+expect_output "it fails on subject identity" "interface-enumeration#P3" \
+              "$M/cbom-entry-fail.cyclonedx.json" "$ENTRY"
+expect_output "on completeness" "interface-enumeration#P4" \
+              "$M/cbom-entry-fail.cyclonedx.json" "$ENTRY"
+expect_output "and on the two per-interface rules" "interface-enumeration#I7" \
+              "$M/cbom-entry-fail.cyclonedx.json" "$ENTRY"
+# Rule ids are local to the profile that declares them, so the same rule carries
+# the same number at both depths and is cited against a different tag. Decision
+# 0011 is what makes that legible rather than ambiguous.
+expect_output "a shared rule is cited against this profile's tag" "interface-enumeration#I1" \
+              "$M/cbom-pass.cyclonedx.json" "$ENTRY"
+expect_output "and against the baseline's from the baseline" "interface-disclosure#I1" \
+              "$M/cbom-pass.cyclonedx.json" "$BASE"
+
+# The ladder itself: the deeper profile contains the shallower one, and
+# conformance carries downwards. The baseline does not declare 'extends' on the
+# entry profile, so nothing structural enforces this yet (Q51).
+OUT="$("$PY" "$ROOT/tests/check-family.py" 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then
+  passed=$((passed + 1))
+else
+  failed=$((failed + 1))
+fi
+
 # -------------------------------------------------- profile well-formedness ---
 # The second conformance target: a profile checked against the methodology.
 # Requirements C1 to C17 are stated in the Conformance section.

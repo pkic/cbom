@@ -86,7 +86,7 @@ deleted.
 | 3.6 Writing a profile into a file format | Q16, Q17, Q18, Q48 |
 | 3.7 Agreed names for algorithms and protocols | Q19, Q20, Q21, Q38, Q39 |
 | 3.8 How a CBOM relates to an SBOM | Q22, Q40 |
-| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35, Q49 |
+| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35, Q49, Q50, Q51, Q52, Q53 |
 | 3.10 Statements about the future | Q26, Q27, Q28 |
 | 3.11 Governing a profile over time | Q29, Q41, Q42 |
 | 3.12 Fitting regulation and policy | Q43, Q44 |
@@ -1454,6 +1454,144 @@ decision.
 
 ---
 
+## Q50 — Where is a profile family recorded, if not in its profiles?
+
+**Status** open. Added 12 September 2026 with decision 0019.
+
+**The question.** A family of profiles ordered by depth is only useful if a consumer can see that
+the deeper ones exist. A profile points down the family, to the base it extends, and nothing points
+up. A consumer holding a claim of conformance to the entry profile cannot tell from the artifact
+whether that is the whole family or the first of four.
+
+**Why it matters.** The entry profile's whole purpose is to be a first step, and a first step that
+nobody can see the second of is a destination. It also affects what a buyer can write into a
+requirement: "the entry profile now, the next depth within eighteen months" requires the second one
+to be nameable.
+
+**Why not fix it in the profile.** A profile cannot list the profiles deeper than it. They do not
+exist when it is published, and adding them later means re-releasing it every time the family grows,
+which inverts the direction of extension: the base would depend on its derivatives.
+
+**Option A: the register.** Governance already describes a register of published profiles. A family
+is a fact about a set of profiles, which is what a register holds. A consumer resolves the family
+from the profile id.
+
+**Option B: a family identifier in each profile.** Each member declares `family: pkic.interface`
+and its own depth within it, without naming the others. Cheap, visible in the artifact, and it
+makes two claims comparable without a lookup — but a declared depth number is a rank, and ranks
+invite the comparison this methodology avoids (see Q53).
+
+**Option C: nothing.** The chain is discoverable by reading the profiles that extend, and a consumer
+who wants the family asks the publisher.
+
+**Where it stands.** Option A by inference, stated in the Maturity section. The register does not
+exist yet, so today the family is recorded in `tests/check-family.py` and in prose, which is honest
+and not sufficient.
+
+**What would have to change.** The register's contents, which Q42 and Q41 also bear on, or the rule
+format if Option B is taken.
+
+## Q51 — Should the disclosure baseline be re-parented to extend the entry profile?
+
+**Status** open. Added 12 September 2026 with decision 0019.
+
+**The question.** The entry profile and the Interface Disclosure Baseline are siblings: the baseline
+was published first and declares no `extends`. The ladder between them is therefore an assertion
+checked by a test rather than a structural fact enforced by the validator.
+
+**Why it matters.** Monotonic extension is the mechanism that guarantees conformance at a depth
+carries conformance below it. Where it is declared, the validator refuses a relaxing profile before
+evaluating any document. Where it is not, nothing stops the two drifting except a test this project
+wrote itself, which is the weaker of the two arrangements.
+
+**What it costs.** Seven rules would move to the entry profile and be inherited: P1, P3, P4, I1, I2,
+I7 and I8. Under decision 0011 a rule id belongs to the profile that declares it, so every report
+would cite them as `interface-enumeration#I1` rather than `interface-disclosure#I1`. That changes
+every citation of those seven ids in the documentation, in the test suite, and in any report or
+claim already issued. It is also a tightening of nothing and a relaxation of nothing: no document's
+verdict changes.
+
+**Option A: re-parent.** The baseline declares `extends` on the entry profile at a pinned version,
+drops the seven rules, and bumps its version. The ladder becomes structural and most of
+`tests/check-family.py` is deleted rather than kept in parallel.
+
+**Option B: leave them as siblings** and keep the check. The citations stay where they are, and the
+cost is a test that has to be maintained and a property that holds by assertion.
+
+**Option C: re-parent and keep the ids** by having the entry profile declare its rules under
+different numbers, so the baseline's citations are unaffected. This trades citation churn for two
+numbers for one rule, which decision 0011 exists to avoid.
+
+**Where it stands.** Option B, as the state that exists. The choice is the group's because it is
+about published identifiers, not about drafting.
+
+**What would have to change.** The baseline's version and rule set, the entry profile's status as a
+base, every citation of the seven ids, and the family check.
+
+## Q52 — Should a rules file distinguish a deferral from a permanent exclusion?
+
+**Status** open. Added 12 September 2026 with decision 0019.
+
+**The question.** A profile records what it deliberately leaves out in one `exclusions` list. Two
+quite different statements go in it: that something is excluded on principle at every depth of every
+profile — key material, derived judgements — and that something is simply not asked at this depth and
+is required by the profile above.
+
+**Why it matters.** To a consumer these mean opposite things. A permanent exclusion says do not
+expect this from anyone. A deferral says expect this from the next depth, and ask for it if you need
+it now. A tool reading the file cannot tell them apart, so neither can anything built on one.
+The entry profile marks each of its own in prose, which a reader can follow and a checker cannot.
+
+**Option A: a `kind` on each exclusion**, one of `permanent` or `deferred`, with a deferred entry
+naming nothing about where it is satisfied — because a profile cannot name its descendants (Q50).
+C8 would check the field is present and valid. Both existing profiles would need their exclusions
+classified.
+
+**Option B: leave it.** The distinction is a reading matter, and every exclusion already carries a
+reason that says which it is in words.
+
+**Option C: separate lists**, `exclusions` and `deferrals`, which is clearer to read and changes the
+published schema more than Option A.
+
+**Where it stands.** Option B, with the distinction made in the reasons and in the Maturity section.
+
+**What would have to change.** The rule format and schema, C8, and the exclusions of all three
+published profiles.
+
+## Q53 — Are the depths of a family numbered, and may a consortium profile be an entry depth?
+
+**Status** open. Added 12 September 2026 with decision 0019.
+
+**The question.** Two questions that have to be answered together, because the answer to one makes
+the other easier or harder. Are a family's depths given numbers, and may a profile published under a
+PKI Consortium name be a deliberately shallow one?
+
+**Why it matters.** A number is what a buyer can put in a contract and what a supplier can put on a
+datasheet, which is most of why staged adoption works at all. A number is also a rank, and a rank
+invites the comparison the methodology avoids elsewhere: two families numbered independently would
+put unlike things at "level 2", and a branch would be mistaken for a rung. Meanwhile a shallow
+profile published under a consortium name may be read as the consortium's view of what is
+sufficient, which is the risk in publishing an entry depth at all — and not publishing one leaves
+each buyer to write its own, which loses comparability.
+
+**Option A: names, not numbers.** A depth is identified by the profile's own id and version, which
+a claim already carries. Nothing is comparable across families, which is accurate.
+
+**Option B: numbers within a named family.** `pkic.interface` depth 1 and depth 2, with the family
+name mandatory so that a number never appears alone.
+
+**Option C: no consortium entry profile.** The consortium publishes the full baseline only, and
+sector bodies publish their own shallower profiles.
+
+**Where it stands.** Option A, by default, since profiles are named and versioned and no numbering
+has been introduced. The entry profile is published as an example, like everything else in
+`docs/methodology/`, which defers rather than answers the second half.
+
+**What would have to change.** Q03, on who may publish under a consortium name, and the register's
+naming rules.
+
+---
+
 # 3.10 Statements about the future
 
 Tracked as issue #10.
@@ -1851,7 +1989,7 @@ and possibly the topic list.
 **Status** open
 
 **The question.** Members have been told that three sections are reviewed every two weeks and
-that an initial document appears in August. There are eighteen sections.
+that an initial document appears in August. There are nineteen sections.
 
 **Why it has no topic.** Project scoping.
 
@@ -1910,3 +2048,4 @@ not depend on a second example.
 | Improvement plan | Q01, Q16, Q19, N01, N03, N04 |
 | Decision index | Q07 |
 | Validator source, where the limitation was recorded as a comment | Q49 |
+| Maturity section, drafted from a member's request for a reachable first profile | Q50, Q51, Q52, Q53 |

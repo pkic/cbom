@@ -38,6 +38,7 @@
     - { id: model,        title: Model,             url: model.html }
     - { id: profile,      title: Profile,           url: profile.html }
     - { id: conformance,  title: Conformance,       url: conformance.html }
+    - { id: maturity,     title: Maturity,          url: maturity.html }
     - { id: policyeval,   title: Policy Evaluation, url: policy-evaluation.html }
 
 - group: Applying it
