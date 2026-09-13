@@ -148,7 +148,24 @@ meetings:
     time: "18:00"
     timezone: Europe/Zurich
     duration: 60
-    title: Working group meeting
+    title: Collaboration, external presentations and critical infrastructure
+    agenda:
+      - "Collaboration structure — contribution paths for members who do not use GitHub, surveys for open questions and decisions, and a portal for decisions and deliverables"
+      - "A series of external presentations from standards bodies, industry and critical-infrastructure practitioners — format and scheduling"
+      - Critical infrastructure and OT as a priority use case, and a subgroup to develop its sector profile
+      - "Methodology update — restructured chapters, Related Work and maturity alignment, the critical-infrastructure use case, and a move to distributed review"
+      - "BOM standards — CycloneDX version 2 and cryptography support in SPDX"
+      - "How CBOM relates to SBOM, HBOM, QBOM, AI BOM and XBOM, including the multinational 2026 SBOM minimum elements"
+      - Evidence of successful PQC migrations, and NIST's collection of migration use cases
+      - Where new members should start, and what is public
+    summary: >-
+      The group needs contribution paths that do not depend on GitHub, and will check which
+      PKIC mechanisms are available before choosing between surveys, a portal or existing
+      infrastructure; this methodology update is expected to be the last one collected and
+      incorporated centrally. External presentations will run as a series, about two per
+      session over several dates, with decks published in advance where presenters agree.
+      Critical infrastructure and OT is a priority use case, and a subgroup is forming to
+      develop its sector profile.
 
   - number: 3
     date: 2026-08-26
