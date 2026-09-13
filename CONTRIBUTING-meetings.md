@@ -58,6 +58,10 @@ checker catches this, but quoting it is easier.
 If a meeting was deliberately not recorded, set `no_recording: true`. The page then says
 "Not recorded" instead of "Recording to follow", which otherwise implies one is still coming.
 
+If the recording is for PKI Consortium members only, set `recording_members_only: true` and do
+**not** add `recording:`. This site is public, so a members-only link must not appear on it. The
+page then says "Recording for members", and members find it where it was shared with them.
+
 ## Adding a presentation
 
 An entry needs **exactly one** of `file:` or `url:`.
@@ -107,6 +111,7 @@ never line-ending-normalised.
 | `join` | no | Upcoming only. Remove it afterwards. |
 | `recording` | no | Past only. |
 | `no_recording` | no | `true` when the meeting was deliberately not recorded. |
+| `recording_members_only` | no | `true` when a recording exists but is for members only. Never combine with `recording`. |
 | `minutes` | no | Link to minutes or notes. |
 | `summary` | no | One to three sentences on what was settled. |
 | `example` | no | `true` marks a placeholder. Renders a badge; delete once real meetings exist. |

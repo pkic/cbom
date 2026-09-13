@@ -19,6 +19,8 @@
 #   recording  (optional) link to the recording. Past meetings; omit if none was made.
 #   no_recording (optional) true if the meeting was deliberately not recorded, so the
 #              page says so rather than implying one is still coming.
+#   recording_members_only (optional) true if a recording exists but is for PKI Consortium
+#              members only. Do not add its link: this site is public.
 #   minutes    (optional) link to the minutes or notes.
 #   summary    (optional) one to three sentences on what was settled. Past meetings.
 #   example    (optional) true marks a placeholder entry. Renders a visible badge and
@@ -171,17 +173,26 @@ meetings:
     time: "18:00"
     timezone: Europe/Zurich
     duration: 60
-    title: Decision records and the open questions register
+    title: Standards evolution, use cases and governance
+    recording_members_only: true
     agenda:
-      - Welcome, apologies, and approval of the previous minutes
-      - "Decision records 0001 to 0007, drafted from the worked example and marked Proposed"
-      - The open questions register, and how its questions map to the group's thirteen topics
-      - "Working notes — the resolution plan for August member feedback, and the design note on data and harvest-now-decrypt-later"
-      - Any other business
+      - Welcome, and introductions from new participants
+      - "CBOM standards evolution — CycloneDX 2.0, cryptography support in SPDX, and industry work with ANSI X9 and PQFF"
+      - Aligning profiles with use cases, and a registry of industry organisations working on CBOM
+      - "Governance, policy and tooling — rule enforcement and exceptions, signing rules files, composite CBOMs, and verification tooling"
+      - "Use cases from energy, financial services and autonomous vehicles, and an empirical study of diversity between CBOMs"
+      - "Methodology and documentation — chapter structure, tracking suggestions as GitHub issues, and a prototype profile-selection tool"
+      - How CBOMs relate to SBOMs, AI BOMs and inventory
+      - The CBOM life cycle, and anchoring profiles in a defined purpose
+      - Open forum for questions
     summary: >-
-      Follow-up work was merged on 24 August as "updates after mid August workgroups"
-      (pull request 38): an Introduction for first-time readers, decisions 0008 to 0013,
-      and a revised Interface Disclosure Baseline.
+      The group's role is to orchestrate requirements at the business level and map them to
+      existing standards rather than create new ones, with profiles anchored in defined use
+      cases. Suggestions from meetings will be tracked as GitHub issues, a registry of industry
+      organisations working on CBOM will be started, and members will contribute use cases from
+      energy, financial services and autonomous vehicles, including a grid operator's PKI
+      migration as a test case for the methodology. A prototype profile-selection tool and a
+      demonstration of an authenticity layer were proposed for future meetings.
 
   - number: 1
     date: 2026-08-12

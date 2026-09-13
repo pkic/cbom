@@ -100,13 +100,19 @@ for m in meetings:
             note("%s is upcoming and has no agenda yet" % label)
         if m.get("recording"):
             bad(label, "is in the future but carries a recording link")
+        if m.get("recording_members_only"):
+            bad(label, "is in the future but is marked recording_members_only")
     else:
         if m.get("join"):
             note("%s is past but still carries a join link — remove it" % label)
-        if not m.get("recording") and not m.get("no_recording"):
+        if not (m.get("recording") or m.get("no_recording") or m.get("recording_members_only")):
             note("%s is past with no recording; the page says 'Recording to follow'" % label)
         if m.get("recording") and m.get("no_recording"):
             bad(label, "has both a recording and no_recording: true")
+        if m.get("recording_members_only") and m.get("recording"):
+            bad(label, "is marked recording_members_only but carries a public recording link")
+        if m.get("recording_members_only") and m.get("no_recording"):
+            bad(label, "has both recording_members_only and no_recording: true")
 
     if m.get("example"):
         note("%s is a placeholder (example: true)" % label)

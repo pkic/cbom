@@ -98,6 +98,7 @@ lede: When the working group meets, what it plans to settle, and what it settled
       <span class="meeting-no">#{{ m.number }}</span>
       <time class="meeting-date" datetime="{{ md }}">{{ m.date | date: "%-d %B %Y" }}</time>
       {% if m.recording %}<span class="badge badge-recording">Recording</span>
+      {% elsif m.recording_members_only %}<span class="badge badge-recording" title="Shared with PKI Consortium members, not published here">Recording for members</span>
       {% elsif m.no_recording %}<span class="badge badge-norecording">Not recorded</span>
       {% else %}<span class="badge badge-pending">Recording to follow</span>{% endif %}
       {% if m.example %}<span class="badge badge-example" title="Placeholder entry — replace or delete">example</span>{% endif %}
