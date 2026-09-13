@@ -29,31 +29,109 @@
 # names its meeting with `meeting: <number>`, and both pages link to each other.
 
 meta:
-  updated: 2026-09-12
-  timezone: UTC
+  updated: 2026-09-13
+  timezone: Europe/Zurich
   # Shown above the list so a newcomer knows when to turn up. Free text.
-  cadence: Check the working group page for the current schedule.
+  cadence: >-
+    The working group meets every Wednesday, alternating between 09:00 and 18:00
+    Zurich time.
 
 meetings:
 
   # ----------------------------------------------------------------- upcoming
   - number: 2
-    date: 2026-10-14
-    time: "15:00"
-    timezone: UTC
+    date: 2026-09-16
+    time: "18:00"
+    timezone: Europe/Zurich
     duration: 60
-    title: Example — an upcoming meeting
-    example: true
+    title: Depth, confidentiality and vulnerabilities
     join: https://pkic.org/wg/cbom/
     agenda:
       - Welcome, apologies, and approval of the previous minutes
-      - "Q19 — does the specs category in the reference register stay?"
-      - "Q20 — whose names for algorithms should a CBOM use?"
-      - Review of the expanded reference register
+      - "Decision 0018 — the demonstration page is checked against the reference validator (settles Q30)"
+      - "Decision 0019 — staging adoption with a family of profiles ordered by depth, and the new entry profile"
+      - "Decision 0020 — a CBOM is joined to vulnerability statements, not merged with them"
+      - Review of the new Maturity, Confidentiality and Vulnerabilities sections, and the separate Use Cases section
+      - "Q51 — should the disclosure baseline be re-parented to extend the entry profile?"
+      - "Q55 — should 'coverage: partial' separate ignorance from policy?"
+      - "Q57 — must a vulnerability-response profile forbid withholding the implementing library?"
+      - "Remaining new questions, for triage — Q50, Q52–Q54, Q56, Q58–Q60"
+      - "Reference register — 17 new entries including OMB M-26-15, nine flagged for verification, and Q19"
+      - Meetings and presentations pages — who maintains them, and replacing the placeholder entries
+      - Merge plan for the open branches, and which use case to develop next (N04)
       - Any other business
-    summary: >-
-      This is a placeholder so the page renders and the shape of an entry is visible.
-      Replace it with a real meeting, or delete it.
+
+  - number: 3
+    date: 2026-09-23
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 4
+    date: 2026-09-30
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 5
+    date: 2026-10-07
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 6
+    date: 2026-10-14
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 7
+    date: 2026-10-21
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 8
+    date: 2026-10-28
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 9
+    date: 2026-11-04
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 10
+    date: 2026-11-11
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 11
+    date: 2026-11-18
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
 
   # --------------------------------------------------------------------- past
   - number: 1
