@@ -46,7 +46,8 @@ jobs:
         run: bash tests/run-profile-tests.sh
 
       - name: Check the site data files
-        # Meetings and presentations: a download link to a file that is not
-        # committed, or a presentation attached to a meeting that does not
-        # exist, builds cleanly under Jekyll and is only visible to a visitor.
+        # Meetings, presentations and tooling: a download link to a file that is
+        # not committed, a presentation attached to a meeting that does not
+        # exist, or a tool value with no display label builds cleanly under
+        # Jekyll and is only visible to a visitor.
         run: python tests/check-site-data.py

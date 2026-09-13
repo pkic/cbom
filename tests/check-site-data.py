@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Integrity checks for the site data files that carry meetings and presentations.
+"""Integrity checks for the site data files: meetings, presentations and tooling.
 
 Jekyll will happily build a page with a download link to a file that is not
 there, a presentation attached to a meeting that does not exist, or a deck with
@@ -21,6 +21,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "docs", "_data")
 DECKS = os.path.join(ROOT, "docs", "assets", "presentations")
+CONFIG = os.path.join(ROOT, "docs", "_config.yml")
 
 passed = 0
 failures = []
@@ -63,7 +64,7 @@ except ImportError:
     sys.exit(0)
 
 
-print("Site data: meetings and presentations")
+print("Site data: meetings, presentations and tooling")
 
 meetings_doc = load("meetings.yml")
 decks_doc = load("presentations.yml")
@@ -180,6 +181,77 @@ if os.path.isdir(DECKS):
         note("in docs/assets/presentations/ but listed by no entry: %s" % ", ".join(orphans))
     else:
         ok("every committed deck is listed")
+
+# ----------------------------------------------------------------- tooling ---
+
+with open(CONFIG, encoding="utf-8") as fh:
+    labels = (yaml.safe_load(fh) or {}).get("labels") or {}
+tools = (load("tooling.yml") or {}).get("tools") or []
+today = datetime.date.today()
+
+tool_ids = [t.get("id") for t in tools]
+if len(tool_ids) == len(set(tool_ids)) and all(
+        isinstance(i, str) and re.match(r"^[a-z0-9]+(-[a-z0-9]+)*$", i) for i in tool_ids):
+    ok("tool ids are unique lowercase slugs")
+else:
+    bad("tool ids are unique lowercase slugs", "found %r" % (tool_ids,))
+
+names = [str(t.get("name", "")).strip().lower() for t in tools]
+dupes = sorted(set(n for n in names if n and names.count(n) > 1))
+if dupes:
+    bad("tool names are unique", "listed more than once: %s" % ", ".join(dupes))
+else:
+    ok("tool names are unique")
+
+
+def in_vocab(label, t, field, vocab, many):
+    known = labels.get(vocab) or {}
+    values = t.get(field)
+    if values is None or (many and not isinstance(values, list)):
+        return                        # absence, or a non-list already reported above
+    for v in (values if many else [values]):
+        if v not in known:
+            bad(label, "%s: %r has no label under labels.%s in docs/_config.yml" % (field, v, vocab))
+
+
+for t in tools:
+    label = "tool %s" % t.get("id", "(no id)")
+    missing = [k for k in ("id", "name", "maintainer", "url", "licensing", "functions",
+                           "status", "evidence", "checked") if not t.get(k)]
+    if missing:
+        bad(label, "missing required field(s): %s" % ", ".join(missing))
+
+    for many in ("functions", "methods", "formats", "tags"):
+        if many in t and not isinstance(t[many], list):
+            bad(label, "%s must be a list" % many)
+
+    in_vocab(label, t, "functions", "tool_function", True)
+    in_vocab(label, t, "methods", "tool_method", True)
+    in_vocab(label, t, "licensing", "tool_licensing", False)
+    in_vocab(label, t, "status", "tool_status", False)
+
+    if t.get("methods") and "generate" not in (t.get("functions") or []):
+        bad(label, "has methods: but its functions do not include generate")
+
+    for link in ("url", "evidence"):
+        if t.get(link) and not re.match(r"^https?://", str(t[link])):
+            bad(label, "%s %r is not an http(s) URL" % (link, t[link]))
+
+    checked = t.get("checked")
+    if checked is not None and not isinstance(checked, datetime.date):
+        bad(label, "checked %r is not a YYYY-MM-DD date" % checked)
+    elif isinstance(checked, datetime.date):
+        if checked > today:
+            bad(label, "checked %s is in the future" % checked)
+        elif (today - checked).days > 365:
+            note("%s was last checked %s, over a year ago" % (label, checked))
+
+    if t.get("licensing") == "open-source" and not t.get("license"):
+        note("%s is open source but names no license" % label)
+    if t.get("verify"):
+        note("%s is flagged verify: true" % label)
+
+ok("%d tool entr%s checked" % (len(tools), "y" if len(tools) == 1 else "ies"))
 
 # ----------------------------------------------------------------- report ----
 

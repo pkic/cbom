@@ -34,6 +34,13 @@ none of them requires editing files or using a command line.
        working-group mailing list — no GitHub account needed.</p>
     <a class="card-cta" href="#suggest-a-reference">How to suggest one &#8595;</a>
   </div>
+  <div class="feature-card">
+    <span class="card-kicker">By email</span>
+    <h3>Suggest a tool</h3>
+    <p>Know software that produces, reads or checks CBOMs? Send a link to where its maintainer
+       says so, and it can be added to the tooling registry.</p>
+    <a class="card-cta" href="#suggest-a-tool">How to suggest one &#8595;</a>
+  </div>
 </div>
 
 ## Discuss the methodology
@@ -86,6 +93,32 @@ To make the suggestion easy to add, please include:
   for you.
 </p>
 
+## Suggest a tool
+
+The [tooling registry]({{ '/tooling/' | relative_url }}) lists software that works with CBOMs. As
+with references, **you don't edit it directly**: send the details to the mailing list and a
+maintainer will add it. Suggestions for your own organisation's tools are welcome, and are held to
+the same rule as any other.
+
+<div class="callout">
+  <strong>Email:</strong> <a href="mailto:cbom@lists.pkic.org?subject=CBOM%20tool%20suggestion&amp;body=Tool%20name%3A%0AMaintainer%3A%0ALink%20to%20the%20repository%20or%20product%20page%3A%0ALink%20to%20where%20the%20maintainer%20states%20CBOM%20support%3A%0AWhat%20it%20does%20with%20a%20CBOM%20(generate%2C%20consume%2C%20validate%2C%20convert%2C%20analyse)%3A%0AFormats%20and%20versions%3A%0AOpen%20source%20or%20commercial%3A%0A">cbom@lists.pkic.org</a>
+  <span class="muted"> — subject line “CBOM tool suggestion”.</span>
+</div>
+
+Please include:
+
+- The tool's **name** and **maintainer**
+- A link to its **repository or product page**
+- A link to **where the maintainer states CBOM support** — this is what gets a tool listed. A press
+  release or a third-party article is a good lead, but the statement has to come from the
+  maintainer's own material
+- **What it does with a CBOM** — generate, consume, validate, convert or analyse — and the
+  **formats and versions** it names
+- Whether it is **open source** (and under which licence) or **commercial**
+
+A listing is not an endorsement and is not a conformance result: the working group does not test
+the tools it lists.
+
 ## Come to a meeting
 
 The [Meetings]({{ '/meetings/' | relative_url }}) page lists what is coming up and what the group
@@ -117,4 +150,7 @@ line.
   <a href="{{ site.repo.url }}/blob/main/docs/_data/meetings.yml"><code>docs/_data/meetings.yml</code></a> and
   <a href="{{ site.repo.url }}/blob/main/docs/_data/presentations.yml"><code>docs/_data/presentations.yml</code></a>,
   under <a href="{{ site.repo.url }}/blob/main/CONTRIBUTING-meetings.md">CONTRIBUTING-meetings.md</a>.
+  The tooling registry is
+  <a href="{{ site.repo.url }}/blob/main/docs/_data/tooling.yml"><code>docs/_data/tooling.yml</code></a>,
+  under <a href="{{ site.repo.url }}/blob/main/CONTRIBUTING-tooling.md">CONTRIBUTING-tooling.md</a>.
 </p>

@@ -46,6 +46,33 @@ labels:
     japan: Japan
     canada: Canada
     asean: ASEAN
+  # Tooling registry. Order here is the order of the filter chips and of the groups.
+  tool_function:
+    generate: Generates
+    consume: Consumes
+    validate: Validates
+    convert: Converts
+    analyse: Analyses
+    visualise: Visualises
+    store: Stores and manages
+  tool_method:
+    source-code: Source code
+    binary: Binaries
+    container: Container images
+    filesystem: Filesystems
+    network: Network traffic
+    runtime: Running systems
+    configuration: Configuration
+    cloud: Cloud services
+    keystore: Certificates and keystores
+  tool_licensing:
+    open-source: Open source
+    freemium: Free tier
+    commercial: Commercial
+  tool_status:
+    active: Active
+    unknown: Status unknown
+    archived: Archived
 
 exclude:
   - README.md
