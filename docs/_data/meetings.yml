@@ -39,7 +39,7 @@ meta:
 meetings:
 
   # ----------------------------------------------------------------- upcoming
-  - number: 2
+  - number: 6
     date: 2026-09-16
     time: "18:00"
     timezone: Europe/Zurich
@@ -61,7 +61,7 @@ meetings:
       - Merge plan for the open branches, and which use case to develop next (N04)
       - Any other business
 
-  - number: 3
+  - number: 7
     date: 2026-09-23
     time: "09:00"
     timezone: Europe/Zurich
@@ -69,7 +69,7 @@ meetings:
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
 
-  - number: 4
+  - number: 8
     date: 2026-09-30
     time: "18:00"
     timezone: Europe/Zurich
@@ -77,7 +77,7 @@ meetings:
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
 
-  - number: 5
+  - number: 9
     date: 2026-10-07
     time: "09:00"
     timezone: Europe/Zurich
@@ -85,7 +85,7 @@ meetings:
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
 
-  - number: 6
+  - number: 10
     date: 2026-10-14
     time: "18:00"
     timezone: Europe/Zurich
@@ -93,7 +93,7 @@ meetings:
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
 
-  - number: 7
+  - number: 11
     date: 2026-10-21
     time: "09:00"
     timezone: Europe/Zurich
@@ -101,7 +101,7 @@ meetings:
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
 
-  - number: 8
+  - number: 12
     date: 2026-10-28
     time: "18:00"
     timezone: Europe/Zurich
@@ -109,7 +109,7 @@ meetings:
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
 
-  - number: 9
+  - number: 13
     date: 2026-11-04
     time: "09:00"
     timezone: Europe/Zurich
@@ -117,7 +117,7 @@ meetings:
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
 
-  - number: 10
+  - number: 14
     date: 2026-11-11
     time: "18:00"
     timezone: Europe/Zurich
@@ -125,7 +125,7 @@ meetings:
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
 
-  - number: 11
+  - number: 15
     date: 2026-11-18
     time: "09:00"
     timezone: Europe/Zurich
@@ -134,18 +134,70 @@ meetings:
     join: https://pkic.org/wg/cbom/
 
   # --------------------------------------------------------------------- past
-  - number: 1
-    date: 2026-08-19
-    time: "15:00"
-    timezone: UTC
+  - number: 5
+    date: 2026-09-09
+    time: "09:00"
+    timezone: Europe/Zurich
     duration: 60
-    title: Example — a past meeting
-    example: true
-    recording: https://pkic.org/wg/cbom/
-    minutes: https://github.com/pkic/cbom/discussions
+    title: Working group meeting
+
+  - number: 4
+    date: 2026-09-02
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+
+  - number: 3
+    date: 2026-08-26
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Profile scope, cryptographic purposes and conformance claims
     agenda:
-      - Scope of the methodology onramp
-      - Conformance claims as checkable artifacts
+      - Welcome, apologies, and approval of the previous minutes
+      - An Introduction for first-time readers, and a new reading order for the methodology
+      - "Member submissions on a structured profile preamble — decisions 0008 (profile scope) and 0009 (orientation)"
+      - "Financial-sector feedback on systems shared by several parties — Q46 and Q47"
+      - "Decision 0010 — capability stated per cryptographic purpose (settles Q27)"
+      - "Revised Interface Disclosure Baseline — decisions 0011 (rule numbering) and 0012"
+      - "Decisions 0013 and 0014 — monotonicity for constraints, and tightening one member of an inherited group (Q49)"
+      - "Conformance claims as checkable artifacts — decisions 0015 to 0017"
+      - How adoption will work, and what makes an aspect ready for it
+      - Any other business
+
+  - number: 2
+    date: 2026-08-19
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Decision records and the open questions register
+    agenda:
+      - Welcome, apologies, and approval of the previous minutes
+      - "Decision records 0001 to 0007, drafted from the worked example and marked Proposed"
+      - The open questions register, and how its questions map to the group's thirteen topics
+      - "Working notes — the resolution plan for August member feedback, and the design note on data and harvest-now-decrypt-later"
+      - Any other business
     summary: >-
-      This is a placeholder so the past-meeting layout renders, including the recording
-      and minutes links. Replace it with a real meeting, or delete it.
+      Follow-up work was merged on 24 August as "updates after mid August workgroups"
+      (pull request 38): an Introduction for first-time readers, decisions 0008 to 0013,
+      and a revised Interface Disclosure Baseline.
+
+  - number: 1
+    date: 2026-08-12
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Member feedback on the August proposal
+    agenda:
+      - Welcome and apologies
+      - "Five items of member feedback — harvest-now-decrypt-later, asset identity across tools, the PQC Maturity Model, end-to-end deployment posture, and long-term governance"
+      - The open questions register, compiled 7 August
+      - New Method and Terms sections, and profile composition
+      - "New Conformance section — three conformance targets, requirements C1 to C10 and T1 to T7"
+      - Profile tests running in CI, and the baseline aligned with the migration profile
+      - Any other business
+    summary: >-
+      The update committed after the meeting added the Data Exposure and Related Work
+      sections and a challenge on identifying the same asset across tools, and extended
+      Inventory on correlating records and Governance on the stewardship of profiles.

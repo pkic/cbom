@@ -34,7 +34,7 @@
 #              is reported by tests/check-site-data.py.
 
 meta:
-  updated: 2026-09-12
+  updated: 2026-09-13
 
 presentations:
 
@@ -43,7 +43,6 @@ presentations:
     date: 2026-08-19
     presenter: A. Presenter
     org: PKI Consortium
-    meeting: 1
     url: https://pkic.org/wg/cbom/
     format: PDF
     example: true
