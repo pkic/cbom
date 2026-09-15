@@ -37,7 +37,7 @@
   "overrides": [
     {
       "id": "pqc-migration#G1",
-      "coverage": "in-scope"
+      "keyCoverage": "in-scope"
     }
   ],
   "interfaceRules": []

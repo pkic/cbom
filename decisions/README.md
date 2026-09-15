@@ -59,6 +59,7 @@ profile widens the vocabulary — so it can be accepted in part.
 | [0018](./0018-the-demonstration-is-checked-against-the-tool.md) | The demonstration loads the published rules and is checked against the reference tool | 3.13 | Proposed | 2026-09-12 |
 | [0019](./0019-a-family-ordered-by-depth.md) | Adoption is staged by a family of profiles ordered by depth, not by a maturity field | 3.9 | Proposed | 2026-09-12 |
 | [0020](./0020-cbom-joined-to-vulnerability-statements.md) | A CBOM is joined to vulnerability statements, not merged with them | 3.3 | Proposed | 2026-09-12 |
+| [0021](./0021-one-word-one-meaning.md) | A word means one thing: keyCoverage, and revision states | 3.7 | Proposed | 2026-09-15 |
 
 <!-- Add a row per decision, newest at the bottom:
 | 0008 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |
@@ -66,7 +67,7 @@ profile widens the vocabulary — so it can be accepted in part.
 
 ## Why every record says Proposed
 
-All twenty carry the status **Proposed**, and for an alpha that is the correct status rather than
+All twenty-one carry the status **Proposed**, and for an alpha that is the correct status rather than
 a backlog.
 
 These records are written while building the methodology and its worked example, so that the

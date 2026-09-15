@@ -36,6 +36,7 @@
 - group: Concepts
   items:
     - { id: model,        title: Model,             url: model.html }
+    - { id: objects,      title: Objects,           url: objects.html }
     - { id: profile,      title: Profile,           url: profile.html }
     - { id: conformance,  title: Conformance,       url: conformance.html }
     - { id: maturity,     title: Maturity,          url: maturity.html }

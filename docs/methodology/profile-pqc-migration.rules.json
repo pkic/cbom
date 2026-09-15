@@ -208,7 +208,7 @@
       "group": "capabilityByPurpose",
       "keyedBy": "purpose",
       "keyVocabularyRef": "cryptographicPurposeVocabulary",
-      "coverage": "all-purposes",
+      "keyCoverage": "all-purposes",
       "level": "MUST",
       "description": "Every cryptographic purpose has an entry stating its capability status",
       "note": "Coverage is the whole vocabulary and not only the purposes this profile takes in scope. In-scope purposes owe the full attribute set; the rest owe a status and, where the status is not 'available', a blocker. That is close to the cheapest obligation a profile can impose, and it is what stops a staged profile becoming a permanent floor: a supplier cannot conform while behaving as though authentication does not exist, and a buyer sees the long-lead blockers in the first document rather than the third.",

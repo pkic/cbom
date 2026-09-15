@@ -88,7 +88,7 @@ deleted.
 | 3.8 How a CBOM relates to an SBOM | Q22, Q40 |
 | 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35, Q49, Q50, Q51, Q52, Q53 |
 | 3.10 Statements about the future | Q26, Q27, Q28 |
-| 3.11 Governing a profile over time | Q29, Q41, Q42 |
+| 3.11 Governing a profile over time | Q29, Q41, Q42, Q61 |
 | 3.12 Fitting regulation and policy | Q43, Q44 |
 | 3.13 Examples and tooling | Q30 |
 | No matching topic | N01, N02, N03, N04 |
@@ -936,7 +936,9 @@ the Governance section's treatment of signing.
 
 **The question.** The baseline recently became stricter. A document that passed under the old
 version fails under the new one. Nothing says how long a supplier has before a buyer may start
-rejecting documents.
+rejecting documents. Q61 asks the prior question: whether the supplier is told at
+all. A duration cannot be settled without it, since a clock nobody knows has started is not a grace
+period.
 
 **Why it matters.** This is the transition-period question that appears in every regulation, and
 getting it wrong in either direction causes real disruption. Too short, and conforming suppliers
@@ -2297,6 +2299,39 @@ questions have settled. A second example built on unsettled foundations would ne
 against naming specific products gives a mechanical argument for product independence that does
 not depend on a second example.
 
+## Q61 — When a profile is tightened, does anyone have to be told?
+
+**Status** open. Added 15 September 2026, from the Governance rework.
+
+**The question.** Revising a published profile changes whether already-published CBOMs conform to
+it. Q15 asks how long a supplier has to catch up. Nothing asks whether the supplier finds out, or
+from whom.
+
+**Why it matters.** A grace period nobody knows has started is not a grace period. A producer's
+documents can stop conforming while the producer is doing nothing wrong and reading nothing that
+would say so, and the first signal is a buyer rejecting a submission. Notification is also what
+separates a tightening from an ambush in procurement terms, and a profile authority that cannot be
+reached has effectively frozen its own profile, since nobody can rely on it changing predictably.
+
+**Option A: publication is notification.** The versioned profile is published and the archive
+obligation makes the change inspectable; suppliers are expected to watch (trade-off: nobody watches,
+and the burden falls on the party least able to carry it. It also rewards a profile authority for
+being quiet).
+
+**Option B: the profile authority maintains a notification channel** and announces tightenings to
+registered conformance claimants (trade-off: requires a register of who has claimed conformance,
+which nothing currently keeps, and which has its own confidentiality problems).
+
+**Option C: the obligation falls on the consumer invoking the newer version.** A buyer insisting on
+a tightened profile must give notice before rejecting on that basis (trade-off: puts the duty where
+the commercial power is, and gives the same supplier a different date from every buyer).
+
+**Where it stands.** Nothing. The power is now named in Governance under revision states; the
+obligation that should accompany it is not.
+
+**What would have to change.** The Governance section, and Q15, which cannot be answered
+independently of this one.
+
 ---
 
 # Where each item came from
@@ -2307,7 +2342,7 @@ not depend on a second example.
 | Profile section and its rule files | Q02, Q03, Q04, Q11, Q12, Q15, Q17, Q23, Q24, Q33, Q34, Q35 |
 | Model section | Q08, Q09, Q46, Q47, N02 |
 | Formats section | Q20, Q21, Q48 |
-| Governance section | Q14, Q22, Q29 |
+| Governance section | Q14, Q22, Q29, Q61 |
 | Challenges section | Q18 |
 | Demo section | Q30 |
 | Conformance section | Q13, Q31, Q32 |
