@@ -1,11 +1,13 @@
 # tests/
 
-Automated checks for the methodology's example profiles, CBOMs and validator.
+Automated checks for the methodology's example profiles, CBOMs and validator,
+and for the data files that drive the site's generated pages.
 
 ## Running them
 
 ```bash
-bash tests/run-profile-tests.sh
+bash tests/run-profile-tests.sh    # profiles, CBOMs, validator
+python3 tests/check-site-data.py   # meetings and presentations data
 ```
 
 Python 3 is the only requirement for most of the suite. One check needs more:
@@ -18,9 +20,36 @@ which installs it. Set `PYTHON` to use a specific interpreter:
 PYTHON=python3.12 bash tests/run-profile-tests.sh
 ```
 
-Exit status is 0 when every test passes. CI runs the same script on any change
-under `docs/methodology/`, so a broken example fails visibly rather than sitting
-on the published site.
+Exit status is 0 when every test passes. CI runs both on any change under
+`docs/methodology/`, `docs/_data/` or `tests/`, so a broken example or a broken
+download link fails visibly rather than sitting on the published site.
+
+## Site data
+
+`check-site-data.py` covers `docs/_data/meetings.yml`,
+`docs/_data/presentations.yml` and `docs/_data/tooling.yml`. Jekyll builds all of
+the following without complaint, and each is visible to a visitor:
+
+| Check | Why it matters |
+|---|---|
+| A presentation has exactly one of `file:` and `url:` | Neither means there is nothing to download; both means the page silently prefers one. |
+| A `file:` is actually committed under `docs/assets/presentations/` | Otherwise the download button 404s. |
+| A presentation's `meeting:` matches a real meeting number | Otherwise the cross-link between the two pages goes nowhere. |
+| Meeting numbers and presentation ids are unique | Both are linked to from the other page. |
+| `date` parsed as a date, `time` as `"HH:MM"` | Unquoted, YAML reads `15:00` as the number 900. |
+| No presentation uses `size:` | `size` is a reserved Liquid property; on an entry lacking the key it renders the field count. |
+| A future meeting carries no recording, a past one no join link | Cheap signs the entry was not updated after the meeting. |
+| A tool's `functions`, `methods`, `licensing` and `status` each have a label in `_config.yml` | An unlabelled value renders as a blank chip or badge. |
+| A tool has an `evidence` URL and a `checked` date that is not in the future | The admission rule is a maintainer's statement of CBOM support; an entry without one should not be listed. |
+| Tool ids are unique slugs, tool names are unique, and `methods` appears only on a generator | The id is the page anchor; a duplicate name is usually the same tool added twice. |
+
+It also reports, without failing: placeholder entries still marked
+`example: true`, a past meeting with no recording yet, a committed deck that no
+entry lists, any `filesize:` that disagrees with the file on disk, a tool not
+checked for over a year, an open-source tool with no `license`, and a tool flagged
+`verify: true`.
+
+It skips itself with a message if PyYAML is not installed.
 
 ## What is covered
 

@@ -1,0 +1,53 @@
+# CBOM Profiles Working Group — presentations
+#
+# Single source of truth for the presentations page. The published page is
+# generated from this data. See CONTRIBUTING-meetings.md.
+#
+# A deck can be held two ways, and an entry needs exactly one of them:
+#
+#   file: <name>   the deck is committed under docs/assets/presentations/ and is
+#                  served from this site. Preferred — the link cannot rot.
+#   url:  <link>   the deck lives somewhere else. Use when the file is too large
+#                  to commit, or belongs to another body.
+#
+# Fields:
+#   id         (required) stable key, lowercase, e.g. 2026-09-16-conformance.
+#              Never reuse or rename — the page anchors to it and meetings link to it.
+#   title      (required) the title of the talk.
+#   date       (required) YYYY-MM-DD. The date it was given.
+#   presenter  (required) who gave it. A string, or a list for several people.
+#   file / url (required) exactly one. See above.
+#   org        (optional) the presenter's organisation.
+#   meeting    (optional) the `number` of the meeting in meetings.yml where it was
+#              given. Both pages cross-link when this is set. Omit for a deck given
+#              somewhere else, such as a conference.
+#   venue      (optional) where it was given, when it was not a working group meeting.
+#   format     (optional) PDF, PPTX, ODP. Defaults to the file extension.
+#   filesize   (optional) human-readable, e.g. "2.4 MB". tests/check-site-data.py
+#              reports the real size so this can be kept honest. Named `filesize`
+#              and not `size` because `size` is a reserved Liquid property — on an
+#              entry without it, `p.size` silently renders the number of fields.
+#   summary    (optional) one to three sentences. What the talk argued, not what it
+#              was called.
+#   tags       (optional) free-text list.
+#   example    (optional) true marks a placeholder entry. Renders a visible badge and
+#              is reported by tests/check-site-data.py.
+
+meta:
+  updated: 2026-09-13
+
+presentations:
+
+  - id: 2026-08-19-example-deck
+    title: Example — a presentation entry
+    date: 2026-08-19
+    presenter: A. Presenter
+    org: PKI Consortium
+    url: https://pkic.org/wg/cbom/
+    format: PDF
+    example: true
+    tags: [example]
+    summary: >-
+      A placeholder so the page renders and the shape of an entry is visible. A real
+      entry would normally use `file:` and be downloaded from this site; this one uses
+      `url:` because no deck has been committed yet. Replace it, or delete it.

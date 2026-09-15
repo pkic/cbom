@@ -4,3 +4,18 @@
 
 # Shell scripts must be LF regardless of platform.
 *.sh text eol=lf
+
+# Presentation decks and recordings metadata committed under docs/assets/.
+# The `* text=auto` rule above relies on Git's own binary detection; naming
+# these explicitly means a deck is never line-ending-normalised and corrupted,
+# even if a future rule widens the text glob.
+*.pdf  binary
+*.pptx binary
+*.ppt  binary
+*.odp  binary
+*.key  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
