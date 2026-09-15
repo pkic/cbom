@@ -1,0 +1,264 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7",
+  "serialNumber": "urn:uuid:3c3c3c3c-0000-4000-8000-0000disclose",
+  "version": 1,
+  "$comment": "EXAMPLE CBOM — DOES NOT CONFORM to profile pkic.example.interface-disclosure v0.7. It exists to exercise all four disclosure outcomes for attributes of one interface at once, which no other example does: the management interface withholds its implementing library (permitted, I9 is withholdable, reported HELD), declares its encryption algorithm unknown to the producer (reported UNKN, and I4 fails), and says nothing at all about host authentication (reported as undeclared, and I5 fails). Key exchange is disclosed normally. The three absences mean different things to a consumer — a commercial position, a limit of the producing process, and a document not built against the profile — and a tool that collapsed them into 'absent' would report the same verdict for three different situations, which is what T2 forbids. The service interface is unchanged from cbom-pass, so the failure is attributable to the interface that causes it. Subject: nginx. Carrier format: CycloneDX 1.7. Profile attributes CycloneDX has no first-class field for are carried under component.properties with the pkic:profile: namespace.",
+  "metadata": {
+    "timestamp": "2026-07-16T09:00:00Z",
+    "component": {
+      "type": "application",
+      "bom-ref": "app:nginx",
+      "name": "nginx",
+      "version": "1.27.0",
+      "purl": "pkg:generic/nginx@1.27.0",
+      "description": "Web server / reverse proxy (example subject)",
+      "properties": [
+        {
+          "name": "pkic:profile:coverage",
+          "value": "all-external"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "lib:openssl",
+      "name": "OpenSSL",
+      "version": "3.4.0",
+      "purl": "pkg:generic/openssl@3.4.0",
+      "description": "Crypto provider for the TLS service interface"
+    },
+    {
+      "type": "library",
+      "bom-ref": "lib:openssh",
+      "name": "OpenSSH",
+      "version": "9.6",
+      "purl": "pkg:generic/openssh@9.6",
+      "description": "Crypto provider for the SSH management interface"
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:protocol:svc-https",
+      "name": "HTTPS service interface (TLS 1.3)",
+      "description": "Cryptographic relationship (edge): TLS 1.3 session between a browser and nginx.",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "tls",
+          "version": "1.3",
+          "cipherSuites": [
+            {
+              "name": "TLS_AES_256_GCM_SHA384",
+              "algorithms": [
+                "crypto:algo:aes-256-gcm",
+                "crypto:algo:x25519",
+                "crypto:algo:rsa-2048"
+              ],
+              "identifiers": [
+                "0x13,0x02"
+              ]
+            }
+          ],
+          "cryptoRefArray": [
+            "crypto:algo:aes-256-gcm",
+            "crypto:algo:x25519",
+            "crypto:algo:rsa-2048",
+            "crypto:cert:server-leaf"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "pkic:profile:interfaceId",
+          "value": "svc-https"
+        },
+        {
+          "name": "pkic:profile:interfaceType",
+          "value": "service"
+        },
+        {
+          "name": "pkic:profile:lifecycleStage",
+          "value": "observed"
+        },
+        {
+          "name": "pkic:profile:endpointRole:client",
+          "value": "endpoint:browser"
+        },
+        {
+          "name": "pkic:profile:endpointRole:server",
+          "value": "endpoint:nginx"
+        },
+        {
+          "name": "pkic:profile:implementationPurl",
+          "value": "pkg:generic/openssl@3.4.0"
+        }
+      ]
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:protocol:mgmt-ssh",
+      "name": "Management interface (SSH 2.0)",
+      "description": "Cryptographic relationship (edge): SSH session an administrator uses to configure the host. Only the key exchange is disclosed: the cipher is declared unknown, the host key is not addressed, and the implementing library is withheld.",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "ssh",
+          "version": "2.0",
+          "cryptoRefArray": [
+            "crypto:algo:curve25519"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "pkic:profile:interfaceId",
+          "value": "mgmt-ssh"
+        },
+        {
+          "name": "pkic:profile:interfaceType",
+          "value": "management"
+        },
+        {
+          "name": "pkic:profile:lifecycleStage",
+          "value": "configured"
+        },
+        {
+          "name": "pkic:profile:endpointRole:client",
+          "value": "endpoint:admin"
+        },
+        {
+          "name": "pkic:profile:endpointRole:server",
+          "value": "endpoint:host"
+        },
+        {
+          "name": "pkic:profile:disclosure:encryption",
+          "value": "unknown"
+        },
+        {
+          "name": "pkic:profile:disclosure:implementationPurl",
+          "value": "withheld"
+        }
+      ]
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:aes-256-gcm",
+      "name": "AES-256-GCM",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "ae",
+          "parameterSetIdentifier": "256",
+          "mode": "gcm",
+          "cryptoFunctions": [
+            "encrypt",
+            "decrypt"
+          ],
+          "nistQuantumSecurityLevel": 1
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:x25519",
+      "name": "X25519",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "key-agree",
+          "curve": "x25519",
+          "cryptoFunctions": [
+            "keygen",
+            "keyagreement"
+          ],
+          "nistQuantumSecurityLevel": 0
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:rsa-2048",
+      "name": "RSA-2048",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "parameterSetIdentifier": "2048",
+          "cryptoFunctions": [
+            "sign",
+            "verify"
+          ],
+          "nistQuantumSecurityLevel": 0
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:server-leaf",
+      "name": "example.com server certificate",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "CN=example.com",
+          "issuerName": "CN=Example Issuing CA",
+          "certificateFormat": "X.509",
+          "signatureAlgorithmRef": "crypto:algo:rsa-2048",
+          "subjectPublicKeyRef": "crypto:algo:rsa-2048"
+        }
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:algo:curve25519",
+      "name": "curve25519-sha256",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "key-agree",
+          "curve": "x25519",
+          "cryptoFunctions": [
+            "keygen",
+            "keyagreement"
+          ],
+          "nistQuantumSecurityLevel": 0
+        }
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app:nginx",
+      "dependsOn": [
+        "lib:openssl",
+        "lib:openssh",
+        "crypto:protocol:svc-https",
+        "crypto:protocol:mgmt-ssh"
+      ]
+    },
+    {
+      "ref": "crypto:protocol:svc-https",
+      "dependsOn": [
+        "lib:openssl",
+        "crypto:algo:aes-256-gcm",
+        "crypto:algo:x25519",
+        "crypto:algo:rsa-2048",
+        "crypto:cert:server-leaf"
+      ]
+    },
+    {
+      "ref": "crypto:protocol:mgmt-ssh",
+      "dependsOn": [
+        "lib:openssh",
+        "crypto:algo:curve25519"
+      ]
+    },
+    {
+      "ref": "crypto:cert:server-leaf",
+      "dependsOn": [
+        "crypto:algo:rsa-2048"
+      ]
+    }
+  ]
+}

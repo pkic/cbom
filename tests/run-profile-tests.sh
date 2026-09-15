@@ -371,6 +371,85 @@ expect_output "the failure is I9" "interface-disclosure#I9" \
 expect_output "reported as undeclared, not withheld" "no disclosure marker" \
               "$TMP/cbom-no-marker.json" "$BASE"
 
+# ------------------------------------------- the four disclosure outcomes ---
+# T2: withheld, unknown and undeclared are three different statements, and a
+# tool must not collapse them. Until these two documents existed the site's
+# demonstration described four example documents and the repository held two,
+# so the two cases that exercise this were illustrated and not evaluable.
+echo
+echo "Four disclosure outcomes in one document"
+expect_exit   "the disclosure document is rejected"        1 "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+expect_output "withheld is reported HELD, and permitted" "HELD" \
+              "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+expect_output "unknown is reported UNKN, distinctly"    "UNKN" \
+              "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+expect_output "undeclared is reported as such"  "no disclosure marker" \
+              "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+expect_output "the two failures are I4 and I5" "interface-disclosure#I4, mgmt-ssh/interface-disclosure#I5" \
+              "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+expect_output "the service interface still conforms" "svc-https  (type=service)  ==>  conforms" \
+              "$M/cbom-disclosure.cyclonedx.json" "$BASE"
+
+# A subject with no administrative surface satisfies P2 by saying so. The rule
+# exists to catch omission, and a library with nothing to configure omits
+# nothing; silence would still fail, which is the case below it.
+expect_exit   "a declared absence satisfies P2"            0 "$M/cbom-noadmin.cyclonedx.json" "$BASE"
+expect_output "the reason is reported" "stated as 'no-configuration-surface'" \
+              "$M/cbom-noadmin.cyclonedx.json" "$BASE"
+"$PY" - "$M/cbom-noadmin.cyclonedx.json" "$TMP" <<'PY'
+import json, sys, os
+bom = json.load(open(sys.argv[1], encoding="utf-8"))
+# Drop the stated reason, leaving a document with no management interface and
+# nothing said about why: silence, which is neither presence nor declared absence.
+comp = bom["metadata"]["component"]
+comp["properties"] = [p for p in comp.get("properties", [])
+                      if p.get("name") != "pkic:profile:managementInterfaceAbsence"]
+json.dump(bom, open(os.path.join(sys.argv[2], "cbom-noadmin-silent.json"), "w"))
+PY
+expect_exit   "silence about the same absence does not"    1 "$TMP/cbom-noadmin-silent.json" "$BASE"
+expect_output "the failure is P2" "interface-disclosure#P2" \
+              "$TMP/cbom-noadmin-silent.json" "$BASE"
+
+# ------------------------------------------------- entry profile and family ---
+# The shallowest profile of the interface family. Its reason to exist is that a
+# producer who cannot yet satisfy the disclosure baseline is not producing
+# nothing, so the case that matters is cbom-fail: the document named for the
+# verdict the baseline gives it, conforming here. See decision 0019.
+echo
+echo "Entry profile and the family ladder"
+ENTRY="$M/profile-interface-enumeration.rules.json"
+expect_check_exit "entry profile is well-formed"           0 "$ENTRY"
+expect_check_exit "and under --strict"                     0 "$ENTRY" --strict
+expect_check_output "it declares no forward-looking rules" "orientation 'inventory'" "$ENTRY"
+expect_exit   "the baseline's failing document conforms here" 0 "$M/cbom-fail.cyclonedx.json" "$ENTRY"
+expect_exit   "so does the one failing on disclosure states" 0 "$M/cbom-disclosure.cyclonedx.json" "$ENTRY"
+expect_exit   "and both documents that conform to the baseline" 0 "$M/cbom-pass.cyclonedx.json" "$ENTRY"
+expect_exit   "the untargeted scanner output does not"       1 "$M/cbom-entry-fail.cyclonedx.json" "$ENTRY"
+expect_output "it fails on subject identity" "interface-enumeration#P3" \
+              "$M/cbom-entry-fail.cyclonedx.json" "$ENTRY"
+expect_output "on completeness" "interface-enumeration#P4" \
+              "$M/cbom-entry-fail.cyclonedx.json" "$ENTRY"
+expect_output "and on the two per-interface rules" "interface-enumeration#I7" \
+              "$M/cbom-entry-fail.cyclonedx.json" "$ENTRY"
+# Rule ids are local to the profile that declares them, so the same rule carries
+# the same number at both depths and is cited against a different tag. Decision
+# 0011 is what makes that legible rather than ambiguous.
+expect_output "a shared rule is cited against this profile's tag" "interface-enumeration#I1" \
+              "$M/cbom-pass.cyclonedx.json" "$ENTRY"
+expect_output "and against the baseline's from the baseline" "interface-disclosure#I1" \
+              "$M/cbom-pass.cyclonedx.json" "$BASE"
+
+# The ladder itself: the deeper profile contains the shallower one, and
+# conformance carries downwards. The baseline does not declare 'extends' on the
+# entry profile, so nothing structural enforces this yet (Q51).
+OUT="$("$PY" "$ROOT/tests/check-family.py" 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then
+  passed=$((passed + 1))
+else
+  failed=$((failed + 1))
+fi
+
 # -------------------------------------------------- profile well-formedness ---
 # The second conformance target: a profile checked against the methodology.
 # Requirements C1 to C17 are stated in the Conformance section.
@@ -719,6 +798,20 @@ sys.exit(0 if e['verdict']=='refused' and e['assessed'] is False and 'rules' not
   ok "a refused evaluation is refused in the claim, with no rule results"
 else
   bad "a refused evaluation is refused in the claim, with no rule results" "expected exit 4 and a refused entry carrying no rules, got exit $RC"
+fi
+
+# ------------------------------------------------------- demonstration page ---
+# The site's interactive page is a second implementation of the evaluation
+# semantics, and it told readers its results matched the reference tool's while
+# nothing checked that. See decision 0018.
+echo
+echo "Demonstration page"
+OUT="$("$PY" "$ROOT/tests/check-demo.py" 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then
+  passed=$((passed + 1))
+else
+  failed=$((failed + 1))
 fi
 
 # --------------------------------------------------------- published schemas ---

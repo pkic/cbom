@@ -86,7 +86,7 @@ deleted.
 | 3.6 Writing a profile into a file format | Q16, Q17, Q18, Q48 |
 | 3.7 Agreed names for algorithms and protocols | Q19, Q20, Q21, Q38, Q39 |
 | 3.8 How a CBOM relates to an SBOM | Q22, Q40 |
-| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35, Q49 |
+| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35, Q49, Q50, Q51, Q52, Q53 |
 | 3.10 Statements about the future | Q26, Q27, Q28 |
 | 3.11 Governing a profile over time | Q29, Q41, Q42 |
 | 3.12 Fitting regulation and policy | Q43, Q44 |
@@ -702,6 +702,127 @@ setting per rule.
 
 **What would have to change.** The disclosure settings in the rule format, the file mapping, part
 of the validator, and one table in the Conformance section.
+
+## Q54 — Should a profile declare the audience its withholding permissions assume?
+
+**Status** open. Added 12 September 2026 with the Confidentiality section.
+
+**The question.** A profile decides, rule by rule, whether an answer may be withheld. That decision
+is taken with an audience in mind: a floor a supplier can clear in a document it publishes to the
+world is not the floor it can clear in a document released to a named customer under an agreement.
+Nothing in a rules file records which of the two was meant.
+
+**Why it matters.** Two profiles with an identical rule set, one drafted as a public floor and one
+as a restricted floor, are indistinguishable as artifacts; today the pair is told apart only by
+their titles. A buyer writing a requirement has to say two things — which profile, and on what terms
+the document will be received — and can only cite the first. The substance already works without
+this: removing withholdability is a tightening, so a restricted profile is a derived profile of the
+public one and the validator already enforces the relation. What is missing is the label.
+
+**Why not the obvious place.** It cannot go in the `disclosure` block. C7 requires that an inherited
+block be identical along a chain, on the reasoning that `disclosure` and `conformanceKeywords` carry
+no requirement of their own, so a divergence can only be a mistake — there is a fixture for exactly
+that. A derived restricted profile declaring its own audience there would fail C7 correctly by the
+letter of the check and wrongly by its intent.
+
+**Option A: declare it in `scope`.** The scope already narrows down a chain, is already checked by
+C11, and who a profile is written to be read by is part of the boundary it draws. One enum, one
+check, and a line in the scope table.
+
+**Option B: leave it to the title and the objective.** A profile's consumer statement can say
+"under an agreement" in words. Nothing mechanical depends on it, and the register would carry the
+fact where a family is recorded (Q50).
+
+**Option C: derive it.** A profile with no withholdable rule is restricted by construction; one with
+several is public by construction. Cheap, and wrong at the edges: a public profile may permit no
+withholding on rules nobody contests, and a restricted profile may still permit some.
+
+**Where it stands.** Option B, as the state that exists. The Confidentiality section states plainly
+that nothing in the tooling knows what an audience is.
+
+**What would have to change.** The scope object, the published profile schema, C11, and the scope
+table in the Conformance section.
+
+## Q55 — Should a document say which variant it is, and should `partial` separate ignorance from policy?
+
+**Status** open. Added 12 September 2026 with the Confidentiality section.
+
+**The question.** Two related gaps in what a document says about itself. A recipient cannot always
+tell whether it holds a public or a restricted variant — a public one whose producer happened to
+redact nothing looks exactly like a restricted one. And the completeness statement P4 requires,
+from `all-external`, `all` and `partial`, uses one value for two opposite situations: the producer
+did not enumerate everything, and the producer is not disclosing everything.
+
+**Why it matters.** The second is the collapse decision 0003 was taken to prevent, reappearing one
+level up. At the grain of an attribute the methodology insists that `unknown` and `withheld` be
+distinguishable, because one points at the producing process and the other at a policy, and they
+call for different responses. At the grain of the interface set, `partial` merges them again. A
+buyer reading it cannot tell whether to press the supplier on its tooling or to open a commercial
+conversation.
+
+**Option A: both, as product-level facts.** A declared variant, and a completeness vocabulary that
+separates the two kinds of incompleteness. Both are expressible with the product-rule machinery
+that exists, and both are facts about the document in the same family as P3's subject identity.
+It widens a published vocabulary and moves the baseline's version.
+
+**Option B: the completeness vocabulary only.** The narrower fix, and the one that repairs an
+inconsistency rather than adding a capability. A variant can then be inferred from the marker
+pattern in most real cases.
+
+**Option C: the variant only.** A recipient that knows which variant it holds can interpret
+`partial` from context, since a public variant's incompleteness is likelier to be policy.
+
+**Option D: neither.** Both are matters for the exchange in which the document is handed over.
+
+**Where it stands.** Option D, by omission. No profile requires a variant statement and the
+completeness vocabulary is as published.
+
+**What would have to change.** The coverage vocabulary and P4's note in the baseline, its version, a
+new product rule if a variant is required, the Terms and Conformance tables, and the example
+documents.
+
+## Q56 — May a structural rule be satisfied by a declared withholding?
+
+**Status** open. Added 12 September 2026 with the Confidentiality section.
+
+**The question.** The disclosure states apply to attributes. A whole interface withheld for
+confidentiality has no attribute on which to carry a marker. Product rule P2 requires a management
+interface, or a statement of absence from `no-configuration-surface`, `configured-out-of-band` and
+`not-applicable-to-subject`. None of those means "it exists and I am not disclosing it".
+
+**Why it matters.** A producer whose administrative interface is genuinely confidential has no
+honest conforming move: disclose it, state something untrue, or fail. That is the position P2 was
+revised in baseline v0.6 to get a legitimate subject out of — the argument then was that a rule
+which cannot be satisfied honestly by a legitimate subject is not strict but wrong, and it reaches
+this case too. The management interface is also the one most often left out, which is why the rule
+exists, so the change is not free.
+
+**Option A: permit a withheld structural declaration**, from the same vocabulary as an absence, so
+the three answers are "here it is", "there is none, because…", and "there is one and I am not
+naming it". A consumer sees the difference and a profile can forbid the third by making the rule
+non-withholdable, which is the existing mechanism.
+
+**Option B: leave it.** A structural rule is the only defence against omission, and an omission the
+producer is permitted to declare is still an omission. A consumer needing the interface named
+should require a profile that does not permit it — which is Option A's own answer, so the argument
+turns on what the baseline's default should be.
+
+**Option C: require the interface but permit every attribute on it to be withheld.** The producer
+declares that a management interface exists and says nothing else about it. No new mechanism at
+all, and it keeps the count honest, but it discloses the existence the producer may be trying to
+conceal.
+
+**What it costs.** Under Option A, `minInterfaces` and `minInterfacesOfType` become lower bounds on
+the *declared* set rather than on the product, which is a weaker statement than they make today,
+and a producer could satisfy a structural rule without declaring anything.
+
+**Where it stands.** Option B, as the state that exists. Option C is available to any producer now
+and is what the Confidentiality section recommends where the profile permits it.
+
+**What would have to change.** The `orDeclaredAbsent` handling in the validator, the absence
+vocabularies, P2's note, the baseline's version, and the disclosure-state tables in Profile,
+Conformance and Terms, which currently describe four outcomes for an attribute and none for a
+structural rule.
 
 ---
 
@@ -1454,6 +1575,144 @@ decision.
 
 ---
 
+## Q50 — Where is a profile family recorded, if not in its profiles?
+
+**Status** open. Added 12 September 2026 with decision 0019.
+
+**The question.** A family of profiles ordered by depth is only useful if a consumer can see that
+the deeper ones exist. A profile points down the family, to the base it extends, and nothing points
+up. A consumer holding a claim of conformance to the entry profile cannot tell from the artifact
+whether that is the whole family or the first of four.
+
+**Why it matters.** The entry profile's whole purpose is to be a first step, and a first step that
+nobody can see the second of is a destination. It also affects what a buyer can write into a
+requirement: "the entry profile now, the next depth within eighteen months" requires the second one
+to be nameable.
+
+**Why not fix it in the profile.** A profile cannot list the profiles deeper than it. They do not
+exist when it is published, and adding them later means re-releasing it every time the family grows,
+which inverts the direction of extension: the base would depend on its derivatives.
+
+**Option A: the register.** Governance already describes a register of published profiles. A family
+is a fact about a set of profiles, which is what a register holds. A consumer resolves the family
+from the profile id.
+
+**Option B: a family identifier in each profile.** Each member declares `family: pkic.interface`
+and its own depth within it, without naming the others. Cheap, visible in the artifact, and it
+makes two claims comparable without a lookup — but a declared depth number is a rank, and ranks
+invite the comparison this methodology avoids (see Q53).
+
+**Option C: nothing.** The chain is discoverable by reading the profiles that extend, and a consumer
+who wants the family asks the publisher.
+
+**Where it stands.** Option A by inference, stated in the Maturity section. The register does not
+exist yet, so today the family is recorded in `tests/check-family.py` and in prose, which is honest
+and not sufficient.
+
+**What would have to change.** The register's contents, which Q42 and Q41 also bear on, or the rule
+format if Option B is taken.
+
+## Q51 — Should the disclosure baseline be re-parented to extend the entry profile?
+
+**Status** open. Added 12 September 2026 with decision 0019.
+
+**The question.** The entry profile and the Interface Disclosure Baseline are siblings: the baseline
+was published first and declares no `extends`. The ladder between them is therefore an assertion
+checked by a test rather than a structural fact enforced by the validator.
+
+**Why it matters.** Monotonic extension is the mechanism that guarantees conformance at a depth
+carries conformance below it. Where it is declared, the validator refuses a relaxing profile before
+evaluating any document. Where it is not, nothing stops the two drifting except a test this project
+wrote itself, which is the weaker of the two arrangements.
+
+**What it costs.** Seven rules would move to the entry profile and be inherited: P1, P3, P4, I1, I2,
+I7 and I8. Under decision 0011 a rule id belongs to the profile that declares it, so every report
+would cite them as `interface-enumeration#I1` rather than `interface-disclosure#I1`. That changes
+every citation of those seven ids in the documentation, in the test suite, and in any report or
+claim already issued. It is also a tightening of nothing and a relaxation of nothing: no document's
+verdict changes.
+
+**Option A: re-parent.** The baseline declares `extends` on the entry profile at a pinned version,
+drops the seven rules, and bumps its version. The ladder becomes structural and most of
+`tests/check-family.py` is deleted rather than kept in parallel.
+
+**Option B: leave them as siblings** and keep the check. The citations stay where they are, and the
+cost is a test that has to be maintained and a property that holds by assertion.
+
+**Option C: re-parent and keep the ids** by having the entry profile declare its rules under
+different numbers, so the baseline's citations are unaffected. This trades citation churn for two
+numbers for one rule, which decision 0011 exists to avoid.
+
+**Where it stands.** Option B, as the state that exists. The choice is the group's because it is
+about published identifiers, not about drafting.
+
+**What would have to change.** The baseline's version and rule set, the entry profile's status as a
+base, every citation of the seven ids, and the family check.
+
+## Q52 — Should a rules file distinguish a deferral from a permanent exclusion?
+
+**Status** open. Added 12 September 2026 with decision 0019.
+
+**The question.** A profile records what it deliberately leaves out in one `exclusions` list. Two
+quite different statements go in it: that something is excluded on principle at every depth of every
+profile — key material, derived judgements — and that something is simply not asked at this depth and
+is required by the profile above.
+
+**Why it matters.** To a consumer these mean opposite things. A permanent exclusion says do not
+expect this from anyone. A deferral says expect this from the next depth, and ask for it if you need
+it now. A tool reading the file cannot tell them apart, so neither can anything built on one.
+The entry profile marks each of its own in prose, which a reader can follow and a checker cannot.
+
+**Option A: a `kind` on each exclusion**, one of `permanent` or `deferred`, with a deferred entry
+naming nothing about where it is satisfied — because a profile cannot name its descendants (Q50).
+C8 would check the field is present and valid. Both existing profiles would need their exclusions
+classified.
+
+**Option B: leave it.** The distinction is a reading matter, and every exclusion already carries a
+reason that says which it is in words.
+
+**Option C: separate lists**, `exclusions` and `deferrals`, which is clearer to read and changes the
+published schema more than Option A.
+
+**Where it stands.** Option B, with the distinction made in the reasons and in the Maturity section.
+
+**What would have to change.** The rule format and schema, C8, and the exclusions of all three
+published profiles.
+
+## Q53 — Are the depths of a family numbered, and may a consortium profile be an entry depth?
+
+**Status** open. Added 12 September 2026 with decision 0019.
+
+**The question.** Two questions that have to be answered together, because the answer to one makes
+the other easier or harder. Are a family's depths given numbers, and may a profile published under a
+PKI Consortium name be a deliberately shallow one?
+
+**Why it matters.** A number is what a buyer can put in a contract and what a supplier can put on a
+datasheet, which is most of why staged adoption works at all. A number is also a rank, and a rank
+invites the comparison the methodology avoids elsewhere: two families numbered independently would
+put unlike things at "level 2", and a branch would be mistaken for a rung. Meanwhile a shallow
+profile published under a consortium name may be read as the consortium's view of what is
+sufficient, which is the risk in publishing an entry depth at all — and not publishing one leaves
+each buyer to write its own, which loses comparability.
+
+**Option A: names, not numbers.** A depth is identified by the profile's own id and version, which
+a claim already carries. Nothing is comparable across families, which is accurate.
+
+**Option B: numbers within a named family.** `pkic.interface` depth 1 and depth 2, with the family
+name mandatory so that a number never appears alone.
+
+**Option C: no consortium entry profile.** The consortium publishes the full baseline only, and
+sector bodies publish their own shallower profiles.
+
+**Where it stands.** Option A, by default, since profiles are named and versioned and no numbering
+has been introduced. The entry profile is published as an example, like everything else in
+`docs/methodology/`, which defers rather than answers the second half.
+
+**What would have to change.** Q03, on who may publish under a consortium name, and the register's
+naming rules.
+
+---
+
 # 3.10 Statements about the future
 
 Tracked as issue #10.
@@ -1748,7 +2007,7 @@ Tracked as issue #13.
 
 ## Q30 — The interactive demonstration contains its own copy of the rules
 
-**Status** open
+**Status** settled by decision 0018, awaiting adoption
 
 **The question.** The website has an interactive page that checks a document against the baseline
 in the browser. It contains its own copy of the rules and its own checking logic, because a
@@ -1770,11 +2029,28 @@ leaves a published page that can still be wrong.
 automatically, or run both over the example documents and compare results. This is the only
 option that would have caught the drift that already happened.
 
-**Where it stands.** Neither. The page carries its own copy and asserts that it matches.
+**Where it stands.** A and C together, under decision 0018, on the grounds that the two halves of
+the problem have different fixes. Duplicated data can be deleted, so it was: the page fetches the
+rules file and holds no copy of the rule set, the vocabularies, the carrier range or the profile
+version, and shows a visible failure rather than falling back to anything when the file cannot be
+loaded. Duplicated logic cannot be deleted, because a static page cannot run the reference tool, so
+it is tested: `tests/check-demo.py` runs the page's own functions under Node over the four example
+documents and requires the same verdict, the same outcome for every rule, the same disclosure state
+for every value and the same carrier band. B was the position the repository was already in, and the
+drift happened anyway.
 
-**What would have to change.** The demonstration page, the automated test setup, and one of the
-tool requirements in the Conformance section, which expects consistent results and which the
-demonstration is not tested against.
+Settling it turned up two further gaps of the same kind. Two of the four example documents the page
+described did not exist as documents, so the only two cases exercising the four-outcome model and
+the stated-absence rule were the two no tool could evaluate; both are now committed. And the
+interface records the page displays were a third copy, transcribed from those documents, which the
+test now holds to what the reference adapter extracts.
+
+**What changed.** The demonstration page, two new example CBOMs, a new check wired into the suite
+and into CI, and a paragraph in the Conformance section, which now says where its two-tools
+expectation is exercised. **What is left.** The check needs a JavaScript runtime and skips itself
+where there is none, so a contributor's green run is not quite CI's. Whether a tool requirement
+should generalise the position — that a second implementation published alongside a profile is
+tested against the reference — is left open: one instance is not evidence for a requirement.
 
 ---
 
@@ -1834,7 +2110,7 @@ and possibly the topic list.
 **Status** open
 
 **The question.** Members have been told that three sections are reviewed every two weeks and
-that an initial document appears in August. There are eighteen sections.
+that an initial document appears in August. There are nineteen sections.
 
 **Why it has no topic.** Project scoping.
 
@@ -1893,3 +2169,5 @@ not depend on a second example.
 | Improvement plan | Q01, Q16, Q19, N01, N03, N04 |
 | Decision index | Q07 |
 | Validator source, where the limitation was recorded as a comment | Q49 |
+| Maturity section, drafted from a member's request for a reachable first profile | Q50, Q51, Q52, Q53 |
+| Confidentiality section | Q54, Q55, Q56 |

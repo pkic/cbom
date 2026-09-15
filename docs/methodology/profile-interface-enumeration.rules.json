@@ -1,0 +1,186 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile: the ENTRY PROFILE of the interface family, and the shallowest profile in it. It requires a producer to say what the product is, which interfaces it exposes, what each one speaks, at which lifecycle stage the report was taken, and how complete the list is. It requires nothing about the algorithms, the implementing library or the endpoint roles, which is what the Interface Disclosure Baseline adds at the next depth. Every rule here is declared with the id the baseline uses for the same rule, and the gaps in the numbering (no P2, no I3 to I6, no I9) are exactly where the next profile adds. See the Maturity section for why a family is published this way, and decision 0019. PRODUCT-INDEPENDENT and INSTANCE-INDEPENDENT: no rule names a specific product or interface id. Note the naming of the example documents: cbom-fail is named for the verdict it gets from the baseline, and it conforms here. That is the entry profile doing its job, not a mistake in the file.",
+  "profileId": "pkic.example.interface-enumeration",
+  "profileTag": "interface-enumeration",
+  "title": "Interface Enumeration (Example entry profile)",
+  "version": "0.1",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+  "objective": {
+    "$comment": "C1. The consumer here is at an earlier moment than the baseline's: they are not yet matching a published weakness against an algorithm, because they do not yet know what the estate contains. The decision is about where to look and whom to ask, and it is a real decision with real options, which is what keeps this profile from being a content-free first step. A profile whose decision was 'to have started' would fail C1, and would deserve to.",
+    "consumer": "An operator assembling a first cryptographic inventory across an estate of products it did not build, or a purchaser establishing whether a supplier can produce a machine-readable cryptographic record at all.",
+    "decision": "Which interfaces of this product enter the inventory, which of them a published weakness could plausibly reach, and which of them need a fuller disclosure requested before that question can actually be answered.",
+    "decisionOptions": [
+      "record the interfaces, their protocols and their versions in the inventory",
+      "request a disclosure at the next depth of this family for an interface that matters, where the algorithms decide the question",
+      "accept the record as the entry-depth record it is, and set the date at which a fuller one is required",
+      "reject the submission, where the product's own identity or its interface list is absent"
+    ],
+    "$note": "This profile cannot answer 'which interfaces are affected by a weakness in AES-GCM', and is not written as though it could. It answers 'which interfaces exist, what do they speak, and is this list the whole list' — which is the question that has to be answered first, and the one an operator most often cannot answer today. A consumer needing the first question answered names the Interface Disclosure Baseline instead, and should not accept conformance here as a substitute for it."
+  },
+  "scope": {
+    "$comment": "C11. The same subject, relationship type and orientation as the Interface Disclosure Baseline, which is what allows the two to sit on one ladder: a family ordered by depth differs in how much it asks, not in what it is about. All four lifecycle stages are accepted, because a first inventory takes whatever the producer can report. See decision 0008 for the scope object and decision 0019 for the family.",
+    "subjectType": "product",
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "intended",
+      "implemented",
+      "configured",
+      "observed"
+    ]
+  },
+  "appliesTo": {
+    "$comment": "C2. Identical to the Interface Disclosure Baseline's range. A deeper profile in a family may narrow the carrier range and may not widen it, so the entry profile sets the widest range the family will ever accept.",
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "disclosure": {
+    "$comment": "Declared identically to the Interface Disclosure Baseline, so that a profile extending either inherits the same marker convention. No rule here is withholdable: at this depth the producer is asked only for facts it necessarily holds, since a product whose interface list or protocol names are commercially sensitive is a product that cannot be inventoried at all. The states still matter for reporting, because 'unknown' and silence are different answers and a report says which was given.",
+    "markerPrefix": "pkic:profile:disclosure:",
+    "states": [
+      "unknown",
+      "withheld"
+    ]
+  },
+  "interfaceTypeVocabulary": [
+    "management",
+    "service",
+    "interconnect",
+    "peer",
+    "storage"
+  ],
+  "coverageVocabulary": [
+    "all-external",
+    "all",
+    "partial"
+  ],
+  "identifierSchemes": {
+    "$comment": "C14. Only the two asset classes this profile's rules constrain. The algorithm and library schemes the baseline declares are absent because no rule here names an algorithm or a library: a scheme nobody applies reads as authoritative while constraining nothing, which C14 rejects in both directions.",
+    "protocol": "cyclonedx-cryptography-registry",
+    "subject": "purl"
+  },
+  "productRules": [
+    {
+      "id": "P1",
+      "level": "MUST",
+      "description": "Product declares at least one cryptographic interface",
+      "constraint": {
+        "minInterfaces": 1
+      }
+    },
+    {
+      "id": "P3",
+      "level": "MUST",
+      "description": "Document identifies the subject it describes",
+      "constraint": {
+        "subjectIdentified": {
+          "startsWith": "pkg:"
+        }
+      },
+      "withholdable": false,
+      "schemeRef": "subject",
+      "note": "Same id and same constraint as the baseline's P3. A record that does not say which version of what it describes cannot be matched to a deployment or compared with the same product's record from last quarter, and an inventory of unidentified subjects is not an inventory. This is the one rule that has to be at the entry depth whatever else is deferred."
+    },
+    {
+      "id": "P4",
+      "level": "MUST",
+      "description": "Product states how complete its declared interface set is",
+      "constraint": {
+        "productAttribute": "coverage",
+        "enumRef": "coverageVocabulary"
+      },
+      "withholdable": false,
+      "note": "Same id and same constraint as the baseline's P4. Without it a short interface list is uninterpretable: silence could mean the product has two interfaces or that the producer listed two of nine. At the entry depth that ambiguity would be fatal, because the list is nearly all the document carries."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "protocol",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "schemeRef": "protocol"
+    },
+    {
+      "id": "I2",
+      "attribute": "protocolVersion",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "note": "The version is required at the entry depth because a protocol name without one does not narrow anything: most published weaknesses are against a version, not against a protocol."
+    },
+    {
+      "id": "I7",
+      "attribute": "interfaceType",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "interfaceTypeVocabulary"
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I8",
+      "attribute": "lifecycleStage",
+      "level": "MUST",
+      "constraint": {
+        "enum": [
+          "intended",
+          "implemented",
+          "configured",
+          "observed"
+        ]
+      },
+      "withholdable": false,
+      "note": "What the report is a report of. An intended interface and an observed one are both admissible here and mean different things to a consumer, so the stage is required even though the set is not narrowed."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "The algorithms each interface uses: key exchange, encryption and authentication",
+      "reason": "Deferred, not excluded. They are the point of the exercise and they are what the Interface Disclosure Baseline requires at the next depth. They are not required here because a producer who can enumerate its interfaces this quarter often cannot attribute algorithms to them until it has instrumented the build, and a family that made the two a single step would be conformed to by nobody. A consumer who needs them names the deeper profile."
+    },
+    {
+      "item": "The library implementing each interface",
+      "reason": "Deferred, not excluded. Required by the baseline at the next depth, and withholdable there. At the entry depth it would be the first thing a producer refused, and refusing it here would stop the inventory before it started."
+    },
+    {
+      "item": "The endpoint roles at each interface, and the obligation to declare a management interface or state why there is none",
+      "reason": "Deferred, not excluded. Both are baseline rules (I6 and P2). They ask the producer to reason about the shape of its own product rather than to report a configured fact, which is a second kind of work and belongs at the second depth."
+    },
+    {
+      "item": "Forward-looking capability, roadmaps and migration readiness",
+      "reason": "Excluded from this profile and from the family's inventory branch. The orientation declared above is 'inventory': this profile records present state. Capability is a different decision, not a deeper one, and it is reached by a profile deriving for that purpose rather than by adding depth here. See decision 0007."
+    },
+    {
+      "item": "Key material, secrets and certificate private components",
+      "reason": "Permanently excluded, at every depth of every profile in this family. Never disclosed in a bill of materials."
+    },
+    {
+      "item": "Derived judgements such as post-quantum posture or a maturity rating",
+      "reason": "Permanently excluded. The criteria behind such judgements change while the product does not, so they are computed by external versioned policy from the facts a document discloses. See decision 0002. Note that this exclusion is the reason the family's depths are not called maturity levels: a maturity level is the judgement, and a profile is what the judgement reads."
+    }
+  ],
+  "artifacts": {
+    "$comment": "C9. The conforming example is the document the Interface Disclosure Baseline rejects, which is the whole argument for publishing this profile: a producer whose document fails the baseline is not producing nothing. The non-conforming example is what a scanner emits with no profile in mind, which is what the entry depth is set above.",
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "cbom-fail.cyclonedx.json",
+    "nonConformingExample": "cbom-entry-fail.cyclonedx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-09-12",
+      "summary": "Initial draft. The entry profile of the interface family: product rules P1, P3 and P4, per-interface rules I1, I2, I7 and I8, each carrying the id the Interface Disclosure Baseline uses for the same rule.",
+      "changes": []
+    }
+  ]
+}
