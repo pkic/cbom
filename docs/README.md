@@ -15,17 +15,20 @@ Data-driven pages built by Jekyll from Markdown and Liquid templates.
 | `_config.yml` | Site settings. `baseurl` must stay `/cbom` so `relative_url` resolves correctly. |
 | `index.md` | Overview and landing page. |
 | `references.md` | The reference register, rendered from `_data/references.yml`. |
+| `tooling.md` | The tooling registry, rendered from `_data/tooling.yml`. |
 | `issues.md` | The methodology aspects. |
 | `meetings.md` | Meetings, rendered from `_data/meetings.yml`. |
 | `presentations.md` | Presentations, rendered from `_data/presentations.yml`. |
 | `contributing.md` | How to take part. |
 | `_data/references.yml` | Reference sources, with category, status and jurisdiction. |
+| `_data/tooling.yml` | Tools that work with CBOMs, with what they do and where they say so. |
 | `_data/aspects.yml` | The methodology aspects. |
 | `_data/meetings.yml` | Meetings, their agendas and their recordings. |
 | `_data/presentations.yml` | Presentations, and where each deck is held. |
 | `_layouts/`, `_includes/` | Page shells and the shared header and footer. |
 | `assets/css/style.css` | The design system: palette, typography, components. |
 | `assets/js/references.js` | Filtering for the reference register. |
+| `assets/js/tooling.js` | Filtering and grouping for the tooling registry. |
 | `assets/js/presentations.js` | Search and grouping for the presentations page. |
 | `assets/presentations/` | Presentation files served at `/cbom/assets/presentations/`. |
 
@@ -44,6 +47,12 @@ Liquid property that would render the number of fields on any entry lacking the 
 is actually committed, that a presentation's `meeting:` matches a real meeting, and that an entry
 has exactly one of `file:` and `url:`. Jekyll fails on none of these — it builds the broken link
 and serves it.
+
+The tooling registry is documented in [CONTRIBUTING-tooling.md](../CONTRIBUTING-tooling.md). Its
+admission rule is that a tool's maintainer states CBOM support in their own material, and each
+entry links to that statement. The same checker validates it: every value in `functions`,
+`methods`, `licensing` and `status` must have a label in `_config.yml`, or the page renders a blank
+where the label should be.
 
 ## 2. The methodology documentation (static HTML)
 

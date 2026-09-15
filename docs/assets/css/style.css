@@ -457,3 +457,14 @@ h1, h2, h3 { color: var(--ink); font-family: var(--font-display); font-weight: 6
   .hero-inner { padding: 60px 24px 52px; }
   .meeting-links .btn, .deck-actions .btn { flex: 1 1 100%; justify-content: center; }
 }
+
+/* ---------------------------------------------------------------- tooling */
+.tool { scroll-margin-top: 84px; }
+.badge-tool-active   { color: var(--current); }
+.badge-tool-unknown  { color: var(--draft); border-style: dashed; }
+.badge-tool-archived { color: var(--superseded); }
+.tool-facts { margin: 10px 0 0; display: grid; gap: 6px; }
+.tool-facts > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+.tool-facts dt { font-size: 13px; color: var(--muted); min-width: 9.5em; }
+.tool-facts dd { margin: 0; display: flex; flex-wrap: wrap; gap: 5px; }
+.tool-evidence { margin: 10px 0 0; font-size: .92rem; }
