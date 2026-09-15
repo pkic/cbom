@@ -1,0 +1,250 @@
+---
+nav: uc-iot
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — IoT Device Estate</title>
+<link rel="stylesheet" href="../methodology/styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Use Cases</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include usecases-nav.html %}
+
+<main>
+  <div class="crumb">WORKED USE CASE · DRAFT</div>
+  <h1>IoT device estate: from use case to profile</h1>
+  <p class="lead">A use case in the shape the <a href="template.html">template</a> sets out, developed as far as it can be without the working group. The sections that could be argued from the methodology are written; the sections that need a decision are marked and left open. Nothing here is a profile yet, and no rules file exists.</p>
+  <div class="banner warn">Draft for discussion. Attribute names below are proposals of this page, not established terms, and the profile has not been written, validated or tested. See <a href="#next">what this page needs next</a>.</div>
+
+  <h2>Why IoT is not yet a use case</h2>
+  <p>Every other entry in this section names a consumer and a decision. IoT names neither. It names a class of subject: devices that are numerous, constrained, deployed somewhere nobody visits, and expected to keep working for a decade or more. Several different consumers make several different decisions about that class, and they need different profiles.</p>
+  <p>So the first piece of work is choosing which decision to develop. Three are plausible, and they are genuinely different rather than three descriptions of one.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Candidate</th><th>Consumer and decision</th><th>Why it might be the one</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Fleet remediation</strong><br><span class="na">proposed</span></td>
+        <td>An operator of a deployed estate deciding, per device model, whether to update it, replace it, put something in front of it, or accept it</td>
+        <td>It is the decision the constraints actually bite on, and the one no existing profile serves. The migration profile assumes a negotiable interface and an update path, and a large part of an IoT estate has neither.</td>
+      </tr>
+      <tr>
+        <td>Device procurement and certification</td>
+        <td>A buyer or certification body checking a device against a scheme before it is bought or placed on the market</td>
+        <td>Closer to the <a href="../methodology/use-cases.html#procurement">procurement</a> and <a href="../methodology/use-cases.html#compliance">compliance</a> entries already in the catalogue, and possibly served by a depth of one of those rather than by a profile of its own.</td>
+      </tr>
+      <tr>
+        <td>Manufacturer support planning</td>
+        <td>A manufacturer deciding which of its shipped models to carry forward and which to end</td>
+        <td>The producer and the consumer are the same party, which is a different situation from every other use case here and probably needs no disclosure profile at all.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The rest of this page develops the first. The other two are recorded so that choosing the first is visibly a choice.</p>
+
+  <h2>1 · The decision being supported</h2>
+  <p>An operator runs an estate of devices it did not build, cannot inspect, and in most cases cannot reach without sending somebody. Cryptography on some of those devices will have to change. For each device model in the estate the operator is choosing between four actions, and they differ by orders of magnitude in cost.</p>
+  <ul>
+    <li><strong>Update in place.</strong> New firmware carries the new algorithms. Cheapest, and available for a minority of the estate.</li>
+    <li><strong>Replace.</strong> On a schedule, at a unit cost multiplied by the number deployed, plus the cost of physically reaching each one.</li>
+    <li><strong>Put something in front of it.</strong> Terminate the protected session at a gateway that can carry the new algorithms, and leave the device alone. Cheap where the topology allows it and impossible where the device talks directly to the outside.</li>
+    <li><strong>Accept and document.</strong> The device outlives the exposure, or the data it carries does not warrant the spend. A legitimate answer that has to be defensible.</li>
+  </ul>
+  <p>Five questions decide between them.</p>
+  <ul>
+    <li>Can this model carry the algorithms at all, or do its memory, compute and message-size limits rule them out whatever firmware it runs?</li>
+    <li>Is there a mechanism to get new firmware onto it, who is able to trigger that, and for how long will it still be offered?</li>
+    <li>Is the key material replaceable, or was it fixed at manufacture?</li>
+    <li>Does the cryptography for this interface terminate on the device, or somewhere we control?</li>
+    <li>How long will this model stay in the field, and does that outlast the exposure?</li>
+  </ul>
+  <p>Only the third and fourth are close to anything the interface disclosure baseline asks. The first is a statement about the device rather than about the interface, which is unusual. The second is a statement about a process, which is more unusual still, and is the one most likely to be argued about.</p>
+
+  <h2>2 · The constraint the producer is under</h2>
+  <p>The black-box constraint applies, as it does to every profile whose producer is a vendor. Four further constraints apply here, and together they are what make this a separate use case rather than a sector flavour of PQC migration.</p>
+
+  <h3>The producer knows the model, not the deployment</h3>
+  <p>A device manufacturer knows what it shipped. It usually does not know how any particular unit was configured, what it was connected to, or whether it is still switched on. The document therefore describes a model, and the decision is made about instances of that model. Everything that varies per instance has to be joined in by the operator from its own inventory, and the CBOM does not carry it.</p>
+  <figure>
+    <svg viewBox="0 0 720 268" role="img" aria-label="A device model on the left is the subject of the CBOM; many deployed instances in the middle are what the operator decides about; a gateway sits between the instances and the outside" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+      <rect x="20" y="78" width="150" height="92" rx="12" fill="#29323d" stroke="#0f1b2d"/>
+      <text x="95" y="112" fill="#ffffff" text-anchor="middle" font-weight="700" font-size="14">Device model</text>
+      <text x="95" y="132" fill="#c9d3e0" text-anchor="middle" font-size="10.5">one CBOM</text>
+      <text x="95" y="148" fill="#8a94a1" text-anchor="middle" font-size="10.5">written by the vendor</text>
+      <text x="95" y="60" fill="#1a2230" text-anchor="middle" font-weight="600">the document describes this</text>
+
+      <path d="M178 124 L232 124" stroke="#8a94a1" stroke-width="1.5" fill="none"/>
+      <path d="M232 124 l-7 -4 v8 z" fill="#8a94a1"/>
+
+      <rect x="244" y="62" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"/>
+      <rect x="300" y="62" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"/>
+      <rect x="356" y="62" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"/>
+      <rect x="244" y="108" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"/>
+      <rect x="300" y="108" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"/>
+      <rect x="356" y="108" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"/>
+      <rect x="244" y="154" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"/>
+      <rect x="300" y="154" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"/>
+      <rect x="356" y="154" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"/>
+
+      <text x="322" y="44" fill="#1a2230" text-anchor="middle" font-weight="600">the decision is made about these</text>
+      <text x="322" y="204" fill="#5b6472" text-anchor="middle" font-size="11">configuration, location and remaining life vary per instance</text>
+      <text x="322" y="221" fill="#8a94a1" text-anchor="middle" font-size="10.5">and are held by the operator, not by the document</text>
+
+      <path d="M412 124 L462 124" stroke="#8a94a1" stroke-width="1.5" fill="none"/>
+      <path d="M462 124 l-7 -4 v8 z" fill="#8a94a1"/>
+
+      <rect x="474" y="94" width="96" height="60" rx="10" fill="#eaf1fe" stroke="#1c5fd6"/>
+      <text x="522" y="120" fill="#16409a" text-anchor="middle" font-weight="700" font-size="12.5">Gateway</text>
+      <text x="522" y="138" fill="#16409a" text-anchor="middle" font-size="10.5">may terminate</text>
+
+      <path d="M578 124 L628 124" stroke="#8a94a1" stroke-width="1.5" fill="none"/>
+      <path d="M628 124 l-7 -4 v8 z" fill="#8a94a1"/>
+      <text x="672" y="128" fill="#5b6472" text-anchor="middle" font-size="11">the outside world</text>
+
+      <text x="360" y="252" fill="#5b6472" text-anchor="middle" font-size="11">where cryptography terminates decides whether the device has to change at all</text>
+    </svg>
+    <figcaption>The subject of the document and the subject of the decision are not the same object. A profile for this use case has to be explicit about which one each rule is about, and has to accept that the operator supplies the rest.</figcaption>
+  </figure>
+
+  <h3>Some limits are physics, not policy</h3>
+  <p>Elsewhere in this methodology, a statement that an interface cannot do something is a statement about what has been built and could be built differently. On a constrained device it is often a statement about available flash, available RAM, or a frame size fixed by a radio standard. No firmware release changes those. This is the only use case here in which a capability answer of "no" can be permanent, and a profile that cannot express the difference tells an operator to wait for an update that will never come.</p>
+
+  <h3>The party who can update may be neither the vendor nor the operator</h3>
+  <p>Firmware often reaches a device through a third party: a connectivity provider, a platform operator, an installer with physical access. The operator making the decision may have no relationship with that party. A profile that records only whether an update exists, and not who can cause it to happen, leaves the operator unable to tell an available action from a theoretical one.</p>
+
+  <h3>Field life outlasts the support commitment, and sometimes the vendor</h3>
+  <p>A device installed today may still be running in fifteen years. The commitment to ship firmware for it will not last that long, and neither, in some cases, will the company that made it. This is the same problem as the long-term stewardship question the working group already tracks, arriving from the device end rather than the profile end.</p>
+
+  <h2>3 · From questions to attributes</h2>
+  <p>Each question from section one turned into facts that a manufacturer could declare about a model. The right-hand column says whether the attribute exists already, which decides how much of this is a new profile and how much is a tightening of an existing one.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>What the consumer needs to know</th><th>Proposed attribute</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>What is this interface and what does it speak?</td><td><code>interfaceType</code>, <code>protocol</code>, <code>protocolVersionsSupported</code></td><td>Baseline. The value set for <code>interfaceType</code> probably needs extending; see below.</td></tr>
+      <tr><td>What is it doing now, and what else could it do?</td><td><code>keyExchange</code>, <code>authentication</code>, and their <code>Supported</code> counterparts</td><td>Baseline and migration profile.</td></tr>
+      <tr><td>Could any firmware carry the new algorithms, given what the hardware is?</td><td><code>resourceBound</code></td><td class="na">New. The hard limits that bound what this model could ever negotiate: usable flash and RAM headroom, and the maximum frame or message size the link imposes.</td></tr>
+      <tr><td>Is there a way to get new firmware onto it?</td><td><code>updateMechanism</code></td><td class="na">New. <code>none</code> · <code>physical-access</code> · <code>local-network</code> · <code>remote-managed</code>.</td></tr>
+      <tr><td>Who can trigger that?</td><td><code>updateAuthority</code></td><td class="na">New. <code>operator</code> · <code>vendor</code> · <code>platform</code> · <code>installer</code>. The attribute that separates an available action from a theoretical one.</td></tr>
+      <tr><td>Will firmware still be offered?</td><td><code>updateSupportStatus</code></td><td class="na">New. A commitment class rather than a date, following decision 0007: <code>supported</code> · <code>limited</code> · <code>ended</code> · <code>never-offered</code>.</td></tr>
+      <tr><td>Can the keys be replaced?</td><td><code>keyProvisioning</code>, <code>keyReplaceable</code></td><td class="na">New. Where key material came from, and whether anything short of replacing the device can change it. Factory-injected material that cannot be rotated is the case that turns an update decision into a replacement decision.</td></tr>
+      <tr><td>Where do key operations execute?</td><td><code>providerLocation</code></td><td>Migration profile, but the value set is wrong here: <code>software</code>, <code>hsm</code>, <code>tee</code> and <code>unspecified</code> do not cover a secure element, an MCU's internal flash, or one-time-programmable fuses.</td></tr>
+      <tr><td>Does the cryptography terminate on the device?</td><td><code>cryptoTerminationPoint</code></td><td class="na">New. <code>device</code> · <code>gateway</code> · <code>both</code>. The attribute the compensating-control option turns on, and the one most likely to be contested, because it is arguably a deployment fact rather than a product fact.</td></tr>
+      <tr><td>What breaks if we do change it?</td><td><code>integrationConstraints</code></td><td>Migration profile. Here it has teeth it does not have elsewhere, because a post-quantum handshake may simply not fit.</td></tr>
+      <tr><td>How much should we trust this record?</td><td><code>lifecycleStage</code></td><td>Baseline.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Interface types a device has that a server does not</h3>
+  <p>The baseline's product rule P2 requires a management interface or a statement of why there is none, which is a rule written for products that are administered. Many devices are not administered at all, and the escape clause carries them, though a profile for this use case should say so rather than leaving every producer to discover it. Four interface kinds recur on devices and have no obvious home in the current value set: a provisioning or onboarding interface used once and never again, a firmware update channel, a radio link with cryptography fixed by its own standard, and a telemetry uplink that is one-way.</p>
+
+  <h3>Questions that may not survive</h3>
+  <p>Two of the five questions from section one may not be answerable by a document at all, and that is a finding rather than a gap to be filled.</p>
+  <p><strong>How long the model will stay in the field</strong> is a fact about the operator's estate, not about the product. The manufacturer can state how long it will support the model, which is <code>updateSupportStatus</code>; how long the operator will keep running it is the operator's own planning input.</p>
+  <p><strong>Whether a gateway can carry the cryptography instead</strong> is a fact about a deployment. <code>cryptoTerminationPoint</code> is an attempt to get at the part of it that is a product fact: whether the device's design permits termination elsewhere. Whether it has been deployed that way is not something the document can say.</p>
+
+  <h2>4 · The profile definition</h2>
+  <p>One structural question has to be answered before any rule can be written, and it is not a detail. This profile is not a deeper version of PQC migration. It supports a different decision, with a different action set, and it adds attributes the migration profile has no use for while ignoring several the migration profile requires. In the terms used under composition in <a href="../methodology/profile.html">Profile</a>, it is a branch rather than a depth, which means it extends the interface disclosure baseline directly rather than extending the migration profile. It is carried as <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">Q64</a> because the alternative is arguable: an estate of gateways and an estate of sensors are being planned by the same person, and two unrelated profiles make that harder rather than easier.</p>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <p><strong>The relationship to the base</strong>, once Q64 is settled: one table with three rows for inherited, tightened and added.</p>
+    <p><strong>Product-level rules.</strong> At least one is needed that the baseline does not have: a device with no update path at all is the single most consequential fact in this use case, and a rule that only ever fires per interface will let it go unstated.</p>
+    <p><strong>Per-interface rules</strong> for the attributes in section three, each with a conformance level and a note saying what a consumer does with it.</p>
+    <p><strong>Tightenings</strong>, with a justification each. One candidate is already visible: if <code>resourceBound</code> is required at MUST then <code>integrationConstraints</code>, which the migration profile leaves at SHOULD, is arguably the thing that explains it and should rise with it.</p>
+    <p><strong>Conditional rules.</strong> Two are implied by section three: <code>updateAuthority</code> and <code>updateSupportStatus</code> only mean anything where <code>updateMechanism</code> is not <code>none</code>. Remember that a guard may be removed by a derived profile but never added or narrowed.</p>
+  </div>
+
+  <h2>5 · A worked interface</h2>
+  <p>One real interface on one real device model, filled in completely. The candidate worth using is the least convenient one: a battery-powered sensor reaching a gateway over a constrained radio link, where the honest answer to several attributes is that the model cannot do it and never will.</p>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <div style="overflow:auto">
+    <table>
+      <thead><tr><th>Attribute</th><th>Value</th><th>What it tells the consumer</th></tr></thead>
+      <tbody>
+        <tr><td><code>interfaceId</code></td><td class="na">…</td><td class="na">…</td></tr>
+        <tr><td><code>interfaceType</code></td><td class="na">…</td><td class="na">…</td></tr>
+        <tr><td><code>protocol</code> · <code>protocolVersionsSupported</code></td><td class="na">…</td><td class="na">…</td></tr>
+        <tr><td><code>keyExchange</code> · <code>keyExchangeSupported</code></td><td class="na">…</td><td class="na">…</td></tr>
+        <tr><td><code>authentication</code> · <code>authenticationSupported</code></td><td class="na">…</td><td class="na">…</td></tr>
+        <tr><td><code>resourceBound</code></td><td class="na">…</td><td class="na">…</td></tr>
+        <tr><td><code>updateMechanism</code> · <code>updateAuthority</code> · <code>updateSupportStatus</code></td><td class="na">…</td><td class="na">…</td></tr>
+        <tr><td><code>keyProvisioning</code> · <code>keyReplaceable</code></td><td class="na">…</td><td class="na">…</td></tr>
+        <tr><td><code>providerLocation</code></td><td class="na">…</td><td class="na">…</td></tr>
+        <tr><td><code>cryptoTerminationPoint</code></td><td class="na">…</td><td class="na">…</td></tr>
+        <tr><td><code>integrationConstraints</code></td><td class="na">…</td><td class="na">…</td></tr>
+        <tr><td><code>lifecycleStage</code></td><td class="na">…</td><td class="na">…</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Then the same interface on a device that <em>can</em> be updated, so the two can be read against each other. The pair is what shows the profile separating the four actions rather than describing them.</p>
+  </div>
+
+  <h2>6 · What the profile deliberately excludes</h2>
+  <p>Three exclusions can be argued now. A fourth is open.</p>
+  <p><strong>No device verdict.</strong> Whether a device model is quantum-safe, or safe at all, is a judgement against criteria that change while the device sits in a field. The profile states facts and an external <a href="../methodology/policy-evaluation.html">policy</a> reaches the verdict, dated. This matters more here than elsewhere because the device will outlive several revisions of the criteria.</p>
+  <p><strong>Nothing per instance.</strong> No serial numbers, no locations, no deployment configuration. The producer does not know them, and a profile that asks for them is unsatisfiable by the party that has to fill it in. The operator joins its own inventory to the document; <a href="../methodology/objects.html">Objects</a> sets out why the subject of a document and the subject of a decision are separate objects.</p>
+  <p><strong>No firmware component inventory.</strong> What libraries the firmware is built from is an SBOM question. The overlap is real and the boundary is the one drawn in <a href="../methodology/model.html">Model</a>; restating it here would put the same requirement in two places.</p>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <p><strong>Whether the physical attack surface is in scope.</strong> Debug ports, unlocked bootloaders and readable flash decide whether key material can be extracted, which bears directly on whether replacing the device is necessary. It is also a security posture question rather than a cryptographic disclosure question, and admitting it would widen this profile considerably. Argue it explicitly, either way.</p>
+  </div>
+
+  <h2>7 · Expressing it in a CBOM</h2>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <p>Which of the new attributes map to native CycloneDX and SPDX fields and which become properties under the <code>pkic:profile:</code> namespace. Most of them will be properties; <code>resourceBound</code> is a structure rather than a value and needs the most care.</p>
+    <p>How the subject is identified, given that it is a model. This is the part to settle first: a document whose subject is ambiguous between a model and a unit cannot be joined to an estate inventory reliably, which is the whole of what the consumer does with it.</p>
+    <p>What a producer records when it does not know. <code>unknown</code> has to be available on the update attributes in particular, because a manufacturer genuinely may not know who can push firmware to a unit it sold through a channel.</p>
+  </div>
+
+  <h2>8 · Recorded decisions and open questions</h2>
+  <p>No decision records yet. Four questions are carried in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a>, and they are the four that block writing the rules.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>#</th><th>Question</th><th>Topic</th></tr></thead>
+    <tbody>
+      <tr><td>Q62</td><td>Is the subject of a CBOM a device model or a deployed device, and does the methodology need to say which?</td><td>3.3</td></tr>
+      <tr><td>Q63</td><td>Does the methodology need a way to say that a limit is permanent rather than a current state?</td><td>3.3</td></tr>
+      <tr><td>Q64</td><td>Is an IoT profile a branch from the baseline or a depth of the migration family?</td><td>3.9</td></tr>
+      <tr><td>Q65</td><td>May a profile require a fact about a process, such as who can push firmware, rather than about a product?</td><td>3.4</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="next">What this page needs next</h2>
+  <p>In order, because each depends on the one before it.</p>
+  <ol>
+    <li>Confirm the consumer and the decision, or pick one of the two alternatives instead.</li>
+    <li>Settle Q64, which decides what the profile extends and therefore what it may tighten.</li>
+    <li>Settle Q62, which decides what the subject is and therefore what the product rules can say.</li>
+    <li>Write the rule tables in section four and the rules file together, then run <code>check_profile.py</code> against it for C1 to C17.</li>
+    <li>Fill in section five with two interfaces, one that can be updated and one that cannot.</li>
+    <li>Add a conforming and a non-conforming document, and a test in <code>tests/run-profile-tests.sh</code> that asserts both.</li>
+  </ol>
+  <p>Until step six the overview page lists this as a draft. That is the correct state for it, and the reason for having the page at all: a draft that names its consumer and its constraints is something the working group can argue with, which is more than an empty slot in a table offers.</p>
+
+  <div class="banner">What this use case adds to the methodology, whatever is decided about the profile: it is the first one where a capability answer of no can be permanent, where the party who can act is neither the producer nor the consumer, and where the subject of the document is a class and the subject of the decision is a member of it. Each of those is a general problem that this sector happens to surface first.</div>
+
+  <div class="pagenav">
+    <a href="pqc-migration.html">← PQC Migration</a>
+    <a class="next" href="template.html">Next: Template →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</div>
+</body>
+</html>

@@ -24,17 +24,17 @@ nav: uc-index
 <main>
   <div class="crumb">START HERE</div>
   <h1>Use cases</h1>
-  <p class="lead">A profile is written for a consumer who has a decision to make. This section holds the use cases that have been carried through from that decision to a finished profile — the rules, the attributes they constrain, and documents that can be checked against them. The catalogue of purposes a profile <em>can</em> serve stays in the methodology, under <a href="../methodology/use-cases.html">Use Cases</a>; what is collected here is the work of developing one of them in full.</p>
+  <p class="lead">A profile is written for a consumer who has a decision to make. This section holds the use cases that have been carried through from that decision to a finished profile — the rules, the attributes they constrain, and documents that can be checked against them. The catalogue of purposes a profile <em>can</em> serve stays in the methodology, under <a href="../methodology/use-cases.html">Use Cases</a>; what is collected here is the work of developing one of them in full. A blank in the same shape is kept as the <a href="template.html">template</a>.</p>
   <div>
     <span class="tag">PKIC CBOM Profiles WG</span>
     <span class="tag">illustrative</span>
-    <span class="tag">1 of 8 developed</span>
+    <span class="tag">1 of 9 developed</span>
   </div>
 
   <div class="banner"><strong>Looking for the methodology?</strong> It is the deliverable, and it is <a href="../methodology/">over here</a>. This section is an application of it. Reading one worked use case is the fastest way to see what the methodology produces; reading the <a href="../methodology/method.html">Method</a> section is the fastest way to see how.</div>
 
   <h2>What a worked use case contains</h2>
-  <p>Each page in this section follows the same eight-part shape, in the same order, because each part is the input to the next. The shape is the twelve steps of <a href="../methodology/method.html">Method</a> grouped for reading rather than for working.</p>
+  <p>Each page in this section follows the same eight-part shape, in the same order, because each part is the input to the next. The shape is the twelve steps of <a href="../methodology/method.html">Method</a> grouped for reading rather than for working. The <a href="template.html">template</a> is that shape as a blank, with each section saying what belongs in it and how to tell when it is finished.</p>
   <ol>
     <li><strong>The decision being supported.</strong> Who the consumer is, what actions it is choosing between, and the questions it has to answer to choose. Stating the actions is what makes the rest checkable: a decision answerable in only one way is not a decision, and a profile written from one has no principled place to stop.</li>
     <li><strong>The constraint the producer is under.</strong> What the party filling the document in can actually observe. An operator of its own service can be asked for more than a vendor shipping a product it cannot inspect, and a profile that ignores the difference is unsatisfiable rather than demanding.</li>
@@ -57,6 +57,11 @@ nav: uc-index
         <td>A migration programme lead deciding which interfaces to migrate, in what order, and what each will cost</td>
         <td><code>pkic.example.pqc-migration</code> v0.6, extending the interface disclosure baseline v0.7</td>
         <td>Developed in full. One product rule, nine per-interface rules, one group rule, one tightening. <a href="../methodology/files.html">Rules file, two documents and the validator</a>.</td>
+      </tr>
+      <tr>
+        <td><strong><a href="iot.html">IoT device estate</a></strong></td>
+        <td>A fleet operator deciding, per device model, whether to update it, replace it, put a gateway in front of it, or accept it</td>
+        <td colspan="2">Draft. Consumer, constraints and candidate attributes written; no rules file yet. Four questions block it, Q62 to Q65. Added to the catalogue as <a href="../methodology/use-cases.html#iot">purpose 9</a>.</td>
       </tr>
       <tr>
         <td>Procurement and tender conformance</td>
@@ -96,19 +101,20 @@ nav: uc-index
     </tbody>
   </table>
   </div>
-  <p style="font-size:13px;color:var(--muted)">Three of the seven undeveloped cases may not need a profile of their own, which is recorded above rather than discovered later. A use case that is served by an existing profile, or by a depth of an existing family, is a better outcome than a new profile and should be argued for on that basis.</p>
+  <p style="font-size:13px;color:var(--muted)">Three of the eight undeveloped cases may not need a profile of their own, which is recorded above rather than discovered later. A use case that is served by an existing profile, or by a depth of an existing family, is a better outcome than a new profile and should be argued for on that basis.</p>
 
   <h2>Why they are not in the methodology</h2>
   <p>The methodology is the working group's deliverable: a specification for how to define a CBOM profile. A worked use case is an instance of following it. The two are kept apart for three reasons, and the first is the one that decided it.</p>
   <ul>
-    <li><strong>Instances multiply and a specification should not.</strong> There are eight purposes in the catalogue today and sectors will bring more. If each worked one is a section of the methodology, the length of the deliverable comes to depend on how many use cases exist, which is a property of the world and not of the specification.</li>
-    <li><strong>The two have different readers.</strong> Someone assessing the methodology needs one worked example and is ill-served by eight. Someone with a migration to plan needs theirs in full and will not read the other seven.</li>
+    <li><strong>Instances multiply and a specification should not.</strong> There are nine purposes in the catalogue today and sectors will bring more. If each worked one is a section of the methodology, the length of the deliverable comes to depend on how many use cases exist, which is a property of the world and not of the specification.</li>
+    <li><strong>The two have different readers.</strong> Someone assessing the methodology needs one worked example and is ill-served by nine. Someone with a migration to plan needs theirs in full and will not read the other eight.</li>
     <li><strong>They are governed differently.</strong> A profile is versioned, dated and stewarded on its own schedule, as <a href="../methodology/governance.html">Governance</a> sets out. Carrying it inside the methodology ties its revisions to the methodology's.</li>
   </ul>
   <p>What stays in the methodology is the part that is general: <a href="../methodology/use-cases.html">why the use case has to come first</a>, the catalogue of purposes, and which attributes each emphasises. The PQC migration profile is still cited throughout the methodology as the example that exercises composition, group rules and tightening, and those citations now point here.</p>
 
   <h2>Proposing one</h2>
   <p>A use case is worth developing when a consumer and a decision can be named, and when the facts the decision needs are not already required by the interface disclosure baseline. Open a topic on the <a href="https://github.com/pkic/cbom/issues">aspect issues</a> stating the consumer, the actions being chosen between, and the questions that decision raises. The attributes come out of that analysis; starting from the fields a format happens to offer produces a profile with no stated purpose and no way to argue about whether it asks for the right things.</p>
+  <p>Once the topic has a consumer and a decision, copy the <a href="template.html">template</a> and work down it. A page that is only half filled in is still worth opening a pull request for: the sections it leaves blank are the ones the working group has to answer, and they are easier to argue about in place than in the abstract.</p>
 
   <div class="banner">One document, many consumers. A vendor generating one high-fidelity CBOM may have it evaluated against a procurement profile by one customer and a migration profile by another, with no republication in between — but only where the attributes are already in the document. A profile that <em>adds</em> attributes, as the migration profile does, cannot be answered by a document produced against the baseline alone. That is why naming the profile is part of asking for a CBOM.</div>
 
