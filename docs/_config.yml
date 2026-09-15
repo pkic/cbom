@@ -38,12 +38,16 @@ labels:
     global: Global
     eu: European Union
     uk: United Kingdom
+    netherlands: Netherlands
+    france: France
+    czechia: Czechia
     us: United States
     india: India
     singapore: Singapore
     malaysia: Malaysia
     australia: Australia
     japan: Japan
+    korea: Republic of Korea
     canada: Canada
     asean: ASEAN
 
