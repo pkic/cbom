@@ -28,9 +28,9 @@ product-independent, version-aware, and composable:
                        interface can state one answer per cryptographic purpose
                        rather than one answer overall. Member rules are
                        evaluated inside an entry, so a 'requiredWhen' guard
-                       refers to that entry. 'coverage' says whether an entry is
-                       required for every value in the vocabulary or only for
-                       those the profile's scope declares.
+                       refers to that entry. 'keyCoverage' says whether an
+                       entry is required for every key in the vocabulary or only
+                       for those the profile's scope declares.
 
 Disclosure states. An attribute is reported as one of:
   value      -- supplied and checked against the constraint
@@ -360,9 +360,9 @@ def load_profile(path):
         merged[section] = inherited + added
 
     # A derived profile may add a group, and may tighten one member of a group it
-    # inherited, or widen that group's coverage. Settling Q49: without member
+    # inherited, or widen that group's keyCoverage. Settling Q49: without member
     # overrides the only ways to ask for more depth were to restate the group,
-    # which silently replaces the base's coverage, or to add a parallel group,
+    # which silently replaces the base's keyCoverage, or to add a parallel group,
     # which asks a producer for the same fact twice under two names.
     inherited_groups = []
     for g in base.get("groupRules", []):
@@ -377,7 +377,7 @@ def load_profile(path):
     for ov in prof.get("overrides", []):
         oid = ov.get("id")
         if oid in group_by_qid:
-            check_coverage_tightens(oid, group_by_qid[oid], ov, notes)
+            check_key_coverage_tightens(oid, group_by_qid[oid], ov, notes)
             group_by_qid[oid].update({k: v for k, v in ov.items()
                                       if k not in ("note", "id", "members")})
             merged["_tightenedBy"].setdefault(oid, []).append(tag)
@@ -551,11 +551,16 @@ def check_constraint_tightens(rid, base_rule, ov, base, derived, notes):
             notes.append("%s: %s tightened, %s" % (rid, key, how))
 
 
-# A group's coverage says which keys must have an entry. Widening it obliges a
-# producer to answer for more keys, so it is a tightening; narrowing it is how a
-# staged profile would quietly become a permanent floor, which is the thing
-# decision 0010 exists to prevent.
-COVERAGE_STRENGTH = {"in-scope": 0, "all-purposes": 1, "all": 1}
+# A group's keyCoverage says which keys of its vocabulary must have an entry.
+# Widening it obliges a producer to answer for more keys, so it is a tightening;
+# narrowing it is how a staged profile would quietly become a permanent floor,
+# which is the thing decision 0010 exists to prevent.
+#
+# Named keyCoverage rather than coverage because a document already carries a
+# product attribute called 'coverage', saying how complete its interface list
+# is. Two unrelated things in one rules file under one word is how a reader ends
+# up checking the wrong one. See decision 0021.
+KEY_COVERAGE_STRENGTH = {"in-scope": 0, "all-purposes": 1}
 
 
 def check_guard_tightens(rid, base_rule, ov, notes):
@@ -586,22 +591,22 @@ def check_guard_tightens(rid, base_rule, ov, notes):
             "rule under this profile's own id" % rid)
 
 
-def check_coverage_tightens(rid, base_group, ov, notes):
-    """A group's coverage may be widened, never narrowed."""
-    if "coverage" not in ov:
+def check_key_coverage_tightens(rid, base_group, ov, notes):
+    """A group's keyCoverage may be widened, never narrowed."""
+    if "keyCoverage" not in ov:
         return
-    old, new = base_group.get("coverage"), ov["coverage"]
+    old, new = base_group.get("keyCoverage"), ov["keyCoverage"]
     if old == new:
         return
-    o, n = COVERAGE_STRENGTH.get(old), COVERAGE_STRENGTH.get(new)
+    o, n = KEY_COVERAGE_STRENGTH.get(old), KEY_COVERAGE_STRENGTH.get(new)
     if o is None or n is None:
-        raise ProfileError("override on %s sets coverage %r, which is not a known coverage"
+        raise ProfileError("override on %s sets keyCoverage %r, which is not a known value"
                            % (rid, new))
     if n < o:
         raise ProfileError(
-            "override on %s narrows coverage from %r to %r, so a producer would owe an "
-            "answer for fewer keys; extension is monotonic" % (rid, old, new))
-    notes.append("%s: coverage widened, %s -> %s" % (rid, old, new))
+            "override on %s narrows keyCoverage from %r to %r, so a producer would owe "
+            "an answer for fewer keys; extension is monotonic" % (rid, old, new))
+    notes.append("%s: keyCoverage widened, %s -> %s" % (rid, old, new))
 
 
 def check_override_tightens(base_rule, ov, notes, base=None, derived=None):
@@ -903,7 +908,7 @@ def required_keys(rule, profile):
     authentication stands. 'in-scope' restricts the requirement to the scope
     member of the same name."""
     vocab = profile.get(rule.get("keyVocabularyRef"), [])
-    if rule.get("coverage") == "in-scope":
+    if rule.get("keyCoverage") == "in-scope":
         scope_key = rule.get("scopeRef") or "cryptographicPurposes"
         declared = (profile.get("scope") or {}).get(scope_key) or []
         return [k for k in vocab if k in declared]

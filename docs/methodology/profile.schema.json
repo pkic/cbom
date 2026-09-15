@@ -76,7 +76,7 @@
           "withholdable": {"type": "boolean"},
           "constraint": {"$ref": "#/definitions/constraint"},
           "requiredWhen": {"$ref": "#/definitions/requiredWhen"},
-          "coverage": {"$ref": "#/definitions/coverage"},
+          "keyCoverage": {"$ref": "#/definitions/keyCoverage"},
           "note": {"type": "string"}
         }
       }
@@ -105,7 +105,7 @@
       "pattern": "^[PIG][0-9]+$",
       "$comment": "C16. Local to the declaring profile; the letter is fixed by the section the rule sits in. A schema cannot check that the letter matches its section, which is why C16 exists as well."
     },
-    "coverage": {"enum": ["in-scope", "all-purposes", "all"]},
+    "keyCoverage": {"enum": ["in-scope", "all-purposes"]},
     "requiredWhen": {
       "type": "object",
       "required": ["attribute"],
@@ -170,13 +170,13 @@
     },
     "groupRule": {
       "type": "object",
-      "required": ["id", "group", "keyedBy", "keyVocabularyRef", "coverage", "level", "members"],
+      "required": ["id", "group", "keyedBy", "keyVocabularyRef", "keyCoverage", "level", "members"],
       "properties": {
         "id": {"$ref": "#/definitions/ruleId"},
         "group": {"type": "string"},
         "keyedBy": {"type": "string"},
         "keyVocabularyRef": {"type": "string"},
-        "coverage": {"$ref": "#/definitions/coverage"},
+        "keyCoverage": {"$ref": "#/definitions/keyCoverage"},
         "level": {"$ref": "#/definitions/level"},
         "description": {"type": "string"},
         "note": {"type": "string"},

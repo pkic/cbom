@@ -160,7 +160,7 @@ Implemented. What it took:
   in the file, and `scope.cryptographicPurposes` naming the three this profile takes in depth.
 - M10, M11 and M12 replaced by one group rule M10 with members M10.1 to M10.3. This is new
   validator capability rather than configuration: `check_rule` evaluated one attribute against one
-  value, and a group needs coverage per key, member evaluation inside an entry, and a
+  value, and a group needs key coverage, member evaluation inside an entry, and a
   `requiredWhen` guard that resolves against the entry rather than the interface.
 - **C13**, holding a group rule to two things that would otherwise pass silently: a group keyed by
   a vocabulary that does not exist requires an entry for no keys, and a group covering only the

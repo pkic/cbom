@@ -26,45 +26,72 @@ nav: governance
   <h1>Governance</h1>
   <p class="lead">Governance concerns the processes and controls that apply to CBOMs and profiles over their lifetime: how they are produced, authenticated, distributed, evolved, and retired. This section describes the areas of governance and their relationship to the rest of the methodology.</p>
 
-  <h2>The CBOM lifecycle</h2>
-  <p>A CBOM passes through a defined sequence of states. Governance defines the controls that apply at each transition.</p>
+  <h2>Revision states</h2>
+  <p>A CBOM revision passes through four states, and governance controls each transition. The word <em>lifecycle</em> is reserved in this methodology for the capture phase of a reported fact, which is a different axis and is described under <a href="lifecycle.html">Lifecycle Data</a>. A revision has states. A fact has a capture phase. They get run together because the same word was doing both jobs on this page until now.</p>
   <figure>
-    <svg viewBox="0 0 720 140" role="img" aria-label="Five boxes joined left to right by arrows: Create from build or scan, Sign for integrity and provenance, Publish to a registry, Validate against profiles, and Supersede" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+    <svg viewBox="0 0 720 210" role="img" aria-label="Four boxes joined left to right by arrows: Create from build or scan, Sign for integrity and provenance, Publish to a registry, and Supersede by revision or retirement. Three dashed arrows lead down from Publish to three separate validation events, each producing a conformance claim, showing that validation does not advance the document." xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <g>
-        <rect x="8" y="50" width="118" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
-        <text x="67" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">Create</text>
-        <text x="67" y="88" fill="#5b6472" text-anchor="middle" font-size="10">build / scan</text>
-        <rect x="152" y="50" width="118" height="46" rx="10" fill="#ffffff" stroke="#2563eb"/>
-        <text x="211" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">Sign</text>
-        <text x="211" y="88" fill="#5b6472" text-anchor="middle" font-size="10">integrity, provenance</text>
-        <rect x="296" y="50" width="118" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
-        <text x="355" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">Publish</text>
-        <text x="355" y="88" fill="#5b6472" text-anchor="middle" font-size="10">registry, access</text>
-        <rect x="440" y="50" width="118" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
-        <text x="499" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">Validate</text>
-        <text x="499" y="88" fill="#5b6472" text-anchor="middle" font-size="10">against profiles</text>
-        <rect x="584" y="50" width="128" height="46" rx="10" fill="#fff7ec" stroke="#b45309"/>
-        <text x="648" y="72" fill="#1a2230" text-anchor="middle" font-weight="600">Supersede</text>
-        <text x="648" y="88" fill="#5b6472" text-anchor="middle" font-size="10">revise / retire</text>
+        <rect x="8" y="24" width="118" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+        <text x="67" y="46" fill="#1a2230" text-anchor="middle" font-weight="600">Create</text>
+        <text x="67" y="62" fill="#5b6472" text-anchor="middle" font-size="10">build / scan</text>
+        <rect x="152" y="24" width="118" height="46" rx="10" fill="#ffffff" stroke="#2563eb"/>
+        <text x="211" y="46" fill="#1a2230" text-anchor="middle" font-weight="600">Sign</text>
+        <text x="211" y="62" fill="#5b6472" text-anchor="middle" font-size="10">integrity, provenance</text>
+        <rect x="296" y="24" width="118" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+        <text x="355" y="46" fill="#1a2230" text-anchor="middle" font-weight="600">Publish</text>
+        <text x="355" y="62" fill="#5b6472" text-anchor="middle" font-size="10">registry, access</text>
+        <rect x="440" y="24" width="140" height="46" rx="10" fill="#fff7ec" stroke="#b45309"/>
+        <text x="510" y="42" fill="#1a2230" text-anchor="middle" font-weight="600">Supersede</text>
+        <text x="510" y="56" fill="#5b6472" text-anchor="middle" font-size="9.5">revise: a successor exists</text>
+        <text x="510" y="66" fill="#5b6472" text-anchor="middle" font-size="9.5">retire: none does</text>
       </g>
       <g stroke="#2563eb" stroke-width="2" fill="none">
-        <line x1="126" y1="73" x2="152" y2="73"/><polygon points="152,73 142,68 142,78" fill="#2563eb"/>
-        <line x1="270" y1="73" x2="296" y2="73"/><polygon points="296,73 286,68 286,78" fill="#2563eb"/>
-        <line x1="414" y1="73" x2="440" y2="73"/><polygon points="440,73 430,68 430,78" fill="#2563eb"/>
-        <line x1="558" y1="73" x2="584" y2="73"/><polygon points="584,73 574,68 574,78" fill="#2563eb"/>
+        <line x1="126" y1="47" x2="152" y2="47"/><polygon points="152,47 142,42 142,52" fill="#2563eb"/>
+        <line x1="270" y1="47" x2="296" y2="47"/><polygon points="296,47 286,42 286,52" fill="#2563eb"/>
+        <line x1="414" y1="47" x2="440" y2="47"/><polygon points="440,47 430,42 430,52" fill="#2563eb"/>
       </g>
+      <g stroke="#5b6472" stroke-width="1.4" fill="none" stroke-dasharray="4 3">
+        <line x1="330" y1="70" x2="150" y2="138"/>
+        <line x1="355" y1="70" x2="355" y2="138"/>
+        <line x1="380" y1="70" x2="560" y2="138"/>
+      </g>
+      <g>
+        <rect x="80" y="140" width="140" height="38" rx="8" fill="#ffffff" stroke="#c9d3e0"/>
+        <text x="150" y="156" fill="#1a2230" text-anchor="middle" font-size="11">validation, March</text>
+        <text x="150" y="170" fill="#5b6472" text-anchor="middle" font-size="10">claim A</text>
+        <rect x="285" y="140" width="140" height="38" rx="8" fill="#ffffff" stroke="#c9d3e0"/>
+        <text x="355" y="156" fill="#1a2230" text-anchor="middle" font-size="11">validation, August</text>
+        <text x="355" y="170" fill="#5b6472" text-anchor="middle" font-size="10">claim B</text>
+        <rect x="490" y="140" width="140" height="38" rx="8" fill="#ffffff" stroke="#c9d3e0"/>
+        <text x="560" y="156" fill="#1a2230" text-anchor="middle" font-size="11">validation, next year</text>
+        <text x="560" y="170" fill="#5b6472" text-anchor="middle" font-size="10">claim C</text>
+      </g>
+      <text x="360" y="200" fill="#5b6472" text-anchor="middle" font-size="10.5">any number, by parties who never coordinate, and none of them advances the document</text>
     </svg>
-    <figcaption>The CBOM lifecycle. A new revision re-enters the sequence at Create; superseded revisions are retained for audit.</figcaption>
+    <figcaption>The four states of a revision, and the validation events against a published one. A new revision re-enters at Create; superseded revisions are retained for audit. The dashed arrows are not transitions.</figcaption>
   </figure>
 
+  <h3>Validation is not a state</h3>
+  <p>A document does not change when somebody validates it. Validation happens to a published revision, repeatedly, by parties who never coordinate, and each occurrence leaves a <a href="conformance.html">conformance claim</a> instead of moving the document anywhere. The four states belong to the producer and the curator. The claims belong to whoever made them.</p>
+  <p>That asymmetry is what governance has to account for: a revision is produced once and consumed for as long as anyone keeps a copy. Two consumers validating the same document against the same profile a year apart can reach different verdicts, because the profile was revised in between. A claim is bound to a document digest and pins a profile version for that reason.</p>
+
+  <h3>A profile authority can change a verdict without anyone touching the document</h3>
+  <p>Tightening a published profile alters whether existing revisions conform to it. No producer acted, no document changed, and the answer moved anyway. That power rests with the profile authority alone. Nothing else in the model can do it, which is why it is set out here rather than left implied.</p>
+  <p>It has two consequences. A profile authority revising a published profile should state what becomes of documents that conformed to the previous version, which is the grace-window question recorded as Q15. And the archive obligation below is what keeps the earlier verdict checkable: without the superseded profile text, the old claim cannot be reproduced and the change cannot be shown to have been a tightening rather than a rewrite.</p>
+
+  <h3>Where the variants fork</h3>
+  <p>A family with a public and a restricted variant forks at Create, not at Publish. The markers that make a document public are in the document itself, so a producer creates two, signs two, and publishes two to different audiences. They are superseded together: a restricted revision issued without its public counterpart leaves the public record describing a version that no longer exists.</p>
+  <p>How a producer manufactures the two is outside this methodology, and in practice both are extracts taken from one inventory at two redaction settings. What governance covers is the pair that arrives and the relationship between them. See <a href="confidentiality.html">Confidentiality</a>.</p>
+
   <h2>Roles</h2>
+  <p>Three of the four roles can move a revision between states. The fourth cannot, and has the larger power.</p>
   <table>
-    <thead><tr><th>Role</th><th>Responsibility</th></tr></thead>
+    <thead><tr><th>Role</th><th>Transitions it may cause</th><th>Responsibility</th></tr></thead>
     <tbody>
-      <tr><td>Producer</td><td>Generates the CBOM (build pipeline or scanner), and records provenance and lifecycle stage.</td></tr>
-      <tr><td>Consumer</td><td>Validates the CBOM against the applicable profiles and records the conformance claim.</td></tr>
-      <tr><td>Curator / registry</td><td>Stores, versions, and serves CBOMs, and enforces retention and access control.</td></tr>
-      <tr><td>Profile authority</td><td>Defines and versions profiles, and manages the controlled vocabulary and its deprecation.</td></tr>
+      <tr><td>Producer</td><td>Create, Sign, revise</td><td>Generates the CBOM (build pipeline or scanner), and records provenance and the <code>lifecycleStage</code> of what it captured.</td></tr>
+      <tr><td>Consumer</td><td>None</td><td>Validates a published revision against the applicable profiles and records the conformance claim. Validating does not change the document, and a consumer may validate the same revision again whenever a profile is revised.</td></tr>
+      <tr><td>Curator / registry</td><td>Publish, retire</td><td>Stores, versions, and serves revisions, and enforces retention and access control.</td></tr>
+      <tr><td>Profile authority</td><td>None</td><td>Defines and versions profiles, and manages the controlled vocabulary and its deprecation. Revising a profile can change the verdict on every published revision evaluated against it.</td></tr>
     </tbody>
   </table>
 

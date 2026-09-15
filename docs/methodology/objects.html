@@ -1,0 +1,144 @@
+---
+nav: objects
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Objects</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include methodology-nav.html %}
+
+<main>
+  <div class="crumb">CONCEPT</div>
+  <h1>Objects</h1>
+  <p class="lead">The methodology has about a dozen nouns, each introduced on the page where it became necessary. This page collects them, says what writes each one and how each is identified, and names what is deliberately not modelled. Nothing here is new. It is the material the other pages assume you have already assembled.</p>
+
+  <p><a href="model.html">Model</a> covers the subject matter, meaning the cryptography a document describes. This page covers the documents themselves and the things that check them.</p>
+
+  <h2>What there is</h2>
+  <table>
+    <thead><tr><th>Object</th><th>What it is</th><th>Written by</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Subject</strong></td><td>The product, service or component a document describes. A profile declares which kind it accepts as its <code>subjectType</code>.</td><td>nobody; it is the thing being described</td></tr>
+      <tr><td><strong>Interface</strong></td><td>A cryptographic relationship the subject exposes at its boundary. The unit most rules apply to. See <a href="model.html">Model</a>.</td><td>producer, as part of a document</td></tr>
+      <tr><td><strong>CBOM revision</strong></td><td>One revision of the record for one subject, in one carrier format. An extract from an inventory rather than a thing that exists on its own. See <a href="inventory.html">Inventory</a>.</td><td>producer</td></tr>
+      <tr><td><strong>Variant</strong></td><td>The public or restricted form of a revision, distinguished by who may hold it. The public one carries markers where the restricted one carries values. See <a href="confidentiality.html">Confidentiality</a>.</td><td>producer</td></tr>
+      <tr><td><strong>Profile</strong></td><td>The minimum reporting requirements serving one stated consumer and one stated decision. A rules file, not a schema.</td><td>profile author</td></tr>
+      <tr><td><strong>Profile family</strong></td><td>A set of profiles related by extension and ordered by <a href="maturity.html">depth</a>, each containing the one below it. The shallowest is the entry profile. A profile that changes the consumer decision is a branch rather than a rung.</td><td>nobody declares it; it follows from <code>extends</code></td></tr>
+      <tr><td><strong>Rule</strong></td><td>One requirement. <code>P</code> is evaluated per product, <code>I</code> per interface, <code>G</code> per entry in a group. Local to its profile and cited as <code>tag#id</code>.</td><td>profile author</td></tr>
+      <tr><td><strong>Vocabulary</strong></td><td>A controlled list a rule constrains values against, such as the cryptographic purposes.</td><td>profile author, or inherited</td></tr>
+      <tr><td><strong>Conformance report</strong></td><td>The full result of evaluating one document against one profile, rule by rule, with the disclosure state of each.</td><td>a validator, where the evaluation ran</td></tr>
+      <tr><td><strong>Conformance claim</strong></td><td>The portable record of one or more evaluations, bound to a document by digest. The artifact that crosses an organisational boundary.</td><td>whoever ran the evaluation</td></tr>
+      <tr><td><strong>Policy</strong></td><td>External and versioned. Holds the judgements a CBOM deliberately does not carry, such as whether an algorithm is still acceptable. See <a href="policy-evaluation.html">Policy Evaluation</a>.</td><td>the consuming organisation</td></tr>
+      <tr><td><strong>Vulnerability statement</strong></td><td>External, and joined to a document rather than contained in one. It cites the document a claim already binds by digest. Conformance asserts nothing about it. See <a href="vulnerabilities.html">Vulnerabilities</a>.</td><td>whoever issues it, usually not the producer</td></tr>
+    </tbody>
+  </table>
+
+  <h2>How they connect</h2>
+  <figure>
+    <svg viewBox="0 0 720 300" role="img" aria-label="A subject exposes interfaces, which are recorded in a CBOM revision that exists as a public and a restricted variant. A profile, belonging to a family and holding rules, is evaluated against the revision to produce a report and then a claim. A separate external policy reads the same revision and produces judgements the revision does not carry." xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11.5">
+      <g>
+        <rect x="14" y="16" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"/>
+        <text x="74" y="34" fill="#1a2230" text-anchor="middle" font-weight="600">Subject</text>
+        <text x="74" y="49" fill="#5b6472" text-anchor="middle" font-size="10">product or service</text>
+        <rect x="14" y="96" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"/>
+        <text x="74" y="114" fill="#1a2230" text-anchor="middle" font-weight="600">Interfaces</text>
+        <text x="74" y="129" fill="#5b6472" text-anchor="middle" font-size="10">at its boundary</text>
+        <rect x="206" y="96" width="140" height="42" rx="9" fill="#ffffff" stroke="#2563eb"/>
+        <text x="276" y="114" fill="#1a2230" text-anchor="middle" font-weight="600">CBOM revision</text>
+        <text x="276" y="129" fill="#5b6472" text-anchor="middle" font-size="10">public and restricted</text>
+        <rect x="206" y="16" width="140" height="42" rx="9" fill="#f6f1fb" stroke="#7c5cbf"/>
+        <text x="276" y="34" fill="#1a2230" text-anchor="middle" font-weight="600">Profile</text>
+        <text x="276" y="49" fill="#5b6472" text-anchor="middle" font-size="10">in a family, holds rules</text>
+        <rect x="418" y="96" width="130" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"/>
+        <text x="483" y="114" fill="#1a2230" text-anchor="middle" font-weight="600">Report</text>
+        <text x="483" y="129" fill="#5b6472" text-anchor="middle" font-size="10">rule by rule</text>
+        <rect x="418" y="176" width="130" height="42" rx="9" fill="#eefaf1" stroke="#15803d"/>
+        <text x="483" y="194" fill="#1a2230" text-anchor="middle" font-weight="600">Claim</text>
+        <text x="483" y="209" fill="#5b6472" text-anchor="middle" font-size="10">bound by digest</text>
+        <rect x="206" y="236" width="140" height="42" rx="9" fill="#fff7ec" stroke="#b45309"/>
+        <text x="276" y="254" fill="#1a2230" text-anchor="middle" font-weight="600">Policy</text>
+        <text x="276" y="269" fill="#5b6472" text-anchor="middle" font-size="10">external, versioned</text>
+        <rect x="418" y="236" width="130" height="42" rx="9" fill="#fff7ec" stroke="#b45309"/>
+        <text x="483" y="254" fill="#1a2230" text-anchor="middle" font-weight="600">Judgement</text>
+        <text x="483" y="269" fill="#5b6472" text-anchor="middle" font-size="10">not in the CBOM</text>
+        <rect x="596" y="96" width="112" height="42" rx="9" fill="#fdf2f4" stroke="#b4365d"/>
+        <text x="652" y="114" fill="#1a2230" text-anchor="middle" font-weight="600">Vuln.</text>
+        <text x="652" y="129" fill="#5b6472" text-anchor="middle" font-size="10">statement</text>
+      </g>
+      <g stroke="#5b6472" stroke-width="1.6" fill="none">
+        <line x1="74" y1="58" x2="74" y2="96"/><polygon points="74,96 69,86 79,86" fill="#5b6472"/>
+        <line x1="134" y1="117" x2="206" y2="117"/><polygon points="206,117 196,112 196,122" fill="#5b6472"/>
+        <line x1="346" y1="117" x2="418" y2="117"/><polygon points="418,117 408,112 408,122" fill="#5b6472"/>
+        <line x1="483" y1="138" x2="483" y2="176"/><polygon points="483,176 478,166 488,166" fill="#5b6472"/>
+        <line x1="276" y1="138" x2="276" y2="236"/><polygon points="276,236 271,226 281,226" fill="#5b6472"/>
+        <line x1="346" y1="257" x2="418" y2="257"/><polygon points="418,257 408,252 408,262" fill="#5b6472"/>
+      </g>
+      <g stroke="#2563eb" stroke-width="1.6" fill="none">
+        <line x1="276" y1="58" x2="276" y2="96"/><polygon points="276,96 271,86 281,86" fill="#2563eb"/>
+      </g>
+      <g stroke="#b4365d" stroke-width="1.4" fill="none" stroke-dasharray="4 3">
+        <line x1="596" y1="150" x2="548" y2="190"/><polygon points="548,190 556,182 560,191" fill="#b4365d"/>
+      </g>
+      <g fill="#5b6472" font-size="10">
+        <text x="82" y="80">exposes</text>
+        <text x="146" y="110">recorded in</text>
+        <text x="352" y="110">evaluated to</text>
+        <text x="492" y="162">summarised as</text>
+        <text x="284" y="190">read by</text>
+        <text x="352" y="250">produces</text>
+        <text x="284" y="82">constrains</text>
+        <text x="556" y="152">cites</text>
+      </g>
+    </svg>
+    <figcaption>A profile constrains a revision and is evaluated against it. Policy reads the same revision and produces judgements the revision does not carry. A vulnerability statement cites the document by the digest a claim already binds.</figcaption>
+  </figure>
+
+  <h2>How each one is identified</h2>
+  <p>This is the question that recurs, and the answers were spread across five pages. Identity matters because a conformance claim has to be reproducible years later by somebody who was not there.</p>
+  <table>
+    <thead><tr><th>Object</th><th>Identified by</th><th>Stable across</th></tr></thead>
+    <tbody>
+      <tr><td>Subject</td><td>An identifier in the form the profile names, usually a <code>purl</code></td><td>revisions of the document</td></tr>
+      <tr><td>Interface</td><td><code>interfaceId</code>, chosen by the producer. No profile constrains it.</td><td>nothing; it is a label</td></tr>
+      <tr><td>CBOM revision</td><td>Content revision, and a digest when a claim or a vulnerability statement cites it</td><td>nothing; a new revision is a new document</td></tr>
+      <tr><td>Profile</td><td><code>profileId</code> and version, cited together</td><td>a published version is never altered</td></tr>
+      <tr><td>Profile, in a citation</td><td><code>profileTag</code>, the short handle</td><td>the life of the profile</td></tr>
+      <tr><td>Rule</td><td><code>tag#id</code>, such as <code>interface-disclosure#I9</code>. The id belongs to the profile that introduced it, not to one that later tightened it.</td><td>every version after it appears; a released id is never reused</td></tr>
+      <tr><td>Claim</td><td>The digest of the document it is about</td><td>nothing; a new revision needs a new claim</td></tr>
+      <tr><td>Policy</td><td>Its own version, recorded alongside any judgement it produced</td><td>whatever the consuming organisation decides</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Two axes that get confused</h2>
+  <p>Both were one word until <a href="https://github.com/pkic/cbom/blob/main/decisions/0021-one-word-one-meaning.md">decision 0021</a>, and the distinction is worth holding on to.</p>
+  <p><strong>Capture phase</strong> belongs to a fact. <code>lifecycleStage</code> says whether a value was intended, implemented, configured or observed, which is how much weight the value carries. It can differ between two attributes in the same document. See <a href="lifecycle.html">Lifecycle Data</a>.</p>
+  <p><strong>Revision state</strong> belongs to a document. Created, signed, published, superseded. It is the same for every attribute in the document, and governance controls the transitions. See <a href="governance.html">Governance</a>.</p>
+
+  <h2>What is deliberately not an object here</h2>
+  <p><strong>A judgement.</strong> Whether an interface is adequate, or how mature a supplier's disclosure is, is produced by policy at evaluation time and carries the policy version and the date applied. Storing it in a document would freeze an answer whose criteria move. A depth is a profile; a maturity level is a judgement read off one.</p>
+  <p><strong>An attestation.</strong> Nothing here establishes that a disclosed value is true. A signature covers origin and integrity, and a claim covers what was evaluated. A producer who states the wrong protocol version produces a document that signs, validates and verifies.</p>
+  <p><strong>A registry.</strong> Profiles, documents and claims all have to be stored and served somewhere, and the model says nothing about where. That is left to whoever operates the inventory, with the archive obligation in <a href="governance.html">Governance</a> as the one requirement placed on them.</p>
+
+  <div class="pagenav">
+    <a href="model.html">← Model</a>
+    <a class="next" href="profile.html">Next: Profile →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</div>
+</body>
+</html>

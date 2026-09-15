@@ -99,7 +99,7 @@ def declared_rules(prof):
     """Every rule the file declares itself, product and interface alike.
 
     Group members count: they are rules, and C3 to C6 apply to them exactly as
-    to any other. The group shell is excluded because it constrains coverage
+    to any other. The group shell is excluded because it constrains key coverage
     rather than an attribute, and C13 checks it instead."""
     rules = list(prof.get("productRules", [])) + list(prof.get("interfaceRules", []))
     for g in prof.get("groupRules", []):
@@ -535,9 +535,9 @@ def c13_group_rules(prof, resolved, evidence_reliable, f):
                             "the rule would require no entries" % (gid, ref))
             continue
 
-        coverage = g.get("coverage")
+        coverage = g.get("keyCoverage")
         if coverage not in ("all-purposes", "in-scope"):
-            problems.append("%s has coverage %r, expected all-purposes or in-scope"
+            problems.append("%s has keyCoverage %r, expected all-purposes or in-scope"
                             % (gid, coverage))
 
         declared = scope.get("cryptographicPurposes")

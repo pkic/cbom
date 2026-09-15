@@ -101,7 +101,7 @@
       "group": "capabilityByPurpose",
       "keyedBy": "purpose",
       "keyVocabularyRef": "cryptographicPurposeVocabulary",
-      "coverage": "in-scope",
+      "keyCoverage": "in-scope",
       "level": "MUST",
       "description": "Every purpose in scope has an entry stating its capability status",
       "members": [
