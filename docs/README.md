@@ -4,7 +4,8 @@ The published site for the PKI Consortium CBOM Profiles Working Group, served by
 at <https://pkic.github.io/cbom/>. This file is excluded from the build and is here for
 contributors.
 
-The folder holds two things that are built differently.
+The folder holds two things that are built differently: the Jekyll site, and two sections of
+hand-written HTML.
 
 ## 1. The working group site (Jekyll)
 
@@ -56,11 +57,27 @@ where the label should be.
 
 ## 2. The methodology documentation (static HTML)
 
-`methodology/` holds the working draft of the methodology, explained against a worked example:
-an nginx web server, its CBOM in CycloneDX 1.7, evaluated against a small product-independent
-profile. The pages are hand-written HTML served at `/cbom/methodology/`. Each carries a two-line
-front matter block so that Jekyll processes it, which is what allows the shared navigation
-include to work. No layout is applied, so each page still controls its own markup.
+Two sections are hand-written HTML rather than Markdown:
+
+| Path | Served at | Holds |
+|---|---|---|
+| `methodology/` | `/cbom/methodology/` | The working draft of the methodology, explained against a worked example: an nginx web server, its CBOM in CycloneDX 1.7, evaluated against a small product-independent profile. |
+| `use-cases/` | `/cbom/use-cases/` | Use cases developed in full, from a consumer's decision to a finished profile. One so far: PQC migration. |
+
+Each page carries a two-line front matter block so that Jekyll processes it, which is what allows
+the shared navigation include to work. No layout is applied, so each page still controls its own
+markup.
+
+The two sections are separate because the methodology is the deliverable and a worked use case is
+an instance of applying it: instances multiply with the number of sectors that want one, and the
+length of the deliverable should not. The argument is set out on `use-cases/index.html`. The
+methodology keeps the general part — why the use case comes first, the catalogue of eight purposes,
+and which attributes each emphasises — in `methodology/use-cases.html`, which is a different page
+from the section index and is easy to confuse with it.
+
+`use-cases/` has no stylesheet of its own and links `../methodology/styles.css`, which is the
+design system for both. `methodology/pqc-migration.html` is a redirect stub: that page moved to
+`use-cases/` and the old URL was already published and cited outside the repository.
 
 ### Previewing locally
 
@@ -70,11 +87,14 @@ filesystem shows the front matter as text and no navigation. Two ways to see the
 | | Command | Covers |
 |---|---|---|
 | **Full site** | `bundle install` then `bundle exec jekyll serve --source docs` | Everything, at the versions GitHub Pages builds with. Use this before publishing. |
-| **Methodology pages only** | `python3 tools/preview.py` | The twenty HTML sections, served on `localhost:8000`. No Ruby, no install. Skips the Markdown pages and layouts. |
+| **The HTML sections only** | `python3 tools/preview.py` | Both sections, served on `localhost:8000/methodology/introduction.html`. No Ruby, no install. Skips the Markdown pages and layouts. |
 
-`tools/preview.py` does only what Jekyll does to these particular pages — strips the front
-matter and expands the one navigation include — and warns rather than guessing if a page grows
-Liquid it does not handle. Re-run it after editing; it does not watch for changes.
+`tools/preview.py` does only what Jekyll does to these particular pages — strips the front matter
+and expands the one navigation include each calls — and warns rather than guessing if a page grows
+Liquid it does not handle. It writes each section under its own directory name so the links between
+them resolve as they do on the published site, and it copies a redirect stub through untouched.
+Re-run it after editing; it does not watch for changes. Adding a third section means adding a line
+to `SECTIONS` in that file.
 
 ### Navigation
 
@@ -82,16 +102,29 @@ The section navigation lives in one place and is rendered into every page.
 
 | Path | Purpose |
 |---|---|
-| `_data/methodology_nav.yml` | The list of sections, in groups, in reading order. The single source of truth. |
-| `_includes/methodology-nav.html` | Renders the list. Marks the current page from its `nav:` front matter value. |
-| `methodology/styles.css` | Styling, under "section navigation". A left rail at 1100px and above, a grouped block above the content below that. |
+| `_data/methodology_nav.yml` | The methodology's sections, in groups, in reading order. The single source of truth. |
+| `_data/usecases_nav.yml` | The same for the Use Cases section. Its ids are prefixed `uc-` so the two rails cannot mark each other's pages current. |
+| `_includes/methodology-nav.html` | Renders the methodology's list. Marks the current page from its `nav:` front matter value. |
+| `_includes/usecases-nav.html` | The same for the Use Cases section. A copy against a different data file rather than one parameterised include. |
+| `methodology/styles.css` | Styling for both, under "section navigation". A left rail at 1100px and above, a grouped block above the content below that. |
 
-**Adding a section** means: create the page with `nav: <id>` in its front matter, wrap its body in
-`<div class="shell">` with `{% include methodology-nav.html %}` before `<main>`, add one line to
-`_data/methodology_nav.yml`, then run `python3 tools/renumber-pagenav.py` from the repository
+**Adding a methodology section** means: create the page with `nav: <id>` in its front matter, wrap
+its body in `<div class="shell">` with `{% include methodology-nav.html %}` before `<main>`, add one
+line to `_data/methodology_nav.yml`, then run `python3 tools/renumber-pagenav.py` from the repository
 root. The same applies to reordering: the sidebar comes from the data file, but the previous and
 next links at the foot of each page are written into the pages themselves, and the script is what
 keeps the two in step.
+
+**Adding a worked use case** means the same, against `_data/usecases_nav.yml` and
+`{% include usecases-nav.html %}`, plus a row in the table on `use-cases/index.html`. Do not run
+`renumber-pagenav.py` for it: that script manages the methodology's order only, and this section's
+footer links are written by hand because it has few enough pages for that to be safe.
+
+Each rail carries a pointer to the other section, as its own group at the end of the list. In
+`methodology_nav.yml` that entry is last on purpose: `renumber-pagenav.py` skips entries whose url
+is not a local `.html` page, and the page before a skipped entry keeps the neighbour it had, so a
+cross-section pointer placed mid-order would give its predecessor a footer link into the other
+section.
 
 The order in `_data/methodology_nav.yml` is a *reading* order, aimed at someone meeting the
 material for the first time. It is deliberately not the clause order of the numbered draft, where
@@ -115,8 +148,9 @@ twenty files and was done with a script each time. That is why the include exist
 | `maturity.html` | Profile maturity: a family of profiles ordered by depth, and the entry profile |
 | `policy-evaluation.html` | Policy evaluation: facts against derived judgements |
 | `method.html` | How to define a CBOM profile (the procedure) |
-| `use-cases.html` | Use cases for profiles |
-| `pqc-migration.html` | PQC migration: worked use case to profile definition |
+| `use-cases.html` | Use cases for profiles: the catalogue of eight purposes, and why purpose comes first |
+| `vulnerabilities.html` | How cryptographic weakness is communicated alongside a CBOM rather than inside one |
+| `pqc-migration.html` | Redirect stub. The page is now `use-cases/pqc-migration.html` |
 | `formats.html` | CycloneDX and SPDX mapping |
 | `versioning.html` | Handling older CBOM files |
 | `governance.html` | Governance: lifecycle, signing, provenance, stewardship |
@@ -124,6 +158,17 @@ twenty files and was done with a script each time. That is why the include exist
 | `files.html` | Files and how to run them |
 | `demo.html` | Interactive conformance evaluation |
 | `terms.html` | Terms and definitions (Reference group) |
+
+The Use Cases section, for comparison, is two files:
+
+| File | Section |
+|---|---|
+| `use-cases/index.html` | What a worked use case contains, which of the eight are developed, and why they are not in the methodology |
+| `use-cases/pqc-migration.html` | PQC migration: one use case from the consumer's decision to a complete profile definition |
+
+The machine-readable artifacts for the PQC migration profile stay in `methodology/` with the other
+profiles and documents, because `tests/run-profile-tests.sh` and `files.html` path them there and
+splitting the artifacts would make the suite harder to read than the page being one directory away.
 
 Machine-readable artifacts in the same folder:
 
@@ -184,8 +229,10 @@ render two headers. An earlier version of this file advised keeping the folder f
 matter for exactly that reason; the risk is real, and it comes from a default layout rather than
 from front matter itself.
 
-**Links are relative.** Nothing in `methodology/` hard-codes the baseurl, so `../` reaches the
-site root and the section works unchanged if the folder is moved or served elsewhere.
+**Links are relative.** Nothing in either HTML section hard-codes the baseurl, so `../` reaches the
+site root and a section works unchanged if the folder is moved or served elsewhere. Links between the
+two sections assume they stay siblings under `docs/`, which is the one relative assumption that
+crosses a directory: `../use-cases/…` from the methodology, `../methodology/…` back.
 
 **Styling is shared by convention, not by import.** `methodology/styles.css` is a separate
 stylesheet that mirrors the palette, typography and header treatment of `assets/css/style.css`.

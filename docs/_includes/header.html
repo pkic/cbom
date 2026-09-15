@@ -9,6 +9,7 @@
       {% assign u = page.url %}
       <a href="{{ '/' | relative_url }}" {% if u == '/' %}class="active" aria-current="page"{% endif %}>Overview</a>
       <a href="{{ '/methodology/' | relative_url }}" {% if u contains '/methodology' %}class="active" aria-current="page"{% endif %}>Methodology</a>
+      <a href="{{ '/use-cases/' | relative_url }}" {% if u contains '/use-cases/' %}class="active" aria-current="page"{% endif %}>Use&nbsp;Cases</a>
       <a href="{{ '/references/' | relative_url }}" {% if u contains '/references' %}class="active" aria-current="page"{% endif %}>References</a>
       <a href="{{ '/tooling/' | relative_url }}" {% if u contains '/tooling' %}class="active" aria-current="page"{% endif %}>Tooling</a>
       <a href="{{ '/issues/' | relative_url }}" {% if u contains '/issues' %}class="active" aria-current="page"{% endif %}>Issues</a>

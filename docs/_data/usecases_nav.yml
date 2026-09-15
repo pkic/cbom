@@ -1,0 +1,28 @@
+# Navigation for the Use Cases section.
+#
+# Same arrangement as _data/methodology_nav.yml and rendered the same way, by
+# _includes/usecases-nav.html. 'id' must match the 'nav:' value in the target
+# page's front matter. Ids here are prefixed 'uc-' so that a page in this
+# section can never be marked current by the methodology's rail, or the
+# reverse.
+#
+# The second group points back into the methodology and is navigation only:
+# those pages belong to the other section and are not part of this section's
+# reading order. Nothing here is read by tools/renumber-pagenav.py, which
+# manages the methodology's footer links only — this section has few enough
+# pages that its previous/next links are written by hand.
+#
+# Adding a worked use case means adding one line to the first group, and one
+# row to the table on index.html.
+
+- group: Use cases
+  items:
+    - { id: uc-index,     title: Overview,           url: index.html }
+    - { id: uc-pqc,       title: PQC Migration,      url: pqc-migration.html }
+
+- group: In the methodology
+  items:
+    - { id: uc-purposes,  title: Use Cases,          url: ../methodology/use-cases.html }
+    - { id: uc-method,    title: Method,             url: ../methodology/method.html }
+    - { id: uc-profile,   title: Profile,            url: ../methodology/profile.html }
+    - { id: uc-terms,     title: Terms,              url: ../methodology/terms.html }
