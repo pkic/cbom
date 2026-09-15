@@ -1,0 +1,299 @@
+# CBOM Profiles Working Group — meetings
+#
+# Single source of truth for the meetings page. The published page is generated
+# from this data; no HTML or templates are involved. See CONTRIBUTING-meetings.md.
+#
+# Upcoming and past are NOT recorded as a status field — they are derived from
+# `date` when the site is built. A meeting moves to Past on the first build after
+# its date, which in practice is the commit that adds its recording.
+#
+# Fields:
+#   number     (required) meeting number. Sequential, never reused.
+#   date       (required) YYYY-MM-DD.
+#   title      (required) what the meeting is about, in a few words.
+#   time       (optional) HH:MM in `timezone`. Omit only if genuinely unset.
+#   timezone   (optional) the zone `time` is stated in. Defaults to meta.timezone.
+#   duration   (optional) minutes.
+#   agenda     (optional) list of items. Expected on an upcoming meeting.
+#   join       (optional) link to join. Upcoming meetings only — remove it afterwards.
+#   recording  (optional) link to the recording. Past meetings; omit if none was made.
+#   no_recording (optional) true if the meeting was deliberately not recorded, so the
+#              page says so rather than implying one is still coming.
+#   recording_members_only (optional) true if a recording exists but is for PKI Consortium
+#              members only. Do not add its link: this site is public.
+#   minutes    (optional) link to the minutes or notes.
+#   summary    (optional) one to three sentences on what was settled. Past meetings.
+#   example    (optional) true marks a placeholder entry. Renders a visible badge and
+#              is reported by tests/check-site-data.py. Delete these once real
+#              meetings exist.
+#
+# Presentations are not listed here. A presentation entry in presentations.yml
+# names its meeting with `meeting: <number>`, and both pages link to each other.
+
+meta:
+  updated: 2026-09-13
+  timezone: Europe/Zurich
+  # Shown above the list so a newcomer knows when to turn up. Free text.
+  cadence: >-
+    The working group meets every Wednesday, alternating between 09:00 and 18:00
+    Zurich time.
+
+meetings:
+
+  # ----------------------------------------------------------------- upcoming
+  - number: 10
+    date: 2026-09-16
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Depth, confidentiality and vulnerabilities
+    join: https://pkic.org/wg/cbom/
+    agenda:
+      - Welcome, apologies, and approval of the previous minutes
+      - "Decision 0018 — the demonstration page is checked against the reference validator (settles Q30)"
+      - "Decision 0019 — staging adoption with a family of profiles ordered by depth, and the new entry profile"
+      - "Decision 0020 — a CBOM is joined to vulnerability statements, not merged with them"
+      - Review of the new Maturity, Confidentiality and Vulnerabilities sections, and the separate Use Cases section
+      - "Q51 — should the disclosure baseline be re-parented to extend the entry profile?"
+      - "Q55 — should 'coverage: partial' separate ignorance from policy?"
+      - "Q57 — must a vulnerability-response profile forbid withholding the implementing library?"
+      - "Remaining new questions, for triage — Q50, Q52–Q54, Q56, Q58–Q60"
+      - "Reference register — 17 new entries including OMB M-26-15, nine flagged for verification, and Q19"
+      - Meetings and presentations pages — who maintains them, and replacing the placeholder entries
+      - Merge plan for the open branches, and which use case to develop next (N04)
+      - Any other business
+
+  - number: 11
+    date: 2026-09-23
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 12
+    date: 2026-09-30
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 13
+    date: 2026-10-07
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 14
+    date: 2026-10-14
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 15
+    date: 2026-10-21
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 16
+    date: 2026-10-28
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 17
+    date: 2026-11-04
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 18
+    date: 2026-11-11
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  - number: 19
+    date: 2026-11-18
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    join: https://pkic.org/wg/cbom/
+
+  # --------------------------------------------------------------------- past
+  - number: 9
+    date: 2026-09-09
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+
+  - number: 8
+    date: 2026-09-02
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Collaboration, external presentations and critical infrastructure
+    agenda:
+      - "Collaboration structure — contribution paths for members who do not use GitHub, surveys for open questions and decisions, and a portal for decisions and deliverables"
+      - "A series of external presentations from standards bodies, industry and critical-infrastructure practitioners — format and scheduling"
+      - Critical infrastructure and OT as a priority use case, and a subgroup to develop its sector profile
+      - "Methodology update — restructured chapters, Related Work and maturity alignment, the critical-infrastructure use case, and a move to distributed review"
+      - "BOM standards — CycloneDX version 2 and cryptography support in SPDX"
+      - "How CBOM relates to SBOM, HBOM, QBOM, AI BOM and XBOM, including the multinational 2026 SBOM minimum elements"
+      - Evidence of successful PQC migrations, and NIST's collection of migration use cases
+      - Where new members should start, and what is public
+    summary: >-
+      The group needs contribution paths that do not depend on GitHub, and will check which
+      PKIC mechanisms are available before choosing between surveys, a portal or existing
+      infrastructure; this methodology update is expected to be the last one collected and
+      incorporated centrally. External presentations will run as a series, about two per
+      session over several dates, with decks published in advance where presenters agree.
+      Critical infrastructure and OT is a priority use case, and a subgroup is forming to
+      develop its sector profile.
+
+  - number: 7
+    date: 2026-08-26
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Profile scope, cryptographic purposes and conformance claims
+    agenda:
+      - Welcome, apologies, and approval of the previous minutes
+      - An Introduction for first-time readers, and a new reading order for the methodology
+      - "Member submissions on a structured profile preamble — decisions 0008 (profile scope) and 0009 (orientation)"
+      - "Financial-sector feedback on systems shared by several parties — Q46 and Q47"
+      - "Decision 0010 — capability stated per cryptographic purpose (settles Q27)"
+      - "Revised Interface Disclosure Baseline — decisions 0011 (rule numbering) and 0012"
+      - "Decisions 0013 and 0014 — monotonicity for constraints, and tightening one member of an inherited group (Q49)"
+      - "Conformance claims as checkable artifacts — decisions 0015 to 0017"
+      - How adoption will work, and what makes an aspect ready for it
+      - Any other business
+
+  - number: 6
+    date: 2026-08-19
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Standards evolution, use cases and governance
+    recording_members_only: true
+    agenda:
+      - Welcome, and introductions from new participants
+      - "CBOM standards evolution — CycloneDX 2.0, cryptography support in SPDX, and industry work with ANSI X9 and PQFF"
+      - Aligning profiles with use cases, and a registry of industry organisations working on CBOM
+      - "Governance, policy and tooling — rule enforcement and exceptions, signing rules files, composite CBOMs, and verification tooling"
+      - "Use cases from energy, financial services and autonomous vehicles, and an empirical study of diversity between CBOMs"
+      - "Methodology and documentation — chapter structure, tracking suggestions as GitHub issues, and a prototype profile-selection tool"
+      - How CBOMs relate to SBOMs, AI BOMs and inventory
+      - The CBOM life cycle, and anchoring profiles in a defined purpose
+      - Open forum for questions
+    summary: >-
+      The group's role is to orchestrate requirements at the business level and map them to
+      existing standards rather than create new ones, with profiles anchored in defined use
+      cases. Suggestions from meetings will be tracked as GitHub issues, a registry of industry
+      organisations working on CBOM will be started, and members will contribute use cases from
+      energy, financial services and autonomous vehicles, including a grid operator's PKI
+      migration as a test case for the methodology. A prototype profile-selection tool and a
+      demonstration of an authenticity layer were proposed for future meetings.
+
+  - number: 5
+    date: 2026-08-12
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Member feedback on the August proposal
+    agenda:
+      - Welcome and apologies
+      - "Five items of member feedback — harvest-now-decrypt-later, asset identity across tools, the PQC Maturity Model, end-to-end deployment posture, and long-term governance"
+      - The open questions register, compiled 7 August
+      - New Method and Terms sections, and profile composition
+      - "New Conformance section — three conformance targets, requirements C1 to C10 and T1 to T7"
+      - Profile tests running in CI, and the baseline aligned with the migration profile
+      - Any other business
+    summary: >-
+      The update committed after the meeting added the Data Exposure and Related Work
+      sections and a challenge on identifying the same asset across tools, and extended
+      Inventory on correlating records and Governance on the stewardship of profiles.
+
+  - number: 4
+    date: 2026-08-05
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Position paper chapters, lifecycle stages and BOM relationships
+    agenda:
+      - Collecting questions and feedback into information pages, and a position paper on CBOMs
+      - An end-to-end CBOM use case demonstration for the PKI Consortium conference workshop
+      - "CBOM lifecycle stages — design, build, deploy and runtime — and data quality and false positives"
+      - How CBOMs relate to other BOM types, and unified data models mapped to CycloneDX and SPDX
+      - Governance, compliance and government regulation
+    summary: >-
+      The collected questions and feedback will be synthesised into a position paper, starting
+      with three chapters — challenges, inventory and lifecycle data — over the next two weeks,
+      while easier ways to contribute, such as GitHub discussions, are explored. The accepted
+      workshop at the PKI Consortium conference will include an end-to-end CBOM use case
+      demonstration. The governance chapter will cover compliance and government regulation,
+      starting with the PKI requirements for the US electric industry in WEQ-012.
+
+  - number: 3
+    date: 2026-07-29
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+
+  - number: 2
+    date: 2026-07-22
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Rolling CBOMs, tool diversity and what a profile is for
+    agenda:
+      - Access to the draft document, and whether the files it references are public
+      - "Rolling CBOMs — a continuously updated inventory, and discovering assets kept in non-default locations"
+      - An inventory of discovery tools, and the inconsistent output between them
+      - Standardising CBOM fields and naming, and the CycloneDX cryptography registry
+      - "What a profile is for — required fields and validation rules — and how CBOMs relate to SBOMs"
+      - Enterprise and vendor use cases, and identifying high-value assets for migration
+    summary: >-
+      A profile defines the fields a CBOM must carry and the rules it is validated against; it
+      does not generate data, and it has to serve enterprise production environments as well as
+      vendors, across hardware and software. Tools produce CBOMs with different formats and
+      naming, so members will compile an inventory of discovery tools and look at standardising
+      or mapping their output. Whether high-value assets can be identified automatically or need
+      manual review was left open, with profiles expected to carry the fields that analysis needs.
+
+  - number: 1
+    date: 2026-07-15
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Introductions, and the case for CBOM profiles
+    agenda:
+      - Introductions, and members' backgrounds and interests
+      - "Lessons from SBOMs — minimum elements that depend on purpose, sensitive content, and inconsistency between formats"
+      - "The CBOM profile concept — minimum data per use case, industry profiles, quality gates, and mappings to CycloneDX and SPDX"
+      - Whether data inventory and context belong in a CBOM
+      - Guidance for existing standards rather than new ones, and how cryptography is represented in CycloneDX
+      - Timeline, milestones and meeting cadence
+    summary: >-
+      The group will not create new standards. It will define industry-neutral profiles stating
+      the minimum data a use case needs, mapped to CycloneDX and SPDX so that CBOMs can be
+      quality-checked and automated, and industries are encouraged to write their own. The
+      December workshop at the PKI Consortium conference in Amsterdam is the first milestone,
+      with a basic example profile and a proposed timeline to be prepared.

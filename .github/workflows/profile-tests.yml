@@ -1,19 +1,24 @@
 name: Profile tests
 
 # Checks that the published example profiles, CBOMs and validator still behave
-# as the methodology documentation describes. Runs on any change to the
-# methodology artifacts or to the tests themselves.
+# as the methodology documentation describes, and that the site data files are
+# internally consistent. Runs on any change to the methodology artifacts, the
+# site data, or the tests themselves.
 
 on:
   push:
     branches: [main]
     paths:
       - 'docs/methodology/**'
+      - 'docs/_data/**'
+      - 'docs/assets/presentations/**'
       - 'tests/**'
       - '.github/workflows/profile-tests.yml'
   pull_request:
     paths:
       - 'docs/methodology/**'
+      - 'docs/_data/**'
+      - 'docs/assets/presentations/**'
       - 'tests/**'
       - '.github/workflows/profile-tests.yml'
   workflow_dispatch:
@@ -44,6 +49,19 @@ jobs:
         # itself with a message when it is absent, so a contributor without it
         # can still run the rest of the suite.
         run: python -m pip install --quiet jsonschema
+      - name: Install the schema validator and YAML parser
+        # Only the published-schema checks need jsonschema, and only the site
+        # data checks need PyYAML. Both scripts skip themselves with a message
+        # when their dependency is absent, so a contributor without them can
+        # still run the rest of the suite.
+        run: python -m pip install --quiet jsonschema pyyaml
 
       - name: Run profile tests
         run: bash tests/run-profile-tests.sh
+
+      - name: Check the site data files
+        # Meetings, presentations and tooling: a download link to a file that is
+        # not committed, a presentation attached to a meeting that does not
+        # exist, or a tool value with no display label builds cleanly under
+        # Jekyll and is only visible to a visitor.
+        run: python tests/check-site-data.py

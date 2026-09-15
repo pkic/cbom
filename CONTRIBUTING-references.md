@@ -35,12 +35,12 @@ truth; the published page is generated from it. No HTML or templates are involve
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `id` | yes | Stable citation key (`F1`, `M3`, `E5`, `U7`, `A1`, `N1`). **Never reuse or renumber** — other documents cite these. Prefix by section: `F` formats, `M` methodology, `E` Europe, `U` United States, `A` Asia-Pacific, `N` other national. |
+| `id` | yes | Stable citation key (`F1`, `M3`, `E5`, `U7`, `A1`, `N1`, `X1`, `S1`). **Never reuse or renumber** — other documents cite these. Prefix by section: `F` formats, `M` methodology, `E` Europe, `U` United States, `A` Asia-Pacific, `N` other national, `X` multilateral, `S` protocol and algorithm specifications. |
 | `doc` | yes | Document or standard number, e.g. `BSI TR-03183-2 v2.1.0`. Include the version — half the errors in the old reference list were stale versions. |
 | `title` | yes | Full published title. |
 | `org` | yes | Publishing body. |
 | `date` | no | `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. Use the publication date, not the date you found it. |
-| `category` | yes | `formats`, `methodology` or `policy`. |
+| `category` | yes | `formats`, `methodology`, `policy` or `specs`. `methodology` also holds sector work and tooling, including non-government industry standards such as PCI DSS. Whether `specs` stays is open question Q19 — do not add a sixth category without the group. |
 | `jurisdiction` | yes | Must exist in `labels.jurisdiction` in `docs/_config.yml`. Adding a new one? Add the label too. |
 | `status` | yes | `current`, `draft`, `superseded` or `gap`. |
 | `url` | no | Canonical link. Prefer the publisher's own URL over a mirror or a vendor blog. |
@@ -60,7 +60,11 @@ truth; the published page is generated from it. No HTML or templates are involve
 - **Tag inventory mandates.** Where a document requires a cryptographic inventory,
   tag it `inventory` and note in `notes` whether it specifies a *format*. Nearly all
   of them do not. That pattern is the working group's central argument, and the tag is
-  what makes it demonstrable rather than assertable.
+  what makes it demonstrable rather than assertable. The closest any instrument has come
+  is OMB M-26-15 [`U15`], which names the CBOM but no format for one.
+- **Cross-reference with the citation key.** Where an entry supersedes, implements or
+  depends on another, name it in `notes` as `[U15]`. The keys are stable, so the link
+  survives renumbering of everything around it.
 
 ## Previewing locally
 

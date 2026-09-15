@@ -9,7 +9,7 @@
 #   title        (required) full title
 #   org          (required) publishing organisation
 #   date         (optional) YYYY-MM-DD or YYYY-MM or YYYY
-#   category     (required) formats | methodology | policy
+#   category     (required) formats | methodology | policy | specs
 #   jurisdiction (required) see _config.yml labels
 #   status       (required) current | draft | superseded | gap
 #   url          (optional) canonical link
@@ -18,7 +18,7 @@
 #   verify       (optional) true if the entry needs confirming against a primary source
 
 meta:
-  updated: 2026-07-14
+  updated: 2026-09-12
 
 references:
 
@@ -47,11 +47,12 @@ references:
     status: current
     url: https://cyclonedx.org/specification/overview/
     tags: [cyclonedx, cbom]
-    verify: true
     notes: >-
-      Final release of the 1.x line; backward compatible with 1.4–1.6. Introduces the
-      algorithm-family object and a standardised elliptic-curve list, deprecating the v1.6
-      curve property. Confirm exact field names against the schema before citing.
+      Released 21 October 2025; final release of the 1.x line and backward compatible with
+      1.4–1.6. Adds the algorithm-family and elliptic-curve properties `algorithmFamily` and
+      `ellipticCurve`, both constrained to enumerations held in the `cryptography-defs`
+      subschema, and deprecates the free-text `curve` property carried since v1.6. Field
+      names confirmed against the published 1.7 schema.
 
   - id: F3
     doc: CycloneDX Cryptography Registry
@@ -64,9 +65,12 @@ references:
     url: https://cyclonedx.org/registry/cryptography/
     tags: [cyclonedx, registry, normalisation]
     notes: >-
-      Authoritative machine-readable registry of algorithm families and curves with a JSON
-      Schema. Versioned independently of the specification and usable outside CycloneDX,
-      which makes it the natural normalisation target for a format-independent profile.
+      Authoritative machine-readable registry of algorithm families and curves, published as
+      the `cryptography-defs` JSON Schema and carrying its own `lastUpdated` timestamp rather
+      than the specification's version. Enumerates 93 algorithm families and 246 elliptic
+      curves, and records per-curve aliases tagged by category — which is the naming problem
+      of Q20 expressed as data, and what makes it the natural normalisation target for a
+      format-independent profile.
 
   - id: F4
     doc: CycloneDX CBOM
@@ -99,9 +103,11 @@ references:
     tags: [spdx]
     verify: true
     notes: >-
-      No dedicated cryptographic-asset object model equivalent to CycloneDX CBOM. A 3.1
-      release is in progress and more granular cryptographic metadata has been signalled.
-      Confirm the 3.1 status and any crypto profile with the SPDX project before citing.
+      No dedicated cryptographic-asset object model equivalent to CycloneDX CBOM in the
+      released 3.0.1 line. Work has since become concrete: an SPDX Cryptography Group now
+      maintains a Cryptographic Algorithm List [F9], and a 3.1 release candidate is in
+      progress. Confirm the 3.1 status and the standing of the algorithm list with the SPDX
+      project before citing.
 
   - id: F7
     doc: ISO/IEC 5962:2021
@@ -124,6 +130,23 @@ references:
     url: https://www.rfc-editor.org/rfc/rfc8174
     tags: [ietf, conformance]
     notes: Normative keyword vocabulary for profile conformance language.
+
+  - id: F9
+    doc: SPDX Cryptographic Algorithm List
+    title: SPDX Cryptographic Algorithm List
+    org: SPDX Cryptography Group (Linux Foundation)
+    category: formats
+    jurisdiction: global
+    status: draft
+    url: https://github.com/spdx/cryptographic-algorithm-list
+    tags: [spdx, registry, normalisation]
+    verify: true
+    notes: >-
+      A community-curated vocabulary of cryptographic algorithms, modelled on the SPDX
+      License List and maintained alongside the specification rather than inside it. It is
+      the SPDX-side counterpart to the CycloneDX Cryptography Registry [F3], and therefore
+      the normalisation target an SPDX mapping would have to use. No numbered release; its
+      normative standing within SPDX is not established. Confirm both before citing.
 
   # ------------------------------------------------------------- methodology
   - id: M1
@@ -232,6 +255,104 @@ references:
     tags: [tracker]
     notes: >-
       Maintained tracker of national PQC mandates; useful for keeping this register current.
+
+  - id: M10
+    doc: PQCMM v1.0.1
+    title: PQC Maturity Model
+    org: PKI Consortium (Post-Quantum Cryptography Working Group)
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://pkic.org/wg/pqc/pqcmm/
+    tags: [pkic, maturity, cbom, inventory]
+    notes: >-
+      Assesses products and services in the supply chain rather than an organisation's
+      internal posture, which makes its subject the same as this methodology's. Level 3
+      requires a cryptographic inventory and SBOM support; Level 4 requires CBOM support
+      without defining what a CBOM must contain, and names no format. That undefined
+      requirement is the dependency the profile methodology addresses.
+
+  - id: M11
+    doc: PQCCM
+    title: PQC Capabilities Matrix
+    org: PKI Consortium (Post-Quantum Cryptography Working Group)
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://pkic.org/wg/pqc/pqccm/
+    tags: [pkic, capabilities]
+    verify: true
+    notes: >-
+      Aggregates vendor-declared post-quantum capability across products, recording support
+      for ML-KEM, ML-DSA, SLH-DSA, LMS and XMSS as available, planned, unavailable or not
+      applicable. Its subject overlaps the migration profile's declared capability
+      attributes. No version or release date is published for the matrix itself.
+
+  - id: M12
+    doc: PKIMM v1.0.0
+    title: PKI Maturity Model
+    org: PKI Consortium (PKI Maturity Model Working Group)
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://pkic.org/wg/pkimm/
+    tags: [pkic, maturity]
+    notes: >-
+      Assesses an organisation's PKI operation across five levels, with a separate PQC
+      Readiness Extension. Its subject is the operator rather than the product, so it sits at
+      a different level from both the PQCMM [M10] and this methodology.
+
+  - id: M13
+    doc: FS-ISAC PQC Working Group
+    title: >-
+      Post-Quantum Cryptography Working Group papers, including Infrastructure Inventory and
+      Building Cryptographic Agility in the Financial Sector
+    org: FS-ISAC
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://www.fsisac.com/knowledge/pqc
+    tags: [finance, inventory, sector-profile, agility]
+    verify: true
+    notes: >-
+      Sector guidance directing financial institutions to inventory cryptographic assets
+      together with the keys, systems and business processes that depend on them. Names no
+      format, which makes the sector a candidate consumer of a profile rather than a
+      competing specification. Individual papers are undated on the landing page; take dates
+      from each paper before citing.
+
+  - id: M14
+    doc: PCI DSS v4.0.1, requirement 12.3.3
+    title: Payment Card Industry Data Security Standard
+    org: PCI Security Standards Council
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://www.pcisecuritystandards.org/document_library/
+    tags: [finance, inventory, compliance]
+    verify: true
+    notes: >-
+      Requirement 12.3.3 obliges an entity to document an inventory of the cryptographic
+      cipher suites and protocols in use, with where and why each is used, and to review it
+      at least every twelve months; it became mandatory on 31 March 2025. A binding
+      commercial inventory mandate that names no format. Confirm the requirement text and the
+      current DSS revision against the PCI SSC library before citing.
+
+  - id: M15
+    doc: ETSI TR 103 619 V1.1.1
+    title: CYBER; Migration strategies and recommendations to Quantum Safe schemes
+    org: ETSI
+    date: 2020-07
+    category: methodology
+    jurisdiction: global
+    status: current
+    url: https://www.etsi.org/deliver/etsi_tr/103600_103699/103619/01.01.01_60/tr_103619v010101p.pdf
+    tags: [etsi, inventory, migration]
+    notes: >-
+      Frames the move to a fully quantum-safe state in three stages, of which the first is
+      compiling an inventory of cryptographic assets. The earliest inventory-first migration
+      framework this register carries, predating the national roadmaps by several years, and
+      it names no format.
 
   # ------------------------------------------------------------ policy — EU
   - id: E1
@@ -352,6 +473,55 @@ references:
       Three phases: by 2028 discovery, cryptographic inventory and migration plan;
       2028–2031 high-priority upgrades; 2031–2035 full migration.
 
+  - id: E10
+    doc: PQC Migration Handbook, 2nd edition
+    title: The PQC Migration Handbook
+    org: AIVD, CWI and TNO (Netherlands)
+    date: 2024-12
+    category: policy
+    jurisdiction: netherlands
+    status: current
+    url: https://publications.tno.nl/publication/34643386/fXcPVHsX/TNO-2024-pqc-en.pdf
+    tags: [inventory, migration, pqc]
+    notes: >-
+      Second edition of the March 2023 handbook, presented on 3 December 2024. Covers
+      cryptographic asset management and the creation of a cryptographic inventory, with
+      expanded advice on discovering cryptography inside software and on crypto-agility.
+      Guidance rather than a mandate, and it names no format.
+
+  - id: E11
+    doc: ANSSI follow-up position paper
+    title: ANSSI views on the Post-Quantum Cryptography transition (2023 follow up)
+    org: ANSSI (France)
+    date: 2023
+    category: policy
+    jurisdiction: france
+    status: current
+    url: https://cyber.gouv.fr/en/publications/anssi-views-post-quantum-cryptography-transition
+    tags: [pqc, hybrid, certification]
+    notes: >-
+      Follow-up to the March 2022 position paper. Requires hybridisation wherever
+      post-quantum mitigation is needed, on the grounds that post-quantum algorithms are not
+      yet mature enough to stand alone, and sets the agenda for French security visas
+      covering hybrid implementations. Bears directly on how a profile represents hybrid and
+      coexistence as facts rather than as a judgement.
+
+  - id: E12
+    doc: NÚKIB minimum requirements
+    title: Minimum Requirements for Cryptographic Algorithms
+    org: NÚKIB (Czechia)
+    date: 2025-05
+    category: policy
+    jurisdiction: czechia
+    status: current
+    url: https://nukib.gov.cz/download/publications_en/Minimum%20Requirements%20for%20Cryptographic%20Algorithms.pdf
+    tags: [algorithms, pqc]
+    verify: true
+    notes: >-
+      A national algorithm and key-length baseline of the same kind as BSI TR-02102-1 [E6],
+      against which a profile's conformance rules would be assessed. Revised more than once
+      during 2025; confirm the current revision and its date against NÚKIB before citing.
+
   # ------------------------------------------------------------ policy — US
   - id: U1
     doc: EO 14306
@@ -439,8 +609,10 @@ references:
     url: https://csrc.nist.gov/pubs/ir/8547/ipd
     tags: [nist, pqc, timeline]
     notes: >-
-      RSA/ECC deprecated 2030, disallowed 2035. Still an initial public draft — the
-      timeline is directional, not binding. Do not cite as a mandate.
+      RSA/ECC deprecated 2030, disallowed 2035. Still an initial public draft, so the report
+      itself binds nothing — but OMB M-26-15 [U15] directs agencies to align their migration
+      plans with it "or successor document", which gives the draft timeline force it does not
+      carry on its own. Cite it as the referenced timeline, not as a standard.
 
   - id: U8
     doc: FIPS 203 / 204 / 205
@@ -504,6 +676,73 @@ references:
     jurisdiction: us
     status: current
     tags: [algorithms, nss]
+
+  - id: U14
+    doc: EO 14412
+    title: Securing the Nation Against Advanced Cryptographic Attacks
+    org: The White House (United States)
+    date: 2026-06-22
+    category: policy
+    jurisdiction: us
+    status: current
+    url: https://www.federalregister.gov/documents/2026/06/25/2026-12909/securing-the-nation-against-advanced-cryptographic-attacks
+    tags: [executive-order, pqc]
+    notes: >-
+      Signed 22 June 2026 and published 25 June 2026. Accelerates the migration of federal
+      systems to the NIST PQC standards and directs assistance to critical infrastructure
+      owners and operators. The operative timetable is set out in OMB M-26-15 [U15], which
+      implements it two days later.
+
+  - id: U15
+    doc: OMB M-26-15
+    title: Execution of the Migration to Post-Quantum Cryptography
+    org: Office of Management and Budget (United States)
+    date: 2026-06-24
+    category: policy
+    jurisdiction: us
+    status: current
+    url: https://www.whitehouse.gov/wp-content/uploads/2026/06/M-26-15-Execution-of-the-Migration-to-Post-Quantum-Cryptography.pdf
+    tags: [inventory, pqc, cbom, discovery]
+    notes: >-
+      Implements EO 14412 [U14] and discharges OMB's duty under the Quantum Computing
+      Cybersecurity Preparedness Act [U6]. Sets five migration phases from 2026 to 2035, and
+      requires each agency's plan to state "the methodologies and automated tools used for
+      the cryptographic inventory". Of that inventory it says the data "should populate a
+      central Cryptographic Bill of Materials (CBOM)" — and names no CBOM format, which makes
+      it the most direct statement to date of the gap this working group exists to fill.
+      Excludes national security systems.
+
+  - id: U16
+    doc: NIST CSWP 39
+    title: "Considerations for Achieving Crypto Agility: Strategies and Practices"
+    org: NIST
+    date: 2025-12
+    category: policy
+    jurisdiction: us
+    status: current
+    url: https://csrc.nist.gov/pubs/cswp/39/upd1/considerations-for-achieving-crypto-agility/final
+    tags: [nist, agility]
+    verify: true
+    notes: >-
+      The reference OMB M-26-15 [U15] cites for cryptographic agility. Relevant because
+      agility is a judgement formed from disclosed facts rather than an attribute a CBOM
+      records, which is the separation decision 0002 rests on. An updated revision (upd1)
+      exists; confirm which revision and date apply before citing.
+
+  - id: U17
+    doc: NTIA minimum elements (2021)
+    title: The Minimum Elements For a Software Bill of Materials (SBOM)
+    org: National Telecommunications and Information Administration (United States)
+    date: 2021-07
+    category: policy
+    jurisdiction: us
+    status: superseded
+    url: https://www.ntia.gov/report/2021/minimum-elements-software-bill-materials-sbom
+    tags: [sbom, minimum-elements]
+    notes: >-
+      Issued under EO 14028 [U4] and the origin of the seven baseline SBOM data fields.
+      Updated and replaced by the 2026 minimum elements [X1]. Retained because procurement
+      language and existing tooling still cite it by name.
 
   # -------------------------------------------------- policy — Asia-Pacific
   - id: A1
@@ -607,6 +846,24 @@ references:
       Malaysia and Indonesia (BSSN) following. Recorded as an engagement opportunity for
       the working group rather than a citable reference.
 
+  - id: A8
+    doc: KpqC master plan
+    title: Master plan for the transition to post-quantum cryptography
+    org: National Intelligence Service and Ministry of Science and ICT (Republic of Korea)
+    date: 2023
+    category: policy
+    jurisdiction: korea
+    status: current
+    tags: [pqc, timeline, algorithms]
+    verify: true
+    notes: >-
+      Sets a 2035 target for transitioning national cryptographic systems, organised in six
+      tracks covering technology, regulation, procedure, transition support, assurance
+      infrastructure and industrial base. Korea also runs its own KpqC algorithm selection
+      alongside the NIST standards, so a profile applied here must carry algorithm names that
+      are not in either carrier's registry. Primary sources are Korean-language and the
+      document designation is not confirmed against them.
+
   # ------------------------------------------------------ policy — multilateral
   - id: X1
     doc: 2026 SBOM Minimum Elements
@@ -626,7 +883,8 @@ references:
       version, and tool provenance. Requires authors to distinguish information that is
       unknown from information deliberately withheld, and states that supporting automation
       means supporting all widely used formats rather than mandating one — both positions
-      the profile methodology depends on.
+      the profile methodology depends on. Updates and replaces the 2021 NTIA minimum
+      elements [U17].
 
   # --------------------------------------------------------- policy — other
   - id: N1
@@ -761,3 +1019,37 @@ references:
       The identifier scheme the methodology uses to name the library implementing an
       interface, and the value that links a CBOM entry to vulnerability feeds and to the
       corresponding SBOM component.
+
+  - id: S9
+    doc: RFC 9794
+    title: Terminology for Post-Quantum Traditional Hybrid Schemes
+    org: IETF
+    date: 2025-06
+    category: specs
+    jurisdiction: global
+    status: current
+    url: https://www.rfc-editor.org/info/rfc9794
+    tags: [ietf, hybrid, terminology]
+    notes: >-
+      Informational, and the agreed vocabulary for schemes combining post-quantum and
+      traditional algorithms — hybrid, composite, combiner. A profile describing coexistence
+      or hybrid capability should take its terms from here rather than coin its own.
+
+  - id: S10
+    doc: ETSI TS 103 744 V1.2.1
+    title: >-
+      CYBER; Quantum-Safe Cryptography (QSC); Quantum-safe Hybrid Key Establishment
+    org: ETSI
+    date: 2025-03
+    category: specs
+    jurisdiction: global
+    status: current
+    url: https://www.etsi.org/deliver/etsi_ts/103700_103799/103744/
+    tags: [etsi, hybrid, key-exchange]
+    verify: true
+    notes: >-
+      Normative constructions for combining elliptic-curve key exchange with ML-KEM,
+      superseding V1.1.1 of December 2020. A named construction of this kind is what an
+      interface disclosure records when it states a hybrid key exchange, rather than the two
+      algorithms listed separately. Confirm the published version against the ETSI portal
+      before citing.

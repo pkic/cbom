@@ -1,0 +1,628 @@
+# CBOM Tooling Registry — PKI Consortium CBOM Profiles Working Group
+#
+# Single source of truth for the tooling page. Add or amend entries here; the
+# rendered page is generated from this data. See CONTRIBUTING-tooling.md.
+#
+# A tool is listed only when its maintainer's own material — repository, documentation
+# or product page — states that it works with CBOMs. That statement is `evidence`.
+# A listing is not an endorsement, and no entry has been tested against the methodology
+# or any profile.
+#
+# Fields:
+#   id           (required) stable slug, lowercase with hyphens, e.g. cbomkit. It is the
+#                page anchor. Never reuse or rename.
+#   name         (required) the tool's name as its maintainer writes it
+#   maintainer   (required) organisation or project that maintains it
+#   url          (required) primary link: the repository or the product page
+#   licensing    (required) open-source | commercial | freemium (labels in _config.yml)
+#   license      (optional) SPDX licence id, expected when licensing is open-source
+#   functions    (required) list, from: generate | consume | validate | convert | analyse |
+#                visualise | store
+#   methods      (optional) how a generator finds cryptography, from: source-code | binary |
+#                container | filesystem | network | runtime | configuration | cloud | keystore.
+#                Only on a tool whose functions include generate.
+#   formats      (optional) list of BOM formats and versions the source states, e.g.
+#                "CycloneDX 1.6". Leave out rather than guess.
+#   status       (required) active | archived | unknown
+#   summary      (optional) one or two neutral sentences on what it does with a CBOM
+#   evidence     (required) URL where the maintainer states CBOM support
+#   checked      (required) YYYY-MM-DD the entry was last checked against its evidence
+#   verify       (optional) true if a detail could not be confirmed against the primary source
+#   tags         (optional) list of free-text tags
+
+meta:
+  updated: 2026-09-13
+
+tools:
+
+  # ------------------------------------------------------------- open source
+  - id: cbomkit
+    name: CBOMkit
+    maintainer: Post-Quantum Cryptography Alliance (Linux Foundation); originally IBM Research
+    url: https://github.com/cbomkit/cbomkit
+    licensing: open-source
+    license: Apache-2.0
+    functions: [generate, store, visualise, analyse, consume]
+    methods: [source-code]
+    status: active
+    summary: >-
+      A service with a web viewer, an API and a database: it generates CBOMs from repositories,
+      displays uploaded CBOMs, checks them against compliance policies, and stores them behind a
+      REST API.
+    evidence: https://github.com/cbomkit/cbomkit
+    checked: 2026-09-13
+
+  - id: sonar-cryptography
+    name: Sonar Cryptography Plugin
+    maintainer: Post-Quantum Cryptography Alliance (CBOMkit project)
+    url: https://github.com/cbomkit/sonar-cryptography
+    licensing: open-source
+    license: Apache-2.0
+    functions: [generate]
+    methods: [source-code]
+    formats: [CycloneDX 1.6]
+    status: active
+    summary: >-
+      A SonarQube plugin, also known as CBOMkit-hyperion, that detects cryptographic assets in
+      Java, Python and Go source and writes a CBOM when its Cryptographic Inventory rule is enabled.
+    evidence: https://github.com/cbomkit/sonar-cryptography
+    checked: 2026-09-13
+
+  - id: cbomkit-theia
+    name: CBOMkit-theia
+    maintainer: Post-Quantum Cryptography Alliance (CBOMkit project)
+    url: https://github.com/cbomkit/cbomkit-theia
+    licensing: open-source
+    license: Apache-2.0
+    functions: [generate, consume]
+    methods: [container, filesystem, keystore, configuration]
+    formats: [CycloneDX 1.6]
+    status: active
+    summary: >-
+      A command-line tool that finds certificates, keys, secrets and cryptographic configuration in
+      container images and directories and writes a CBOM, or enriches an existing one. It does not
+      scan source code.
+    evidence: https://github.com/cbomkit/cbomkit-theia
+    checked: 2026-09-13
+
+  - id: cbomkit-action
+    name: CBOMkit-action
+    maintainer: Post-Quantum Cryptography Alliance (CBOMkit project)
+    url: https://github.com/cbomkit/cbomkit-action
+    licensing: open-source
+    license: Apache-2.0
+    functions: [generate]
+    methods: [source-code]
+    status: active
+    summary: >-
+      A GitHub Action that finds the modules in a repository, scans their Java and Python source,
+      and produces one CBOM per module as a workflow artifact.
+    evidence: https://github.com/cbomkit/cbomkit-action
+    checked: 2026-09-13
+
+  - id: cdxgen
+    name: cdxgen
+    maintainer: cdxgen project (OWASP)
+    url: https://github.com/cdxgen/cdxgen
+    licensing: open-source
+    license: Apache-2.0
+    functions: [generate]
+    methods: [keystore, source-code, runtime]
+    formats: [CycloneDX 1.7]
+    status: active
+    summary: >-
+      A general BOM generator whose CBOM coverage is Java keystores and certificates and algorithm
+      use in JavaScript and TypeScript source; its tracebom command records cryptographic activity
+      while a command runs.
+    evidence: https://github.com/cdxgen/cdxgen
+    checked: 2026-09-13
+
+  - id: cbom-lens
+    name: CBOM-Lens
+    maintainer: OmniTrust (formerly 3Key Company, CZERTAINLY)
+    url: https://github.com/OmniTrustILM/cbom-lens
+    licensing: open-source
+    license: Apache-2.0
+    functions: [generate]
+    methods: [filesystem, container, network, keystore]
+    formats: [CycloneDX 1.6, CycloneDX 1.7]
+    status: active
+    summary: >-
+      A command-line tool or service that finds certificates, keys, secrets and algorithms on
+      filesystems, in container images and on network ports, and writes a CBOM.
+    evidence: https://github.com/OmniTrustILM/cbom-lens
+    checked: 2026-09-13
+
+  - id: cbom-repository
+    name: CBOM-Repository
+    maintainer: OmniTrust (formerly 3Key Company, CZERTAINLY)
+    url: https://github.com/OmniTrustILM/cbom-repository
+    licensing: open-source
+    license: Apache-2.0
+    functions: [store, consume]
+    formats: [CycloneDX 1.6, CycloneDX 1.7]
+    status: active
+    summary: >-
+      A REST service on S3-compatible storage for uploading, versioning, retrieving and searching
+      CBOMs in JSON.
+    evidence: https://github.com/OmniTrustILM/cbom-repository
+    checked: 2026-09-13
+
+  - id: cipheriq-cbom-generator
+    name: CBOM Generator
+    maintainer: CipherIQ
+    url: https://github.com/CipherIQ/cbom-generator
+    licensing: open-source
+    license: GPL-3.0-or-later
+    functions: [generate]
+    methods: [filesystem, keystore, configuration]
+    formats: [CycloneDX 1.6, CycloneDX 1.7]
+    status: active
+    summary: >-
+      A static scanner for Linux systems that inventories certificates, keys, algorithms,
+      cryptographic libraries and services. Also offered under a commercial licence.
+    evidence: https://github.com/CipherIQ/cbom-generator
+    checked: 2026-09-13
+
+  - id: cipheriq-cbom-explorer
+    name: CBOM Explorer
+    maintainer: CipherIQ
+    url: https://github.com/CipherIQ/cbom-explorer
+    licensing: open-source
+    license: GPL-3.0-or-later
+    functions: [visualise, consume]
+    formats: [CycloneDX 1.6, CycloneDX 1.7]
+    status: active
+    summary: >-
+      A browser-based viewer that loads a CBOM and shows its assets and dependencies as an
+      interactive graph. Also offered under a commercial licence.
+    evidence: https://github.com/CipherIQ/cbom-explorer
+    checked: 2026-09-13
+
+  - id: sbom-tools
+    name: sbom-tools
+    maintainer: sbom-tool project
+    url: https://github.com/sbom-tool/sbom-tools
+    licensing: open-source
+    license: MIT
+    functions: [analyse, consume, validate, visualise]
+    formats: [CycloneDX 1.6, CycloneDX 1.7]
+    status: active
+    summary: >-
+      A tool for diffing, quality scoring and compliance checks of BOMs that reads the cryptographic
+      properties of CycloneDX 1.6 and 1.7 documents and tells a CBOM from an SBOM.
+    evidence: https://github.com/sbom-tool/sbom-tools
+    checked: 2026-09-13
+
+  - id: codeql-cbom-action
+    name: cbom-action
+    maintainer: GitHub (advanced-security)
+    url: https://github.com/advanced-security/cbom-action
+    licensing: open-source
+    license: MIT
+    functions: [generate]
+    methods: [source-code]
+    status: active
+    summary: >-
+      GitHub Actions that build a crypto bill of materials from CodeQL analysis across a set of
+      repositories and languages. The output format is not documented.
+    evidence: https://github.com/advanced-security/cbom-action
+    checked: 2026-09-13
+
+  - id: cryptobom-forge
+    name: Cryptobom Forge
+    maintainer: Santander Security Research
+    url: https://github.com/Santandersecurityresearch/cryptobom-forge
+    licensing: open-source
+    license: GPL-3.0
+    functions: [generate, analyse]
+    methods: [source-code]
+    formats: [CycloneDX 1.4 with the pre-standard CBOM extension]
+    status: active
+    summary: >-
+      Turns CodeQL analysis results into a CBOM and checks a CBOM against rules, reporting in SARIF.
+      Its documented output uses the CBOM extension that preceded CycloneDX 1.6.
+    evidence: https://github.com/Santandersecurityresearch/cryptobom-forge
+    checked: 2026-09-13
+
+  - id: bf-cbom
+    name: BF-CBOM
+    maintainer: Software Engineering Group, University of Bern
+    url: https://github.com/SEG-UNIBE/BF-CBOM
+    licensing: open-source
+    license: GPL-3.0-only
+    functions: [analyse, consume, visualise]
+    status: active
+    summary: >-
+      A research framework that runs several CBOM generators in containers and compares their output
+      side by side.
+    evidence: https://github.com/SEG-UNIBE/BF-CBOM
+    checked: 2026-09-13
+
+  - id: dynamiccbom
+    name: DynamicCBOM
+    maintainer: Software Engineering Group, University of Bern
+    url: https://github.com/SEG-UNIBE/DynamicCBOM
+    licensing: open-source
+    license: MIT
+    functions: [generate]
+    methods: [runtime]
+    formats: [CycloneDX 1.6]
+    status: active
+    summary: >-
+      Experimental software that traces OpenSSL 3 calls at runtime with eBPF and writes a CBOM,
+      without changing the traced program.
+    evidence: https://github.com/SEG-UNIBE/DynamicCBOM
+    checked: 2026-09-13
+
+  - id: cryptamap
+    name: CryptaMap
+    maintainer: AWS Samples
+    url: https://github.com/aws-samples/sample-CryptaMap
+    licensing: open-source
+    license: MIT-0
+    functions: [generate, analyse]
+    methods: [cloud]
+    formats: [CycloneDX 1.7]
+    status: active
+    summary: >-
+      Builds an organisation-wide inventory of cryptography in AWS services as a CBOM. A sample
+      project rather than a supported AWS product.
+    evidence: https://github.com/aws-samples/sample-CryptaMap
+    checked: 2026-09-13
+
+  - id: cbom4cert
+    name: cbom4cert
+    maintainer: Anthony Harrison
+    url: https://github.com/anthonyharrison/cbom4cert
+    licensing: open-source
+    license: Apache-2.0
+    functions: [generate]
+    methods: [keystore]
+    formats: [CycloneDX, SPDX (incomplete)]
+    status: active
+    summary: >-
+      Generates a CBOM for installed certificates. One of few tools offering SPDX output, which its
+      README describes as incomplete.
+    evidence: https://github.com/anthonyharrison/cbom4cert
+    checked: 2026-09-13
+
+  - id: cbomctl
+    name: cbomctl
+    maintainer: Sadjad Asadi
+    url: https://github.com/lvlrSajjad/cbomctl
+    licensing: open-source
+    license: Apache-2.0
+    functions: [analyse, consume]
+    formats: [CycloneDX]
+    status: active
+    summary: >-
+      Takes a CBOM from any generator and evaluates it against several national PQC policies. It
+      does not scan anything itself.
+    evidence: https://github.com/lvlrSajjad/cbomctl
+    checked: 2026-09-13
+
+  - id: open-quantum-secure
+    name: open-quantum-secure
+    maintainer: jimbo111
+    url: https://github.com/jimbo111/open-quantum-secure
+    licensing: open-source
+    license: MIT
+    functions: [generate, analyse]
+    methods: [source-code, binary, network, keystore]
+    formats: [CycloneDX 1.7]
+    status: active
+    summary: >-
+      A scanner that combines its own findings with those of other engines, such as CryptoScan,
+      cdxgen and CBOMkit-theia, into one CBOM.
+    evidence: https://github.com/jimbo111/open-quantum-secure
+    checked: 2026-09-13
+
+  - id: cryptarch
+    name: cryptarch
+    maintainer: jhammant
+    url: https://github.com/jhammant/cryptarch
+    licensing: open-source
+    license: Apache-2.0
+    functions: [generate]
+    methods: [network, keystore]
+    formats: [CycloneDX 1.6]
+    status: active
+    summary: >-
+      A scanner for network endpoints and certificates that can write its findings as a CBOM.
+    evidence: https://github.com/jhammant/cryptarch
+    checked: 2026-09-13
+
+  - id: pqaudit
+    name: pqaudit
+    maintainer: PQCWorld
+    url: https://github.com/PQCWorld/pqaudit
+    licensing: open-source
+    license: MIT
+    functions: [generate]
+    methods: [source-code, configuration, network]
+    formats: [CycloneDX 1.6]
+    status: active
+    summary: >-
+      An audit tool for quantum-vulnerable cryptography in code, configuration and endpoints that
+      reports as a CBOM.
+    evidence: https://github.com/PQCWorld/pqaudit
+    checked: 2026-09-13
+
+  - id: pqc-readiness-cli
+    name: pqc-readiness-cli
+    maintainer: Qtonic Quantum
+    url: https://github.com/qtonicquantum/pqc-readiness-cli
+    licensing: open-source
+    license: MIT
+    functions: [generate]
+    methods: [keystore]
+    formats: [CycloneDX 1.7]
+    status: active
+    summary: >-
+      Reads PEM and DER certificate files and writes a CBOM.
+    evidence: https://github.com/qtonicquantum/pqc-readiness-cli
+    checked: 2026-09-13
+
+  - id: cryptoscan
+    name: CryptoScan
+    maintainer: CSNP (QRAMM Toolkit)
+    url: https://github.com/csnp/cryptoscan
+    licensing: open-source
+    license: Apache-2.0
+    functions: [generate]
+    methods: [source-code]
+    status: active
+    summary: >-
+      A source code scanner with a CBOM output format. The sample output in its README declares
+      specVersion 1.0, and CycloneDX 1.6 cryptographic properties are listed as planned.
+    evidence: https://github.com/csnp/cryptoscan
+    checked: 2026-09-13
+
+  - id: cryptodeps
+    name: CryptoDeps
+    maintainer: CSNP (QRAMM Toolkit)
+    url: https://github.com/csnp/cryptodeps
+    licensing: open-source
+    license: Apache-2.0
+    functions: [generate]
+    methods: [source-code]
+    status: active
+    summary: >-
+      Analyses a project's dependencies for cryptography and can report as a CBOM. The sample output
+      in its README declares CycloneDX 1.5, which predates cryptographic assets in CycloneDX.
+    evidence: https://github.com/csnp/cryptodeps
+    checked: 2026-09-13
+
+  - id: csnp-tls-analyzer
+    name: TLS Analyzer
+    maintainer: CSNP (QRAMM Toolkit)
+    url: https://github.com/csnp/tls-analyzer
+    licensing: open-source
+    license: MIT
+    functions: [generate]
+    methods: [network]
+    formats: [CycloneDX]
+    status: active
+    summary: >-
+      Analyses TLS endpoints and can report as a CBOM.
+    evidence: https://github.com/csnp/tls-analyzer
+    checked: 2026-09-13
+
+  - id: ac-scanner
+    name: AC Scanner
+    maintainer: qubitac
+    url: https://github.com/qubitac/AC-Scanner
+    licensing: open-source
+    license: AGPL-3.0
+    functions: [generate]
+    methods: [network]
+    status: active
+    summary: >-
+      A network scanner that outputs a CBOM as structured JSON. Its README does not say which
+      format the JSON follows.
+    evidence: https://github.com/qubitac/AC-Scanner
+    checked: 2026-09-13
+
+  - id: quantakrypto-pqc-tools
+    name: pqc-tools
+    maintainer: quantakrypto (Dandelion Labs)
+    url: https://github.com/quantakrypto/pqc-tools
+    licensing: open-source
+    license: Apache-2.0
+    functions: [generate, analyse]
+    methods: [source-code, network]
+    status: active
+    summary: >-
+      A set of scanners for source code and network endpoints whose outputs include a CBOM. Its
+      README does not name the CBOM format.
+    evidence: https://github.com/quantakrypto/pqc-tools
+    checked: 2026-09-13
+
+  # ------------------------------------------------------ commercial, freemium
+  - id: aqtive-guard
+    name: AQtive Guard
+    maintainer: SandboxAQ
+    url: https://www.aqtiveguard.com/
+    licensing: commercial
+    functions: [consume, generate, analyse]
+    formats: [CycloneDX 1.4 (import), CycloneDX 1.6 (import)]
+    status: active
+    summary: >-
+      A platform for discovering and managing cryptographic assets that imports CBOM files produced
+      by other tools. The product site also says it generates CBOMs; the export format is not stated.
+    evidence: https://docs.aqtiveguard.com/data-sources/cbom/
+    checked: 2026-09-13
+
+  - id: keyfactor-agilesec
+    name: Keyfactor AgileSec
+    maintainer: Keyfactor (formerly InfoSec Global)
+    url: https://docs.keyfactor.com/agilesec/latest/agilesec-3-4-release-notes
+    licensing: commercial
+    functions: [generate, analyse]
+    methods: [source-code, binary, configuration]
+    formats: [CycloneDX 1.6]
+    status: active
+    summary: >-
+      A cryptographic inventory platform that exports its findings as a CBOM for each scanned
+      source, from release 3.4.
+    evidence: https://docs.keyfactor.com/agilesec/latest/agilesec-3-4-release-notes
+    checked: 2026-09-13
+
+  - id: cbom-secure
+    name: CBOM Secure
+    maintainer: Encryption Consulting
+    url: https://www.encryptionconsulting.com/cryptographic-discovery-inventory/
+    licensing: commercial
+    functions: [generate, analyse]
+    methods: [source-code, binary, filesystem, network, cloud, keystore]
+    formats: [CycloneDX 1.6, CycloneDX 1.7]
+    status: active
+    summary: >-
+      A discovery and inventory product with sensors for cloud platforms, HSMs, TLS endpoints,
+      directories, databases, filesystems, source code and binaries.
+    evidence: https://www.encryptionconsulting.com/cryptographic-discovery-inventory/
+    checked: 2026-09-13
+
+  - id: quprotect-r3
+    name: QuProtect R3
+    maintainer: QuSecure
+    url: https://www.qusecure.com/cryptographic-bill-of-materials-cbom/
+    licensing: commercial
+    functions: [generate, analyse]
+    formats: [CycloneDX]
+    status: active
+    summary: >-
+      A PQC platform whose reporting component produces CBOMs from the inventory its sensors build.
+    evidence: https://www.qusecure.com/cryptographic-bill-of-materials-cbom/
+    checked: 2026-09-13
+
+  - id: tychon-cryptographic-inventory
+    name: TYCHON Cryptographic Inventory
+    maintainer: TYCHON
+    url: https://tychon.io/tychoncryptographicinventory/
+    licensing: commercial
+    functions: [generate, analyse]
+    formats: [CycloneDX]
+    status: active
+    summary: >-
+      A cryptographic inventory product with quantum readiness scoring that lists CBOM as an
+      inventory output.
+    evidence: https://tychon.io/tychoncryptographicinventory/
+    checked: 2026-09-13
+
+  - id: qvision
+    name: QVision
+    maintainer: PQStation
+    url: https://www.pqstation.com/qvision
+    licensing: commercial
+    functions: [generate, analyse]
+    methods: [network, keystore, filesystem, source-code]
+    formats: [CycloneDX 1.7]
+    status: active
+    summary: >-
+      A discovery platform that reconciles network, certificate, filesystem and source code
+      observations into one CBOM.
+    evidence: https://www.pqstation.com/qvision
+    checked: 2026-09-13
+
+  - id: qscout
+    name: QScout
+    maintainer: Qtonic Quantum (formerly Qryptonic)
+    url: https://qtonicquantum.com/qscout
+    licensing: commercial
+    functions: [analyse, generate]
+    formats: [CycloneDX 1.7]
+    status: active
+    summary: >-
+      An assessment service and platform for quantum cryptographic risk with CBOM output among its
+      deliverables.
+    evidence: https://qtonicquantum.com/qscout
+    checked: 2026-09-13
+
+  - id: ibm-quantum-safe-explorer
+    name: IBM Quantum Safe Explorer
+    maintainer: IBM
+    url: https://www.ibm.com/docs/en/quantum-safe/quantum-safe-explorer/2.x?topic=quantum-safe-explorer-overview
+    licensing: commercial
+    functions: [generate]
+    methods: [source-code]
+    status: active
+    summary: >-
+      Scans source code in several languages for quantum-vulnerable cryptography and reports as a
+      CBOM, among other formats. The documentation does not name a CycloneDX version.
+    evidence: https://www.ibm.com/docs/en/quantum-safe/quantum-safe-explorer/2.x?topic=quantum-safe-explorer-overview
+    checked: 2026-09-13
+
+  - id: ibm-guardium-cryptography-manager
+    name: IBM Guardium Cryptography Manager
+    maintainer: IBM
+    url: https://www.ibm.com/docs/en/guardium-cm/2.0.x?topic=getting-portfolio-view-code-repositories
+    licensing: commercial
+    functions: [consume, analyse]
+    status: active
+    verify: true
+    summary: >-
+      Imports code repository findings from IBM Quantum Safe Explorer, including CBOMs, into a
+      portfolio view. CBOM is mentioned only as an imported data type.
+    evidence: https://www.ibm.com/docs/en/guardium-cm/2.0.x?topic=getting-portfolio-view-code-repositories
+    checked: 2026-09-13
+
+  - id: qcecuring-cbom
+    name: QCecuring CBOM
+    maintainer: QCecuring
+    url: https://www.qcecuring.com/product/cbom
+    licensing: commercial
+    functions: [generate, analyse]
+    methods: [source-code, keystore, network, cloud]
+    formats: [CycloneDX]
+    status: active
+    summary: >-
+      A discovery product covering code repositories, directories, certificate authorities, web
+      servers, cloud platforms, HSMs and Kubernetes that reports in CycloneDX JSON and XML.
+    evidence: https://www.qcecuring.com/product/cbom
+    checked: 2026-09-13
+
+  - id: qinsight-atlas
+    name: Qinsight Atlas
+    maintainer: Qinsight
+    url: https://www.qinsight.com/product-cryptographic-posture-management
+    licensing: commercial
+    functions: [generate, analyse]
+    methods: [cloud, source-code, runtime]
+    status: active
+    summary: >-
+      A cryptographic posture management platform that builds a CBOM for each scanned source. The
+      product page does not name a format.
+    evidence: https://www.qinsight.com/product-cryptographic-posture-management
+    checked: 2026-09-13
+
+  - id: appviewx-pqc-assessment
+    name: AppViewX PQC Assessment Tool
+    maintainer: AppViewX
+    url: https://www.appviewx.com/blogs/appviewx-avx-one-pqc-assessment-tool-kickstart-your-pqc-readiness-journey-with-complete-cryptographic-visibility/
+    licensing: freemium
+    functions: [generate, analyse]
+    methods: [source-code, keystore, configuration]
+    formats: [CycloneDX]
+    status: active
+    summary: >-
+      Scans code, dependencies, certificates and configuration, gives a PQC readiness score, and
+      generates a CBOM in CycloneDX or CSV. Free with registration.
+    evidence: https://www.appviewx.com/blogs/appviewx-avx-one-pqc-assessment-tool-kickstart-your-pqc-readiness-journey-with-complete-cryptographic-visibility/
+    checked: 2026-09-13
+
+  - id: cbom-compliance
+    name: CBOM Compliance
+    maintainer: NextGenRails
+    url: https://cbomcompliance.com/
+    licensing: freemium
+    functions: [validate, consume, analyse]
+    formats: [CycloneDX 1.6, CycloneDX 1.7, SPDX]
+    status: active
+    verify: true
+    summary: >-
+      A web service that grades the cryptographic assets in an uploaded BOM against NIST PQC
+      deadlines. The site gives no company details beyond a contact address.
+    evidence: https://cbomcompliance.com/
+    checked: 2026-09-13

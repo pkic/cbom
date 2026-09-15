@@ -8,6 +8,7 @@ title: Overview
 {% assign aspects = site.data.aspects.aspects %}
 {% assign naspects = aspects | size %}
 {% assign jset = refs | map: "jurisdiction" | uniq | size %}
+{% assign ntools = site.data.tooling.tools | size %}
 
 <section class="hero">
   <div class="wrap hero-inner">
@@ -85,7 +86,7 @@ title: Overview
 <section class="wrap cards-section">
   <div class="section-head">
     <h2>Explore the project</h2>
-    <p>Five places to dig in.</p>
+    <p>Seven places to dig in.</p>
   </div>
   <div class="card-grid">
     <a class="feature-card" href="{{ '/methodology/' | relative_url }}">
@@ -108,6 +109,20 @@ title: Overview
       <p>The evidence base — standards, regulation and guidance the methodology aligns to,
          filterable by category, status and jurisdiction.</p>
       <span class="card-cta">Browse the register &#8594;</span>
+    </a>
+    <a class="feature-card" href="{{ '/tooling/' | relative_url }}">
+      <span class="card-kicker">{{ ntools }} tools</span>
+      <h3>Tooling</h3>
+      <p>Software that generates, consumes, validates or analyses CBOMs, each linked to where its
+         maintainer states CBOM support. A listing, not an endorsement.</p>
+      <span class="card-cta">Browse the tools &#8594;</span>
+    </a>
+    <a class="feature-card" href="{{ '/meetings/' | relative_url }}">
+      <span class="card-kicker">Agendas and recordings</span>
+      <h3>Meetings</h3>
+      <p>When the group meets and what it plans to settle. Upcoming meetings carry an agenda;
+         past ones carry the recording and the slides presented, ready to download.</p>
+      <span class="card-cta">See the schedule &#8594;</span>
     </a>
     <a class="feature-card" href="{{ '/contributing/' | relative_url }}">
       <span class="card-kicker">No install required</span>
