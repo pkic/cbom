@@ -24,61 +24,129 @@ nav: introduction
 <main>
   <div class="crumb">START HERE</div>
   <h1>Introduction</h1>
-  <p class="lead">This section assumes no prior knowledge of bills of materials. It takes one product, one CBOM and one buyer's question, shows why the CBOM cannot answer the question, and shows what a profile does about it. Every other section elaborates on something that happens here.</p>
+  <p class="lead">This section assumes no prior knowledge of bills of materials. It follows one product, one CBOM and one question the CBOM cannot answer, then shows what a profile does about it. Every other section expands on something that happens here.</p>
 
-  <h2>A document that is correct and still unusable</h2>
-  <p>A vendor supplies an nginx web server and, with it, a CBOM. Reading it, you learn that the product uses AES-256-GCM, X25519 and RSA-2048, that it holds a server certificate for <code>example.com</code>, and that the cryptography is implemented by OpenSSL 3.4.0. Every statement in the document is true.</p>
-  <p>Now the question you actually have to answer before you deploy it: <em>when an administrator logs in to configure this product, what protects that session?</em></p>
-  <p>The document does not say. Not because the vendor was careless — the interface it described, it described well — but because nothing required it to describe that other one. A CBOM format specifies what <em>may</em> be recorded. It does not specify what <em>must</em> be.</p>
+  <h2>The problem, in one example</h2>
+  <p>A vendor supplies an nginx web server and, with it, a CBOM. From that document you learn that the product uses AES-256-GCM, X25519 and RSA-2048, that it holds a server certificate for <code>example.com</code>, and that OpenSSL 3.4.0 implements the cryptography. Every statement in it is true.</p>
 
-  <pre><code>components
-  HTTPS service interface (TLS 1.3)     described in full
-  AES-256-GCM, X25519, RSA-2048         the algorithms it uses
-  example.com server certificate
-  OpenSSL 3.4.0                         the implementing library
+  <pre><code>Document A, as supplied
+────────────────────────────────────────────────────────────
+subject       nginx 1.27.0
+interfaces    1 declared
 
-                                        (nothing about administrative access)</code></pre>
+  [1]  HTTPS service interface
+       protocol          TLS 1.3
+       key exchange      X25519
+       encryption        AES-256-GCM
+       authentication    RSA-2048
+       certificate       example.com
+       implemented by    OpenSSL 3.4.0
 
-  <p>This is not an unusual document. It is the normal outcome of asking a supplier for a CBOM without stating what the CBOM is for.</p>
+not declared  the interface an administrator logs in to
+              (on this product, SSH via OpenSSH)</code></pre>
 
-  <h2>Completeness depends on the question</h2>
-  <p>The obvious remedy — ask for everything — makes the problem worse. A large product performs thousands of cryptographic operations, and a document that lists all of them buries the two or three facts on which any particular decision turns. Exhaustive coverage is not useful coverage.</p>
-  <p>There is no absolute standard of completeness for a CBOM. A CBOM is complete <em>relative to a purpose</em>. So the question worth asking is not "does this document contain everything", which has no answer, but "does it contain what this decision needs", which does — provided the decision has been written down first, in a form something other than a person can check.</p>
+  <p>Three months later a weakness is published against a key exchange that SSH uses. The question that lands on your desk is whether this product is affected, and if it is, which of the several hundred instances you operate.</p>
+  <p>Document A cannot answer. It describes the interface that serves web traffic and says nothing about the interface an administrator connects to. The vendor was not careless. It described the interface it declared accurately and in full, and nothing obliged it to declare the other one.</p>
+  <p>A CBOM format defines what a document <em>may</em> record. It does not define what a document <em>must</em> record. A vendor that answers a request for a CBOM with Document A has complied with the format and left the buyer no better off.</p>
+  <p>Document A is not an unusual document. It is the ordinary result of asking a supplier for a CBOM without saying what the CBOM is for.</p>
 
-  <h2>A profile is that written-down form</h2>
-  <p>A profile is a short list of rules stating which attributes a CBOM must carry to support one stated decision, for one stated reader. It is a minimum reporting requirement, not a schema and not a format.</p>
-  <p>The example used throughout this documentation is the <strong>Interface Disclosure Baseline</strong>. Its consumer is an operator or purchaser holding a product it did not build and cannot inspect. Its decision is whether the cryptography the product applies at its boundaries, including the interface used to configure it, is disclosed in enough detail to be recorded in an inventory and assessed against policy.</p>
-  <p>It has two kinds of rule. <strong>Product rules</strong> constrain the set of interfaces as a whole:</p>
+  <h2>Why asking for everything does not work</h2>
+  <p>The obvious remedy makes matters worse. A large product performs thousands of cryptographic operations, and a document listing all of them buries the two or three facts any particular decision turns on. Exhaustive coverage is not useful coverage, and in practice no supplier would produce it.</p>
+  <p>There is no absolute standard of completeness for a CBOM. Completeness is relative to a purpose. So the question worth asking is not "does this document contain everything", which has no answer, but "does it contain what this decision needs", which does. That second question has an answer only if the decision has been written down first, in a form that something other than a person can check.</p>
+
+  <h2>What a profile is</h2>
+  <p>A profile is a short list of rules stating which attributes a CBOM must carry to support one stated decision, for one stated reader. It is a minimum reporting requirement. It is not a schema, and it is not a format.</p>
+
+  <h3>The example used throughout: the Interface Disclosure Baseline</h3>
+  <p>Every profile begins by naming who reads the document and what they are deciding. Without those two, there is no principled place for the list of rules to stop.</p>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th>Rule</th><th>Requirement</th><th>Level</th></tr></thead>
+    <thead><tr><th></th><th>The Interface Disclosure Baseline, v0.7</th></tr></thead>
     <tbody>
-      <tr><td>P1</td><td>The product declares at least one cryptographic interface</td><td><span class="must">MUST</span></td></tr>
-      <tr><td>P2</td><td>The product declares at least one management (configuration) interface</td><td><span class="must">MUST</span></td></tr>
+      <tr><td><strong>Reader</strong></td><td>An operator or purchaser holding a product it did not build and cannot inspect, keeping a cryptographic inventory across an estate.</td></tr>
+      <tr><td><strong>Decision</strong></td><td>When a weakness is published against an algorithm, a protocol version or a library, which of the deployed interfaces are affected. And, set beside the record from last quarter, what has changed.</td></tr>
+      <tr><td><strong>Actions</strong></td><td>Record the interfaces and take no further action. Act on an affected interface by reconfiguring, upgrading or isolating it. Ask the producer for a fuller disclosure. Reject the submission as insufficient to inventory.</td></tr>
     </tbody>
   </table>
   </div>
-  <p><strong>Interface rules</strong> then apply uniformly to every interface that has been declared: the protocol and its version, the key exchange, the encryption, the authentication, both endpoint roles, the interface type, the lifecycle stage the report describes, and the implementing library.</p>
-  <p>Eleven rules in total. That is the entire profile. It is short on purpose: it names the minimum that supports one decision and stops there, which is what makes it possible for a vendor to satisfy it and for a buyer to insist on it.</p>
-  <p>Note what the profile does not contain. There is no rule about whether the cryptography is any good. Whether a product is post-quantum ready is not a fact about the product; it is a judgement made against criteria that change over time, and it is kept outside the document in versioned <a href="policy-evaluation.html">policy</a>. The CBOM carries facts. The policy makes the judgement.</p>
+  <p>Naming four actions is what makes the rest of the profile arguable. A reader with only one available action is not deciding anything, and a profile written from that has no test for whether it asks for the right things.</p>
+  <p>The baseline has thirteen rules, of two kinds.</p>
 
-  <h2>What happens when the rules are run</h2>
-  <p>Two nginx CBOMs, evaluated against that profile.</p>
-  <p>The first declares an HTTPS service interface and an SSH management interface, and describes both. It conforms.</p>
-  <p>The second is the document at the top of this page. Its HTTPS interface is described accurately and in full — every interface rule passes — and it fails, on P2, because no management interface was declared at all.</p>
-  <div class="banner">The failing document contains no false statement. It fails because conformance is measured against a decision rather than against truth. An accurate document that omits the one thing the reader needs is precisely the failure a profile exists to catch, and no check the format alone can perform will find it.</div>
-  <p>The <a href="demo.html">Demo</a> runs both of these, and a third, in the browser.</p>
+  <h3>Product rules: constraints on the set of interfaces</h3>
+  <table>
+    <thead><tr><th>#</th><th>The document must</th><th>Level</th><th>Because</th></tr></thead>
+    <tbody>
+      <tr><td>P1</td><td>declare at least one cryptographic interface</td><td><span class="must">MUST</span></td><td>A CBOM describing no interface answers nothing.</td></tr>
+      <tr><td>P2</td><td>declare at least one management interface, or state that there is none</td><td><span class="must">MUST</span></td><td>This is the rule Document A fails. A hardware token with no configuration surface hides nothing by lacking one, so declared absence satisfies the rule and silence does not.</td></tr>
+      <tr><td>P3</td><td>identify the subject it describes</td><td><span class="must">MUST</span></td><td>An unidentified record cannot be matched to a deployment, or compared with the same product's record from last quarter.</td></tr>
+      <tr><td>P4</td><td>state how complete its list of interfaces is</td><td><span class="must">MUST</span></td><td>Otherwise a missing interface is uninterpretable. It could mean the interface does not exist, or that the producer chose not to list it.</td></tr>
+    </tbody>
+  </table>
+  <p>These four are the rules that catch omission, which no per-attribute rule can. A document can describe its service interface impeccably, pass every attribute rule, and still fail P2.</p>
 
-  <h2>Withheld is not the same as missing</h2>
-  <p>One refinement is worth meeting early, because it recurs throughout. In the conforming document, the management interface does not name its implementing library. It carries a marker saying the value is <em>withheld</em>. Rule I9 allows this: the attribute is required and withholdable, so the marker satisfies the rule where silent omission would not.</p>
-  <p>The distinction matters to whoever reads the document. A withheld value is a position the producer has taken deliberately and can be challenged in a negotiation. An absent value could be anything — unknown to the producer, not applicable, or simply forgotten. The first can be acted on; the second can only be guessed at. The methodology therefore distinguishes four outcomes for any attribute — supplied, withheld, unknown, undeclared — where the formats offer only present or absent.</p>
+  <h3>Interface rules: constraints on each one</h3>
+  <p>These apply uniformly to every interface the document declares, however many that is.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>#</th><th>Attribute</th><th>Level</th><th>What it answers</th></tr></thead>
+    <tbody>
+      <tr><td>I1</td><td><code>protocol</code></td><td><span class="must">MUST</span></td><td>TLS, SSH, IPsec, and similar</td></tr>
+      <tr><td>I2</td><td><code>protocolVersion</code></td><td><span class="must">MUST</span></td><td>Which version, since an advisory usually names one</td></tr>
+      <tr><td>I3</td><td><code>keyExchange</code></td><td><span class="must">MUST</span></td><td>How the session key is agreed</td></tr>
+      <tr><td>I4</td><td><code>encryption</code></td><td><span class="must">MUST</span></td><td>What protects the traffic once the key is agreed</td></tr>
+      <tr><td>I5</td><td><code>authentication</code></td><td><span class="must">MUST</span></td><td>How each end proves who it is</td></tr>
+      <tr><td>I6</td><td><code>endpointRoles</code></td><td><span class="must">MUST</span></td><td>Who is at each end, so the interface can be located in a topology</td></tr>
+      <tr><td>I7</td><td><code>interfaceType</code></td><td><span class="must">MUST</span></td><td>One of five values, among them service, management and interconnect. P2 is checked against this</td></tr>
+      <tr><td>I8</td><td><code>lifecycleStage</code></td><td><span class="must">MUST</span></td><td>Whether the value was intended, implemented, configured or observed, which is how much weight the reader should give it</td></tr>
+      <tr><td>I9</td><td><code>implementationPurl</code></td><td><span class="must">MUST</span></td><td>Which library implements it, so an advisory against that library can be matched. The one rule here a producer may answer by withholding</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Thirteen rules is the entire profile. It is short deliberately. It names the minimum that supports one decision and then stops, which is what makes it possible for a vendor to satisfy it and for a buyer to insist on it.</p>
+
+  <h3>What the profile does not say</h3>
+  <p>No rule asks whether the cryptography is any good. Whether a product is post-quantum ready is not a fact about the product. It is a judgement made against criteria that change over time, and it is kept outside the document, in versioned <a href="policy-evaluation.html">policy</a>. The CBOM carries the facts. The policy reaches the verdict, and is dated so that a reader can tell which criteria produced it.</p>
+
+  <h2>Evaluating two documents against the profile</h2>
+  <p>Document A is the one above. Document B is the same product described by a supplier who declared both interfaces, the HTTPS service interface and the SSH management interface.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Rule</th><th>Document A</th><th>Document B</th></tr></thead>
+    <tbody>
+      <tr><td>P1 &nbsp;at least one cryptographic interface</td><td><span class="pass">passes</span></td><td><span class="pass">passes</span></td></tr>
+      <tr><td>P2 &nbsp;a management interface, or a statement that there is none</td><td><span class="fail">FAILS</span></td><td><span class="pass">passes</span></td></tr>
+      <tr><td>P3 &nbsp;the subject is identified</td><td><span class="pass">passes</span></td><td><span class="pass">passes</span></td></tr>
+      <tr><td>P4 &nbsp;the interface list states its completeness</td><td><span class="pass">passes</span></td><td><span class="pass">passes</span></td></tr>
+      <tr><td>I1 to I9 &nbsp;on every declared interface</td><td><span class="pass">passes</span> (1 interface)</td><td><span class="pass">passes</span> (2 interfaces)</td></tr>
+      <tr><td><strong>Verdict</strong></td><td><strong>does not conform</strong></td><td><strong>conforms</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="banner">Document A contains no false statement, and every attribute it does carry is correct. It fails because conformance is measured against a decision rather than against truth. An accurate document that omits the one thing its reader needs is the failure a profile exists to catch, and no check the format alone can perform will find it.</div>
+  <p>The <a href="demo.html">Demo</a> runs both of these in the browser, along with a third: a library with no administrative surface at all, which satisfies P2 by saying so.</p>
+
+  <h2>The four disclosure outcomes</h2>
+  <p>One refinement is worth meeting early, because it recurs throughout. In Document B the management interface does not name its implementing library. It carries a marker saying the value is withheld, and rule I9 accepts that, because I9 is the one rule in this profile marked withholdable.</p>
+  <p>The marker matters to whoever reads the document. A withheld value is a position the producer has taken and can be challenged on in a negotiation. An absent value could be anything. So the methodology separates four outcomes for any attribute, where the CBOM formats offer only present and absent.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Outcome</th><th>What it says about the producer</th><th>Satisfies a MUST rule?</th></tr></thead>
+    <tbody>
+      <tr><td><strong>supplied</strong></td><td>It knows the value and has published it</td><td>Yes</td></tr>
+      <tr><td><strong>withheld</strong></td><td>It knows the value and has decided not to publish it</td><td>Only where the rule is marked withholdable</td></tr>
+      <tr><td><strong>unknown</strong></td><td>It does not know the value</td><td>No, but it is reported separately from silence</td></tr>
+      <tr><td><strong>undeclared</strong></td><td>Nothing was said, and the reader cannot tell which of the other three applies</td><td>No</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The first three can be acted on. The fourth can only be guessed at, and a buyer who cannot tell a deliberate omission from an oversight has no basis for asking the supplier to fix it.</p>
 
   <h2>Where to go next</h2>
-  <p>Nothing above depends on the rest of the documentation, and the rest of the documentation is an expansion of it.</p>
+  <p>Nothing above depends on the rest of the documentation, and the rest of the documentation expands on it.</p>
   <div class="cards">
     <a class="card" href="demo.html"><div class="num">interactive</div><h3>Demo</h3><p>Run three documents against the profile and watch each rule resolve, including the four disclosure outcomes.</p></a>
     <a class="card" href="index.html"><div class="num">map</div><h3>Overview</h3><p>What each section covers, and two suggested routes through the material depending on why you are here.</p></a>
-    <a class="card" href="challenges.html"><div class="num">background</div><h3>Challenges</h3><p>Why CBOMs behave the way the failing document did, and what SBOM adoption already established about it.</p></a>
+    <a class="card" href="challenges.html"><div class="num">background</div><h3>Challenges</h3><p>Why CBOMs behave the way Document A did, and what SBOM adoption already established about it.</p></a>
     <a class="card" href="method.html"><div class="num">procedure</div><h3>Method</h3><p>The twelve steps for defining a profile, if you are here to write one rather than to read one.</p></a>
   </div>
   <p><a href="terms.html">Terms</a> is a glossary and sits in the Reference group. It is there for when a word is unfamiliar, not something to read first.</p>
