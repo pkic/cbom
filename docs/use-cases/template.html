@@ -1,0 +1,138 @@
+---
+nav: uc-template
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Worked Use Case Template</title>
+<link rel="stylesheet" href="../methodology/styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Use Cases</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include usecases-nav.html %}
+
+<main>
+  <div class="crumb">TEMPLATE</div>
+  <h1>Worked use case template</h1>
+  <p class="lead">A blank in the shape of a worked use case. Each section below says what belongs in it, why that part has to come before the next one, and how to tell when it is finished. Copy this page, work down it, and delete the instructions as you replace them. The <a href="pqc-migration.html">PQC migration</a> page is the same shape filled in, and is worth reading alongside this one.</p>
+  <div class="banner">This page is scaffolding, not a deliverable. It states no requirement and constrains no profile. If you are looking for what a profile must satisfy, that is <a href="../methodology/conformance.html">Conformance</a>.</div>
+
+  <h2>Starting one</h2>
+  <p>Five mechanical steps, none of which involve writing prose.</p>
+  <ol>
+    <li>Copy this file to <code>docs/use-cases/&lt;short-name&gt;.html</code>. The short name becomes part of the URL and is awkward to change later, so pick the consumer's word for the thing rather than the working group's.</li>
+    <li>Change the front matter <code>nav:</code> value to <code>uc-&lt;short-name&gt;</code>.</li>
+    <li>Add one line to the first group in <code>docs/_data/usecases_nav.yml</code>, with the same id.</li>
+    <li>Add one row to the table on <a href="index.html">the section overview</a>, with the state set to draft.</li>
+    <li>Fix the previous and next links in the footer of this page and of its new neighbours. This section's footer links are written by hand; <code>tools/renumber-pagenav.py</code> manages the methodology's and will not touch these.</li>
+  </ol>
+  <p>Then work down the eight sections. They are in dependency order, which is the reason for doing them in order rather than a matter of presentation: section three cannot be done without section one, and section four cannot be reviewed without section six.</p>
+
+  <h2>1 · The decision being supported</h2>
+  <p>Name the consumer, the actions it is choosing between, and the questions it has to answer to choose. All three, not just the first. A consumer without actions is an audience, and a profile written for an audience has no principled place to stop.</p>
+  <p>The test is whether a reader could disagree with you. "A security team wants visibility of its cryptography" is not a decision and cannot be argued with. "A fleet operator is choosing, per device model, between update in place, replace, and accept with a compensating control" can be: someone can say that a fourth option exists, or that two of these are really one.</p>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <p><strong>The consumer.</strong> Who is reading the CBOM and acting on it. A role, not an organisation.</p>
+    <p><strong>The actions.</strong> Two or more, mutually exclusive, each with a different cost. If you can only think of one, the use case is a reporting requirement rather than a decision, which is a different and usually cheaper thing to serve.</p>
+    <p><strong>The questions.</strong> Three to five. Each one has to be answerable from a document, or it belongs to a different process.</p>
+    <p><strong>Why the existing profiles do not already answer them.</strong> If the interface disclosure baseline answers them all, stop here and say so on the overview page. That is a good outcome, not a failed one.</p>
+  </div>
+
+  <h2>2 · The constraint the producer is under</h2>
+  <p>What the party filling the document in can actually observe. This section is what keeps the profile satisfiable, and skipping it is the most common way to produce a profile nobody can conform to.</p>
+  <p>The PQC migration profile has one constraint, the black box: the vendor will not expose internals, so every attribute must be declarable at the boundary. Yours may have others. A producer may not know how its product is deployed. It may know at manufacture and not afterwards. It may be a different party from the one the consumer is asking.</p>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <p><strong>Who produces the document</strong>, and whether that is the same party the consumer is in a relationship with.</p>
+    <p><strong>What they can observe</strong>, and at what moment. Design time, build time, ship time and run time give different answers, and <a href="../methodology/lifecycle.html">capture phase</a> is how the document says which one it is.</p>
+    <p><strong>What they will not disclose</strong> even though they know it, and whether the profile should permit that as a <a href="../methodology/confidentiality.html">withholding</a> or require it outright.</p>
+    <p><strong>A diagram, if the constraint is structural.</strong> The migration page draws its black box because the shape of the constraint is the argument for the shape of the profile.</p>
+  </div>
+
+  <h2>3 · From questions to attributes</h2>
+  <p>Take each question from section one and turn it into one fact that can be declared at the boundary. Work in that direction. Starting from the fields a format happens to offer produces a profile with no stated purpose and no way to argue about whether it asks for the right things.</p>
+  <p>Record the questions that do not survive. A question that cannot be turned into a declarable fact is a finding about the limits of a CBOM, and it is worth more written down than dropped.</p>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <p>A two-column table: <em>what the consumer needs to know</em> against <em>the attribute that supplies it</em>. One row per question, and more than one row per question where the answer needs several facts.</p>
+    <p>For each attribute, say whether it already exists in the baseline, exists under a different name, or is new to this profile. Reusing a name means inheriting its meaning; <a href="../methodology/method.html">Method</a> has the naming conventions and they are not optional.</p>
+    <p>Then the questions that did not survive, with the reason each one failed. Usually: not observable by the producer, or a judgement rather than a fact.</p>
+  </div>
+
+  <h2>4 · The profile definition</h2>
+  <p>The rules. State which profile this one extends, then list what it adds and what it tightens. Do not restate inherited rules as though they were yours; the base profile remains authoritative for them, and repeating them creates two places to maintain one requirement.</p>
+  <p>Rules are numbered in this profile's own space, from <code>P1</code>, <code>I1</code> and <code>G1</code>, and cited against this profile's tag. A tightened rule keeps the id of the profile that introduced it. <a href="../methodology/profile.html">Profile</a> has the scheme and <a href="../methodology/objects.html">Objects</a> has the identity rules.</p>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <p><strong>The relationship to the base.</strong> One table with three rows: inherited unchanged, tightened, added.</p>
+    <p><strong>Product-level rules</strong>, <strong>per-interface rules</strong> and <strong>group rules</strong>, each with a conformance level and a note saying what the rule is for. The note is what a reviewer argues with.</p>
+    <p><strong>Every tightening, with its justification.</strong> A tightening removes an option the base profile deliberately offered, so each one owes the reader a reason. Remember that extension is monotonic: you may add and tighten, never relax.</p>
+    <p><strong>Conditional rules.</strong> A rule that applies only under a stated condition, with the condition written as something checkable rather than as advice.</p>
+  </div>
+  <div class="banner warn">Write the rules file at the same time as this table, not afterwards. Two statements of the same rules drift apart within a week, and the file is the one a tool reads.</div>
+
+  <h2>5 · A worked interface</h2>
+  <p>One real interface with every required attribute filled in, so the rules can be read against something concrete. This is the section reviewers use, and it routinely shows up problems the rule table hides: an attribute with no sensible value, two attributes that cannot both be true, a MUST that the producer has no way to satisfy.</p>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <p>One interface, named and typed, with each attribute the profile requires and a plain-language column saying what the value tells the consumer.</p>
+    <p>At least one attribute where the honest answer is <code>unknown</code> or withheld, if the profile permits either. A worked example in which everything is known is not the case the profile has to survive.</p>
+  </div>
+
+  <h2>6 · What the profile deliberately excludes</h2>
+  <p>Each exclusion with its reason. Without this section the profile cannot be reviewed, because a reader cannot tell an exclusion that was argued from an attribute nobody thought of.</p>
+  <p>Two exclusions are likely to apply to any profile and are worth stating even when they feel obvious. Verdicts and scores belong in a <a href="../methodology/policy-evaluation.html">policy</a> rather than a profile, because the criteria change and the document does not. Internal implementation detail is out of scope wherever the producer is a vendor, and asking for it produces a profile nobody satisfies.</p>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <p>Each excluded attribute or class of attribute, with the reason. "Not needed for this decision" is a reason. "We could not agree" is also a reason, and should be recorded as an open question rather than presented as a choice.</p>
+    <p>Anything a reader of the base profile would expect to see here and will not find.</p>
+  </div>
+
+  <h2>7 · Expressing it in a CBOM</h2>
+  <p>How the attributes land in the formats, and which of them have no native field. The attribute list is format-independent by design; this section is where that design meets CycloneDX and SPDX. <a href="../methodology/formats.html">Formats</a> has the encoding conventions.</p>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <p>Which attributes map to native fields, and which are carried as properties under the <code>pkic:profile:</code> namespace.</p>
+    <p>Anything structural that the mapping makes awkward. Lists where the baseline holds single values are the usual one, and the usual failure is a consumer that cannot tell an empty list from an absent one, or either from a withheld one.</p>
+    <p>What the four disclosure outcomes mean here, and specifically what a producer should record when it does not know rather than guessing.</p>
+  </div>
+
+  <h2>8 · Recorded decisions and open questions</h2>
+  <p>What was settled while writing it, and what was not. A decision taken during the work and not written down will be reopened, usually by the person who took it.</p>
+  <div class="fill">
+    <span class="fill-label">to fill in</span>
+    <p><strong>Decision records</strong> for any choice made against a more obvious alternative. One file in <code>decisions/</code> each, with the options, the rationale and what reversing it would involve, plus a row in the decisions README. Summarise them here and link out; the record is authoritative, not the summary.</p>
+    <p><strong>Open questions</strong> added to <code>open-questions.md</code>, each mapped to one of the thirteen topics, each with its options and their trade-offs. Cite them by number here.</p>
+  </div>
+
+  <h2>Before it counts as developed</h2>
+  <p>The overview page lists a use case as developed only when three things exist, and they are the three a reader can check without taking anyone's word for it.</p>
+  <ul>
+    <li>A rules file that passes requirements C1 to C17 of <a href="../methodology/conformance.html">Conformance</a>. Run <code>check_profile.py</code> against it.</li>
+    <li>One document that conforms to the profile, and one that does not. The second is the one that matters: a profile no document has ever failed has not been shown to constrain anything.</li>
+    <li>A test in <code>tests/run-profile-tests.sh</code> that asserts both outcomes, including the exit status.</li>
+  </ul>
+  <p>Until then the page is a draft, which is a perfectly good state for it to be in and should be labelled rather than avoided. A draft that names its consumer and its decision is already more useful to the working group than a finished profile whose purpose has to be reverse-engineered from its rules.</p>
+
+  <div class="banner">The pattern to take from this template: name the consumer and the decision, derive the questions that decision raises, and turn each question into an attribute that can be declared at the boundary. Everything else on this page is bookkeeping in service of that.</div>
+
+  <div class="pagenav">
+    <a href="iot.html">← IoT device estate</a>
+    <span></span>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</div>
+</body>
+</html>

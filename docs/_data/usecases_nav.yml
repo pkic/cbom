@@ -13,12 +13,15 @@
 # pages that its previous/next links are written by hand.
 #
 # Adding a worked use case means adding one line to the first group, and one
-# row to the table on index.html.
+# row to the table on index.html. The Template entry stays last in the group:
+# it is the blank the others are copied from, not a use case.
 
 - group: Use cases
   items:
     - { id: uc-index,     title: Overview,           url: index.html }
     - { id: uc-pqc,       title: PQC Migration,      url: pqc-migration.html }
+    - { id: uc-iot,       title: IoT Device Estate,  url: iot.html }
+    - { id: uc-template,  title: Template,           url: template.html }
 
 - group: In the methodology
   items:

@@ -13,7 +13,7 @@ This register collects them in one place so that a meeting agenda can be set fro
 Each question is mapped to one of the thirteen topics the group already tracks as GitHub issues,
 so an item can be posted to the issue that covers it.
 
-Forty-eight questions sit under those thirteen topics. Four more do not fit any of them, which
+Sixty-five questions sit under those thirteen topics. Four more do not fit any of them, which
 is itself worth knowing, and they are listed at the end.
 
 Q36 to Q44 were added on 9 August 2026 in response to member feedback, covering the
@@ -80,13 +80,13 @@ deleted.
 |---|---|
 | 3.1 What a profile is for, and its scope | Q01, Q02 |
 | 3.2 Naming and versioning a profile | Q03, Q04 |
-| 3.3 The list of attributes | Q05, Q06, Q07, Q08, Q09, Q34, Q36, Q37, Q45, Q46, Q47 |
-| 3.4 How binding each rule is | Q10, Q11, Q12 |
+| 3.3 The list of attributes | Q05, Q06, Q07, Q08, Q09, Q34, Q36, Q37, Q45, Q46, Q47, Q62, Q63 |
+| 3.4 How binding each rule is | Q10, Q11, Q12, Q65 |
 | 3.5 Checking conformance | Q13, Q14, Q15, Q31, Q32 |
 | 3.6 Writing a profile into a file format | Q16, Q17, Q18, Q48 |
 | 3.7 Agreed names for algorithms and protocols | Q19, Q20, Q21, Q38, Q39 |
 | 3.8 How a CBOM relates to an SBOM | Q22, Q40 |
-| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35, Q49, Q50, Q51, Q52, Q53 |
+| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35, Q49, Q50, Q51, Q52, Q53, Q64 |
 | 3.10 Statements about the future | Q26, Q27, Q28 |
 | 3.11 Governing a profile over time | Q29, Q41, Q42, Q61 |
 | 3.12 Fitting regulation and policy | Q43, Q44 |
@@ -616,6 +616,74 @@ already familiar in the sectors that care most.
 
 ---
 
+## Q62 — Is the subject of a CBOM a device model or a deployed device?
+
+**Status** open. Added 15 September 2026, from the IoT use case draft.
+
+**The question.** A manufacturer writes one document about a model it ships in millions. An
+operator makes its decisions about particular deployed units, whose configuration, location and
+remaining life the manufacturer does not know. Nothing in the methodology says which of these the
+subject of a document is, and the baseline's product rule P3 requires only that the subject be
+identified, not what kind of thing it is.
+
+**Why it matters.** The two readings give different profiles. If the subject is a model, no rule
+may require a deployment fact and the operator has to join the document to its own inventory,
+which nothing specifies how to do. If the subject is a unit, almost no manufacturer can produce a
+conforming document at all. Today a reader cannot tell which a given document is, and two
+documents that differ on this point look identical.
+
+**Option A: the subject is whatever the producer says it is, declared explicitly.** Add a subject
+kind alongside the subject identifier (trade-off: cheap, and pushes the join problem onto the
+consumer without helping it).
+
+**Option B: a profile states which kind of subject it is written for**, and a document about the
+wrong kind does not conform (trade-off: makes the mismatch a verdict rather than a surprise, and
+forces a sector profile to choose; needs a new conformance requirement).
+
+**Option C: leave it.** The methodology has managed without it because every worked example so far
+has a subject that is both (trade-off: it stops being true the moment a device profile exists).
+
+**Where it stands. Nothing.** The question was noticed while drafting the IoT use case, where the
+gap between the two is unusually wide.
+
+**What would have to change.** The Model and Objects sections, the baseline's P3, and probably a
+conformance requirement.
+
+---
+
+## Q63 — Can a profile say that a limit is permanent rather than current?
+
+**Status** open. Added 15 September 2026, from the IoT use case draft.
+
+**The question.** Every capability attribute in the methodology reports a current state. A device
+that cannot carry a post-quantum handshake because of its available flash or a frame size fixed by
+a radio standard is not in a current state that a future release changes. Nothing distinguishes
+the two.
+
+**Why it matters.** The distinction is the whole of one consumer decision. Told that an interface
+does not support an algorithm, an operator waits for a release. Told that it cannot and will not,
+the operator replaces the device or puts something in front of it, and starts budgeting now.
+Reporting both the same way produces plans that quietly assume an update that is never coming.
+
+**Option A: a value in the existing capability vocabulary**, alongside `not-planned`, meaning that
+the hardware forecloses it (trade-off: cheap, but overloads a vocabulary about commitment with a
+statement about physics, and commitment vocabularies get revised).
+
+**Option B: a separate attribute recording the binding limit itself** — usable memory, maximum
+frame or message size — from which a consumer draws its own conclusion (trade-off: states a fact
+rather than a judgement, which is the methodology's usual preference, but needs a unit convention
+and is more work for the producer).
+
+**Option C: treat it as out of scope.** A CBOM says what cryptography is present, not what the
+hardware forbids (trade-off: defensible, and leaves the IoT use case unserved).
+
+**Where it stands. Nothing.**
+
+**What would have to change.** The attribute list, and decision 0007 if Option A is taken, since
+that decision fixed how availability is expressed.
+
+---
+
 # 3.4 How binding each rule is
 
 Tracked as issue #6.
@@ -865,6 +933,36 @@ exists. The use case is listed as undeveloped in the Use Cases section and block
 
 **What would have to change.** A new profile and its documents; the Use Cases table; and, under
 Option B, either the baseline's disclosure convention or the attribute list.
+
+## Q65 — May a rule require a fact about a process rather than about a product?
+
+**Status** open. Added 15 September 2026, from the IoT use case draft.
+
+**The question.** The IoT use case needs to know who can install firmware on a device: the
+operator, the manufacturer, a connectivity platform, or an installer with physical access. That is
+a fact about an arrangement between parties, not a property of the product. Every attribute in the
+methodology so far is a property of the product or of one of its interfaces.
+
+**Why it matters.** Without it, an operator cannot tell an available action from a theoretical one,
+and the update attribute that does exist is close to useless. Against that, admitting process facts
+opens a door: support contracts, service levels and commercial terms are all facts about
+arrangements, and a profile that can ask for one can be argued into asking for the rest.
+
+**Option A: admit it, narrowly**, with a stated test — the fact must be one the producer knows at
+the time of writing and that changes what the consumer can do (trade-off: serves the use case, and
+the test is a judgement rather than something a validator can check).
+
+**Option B: keep the boundary and record only the mechanism**, leaving who may use it to the
+commercial relationship (trade-off: clean, and leaves the operator to discover by asking, which is
+the manual work the profile exists to remove).
+
+**Option C: a separate document kind** for arrangement facts, referenced from the CBOM
+(trade-off: keeps the CBOM clean at the cost of an object the methodology does not have and would
+have to govern).
+
+**Where it stands. Nothing.**
+
+**What would have to change.** The Model section, on what a CBOM is about, and the attribute list.
 
 # 3.5 Checking conformance
 
@@ -1826,6 +1924,39 @@ naming rules.
 
 ---
 
+## Q64 — Is an IoT profile a branch from the baseline or a depth of the migration family?
+
+**Status** open. Added 15 September 2026, from the IoT use case draft.
+
+**The question.** The IoT use case needs most of the migration profile's capability attributes and
+several it does not have, while having no use for others the migration profile requires at MUST.
+Under composition it can either extend the interface disclosure baseline directly, as a branch, or
+extend the PQC migration profile, as a depth of that family.
+
+**Why it matters.** Extension is monotonic, so extending the migration profile means inheriting
+every one of its MUSTs, including ones a constrained device cannot satisfy and a fleet operator
+does not need. Branching avoids that and costs something real in return: the same person planning
+an estate of gateways and an estate of sensors then holds two profiles that share most of their
+attributes and cannot be compared by conformance.
+
+**Option A: branch from the baseline** (trade-off: satisfiable, and gives up the guarantee that an
+IoT-conforming document is also migration-conforming).
+
+**Option B: extend the migration profile** (trade-off: one family, one comparison, and probably
+unsatisfiable for the devices the use case exists for).
+
+**Option C: refactor the migration profile** so that the attributes both need sit in a shallower
+shared profile that each extends (trade-off: the right answer structurally, and it revises a
+profile that has already been reviewed).
+
+**Where it stands. Nothing.** It blocks writing any rule for the IoT use case, since what a profile
+may tighten depends on what it extends.
+
+**What would have to change.** The IoT profile, and under Option C the migration profile and its
+documents.
+
+---
+
 # 3.10 Statements about the future
 
 Tracked as issue #10.
@@ -2064,6 +2195,39 @@ means.
 **What would have to change.** The Governance section, the freshness policy in Versioning, and
 possibly the claim schema.
 
+## Q61 — When a profile is tightened, does anyone have to be told?
+
+**Status** open. Added 15 September 2026, from the Governance rework.
+
+**The question.** Revising a published profile changes whether already-published CBOMs conform to
+it. Q15 asks how long a supplier has to catch up. Nothing asks whether the supplier finds out, or
+from whom.
+
+**Why it matters.** A grace period nobody knows has started is not a grace period. A producer's
+documents can stop conforming while the producer is doing nothing wrong and reading nothing that
+would say so, and the first signal is a buyer rejecting a submission. Notification is also what
+separates a tightening from an ambush in procurement terms, and a profile authority that cannot be
+reached has effectively frozen its own profile, since nobody can rely on it changing predictably.
+
+**Option A: publication is notification.** The versioned profile is published and the archive
+obligation makes the change inspectable; suppliers are expected to watch (trade-off: nobody watches,
+and the burden falls on the party least able to carry it. It also rewards a profile authority for
+being quiet).
+
+**Option B: the profile authority maintains a notification channel** and announces tightenings to
+registered conformance claimants (trade-off: requires a register of who has claimed conformance,
+which nothing currently keeps, and which has its own confidentiality problems).
+
+**Option C: the obligation falls on the consumer invoking the newer version.** A buyer insisting on
+a tightened profile must give notice before rejecting on that basis (trade-off: puts the duty where
+the commercial power is, and gives the same supplier a different date from every buyer).
+
+**Where it stands.** Nothing. The power is now named in Governance under revision states; the
+obligation that should accompany it is not.
+
+**What would have to change.** The Governance section, and Q15, which cannot be answered
+independently of this one.
+
 # 3.12 Fitting regulation and policy
 
 Tracked as issue #12.
@@ -2295,42 +2459,15 @@ reviewer to discount it.
 **Option B: defer.** It is expensive, and more convincing once the method and composition
 questions have settled. A second example built on unsettled foundations would need reworking.
 
+**Where it stands.** Partly answered, and not in the way this item expected. The IoT use case
+drafted on 15 September is a second sector, but it does not use the same profile unchanged: it
+needs attributes no existing profile has, and it raises Q62 to Q65 in the process. That is
+evidence of a different kind. It shows the method carries to another sector, which is the useful
+claim, rather than showing that one profile does, which was probably never true.
+
 **What would have to change.** Release scope (N03) and reviewer confidence. Note that the rule
 against naming specific products gives a mechanical argument for product independence that does
 not depend on a second example.
-
-## Q61 — When a profile is tightened, does anyone have to be told?
-
-**Status** open. Added 15 September 2026, from the Governance rework.
-
-**The question.** Revising a published profile changes whether already-published CBOMs conform to
-it. Q15 asks how long a supplier has to catch up. Nothing asks whether the supplier finds out, or
-from whom.
-
-**Why it matters.** A grace period nobody knows has started is not a grace period. A producer's
-documents can stop conforming while the producer is doing nothing wrong and reading nothing that
-would say so, and the first signal is a buyer rejecting a submission. Notification is also what
-separates a tightening from an ambush in procurement terms, and a profile authority that cannot be
-reached has effectively frozen its own profile, since nobody can rely on it changing predictably.
-
-**Option A: publication is notification.** The versioned profile is published and the archive
-obligation makes the change inspectable; suppliers are expected to watch (trade-off: nobody watches,
-and the burden falls on the party least able to carry it. It also rewards a profile authority for
-being quiet).
-
-**Option B: the profile authority maintains a notification channel** and announces tightenings to
-registered conformance claimants (trade-off: requires a register of who has claimed conformance,
-which nothing currently keeps, and which has its own confidentiality problems).
-
-**Option C: the obligation falls on the consumer invoking the newer version.** A buyer insisting on
-a tightened profile must give notice before rejecting on that basis (trade-off: puts the duty where
-the commercial power is, and gives the same supplier a different date from every buyer).
-
-**Where it stands.** Nothing. The power is now named in Governance under revision states; the
-obligation that should accompany it is not.
-
-**What would have to change.** The Governance section, and Q15, which cannot be answered
-independently of this one.
 
 ---
 
@@ -2352,3 +2489,4 @@ independently of this one.
 | Maturity section, drafted from a member's request for a reachable first profile | Q50, Q51, Q52, Q53 |
 | Confidentiality section | Q54, Q55, Q56 |
 | Vulnerabilities section | Q57, Q58, Q59, Q60 |
+| IoT use case draft | Q62, Q63, Q64, Q65 |

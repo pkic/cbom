@@ -145,6 +145,16 @@ li{margin:7px 0;color:var(--body)}
 .card p{margin:0;color:var(--muted);font-size:14px}
 .card .num{font:500 11.5px/1 var(--mono);color:var(--faint);letter-spacing:.05em}
 
+/* a to-fill-in block on the use case template */
+.fill{background:var(--panel2);border:1px dashed #c3ccd9;border-radius:var(--radius);
+  padding:12px 17px;margin:18px 0}
+.fill p,.fill li{color:var(--muted);font-size:14px}
+.fill p{margin:7px 0}
+.fill>:first-child+p{margin-top:0}
+.fill-label{display:block;font:500 11px/1 var(--mono);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+.fill table{margin:10px 0}
+
 .pagenav{display:flex;justify-content:space-between;gap:12px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
 .pagenav a{font-size:14px}
 .pagenav .next{margin-left:auto;text-align:right}
