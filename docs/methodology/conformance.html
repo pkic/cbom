@@ -24,14 +24,14 @@ nav: conformance
 <main>
   <div class="crumb">CORE</div>
   <h1>Conformance</h1>
-  <p class="lead">This section states what conformance means within the methodology, what may be assessed for conformance, who may assert it, how an assertion is expressed, and what an assertion does not cover. The <a href="profile.html">Profile</a> section describes the rules of one example profile; this section describes the relation those rules take part in.</p>
+  <p class="lead">This section says what conformance means in this methodology. It covers what can be assessed, who may assert conformance, how an assertion is written down, and what an assertion does not cover. The <a href="profile.html">Profile</a> section sets out the rules of one example profile. This section describes the relation those rules take part in.</p>
   <div class="banner warn">Illustrative. This clause is a draft for working group discussion. Several points marked below remain open, and are recorded in the open questions register.</div>
 
   <h2>Requirement keywords</h2>
   <p>The keywords MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in BCP 14 (RFC 2119 and RFC 8174) when, and only when, they appear in capitals. The same keywords in lower case carry their ordinary English meaning and impose no requirement.</p>
 
   <h2>What can be assessed</h2>
-  <p>Three different things are assessed against three different criteria, and a claim that does not say which of them is meant is ambiguous. A statement that something "is conformant" without naming the target is not a conformance claim under this methodology.</p>
+  <p>Three different things can be assessed, and each is assessed against its own criteria. A claim that does not say which of the three it means is ambiguous. Saying that something "is conformant", without naming what was assessed, is not a conformance claim under this methodology.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Target</th><th>Assessed against</th><th>Assessed by</th><th>Result</th></tr></thead>
@@ -57,7 +57,7 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>The three are related in one direction only. A document assessed by a non-conforming tool has no established verdict, and a verdict against a profile that is not well-formed establishes nothing about the document, because the rules it was measured against were not valid rules.</p>
+  <p>The three depend on each other, and only in one direction. A verdict means something only if the tool that produced it conforms, and only if the profile it was measured against is well-formed. So a document assessed by a non-conforming tool has no established verdict. A verdict against a profile that is not well-formed establishes nothing either, because the rules the document was measured against were not valid rules in the first place.</p>
 
   <h2>1. A CBOM document conforming to a profile</h2>
   <p>A CBOM document conforms to a profile version when all of the following hold.</p>
@@ -67,7 +67,7 @@ nav: conformance
     <li>Every declared interface satisfies every per-interface rule at MUST level.</li>
     <li>Every rule assessed as satisfied by a disclosure marker rather than a value is a rule the profile marks as withholdable.</li>
   </ul>
-  <p>Rules at SHOULD and MAY level are evaluated and reported. They do not determine the verdict. A profile that intends a requirement to determine the verdict states it at MUST level. Where a consumer treats a SHOULD rule as binding, the error lies in the reading of the profile, and the remedy is for the profile author to raise the level if that is what was meant.</p>
+  <p>Rules at SHOULD and MAY level are evaluated and reported, but they do not decide the verdict. An author who wants a requirement to decide the verdict states it at MUST level. Sometimes a consumer treats a SHOULD rule as binding anyway. That is a misreading of the profile, and the fix is for the author to raise the level if MUST was what they meant.</p>
 
   <h3>Verdict vocabulary</h3>
   <div style="overflow:auto">
@@ -80,7 +80,7 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>Refusal and non-conformance are reported distinctly and MUST NOT be merged. A refused document may be entirely adequate; the profile is simply unable to say so. Treating a refusal as a failure penalises a producer for the age of a format rather than for the content of its disclosure.</p>
+  <p>Refusal and non-conformance are reported separately and MUST NOT be merged. A refused document may be perfectly adequate. The profile is simply unable to say so, because it cannot express its rules against that version of the carrier format. Treating a refusal as a failure punishes a producer for the age of a format rather than for what the document discloses.</p>
 
   <h3>Effect of the disclosure states</h3>
   <p>An attribute with no value is assessed according to which of the four outcomes applies. The states are defined in the <a href="profile.html">Profile</a> section and are summarised here for their effect on a verdict.</p>
@@ -95,10 +95,10 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>A conforming document may therefore withhold material, and a consumer reading only the verdict will not know that it did. For that reason a conformance report states the disclosure state of every rule it assessed, and a consumer that acts on the verdict alone is discarding the part of the result most likely to matter commercially. The sharpest case is a public and a restricted variant of one document, both conforming, only one of which answers the question; see <a href="confidentiality.html">Confidentiality</a>.</p>
+  <p>So a document can conform while withholding something, and a consumer who reads only the verdict will not know that it did. This is why a conformance report states the disclosure state of every rule it assessed. A consumer who acts on the verdict alone is throwing away the part of the result most likely to matter commercially. The sharpest case is a public variant and a restricted variant of the same document. Both conform, and only one of them answers the question. See <a href="confidentiality.html">Confidentiality</a>.</p>
 
   <h3>Conformance to more than one profile</h3>
-  <p>A document evaluated against several profiles receives one verdict per profile. No verdict implies anything about another, except where one profile extends the other: conformance to a derived profile implies conformance to the base version it pins, because extension is monotonic. See the composition rules in <a href="profile.html">Profile</a>.</p>
+  <p>A document evaluated against several profiles receives one verdict per profile, and no verdict implies anything about any other. There is one exception. Where one profile extends another, conformance to the derived profile does imply conformance to the base version it pins, because extension is monotonic. See the composition rules in <a href="profile.html">Profile</a>.</p>
 
   <h3>Scope of a verdict</h3>
   <p>A verdict applies to one revision of one document, assessed at a point in time. It does not extend to later revisions, to other documents describing the same product, or to the product itself. A product does not conform to a profile; a document describing it does.</p>
@@ -129,10 +129,10 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>C3, C6 and C7 are the three that a review most often has to enforce, because each is easy to violate while producing a rules file that loads and runs. A profile naming an instance still evaluates documents; it simply evaluates them for one deployment.</p>
+  <p>C3, C6 and C7 are the three a review most often has to enforce. Each is easy to break while still producing a rules file that loads and runs without complaint. A profile that names a particular instance, for example, still evaluates documents perfectly well. It just evaluates them for one deployment rather than for the product.</p>
 
   <h3>The scope declaration</h3>
-  <p>C11 asks for one object rather than a set of scattered fields, because the subject, the relationship types and the accepted lifecycle stages are one boundary and are decided together in <a href="method.html">Method</a> step 2.</p>
+  <p>C11 asks for one object rather than a set of scattered fields. The subject, the relationship types and the accepted lifecycle stages together describe a single boundary, and <a href="method.html">Method</a> step 2 decides all of them at once.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Member</th><th>Values</th><th>What it settles</th></tr></thead>
@@ -144,10 +144,12 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>The last of the four is the one that changes verdicts. Without it a document may report every interface at the <code>intended</code> stage, describing cryptography the producer plans to implement rather than cryptography that exists, and still conform. That is adequate for a disclosure baseline, which is why the example baseline accepts all four stages; it is not adequate for a procurement or migration profile, and the migration example accepts only the three that describe something real. A derived profile may narrow the set and may not widen it, for the same reason it may not relax a rule.</p>
+  <p>The last of the four is the one that changes verdicts. Without it, a document could report every interface at the <code>intended</code> stage and still conform. It would be describing cryptography the producer plans to build rather than cryptography that exists.</p>
+  <p>For a disclosure baseline that is acceptable, which is why the example baseline accepts all four stages. For a procurement or migration profile it is not, and the migration example accepts only the three stages that describe something real. A derived profile may narrow the set. It may not widen it, for the same reason it may not relax a rule.</p>
 
-  <h3>Orientation, and why it constrains rather than labels</h3>
-  <p>Present state and declared capability are reported in the same document, about the same interface, under names that differ by one suffix: <code>keyExchange</code> is what an interface negotiates, <code>keyExchangeSupported</code> is everything it could negotiate. The naming conventions in <a href="method.html">Method</a> keep the two names apart. They do not keep the two <em>obligations</em> apart, and a profile requiring only the capability leaves a consumer with a set of algorithms and no way to tell which is in use. The likely reading of such a document is the wrong one.</p>
+  <h3>Orientation, and why it is checked rather than taken on trust</h3>
+  <p>Present state and declared capability sit in the same document, about the same interface, under names that differ by a single suffix. <code>keyExchange</code> is what an interface negotiates today. <code>keyExchangeSupported</code> is everything it could negotiate.</p>
+  <p>The naming conventions in <a href="method.html">Method</a> keep the two names apart. They do not keep the two <em>obligations</em> apart. A profile that requires only the capability leaves a consumer holding a set of algorithms with no way to tell which one is in use, and the reading such a document invites is the wrong one.</p>
   <p>C12 closes that by giving each orientation an obligation.</p>
   <div style="overflow:auto">
   <table>
@@ -159,35 +161,44 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>C12 is assessed against the resolved profile, so an inherited rule satisfies it. That is the ordinary case rather than a concession: the example migration profile declares the three capability attributes itself and takes their present-state counterparts from the baseline it extends. A profile that declared <code>both</code> and required capability alone would fail, which is the case the requirement exists for.</p>
+  <p>C12 is assessed against the resolved profile, so a rule inherited from a base can satisfy it. That is the normal case rather than a loophole. The example migration profile declares the three capability attributes itself, and takes their present-state counterparts from the baseline it extends. A profile that declared <code>both</code> and required capability alone would fail, and that is the case the requirement exists to catch.</p>
 
   <h3>Group rules, and why coverage is checked</h3>
-  <p>A rule normally constrains one attribute of an interface. A <strong>group rule</strong> constrains a repeated group keyed by a controlled vocabulary, so an interface can give one answer per key rather than one answer overall. The migration example uses it for capability: an interface states where it stands for each cryptographic purpose, because key agreement and identity proof migrate on different timetables and a single status would have to report the worse of the two.</p>
-  <p>Two properties of a group rule are checked, and each has a failure mode that would otherwise pass silently.</p>
-  <p>A group keyed by a vocabulary the profile does not declare requires an entry for no keys at all. Every document then satisfies it, and the rule reads as passing. C13 rejects the profile instead.</p>
-  <p>A group whose <code>coverage</code> is <code>in-scope</code> while the vocabulary is larger lets a profile defer part of the problem and then never ask about it. A staged profile is meant to sequence the <em>depth</em> of an answer, not to remove the question: a purpose the profile has deferred still owes a status, and a blocker where that status is not <code>available</code>. Without that, a supplier conforms while behaving as though a whole class of cryptography does not exist, and each stage becomes a floor rather than a step. C13 is what makes the difference checkable.</p>
+  <p>A rule normally constrains one attribute of one interface. A <strong>group rule</strong> is different. It constrains a repeated group of entries, keyed by a controlled vocabulary, so that an interface gives one answer per key instead of one answer overall. The migration example uses this for capability. An interface states where it stands for each cryptographic purpose separately, because key agreement and identity proof migrate on different timetables, and a single status would have to report the worse of the two.</p>
+  <p>Two properties of a group rule are checked. Each of them has a failure mode that would otherwise slip through, because the rule looks entirely ordinary in the file and reports as passing.</p>
+  <p>The first is a group keyed to a vocabulary the profile never declares. Such a rule requires an entry for no keys at all, so every document satisfies it and the report shows it passing. C13 rejects the profile rather than issuing that verdict.</p>
+  <p>The second is a group whose <code>coverage</code> is set to <code>in-scope</code> while the vocabulary it is keyed to is larger. That lets a profile defer part of the problem and then never come back to it. A staged profile is meant to sequence how much <em>detail</em> an answer carries, not to remove the question. A purpose the profile has deferred still owes a status, and a blocker wherever that status is not <code>available</code>. Without that, a supplier can conform while behaving as though a whole class of cryptography does not exist, and each stage becomes a floor rather than a step towards something. C13 is what makes the difference checkable.</p>
 
   <h3>Identifier schemes</h3>
-  <p>An inventory assembled from several suppliers has to decide which records describe the same thing, and identity cannot be settled in general because some asset classes have no agreed identifier. It can be settled per profile, which is the lever this methodology has: a profile names the form it requires for each class of asset its rules constrain, and a consumer then knows which naming they are reading.</p>
-  <p>C14 does not check that a value belongs to a registry. The checker does not hold the registry and would be guessing. What it checks is that the declaration and the rules agree in both directions &mdash; every scheme a rule references is declared, and every scheme declared is referenced by some rule &mdash; because a scheme nobody applies drifts from the rules while continuing to read as authoritative. Which registry an algorithm name should come from is <a href="../issues/">Q20</a> and is unsettled; that a profile says which one it means is settled here.</p>
+  <p>An inventory built from several suppliers has to work out which records describe the same thing. Identity cannot be settled in general, because some classes of asset have no agreed identifier at all. It can be settled one profile at a time, and that is the lever this methodology has. A profile names the form it requires for each class of asset its rules constrain, and a consumer then knows which naming scheme they are reading.</p>
+  <p>C14 does not check that a value really belongs to a registry. The checker does not hold the registry, so it would be guessing. What it does check is that the declaration and the rules agree in both directions. Every scheme a rule references must be declared, and every scheme declared must be referenced by some rule. A scheme that no rule applies drifts away from what the profile actually does, while continuing to read as authoritative. Which registry an algorithm name should come from is <a href="../issues/">Q20</a>, and that is unsettled. That a profile has to say which one it means is settled here.</p>
 
   <h3>C15 and C16: identifiers that can be cited</h3>
-  <p>A rule identifier is local to the profile that declares it, so a rule is named as <code>&lt;profileTag&gt;#&lt;ruleId&gt;</code> and three profiles in one family may each declare an <code>I1</code>. That moves the uniqueness requirement off the rule identifiers, which an author cannot coordinate across a family, and onto the tag, which an author chooses once. C15 is that check. Without it a citation resolves to two different rules and a stored conformance claim stops meaning anything; with it, a base profile can add a rule without first asking what its derived profiles have taken.</p>
-  <p>C16 fixes the letter to the kind of rule rather than leaving it to the author: <code>P</code> once per product, <code>I</code> once per declared interface, <code>G</code> once per entry in a group. Because the tag already says which profile a rule belongs to, the letter is free to carry the thing a reader actually wants from it. C16 does not require the numbering to be dense: a released identifier is never reused, so gaps are correct, and a checker demanding a contiguous sequence would forbid the thing that rule exists to permit. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0011-rule-numbering-across-a-family.md">decision 0011</a>.</p>
+  <p>A rule identifier is local to the profile that declares it. A rule is therefore named as <code>&lt;profileTag&gt;#&lt;ruleId&gt;</code>, and three profiles in one family may each declare an <code>I1</code> of their own. This moves the uniqueness requirement off the rule identifiers, which no author can coordinate across a whole family, and onto the tag, which an author picks once. C15 is the check that the tag is unique. Without it, a citation could resolve to two different rules and a stored conformance claim would stop meaning anything. With it, a base profile can add a rule without first asking what its derived profiles have already used.</p>
+  <p>C16 fixes what the letter means, rather than leaving it to the author. <code>P</code> means the rule is evaluated once per product, <code>I</code> once per declared interface, and <code>G</code> once per entry in a group. The tag already says which profile a rule belongs to, so the letter is free to carry the thing a reader actually wants to know. C16 does not require the numbers to run without gaps. A released identifier is never reused, so gaps are correct, and a checker that demanded a contiguous sequence would forbid exactly what that rule exists to allow. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0011-rule-numbering-across-a-family.md">decision 0011</a>.</p>
 
   <h3>The third artifact: a claim</h3>
-  <p>Two conformance targets are checked by someone holding the inputs: a document against a profile, and a profile against the methodology. The <strong>claim</strong> is the third artifact and the only one read by someone who does not &mdash; a buyer, months later, in another organisation. It is a machine-readable document bound to one CBOM by digest, listing every profile evaluated with its own verdict and its whole pinned chain, and carrying the disclosure states and the non-assertions inside it rather than by reference.</p>
-  <p>The non-assertions matter most here. Everything in the table above about what a verdict does not establish is repeated inside every claim, because the person reading a claim will not have read this page, and &ldquo;conforms&rdquo; invites more inference than the word can carry.</p>
-  <p>A claim can be re-checked: <code>--verify-claim</code> confirms the digest and re-runs each profile named. It cannot establish that the disclosed values are true, and no version of it ever will &mdash; a producer who misstates a protocol version produces a claim that verifies perfectly. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0015-a-conformance-claim-is-checkable.md">decision 0015</a>, and <a href="https://github.com/pkic/cbom/blob/main/decisions/0016-what-an-spdx-only-claim-asserts.md">0016</a> for what an SPDX-only claim may assert.</p>
+  <p>Two of the conformance targets are checked by someone who holds the inputs: a document against a profile, and a profile against the methodology. The <strong>claim</strong> is the third artifact, and the only one read by someone who does not hold the inputs. Typically a buyer, months later, in a different organisation.</p>
+  <p>A claim is a machine-readable document. It is bound to one CBOM by digest. It lists every profile that was evaluated, each with its own verdict and its whole pinned chain. And it carries the disclosure states and the non-assertions inside itself, rather than pointing at them somewhere else.</p>
+  <p>The non-assertions matter most here. Everything the table at the end of this page says about what a verdict does not establish is repeated inside every claim. The person reading a claim will not have read this page, and the word &ldquo;conforms&rdquo; invites more inference than it can carry.</p>
+  <p>A claim can be re-checked. Running <code>--verify-claim</code> confirms the digest and re-runs each profile the claim names. What it cannot establish is that the disclosed values are true, and no version of it ever will: a producer who misstates a protocol version produces a claim that verifies perfectly. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0015-a-conformance-claim-is-checkable.md">decision 0015</a>, and <a href="https://github.com/pkic/cbom/blob/main/decisions/0016-what-an-spdx-only-claim-asserts.md">0016</a> for what an SPDX-only claim may assert.</p>
 
-  <h3>C17: a rule that cannot fail</h3>
-  <p>A rule that cannot fail is worse than a missing rule, because the report says it passed and a reader has no way to tell the difference. There are three ways to write one, and all three used to survive review: give the rule no constraint at all, misspell the constraint key so the evaluator recognises nothing and reports <code>ok</code> against every value, or point it at a vocabulary that does not exist &mdash; which is the mirror defect, failing every value while saying only that the value was not accepted. C13 already rejected the third case for group keys; C17 covers the rest, and the validator refuses such a profile rather than issuing a verdict against it.</p>
-  <p>This is the same principle as C13's, applied more widely: a profile must be able to be wrong. It is stated as a requirement rather than left to review because none of the three is visible when reading the file &mdash; each one produces a rule that looks entirely ordinary.</p>
+  <h3>C17: rules that cannot fail</h3>
+  <p>A rule that cannot fail is worse than a missing rule. The report says it passed, and a reader has no way to tell the difference. There are three ways to write one, and until recently all three survived review.</p>
+  <ul>
+    <li>Give the rule no constraint at all.</li>
+    <li>Misspell the constraint key, so the evaluator recognises nothing and reports <code>ok</code> against every value.</li>
+    <li>Point the rule at a vocabulary that does not exist. This is the mirror image of the second: it fails every value, while saying only that the value was not accepted.</li>
+  </ul>
+  <p>C13 already rejected the third case for group keys. C17 covers the rest, and the validator refuses such a profile rather than issuing a verdict against it.</p>
+  <p>This is C13's principle applied more widely: a profile must be able to be wrong. It is written as a requirement rather than left to review because none of the three defects is visible when you read the file. Each one produces a rule that looks entirely ordinary.</p>
 
-  <p>C1 to C7 and C11 to C17 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports each requirement in turn. C8 to C10 are checked where the profile declares the material, and reported as warnings that do not affect the result unless <code>--strict</code> is given. All three example profiles pass &mdash; the entry profile of the interface family, the disclosure baseline and the migration profile &mdash; and the test suite carries one deliberately defective profile for each MUST requirement so that the checks themselves are tested. The tool cannot substitute for review: C3 in particular is enforced through structural proxies, so a rule that names an instance in some way the checker does not model would still pass.</p>
+  <p>C1 to C7 and C11 to C17 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports on each requirement in turn. C8 to C10 are checked where the profile declares the material, and are reported as warnings that do not affect the result unless <code>--strict</code> is given.</p>
+  <p>All three example profiles pass: the entry profile of the interface family, the disclosure baseline and the migration profile. The test suite also carries one deliberately defective profile for each MUST requirement, so that the checks themselves are tested.</p>
+  <p>The tool does not replace review. C3 in particular is enforced through structural proxies, so a rule that names a specific instance in some way the checker does not model would still pass.</p>
 
   <h2>3. An evaluation tool conforming to this methodology</h2>
-  <p>Two tools given the same document, the same profile and the same resolution of any extended base are expected to return the same verdict. The requirements below are what that expectation rests on.</p>
+  <p>Two tools given the same document, the same profile, and the same resolution of any extended base should return the same verdict. The requirements below are what that expectation rests on.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>#</th><th>Requirement</th><th>Level</th></tr></thead>
@@ -204,15 +215,20 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>The reference validator distinguishes T5 by exit code: 0 for conforms, 1 for does not conform, 2 for a usage error, 3 for a profile error such as a relaxing override, and 4 for a refusal. The fourth code exists because of T1: a caller that cannot tell refusal from failure will reject a producer for the age of a carrier format. Until August 2026 the validator printed <code>DOES NOT CONFORM</code> and exited 1 on a refusal, merging exactly what this section says must not be merged, and the test suite asserted that exit code, so the defect was pinned rather than caught. What the methodology requires is that the distinction reach the caller. The particular codes are an implementation choice, and another tool may signal it differently.</p>
+  <p>The reference validator signals T5 through its exit code: 0 for conforms, 1 for does not conform, 2 for a usage error, 3 for a profile error such as a relaxing override, and 4 for a refusal.</p>
+  <p>The fourth code exists because of T1. A caller that cannot tell a refusal from a failure will reject a producer for the age of a carrier format.</p>
+  <p>Until August 2026 the validator printed <code>DOES NOT CONFORM</code> and exited 1 on a refusal, merging exactly what this section says must not be merged. The test suite asserted that exit code, so the defect was pinned in place rather than caught.</p>
+  <p>What the methodology requires is that the distinction reaches the caller. The particular codes are an implementation choice, and another tool may signal it differently.</p>
 
-  <p>This site runs two tools, which makes the expectation testable rather than aspirational. <code>validate_cbom.py</code> is the reference. The <a href="demo.html">Demo</a> page is a second implementation: a static page cannot run Python, so the evaluation is written again in JavaScript. It used to carry its own transcription of the rules as well, and the page asserted that its results corresponded to the reference tool's while nothing checked either half. The rules are now fetched from the published rules file, so there is one statement of them; the logic is still a second implementation, and <code>tests/check-demo.py</code> runs the page's own functions over the four example documents and requires the same verdict, the same outcome for every rule, the same disclosure state for every value, and the same carrier band. The two had diverged once before this was checked. A published page that quietly disagrees with the specification is worse than no page, and the sentence this section opens with &mdash; two tools, one verdict &mdash; was the thing being asserted without a check. See decision 0018.</p>
+  <p>This site runs two tools, which makes the expectation above testable rather than aspirational. <code>validate_cbom.py</code> is the reference implementation. The <a href="demo.html">Demo</a> page is a second one: a static page cannot run Python, so the evaluation is written again in JavaScript.</p>
+  <p>The demo used to carry its own transcription of the rules as well, and the page asserted that its results matched the reference tool while nothing checked either half. The rules are now fetched from the published rules file, so there is a single statement of them. The logic is still a second implementation, so <code>tests/check-demo.py</code> runs the page's own functions over the four example documents. It requires the same verdict, the same outcome for every rule, the same disclosure state for every value, and the same carrier band.</p>
+  <p>The two had diverged once before this check existed. A published page that quietly disagrees with the specification is worse than no page at all, and the sentence this section opens with, two tools and one verdict, was being asserted with nothing behind it. See decision 0018.</p>
 
   <h2>Making and recording a claim</h2>
   <p>A conformance claim is a statement by an identified party that a named document revision was assessed against a named profile version and produced a stated verdict.</p>
 
   <h3>What a claim cites</h3>
-  <p>A claim names the profile and its version, the carrier format and its version, and the content revision of the document assessed. A claim omitting any of the three cannot be reproduced, and a claim that cannot be reproduced cannot be audited. Where a derived profile was used, the base and the version it pins are named as well.</p>
+  <p>A claim names three things: the profile and its version, the carrier format and its version, and the content revision of the document that was assessed. A claim missing any of the three cannot be reproduced, and a claim that cannot be reproduced cannot be audited. Where a derived profile was used, the claim also names the base and the version it pins.</p>
   <pre><code>Conforms to:
   pkic.example.pqc-migration v0.6
     extending pkic.example.interface-disclosure v0.7
@@ -227,7 +243,7 @@ Tool: validate_cbom.py 0.2</code></pre>
   <div class="banner warn">Open point. Whether self-declaration is sufficient for a given purpose, or whether some profiles should require attestation by an independent party, is not settled. It may reasonably differ between a procurement profile and an internal reporting profile. Recorded as Q14.</div>
 
   <h3>Validity over time</h3>
-  <p>A claim is fixed to the revision assessed and does not roll forward. A new content revision requires a new evaluation. A new profile version requires a new evaluation, and where the profile change was a tightening, a document that previously conformed may no longer do so. The changelog is what tells a producer whether re-evaluation is likely to be needed, which is why the methodology asks for changes to be classified.</p>
+  <p>A claim is fixed to the revision it assessed and does not roll forward. A new content revision needs a new evaluation. So does a new profile version, and where that version tightened a rule, a document that conformed before may no longer conform. The changelog is what tells a producer whether re-evaluation is likely to be needed, and that is why the methodology asks for every change to be classified.</p>
   <div class="banner warn">Open point. Whether a tightening obliges a grace window before a consumer may reject documents produced against the previous version, and whether that window belongs to the profile or to the agreement between the parties, is not settled. Recorded as Q15.</div>
 
   <h2>What a conformance verdict does not assert</h2>
@@ -246,9 +262,9 @@ Tool: validate_cbom.py 0.2</code></pre>
     </tbody>
   </table>
   </div>
-  <p>The last two are the ones most likely to cause difficulty in procurement, because both allow a document to conform while omitting something the buyer assumed was covered. The remedy is available to the profile author: product rules strong enough that the omission fails the evaluation. It is a question of how the profile is drafted, and the conformance semantics do not need to change to accommodate it.</p>
+  <p>The last two rows are the ones most likely to cause trouble in procurement. Both allow a document to conform while leaving out something the buyer assumed was covered. The remedy is in the profile author's hands: write product rules strong enough that the omission fails the evaluation. This is a drafting question, and the conformance semantics do not need to change to deal with it.</p>
 
-  <div class="banner">Conformance under this methodology is a relation between one document revision and one profile version, established mechanically and reproducibly, stating that the document discloses at least what the profile requires. Whether the disclosure is accurate, and whether the cryptography it describes is adequate, are separate questions addressed in <a href="governance.html">Governance</a> and <a href="policy-evaluation.html">Policy Evaluation</a>.</div>
+  <div class="banner">In short. Conformance under this methodology is a relation between one revision of one document and one version of one profile. It is established mechanically and reproducibly, and what it says is that the document discloses at least what the profile requires. Whether the disclosure is accurate, and whether the cryptography it describes is adequate, are separate questions. <a href="governance.html">Governance</a> and <a href="policy-evaluation.html">Policy Evaluation</a> deal with those.</div>
 
   <div class="pagenav">
     <a href="profile.html">← Profile</a>
