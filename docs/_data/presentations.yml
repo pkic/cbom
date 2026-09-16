@@ -34,20 +34,27 @@
 #              is reported by tests/check-site-data.py.
 
 meta:
-  updated: 2026-09-13
+  updated: 2026-09-16
 
 presentations:
 
-  - id: 2026-08-19-example-deck
-    title: Example — a presentation entry
-    date: 2026-08-19
-    presenter: A. Presenter
-    org: PKI Consortium
-    url: https://pkic.org/wg/cbom/
+  - id: 2025-10-28-advancing-cbom
+    title: "Advancing CBOM: hands-on with CycloneDX v1.7 and PKI extensions"
+    date: 2025-10-28
+    presenter:
+      - Michael Osborne
+      - Hart Montgomery
+    venue: PKI Consortium Post-Quantum Cryptography Conference, Kuala Lumpur
+    file: 2025-10-28-advancing-cbom-workshop.pdf
     format: PDF
-    example: true
-    tags: [example]
+    filesize: 3.7 MB
+    tags: [workshop, cyclonedx, pqca, fundamentals, use-cases]
     summary: >-
-      A placeholder so the page renders and the shape of an entry is visible. A real
-      entry would normally use `file:` and be downloaded from this site; this one uses
-      `url:` because no deck has been committed yet. Replace it, or delete it.
+      The opening half of the two-hour CBOM workshop: the Linux Foundation's
+      Post-Quantum Cryptography Alliance and its projects, then the case for a
+      standard way of reporting cryptography. The argument that carries into this
+      working group's methodology is on the reporting-versus-scanning slides — no
+      organization has access to all the source code in use, so cryptography in
+      vendor software and hardware has to be reported rather than discovered, and
+      what has to be reported depends on the use case. The later sessions on
+      use cases and open-source tooling are not in this deck.

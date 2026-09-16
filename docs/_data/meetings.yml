@@ -10,7 +10,11 @@
 # Fields:
 #   number     (required) meeting number. Sequential, never reused.
 #   date       (required) YYYY-MM-DD.
-#   title      (required) what the meeting is about, in a few words.
+#   title      (required) the standing label "Working group meeting". It is not a
+#              summary of the agenda: what a meeting is about is in `agenda`, and
+#              what it settled is in `summary`, so a title that restates either one
+#              goes stale the moment the agenda moves and says nothing the page is
+#              not already showing.
 #   time       (optional) HH:MM in `timezone`. Omit only if genuinely unset.
 #   timezone   (optional) the zone `time` is stated in. Defaults to meta.timezone.
 #   duration   (optional) minutes.
@@ -31,7 +35,7 @@
 # names its meeting with `meeting: <number>`, and both pages link to each other.
 
 meta:
-  updated: 2026-09-13
+  updated: 2026-09-16
   timezone: Europe/Zurich
   # Shown above the list so a newcomer knows when to turn up. Free text.
   cadence: >-
@@ -46,7 +50,7 @@ meetings:
     time: "18:00"
     timezone: Europe/Zurich
     duration: 60
-    title: Depth, confidentiality and vulnerabilities
+    title: Working group meeting
     join: https://pkic.org/wg/cbom/
     agenda:
       - Welcome, apologies, and approval of the previous minutes
@@ -148,7 +152,7 @@ meetings:
     time: "18:00"
     timezone: Europe/Zurich
     duration: 60
-    title: Collaboration, external presentations and critical infrastructure
+    title: Working group meeting
     agenda:
       - "Collaboration structure — contribution paths for members who do not use GitHub, surveys for open questions and decisions, and a portal for decisions and deliverables"
       - "A series of external presentations from standards bodies, industry and critical-infrastructure practitioners — format and scheduling"
@@ -172,7 +176,7 @@ meetings:
     time: "09:00"
     timezone: Europe/Zurich
     duration: 60
-    title: Profile scope, cryptographic purposes and conformance claims
+    title: Working group meeting
     agenda:
       - Welcome, apologies, and approval of the previous minutes
       - An Introduction for first-time readers, and a new reading order for the methodology
@@ -190,7 +194,7 @@ meetings:
     time: "18:00"
     timezone: Europe/Zurich
     duration: 60
-    title: Standards evolution, use cases and governance
+    title: Working group meeting
     recording_members_only: true
     agenda:
       - Welcome, and introductions from new participants
@@ -216,7 +220,7 @@ meetings:
     time: "09:00"
     timezone: Europe/Zurich
     duration: 60
-    title: Member feedback on the August proposal
+    title: Working group meeting
     agenda:
       - Welcome and apologies
       - "Five items of member feedback — harvest-now-decrypt-later, asset identity across tools, the PQC Maturity Model, end-to-end deployment posture, and long-term governance"
@@ -235,7 +239,7 @@ meetings:
     time: "18:00"
     timezone: Europe/Zurich
     duration: 60
-    title: Position paper chapters, lifecycle stages and BOM relationships
+    title: Working group meeting
     agenda:
       - Collecting questions and feedback into information pages, and a position paper on CBOMs
       - An end-to-end CBOM use case demonstration for the PKI Consortium conference workshop
@@ -262,7 +266,7 @@ meetings:
     time: "18:00"
     timezone: Europe/Zurich
     duration: 60
-    title: Rolling CBOMs, tool diversity and what a profile is for
+    title: Working group meeting
     agenda:
       - Access to the draft document, and whether the files it references are public
       - "Rolling CBOMs — a continuously updated inventory, and discovering assets kept in non-default locations"
@@ -283,7 +287,7 @@ meetings:
     time: "09:00"
     timezone: Europe/Zurich
     duration: 60
-    title: Introductions, and the case for CBOM profiles
+    title: Working group meeting
     agenda:
       - Introductions, and members' backgrounds and interests
       - "Lessons from SBOMs — minimum elements that depend on purpose, sensitive content, and inconsistency between formats"
