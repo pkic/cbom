@@ -54,19 +54,33 @@ meetings:
     join: https://pkic.org/wg/cbom/
     agenda:
       - Welcome, apologies, and approval of the previous minutes
-      - "Decision 0018 — the demonstration page is checked against the reference validator (settles Q30)"
-      - "Decision 0019 — staging adoption with a family of profiles ordered by depth, and the new entry profile"
-      - "Decision 0020 — a CBOM is joined to vulnerability statements, not merged with them"
-      - Review of the new Maturity, Confidentiality and Vulnerabilities sections, and the separate Use Cases section
-      - "Q51 — should the disclosure baseline be re-parented to extend the entry profile?"
-      - "Q55 — should 'coverage: partial' separate ignorance from policy?"
-      - "Q57 — must a vulnerability-response profile forbid withholding the implementing library?"
-      - "Remaining new questions, for triage — Q50, Q52–Q54, Q56, Q58–Q60"
-      - "Reference register — 17 new entries including OMB M-26-15, nine flagged for verification, and Q19"
-      - Meetings and presentations pages — who maintains them, and replacing the placeholder entries
-      - Merge plan for the open branches, and which use case to develop next (N04)
-      - Any other business
 
+      # What has been added to the project since the last meeting.
+      - "New on the site: a registry of 39 tools that work with CBOMs, 26 of them open source"
+      - "New on the site: the reference register, grown to 73 standards, regulations and guidance documents"
+      - "New on the site: pages for meetings and presentations, with the first deck published"
+      - "New in the methodology: sections on Maturity, Confidentiality and Vulnerabilities, for review"
+      - "Worked use cases now have a section of their own, separate from the methodology"
+
+      # Raised in the call of 9 September.
+      - "A full PQC Migration profile that members can point their own tooling at: what is still missing, what test documents it needs, and who produces them"
+
+      # Positions taken since the last meeting, for confirmation.
+      - "For confirmation: the demonstration page is now checked against the reference validator, so the page and the tool cannot disagree without a test failing"
+      - "For confirmation: adoption is staged as a family of profiles ordered by how much each one asks for, with a short entry profile at the shallow end"
+      - "For confirmation: a CBOM is joined to vulnerability statements rather than merged with them"
+
+      # Open questions that need an answer from the group.
+      - "Should the disclosure baseline be rebuilt on top of the new entry profile?"
+      - "When a document says its list of interfaces is incomplete, should it also have to say whether the producer does not know, or chose not to list them?"
+      - "Must a profile written for vulnerability response forbid a supplier withholding the library that implements an interface?"
+      - Remaining new questions, for triage
+
+      # Housekeeping.
+      - "Reference register: nine entries still need verifying, and which registry algorithm names should come from"
+      - "Who maintains the meetings and presentations pages from here"
+      - "Merge plan for the open branches, and which use case to develop next"
+      - Any other business
   - number: 11
     date: 2026-09-23
     time: "09:00"
