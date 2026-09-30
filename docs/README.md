@@ -18,13 +18,14 @@ Data-driven pages built by Jekyll from Markdown and Liquid templates.
 | `references.md` | The reference register, rendered from `_data/references.yml`. |
 | `tooling.md` | The tooling registry, rendered from `_data/tooling.yml`. |
 | `issues.md` | The methodology aspects. |
-| `meetings.md` | Meetings, rendered from `_data/meetings.yml`. |
+| `meetings.md` | Meetings and polls, rendered from `_data/meetings.yml` and `_data/polls.yml`. |
 | `presentations.md` | Presentations, rendered from `_data/presentations.yml`. |
 | `contributing.md` | How to take part. |
 | `_data/references.yml` | Reference sources, with category, status and jurisdiction. |
 | `_data/tooling.yml` | Tools that work with CBOMs, with what they do and where they say so. |
 | `_data/aspects.yml` | The methodology aspects. |
 | `_data/meetings.yml` | Meetings, their agendas and their recordings. |
+| `_data/polls.yml` | Polls: what was asked, when voting closes, and the result. Votes are collected in Formbricks. |
 | `_data/presentations.yml` | Presentations, and where each deck is held. |
 | `_layouts/`, `_includes/` | Page shells and the shared header and footer. |
 | `assets/css/style.css` | The design system: palette, typography, components. |

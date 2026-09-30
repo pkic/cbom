@@ -4,13 +4,15 @@ title: Meetings
 permalink: /meetings/
 eyebrow: CBOM Profiles · Working Group
 heading: Meetings
-lede: When the working group meets, what it plans to settle, and what it settled last time. Upcoming meetings carry an agenda; past meetings carry a recording where one was made.
+lede: When the working group meets, what it plans to settle, and what it settled last time. Upcoming meetings carry an agenda; past meetings carry a recording where one was made. Open polls and their results are listed here too.
 ---
 
 {% assign all = site.data.meetings.meetings | sort: "date" %}
 {% assign today = site.time | date: "%Y-%m-%d" %}
 {% assign decks = site.data.presentations.presentations %}
 {% assign tz = site.data.meetings.meta.timezone | default: "UTC" %}
+{% assign polls = site.data.polls.polls %}
+{% assign pmeta = site.data.polls.meta %}
 
 {%- comment -%}
   Upcoming and past are derived from the date at build time, not stored. A meeting
@@ -22,6 +24,17 @@ lede: When the working group meets, what it plans to settle, and what it settled
 {%- for m in all -%}
   {%- assign md = m.date | date: "%Y-%m-%d" -%}
   {%- if md >= today -%}{%- assign n_up = n_up | plus: 1 -%}{%- else -%}{%- assign n_past = n_past | plus: 1 -%}{%- endif -%}
+{%- endfor -%}
+{%- comment -%}
+  Polls are open or closed by `closes`, derived at build time in the same way.
+  A poll with `published: false` is prepared but its links have not gone out.
+{%- endcomment -%}
+{%- assign n_poll_open = 0 -%}{%- assign n_poll_closed = 0 -%}
+{%- for p in polls -%}
+  {%- unless p.published == false -%}
+    {%- assign pc = p.closes | date: "%Y-%m-%d" -%}
+    {%- if pc >= today -%}{%- assign n_poll_open = n_poll_open | plus: 1 -%}{%- else -%}{%- assign n_poll_closed = n_poll_closed | plus: 1 -%}{%- endif -%}
+  {%- endunless -%}
 {%- endfor -%}
 
 <div class="callout">
@@ -36,6 +49,38 @@ lede: When the working group meets, what it plans to settle, and what it settled
   <a class="btn btn-ghost" href="{{ site.repo.discussions }}">Discussions &#8599;</a>
   <a class="btn btn-ghost" href="{{ site.wg.url }}">Working group &#8599;</a>
 </p>
+
+{% if n_poll_open > 0 %}
+## Open polls <span class="group-count">{{ n_poll_open }}</span>
+
+<ol class="meeting-list">
+{% for p in polls %}
+{% assign pc = p.closes | date: "%Y-%m-%d" %}
+{% unless p.published == false %}{% if pc >= today %}
+  <li class="meeting meeting-upcoming poll" id="poll-{{ p.id }}">
+    <div class="meeting-top">
+      <span class="badge badge-planned">Open</span>
+      <span class="meeting-time">Voting closes {{ p.closes | date: "%-d %B %Y" }}, end of day {{ pmeta.timezone | default: tz }}</span>
+      {% if p.meeting %}<a class="meeting-time" href="#meeting-{{ p.meeting }}">Raised at meeting #{{ p.meeting }}</a>{% endif %}
+      {% if p.example %}<span class="badge badge-example" title="Placeholder entry — replace or delete">example</span>{% endif %}
+    </div>
+    <h3 class="meeting-title">{{ p.title }}</h3>
+    <div class="agenda">
+      <p class="agenda-label">Questions</p>
+      <ol class="agenda-list">
+        {% for item in p.questions %}<li>{{ item.text }} <span class="muted">({{ item.options | join: " · " }})</span></li>{% endfor %}
+      </ol>
+    </div>
+    {% if p.access == "open" %}
+    <p class="meeting-links"><a class="btn btn-ghost" href="{{ p.url }}">Vote &#8599;</a></p>
+    {% else %}
+    <p class="meeting-summary">{{ pmeta.how_to_vote }}</p>
+    {% endif %}
+  </li>
+{% endif %}{% endunless %}
+{% endfor %}
+</ol>
+{% endif %}
 
 ## Upcoming <span class="group-count">{{ n_up }}</span>
 
@@ -74,6 +119,7 @@ lede: When the working group meets, what it plans to settle, and what it settled
 
     <p class="meeting-links">
       {% if m.join %}<a class="btn btn-ghost" href="{{ m.join }}">Join this meeting &#8599;</a>{% endif %}
+      {% for p in polls %}{% if p.meeting == m.number %}{% unless p.published == false %}<a class="btn btn-ghost" href="#poll-{{ p.id }}">Poll on this agenda &#8594;</a>{% endunless %}{% endif %}{% endfor %}
       {% if mdecks.size > 0 %}<a class="btn btn-ghost" href="{{ '/presentations/' | relative_url }}#{{ mdecks.first.id }}">{{ mdecks.size }} presentation{% if mdecks.size != 1 %}s{% endif %} &#8594;</a>{% endif %}
     </p>
   </li>
@@ -134,6 +180,7 @@ lede: When the working group meets, what it plans to settle, and what it settled
     <p class="meeting-links">
       {% if m.recording %}<a class="btn btn-ghost" href="{{ m.recording }}">Watch the recording &#8599;</a>{% endif %}
       {% if m.minutes %}<a class="btn btn-ghost" href="{{ m.minutes }}">Minutes &#8599;</a>{% endif %}
+      {% for p in polls %}{% if p.meeting == m.number %}{% unless p.published == false %}<a class="btn btn-ghost" href="#poll-{{ p.id }}">Poll on this agenda &#8594;</a>{% endunless %}{% endif %}{% endfor %}
       {% if mdecks.size > 0 %}<a class="btn btn-ghost" href="{{ '/presentations/' | relative_url }}#{{ mdecks.first.id }}">Presentations &#8594;</a>{% endif %}
     </p>
   </li>
@@ -141,10 +188,44 @@ lede: When the working group meets, what it plans to settle, and what it settled
 {% endfor %}
 </ol>
 
+{% if n_poll_closed > 0 %}
+## Poll results <span class="group-count">{{ n_poll_closed }}</span>
+
+<ol class="meeting-list">
+{% assign rpolls = polls | sort: "closes" | reverse %}
+{% for p in rpolls %}
+{% assign pc = p.closes | date: "%Y-%m-%d" %}
+{% unless p.published == false %}{% if pc < today %}
+  <li class="meeting meeting-past poll" id="poll-{{ p.id }}">
+    <div class="meeting-top">
+      {% if p.result %}<span class="badge badge-recording">Closed</span>{% else %}<span class="badge badge-pending">Result to follow</span>{% endif %}
+      <span class="meeting-time">Closed {{ p.closes | date: "%-d %B %Y" }}{% if p.result %} · {{ p.result.responses }} response{% if p.result.responses != 1 %}s{% endif %}{% if p.result.invited %} from {{ p.result.invited }} invited{% endif %}{% endif %}</span>
+      {% if p.meeting %}<a class="meeting-time" href="#meeting-{{ p.meeting }}">Raised at meeting #{{ p.meeting }}</a>{% endif %}
+      {% if p.example %}<span class="badge badge-example" title="Placeholder entry — replace or delete">example</span>{% endif %}
+    </div>
+    <h3 class="meeting-title">{{ p.title }}</h3>
+    {% if p.result %}<p class="meeting-summary">{{ p.result.outcome }}{% if p.result.recorded %} Recorded in {{ p.result.recorded }}.{% endif %}</p>{% endif %}
+    <details class="agenda-past">
+      <summary>Questions{% if p.result %} and votes{% endif %}</summary>
+      <ol class="agenda-list">
+        {% for item in p.questions %}
+        {% assign c = p.result.counts[item.id] %}
+        <li>{{ item.text }}{% if c %}<br><span class="muted">{% for o in item.options %}{{ o }} {{ c[o] | default: 0 }}{% unless forloop.last %} · {% endunless %}{% endfor %}</span>{% endif %}</li>
+        {% endfor %}
+      </ol>
+    </details>
+  </li>
+{% endif %}{% endunless %}
+{% endfor %}
+</ol>
+{% endif %}
+
 <p class="muted note">
   <strong>For maintainers.</strong> Meetings are one data file,
   <a href="{{ site.repo.url }}/blob/main/docs/_data/meetings.yml"><code>docs/_data/meetings.yml</code></a>.
   A meeting moves from Upcoming to Previous on the first site build after its date, so publish
-  the recording and the meeting moves itself. Field definitions and house rules are in
+  the recording and the meeting moves itself. Polls are a second file,
+  <a href="{{ site.repo.url }}/blob/main/docs/_data/polls.yml"><code>docs/_data/polls.yml</code></a>.
+  Field definitions and house rules are in
   <a href="{{ site.repo.url }}/blob/main/CONTRIBUTING-meetings.md">CONTRIBUTING-meetings.md</a>.
 </p>

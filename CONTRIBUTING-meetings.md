@@ -1,4 +1,4 @@
-# Maintaining meetings and presentations
+# Maintaining meetings, presentations and polls
 
 > **Want a deck published, or spotted something wrong?** You don't edit these files. Email the
 > working-group mailing list — **cbom@lists.pkic.org** — or open an issue, and a maintainer will
@@ -95,6 +95,33 @@ megabytes per meeting is fine. If a deck is large — video, or a deck heavy wit
 `url:` instead. `.gitattributes` marks the usual presentation extensions `binary`, so they are
 never line-ending-normalised.
 
+## Polls
+
+Many participants cannot use GitHub, so polls do not run on it. Votes are collected in
+Formbricks, and `docs/_data/polls.yml` records what was asked and what came out. The meetings
+page lists open polls above the upcoming meetings and results below the previous ones.
+
+**Each member votes through a personal single-use link.** The link works once and needs no
+account. Because it works once, it is never put on the site or in the repository. The site says
+how to vote; the link arrives by email.
+
+1. **Prepare.** Add the entry to `polls.yml` with `published: false`. Write each question as a
+   proposal, with Agree, Disagree and Abstain unless the question needs other options. Set
+   `closes` before the meeting that will act on the result.
+2. **Create the survey** in Formbricks with the same questions and options, in the same order.
+   Turn on single-use links and generate one per member.
+3. **Send the links** from the working group mailing list, one per member, with the closing
+   date. Then set `published: true` and commit. The poll appears on the meetings page.
+4. **After it closes,** add `result`: the number of links sent (`invited`), the number of
+   completed responses, the counts per question, and an `outcome` of one or two sentences. If
+   the result settles something, record it in the decision log and name it in `recorded`.
+
+A poll where it does not matter who votes or how often can use `access: open` with a public
+`url` instead. Use that sparingly.
+
+The checker enforces the two rules that matter most: a single-use poll carries no `url`, and a
+poll shows no result before it has closed.
+
 ## Field reference
 
 ### `meetings.yml`
@@ -133,6 +160,21 @@ never line-ending-normalised.
 | `summary` | no | One to three sentences on what the talk argued. |
 | `tags` | no | Free-text list. |
 | `example` | no | `true` marks a placeholder. |
+
+### `polls.yml`
+
+The field definitions are at the top of the file. In short:
+
+| Field | Required | Notes |
+|---|---|---|
+| `id` | yes | Lowercase slug. The page anchor is `#poll-<id>`. |
+| `title` | yes | Short name. |
+| `opens`, `closes` | yes | Dates. Open or closed is derived from `closes` at build time. |
+| `access` | yes | `single-use` (no `url`) or `open` (with `url`). |
+| `published` | no | `false` until the links have gone out. |
+| `meeting` | no | The meeting that raised the questions. Both entries link to each other. |
+| `questions` | yes | Each with `id`, `text`, at least two `options`, and optionally `comment: true`. |
+| `result` | after closing | `invited`, `responses`, `counts`, `outcome`, optionally `recorded`. |
 
 ## House rules
 

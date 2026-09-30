@@ -1,0 +1,81 @@
+# CBOM Profiles Working Group — polls
+#
+# Single source of truth for the polls shown on the meetings page. Votes are not
+# collected here: they are collected in Formbricks, and this file records what was
+# asked, when, and the result. See CONTRIBUTING-meetings.md, "Polls".
+#
+# Many participants cannot use GitHub, so no poll relies on it. Each member gets a
+# personal single-use link by email and needs no account. A single-use link works
+# once, so it is never published: the site says how to vote, not where.
+#
+# Open and closed are NOT recorded as a status field. They are derived from `closes`
+# when the site is built, as meetings are.
+#
+# Fields:
+#   id         (required) lowercase slug, unique. Used as the page anchor.
+#   title      (required) short name for the poll.
+#   opens      (required) YYYY-MM-DD, the day the links are sent.
+#   closes     (required) YYYY-MM-DD, the last day to vote. Closes at the end of the
+#              day in meta.timezone.
+#   access     (required) `single-use`: a personal link per member, sent by email.
+#              `open`: one public link, given in `url`. Use `open` only where it does not
+#              matter who votes or how often.
+#   url        (open polls only) the public link. Never set for a single-use poll.
+#   published  (optional) false keeps a prepared poll off the site until the links have
+#              been sent. Defaults to true.
+#   meeting    (optional) the number of the meeting that raised the questions.
+#   issue      (optional) GitHub issue number, for those who follow the repository.
+#   questions  (required) list of:
+#                id       (required) slug, unique within the poll.
+#                text     (required) the question, as a proposal where possible.
+#                options  (required) at least two choices.
+#                comment  (optional) true if the form also asks for a comment.
+#   result     (closed polls only) filled in after the poll closes:
+#                invited    number of single-use links sent.
+#                responses  number of completed responses.
+#                counts     for each question id, a map of option to votes.
+#                outcome    one or two sentences on what the group takes from it.
+#                recorded   (optional) where it was recorded, such as a decision number.
+#   example    (optional) true marks a placeholder entry.
+
+meta:
+  updated: 2026-09-30
+  timezone: Europe/Zurich
+  tool: Formbricks
+  # Shown with every open single-use poll.
+  how_to_vote: >-
+    Each working group member receives a personal voting link by email. The link works
+    once and needs no account. If yours has not arrived, write to the working group
+    mailing list, cbom@lists.pkic.org.
+
+polls:
+
+  - id: cyclonedx-2
+    title: CycloneDX 2.0 and the PQC migration profiles
+    meeting: 12
+    opens: 2026-10-01
+    closes: 2026-10-06
+    access: single-use
+    # Set to true once the Formbricks survey exists and the links have gone out.
+    published: false
+    questions:
+      - id: carrier
+        text: "CycloneDX 1.7 stays the carrier for the draft profiles, and 2.0 is added once Ecma ratifies it."
+        options: [Agree, Disagree, Abstain]
+        comment: true
+      - id: certifications
+        text: "Module validation and product certification use the new CycloneDX 2.0 certifications field."
+        options: [Agree, Disagree, Abstain]
+        comment: true
+      - id: risks
+        text: "The new CycloneDX 2.0 risk fields (response, owner, target date, status) are kept out of a supplier's conformance claim, in line with decisions 0002 and 0007."
+        options: [Agree, Disagree, Abstain]
+        comment: true
+      - id: perspectives
+        text: "Each PKIC CBOM profile is published with a matching CycloneDX 2.0 perspective."
+        options: [Agree, Disagree, Abstain]
+        comment: true
+      - id: feedback
+        text: "The working group sends CycloneDX its feedback on interfaces and endpoint roles, and on telling supported from in-use algorithms, while 2.0 is still open."
+        options: [Agree, Disagree, Abstain]
+        comment: true
