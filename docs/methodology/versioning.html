@@ -63,6 +63,31 @@ nav: versioning
   </figure>
   <p>The validator reports the band in which the CBOM falls. All four bands can be observed by evaluating the example CBOM at 1.7 and at 1.8, 1.6 and 1.5 copies. Four bands need four inputs: 1.7 is the tested version, 1.8 is newer than tested, 1.6 falls in the legacy window, and 1.5 is below the minimum and is refused.</p>
 
+  <h2>A major carrier revision: CycloneDX 2.0</h2>
+  <p>CycloneDX 2.0 is in development, with Ecma ratification expected around the end of 2026. The observations below were made against the development branch <code>2.0-dev-safety</code> (20 September 2026) and should be revisited against the released schema.</p>
+  <p>The <em>newer</em> band assumes the adapter can still read the fields shared with the tested version. That holds between minor versions. It does not hold for 2.0: a CycloneDX 1.7 worked example fails the 2.0 schema with 19 errors. Until an adapter for 2.0 exists, a change of major version should be treated as <em>unsupported</em>.</p>
+  <table>
+    <thead><tr><th>CycloneDX 1.7</th><th>CycloneDX 2.0</th></tr></thead>
+    <tbody>
+      <tr><td><code>bomFormat</code></td><td><code>specFormat</code></td></tr>
+      <tr><td><code>services[]</code></td><td><code>components[]</code> with <code>type: "service"</code></td></tr>
+      <tr><td><code>purl</code> on a component</td><td><code>identifiers[]</code>, each claimed by a declared party</td></tr>
+      <tr><td><code>supplier</code>, <code>manufacturer</code> on a component</td><td><code>parties[]</code>, each with a role</td></tr>
+      <tr><td><code>cryptoRefArray</code>, <code>algorithmRef</code> and the certificate references</td><td><code>relatedCryptographicAssets[]</code></td></tr>
+      <tr><td><code>curve</code> (deprecated in 1.7)</td><td><code>ellipticCurve</code>, enumerated</td></tr>
+    </tbody>
+  </table>
+  <p>These six changes made the example valid 2.0 without altering any profile attribute, so the upgrade is mechanical. For the profiles:</p>
+  <ul>
+    <li><strong>Paths change, attributes do not.</strong> Rules that read a Package URL, a supplier or a service need new paths.</li>
+    <li><strong>New native homes.</strong> <code>certifications</code> on any component can carry module validation and product certification. <code>agility</code> partly covers enablement and negotiation. <code>rotation</code> and <code>renewal</code> describe how keys and certificates are replaced. The capability-by-purpose group still has no native home.</li>
+    <li><strong>Migration management is a risk register.</strong> The new <code>risks</code> array carries status, owner, response and target date. These are judgements, not product facts, and belong in an operator's CBOM rather than a supplier's conformance claim (decisions 0002 and 0007).</li>
+    <li><strong>Perspectives</strong> mark JSONPath expressions as required, recommended or optional. They cannot express conditions or vocabularies, so they could accompany a profile but not replace it.</li>
+    <li><strong>Terminology.</strong> CycloneDX 2.0 uses "profile" and "interface" for other concepts. Say "PKIC CBOM profile" where both appear.</li>
+    <li><strong>The edge gap remains.</strong> The blueprint model's flows and boundaries describe a deployed system for threat analysis, not a product's cryptographic interface.</li>
+  </ul>
+  <p>Position pending working-group review: CycloneDX 1.7 remains the tested carrier; 2.0 is added once it is ratified and an adapter exists.</p>
+
   <h2>Supporting recommendations</h2>
   <ul>
     <li><strong>Normalize at the adapter.</strong> Prefer CycloneDX 1.7 Cryptography Registry identifiers where present; for 1.6 free-text names, apply a versioned name map before the rules are evaluated.</li>

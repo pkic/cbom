@@ -156,3 +156,12 @@ to the protocol asset (representing the edge as a node); SPDX approximates them 
 relationships and annotations. This is sufficient for the disclosure baseline, but it cannot
 represent a determination that belongs to the connection itself. Providing such an object is
 the objective of the working group's first-class attributed-edge model.
+
+## Outlook: CycloneDX 2.0
+
+CycloneDX 2.0, in development, changes several of the paths used above. Services become
+components of type `service`, the Package URL moves into `identifiers`, and the protocol and
+certificate references become `relatedCryptographicAssets`. The per-interface attributes and the
+edge gap are unaffected. A new `certifications` array offers a native home for module validation
+and product certification. The consequences for the profiles, and the conversion of a 1.7
+example, are set out in `versioning-and-legacy-cboms.md`, section 5.

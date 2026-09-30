@@ -87,7 +87,72 @@ Upgrading is a data transformation, not a re-attestation; it must not add crypto
 that were not present in the original, but only re-encode existing facts. Any value that cannot
 be resolved remains flagged.
 
-## 5. Profile-version change (the second axis)
+## 5. A major carrier revision: CycloneDX 2.0
+
+CycloneDX 2.0 is in development, with Ecma ratification expected around the end of 2026. The
+observations below were made against the development branch `2.0-dev-safety` (commit
+`78f96fe`, 20 September 2026). Field names may still change, and this section should be
+revisited against the released schema.
+
+**The four-band policy assumes the common subset still reads.** A `newer` CBOM is accepted
+with a note because the adapter can still read the fields shared with the tested version. That
+assumption holds for 1.6 to 1.7. It does not hold for 2.0. A CycloneDX 1.7 worked example fails
+validation against the 2.0 schema with 19 errors, and a 2.0 document cannot be read by a 1.7
+adapter. Until an adapter for 2.0 exists, a validator should treat a change of major version as
+**unsupported** rather than **newer**.
+
+**The changes are structural, and the mechanical upgrade is small.** Six changes made the
+example valid 2.0 without altering any profile attribute:
+
+| CycloneDX 1.7 | CycloneDX 2.0 |
+|---|---|
+| `bomFormat` | `specFormat` |
+| `services[]` | `components[]` with `type: "service"` |
+| `purl` on a component | `identifiers[]`, each claimed by a declared party |
+| `supplier`, `manufacturer` on a component | `parties[]`, each with a role |
+| `cryptoRefArray`, `algorithmRef`, `signatureAlgorithmRef`, `subjectPublicKeyRef` | `relatedCryptographicAssets[]` |
+| `curve` (free text, deprecated in 1.7) | `ellipticCurve` (enumerated, for example `other/Curve25519`) |
+
+`dependencies[].provides`, the protocol type enumeration and the cipher-suite structure are
+unchanged. The upgrade therefore follows section 4: it re-encodes existing facts and adds none.
+
+**What changes for the profiles.**
+
+- **Paths, not attributes.** Rules that read a Package URL, a supplier or a service need new
+  paths. Attribute names, levels and vocabularies do not change.
+- **New native homes.** A `certifications` array on any component (standard, identifier, level,
+  issuer, dates and URL) can carry module validation and product certification, including schemes
+  that the algorithm-level `certificationLevel` enumeration does not list. An `agility` object
+  (configuration source, whether the configuration is negotiated, and the change mechanism)
+  partly covers enablement and negotiation. `rotation` on keys and `renewal` on certificates
+  describe how those are replaced. The profile's capability-by-purpose group still has no native
+  home.
+- **Supported and in-use algorithms.** The mapping currently reads `cipherSuites` as supported
+  and `cryptoRefArray` as in use. `cryptoRefArray` is removed, so the in-use reading moves to
+  `relatedCryptographicAssets`.
+- **Migration management is a risk register.** CycloneDX 2.0 adds a root `risks` array. A risk
+  can reference a cryptographic asset and carries a status and an owner; each response carries a
+  strategy, controls, a status, an owner and a target date. These are judgements, not product
+  facts. Decision 0002 places judgements in policy, and decision 0007 states forward-looking
+  capability as a status and a blocker rather than a date. They belong in an operator's CBOM for
+  its own estate, not in a supplier's conformance claim.
+- **Perspectives.** CycloneDX 2.0 adds perspectives: JSONPath expressions, each marked required,
+  recommended, optional or informative. A perspective cannot express conditions, vocabularies,
+  groups or withholding, so it does not replace a profile's rules file. It could accompany one,
+  so that generic tooling can check which fields a profile expects.
+- **Terminology.** CycloneDX 2.0 uses "profile" for reusable data and threat characterizations,
+  and its blueprint model defines an "interface" with types such as `rest` and `cli`. Neither is
+  the concept used here. Documents that discuss both should say "PKIC CBOM profile".
+- **The edge gap remains.** The blueprint model has zones, boundaries and flows with a source
+  and a destination, but it models a deployed system for threat analysis. Its protocols are free
+  text and its encryption is a boolean. It does not represent a product's cryptographic
+  interface.
+
+**Position pending working-group review:** CycloneDX 1.7 remains the tested carrier for the
+current profiles; 2.0 is added to the mapping and to `appliesTo` once it is ratified and an
+adapter exists.
+
+## 6. Profile-version change (the second axis)
 
 When a profile is tightened (for example, v0.3 raises `implementationPurl` from SHOULD to MUST,
 keeping it withholdable), existing CBOMs do not become incorrect; they were
@@ -103,7 +168,7 @@ evaluated against the profile in force at the time. This is handled as any polic
   recognition of the former values (mapped to their replacements) for at least one profile
   major version.
 
-## 6. Content-revision change (staleness)
+## 7. Content-revision change (staleness)
 
 The CBOM's own `version`, `serialNumber`, and `timestamp` sequence constitutes the audit trail
 on which the PQC progress-tracking use case relies. Two controls apply:
@@ -114,7 +179,7 @@ on which the PQC progress-tracking use case relies. Two controls apply:
 - **Supersedence:** a newer content revision for the same product supersedes older ones. The
   history is retained, and the latest revision is evaluated.
 
-## 7. Summary of recommendations
+## 8. Summary of recommendations
 
 Version handling should be explicit and machine-checkable on all three axes:
 
@@ -127,3 +192,5 @@ Version handling should be explicit and machine-checkable on all three axes:
    dated grace windows.
 5. Content-revision freshness and supersedence are tracked, so that an older revision is not
    treated as incorrect without cause.
+6. A change of carrier major version, such as CycloneDX 2.0, is treated as unsupported until an
+   adapter for it exists; the upgrade from 1.7 is mechanical and re-encodes existing facts only.
