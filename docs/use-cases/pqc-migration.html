@@ -41,28 +41,66 @@ nav: uc-pqc
   <h2>The black-box constraint</h2>
   <p>The defining constraint is that the consumer cannot see inside the product, and the vendor will not expose its internals. Everything the profile asks for therefore has to be declarable at the boundary: observable at an interface, or stated by the vendor as a property of the product it ships. Anything requiring disclosure of source, design or internal architecture is out of scope, and would not be supplied in any case.</p>
   <figure>
-    <svg viewBox="0 0 720 250" role="img" aria-label="A dark box labelled Product, its internals not disclosed, with five interface markers on its edges: two service and one management interface on the left, two interconnect interfaces on the right" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
-      <rect x="215" y="52" width="290" height="150" rx="14" fill="#29323d" stroke="#0f1b2d"/>
-      <text x="360" y="115" fill="#ffffff" text-anchor="middle" font-weight="700" font-size="15">Product</text>
-      <text x="360" y="137" fill="#c9d3e0" text-anchor="middle" font-size="11">internals not disclosed</text>
-      <text x="360" y="155" fill="#8a94a1" text-anchor="middle" font-size="10.5">and not required</text>
+    <svg viewBox="0 0 720 350" role="img" aria-label="A dark box labelled Keycloak 26.7.3, container image, internals not disclosed. On its left edge, six inbound interfaces: TLS on the main listener, OIDC token issuance, SAML assertions and plain HTTP, all of type service, and the Admin API and TLS on the management port, of type management. On its right edge, five outbound interconnect interfaces: TLS to the database, the directory, external identity providers and the mail server, and brokered token verification. On its bottom edge, the cluster transport of type peer and the realm key store of type storage." xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11">
+      <text x="360" y="24" fill="#1a2230" text-anchor="middle" font-weight="600" font-size="12">the profile describes the boundary, not the box</text>
 
-      <rect x="205" y="72" width="20" height="20" rx="4" fill="#0284c7"/>
-      <rect x="205" y="118" width="20" height="20" rx="4" fill="#6d28d9"/>
-      <rect x="205" y="164" width="20" height="20" rx="4" fill="#0284c7"/>
-      <rect x="495" y="95" width="20" height="20" rx="4" fill="#0f7a52"/>
-      <rect x="495" y="141" width="20" height="20" rx="4" fill="#0f7a52"/>
+      <rect x="250" y="44" width="220" height="214" rx="14" fill="#29323d" stroke="#0f1b2d"/>
+      <text x="360" y="136" fill="#ffffff" text-anchor="middle" font-weight="700" font-size="15">Keycloak 26.7.3</text>
+      <text x="360" y="156" fill="#c9d3e0" text-anchor="middle" font-size="11">container image</text>
+      <text x="360" y="176" fill="#8a94a1" text-anchor="middle" font-size="10.5">internals not disclosed</text>
+      <text x="360" y="191" fill="#8a94a1" text-anchor="middle" font-size="10.5">and not required</text>
 
-      <text x="196" y="86" fill="#5b6472" text-anchor="end" font-size="11">service interface</text>
-      <text x="196" y="132" fill="#5b6472" text-anchor="end" font-size="11">management interface</text>
-      <text x="196" y="178" fill="#5b6472" text-anchor="end" font-size="11">service interface</text>
-      <text x="524" y="109" fill="#5b6472" font-size="11">interconnect interface</text>
-      <text x="524" y="155" fill="#5b6472" font-size="11">interconnect interface</text>
+      <!-- inbound, left edge -->
+      <rect x="240" y="56" width="20" height="18" rx="4" fill="#0284c7"/>
+      <rect x="240" y="84" width="20" height="18" rx="4" fill="#0284c7"/>
+      <rect x="240" y="112" width="20" height="18" rx="4" fill="#0284c7"/>
+      <rect x="240" y="140" width="20" height="18" rx="4" fill="#0284c7" stroke="#b91c1c" stroke-width="2"/>
+      <rect x="240" y="180" width="20" height="18" rx="4" fill="#6d28d9"/>
+      <rect x="240" y="208" width="20" height="18" rx="4" fill="#6d28d9"/>
+      <g fill="#1a2230" text-anchor="end">
+        <text x="232" y="69">TLS, main listener (tls-https)</text>
+        <text x="232" y="97">OIDC token issuance (svc-oidc)</text>
+        <text x="232" y="125">SAML assertions (svc-saml)</text>
+        <text x="232" y="153">plain HTTP, no protection (svc-http)</text>
+        <text x="232" y="193">Admin API and realm keys (mgmt-admin)</text>
+        <text x="232" y="221">TLS, health and metrics (tls-mgmt)</text>
+      </g>
 
-      <text x="360" y="30" fill="#1a2230" text-anchor="middle" font-weight="600">the profile describes the boundary, not the box</text>
-      <text x="360" y="228" fill="#5b6472" text-anchor="middle" font-size="11">each interface declares what it can negotiate, how that is enabled, and what it costs to change</text>
+      <!-- outbound, right edge -->
+      <rect x="460" y="62" width="20" height="18" rx="4" fill="#0f7a52"/>
+      <rect x="460" y="94" width="20" height="18" rx="4" fill="#0f7a52"/>
+      <rect x="460" y="126" width="20" height="18" rx="4" fill="#0f7a52"/>
+      <rect x="460" y="158" width="20" height="18" rx="4" fill="#0f7a52"/>
+      <rect x="460" y="190" width="20" height="18" rx="4" fill="#0f7a52"/>
+      <g fill="#1a2230">
+        <text x="488" y="75">TLS to the database (int-db)</text>
+        <text x="488" y="107">TLS to the directory (int-ldap)</text>
+        <text x="488" y="139">TLS to identity providers (int-broker)</text>
+        <text x="488" y="171">token verification (svc-broker-tokens)</text>
+        <text x="488" y="203">TLS to the mail server (int-smtp)</text>
+      </g>
+
+      <!-- bottom edge -->
+      <rect x="280" y="248" width="20" height="18" rx="4" fill="#b45309"/>
+      <rect x="420" y="248" width="20" height="18" rx="4" fill="#475569"/>
+      <g fill="#1a2230" text-anchor="middle">
+        <text x="290" y="284">cluster transport</text>
+        <text x="290" y="298" font-family="monospace" font-size="10">int-cache</text>
+        <text x="430" y="284">realm keys, unwrapped</text>
+        <text x="430" y="298" font-family="monospace" font-size="10">sto-realm-keys</text>
+      </g>
+
+      <!-- legend -->
+      <g font-size="10.5" fill="#5b6472">
+        <rect x="70" y="318" width="12" height="11" rx="2" fill="#0284c7"/><text x="87" y="327">service</text>
+        <rect x="150" y="318" width="12" height="11" rx="2" fill="#6d28d9"/><text x="167" y="327">management</text>
+        <rect x="255" y="318" width="12" height="11" rx="2" fill="#0f7a52"/><text x="272" y="327">interconnect</text>
+        <rect x="360" y="318" width="12" height="11" rx="2" fill="#b45309"/><text x="377" y="327">peer</text>
+        <rect x="420" y="318" width="12" height="11" rx="2" fill="#475569"/><text x="437" y="327">storage</text>
+        <rect x="500" y="318" width="12" height="11" rx="2" fill="#0284c7" stroke="#b91c1c" stroke-width="2"/><text x="517" y="327">no cryptography</text>
+      </g>
     </svg>
-    <figcaption>The unit of disclosure is the interface. A consumer plans against the boundary a product presents, because that is all it can verify and all the vendor will state.</figcaption>
+    <figcaption>The unit of disclosure is the interface. An operator of Keycloak plans against the thirteen interfaces the product presents, because that is all it can verify and all the supplier will state. Each declares what it can negotiate, how that is enabled, and what it costs to change.</figcaption>
   </figure>
   <p>This is also why the profile is interface-driven rather than product-driven. A single answer at product level, of the kind "this product supports ML-KEM", is not actionable: a product may support a post-quantum key exchange on its service interface and not on its management interface, and the operator has to migrate both. Migration is planned and executed one interface at a time.</p>
 
