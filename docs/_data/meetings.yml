@@ -70,6 +70,11 @@ meetings:
 
       # 5. CycloneDX 2.0.
       - "CycloneDX 2.0, expected this autumn: how far it changes the mapping to CycloneDX, including its new fields for managing cryptographic migration (risk, response, owner, target date, status), and what that means for the PQC migration profiles and draft decision 0022"
+      - "For discussion: stay on CycloneDX 1.7 as the carrier for the draft profiles, and add 2.0 once Ecma ratifies it? A 1.7 CBOM is not valid 2.0 as it stands"
+      - "For discussion: use the new 2.0 certifications field for module validation and product certification"
+      - "For discussion: keep the new 2.0 risk fields (response, owner, target date, status) out of a supplier's conformance claim, in line with decisions 0002 and 0007"
+      - "For discussion: publish a CycloneDX 2.0 perspective alongside each PKIC CBOM profile"
+      - "For discussion: send CycloneDX our feedback on interfaces and endpoint roles, and on telling supported from in-use algorithms, while 2.0 is still open"
 
       - Any other business
 
