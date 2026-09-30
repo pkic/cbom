@@ -68,6 +68,9 @@ meetings:
       # 4. Presentations.
       - "Presentations: agree the dates, and an owner to take them forward"
 
+      # 5. CycloneDX 2.0.
+      - "CycloneDX 2.0, expected this autumn: how far it changes the mapping to CycloneDX, including its new fields for managing cryptographic migration (risk, response, owner, target date, status), and what that means for the PQC migration profiles and draft decision 0022"
+
       - Any other business
 
   - number: 13
