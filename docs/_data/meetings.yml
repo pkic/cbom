@@ -65,6 +65,9 @@ meetings:
       - "The full PQC migration example: a baseline and an extended profile, and a worked example on Keycloak 26.7.3 with documents that pass and fail each profile"
       - "For discussion: how application protocols such as OIDC and SAML sit on top of TLS, and which CycloneDX fields carry what (draft decision 0022)"
 
+      # 4. Presentations.
+      - "Presentations: agree the dates, and an owner to take them forward"
+
       - Any other business
 
   - number: 13
