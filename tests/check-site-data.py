@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Integrity checks for the site data files: meetings, presentations and tooling.
+"""Integrity checks for the site data files: meetings, presentations, polls and tooling.
 
 Jekyll will happily build a page with a download link to a file that is not
 there, a presentation attached to a meeting that does not exist, or a deck with
@@ -64,7 +64,7 @@ except ImportError:
     sys.exit(0)
 
 
-print("Site data: meetings, presentations and tooling")
+print("Site data: meetings, presentations, polls and tooling")
 
 meetings_doc = load("meetings.yml")
 decks_doc = load("presentations.yml")
@@ -181,6 +181,98 @@ if os.path.isdir(DECKS):
         note("in docs/assets/presentations/ but listed by no entry: %s" % ", ".join(orphans))
     else:
         ok("every committed deck is listed")
+
+# ------------------------------------------------------------------- polls ---
+#
+# Votes are collected in Formbricks; polls.yml records what was asked and the
+# result. The checks that matter most: a single-use link is never published, and
+# no result appears before a poll has closed.
+
+SLUG = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
+polls_path = os.path.join(DATA, "polls.yml")
+polls = (load("polls.yml") or {}).get("polls") or [] if os.path.isfile(polls_path) else []
+
+poll_ids = [q.get("id") for q in polls]
+if len(poll_ids) == len(set(poll_ids)) and all(isinstance(i, str) and SLUG.match(i) for i in poll_ids):
+    ok("poll ids are unique lowercase slugs")
+else:
+    bad("poll ids are unique lowercase slugs", "found %r" % (poll_ids,))
+
+for q in polls:
+    label = "poll %s" % q.get("id", "(no id)")
+    missing = [k for k in ("id", "title", "opens", "closes", "access", "questions") if not q.get(k)]
+    if missing:
+        bad(label, "missing required field(s): %s" % ", ".join(missing))
+        continue
+
+    opens, closes = q["opens"], q["closes"]
+    if not (isinstance(opens, datetime.date) and isinstance(closes, datetime.date)):
+        bad(label, "opens and closes must be YYYY-MM-DD dates, unquoted")
+        continue
+    if closes < opens:
+        bad(label, "closes (%s) is before opens (%s)" % (closes, opens))
+
+    access = q["access"]
+    if access == "single-use":
+        if q.get("url"):
+            bad(label, "is single-use but carries a url: a personal link works once and must never be published")
+    elif access == "open":
+        if not q.get("url"):
+            bad(label, "is open but has no url to vote at")
+    else:
+        bad(label, "access %r is neither single-use nor open" % access)
+
+    if q.get("meeting") is not None and q["meeting"] not in known:
+        bad(label, "names meeting %r, which is not in meetings.yml" % q["meeting"])
+
+    question_ids = []
+    for item in q["questions"]:
+        qid = item.get("id")
+        question_ids.append(qid)
+        if not (isinstance(qid, str) and SLUG.match(qid)):
+            bad(label, "question id %r is not a lowercase slug" % qid)
+        if not item.get("text"):
+            bad(label, "question %s has no text" % qid)
+        if len(item.get("options") or []) < 2:
+            bad(label, "question %s needs at least two options" % qid)
+    if len(question_ids) != len(set(question_ids)):
+        bad(label, "question ids repeat: %r" % (question_ids,))
+
+    published = q.get("published", True)
+    is_open = closes >= datetime.date.today()
+    result = q.get("result")
+
+    if not published:
+        note("%s is prepared but not published (published: false)" % label)
+    if is_open and result:
+        bad(label, "carries a result but has not closed: publish results only after %s" % closes)
+    if not is_open and published and not result:
+        note("%s has closed with no result recorded; the page says 'Result to follow'" % label)
+
+    if result:
+        invited, responses = result.get("invited"), result.get("responses")
+        if not isinstance(responses, int):
+            bad(label, "result.responses must be a whole number")
+        elif isinstance(invited, int) and responses > invited:
+            bad(label, "result has %d responses from %d invitations" % (responses, invited))
+        if not result.get("outcome"):
+            bad(label, "result has no outcome")
+        options_by_id = dict((i.get("id"), i.get("options") or []) for i in q["questions"])
+        for qid, counts in (result.get("counts") or {}).items():
+            if qid not in options_by_id:
+                bad(label, "result counts question %r, which the poll does not ask" % qid)
+                continue
+            unknown = [o for o in counts if o not in options_by_id[qid]]
+            if unknown:
+                bad(label, "result for %s counts options not offered: %s" % (qid, ", ".join(map(str, unknown))))
+            total = sum(v for v in counts.values() if isinstance(v, int))
+            if isinstance(responses, int) and total > responses:
+                bad(label, "result for %s has %d votes from %d responses" % (qid, total, responses))
+
+    if q.get("example"):
+        note("%s is a placeholder (example: true)" % label)
+
+ok("%d poll entr%s checked" % (len(polls), "y" if len(polls) == 1 else "ies"))
 
 # ----------------------------------------------------------------- tooling ---
 
