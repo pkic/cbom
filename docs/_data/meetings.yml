@@ -35,7 +35,7 @@
 # names its meeting with `meeting: <number>`, and both pages link to each other.
 
 meta:
-  updated: 2026-09-16
+  updated: 2026-09-30
   timezone: Europe/Zurich
   # Shown above the list so a newcomer knows when to turn up. Free text.
   cadence: >-
@@ -45,8 +45,8 @@ meta:
 meetings:
 
   # ----------------------------------------------------------------- upcoming
-  - number: 10
-    date: 2026-09-16
+  - number: 12
+    date: 2026-09-30
     time: "18:00"
     timezone: Europe/Zurich
     duration: 60
@@ -55,47 +55,17 @@ meetings:
     agenda:
       - Welcome, apologies, and approval of the previous minutes
 
-      # What has been added to the project since the last meeting.
-      - "New on the site: a registry of 39 tools that work with CBOMs, 26 of them open source"
-      - "New on the site: the reference register, grown to 73 standards, regulations and guidance documents"
-      - "New on the site: pages for meetings and presentations, with the first deck published"
-      - "New in the methodology: sections on Maturity, Confidentiality and Vulnerabilities, for review"
-      - "Worked use cases now have a section of their own, separate from the methodology"
+      # 1. First deliverable.
+      - "A first deliverable on why CBOM profiles are needed: who it is for, what it has to argue, a draft outline, and who writes which part"
 
-      # Raised in the call of 9 September.
-      - "A full PQC Migration profile that members can point their own tooling at: what is still missing, what test documents it needs, and who produces them"
+      # 2. PKI Consortium conference workshop.
+      - "Ideas for the two-hour workshop at the PKI Consortium conference: format, the hands-on part, what participants should leave with, and who presents"
 
-      # Positions taken since the last meeting, for confirmation.
-      - "For confirmation: the demonstration page is now checked against the reference validator, so the page and the tool cannot disagree without a test failing"
-      - "For confirmation: adoption is staged as a family of profiles ordered by how much each one asks for, with a short entry profile at the shallow end"
-      - "For confirmation: a CBOM is joined to vulnerability statements rather than merged with them"
+      # 3. The PQC migration example.
+      - "The full PQC migration example: a baseline and an extended profile, and a worked example on Keycloak 26.7.3 with documents that pass and fail each profile"
+      - "For discussion: how application protocols such as OIDC and SAML sit on top of TLS, and which CycloneDX fields carry what (draft decision 0022)"
 
-      # Open questions that need an answer from the group.
-      - "Should the disclosure baseline be rebuilt on top of the new entry profile?"
-      - "When a document says its list of interfaces is incomplete, should it also have to say whether the producer does not know, or chose not to list them?"
-      - "Must a profile written for vulnerability response forbid a supplier withholding the library that implements an interface?"
-      - Remaining new questions, for triage
-
-      # Housekeeping.
-      - "Reference register: nine entries still need verifying, and which registry algorithm names should come from"
-      - "Who maintains the meetings and presentations pages from here"
-      - "Merge plan for the open branches, and which use case to develop next"
       - Any other business
-  - number: 11
-    date: 2026-09-23
-    time: "09:00"
-    timezone: Europe/Zurich
-    duration: 60
-    title: Working group meeting
-    join: https://pkic.org/wg/cbom/
-
-  - number: 12
-    date: 2026-09-30
-    time: "18:00"
-    timezone: Europe/Zurich
-    duration: 60
-    title: Working group meeting
-    join: https://pkic.org/wg/cbom/
 
   - number: 13
     date: 2026-10-07
@@ -154,6 +124,49 @@ meetings:
     join: https://pkic.org/wg/cbom/
 
   # --------------------------------------------------------------------- past
+  - number: 11
+    date: 2026-09-23
+    time: "09:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+
+  - number: 10
+    date: 2026-09-16
+    time: "18:00"
+    timezone: Europe/Zurich
+    duration: 60
+    title: Working group meeting
+    agenda:
+      - Welcome, apologies, and approval of the previous minutes
+
+      # What has been added to the project since the last meeting.
+      - "New on the site: a registry of 39 tools that work with CBOMs, 26 of them open source"
+      - "New on the site: the reference register, grown to 73 standards, regulations and guidance documents"
+      - "New on the site: pages for meetings and presentations, with the first deck published"
+      - "New in the methodology: sections on Maturity, Confidentiality and Vulnerabilities, for review"
+      - "Worked use cases now have a section of their own, separate from the methodology"
+
+      # Raised in the call of 9 September.
+      - "A full PQC Migration profile that members can point their own tooling at: what is still missing, what test documents it needs, and who produces them"
+
+      # Positions taken since the last meeting, for confirmation.
+      - "For confirmation: the demonstration page is now checked against the reference validator, so the page and the tool cannot disagree without a test failing"
+      - "For confirmation: adoption is staged as a family of profiles ordered by how much each one asks for, with a short entry profile at the shallow end"
+      - "For confirmation: a CBOM is joined to vulnerability statements rather than merged with them"
+
+      # Open questions that need an answer from the group.
+      - "Should the disclosure baseline be rebuilt on top of the new entry profile?"
+      - "When a document says its list of interfaces is incomplete, should it also have to say whether the producer does not know, or chose not to list them?"
+      - "Must a profile written for vulnerability response forbid a supplier withholding the library that implements an interface?"
+      - Remaining new questions, for triage
+
+      # Housekeeping.
+      - "Reference register: nine entries still need verifying, and which registry algorithm names should come from"
+      - "Who maintains the meetings and presentations pages from here"
+      - "Merge plan for the open branches, and which use case to develop next"
+      - Any other business
+
   - number: 9
     date: 2026-09-09
     time: "09:00"
