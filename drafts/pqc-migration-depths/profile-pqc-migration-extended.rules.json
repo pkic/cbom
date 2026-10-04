@@ -1,0 +1,399 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile. DERIVED: the extended depth of the PQC migration family (decisions 0019 and 0022). It extends pqc-migration v0.7 and serves the same consumer and the same decision; it answers the decision's middle clause, what enabling the capability requires, more completely. The baseline asks what an interface can do. This depth asks what surrounds the interface and has to move with it or before it: the key management surface that must generate and hold the new key, the external services the interface depends on, and the setting that switches the capability on. Rules are numbered from P1, I1 in this profile's own space and cited as 'pqc-migration-extended#I1'. The information types come from cprofile.json: key_management_interfaces, security_controls[].external_dependencies, governing_parameters and the existence of data_at_rest_protection. DRAFT v0.1. Two rules are written against evaluator behaviour that does not exist yet; they are listed under '$pendingTooling' and nothing here claims they are evaluated correctly today.",
+  "profileId": "pkic.example.pqc-migration-extended",
+  "profileTag": "pqc-migration-extended",
+  "title": "PQC Migration, Extended Depth (Example)",
+  "version": "0.1",
+  "objective": {
+    "$comment": "C1. A derived profile states its own objective. The consumer and the decision are the baseline's, word for word, because a depth serves the same decision and asks for more (decision 0019). Restating a different decision would make this a branch. One option is added, because the facts this depth requires make a new action possible: sequencing another system's migration ahead of this interface.",
+    "consumer": "An operator planning a post-quantum migration across an estate of products it did not build.",
+    "decision": "For each interface a product exposes: whether it can be made quantum-safe, what enabling it requires, what enabling it costs in interoperability, and where the capability is not yet available, what is preventing it and who controls that.",
+    "decisionOptions": [
+      "enable the capability on the deployed product",
+      "schedule a software update to obtain it",
+      "replace the product, where no update path reaches it",
+      "accept the interface as it stands and revisit at the next review",
+      "escalate to the supplier, where the blocker is theirs to clear",
+      "sequence a dependency first, where a key management surface, a storage path or an external service must migrate before this interface can"
+    ]
+  },
+  "scope": {
+    "$comment": "C11. The baseline's scope with one change: key-protection is taken in depth. That asks more of a document and so is a tightening. The key management and storage rules below are what key-protection in depth means at an interface boundary. Every purpose still owes a status under the inherited G1.",
+    "subjectType": "product",
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented",
+      "configured",
+      "observed"
+    ],
+    "cryptographicPurposes": [
+      "key-establishment",
+      "encryption",
+      "entity-authentication",
+      "key-protection"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.pqc-migration",
+    "version": "0.7",
+    "file": "profile-pqc-migration.rules.json"
+  },
+  "appliesTo": {
+    "$comment": "Restated only to show it is not widened. Same range as the base.",
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "$inherited": "The disclosure model, the requirement keywords, the identifier schemes and every vocabulary of the base are inherited and not restated, for the reason the base gives: a restated block silently overrides the base's value. The vocabularies below are new.",
+  "$commentKeyManagement": "Key management is modelled as management interfaces carrying key attributes (decision 0022, F3). A key management utility is a configuration surface, which the disclosure baseline already requires under interface-disclosure#P2. A new relationship type would reopen the Model section and the parked edge model for no gain at this depth. A management interface states whether it performs key and certificate functions at all; the key attributes apply only where it does, so an administrative console that never touches a key owes nothing further.",
+  "keyManagementFunctionVocabulary": [
+    "keys-and-certificates",
+    "none"
+  ],
+  "keyOperationVocabulary": [
+    "generate",
+    "import",
+    "export",
+    "request-certificate",
+    "rotate",
+    "wrap",
+    "unwrap",
+    "derive",
+    "delete",
+    "zeroize"
+  ],
+  "$commentKeyStoreFormat": "Container formats a key store reads or writes. PKCS#11 is an access interface rather than a format and is absent; a key held in a token is recorded through keyStoreLocation. 'other' is an escape rather than a value: a format outside the list is recorded, and correlation across suppliers is lost for that value only.",
+  "keyStoreFormatVocabulary": [
+    "pkcs12",
+    "pkcs8",
+    "pem",
+    "der",
+    "jks",
+    "jceks",
+    "bks",
+    "bcfks",
+    "kdb",
+    "token-native",
+    "other"
+  ],
+  "$commentKeyStoreLocation": "Where the key material a management surface creates is held. 'software', 'hsm' and 'tee' mean what they mean in the base's providerLocationVocabulary; the two attributes describe different things (where keys are held, where cryptography is performed) and share values where the sense is the same. See decision 0021.",
+  "keyStoreLocationVocabulary": [
+    "software",
+    "hsm",
+    "tee",
+    "tpm",
+    "os-keyring",
+    "external-vault"
+  ],
+  "$commentExternalDependency": "Services outside the product that an interface's cryptography depends on at run time. These are the operator's sequencing facts, not the supplier's blockers: blockedBy says what stops the supplier, externalDependencies says what the operator must migrate first. An interface cannot present an ML-DSA chain before its certificate authority issues one, nor rely on revocation before the responder signs with an algorithm its clients verify. 'none' is a complete answer.",
+  "externalDependencyVocabulary": [
+    "certificate-authority",
+    "revocation-responder",
+    "directory",
+    "identity-provider",
+    "hsm",
+    "key-vault",
+    "time-source",
+    "none"
+  ],
+  "storageAbsenceVocabulary": [
+    "no-persistent-storage",
+    "storage-delegated-to-platform",
+    "not-applicable-to-subject"
+  ],
+  "$commentProductCertification": "Product-level security certification. Separate from the baseline's moduleValidationScheme because it certifies a different object: a Common Criteria or EUCC certificate covers a product in an evaluated configuration, and enabling a new algorithm can take the product outside that configuration until it is re-evaluated. That is a migration cost a module validation does not show.",
+  "productCertificationVocabulary": [
+    "common-criteria",
+    "eucc",
+    "national-scheme",
+    "none"
+  ],
+  "overrides": [
+    {
+      "id": "pqc-migration#G1.4",
+      "level": "MUST",
+      "note": "Tightened from SHOULD. At this depth the consumer is sequencing actual changes, and a capability usable only outside validated mode is not usable by a regulated operator. Keeps the id of the profile that introduced it."
+    }
+  ],
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Product declares at least one storage interface, or states why it has none",
+      "level": "MUST",
+      "constraint": {
+        "minInterfacesOfType": {
+          "interfaceType": "storage",
+          "min": 1
+        },
+        "orDeclaredAbsent": "storageInterfaceAbsence",
+        "absenceEnumRef": "storageAbsenceVocabulary"
+      },
+      "withholdable": false,
+      "note": "The pattern of interface-disclosure#P2 applied to storage. Stored ciphertext is exposed to harvest-now-decrypt-later by a shorter route than captured traffic, and a backup or archive path is the interface most easily left out because it is not a network listener. 'storage-delegated-to-platform' is the honest answer for a product that persists through a database or file system it does not control. Source: cprofile 'data_at_rest_protection'. Once a storage interface is declared, the base profiles describe it: keyWrapping from the Interface Disclosure Baseline and keyWrappingSupported from the migration baseline. This depth adds only the obligation to declare it."
+    },
+    {
+      "id": "P2",
+      "description": "Product states its product-level security certification scheme",
+      "level": "SHOULD",
+      "constraint": {
+        "productAttribute": "productCertificationScheme",
+        "enumRef": "productCertificationVocabulary"
+      },
+      "withholdable": false,
+      "note": "SHOULD because the certificate reference and evaluated configuration are what a consumer ultimately needs, and at this depth only the scheme is asked for. Source: cprofile 'fips_compliance.level' values CC-EAL1 to CC-EAL7, separated from the module validation they were mixed with."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "keyManagementFunction",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "keyManagementFunctionVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "management"
+      },
+      "note": "Whether this management interface performs key and certificate functions. The guard for I2 to I7. Source: the existence of a cprofile 'key_management_interfaces' entry."
+    },
+    {
+      "id": "I2",
+      "attribute": "keyOperations",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "keyOperationVocabulary"
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "keyManagementFunction",
+        "equals": "keys-and-certificates"
+      },
+      "note": "The key lifecycle operations the surface offers. 'request-certificate' is listed separately from 'generate' because a tool that can generate an ML-DSA key and cannot produce a request for it still blocks the migration. Source: cprofile 'key_operations'."
+    },
+    {
+      "id": "I3",
+      "attribute": "keyTypesSupported",
+      "level": "MUST",
+      "constraint": {
+        "minCount": 1
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "keyManagementFunction",
+        "equals": "keys-and-certificates"
+      },
+      "schemeRef": "algorithm",
+      "note": "The key types the surface can generate or import, as algorithm names under the inherited scheme. This is the rule with the most value at this depth. The case it catches is ordinary: a TLS listener supports ML-DSA certificates and the product's key tool cannot create the key. Every baseline rule passes and the operator still cannot migrate. cprofile has no field for it."
+    },
+    {
+      "id": "I4",
+      "attribute": "keyTypes",
+      "level": "MUST",
+      "constraint": {
+        "minCount": 1
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "keyManagementFunction",
+        "equals": "keys-and-certificates"
+      },
+      "schemeRef": "algorithm",
+      "note": "Present-state counterpart of I3: the key types the surface holds in the state described. Required alongside I3 under C12, and useful on its own: it is the key population the migration has to replace."
+    },
+    {
+      "id": "I5",
+      "attribute": "keyStoreFormatsSupported",
+      "level": "SHOULD",
+      "constraint": {
+        "enumRef": "keyStoreFormatVocabulary"
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "keyManagementFunction",
+        "equals": "keys-and-certificates"
+      },
+      "note": "Formats the surface can read and write. SHOULD, because the format rarely decides the migration on its own; it matters where a format cannot carry a new key type, which is what the consumer checks it for. Source: cprofile 'supported_formats'."
+    },
+    {
+      "id": "I6",
+      "attribute": "keyStoreFormats",
+      "level": "SHOULD",
+      "constraint": {
+        "enumRef": "keyStoreFormatVocabulary"
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "keyManagementFunction",
+        "equals": "keys-and-certificates"
+      },
+      "note": "Present-state counterpart of I5, required alongside it under C12: the formats in use in the state described."
+    },
+    {
+      "id": "I7",
+      "attribute": "keyStoreLocation",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "keyStoreLocationVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "keyManagementFunction",
+        "equals": "keys-and-certificates"
+      },
+      "note": "Where the surface holds key material. Decides whether the new key type is a software change or waits on hardware. Source: cprofile 'store_type'."
+    },
+    {
+      "id": "I8",
+      "attribute": "keyStoreRef",
+      "level": "SHOULD",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": true,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "management"
+      },
+      "note": "For every interface other than a management interface: the management interface that manages its keys, by reference within the document, or one of three literals: 'out-of-band' where keys are provisioned outside the product, for example TLS keys supplied as files; 'product-managed' where the product generates and rotates the key itself with no operator surface, for example a cluster transport certificate (decision 0022, K6); 'none' where the interface uses no keys (K3). 'out-of-band' is a fact about the product and is not a disclosure marker: a 'withheld' marker would claim something is being held back when nothing is (decision 0022, K4). SHOULD, because some products cannot say which surface manages a given key. Intended constraint: 'refersTo', resolving to a declared interface with keyManagementFunction 'keys-and-certificates', or equal to one of the three literals (decision 0022, F5). Written as 'present' until the evaluator implements it; see '$pendingTooling'. Source: cprofile 'key_management_ref'."
+    },
+    {
+      "id": "I9",
+      "attribute": "externalDependencies",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "externalDependencyVocabulary"
+      },
+      "list": true,
+      "withholdable": false,
+      "note": "Services outside the product this interface's cryptography depends on at run time, or 'none'. Source: cprofile 'security_controls[].external_dependencies' and 'revocation_check'."
+    },
+    {
+      "id": "I10",
+      "attribute": "enablementSetting",
+      "level": "SHOULD",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "enablementMethod",
+        "equals": "configuration"
+      },
+      "note": "Where the capability is enabled by configuration: the named setting or settings that enable it, as published in the product's documentation. Turns 'enable the capability' from a support ticket into an action. Source: cprofile 'governing_parameters' of a 'quantum_safe_migration_policy' or 'tls_policy' control."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "Cipher suite lists",
+      "reason": "Redundant with the decomposed keyExchange, encryption and authentication attributes, and incomplete for TLS 1.3, whose suites carry neither the key exchange group nor the signature algorithm."
+    },
+    {
+      "item": "Port numbers",
+      "reason": "Deployment-configured. A product's default port is documentation, not a migration fact."
+    },
+    {
+      "item": "Secret protection at rest: stash files, obfuscation, environment variables",
+      "reason": "Classical secret hygiene with no bearing on migration sequencing. It belongs to a hardening profile."
+    },
+    {
+      "item": "Key entry method and key ceremony",
+      "reason": "Operational procedure, not declarable at an interface."
+    },
+    {
+      "item": "Audit logging, intrusion detection, authorisation filters and programmatic exits",
+      "reason": "Not cryptographic facts."
+    },
+    {
+      "item": "Authentication algorithms of administrative roles",
+      "reason": "Already required. An administrative role authenticates at the management interface, and the inherited authentication attributes cover it."
+    },
+    {
+      "item": "Sensitivity labels and confidentiality lifetime of data",
+      "reason": "Deployment scope. See the Data Exposure section and Q36."
+    },
+    {
+      "item": "Individual keys and key identifiers",
+      "reason": "Q39 is open. This depth describes key stores and what they can hold, not the keys in them."
+    },
+    {
+      "item": "trafficPlane (control, management, data)",
+      "reason": "Deferred, not excluded. It is intrinsic to the product and would pass the Q36 test, and it has not yet been shown to change an action beyond what interfaceType gives. Revival trigger: a use case where signalling and user-plane interfaces of the same type migrate on different timetables."
+    },
+    {
+      "item": "Platform-keyed capability within one document",
+      "reason": "Deferred, not excluded. Variance between platform builds is carried by issuing one document per build, distinguished by Package URL qualifiers under interface-disclosure#P3 (decision 0022, F2). Revival trigger: a producer that cannot issue one document per platform build."
+    }
+  ],
+  "$pendingTooling": [
+    {
+      "item": "CycloneDX services are not read as interfaces",
+      "detail": "The adapter enumerates protocol components only. Under the draft mapping (K7), application-layer interfaces and key stores are CycloneDX services: protocol and version come from properties, and algorithms from the components the service lists in its dependencies entry. Until the adapter reads services, product rules undercount interfaces and every service-level rule is unevaluated. Only services carrying pkic:profile:interfaceType are interfaces; the others (HTTPS, JDBC, LDAP, SMTP over TLS) are declared for layering and are followed through the dependency graph, not counted."
+    },
+    {
+      "item": "Native CycloneDX locations (draft mapping, K8)",
+      "detail": "The adapter should derive implementationPurl from dependencies[].provides, providerLocation from executionEnvironment, TLS keyExchangeSupported and authenticationSupported from cipherSuites[].tlsGroups and tlsSignatureSchemes, keyTypes, keyStoreFormats and keyWrapping from the related-crypto-material components an interface depends on, and coverage from compositions. It must also stop adding cipherSuites[].algorithms to the present-state algorithm references: under the mapping, cipherSuites is the supported set and cryptoRefArray the set in use."
+    },
+    {
+      "item": "Inheritance from the providing implementation (K9)",
+      "detail": "Resolve the inheritable attributes and capability entries of pqc-migration's $commentInheritance from the library component whose dependencies[].provides lists the interface, per attribute and per purpose, before evaluating rules. Treat a protocol component without interfaceType, such as a shared TLS configuration, as not an interface, and read its cipherSuites for the interfaces that reference it through relatedCryptographicAssets."
+    },
+    {
+      "item": "List attributes constrained by enumRef (I2, I5, I6, I9)",
+      "detail": "The evaluator tests a whole value for membership of the vocabulary, so a list fails every time. Element-wise evaluation for rules with 'list': true is required before this profile can be evaluated. C17 does not catch this, because the constraint key is known; it is recorded here so the gap is not silent."
+    },
+    {
+      "item": "refersTo constraint (I8)",
+      "detail": "A constraint resolving an intra-document reference to a declared interface of a stated kind, with named literals accepted in place of a reference ('out-of-band', 'product-managed' and 'none' for I8). Adding it touches profile.schema.json and C17. Until then I8 checks presence only."
+    },
+    {
+      "item": "Scope purposes in check_scope_narrows",
+      "detail": "The check does not read cryptographicPurposes, so adding key-protection here is not verified as a tightening and dropping a purpose would not be caught."
+    },
+    {
+      "item": "CycloneDX adapter reads a fixed list of attributes",
+      "detail": "extract_interfaces names each attribute it reads, so every attribute added in interface-disclosure v0.8, pqc-migration v0.7 and this profile is reported absent. The adapter should read any pkic:profile: property generically, as a list where the rule says 'list'."
+    },
+    {
+      "item": "Explicit 'none' for algorithm attributes",
+      "detail": "keyExchange, encryption and authentication are derived from referenced algorithm components, so a document cannot say 'none' (K3). Proposed carrier form: a pkic:profile:<attribute> property with value 'none', read when no algorithm of that kind is referenced."
+    },
+    {
+      "item": "A notEquals guard holds when the guarded attribute is absent",
+      "detail": "pqc-migration#I11 (moduleValidationRef, required when moduleValidationScheme is not 'none') therefore fails alongside I10 when the scheme is omitted, and G1.2 alongside G1.1. Either accepted as a cascade and documented, or a guard is treated as not met when its attribute is absent."
+    }
+  ],
+  "artifacts": {
+    "$comment": "C9. Keycloak 26.7.3. The non-conforming document differs only in the Admin API's keyTypesSupported and fails pqc-migration-extended#I3 alone. Verdicts depend on the evaluator gaps in '$pendingTooling'.",
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "examples/cbom-keycloak-pqc-extended-pass.cyclonedx.json",
+    "nonConformingExample": "examples/cbom-keycloak-pqc-extended-fail.cyclonedx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-09-26",
+      "summary": "Initial draft. Extends pqc-migration v0.7. Adds product rules P1 and P2, interface rules I1 to I10, and tightens pqc-migration#G1.4 to MUST. Takes key-protection in depth. Derived from the information types in cprofile.json. See decision 0022.",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "I8 (keyStoreRef) accepts the literal 'out-of-band' where keys are provisioned outside the product (decision 0022, K4). Settled before release; recorded because it changes what the future refersTo constraint must accept."
+        },
+        {
+          "kind": "editorial",
+          "summary": "I8 also accepts 'product-managed' (K6) and 'none' (K3). Settled before release, from the Keycloak example."
+        }
+      ]
+    }
+  ]
+}

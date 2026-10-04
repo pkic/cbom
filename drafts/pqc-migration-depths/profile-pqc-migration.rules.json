@@ -1,0 +1,496 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile for PQC migration planning. DERIVED: this profile extends the interface disclosure baseline under the composition rules on the Profile page. It inherits every baseline rule, tightens one, and adds twelve per-interface rules, one group rule with four members and one product-level rule. Its own rules are numbered from I1, G1 and P1 in its own space: an id is local to the profile that declares it and is cited as 'pqc-migration#I1'. See decision 0011. Extension is monotonic, so a CBOM conforming to this profile also conforms to the baseline. DRAFT v0.7: this file is the baseline depth of the PQC migration family proposed in decision 0022. It sits in drafts/ until its examples are updated; it pins the draft Interface Disclosure Baseline v0.8 beside it.",
+  "profileId": "pkic.example.pqc-migration",
+  "profileTag": "pqc-migration",
+  "title": "PQC Migration Readiness (Example)",
+  "version": "0.7",
+  "objective": {
+    "$comment": "C1. A derived profile states its own consumer and decision; it does not inherit the base's, because the whole reason to derive is that the decision differs. The same applies to decisionOptions: the base's consumer chooses whether to accept a disclosure, and this one chooses what to do about an interface.",
+    "consumer": "An operator planning a post-quantum migration across an estate of products it did not build.",
+    "decision": "For each interface a product exposes: whether it can be made quantum-safe, what enabling it requires, what enabling it costs in interoperability, and where the capability is not yet available, what is preventing it and who controls that.",
+    "decisionOptions": [
+      "enable the capability on the deployed product",
+      "schedule a software update to obtain it",
+      "replace the product, where no update path reaches it",
+      "accept the interface as it stands and revisit at the next review",
+      "escalate to the supplier, where the blocker is theirs to clear"
+    ]
+  },
+  "scope": {
+    "$comment": "C11. Narrows the base's accepted lifecycle stages, which is a tightening and therefore permitted; widening would be a relaxation and the validator rejects it. 'intended' is excluded because a migration plan built on cryptography a producer intends to implement is a plan built on an intention. The other three describe something that exists: implemented in the shipped product, configured in a deployment, or observed running. Where a producer can only report an intention, the fact belongs to the capability group G1, not to a lifecycle stage. 'cryptographicPurposes' declares which purposes this profile requires in depth; every purpose in the vocabulary still owes a status under G1, which is what keeps a staged profile from becoming a floor. See decision 0010.",
+    "subjectType": "product",
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented",
+      "configured",
+      "observed"
+    ],
+    "cryptographicPurposes": [
+      "key-establishment",
+      "encryption",
+      "entity-authentication"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.8",
+    "file": "profile-interface-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "$comment": "Must lie within the base profile's range. A derived profile may narrow the accepted carrier versions and may not widen them.",
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "$inherited": "The disclosure model and the requirement keywords are inherited from the base and are deliberately not restated. Restating an inherited block would override the base's value silently, so a later change to the base, such as a new marker prefix, would not reach this profile and every marker would stop being recognised without an error. Only appliesTo is restated, because narrowing the carrier range is a real choice and the validator checks that a restated range does not widen the base's.",
+  "$commentCryptographicPurpose": "The jobs cryptography does at an interface, each migrating on its own timetable. A purpose is not an operation: CycloneDX 'cryptoFunctions' already records sign/verify, and one sign/verify covers both a TLS certificate signature and a firmware signature, which migrate a decade apart and call for different work. Only the purpose carries a timetable. Entries qualify under the four-part test in decision 0010: declarable at the boundary, independently migratable, actionable, and not an ingredient of another purpose. That test excludes certificate path validation, which migrates when entity authentication does, and hashing, which is an ingredient of several purposes. 'randomness' is deliberately absent and left open in decision 0010. Note that a purpose is not a partition of algorithms: AES-GCM serves 'encryption' and 'data-integrity' at once, so an asset may appear under several purposes.",
+  "cryptographicPurposeVocabulary": [
+    "key-establishment",
+    "encryption",
+    "entity-authentication",
+    "data-integrity",
+    "non-repudiation",
+    "key-protection",
+    "key-derivation"
+  ],
+  "capabilityStatusVocabulary": [
+    "available",
+    "committed",
+    "planned",
+    "under-evaluation",
+    "not-planned"
+  ],
+  "blockedByVocabulary": [
+    "provider",
+    "product",
+    "hardware",
+    "standard",
+    "certification"
+  ],
+  "enablementMethodVocabulary": [
+    "already-enabled",
+    "configuration",
+    "software-update",
+    "hardware-change",
+    "licence",
+    "not-available"
+  ],
+  "providerLocationVocabulary": [
+    "software",
+    "hsm",
+    "tee",
+    "unspecified"
+  ],
+  "coexistenceVocabulary": [
+    "simultaneous",
+    "exclusive",
+    "unknown"
+  ],
+  "$commentModuleValidation": "The schemes under which the cryptographic module implementing an interface has been validated. Only schemes that validate the cryptographic implementation itself are listed. Common Criteria and EUCC evaluate a product against a protection profile, which is a different object; they are carried at product level in the extended depth and are deliberately absent here, so one attribute never mixes the two. 'iso-19790' covers national schemes built on it. 'national-crypto-approval' covers approval of a module by a national authority outside those schemes. 'none' is a complete answer and keeps the rule cheap for products with no regulated market. See decision 0022.",
+  "moduleValidationSchemeVocabulary": [
+    "fips-140-2",
+    "fips-140-3",
+    "iso-19790",
+    "national-crypto-approval",
+    "none"
+  ],
+  "$commentValidatedMode": "Whether a capability that exists can be used while the module runs in its validated mode. The common case this records: a provider ships ML-KEM before the validation covering it is issued, so the capability is available in the product and unavailable to an operator obliged to run in validated mode. The attribute states the fact. Whether validated mode is required is the operator's policy and is not recorded.",
+  "validatedModeAvailabilityVocabulary": [
+    "in-validated-mode",
+    "outside-validated-mode-only",
+    "no-validated-mode"
+  ],
+  "$commentInheritance": "Added in v0.7 (decision 0022, K9). Rules are evaluated on effective values. Six attributes and the capability group describe the implementation rather than the boundary: moduleValidationScheme, moduleValidationRef, providerLocation, enablementMethod, minimumProductVersion, coexistence, and each capabilityByPurpose entry. A document may state them once on the implementation that provides an interface; the interface inherits them and states a value only where it differs. Precedence is per attribute, and per purpose for the group: an interface's entry for one purpose replaces the provider's entry for that purpose as a whole, so a status never travels without its blocker. Attributes that describe the boundary are never inherited: interfaceType, endpointRoles, lifecycleStage, negotiationControl, integrationConstraints, and the algorithm attributes. How the providing implementation is identified is the mapping's business.",
+  "overrides": [
+    {
+      "id": "interface-disclosure#I9",
+      "level": "MUST",
+      "withholdable": false,
+      "note": "Tightened by removing withholdability. The base already requires implementationPurl at MUST and accepts a 'withheld' marker in place of a value. Migration sequencing depends on knowing which library implements an interface, so this profile removes that option and requires the value itself. Level is restated as MUST for readability and is unchanged from the base."
+    }
+  ],
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Product identifies at least one cryptographic provider",
+      "level": "SHOULD",
+      "constraint": {
+        "minProviders": 1
+      },
+      "note": "This profile's only product-level rule, and therefore P1 in its own space. The baseline's P1 to P4 are inherited and keep their own ids: the two are told apart as 'pqc-migration#P1' and 'interface-disclosure#P1', which is what a report and a conformance claim print. The coverage rule this profile used to carry has moved into the baseline and is now inherited. See decision 0011."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "protocolVersionsSupported",
+      "level": "MUST",
+      "constraint": {
+        "minCount": 1
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Guarded in v0.7 to match the base's rule for the present-state attribute: not required of a storage interface, which has no protocol, key exchange or peer authentication. Its capability counterpart on storage is I12. See decision 0022."
+    },
+    {
+      "id": "I2",
+      "attribute": "keyExchangeSupported",
+      "level": "MUST",
+      "constraint": {
+        "minCount": 1
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Guarded in v0.7 to match the base's rule for the present-state attribute: not required of a storage interface, which has no protocol, key exchange or peer authentication. Its capability counterpart on storage is I12. See decision 0022."
+    },
+    {
+      "id": "I3",
+      "attribute": "authenticationSupported",
+      "level": "MUST",
+      "constraint": {
+        "minCount": 1
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Guarded in v0.7 to match the base's rule for the present-state attribute: not required of a storage interface, which has no protocol, key exchange or peer authentication. Its capability counterpart on storage is I12. See decision 0022."
+    },
+    {
+      "id": "I4",
+      "attribute": "enablementMethod",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "enablementMethodVocabulary"
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I5",
+      "attribute": "minimumProductVersion",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "enablementMethod",
+        "equals": "software-update"
+      },
+      "note": "Conditional. Applies only where the capability is enabled by a software update."
+    },
+    {
+      "id": "I6",
+      "attribute": "providerLocation",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "providerLocationVocabulary"
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I7",
+      "attribute": "coexistence",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "coexistenceVocabulary"
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I8",
+      "attribute": "negotiationControl",
+      "level": "SHOULD",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": true,
+      "note": "Whether the far end can be pinned or forced is sometimes contractual; a producer may decline to publish it."
+    },
+    {
+      "id": "I9",
+      "attribute": "integrationConstraints",
+      "level": "SHOULD",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": true
+    },
+    {
+      "id": "I10",
+      "attribute": "moduleValidationScheme",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "moduleValidationSchemeVocabulary"
+      },
+      "withholdable": false,
+      "note": "Added in v0.7. The scheme under which the module implementing this interface is validated, or 'none'. The blocker vocabulary already offers 'certification', and without the current validation stated that blocker cannot be checked. Validation status is public, so withholding protects nothing. Source: cprofile 'platforms[].fips_compliance'."
+    },
+    {
+      "id": "I11",
+      "attribute": "moduleValidationRef",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "moduleValidationScheme",
+        "notEquals": "none"
+      },
+      "note": "Added in v0.7. The certificate or approval reference under the declared scheme. External policy derives from it which algorithms the module is approved for; the profile records the reference and not the derived flag. Conditional: applies wherever a scheme other than 'none' is declared."
+    },
+    {
+      "id": "I12",
+      "attribute": "keyWrappingSupported",
+      "level": "MUST",
+      "constraint": {
+        "minCount": 1
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "schemeRef": "algorithm",
+      "note": "Added in v0.7. Capability counterpart of the base's keyWrapping (interface-disclosure#I10): the wrapping algorithms the storage path can be configured to use. It sits beside the other Supported attributes. Declaring storage interfaces at all is required only at the extended depth; once one is declared, it is described in full at every depth."
+    }
+  ],
+  "groupRules": [
+    {
+      "$comment": "Settles Q27. Readiness was a single value per interface, which cannot express the ordinary position: key agreement done, identity proof not yet. It is now a repeated group keyed by cryptographic purpose, so an interface states a status for each job its cryptography does. The blocker's guard is evaluated inside a group member rather than across the interface, which is what makes it evaluable again: it asks about the status of one purpose rather than about the interface as a whole. See decision 0010.",
+      "id": "G1",
+      "group": "capabilityByPurpose",
+      "keyedBy": "purpose",
+      "keyVocabularyRef": "cryptographicPurposeVocabulary",
+      "keyCoverage": "all-purposes",
+      "level": "MUST",
+      "description": "Every cryptographic purpose has an entry stating its capability status",
+      "note": "Coverage is the whole vocabulary and not only the purposes this profile takes in scope. In-scope purposes owe the full attribute set; the rest owe a status and, where the status is not 'available', a blocker. That is close to the cheapest obligation a profile can impose, and it is what stops a staged profile becoming a permanent floor: a supplier cannot conform while behaving as though authentication does not exist, and a buyer sees the long-lead blockers in the first document rather than the third.",
+      "members": [
+        {
+          "id": "G1.1",
+          "attribute": "capabilityStatus",
+          "level": "MUST",
+          "constraint": {
+            "enumRef": "capabilityStatusVocabulary"
+          },
+          "withholdable": false
+        },
+        {
+          "id": "G1.2",
+          "attribute": "blockedBy",
+          "level": "MUST",
+          "constraint": {
+            "enumRef": "blockedByVocabulary"
+          },
+          "withholdable": false,
+          "requiredWhen": {
+            "attribute": "capabilityStatus",
+            "notEquals": "available"
+          },
+          "note": "Conditional within the entry. Applies wherever this purpose's capability is not already available."
+        },
+        {
+          "id": "G1.3",
+          "attribute": "roadmapRef",
+          "level": "MAY",
+          "constraint": {
+            "present": true
+          },
+          "withholdable": true
+        },
+        {
+          "id": "G1.4",
+          "attribute": "validatedModeAvailability",
+          "level": "SHOULD",
+          "constraint": {
+            "enumRef": "validatedModeAvailabilityVocabulary"
+          },
+          "withholdable": false,
+          "requiredWhen": {
+            "attribute": "capabilityStatus",
+            "equals": "available"
+          },
+          "note": "Added in v0.7. Conditional within the entry: applies where this purpose's capability is available. SHOULD at this depth so the baseline stays reachable; the extended depth tightens it to MUST. A producer declaring moduleValidationScheme 'none' answers 'no-validated-mode'. That agreement is not checkable by the evaluator, which evaluates each rule on its own."
+        }
+      ]
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "A date on which an interface will gain a capability",
+      "reason": "Interfaces do not gain capability independently of one another, and a date offered where the blocker is an unfinished standard is not one the vendor can keep. The profile records capabilityStatus, blockedBy and roadmapRef instead. See decision 0007."
+    },
+    {
+      "item": "Any judgement as to whether an interface is quantum-safe",
+      "reason": "Inherited from the baseline. The profile requires the algorithm sets an interface uses and supports, and leaves the judgement to external versioned policy. See decision 0002."
+    },
+    {
+      "item": "Internal migration plans, engineering schedules, and unreleased design detail",
+      "reason": "Outside the black-box boundary. Anything the profile requires must be declarable at an interface or stated as a property of the shipped product."
+    },
+    {
+      "item": "encryptionSupported, the counterpart of the inherited encryption attribute",
+      "reason": "The profile adds a Supported form for key exchange, authentication and protocol version, and deliberately not for bulk encryption. A quantum computer degrades symmetric encryption rather than defeating it, so the migration is a key-length change within the same algorithm family and does not constrain sequencing in the way a key exchange or signature change does. A consumer needing it reads the inherited encryption attribute and the product's documentation."
+    },
+    {
+      "item": "Per-algorithm capability status within a single interface",
+      "reason": "Still excluded, but for a different reason than before. Status is now stated per cryptographic purpose (G1), which is the granularity at which timetables actually differ; per algorithm is finer than any planner acts on, and breaks where one algorithm serves two purposes. What was deferred here as Q27 is settled by decision 0010."
+    },
+    {
+      "item": "A per-algorithm flag stating whether an algorithm is approved or quantum-safe",
+      "reason": "Both are derived. Approval follows from the module's validation reference (I11) and its security policy; quantum safety follows from external versioned policy. The profile records the reference and the algorithm names. See decision 0002. Where an available capability cannot be used in validated mode, G1.4 states that fact per purpose."
+    }
+  ],
+  "artifacts": {
+    "$comment": "C9. The Keycloak pair replaces the gateway pair, which does not state module validation. The conforming document conforms only once the evaluator reads the attributes added in v0.7 and the explicit 'none' values (see the extended profile's '$pendingTooling'); the verdicts were checked with those gaps patched outside the repository. The non-conforming document fails pqc-migration#I12 and nothing else.",
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "examples/cbom-keycloak-pqc-pass.cyclonedx.json",
+    "nonConformingExample": "examples/cbom-keycloak-pqc-fail.cyclonedx.json"
+  },
+  "$commentChangelog": "Entries before v0.6 cite the pre-0.6 rule numbering, in which this profile's own rules ran M1 to M14 and its product rules continued the baseline's P-sequence. The v0.6 entry carries the mapping. Nothing was released under the old numbering, so no id is retired and none is held back from reuse; the no-reuse rule in decision 0011 starts from v0.6.",
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-08-07",
+      "summary": "Initial draft. Derived from the interface disclosure baseline v0.3: adds product rules P3 and P4 and per-interface rules M1 to M12, and tightens inherited rule I9 by removing its withholdability.",
+      "changes": []
+    },
+    {
+      "version": "0.2",
+      "date": "2026-08-21",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Added 'scope' and narrowed the accepted lifecycle stages to implemented, configured and observed. An interface reporting 'intended' now fails I8, where under v0.1 it conformed. This is the first rule in either profile that discriminates on how the reported data was obtained rather than on what it says, and it is the reason the field exists: a migration plan built on cryptography a producer intends to implement is a plan built on an intention. See decision 0008."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added 'objective.decisionOptions', stating the five actions the planner chooses between. The decision text itself is unchanged."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Re-pinned the base from v0.3 to v0.4. The base's v0.4 change was editorial and no inherited rule changed, but a pin names an exact version, so the derived profile is re-issued rather than silently following the base."
+        }
+      ]
+    },
+    {
+      "version": "0.3",
+      "date": "2026-08-21",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Added 'scope.orientation', declared here as 'both'. This profile reports present state and migration capability together, and under C12 that declaration obliges it to require the present-state counterpart of every capability attribute it requires. It already does, by inheritance: M1 to M3 require protocolVersionsSupported, keyExchangeSupported and authenticationSupported, and I2, I3 and I5 require the present-state attributes those are capabilities for. Declaring 'migration' instead would have been the inaccurate answer, since this profile does not report capability alone. See decision 0009."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Re-pinned the base from v0.4 to v0.5. No inherited rule changed."
+        }
+      ]
+    },
+    {
+      "version": "0.4",
+      "date": "2026-08-21",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Capability is now stated per cryptographic purpose. M10, M11 and M12 are replaced by the 'capabilityByPurpose' group rule M10, whose members M10.1 to M10.3 carry the status, the conditional blocker and the roadmap reference within each purpose entry. A document conforming to v0.3 carried one status for the interface and does not conform to v0.4, which requires one per purpose. This settles Q27: the ordinary position, key agreement done and identity proof not yet, was not expressible before. See decision 0010."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Coverage of M10 is the whole purpose vocabulary, not only the purposes named in scope.cryptographicPurposes. In-scope purposes owe the full attribute set; the rest owe a status and a blocker. This is what allows a profile to be staged without the earlier stage becoming a permanent floor."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added cryptographicPurposeVocabulary and scope.cryptographicPurposes. The vocabulary is fixed by the methodology so that two profiles cannot mean different things by the same word; a sector profile widening it raises the mirror of Q35, which is unresolved."
+        }
+      ]
+    },
+    {
+      "version": "0.5",
+      "date": "2026-08-21",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Renumbered the product rules out of the baseline's P-space, under the first form of decision 0011. Superseded in v0.6, which renumbers the whole profile under the settled scheme; this entry is kept because it is what the v0.5 file did."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Re-pinned the base to v0.6, which adds P3 (subject identity) and P4 (completeness) and revises P2. Those requirements are inherited, so a document conforming to this profile now has to satisfy them too. The coverage statement this profile used to require itself is unchanged in substance and now arrives from the base."
+        }
+      ]
+    },
+    {
+      "version": "0.6",
+      "date": "2026-08-24",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Renumbered every rule this profile declares into its own local space under the settled decision 0011. Ids are local to the declaring profile and are cited as '<profileTag>#<ruleId>', so this profile numbers from I1, G1 and P1 without colliding with the baseline's I1 to I9 and P1 to P4, which it inherits unchanged. No requirement on any document changes and no rule changes meaning: rule ids appear in reports and claims, not in CBOMs. The override on the baseline's implementationPurl rule now names its target as 'interface-disclosure#I9', because a tightened rule keeps the id of the profile that introduced it.",
+          "mapping": {
+            "M1": "I1",
+            "M2": "I2",
+            "M3": "I3",
+            "M4": "I4",
+            "M5": "I5",
+            "M6": "I6",
+            "M7": "I7",
+            "M8": "I8",
+            "M9": "I9",
+            "M10": "G1",
+            "M10.1": "G1.1",
+            "M10.2": "G1.2",
+            "M10.3": "G1.3",
+            "M14": "P1"
+          }
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added 'profileTag'. Re-pinned the base to v0.7, which adds the same field and changes no rule."
+        }
+      ]
+    },
+    {
+      "version": "0.7",
+      "date": "2026-09-26",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Re-pinned the base to Interface Disclosure Baseline v0.8, which stops requiring channel attributes of a storage interface and adds keyWrapping for it. Guarded I1 to I3 on the same condition, so that no capability attribute is required where its present-state counterpart is not. Added I12 (keyWrappingSupported), MUST on a storage interface. See decision 0022."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Added I10 (moduleValidationScheme) and I11 (moduleValidationRef, conditional on a scheme other than 'none'), both MUST. A document conforming to v0.6 does not conform to v0.7 until it states the validation of each interface's implementing module. Derived from the information cprofile.json carries under 'fips_compliance'. See decision 0022."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added G1.4 (validatedModeAvailability) at SHOULD. No verdict changes, because a SHOULD does not decide one. The extended depth, pqc-migration-extended, tightens it to MUST."
+        },
+        {
+          "kind": "editorial",
+          "summary": "This profile becomes the baseline depth of the PQC migration family (decisions 0019 and 0022). Its objective, scope and existing rules are unchanged."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Implementation facts may be stated once on the providing implementation and inherited by the interfaces it provides (K9). Rules are evaluated on effective values; no rule changes."
+        }
+      ]
+    }
+  ]
+}

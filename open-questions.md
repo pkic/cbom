@@ -1552,7 +1552,11 @@ qualification would mislead.
 does without calling itself a recommendation.
 
 **Where it stands.** Structurally Option B, in substance Option C. A notice labelled "a
-defensible default" states one, and nothing adopts it.
+defensible default" states one, and nothing adopts it. *Update 27 September 2026:* the draft
+decision 0022 (K10, in `drafts/pqc-migration-depths/`) proposes a concrete arrangement for
+CycloneDX. The CBOM references its companion SBOM with `externalReferences[type="bom"]`,
+carrying a hash, and each library references its own SBOM entry by BOM-Link. Nothing is
+restated. It is proposed for the worked example and not yet as a methodology rule.
 
 **What would have to change.** The Governance section, the mapping's treatment of external
 references, and whether a profile can require a particular arrangement.
@@ -1990,7 +1994,10 @@ implemented, configured or observed, so the mechanism to distinguish them exists
 
 **Where it stands.** Option C in effect. The baseline records present state and lists
 forward-looking information among the things it deliberately excludes. The migration profile adds
-it. No general rule is stated.
+it. No general rule is stated. *Update 27 September 2026:* the draft decision 0022 (K9) lets a
+document state capability once, on the library that provides the interfaces, and have them
+inherit it. Future-state statements would then sit on library components as well as on
+interfaces. That widens where this question bites; it does not answer it.
 
 **What would have to change.** Three rules in the migration profile, the baseline's exclusions,
 one decision record, and possibly a statement in the Conformance section about what can be
