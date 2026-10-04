@@ -25,7 +25,6 @@
     - { id: introduction, title: Introduction,      url: introduction.html }
     - { id: index,        title: Overview,          url: index.html }
     - { id: demo,         title: Demo,              url: demo.html }
-    - { id: usecases,     title: Use Cases,         url: use-cases.html }
 
 - group: Background
   items:
@@ -46,6 +45,7 @@
 
 - group: Applying it
   items:
+    - { id: usecases,     title: Starting from a Use Case, url: use-cases.html }
     - { id: method,       title: Method,            url: method.html }
     - { id: formats,      title: Formats,           url: formats.html }
     - { id: dataexp,      title: Data Exposure,     url: data-exposure.html }
@@ -69,4 +69,4 @@
 # why.
 - group: Other sections
   items:
-    - { id: ucsection,    title: Worked use cases,  url: ../use-cases/ }
+    - { id: ucsection,    title: Use cases,         url: ../use-cases/ }

@@ -24,7 +24,7 @@ nav: uc-template
 <main>
   <div class="crumb">TEMPLATE</div>
   <h1>Worked use case template</h1>
-  <p class="lead">A blank in the shape of a worked use case. Each section below says what belongs in it, why that part has to come before the next one, and how to tell when it is finished. Copy this page, work down it, and delete the instructions as you replace them. The <a href="pqc-migration.html">PQC migration</a> page is the same shape filled in, and is worth reading alongside this one.</p>
+  <p class="lead">A blank in the shape of a worked use case. Each section below says what belongs in it, why that part has to come before the next one, and how to tell when it is finished. Copy this page, work down it, and delete the instructions as you replace them. The <a href="pqc-migration.html">PQC migration</a> page is the same shape filled in, and is worth reading alongside this one. How a use case is proposed, and what each status means, is on <a href="proposing.html">Proposing a use case</a>.</p>
   <div class="banner">This page is scaffolding, not a deliverable. It states no requirement and constrains no profile. If you are looking for what a profile must satisfy, that is <a href="../methodology/conformance.html">Conformance</a>.</div>
 
   <h2>Starting one</h2>
@@ -33,7 +33,7 @@ nav: uc-template
     <li>Copy this file to <code>docs/use-cases/&lt;short-name&gt;.html</code>. The short name becomes part of the URL and is awkward to change later, so pick the consumer's word for the thing rather than the working group's.</li>
     <li>Change the front matter <code>nav:</code> value to <code>uc-&lt;short-name&gt;</code>.</li>
     <li>Add one line to its group in <code>docs/_data/usecases_nav.yml</code> (Disclosure or Change planning), with the same id. If it fits neither group, raise that before writing anything else.</li>
-    <li>In the <a href="index.html">register</a>, set its state to drafted and link the page in the last column. On its group page, point its entry to the page and add a row to the table of worked examples.</li>
+    <li>In the <a href="index.html">register</a>, set its status to <em>draft worked example</em> and link the page in the last column. On its group page, point its entry to the page and add a row to the table of worked examples.</li>
     <li>Fix the previous and next links in the footer of this page and of its new neighbours. This section's footer links are written by hand; <code>tools/renumber-pagenav.py</code> manages the methodology's and will not touch these.</li>
   </ol>
   <p>Then work down the eight sections. They are in dependency order, which is the reason for doing them in order rather than a matter of presentation: section three cannot be done without section one, and section four cannot be reviewed without section six.</p>
@@ -128,7 +128,7 @@ nav: uc-template
   <div class="banner">The pattern to take from this template: name the consumer and the decision, derive the questions that decision raises, and turn each question into an attribute that can be declared at the boundary. Everything else on this page is bookkeeping in service of that.</div>
 
   <div class="pagenav">
-    <a href="substation.html">← Substation Automation</a>
+    <a href="proposing.html">← Proposing a Use Case</a>
     <span></span>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>

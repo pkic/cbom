@@ -6,7 +6,7 @@ nav: usecases
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CBOM Profiles — Use Cases</title>
+<title>CBOM Profiles — Starting from a Use Case</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,47 +22,34 @@ nav: usecases
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">APPLIED</div>
-  <h1>Use cases for profiles</h1>
-  <p class="lead">The purpose of a profile has to be settled before the profile can be written. Each purpose makes a different set of attributes mandatory, which is why the methodology produces profiles rather than a single schema. This page sets out why a profile starts from a use case and what follows from it. The use cases themselves, grouped and with their worked examples, are in the <a href="../use-cases/">Use Cases</a> section.</p>
+  <div class="crumb">APPLYING IT</div>
+  <h1>Starting from a use case</h1>
+  <p class="lead">A profile exists to support a decision. This page sets out what a use case is, why a profile has to start from one, and what follows for the CBOMs that answer it. The use cases the working group has identified, and its worked examples, are in the <a href="../use-cases/">Use Cases</a> section.</p>
+
+  <h2>What a use case is</h2>
+  <p>A use case is a consumer and a decision. The consumer is whoever reads the CBOM and has to act on it. The decision is a choice between stated actions, and it raises a small number of questions that the CBOM has to help answer. Three things are needed before a profile can be written:</p>
+  <ul>
+    <li><strong>The consumer</strong>, named by role: a buyer, a vulnerability responder, a migration lead.</li>
+    <li><strong>The actions being chosen between.</strong> A decision answerable in only one way is not a decision, and a profile written from one has no principled place to stop.</li>
+    <li><strong>The questions</strong> the consumer has to answer to choose. Step 3 of <a href="method.html">Method</a> turns each into the facts a CBOM must carry.</li>
+  </ul>
+  <p>A sector, a product category or a field a format offers is not a use case. Each can be the setting for one, and sector vocabulary belongs in the profile written for it.</p>
 
   <h2>Why the use case comes first</h2>
   <p>A profile answers the question "what must be disclosed so that a particular decision can be made", which is a different question from "what cryptography does this contain". The first question cannot be answered in the abstract. An attribute that is indispensable for one purpose is irrelevant to another: a vulnerability responder needs the implementing library and can ignore endpoint roles, while a procurement team checking an interface baseline needs the reverse.</p>
   <p>Starting from the use case also bounds the disclosure. Without a stated purpose there is no principled way to decide where a profile stops, and the result drifts either towards demanding everything, which vendors reasonably resist, or towards a lowest common denominator that supports no decision at all. A profile with a named consumer and a named decision can be assessed on its merits.</p>
-  <p>One CBOM can serve several of these purposes at once, within a limit worth stating plainly. Different consumers apply different profiles to the same unchanged document, and a vendor generating a single high-fidelity CBOM may find it evaluated against a procurement profile by one customer and a vulnerability profile internally, with no republication in between. That holds for any profile whose attributes the document already carries.</p>
-  <p>It does not hold across a profile that introduces new attributes. A baseline-conforming document cannot be evaluated against the PQC migration profile at all, because the capability and roadmap attributes are absent. The practical consequence is that "supply a CBOM" is not one request: a buyer has to name the profile, and a vendor generating documents against the baseline alone has not met a migration request by producing more of them.</p>
+  <h2>One document, several profiles, and the limit</h2>
+  <p>Different consumers can apply different profiles to the same unchanged CBOM. A supplier that produces one complete document may find it evaluated against a procurement profile by one customer and a vulnerability profile by another, with nothing republished in between.</p>
+  <p>That holds only while each profile selects from facts the document already carries. Some profiles add facts the baseline does not define: knowing which algorithms an interface uses today answers none of a migration planner's questions, so a migration profile adds capability facts rather than selecting among the existing ones. A document produced against the baseline cannot be evaluated against such a profile at all, because the facts were never collected. These are the depth and coverage axes of composition in <a href="profile.html">Profile</a>.</p>
+  <p>The practical consequence is that "supply a CBOM" is not one request. A buyer has to name the profile, and a supplier that has produced baseline documents has not met a migration request by producing more of them. The <a href="../use-cases/">Use Cases</a> section groups its use cases by exactly this distinction.</p>
 
-  <h2>Two kinds of profile</h2>
-  <p>Profiles differ from one another in two ways, and the distinction decides whether one document can serve several of them. Some purposes draw on the <strong>same set of attributes</strong> and differ only in which of them are mandatory; a document rich enough for one is usually evaluable against another without being reissued. Others need attributes that do not exist in the baseline at all: knowing which algorithms an interface uses today answers none of a migration planner's questions, so the migration profile <em>adds</em> attributes rather than selecting among them, and a baseline document cannot be evaluated against it. These are the depth and coverage axes described under composition in <a href="profile.html">Profile</a>.</p>
-  <p>The <a href="../use-cases/">Use Cases</a> section groups every purpose by this distinction: <a href="../use-cases/disclosure.html">disclosure</a> for the first kind and <a href="../use-cases/change-planning.html">change planning</a> for the second. Each group page carries the descriptions of its use cases, a table of the attributes each emphasises, and links to its worked examples.</p>
-
-  <h2 id="catalogue">Where each use case is described</h2>
-  <p>The catalogue of purposes moved to the Use Cases section in October 2026. Its numbers did not change. Links to the old entries on this page land here.</p>
-  <p><span id="supply-chain"></span><span id="procurement"></span><span id="vulnerability"></span><span id="compliance"></span><span id="due-diligence"></span><span id="managed-service"></span><span id="service-assurance"></span><span id="pqc-readiness"></span><span id="iot"></span><span id="substation"></span><span id="crypto-agility"></span><span id="pki-estate"></span><span id="code-signing"></span><span id="stored-data"></span><span id="shared-trust"></span><span id="ci-gate"></span></p>
-  <ol>
-    <li><a href="../use-cases/change-planning.html#pqc-readiness">1 · PQC migration readiness and planning</a></li>
-    <li><a href="../use-cases/disclosure.html#procurement">2 · Procurement and tender conformance</a></li>
-    <li><a href="../use-cases/disclosure.html#vulnerability">3 · Vulnerability management and incident response</a></li>
-    <li><a href="../use-cases/disclosure.html#compliance">4 · Regulatory and compliance reporting</a></li>
-    <li><a href="../use-cases/index.html#ci-gate">5 · Continuous integration quality gate</a></li>
-    <li><a href="../use-cases/change-planning.html#crypto-agility">6 · Crypto-agility assessment</a></li>
-    <li><a href="../use-cases/disclosure.html#supply-chain">7 · Supply-chain transparency</a></li>
-    <li><a href="../use-cases/disclosure.html#due-diligence">8 · Mergers and third-party risk due diligence</a></li>
-    <li><a href="../use-cases/change-planning.html#iot">9 · IoT device estates</a></li>
-    <li><a href="../use-cases/disclosure.html#managed-service">10 · Managed and cloud service disclosure</a></li>
-    <li><a href="../use-cases/disclosure.html#service-assurance">11 · Service assurance</a></li>
-    <li><a href="../use-cases/change-planning.html#substation">12 · Substation automation</a></li>
-    <li><a href="../use-cases/change-planning.html#pki-estate">13 · PKI and certificate estate migration</a></li>
-    <li><a href="../use-cases/change-planning.html#code-signing">14 · Code and firmware signing migration</a></li>
-    <li><a href="../use-cases/change-planning.html#stored-data">15 · Stored data and archive protection</a></li>
-    <li><a href="../use-cases/change-planning.html#shared-trust">16 · Shared-trust network migration</a></li>
-  </ol>
-
-  <div class="banner">A vendor generates one high-fidelity document, and different consumers evaluate it independently against the profile that matches their decision. This follows from keeping the methodology <a href="formats.html">format-independent</a> and locating the requirements in profiles rather than in the format.</div>
+  <h2>Where the use cases are</h2>
+  <p>The register of use cases, their descriptions and the worked examples are in the <a href="../use-cases/">Use Cases</a> section. The nginx example used throughout this methodology illustrates its concepts; the worked examples there apply them to real products.</p>
+  <p style="font-size:13px;color:var(--muted)"><span id="supply-chain"></span><span id="procurement"></span><span id="vulnerability"></span><span id="compliance"></span><span id="due-diligence"></span><span id="managed-service"></span><span id="service-assurance"></span><span id="pqc-readiness"></span><span id="iot"></span><span id="substation"></span><span id="crypto-agility"></span><span id="pki-estate"></span><span id="code-signing"></span><span id="stored-data"></span><span id="shared-trust"></span><span id="ci-gate"></span>Entries once listed on this page, by their former numbers: <a href="../use-cases/change-planning.html#pqc-readiness">1 PQC migration readiness and planning</a> · <a href="../use-cases/disclosure.html#procurement">2 Procurement and tender conformance</a> · <a href="../use-cases/disclosure.html#vulnerability">3 Vulnerability management and incident response</a> · <a href="../use-cases/disclosure.html#compliance">4 Regulatory and compliance reporting</a> · <a href="../use-cases/index.html#ci-gate">5 Continuous integration quality gate</a> · <a href="../use-cases/change-planning.html#crypto-agility">6 Crypto-agility assessment</a> · <a href="../use-cases/disclosure.html#supply-chain">7 Supply-chain transparency</a> · <a href="../use-cases/disclosure.html#due-diligence">8 Mergers and third-party risk due diligence</a> · <a href="../use-cases/change-planning.html#iot">9 IoT device estates</a> · <a href="../use-cases/disclosure.html#managed-service">10 Managed and cloud service disclosure</a> · <a href="../use-cases/disclosure.html#service-assurance">11 Service assurance</a> · <a href="../use-cases/change-planning.html#substation">12 Substation automation</a> · <a href="../use-cases/change-planning.html#pki-estate">13 PKI and certificate estate migration</a> · <a href="../use-cases/change-planning.html#code-signing">14 Code and firmware signing migration</a> · <a href="../use-cases/change-planning.html#stored-data">15 Stored data and archive protection</a> · <a href="../use-cases/change-planning.html#shared-trust">16 Shared-trust network migration</a>.</p>
 
   <div class="pagenav">
-    <a href="demo.html">← Demo</a>
-    <a class="next" href="challenges.html">Next: Challenges →</a>
+    <a href="vulnerabilities.html">← Vulnerabilities</a>
+    <a class="next" href="method.html">Next: Method →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>
