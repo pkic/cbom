@@ -24,14 +24,14 @@ nav: uc-index
 <main>
   <div class="crumb">START HERE</div>
   <h1>Use cases</h1>
-  <p class="lead">A profile is written for a consumer who has a decision to make. This section holds the use cases that have been carried through from that decision to a finished profile — the rules, the attributes they constrain, and documents that can be checked against them. The catalogue of purposes a profile <em>can</em> serve stays in the methodology, under <a href="../methodology/use-cases.html">Use Cases</a>; what is collected here is the work of developing one of them in full. A blank in the same shape is kept as the <a href="template.html">template</a>.</p>
+  <p class="lead">A profile is written for a consumer who has a decision to make. This section is where the use cases live: the register of every purpose a profile has been proposed for, grouped by how its profile relates to the baseline, and the worked examples that carry a purpose from the decision through to rules and documents that can be checked against them. A blank in the same shape is kept as the <a href="template.html">template</a>.</p>
   <div>
     <span class="tag">PKIC CBOM Profiles WG</span>
     <span class="tag">illustrative</span>
     <span class="tag">1 developed · 3 drafted · 11 described or placeholder</span>
   </div>
 
-  <div class="banner"><strong>Looking for the methodology?</strong> It is the deliverable, and it is <a href="../methodology/">over here</a>. This section is an application of it. Reading one worked use case is the fastest way to see what the methodology produces; reading the <a href="../methodology/method.html">Method</a> section is the fastest way to see how.</div>
+  <div class="banner"><strong>Looking for the methodology?</strong> It is the deliverable, and it is <a href="../methodology/">over here</a>. This section is an application of it; the methodology keeps only the general argument for <a href="../methodology/use-cases.html">why the use case comes first</a>. Reading one worked use case is the fastest way to see what the methodology produces; reading the <a href="../methodology/method.html">Method</a> section is the fastest way to see how.</div>
 
   <h2>What a worked use case contains</h2>
   <p>Each page in this section follows the same eight-part shape, in the same order, because each part is the input to the next. The shape is the twelve steps of <a href="../methodology/method.html">Method</a> grouped for reading rather than for working. The <a href="template.html">template</a> is that shape as a blank, with each section saying what belongs in it and how to tell when it is finished.</p>
@@ -50,41 +50,33 @@ nav: uc-index
   <h2>How the use cases are grouped</h2>
   <p>Use cases are grouped by how their profile relates to the interface disclosure baseline, because that relation decides whether one document can serve several consumers. A second column gives the subject the document describes, because that decides who can produce it. Sector is not a grouping: a telecom or energy member arrives with a sector, picks a row, and adds vocabulary to that row's profile. The grouping is proposed in draft decision 0023 and is not yet settled.</p>
   <ul>
-    <li><strong>Disclosure.</strong> The profile selects and tightens facts the baseline already defines, with orientation <code>inventory</code>. One sufficiently rich document is evaluable against every profile in the group without being reissued. The depths of <a href="../methodology/maturity.html">Maturity</a> apply here.</li>
-    <li><strong>Change planning.</strong> The profile adds facts the baseline does not have: capability per purpose, what blocks it, what enabling it requires, and whether the far end can still be classical. Orientation is <code>both</code>. A baseline document cannot be evaluated against these profiles at all. The group shares a common base, the change core, so that a fact two of them need is defined once (Q64).</li>
+    <li><strong><a href="disclosure.html">Disclosure</a>.</strong> The profile selects and tightens facts the baseline already defines, with orientation <code>inventory</code>. One sufficiently rich document is evaluable against every profile in the group without being reissued. The depths of <a href="../methodology/maturity.html">Maturity</a> apply here.</li>
+    <li><strong><a href="change-planning.html">Change planning</a>.</strong> The profile adds facts the baseline does not have: capability per purpose, what blocks it, what enabling it requires, and whether the far end can still be classical. Orientation is <code>both</code>. A baseline document cannot be evaluated against these profiles at all. The group shares a common base, the change core, so that a fact two of them need is defined once (Q64).</li>
     <li><strong>Applying a profile.</strong> Entries that describe a way of using any profile rather than a decision that needs one of its own. They are listed so that they are not proposed again as use cases.</li>
   </ul>
-  <p>A use case is marked <em>developed</em> only when it has a rules file that passes C1 to C17 of <a href="../methodology/conformance.html">Conformance</a> and a conforming and a non-conforming document. <em>Drafted</em> means the consumer, constraints and candidate attributes are written. <em>Described</em> means an entry in the <a href="../methodology/use-cases.html">catalogue</a>. <em>Placeholder</em> means a consumer and a decision have been named and nothing more; it is an invitation to develop it, not a commitment that it will need a profile.</p>
+  <p>A use case is marked <em>developed</em> only when it has a rules file that passes C1 to C17 of <a href="../methodology/conformance.html">Conformance</a> and a conforming and a non-conforming document. <em>Drafted</em> means the consumer, constraints and candidate attributes are written. <em>Described</em> means an entry on its group page. <em>Placeholder</em> means a consumer and a decision have been named and nothing more; it is an invitation to develop it, not a commitment that it will need a profile.</p>
 
-  <h2>Disclosure</h2>
+  <h2>Register</h2>
+  <p>Every use case proposed so far. The description of each, and what its profile would need, is on its group page; the worked example, where there is one, is linked in the last column.</p>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th>Use case</th><th>Consumer and decision</th><th>Subject</th><th>Relation to the baseline</th><th>State</th></tr></thead>
+    <thead><tr><th>#</th><th>Use case</th><th>Group</th><th>Subject</th><th>State</th><th>Worked example</th></tr></thead>
     <tbody>
-      <tr><td><strong>Supply-chain transparency</strong></td><td>A supplier disclosing once rather than per customer; an integrator comparing suppliers</td><td>product</td><td>The baseline itself, bounded by what a supplier may withhold</td><td>Described (<a href="../methodology/use-cases.html#supply-chain">7</a>). Substantially served by the baseline already</td></tr>
-      <tr><td><strong>Procurement and tender conformance</strong></td><td>A buyer checking tender responses without reading them by hand</td><td>product</td><td>Selects, and adds structural rules: kinds of interface that must be present</td><td>Drafted (<a href="../methodology/use-cases.html#procurement">2</a>). A well-formed rules file in <code>drafts/procurement/</code>, applied unchanged to the Keycloak migration document. Verdicts wait on the same evaluator work as the migration examples</td></tr>
-      <tr><td><strong>Vulnerability management and incident response</strong></td><td>A responder deciding which services an advisory reaches, in hours</td><td>product, then deployment</td><td>Tightens <code>I9</code> to non-withholdable; joins to vulnerability statements (decision 0020)</td><td>Described (<a href="../methodology/use-cases.html#vulnerability">3</a>). Blocked on Q57</td></tr>
-      <tr><td><strong>Regulatory and compliance reporting</strong></td><td>An auditor or regulator checking a position against a framework</td><td>product or estate</td><td>One profile per framework: a family keyed by framework, not one profile</td><td>Described (<a href="../methodology/use-cases.html#compliance">4</a>)</td></tr>
-      <tr><td><strong>Mergers and third-party due diligence</strong></td><td>An acquirer sizing cryptographic exposure across an estate it cannot inspect</td><td>estate</td><td>The entry depth applied for coverage; probably no new profile</td><td>Described (<a href="../methodology/use-cases.html#due-diligence">8</a>)</td></tr>
-      <tr><td><strong>Managed and cloud service disclosure</strong></td><td>A customer deciding whether to rely on a service it does not operate, and what to require of the provider</td><td>operated service</td><td>Selects, with a producer who operates the service and can therefore state configuration and deployment facts a product vendor cannot</td><td>Placeholder (<a href="../methodology/use-cases.html#managed-service">10</a>)</td></tr>
-      <tr><td><strong>Service assurance</strong></td><td>An assurance team deciding which customer services a cryptographic weakness or change reaches</td><td>system</td><td>A system overlay mapping component documents to the services they carry</td><td>Placeholder (<a href="../methodology/use-cases.html#service-assurance">11</a>). From the telecom paper</td></tr>
-    </tbody>
-  </table>
-  </div>
-
-  <h2>Change planning</h2>
-  <div style="overflow:auto">
-  <table>
-    <thead><tr><th>Use case</th><th>Consumer and decision</th><th>Subject</th><th>Profile</th><th>State</th></tr></thead>
-    <tbody>
-      <tr><td><strong><a href="pqc-migration.html">PQC migration</a></strong></td><td>A migration programme lead deciding which interfaces to migrate, in what order, and what each will cost</td><td>product</td><td><code>pkic.example.pqc-migration</code> v0.7 and <code>pkic.example.pqc-migration-extended</code> v0.1, two depths of one family (draft decision 0022)</td><td>Developed in full and applied to Keycloak 26.7.3, with a conforming and a non-conforming document for each depth. In review</td></tr>
-      <tr><td><strong><a href="iot.html">IoT device estate</a></strong></td><td>A fleet operator deciding, per device model, whether to update it, replace it, put a gateway in front of it, or accept it</td><td>device model</td><td>Branch from the change core (Q64)</td><td>Drafted. No rules file. Blocked on Q62, Q63 and Q65</td></tr>
-      <tr><td><strong>Substation automation</strong></td><td>A grid operator deciding, per communication path, whether to migrate in place, migrate the key plane only, carry the path on a conduit, or replace the device at refurbishment</td><td>system</td><td>A component profile on the change core, and a system overlay from the integrator</td><td>Drafted (<a href="../methodology/use-cases.html#substation">12</a>). Values illustrative until a supplier volunteers a product</td></tr>
-      <tr><td><strong>Crypto-agility assessment</strong></td><td>An architecture function estimating how hard replacing an algorithm would be</td><td>any</td><td>Possibly the change core alone, if the core is target-neutral (Q66)</td><td>Described (<a href="../methodology/use-cases.html#crypto-agility">6</a>)</td></tr>
-      <tr><td><strong>PKI and certificate estate migration</strong></td><td>A PKI owner deciding which hierarchies, certificate profiles and relying-party populations move, in what order, and whether to run parallel or composite hierarchies</td><td>system</td><td>Not yet known. Relying-party capability is the fact no other profile asks for</td><td>Placeholder (<a href="../methodology/use-cases.html#pki-estate">13</a>)</td></tr>
-      <tr><td><strong>Code and firmware signing migration</strong></td><td>A publisher deciding when it can move its signing keys, given the verifiers already deployed in the field</td><td>signing service, and the verifiers</td><td>Not yet known. Shares the update-path rules with IoT and substation</td><td>Placeholder (<a href="../methodology/use-cases.html#code-signing">14</a>)</td></tr>
-      <tr><td><strong>Stored data and archive protection</strong></td><td>A data owner deciding which stores and archives to re-encrypt or re-wrap, and in what order, given how long the data must stay confidential</td><td>operated estate</td><td>Not yet known. Depends on the data design note</td><td>Placeholder (<a href="../methodology/use-cases.html#stored-data">15</a>)</td></tr>
-      <tr><td><strong>Shared-trust network migration</strong></td><td>A scheme operator deciding whether and when every participant can move to a new shared trust anchor</td><td>network of parties</td><td>Not yet known. Needs the multi-party trust model first</td><td>Placeholder (<a href="../methodology/use-cases.html#shared-trust">16</a>). From the multi-party trust design note</td></tr>
+      <tr><td>1</td><td><a href="change-planning.html#pqc-readiness">PQC migration</a></td><td>Change planning</td><td>product</td><td>Developed</td><td><a href="pqc-migration.html">worked example</a></td></tr>
+      <tr><td>2</td><td><a href="disclosure.html#procurement">Procurement and tender conformance</a></td><td>Disclosure</td><td>product</td><td>Drafted</td><td><a href="procurement.html">worked example</a></td></tr>
+      <tr><td>3</td><td><a href="disclosure.html#vulnerability">Vulnerability management and incident response</a></td><td>Disclosure</td><td>product, then deployment</td><td>Described. Blocked on Q57</td><td>—</td></tr>
+      <tr><td>4</td><td><a href="disclosure.html#compliance">Regulatory and compliance reporting</a></td><td>Disclosure</td><td>product or estate</td><td>Described</td><td>—</td></tr>
+      <tr><td>6</td><td><a href="change-planning.html#crypto-agility">Crypto-agility assessment</a></td><td>Change planning</td><td>any</td><td>Described. Possibly the core alone (Q66)</td><td>—</td></tr>
+      <tr><td>7</td><td><a href="disclosure.html#supply-chain">Supply-chain transparency</a></td><td>Disclosure</td><td>product</td><td>Described. Served by the baseline</td><td>—</td></tr>
+      <tr><td>8</td><td><a href="disclosure.html#due-diligence">Mergers and third-party due diligence</a></td><td>Disclosure</td><td>estate</td><td>Described</td><td>—</td></tr>
+      <tr><td>9</td><td><a href="change-planning.html#iot">IoT device estate</a></td><td>Change planning</td><td>device model</td><td>Drafted</td><td><a href="iot.html">worked example</a></td></tr>
+      <tr><td>10</td><td><a href="disclosure.html#managed-service">Managed and cloud service disclosure</a></td><td>Disclosure</td><td>operated service</td><td>Placeholder</td><td>—</td></tr>
+      <tr><td>11</td><td><a href="disclosure.html#service-assurance">Service assurance</a></td><td>Disclosure</td><td>system</td><td>Placeholder</td><td>—</td></tr>
+      <tr><td>12</td><td><a href="change-planning.html#substation">Substation automation</a></td><td>Change planning</td><td>system</td><td>Drafted</td><td><a href="substation.html">worked example</a></td></tr>
+      <tr><td>13</td><td><a href="change-planning.html#pki-estate">PKI and certificate estate migration</a></td><td>Change planning</td><td>system</td><td>Placeholder</td><td>—</td></tr>
+      <tr><td>14</td><td><a href="change-planning.html#code-signing">Code and firmware signing migration</a></td><td>Change planning</td><td>signing service and verifiers</td><td>Placeholder</td><td>—</td></tr>
+      <tr><td>15</td><td><a href="change-planning.html#stored-data">Stored data and archive protection</a></td><td>Change planning</td><td>operated estate</td><td>Placeholder</td><td>—</td></tr>
+      <tr><td>16</td><td><a href="change-planning.html#shared-trust">Shared-trust network migration</a></td><td>Change planning</td><td>network of parties</td><td>Placeholder</td><td>—</td></tr>
     </tbody>
   </table>
   </div>
@@ -94,31 +86,31 @@ nav: uc-index
   <table>
     <thead><tr><th>Entry</th><th>What it is</th><th>Where it is covered</th></tr></thead>
     <tbody>
-      <tr><td><strong>Continuous integration quality gate</strong></td><td>A pipeline failing a build when a document does not conform. Any profile can be applied this way</td><td>The validator's exit status and report, in <a href="../methodology/conformance.html">Conformance</a> and the <a href="../methodology/demo.html">Demo</a>. Formerly catalogue entry <a href="../methodology/use-cases.html#ci-gate">5</a></td></tr>
+      <tr id="ci-gate"><td><strong>Continuous integration quality gate</strong> (5)</td><td>A pipeline failing a build when a document does not conform. Any profile can be applied this way</td><td>The validator's exit status and report, in <a href="../methodology/conformance.html">Conformance</a> and the <a href="../methodology/demo.html">Demo</a></td></tr>
       <tr><td><strong>Change impact between versions</strong></td><td>Comparing two documents about the same subject to see what changed. From the telecom paper</td><td><a href="../methodology/versioning.html">Versioning</a>. A difference between documents, not a profile</td></tr>
     </tbody>
   </table>
   </div>
   <p style="font-size:13px;color:var(--muted)">Several entries above may not need a profile of their own, and that is recorded rather than discovered later. A use case served by an existing profile, by a depth of an existing family, or by the change core alone is a better outcome than a new profile, and should be argued for on that basis.</p>
 
-  <h2>Why they are not in the methodology</h2>
+  <h2>Why the methodology keeps only the argument</h2>
   <p>The methodology is the working group's deliverable: a specification for how to define a CBOM profile. A worked use case is an instance of following it. The two are kept apart for three reasons, and the first is the one that decided it.</p>
   <ul>
     <li><strong>Instances multiply and a specification should not.</strong> There are nine purposes in the catalogue today and sectors will bring more. If each worked one is a section of the methodology, the length of the deliverable comes to depend on how many use cases exist, which is a property of the world and not of the specification.</li>
     <li><strong>The two have different readers.</strong> Someone assessing the methodology needs one worked example and is ill-served by nine. Someone with a migration to plan needs theirs in full and will not read the other eight.</li>
     <li><strong>They are governed differently.</strong> A profile is versioned, dated and stewarded on its own schedule, as <a href="../methodology/governance.html">Governance</a> sets out. Carrying it inside the methodology ties its revisions to the methodology's.</li>
   </ul>
-  <p>What stays in the methodology is the part that is general: <a href="../methodology/use-cases.html">why the use case has to come first</a>, the catalogue of purposes, and which attributes each emphasises. The PQC migration profile is still cited throughout the methodology as the example that exercises composition, group rules and tightening, and those citations now point here.</p>
+  <p>The same reasons apply to the catalogue of purposes, which used to sit in the methodology. What stays there is the part that is general: <a href="../methodology/use-cases.html">why the use case has to come first</a>, and why one document can serve several profiles only within a limit. The register, the groups and every description live here. The PQC migration profile is still cited throughout the methodology as the example that exercises composition, group rules and tightening, and those citations point here.</p>
 
   <h2>Proposing one</h2>
   <p>A use case is worth developing when a consumer and a decision can be named, and when the facts the decision needs are not already required by the interface disclosure baseline. Open a topic on the <a href="https://github.com/pkic/cbom/issues">aspect issues</a> stating the consumer, the actions being chosen between, and the questions that decision raises. The attributes come out of that analysis; starting from the fields a format happens to offer produces a profile with no stated purpose and no way to argue about whether it asks for the right things.</p>
-  <p>Once the topic has a consumer and a decision, copy the <a href="template.html">template</a> and work down it. A page that is only half filled in is still worth opening a pull request for: the sections it leaves blank are the ones the working group has to answer, and they are easier to argue about in place than in the abstract.</p>
+  <p>As soon as a consumer and a decision can be named, add it to the register above and to its group page as a placeholder. Then copy the <a href="template.html">template</a> and work down it. A page that is only half filled in is still worth opening a pull request for: the sections it leaves blank are the ones the working group has to answer, and they are easier to argue about in place than in the abstract.</p>
 
   <div class="banner">One document, many consumers. A vendor generating one high-fidelity CBOM may have it evaluated against a procurement profile by one customer and a migration profile by another, with no republication in between — but only where the attributes are already in the document. A profile that <em>adds</em> attributes, as the migration profile does, cannot be answered by a document produced against the baseline alone. That is why naming the profile is part of asking for a CBOM.</div>
 
   <div class="pagenav">
-    <a href="../methodology/use-cases.html">← Use Cases (methodology)</a>
-    <a class="next" href="pqc-migration.html">Next: PQC Migration →</a>
+    <span></span>
+    <a class="next" href="disclosure.html">Next: Disclosure →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>

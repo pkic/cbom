@@ -98,11 +98,11 @@ title: Overview
       <span class="card-cta">Read the methodology &#8594;</span>
     </a>
     <a class="feature-card" href="{{ '/use-cases/' | relative_url }}">
-      <span class="card-kicker">1 of 9 developed</span>
+      <span class="card-kicker">1 developed · 3 drafted</span>
       <h3>Use cases</h3>
-      <p>Use cases carried through from a consumer's decision to a finished profile. PQC migration
-         is developed in full, IoT device estates is drafted against a template, and the other
-         seven purposes are described and waiting.</p>
+      <p>Every purpose a profile has been proposed for, in two groups: disclosure and change
+         planning. PQC migration on Keycloak is developed in full; procurement, IoT device estates
+         and substation automation are drafted; the rest are described or held as placeholders.</p>
       <span class="card-cta">See the use cases &#8594;</span>
     </a>
     <a class="feature-card" href="{{ '/issues/' | relative_url }}">

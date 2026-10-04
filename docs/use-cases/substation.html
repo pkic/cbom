@@ -1,0 +1,467 @@
+---
+nav: uc-substation
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Substation Automation</title>
+<link rel="stylesheet" href="../methodology/styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Use Cases</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include usecases-nav.html %}
+
+<main>
+  <div class="crumb">CHANGE PLANNING · WORKED USE CASE · DRAFT</div>
+  <h1>Substation automation: from use case to profile</h1>
+  <p class="lead">A grid operator plans the post-quantum migration of one substation automation system, and decides for each communication path whether to migrate it in place, migrate only the key plane, carry it on a conduit, or replace the device at its next refurbishment. Catalogue entry <a href="change-planning.html#substation">12</a>, in the change-planning group.</p>
+  <div class="banner warn">Draft for discussion. Values are illustrative, taken from the standards' profiles, until a supplier volunteers a real product. Attribute and profile names are proposals of this page. The component profile extends the change core (draft decision 0023); the decisions recorded here are numbered for draft decision 0024. The working text is kept in <code>drafts/ot-substation/</code>.</div>
+
+<h2>Choice of case</h2>
+<p>The OT use case is the <strong>substation automation system (SAS) of an electricity grid operator</strong>.</p>
+<div style="overflow:auto">
+<table>
+<thead>
+<tr>
+<th>Candidate</th>
+<th>Case for it</th>
+<th>Case against</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Substation automation (IEC 61850, IEC 62351)</td>
+<td>Energy is the first sector in NIS2 and the clearest high-risk case under the EU roadmap. Protection traffic is the hardest real-time case in OT. The security standards are published, so capability can be checked against them. The system is assembled by an integrator from several suppliers' products</td>
+<td>No open-source product with public crypto documentation as complete as Keycloak's</td>
+<td><strong>Chosen</strong></td>
+</tr>
+<tr>
+<td>OPC UA plant cell (open62541)</td>
+<td>A real product with public documentation of its security policies</td>
+<td>Close to the Keycloak pattern: one product, session security. It would teach the method little that is new</td>
+<td>Kept as a possible second component</td>
+</tr>
+<tr>
+<td>Water utility telemetry (DNP3, Modbus)</td>
+<td>High sector relevance</td>
+<td>Mostly no cryptography at all. The planner's answer would be "conduit" for almost everything, which tests too little</td>
+<td>Mention only</td>
+</tr>
+<tr>
+<td>Secure remote access into OT</td>
+<td>Real harvest-now-decrypt-later exposure</td>
+<td>An IT product at an OT boundary. Too close to Keycloak</td>
+<td>Mention only</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>1. The decision being supported</h2>
+<p>A grid operator plans the PQC migration of one substation automation system: the station level, the bay level, and the link to the control centre. For each communication path it decides one of four actions:</p>
+<ul>
+<li><strong>migrate in place</strong>, by configuration or firmware;</li>
+<li><strong>migrate the key plane only</strong>, where the data plane is already symmetric;</li>
+<li><strong>carry the path on a conduit</strong>, such as the WAN tunnel to the control centre;</li>
+<li><strong>replace the device</strong> at its next scheduled refurbishment.</li>
+</ul>
+<p>It also needs to know whether any trust anchor will outlive the algorithm that protects it.</p>
+<p><strong>Consumer:</strong> the grid operator's protection and control engineering function, working with its system integrator. <strong>Supporting consumer:</strong> the national competent authority under NIS2, which reads the same facts at a higher level.</p>
+<p>The operator's questions:</p>
+<ol>
+<li>Where does asymmetric cryptography sit in this system, and which paths depend on it?</li>
+<li>Which of those can be migrated without replacing hardware, and what does each change cost in outage time and re-certification?</li>
+<li>Which paths can a conduit carry while the devices wait?</li>
+<li>Can each device accept firmware signed with a new algorithm? Can its trust anchor be replaced in the field?</li>
+<li>What blocks each step: the product, a standard, a provider, or certification?</li>
+</ol>
+<p><strong>The threat weighting differs from Keycloak's.</strong> Protection and control traffic is confidential only for a short time. The quantum risk is forged authority: forged firmware, configuration downloads, commands and group keys. The WAN link to the control centre is the main harvest-now-decrypt-later exposure. The profile asks for facts per purpose and does not rank them (decision 0002).</p>
+<h2>2. Producer constraints</h2>
+<p>There are two producers, and the black-box constraint applies to both.</p>
+<ul>
+<li><strong>The IED supplier</strong> publishes a component CBOM for one product at one firmware version. The supplier does not know the substation, the zones or which interfaces are switched on.</li>
+<li><strong>The integrator</strong> publishes a system document, built from the substation configuration description (SCL). It knows which component interfaces are in use, how the zones are cut, and which device implements each conduit. It does not see inside the components.</li>
+<li><strong>The operator</strong> supplies instance data, such as how many substations use the same design. That data stays out of every profile.</li>
+</ul>
+<p>Constraints that shape the attributes:</p>
+<div style="overflow:auto">
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Effect on the profile</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GOOSE and SV are authenticated with a MAC: HMAC or GMAC with group keys</td>
+<td>The data plane is not a migration target. The key plane is. Keys reach devices through IEC 62351-9 group key distribution (GDOI, RFC 8052)</td>
+<td>IEC 62351-6:2020</td>
+</tr>
+<tr>
+<td>GOOSE is a layer-2 multicast message with a 3 ms budget for trip messages</td>
+<td>Per-message signatures are not feasible. An ML-DSA-44 signature is 2,420 bytes. This limit is permanent and is stated once, as an integration constraint</td>
+<td>IEC 61850-5 performance class P2/P3; FIPS 204</td>
+</tr>
+<tr>
+<td>MMS and IEC 60870-5-104 run over TLS as profiled by IEC 62351-3:2023</td>
+<td>A device can only claim 62351-3 conformance for the groups and signature schemes that profile lists. The profile lists none that are post-quantum, so conformance to the profile is itself a blocker, separate from what the TLS library could do</td>
+<td>IEC 62351-3:2023</td>
+</tr>
+<tr>
+<td>GDOI as used by RFC 8052 builds on RFC 6407</td>
+<td>No post-quantum key exchange is defined for it. G-IKEv2 (RFC 9838) is the IKEv2-based successor. It mixes preshared keys for quantum resistance but profiles no ML-KEM exchange</td>
+<td>RFC 8052, RFC 9838</td>
+</tr>
+<tr>
+<td>A device's firmware is verified by its bootloader or boot ROM</td>
+<td>Whether the verification algorithm and anchor can change in the field decides between update and replacement</td>
+<td>EU PQC roadmap: products should accept updates signed with quantum-safe algorithms</td>
+</tr>
+<tr>
+<td>IEDs are certified per product version</td>
+<td>A change to cryptography can trigger re-testing (IEC 61850 conformance), re-certification (IEC 62443-4-2), or the operator's own type approval</td>
+<td>ISASecure CSA</td>
+</tr>
+<tr>
+<td>Field life of 20 to 30 years, aligned to primary-plant refurbishment</td>
+<td>Trust anchor validity and the replacement window matter more than release dates</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>3. From questions to attributes</h2>
+<p>The baseline pqc-migration attributes carry most of the load. Only two new ones are needed.</p>
+<div style="overflow:auto">
+<table>
+<thead>
+<tr>
+<th>What the operator needs to know</th>
+<th>Attribute</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Which interface, of what type</td>
+<td><code>interfaceType</code></td>
+<td>Baseline</td>
+</tr>
+<tr>
+<td>What it uses now and could use</td>
+<td><code>keyExchange</code>, <code>authentication</code>, and their <code>Supported</code> forms</td>
+<td>Baseline</td>
+</tr>
+<tr>
+<td>What blocks PQC, per purpose, and who can change it</td>
+<td><code>capabilityStatus</code>, <code>blockedBy</code>, <code>roadmapRef</code></td>
+<td>Baseline</td>
+</tr>
+<tr>
+<td>Can it migrate while the far end is still classical</td>
+<td><code>coexistence</code>, <code>negotiationControl</code></td>
+<td>Baseline. One-way multicast needs a defined value: <code>not-applicable</code></td>
+</tr>
+<tr>
+<td>What breaks</td>
+<td><code>integrationConstraints</code></td>
+<td>Baseline. Carries the GOOSE frame and timing limit as a structured entry</td>
+</tr>
+<tr>
+<td>Which interface delivers this interface's keys</td>
+<td><code>keyStoreRef</code></td>
+<td>Extended. <strong>Promoted to MUST</strong> for group-keyed interfaces</td>
+</tr>
+<tr>
+<td>Can the trust anchor be replaced in the field</td>
+<td><code>keyReplaceable</code></td>
+<td>IoT draft</td>
+</tr>
+<tr>
+<td>Who can push an update, and how</td>
+<td><code>updateAuthority</code>, <code>updateMechanism</code></td>
+<td>IoT draft</td>
+</tr>
+<tr>
+<td>Can the firmware verification algorithm change in the field</td>
+<td><code>verifierReplaceable</code></td>
+<td><strong>New</strong>. <code>yes</code>, <code>no</code> (boot ROM), <code>via-bootloader-update</code>, <code>unknown</code></td>
+</tr>
+<tr>
+<td>What does enabling the capability cost in certification</td>
+<td><code>certificationImpact</code> with <code>certificationScheme</code></td>
+<td><strong>New</strong>. <code>none</code>, <code>retest</code>, <code>recertification</code>, <code>unknown</code></td>
+</tr>
+<tr>
+<td>Which component interfaces are actually used</td>
+<td><code>usage</code></td>
+<td>System document. <strong>New</strong>. <code>in-use</code>, <code>disabled</code>, <code>not-connected</code></td>
+</tr>
+<tr>
+<td>Which conduit carries an inter-zone path, and which interface implements it</td>
+<td><code>conduitRef</code></td>
+<td>System document. <strong>New</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Tried and rejected:</strong></p>
+<ul>
+<li><strong>A crypto-plane attribute.</strong> Separate interfaces (K2) combined with purpose already separate the data plane from the key plane.</li>
+<li><strong><code>timingClass</code>.</strong> It is an integration constraint, not a new attribute.</li>
+<li><strong>Per-path latency budgets.</strong> They are the operator's requirement, not a supplier fact.</li>
+<li><strong><code>compensatingControl</code>.</strong> It is a design decision. It belongs in the operator's register, not in either CBOM.</li>
+</ul>
+<h2>4. Profiles</h2>
+<p>There are two profiles: one for the component, one for the system.</p>
+<p><strong><code>pqc-migration-ot</code></strong> (component). It extends the change core monotonically (decision 0004). The core supplies the baseline capability attributes and, as conditional rules on update interfaces, <code>keyReplaceable</code>, <code>updateAuthority</code> and <code>updateMechanism</code>.</p>
+<div style="overflow:auto">
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Requirement</th>
+<th>Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inherited</td>
+<td>All change-core rules, including the conditional update-path rules</td>
+<td>as the core</td>
+</tr>
+<tr>
+<td>I-OT1</td>
+<td><code>certificationImpact</code> on every interface whose <code>capabilityStatus</code> is not <code>not-planned</code></td>
+<td>MUST</td>
+</tr>
+<tr>
+<td>I-OT2</td>
+<td><code>keyStoreRef</code> on every interface keyed by a group key service</td>
+<td>MUST</td>
+</tr>
+<tr>
+<td>I-OT3</td>
+<td><code>verifierReplaceable</code> on every update interface</td>
+<td>MUST</td>
+</tr>
+<tr>
+<td>I-OT5</td>
+<td>Real-time limits stated in <code>integrationConstraints</code> where they exist</td>
+<td>SHOULD</td>
+</tr>
+<tr>
+<td>P-OT1</td>
+<td>Declare at least one update interface, or state why there is none</td>
+<td>MUST</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong><code>sas-system</code></strong> (integrator). This is a derived overlay: it references the component CBOMs and does not copy them.</p>
+<div style="overflow:auto">
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Requirement</th>
+<th>Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td>Reference every component CBOM by link and digest</td>
+<td>MUST</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>State <code>usage</code> for every interface of every referenced component</td>
+<td>MUST</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>Declare zones, and for each inter-zone path name the conduit with <code>conduitRef</code></td>
+<td>MUST</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>Name the component that provides the key plane: the GDOI key server and the certificate authority's enrolment interface</td>
+<td>MUST</td>
+</tr>
+<tr>
+<td>S5</td>
+<td>State the IEC 62443-3-3 security level achieved by the system as delivered</td>
+<td>SHOULD</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li>The update-path attributes now sit in the change core and are shared with IoT. If IoT question Q63 (permanent versus temporary limits) changes them, both profiles follow.</li>
+<li>How the overlay's verdict relates to the component documents it cites is Q68.</li>
+<li>A system as the subject has to be accepted by the scope declaration (decision 0008).</li>
+</ul>
+<p><strong>The edge model stays parked.</strong> In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so the revival trigger is not met. It would be met by a fact owned by the path rather than by any device, such as an end-to-end GOOSE transfer time. That fact is an operator requirement, so it stays out.</p>
+<h2>5. The worked example</h2>
+<p>The worked example is a reference SAS with generic components and values taken from the standards' profiles. Every value is marked illustrative until a supplier volunteers a real product.</p>
+<p><strong>Components:</strong></p>
+<ul>
+<li>a protection IED;</li>
+<li>a bay controller;</li>
+<li>a station gateway, which talks IEC 60870-5-104 to the control centre;</li>
+<li>a station server, which hosts the GDOI key server and the HMI;</li>
+<li>an engineering workstation;</li>
+<li>a WAN router, which implements the conduit to the control centre.</li>
+</ul>
+<p><strong>Two zones:</strong> the station zone and the WAN.</p>
+<p><strong>Protection IED interfaces:</strong></p>
+<div style="overflow:auto">
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>Type</th>
+<th>Protocol</th>
+<th>Expected finding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>svc-goose</code></td>
+<td>service</td>
+<td>GOOSE, IEC 62351-6</td>
+<td>Integrity by HMAC-SHA256 with a group key. Already quantum-resistant. Its keys come from <code>int-gdoi</code></td>
+</tr>
+<tr>
+<td><code>svc-sv</code></td>
+<td>service</td>
+<td>Sampled values, IEC 62351-6</td>
+<td>As <code>svc-goose</code></td>
+</tr>
+<tr>
+<td><code>tls-mms</code></td>
+<td>service</td>
+<td>TLS 1.2 and 1.3, IEC 62351-3</td>
+<td>ECDHE and ECDSA. <code>blockedBy: standard</code>, because 62351-3 lists no PQC groups</td>
+</tr>
+<tr>
+<td><code>svc-mms</code></td>
+<td>service</td>
+<td>MMS, with IEC 62351-8 role-based access tokens</td>
+<td>The token signature is the authority. <code>blockedBy: standard</code></td>
+</tr>
+<tr>
+<td><code>int-gdoi</code></td>
+<td>interconnect</td>
+<td>GDOI over IKEv1 phase 1</td>
+<td>The key plane. <code>blockedBy: standard</code>. The successor, G-IKEv2, is published but not profiled for IEC 62351-9</td>
+</tr>
+<tr>
+<td><code>mgmt-enrol</code></td>
+<td>management</td>
+<td>Certificate enrolment (EST or SCEP), IEC 62351-9</td>
+<td>Device identity certificates with long validity. Can it enrol an ML-DSA certificate?</td>
+</tr>
+<tr>
+<td><code>upd-fw</code></td>
+<td>management</td>
+<td>Firmware update</td>
+<td><code>verifierReplaceable</code> decides update versus replacement</td>
+</tr>
+<tr>
+<td><code>mgmt-eng</code></td>
+<td>management</td>
+<td>Configuration download from the engineering tool</td>
+<td>Often protected only by TLS and access control. Is the configuration itself signed?</td>
+</tr>
+<tr>
+<td><code>peer-ptp</code></td>
+<td>peer</td>
+<td>IEEE 1588 time synchronisation</td>
+<td>Commonly no cryptography: <code>none</code></td>
+</tr>
+<tr>
+<td><code>sto-keys</code></td>
+<td>storage</td>
+<td>—</td>
+<td>Device private key and trust anchors. Is a secure element present? <code>unknown</code> is acceptable</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>What a planner is expected to conclude:</strong></p>
+<ul>
+<li><strong>The protection traffic itself is not the migration target.</strong> Its integrity is already symmetric.</li>
+<li><strong>The key plane is the long pole.</strong> GDOI, role-based access tokens and certificate enrolment are all blocked by standards.</li>
+<li><strong>The control-centre link can be protected now at the conduit.</strong> IKEv2 with ML-KEM is in the RFC Editor queue, and RFC 9370 already allows hybrid exchanges. This holds while the gateway's 62351-3 TLS waits on the standard.</li>
+<li><strong>For each device model, <code>verifierReplaceable</code> splits the fleet</strong> into those that can be updated and those that must be replaced at refurbishment.</li>
+<li><strong><code>certificationImpact</code> turns every one of these actions into a schedule.</strong> No algorithm inventory shows any of this.</li>
+</ul>
+<h2>6. What the profiles deliberately exclude</h2>
+<ul>
+<li>Migration priority, risk scores, target dates and compensating controls. These belong in the operator's register (decisions 0002 and 0007, and CycloneDX 2.0 <code>risks</code>).</li>
+<li>Per-path latency budgets and safety analysis.</li>
+<li>Site topology in supplier documents. The system document carries the zone structure for one design, not for a specific site.</li>
+<li>Exploitability. It stays a separate artefact.</li>
+</ul>
+<h2>7. Expressing it in CycloneDX</h2>
+<ul>
+<li><strong>Components follow the Keycloak pattern (K7).</strong> TLS is a protocol component. GOOSE, SV, MMS, IEC 60870-5-104 and GDOI are services, because the CycloneDX protocol types do not include them. Each service depends on what carries it.</li>
+<li><strong>The group-key relationship is a dependency.</strong> <code>svc-goose</code> depends on the key material, and the key material on <code>int-gdoi</code>. <code>keyStoreRef</code> points to <code>int-gdoi</code>.</li>
+<li><strong>The system document is a separate BOM.</strong> It references component BOMs through BOM-Link with a hash. <code>usage</code> and <code>conduitRef</code> are <code>pkic:profile:</code> properties.</li>
+<li><strong>Zones have no native home in 1.7.</strong> In 2.0 the blueprint model (zones, boundaries and flows) is the candidate. This case is the first worked use for it, and a concrete input to the CycloneDX feedback on the edge gap.</li>
+<li><strong>Certification.</strong> <code>certificationScheme</code> maps to <code>certifications</code> in 2.0 and is a property in 1.7, as for module validation.</li>
+</ul>
+<h2>8. Proposed decisions and open questions</h2>
+<p><strong>Proposed decisions</strong> (for a draft decision 0024):</p>
+<ul>
+<li><strong>O1.</strong> The OT use case is the substation automation system, named by its decision.</li>
+<li><strong>O2.</strong> Two profiles: a component profile extending the change core, and a system overlay.</li>
+<li><strong>O3.</strong> The data plane and the key plane are separate interfaces, linked by <code>keyStoreRef</code>, which is MUST for group-keyed interfaces.</li>
+<li><strong>O4.</strong> Real-time limits are integration constraints, not a new attribute.</li>
+<li><strong>O5.</strong> A conduit is an interface of the device that implements it. The edge model stays parked.</li>
+<li><strong>O6.</strong> Values are illustrative until a supplier volunteers a product.</li>
+</ul>
+<p><strong>Open questions:</strong></p>
+<ol>
+<li>Does IEC 62351-9:2023 already profile G-IKEv2, or only GDOI over IKEv1? This changes the <code>int-gdoi</code> finding.</li>
+<li>Has IEC TC 57 WG 15 started PQC work on IEC 62351-3, -6, -8 and -9?</li>
+<li>Is <code>certificationImpact</code> a product fact, or a deployment fact that belongs in the system document?</li>
+<li>Should <code>usage</code> stay in the system overlay, or become a general facility for derived CBOMs?</li>
+<li>Who can bring a protection IED supplier and a transmission or distribution operator to review the draft? Targeted requests to named people are the route.</li>
+</ol>
+<h2>Sources</h2>
+<ul>
+<li><a href="https://cdn.standards.iteh.ai/samples/102476/88f51459928e44f3b051832d08a7518a/IEC-62351-6-2020.pdf">IEC 62351-6:2020 preview</a></li>
+<li><a href="https://cdn.standards.iteh.ai/samples/105100/b7a344cdd98f47e4a67e4a94e9df50b5/IEC-62351-3-2023.pdf">IEC 62351-3:2023 preview</a></li>
+<li><a href="https://www.rfc-editor.org/info/rfc8052/">RFC 8052, GDOI support for IEC 62351</a></li>
+<li><a href="https://datatracker.ietf.org/doc/draft-ietf-ipsecme-g-ikev2/23/">draft-ietf-ipsecme-g-ikev2, published as RFC 9838</a></li>
+<li><a href="https://datatracker.ietf.org/doc/draft-ietf-ipsecme-ikev2-mlkem/">draft-ietf-ipsecme-ikev2-mlkem, RFC Editor queue</a></li>
+<li><a href="https://www.igrid-td.com/smartguide/iec61850/goose-messaging/">GOOSE transfer time, IEC 61850-5 P2/P3</a></li>
+<li><a href="https://industrialcyber.co/regulation-standards-and-compliance/eu-begins-coordinated-effort-for-member-states-to-switch-critical-infrastructure-to-quantum-resistant-encryption-by-2030/">EU PQC roadmap (Industrial Cyber)</a></li>
+<li><a href="https://industrialcyber.co/cisa/dhs-and-cisa-prescribe-proactive-steps-toward-post-quantum-cryptography-across-ot-environments/">DHS/CISA OT PQC guidance (Industrial Cyber)</a></li>
+</ul>
+
+  <div class="pagenav">
+    <a href="iot.html">← IoT Device Estate</a>
+    <a class="next" href="template.html">Next: Template →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</div>
+</body>
+</html>
