@@ -1,0 +1,104 @@
+---
+nav: uc-disclosure
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Disclosure</title>
+<link rel="stylesheet" href="../methodology/styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Use Cases</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include usecases-nav.html %}
+
+<main>
+  <div class="crumb">GROUP</div>
+  <h1>Disclosure: one document, many profiles</h1>
+  <p class="lead">Use cases whose profile selects and tightens facts the interface disclosure baseline already defines. Orientation is <code>inventory</code>. One document rich enough for the baseline, with the implementing library stated, answers every profile in this group without being reissued.</p>
+  <div class="banner">The grouping is proposed in draft decision 0023 and is not yet settled. Numbers on the entries below are catalogue identifiers and do not change when an entry moves.</div>
+
+  <h2>What the group shares</h2>
+  <p>Every profile here extends the <a href="../methodology/profile.html">interface disclosure baseline</a>, or is one of its depths. The facts are the baseline's: what the product is, which interfaces it exposes, the protocol and version of each, the algorithms for each cryptographic job, the endpoint roles, the implementing library, the lifecycle stage of the report, and whether the list is complete. A profile in this group chooses which of them are mandatory, removes a permission to withhold, or adds a structural rule about which kinds of interface must be present. It adds no new attribute.</p>
+  <p>That is what makes one document serve several consumers. A buyer, a vulnerability responder and an auditor can each apply their own profile to the same unchanged document. The depth ladder in <a href="../methodology/maturity.html">Maturity</a> applies here too: the entry depth asks less of the same facts and is the instrument for coverage, as in due diligence.</p>
+  <p>The limit runs one way. A document produced only for this group cannot answer a <a href="change-planning.html">change-planning</a> profile, because the capability facts were never collected. A document produced for change planning answers this group as well.</p>
+
+  <h2>Worked examples</h2>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Page</th><th>What it shows</th><th>State</th></tr></thead>
+    <tbody>
+      <tr><td><strong><a href="procurement.html">Procurement</a></strong></td><td>A procurement profile applied, unchanged, to the Keycloak document written for PQC migration: one document read by two profiles</td><td>Drafted. Rules file well-formed; verdicts wait on evaluator work</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Attributes emphasised</h2>
+  <p>Profiles in this group draw on the same attributes and differ in which are mandatory. The table shows the emphasis each places.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr>
+      <th>Use case</th><th>lifecycleStage</th><th>implementationPurl</th><th>keyExchange / auth</th><th>interfaceType</th><th>disclosure markers</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Supply-chain transparency</td><td>●</td><td>○</td><td>●</td><td>●</td><td>●</td></tr>
+      <tr><td>Procurement</td><td>○</td><td>●</td><td>●</td><td>●</td><td>○</td></tr>
+      <tr><td>Vulnerability / incident</td><td>○</td><td>●</td><td>○</td><td>○</td><td>○</td></tr>
+      <tr><td>Compliance reporting</td><td>●</td><td>○</td><td>●</td><td>●</td><td>●</td></tr>
+      <tr><td>M&amp;A due diligence</td><td>○</td><td>●</td><td>●</td><td>○</td><td>●</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">● emphasised by a profile for this use case · ○ relevant but not the focus. Placeholders have no row until they are drafted.</p>
+  <p style="font-size:13px;color:var(--muted)">Supply-chain transparency does <em>not</em> emphasise <code>implementationPurl</code>: that use case is bounded by an upper limit on what may be asked, and the library is the attribute a supplier is most likely to withhold, which is why the baseline marks it withholdable. Procurement does, because the drafted procurement profile removes that permission, as the migration profile does.</p>
+
+  <h2>The use cases in this group</h2>
+
+  <h3 id="supply-chain">7 · Supply-chain transparency</h3>
+  <p>A supplier at any tier needs to tell its customers what cryptography its product uses, and would prefer to do so once rather than in a different format for each customer. Downstream, an integrator needs disclosures it can compare across suppliers.</p>
+  <p>A disclosure baseline meets this need. The binding constraint here is the upper bound on what may be asked, which is unusual: the profile has to be satisfiable without exposing information a supplier has a legitimate reason to protect. The ability to mark an attribute as withheld, rather than omitting it silently, is therefore of particular importance in this use case.</p>
+
+  <h3 id="procurement">2 · Procurement and tender conformance</h3>
+  <p>An operator states cryptographic requirements in a tender and needs to check what comes back without reading it by hand. Today this is done with security questionnaires, whose answers are prose and cannot be compared between vendors. A profile expresses the requirement in a form a machine can evaluate, and the vendor's CBOM is the response to it.</p>
+  <p>The requirements here are structural as much as attribute-level. Beyond describing each interface, a procurement profile typically insists that certain kinds of interface are present at all, which is how it catches a vendor that has described its service interface and said nothing about how the product is administered.</p>
+  <p>Drafted as a worked example on the <a href="procurement.html">Procurement</a> page.</p>
+
+  <h3 id="vulnerability">3 · Vulnerability management and incident response</h3>
+  <p>An advisory is published against a cryptographic library. The question is which services are affected, and it has to be answered in hours rather than weeks. This use case has the least tolerance for manual work.</p>
+  <p>Almost everything depends on one attribute: the identifier of the implementing library, expressed in a form that can be matched against a vulnerability feed. Endpoint roles, interface types and lifecycle stages contribute little here. A profile written for this purpose is deliberately narrow.</p>
+  <p>It is also the one use case in this list that the baseline actively obstructs, because that attribute is the one rule the baseline permits a producer to withhold. <a href="../methodology/vulnerabilities.html">Vulnerabilities</a> sets out what a CBOM contributes when an advisory lands, which kinds of weakness it is the only evidence for, and why no profile for this purpose has been written yet.</p>
+
+  <h3 id="compliance">4 · Regulatory and compliance reporting</h3>
+  <p>An organization must demonstrate its cryptographic position against a framework such as the EU Cyber Resilience Act, NIS2, the BSI technical guidelines, or a national directive. The consumer is an auditor or regulator who did not generate the data and cannot ask follow-up questions of the system.</p>
+  <p>A profile encodes what a given framework expects, so that conformance can be evidenced by a dated artifact that an auditor can re-check. Because the reader is external, provenance and lifecycle stage carry unusual weight: a reported position is only meaningful if it says when and from what it was derived. A jurisdiction-specific profile also lets a global vendor satisfy the requirement once and report against it in several places.</p>
+
+  <h3 id="due-diligence">8 · Mergers and third-party risk due diligence</h3>
+  <p>An acquiring organization, or one onboarding a significant partner, needs a view of cryptographic exposure across an estate it does not operate and cannot inspect directly. The work is usually done under time pressure and with limited cooperation.</p>
+  <p>Coverage matters more than depth. A broad disclosure across the estate, with the absence of data recorded explicitly rather than left blank, tells the assessor where the risk concentrates: deprecated algorithms still in use, and cryptography bound to hardware that will not be upgraded.</p>
+
+  <h3 id="managed-service">10 · Managed and cloud service disclosure</h3>
+  <p>A customer relies on a service it does not operate: an identity provider, a key management service, a payment gateway, a managed network. It has to decide whether to rely on it, and what to require of the provider. The producer here is not a vendor shipping a product it cannot see inside, but the operator of the service, who knows its configuration and its deployment.</p>
+  <p>That changes the upper bound on what may be asked, which is the point of developing it separately: lifecycle stage <code>configured</code> or <code>observed</code> is attainable, and so are facts the product profiles exclude as deployment-specific. <strong>Placeholder.</strong> Consumer and decision named; nothing more.</p>
+
+  <h3 id="service-assurance">11 · Service assurance</h3>
+  <p>An assurance team responsible for customer-facing services, including critical communications, needs to know which services a cryptographic weakness or a planned change reaches. The facts about each component already exist in that component's document. What is missing is the mapping from components to the services they carry.</p>
+  <p>That makes it a system overlay rather than a new set of attributes: a document that references component documents and states which services depend on which interfaces. It arrives from the telecom sector paper and shares its structure with the substation overlay. <strong>Placeholder.</strong></p>
+
+  <div class="pagenav">
+    <a href="index.html">← Use Cases: Overview</a>
+    <a class="next" href="procurement.html">Next: Procurement →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</div>
+</body>
+</html>

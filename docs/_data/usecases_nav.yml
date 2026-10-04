@@ -12,16 +12,31 @@
 # manages the methodology's footer links only — this section has few enough
 # pages that its previous/next links are written by hand.
 #
-# Adding a worked use case means adding one line to the first group, and one
-# row to the table on index.html. The Template entry stays last in the group:
-# it is the blank the others are copied from, not a use case.
+# Groups follow draft decision 0023: each group opens with its group page, then
+# its worked use cases. Adding a worked use case means adding one line to its
+# group, and linking it from the register on index.html and from its group page.
+# The Template has a group of its own: it is the blank the others are copied
+# from, not a use case.
 
 - group: Use cases
   items:
-    - { id: uc-index,     title: Overview,           url: index.html }
-    - { id: uc-pqc,       title: PQC Migration,      url: pqc-migration.html }
-    - { id: uc-iot,       title: IoT Device Estate,  url: iot.html }
-    - { id: uc-template,  title: Template,           url: template.html }
+    - { id: uc-index,       title: Overview,              url: index.html }
+
+- group: Disclosure
+  items:
+    - { id: uc-disclosure,  title: The group,             url: disclosure.html }
+    - { id: uc-procurement, title: Procurement,           url: procurement.html }
+
+- group: Change planning
+  items:
+    - { id: uc-change,      title: The group,             url: change-planning.html }
+    - { id: uc-pqc,         title: PQC Migration,         url: pqc-migration.html }
+    - { id: uc-iot,         title: IoT Device Estate,     url: iot.html }
+    - { id: uc-substation,  title: Substation Automation, url: substation.html }
+
+- group: Writing one
+  items:
+    - { id: uc-template,    title: Template,              url: template.html }
 
 - group: In the methodology
   items:

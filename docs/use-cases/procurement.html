@@ -1,0 +1,151 @@
+---
+nav: uc-procurement
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Procurement</title>
+<link rel="stylesheet" href="../methodology/styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Use Cases</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include usecases-nav.html %}
+
+<main>
+  <div class="crumb">DISCLOSURE · WORKED USE CASE · DRAFT</div>
+  <h1>Procurement: one document, read by a second profile</h1>
+  <p class="lead">A procurement profile applied, unchanged, to the Keycloak document written for the <a href="pqc-migration.html">PQC migration</a> use case. Catalogue entry <a href="disclosure.html#procurement">2</a>, in the disclosure group, and the first worked example in that group.</p>
+  <div class="banner warn">Draft for discussion. The rules file and the failing example are in <code>drafts/procurement/</code>, and the profile extends the interface disclosure baseline v0.8 draft of decision 0022. Verdicts below were checked by reading the documents, not by the published validator.</div>
+
+<h2>What this shows</h2>
+<p>The Keycloak document written for the PQC migration profile is read, <strong>unchanged</strong>, against a
+procurement profile. This is the first worked example in the disclosure group. It is also the
+first demonstration of the claim the use-case pages make without showing: one rich document
+serves several consumers, each applying the profile that matches its decision.</p>
+<p>It also shows the limit. The procurement profile asks for nothing the migration document lacks,
+so the document answers it. The reverse does not hold: a document written only for procurement
+could not answer the migration profile, because the capability attributes were never collected.</p>
+<h2>Files</h2>
+<div style="overflow:auto">
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>profile-procurement.rules.json</code></td>
+<td>v0.1 draft. Extends the interface disclosure baseline v0.8 draft. Well-formed under C1–C17 with <code>--strict</code></td>
+</tr>
+<tr>
+<td><code>examples/cbom-keycloak-procurement-fail.cyclonedx.json</code></td>
+<td>The pass document with the storage interface removed. Fails <code>procurement#P5</code> only</td>
+</tr>
+<tr>
+<td>Conforming example</td>
+<td><code>../pqc-migration-depths/examples/cbom-keycloak-pqc-pass.cyclonedx.json</code>, not copied</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>What the profile adds</h2>
+<p>The profile selects and tightens. It adds no per-interface attribute.</p>
+<div style="overflow:auto">
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Requirement</th>
+<th>Why a buyer needs it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>scope</td>
+<td>Lifecycle stages <code>implemented</code>, <code>configured</code>, <code>observed</code>; drops <code>intended</code></td>
+<td>A tender response describes what is offered. An intention is a promise and belongs in the commercial response</td>
+</tr>
+<tr>
+<td><code>I9</code> (override)</td>
+<td>Implementing library, no longer withholdable</td>
+<td>The buyer has to match advisories for the life of the contract. The tender's confidentiality terms answer the supplier's reason to withhold</td>
+</tr>
+<tr>
+<td><code>P5</code> (new)</td>
+<td>A storage interface for key material at rest, or a stated reason for having none</td>
+<td>Responses describe the paths traffic crosses and stay silent about where keys are kept</td>
+</tr>
+<tr>
+<td><code>P6</code> (new)</td>
+<td>Coverage <code>all</code> or <code>all-external</code>, not <code>partial</code></td>
+<td>A partial disclosure cannot be compared across responses</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>Verdicts</h2>
+<div style="overflow:auto">
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Expected</th>
+<th>Published validator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cbom-keycloak-pqc-pass</code></td>
+<td>Conforms. <code>sto-realm-keys</code> satisfies P5, coverage is <code>all-external</code>, every interface reaches a library purl through <code>provides</code></td>
+<td>Does not conform: P5, and I9 on the TLS interfaces</td>
+</tr>
+<tr>
+<td><code>cbom-keycloak-procurement-fail</code></td>
+<td>Fails <code>procurement#P5</code> only</td>
+<td>Same failures as the pass document</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The published validator cannot tell the two documents apart. It does not read CycloneDX services
+as interfaces (K7), so it never sees the storage interface. It does not inherit implementation facts
+through <code>dependencies[].provides</code> (K9), so I9 fails on every TLS interface. It also counts the two
+shared TLS configuration components as interfaces. These are the same gaps that hold back the
+migration examples, listed under <code>$pendingTooling</code> in the extended profile. The expected verdicts
+were checked by reading the documents against the rules, not by a patched tool.</p>
+<p>The procurement-specific rule the tool can read today, P6, passes on both documents, as intended.</p>
+<h2>What this asks of the group</h2>
+<ul>
+<li><strong>The evaluator work is now the bottleneck for two groups, not one.</strong> Until it reads services and
+  inherits through <code>provides</code>, no Keycloak example in either group gets a tool verdict. The standing
+  position has been that tooling waits until the profiles are right. This example is a reason to
+  look at that again for these two adapter features only.</li>
+<li><strong>Is P5 a procurement rule, or a baseline rule?</strong> If every consumer needs to know where keys are
+  kept, it belongs beside P2 in the baseline, as P4's coverage rule did (Q34). It is kept here for
+  now because no other drafted profile has asked for it.</li>
+<li><strong>Should a tender be the restricted audience pair of the baseline rather than a profile?</strong> If the
+  only change were removing withholdability under an agreement, Confidentiality says to publish a
+  pair at one depth. P5 and P6 are why this is a profile and not a pair.</li>
+</ul>
+
+  <div class="pagenav">
+    <a href="disclosure.html">← Disclosure</a>
+    <a class="next" href="change-planning.html">Next: Change Planning →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</div>
+</body>
+</html>
