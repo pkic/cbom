@@ -1,0 +1,69 @@
+# Needs the repository secret POLL_API_KEY (the organizer API key of the poll service).
+#
+# Actions → "Open WG poll" → Run workflow, give the issue number. The poll takes its title and
+# description from the issue; the poll service then comments on the issue with the voting link.
+name: Open WG poll
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Issue number the poll decides
+        required: true
+      options:
+        description: Options, separated by "|"
+        default: Approve | Reject | Abstain
+      days:
+        description: Days the poll stays open
+        default: "14"
+      multi_select:
+        description: Allow choosing more than one option
+        type: boolean
+        default: false
+      publish_results:
+        description: Post the results table on the issue when the poll closes (public)
+        type: boolean
+        default: false
+
+permissions:
+  issues: read
+
+jobs:
+  open-poll:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create poll
+        env:
+          GH_TOKEN: ${{ github.token }}
+          POLL_API: https://qsafemigration.cloud
+          POLL_API_KEY: ${{ secrets.POLL_API_KEY }}
+          ISSUE: ${{ inputs.issue }}
+          OPTIONS: ${{ inputs.options }}
+          DAYS: ${{ inputs.days }}
+          MULTI: ${{ inputs.multi_select }}
+          PUBLISH: ${{ inputs.publish_results }}
+        run: |
+          gh issue view "$ISSUE" --repo "$GITHUB_REPOSITORY" --json title,body,url > issue.json
+          python3 - <<'PY'
+          import json, os, urllib.error, urllib.request
+          issue = json.load(open("issue.json"))
+          body = {
+              "title": issue["title"],
+              "description": (issue["body"] or "") + f"\n\n---\nFull discussion: [{issue['url']}]({issue['url']})",
+              "options": [o.strip() for o in os.environ["OPTIONS"].split("|") if o.strip()],
+              "duration_hours": float(os.environ["DAYS"]) * 24,
+              "multi_select": os.environ["MULTI"] == "true",
+              "github_url": issue["url"],
+              "publish_results": os.environ["PUBLISH"] == "true",
+          }
+          req = urllib.request.Request(
+              os.environ["POLL_API"] + "/api/v1/polls", data=json.dumps(body).encode(), method="POST",
+              headers={"Authorization": "Bearer " + os.environ["POLL_API_KEY"], "Content-Type": "application/json"})
+          try:
+              poll = json.load(urllib.request.urlopen(req, timeout=30))
+          except urllib.error.HTTPError as exc:
+              raise SystemExit(f"HTTP {exc.code}: {exc.read().decode()}")
+          print(f"Poll {poll['poll_id']} closes {poll['closes_at']}: {poll['vote_url']}")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+              f.write(f"### Poll opened\n\n[{poll['vote_url']}]({poll['vote_url']}), closes {poll['closes_at']}\n")
+          PY
