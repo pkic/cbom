@@ -97,10 +97,6 @@ sas-system                         overlay over component documents (system)</co
   <p>A publisher of software or firmware decides when it can move its signing keys to a new algorithm. It is constrained less by its own signing service than by the verifiers already deployed: a boot ROM that verifies one algorithm with one fixed key decides the timetable for every device that carries it.</p>
   <p>It shares the update-path facts with the IoT and substation entries, which is why those facts belong in the change core rather than in any one profile. <strong>Proposed.</strong></p>
 
-  <h3 id="stored-data">Stored data and archive protection</h3>
-  <p>A data owner decides which stores and archives to re-encrypt or re-wrap, and in what order. The order follows from how long the data has to stay confidential, set against the key establishment and key wrapping that protect it today. This is where harvest-now-decrypt-later exposure is most direct.</p>
-  <p>The producer is the operator, not a vendor, because only the operator knows what a store holds and for how long. It depends on how data is modelled alongside cryptography, which is an open design note. <strong>Proposed.</strong></p>
-
   <h3 id="shared-trust">Shared-trust network migration</h3>
   <p>The operator of a closed network with many participants, such as a payment or settlement scheme, decides whether and when every participant can move to a new shared trust anchor. No participant can move alone, and the slowest participant sets the date.</p>
   <p>The baseline describes two-party relationships and cannot describe this yet. It is blocked on the multi-party trust model in the design note of the same name. <strong>Proposed.</strong></p>

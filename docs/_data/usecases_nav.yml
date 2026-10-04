@@ -34,6 +34,14 @@
     - { id: uc-iot,         title: IoT Device Estate,     url: iot.html }
     - { id: uc-substation,  title: Substation Automation (OT), url: substation.html }
 
+- group: Operation
+  items:
+    - { id: uc-operation,   title: The group,             url: operation.html }
+
+- group: Assurance
+  items:
+    - { id: uc-assurance,   title: The group,             url: assurance.html }
+
 - group: Writing one
   items:
     - { id: uc-proposing,   title: Proposing a Use Case,  url: proposing.html }

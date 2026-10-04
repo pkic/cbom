@@ -30,35 +30,27 @@ nav: uc-index
   <table>
     <thead><tr><th>Kind of page</th><th>What it gives you</th></tr></thead>
     <tbody>
-      <tr><td><strong>Group pages</strong></td><td>What the use cases in a group have in common, and a description of each: <a href="disclosure.html">Disclosure</a>, <a href="change-planning.html">Change planning</a></td></tr>
+      <tr><td><strong>Group pages</strong></td><td>What the use cases in a group have in common, and a description of each: <a href="disclosure.html">Disclosure</a>, <a href="change-planning.html">Change planning</a>, <a href="operation.html">Operation</a>, <a href="assurance.html">Assurance</a></td></tr>
       <tr><td><strong>Worked examples</strong></td><td>One use case taken through to a profile, applied to a real product, with a document that conforms and one that does not. <a href="pqc-migration.html">PQC migration</a> on Keycloak is the complete one</td></tr>
       <tr><td><strong>Writing one</strong></td><td><a href="proposing.html">How to propose a use case</a>, and the <a href="template.html">template</a> a worked example follows</td></tr>
     </tbody>
   </table>
   </div>
 
-  <h2>Two groups</h2>
-  <p>Use cases fall into two groups. The difference matters most to whoever has to produce the CBOM.</p>
+  <h2>Four groups</h2>
+  <p>Use cases fall into four groups. The first two differ in what the profile asks for, which matters most to whoever has to produce the CBOM. The other two differ in who produces the document and who relies on it.</p>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th style="width:50%"><a href="disclosure.html">Disclosure</a>: know what a product uses</th><th style="width:50%"><a href="change-planning.html">Change planning</a>: decide how to change it</th></tr></thead>
+    <thead><tr><th>Group</th><th>What sets it apart</th><th>Who produces the CBOM</th><th>Examples</th></tr></thead>
     <tbody>
-      <tr>
-        <td>The profile chooses which facts a CBOM must carry from the set every CBOM already describes: interfaces, protocols, algorithms and the libraries that implement them.</td>
-        <td>The profile adds facts a basic CBOM does not have: what each interface could support, what is blocking it, and what changing it costs.</td>
-      </tr>
-      <tr>
-        <td>One CBOM from a supplier can answer every profile in this group.</td>
-        <td>A supplier has to produce a richer CBOM. That CBOM then answers the disclosure profiles as well.</td>
-      </tr>
-      <tr>
-        <td>Procurement, vulnerability response, compliance reporting, due diligence.</td>
-        <td>PQC migration, IoT device estates, substation automation, crypto-agility.</td>
-      </tr>
+      <tr><td><strong><a href="disclosure.html">Disclosure</a></strong><br>know what a product uses</td><td>The profile chooses which facts a CBOM must carry from the set every CBOM already describes: interfaces, protocols, algorithms and the libraries that implement them. One CBOM from a supplier answers every profile in the group</td><td>The supplier</td><td>Procurement, vulnerability response, due diligence</td></tr>
+      <tr><td><strong><a href="change-planning.html">Change planning</a></strong><br>decide how to change it</td><td>The profile adds facts a basic CBOM does not have: what each interface could support, what is blocking it, and what changing it costs. That richer CBOM answers the disclosure profiles as well</td><td>The supplier</td><td>PQC migration, IoT device estates, substation automation (OT)</td></tr>
+      <tr><td><strong><a href="operation.html">Operation</a></strong><br>describe what is running</td><td>The operator states facts no supplier knows: what data crosses an interface, how long it must stay confidential, what was actually negotiated, what changed since the last report. It cites the suppliers' CBOMs rather than repeating them</td><td>The operator</td><td>Harvest-now-decrypt-later exposure, migration progress, managed services</td></tr>
+      <tr><td><strong><a href="assurance.html">Assurance</a></strong><br>rely on it as evidence</td><td>The reader is an auditor or regulator who cannot ask follow-up questions. The facts are usually the disclosure facts; what is added is proof of when, from what and by whom the document was made, and that it is still current</td><td>Supplier or operator</td><td>Compliance reporting, certification evidence</td></tr>
     </tbody>
   </table>
   </div>
-  <p>A use case is not grouped by sector. A telecom operator and a grid operator planning a migration make the same kind of decision, and sector terms go into the profile, not into a separate use case.</p>
+  <p>Disclosure and change planning are defined in draft decision 0023; operation and assurance were added as an amendment and are less settled. A use case is not grouped by sector. A telecom operator and a grid operator planning a migration make the same kind of decision, and sector terms go into the profile, not into a separate use case.</p>
 
   <h2>All use cases</h2>
   <div style="overflow:auto">
@@ -68,9 +60,7 @@ nav: uc-index
       <tr><td><a href="disclosure.html#procurement">Procurement and tender conformance</a></td><td>A buyer: whether a tender's cryptographic disclosure is complete enough to compare and hold the supplier to</td><td>Disclosure</td><td>Draft worked example</td><td><a href="procurement.html">Read</a></td></tr>
       <tr><td><a href="disclosure.html#supply-chain">Supply-chain transparency</a></td><td>A supplier: how to disclose once to every customer</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
       <tr><td><a href="disclosure.html#vulnerability">Vulnerability management and incident response</a></td><td>A responder: which services a published advisory reaches</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
-      <tr><td><a href="disclosure.html#compliance">Regulatory and compliance reporting</a></td><td>An auditor or regulator: whether a position meets a framework</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
       <tr><td><a href="disclosure.html#due-diligence">Mergers and third-party due diligence</a></td><td>An acquirer: where the cryptographic risk sits in an estate it cannot inspect</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
-      <tr><td><a href="disclosure.html#managed-service">Managed and cloud service disclosure</a></td><td>A customer: whether to rely on a service it does not run</td><td>Disclosure</td><td>Proposed</td><td>—</td></tr>
       <tr><td><a href="disclosure.html#service-assurance">Service assurance</a></td><td>An assurance team: which customer services a weakness or a change reaches</td><td>Disclosure</td><td>Proposed</td><td>—</td></tr>
       <tr><td><a href="change-planning.html#pqc-readiness">PQC migration</a></td><td>A migration lead: which interfaces to migrate, in what order, at what cost</td><td>Change planning</td><td>Worked example</td><td><a href="pqc-migration.html">Read</a></td></tr>
       <tr><td><a href="change-planning.html#iot">IoT device estate</a></td><td>A fleet operator: for each device model, update, replace, shield or accept</td><td>Change planning</td><td>Draft worked example</td><td><a href="iot.html">Read</a></td></tr>
@@ -78,8 +68,15 @@ nav: uc-index
       <tr><td><a href="change-planning.html#crypto-agility">Crypto-agility assessment</a></td><td>An architect: how hard replacing an algorithm would be</td><td>Change planning</td><td>Described</td><td>—</td></tr>
       <tr><td><a href="change-planning.html#pki-estate">PKI and certificate estate migration</a></td><td>A PKI owner: which hierarchies move, in what order, while relying parties catch up</td><td>Change planning</td><td>Proposed</td><td>—</td></tr>
       <tr><td><a href="change-planning.html#code-signing">Code and firmware signing migration</a></td><td>A publisher: when signing keys can move, given the verifiers already deployed</td><td>Change planning</td><td>Proposed</td><td>—</td></tr>
-      <tr><td><a href="change-planning.html#stored-data">Stored data and archive protection</a></td><td>A data owner: which stores and archives to re-encrypt first</td><td>Change planning</td><td>Proposed</td><td>—</td></tr>
       <tr><td><a href="change-planning.html#shared-trust">Shared-trust network migration</a></td><td>A scheme operator: when every participant can move to a new trust anchor</td><td>Change planning</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="operation.html#managed-service">Managed and cloud service disclosure</a></td><td>A customer: whether to rely on a service it does not run</td><td>Operation</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="operation.html#stored-data">Stored data and archive protection</a></td><td>A data owner: which stores and archives to re-encrypt first</td><td>Operation</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="operation.html#hndl-exposure">Harvest-now-decrypt-later exposure</a></td><td>A security function: which systems to migrate first because of what they carry and for how long</td><td>Operation</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="operation.html#migration-progress">Migration progress over time</a></td><td>A programme lead or regulator: whether a migration is on track, and why the numbers moved</td><td>Operation</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="operation.html#migration-register">The operator's migration register</a></td><td>An operator: the response, owner, date and status for each finding</td><td>Operation</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="assurance.html#compliance">Regulatory and compliance reporting</a></td><td>An auditor or regulator: whether a position meets a framework</td><td>Assurance</td><td>Described</td><td>—</td></tr>
+      <tr><td><a href="assurance.html#certification-evidence">Certification and validation evidence</a></td><td>An evaluator or buyer: whether the CBOM matches what was certified, and still does</td><td>Assurance</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="assurance.html#readiness-evidence">Readiness assessment evidence</a></td><td>An assessor: what level or status the evidence supports</td><td>Assurance</td><td>Proposed</td><td>—</td></tr>
     </tbody>
   </table>
   </div>

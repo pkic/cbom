@@ -100,8 +100,8 @@ title: Overview
     <a class="feature-card" href="{{ '/use-cases/' | relative_url }}">
       <span class="card-kicker">1 developed · 3 drafted</span>
       <h3>Use cases</h3>
-      <p>Every purpose a profile has been proposed for, in two groups: disclosure and change
-         planning. PQC migration on Keycloak is developed in full; procurement, IoT device estates
+      <p>Every purpose a profile has been proposed for, in four groups: disclosure, change
+         planning, operation and assurance. PQC migration on Keycloak is developed in full; procurement, IoT device estates
          and substation automation are drafted; the rest are described or held as placeholders.</p>
       <span class="card-cta">See the use cases &#8594;</span>
     </a>

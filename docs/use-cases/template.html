@@ -32,7 +32,7 @@ nav: uc-template
   <ol>
     <li>Copy this file to <code>docs/use-cases/&lt;short-name&gt;.html</code>. The short name becomes part of the URL and is awkward to change later, so pick the consumer's word for the thing rather than the working group's.</li>
     <li>Change the front matter <code>nav:</code> value to <code>uc-&lt;short-name&gt;</code>.</li>
-    <li>Add one line to its group in <code>docs/_data/usecases_nav.yml</code> (Disclosure or Change planning), with the same id. If it fits neither group, raise that before writing anything else.</li>
+    <li>Add one line to its group in <code>docs/_data/usecases_nav.yml</code> (Disclosure, Change planning, Operation or Assurance), with the same id. If it fits none of them, raise that before writing anything else.</li>
     <li>In the <a href="index.html">register</a>, set its status to <em>draft worked example</em> and link the page in the last column. On its group page, point its entry to the page and add a row to the table of worked examples.</li>
     <li>Fix the previous and next links in the footer of this page and of its new neighbours. This section's footer links are written by hand; <code>tools/renumber-pagenav.py</code> manages the methodology's and will not touch these.</li>
   </ol>
