@@ -79,3 +79,24 @@ polls:
         text: "The working group sends CycloneDX its feedback on interfaces and endpoint roles, and on telling supported from in-use algorithms, while 2.0 is still open."
         options: [Agree, Disagree, Abstain]
         comment: true
+
+  - id: workshop-format
+    title: Format of the December workshop
+    opens: 2026-10-05
+    closes: 2026-10-19
+    # Opened with the "Open WG poll" workflow from a GitHub issue; see
+    # drafts/polls/2026-10-workshop-format.md. Once open: set issue:, correct the dates to
+    # what the poll service reports, and either keep single-use (personal links) or switch to
+    # access: open with url: (one public link). Then set published: true.
+    access: single-use
+    published: false
+    questions:
+      - id: format
+        text: "How should the working group use its two-hour workshop at the PKI Consortium conference in December?"
+        options:
+          - "A: hands-on lab"
+          - "B: design studio"
+          - "C: debate with live polling"
+          - "D: tabletop exercise"
+          - "Hybrid: demo, tabletop and poll"
+          - Abstain
