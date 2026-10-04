@@ -78,7 +78,7 @@ deleted.
 
 | Topic | Items |
 |---|---|
-| 3.1 What a profile is for, and its scope | Q01, Q02 |
+| 3.1 What a profile is for, and its scope | Q01, Q02, Q67 |
 | 3.2 Naming and versioning a profile | Q03, Q04 |
 | 3.3 The list of attributes | Q05, Q06, Q07, Q08, Q09, Q34, Q36, Q37, Q45, Q46, Q47, Q62, Q63 |
 | 3.4 How binding each rule is | Q10, Q11, Q12, Q65 |
@@ -86,7 +86,7 @@ deleted.
 | 3.6 Writing a profile into a file format | Q16, Q17, Q18, Q48 |
 | 3.7 Agreed names for algorithms and protocols | Q19, Q20, Q21, Q38, Q39 |
 | 3.8 How a CBOM relates to an SBOM | Q22, Q40 |
-| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35, Q49, Q50, Q51, Q52, Q53, Q64 |
+| 3.9 Building one profile on another | Q23, Q24, Q25, Q33, Q35, Q49, Q50, Q51, Q52, Q53, Q64, Q66, Q68 |
 | 3.10 Statements about the future | Q26, Q27, Q28 |
 | 3.11 Governing a profile over time | Q29, Q41, Q42, Q61 |
 | 3.12 Fitting regulation and policy | Q43, Q44 |
@@ -158,6 +158,28 @@ every relevant interface was declared.
 
 **What would have to change.** The rule format, the rule itself, both example documents, and one
 row of the table in the Conformance section listing what a pass does not prove.
+
+## Q67 — Is an estate a subject type, or an aggregation of product documents?
+
+**Status** open. Added 4 October 2026, from the use-case grouping draft.
+
+**The question.** `scope.subjectType` names a product today, and the drafts add a device model and
+a system. Due diligence and compliance reporting reach for an estate: everything an organization
+operates. That could be a subject a profile declares, or a set of product and system documents
+read together under no profile at all.
+
+**Why it matters.** As a subject, an estate needs its own completeness statement, which no producer
+can easily give. As an aggregation, nothing checks that the set is complete, which is the risk the
+due-diligence entry is most exposed to.
+
+**Option A: a subject type** (trade-off: checkable; hard to satisfy).
+
+**Option B: an aggregation outside profiles** (trade-off: no new machinery; completeness is left to
+the consumer).
+
+**Where it stands. Nothing.**
+
+**What would have to change.** The scope object, and the due-diligence and compliance entries.
 
 ---
 
@@ -1954,10 +1976,71 @@ shared profile that each extends (trade-off: the right answer structurally, and 
 profile that has already been reviewed).
 
 **Where it stands. Nothing.** It blocks writing any rule for the IoT use case, since what a profile
-may tighten depends on what it extends.
+may tighten depends on what it extends. *Update 4 October 2026:* draft decision 0023 (in
+`drafts/use-case-grouping/`) proposes Option C without revising the reviewed profile. A change
+core holding the attributes the migration, IoT and substation drafts share is published beside
+pqc-migration as a sibling, declaring each shared rule under the id pqc-migration already uses, as
+the entry profile did with the baseline. The update-path facts IoT and substation share go into
+the core as conditional rules on update interfaces, because a profile has a single base.
+Re-parenting pqc-migration onto the core is left to the same choice as Q51.
 
 **What would have to change.** The IoT profile, and under Option C the migration profile and its
 documents.
+
+## Q66 — Is the change core target-neutral?
+
+**Status** open. Added 4 October 2026, from the use-case grouping draft.
+
+**The question.** The change core's vocabularies are neutral: `capabilityStatus` says available,
+committed, planned, and so on, without saying capability for what. The pqc-migration objective is
+what makes "capability" mean quantum-safe. Lifted into a shared core, the meaning has to come from
+somewhere.
+
+**Why it matters.** If the target is stated per document or per evaluating policy, crypto-agility
+assessment needs no profile of its own and the core serves the next algorithm transition as well
+as this one. If it is fixed in the core, the core is a PQC core and crypto-agility is a sibling.
+
+**Option A: the core is PQC-specific** (trade-off: simple and true to the only developed case;
+the next transition starts again).
+
+**Option B: a declared target** in the document or the profile scope (trade-off: reusable; one
+more thing a producer states and a consumer has to check).
+
+**Option C: the target belongs to policy** (trade-off: consistent with decision 0002; a document
+then says what is possible per purpose, and policy says whether that is the target).
+
+**Where it stands. Nothing.**
+
+**What would have to change.** The core's objective, the pqc-migration objective, and the
+crypto-agility catalogue entry.
+
+## Q68 — How does an overlay's obligation relate to the documents it cites?
+
+**Status** open. Added 4 October 2026, from the use-case grouping draft.
+
+**The question.** An overlay is a profile for a document that references other documents: an
+integrator's system document citing component CBOMs by digest. Its rules can require that every
+cited document conforms to a named profile, or only that it exists and is cited, or nothing about
+it at all.
+
+**Why it matters.** The substation and service-assurance entries both need an overlay. If an
+overlay can pass while citing a component that conforms to nothing, the system verdict says less
+than it appears to. If it requires component conformance, one non-conforming supplier blocks the
+integrator.
+
+**Option A: cite only** (trade-off: always satisfiable; the verdict is about the integrator's own
+statements).
+
+**Option B: require a named component profile** (trade-off: a meaningful system verdict; the
+integrator inherits every supplier's gaps).
+
+**Option C: report component verdicts beside the overlay's own** (trade-off: no blocking, and
+nothing hidden; one more thing a claim has to carry).
+
+**Where it stands. Nothing.** Related to the derived-CBOM overlay in the EU report.
+
+**What would have to change.** Conformance, the claim schema, and Maturity, which names the
+overlay as a fourth relation.
 
 ---
 
@@ -2497,3 +2580,4 @@ not depend on a second example.
 | Confidentiality section | Q54, Q55, Q56 |
 | Vulnerabilities section | Q57, Q58, Q59, Q60 |
 | IoT use case draft | Q62, Q63, Q64, Q65 |
+| Use-case grouping draft | Q66, Q67, Q68 |
