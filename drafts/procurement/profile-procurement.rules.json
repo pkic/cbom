@@ -1,0 +1,115 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile for procurement. DERIVED: extends the interface disclosure baseline v0.8 (draft) and adds no per-interface attribute. It selects and tightens, which places it in the disclosure group (draft decision 0023): a document rich enough for the baseline, and with the implementing library stated, answers it without being reissued. DRAFT: sits in drafts/procurement/ until the baseline v0.8 is promoted with decision 0022.",
+  "profileId": "pkic.example.procurement",
+  "profileTag": "procurement",
+  "title": "Procurement and Tender Conformance (Example)",
+  "version": "0.1",
+  "objective": {
+    "$comment": "C1. The consumer is the buyer, not the operator the product will later serve. The decision is about the tender response, and every rule below traces to a reason a buyer would send a response back.",
+    "consumer": "A buyer evaluating tender responses for a product it will operate but did not build and cannot inspect.",
+    "decision": "Whether a supplier's cryptographic disclosure is complete and specific enough to compare with other responses and to hold the supplier to over the contract, or whether it must be clarified or rejected.",
+    "decisionOptions": [
+      "accept the disclosure for evaluation alongside other responses",
+      "return it for clarification, naming the failing rules",
+      "reject the response as non-compliant with the tender's disclosure requirement"
+    ]
+  },
+  "scope": {
+    "$comment": "C11. Narrows the base's accepted lifecycle stages by removing 'intended'. A tender response describes the product being offered; a statement of what it is meant to do is a promise, and belongs in the commercial response where its status is understood.",
+    "subjectType": "product",
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented",
+      "configured",
+      "observed"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.8",
+    "file": "../pqc-migration-depths/profile-interface-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "overrides": [
+    {
+      "id": "interface-disclosure#I9",
+      "level": "MUST",
+      "withholdable": false,
+      "note": "Tightened by removing withholdability, as the migration profile does. A buyer holds the product for the life of the contract and must be able to match every interface to library advisories during it. A tender response is made under the tender's confidentiality terms, which is where a supplier's reason to withhold the library is answered."
+    }
+  ],
+  "storageAbsenceVocabulary": [
+    "no-persistent-key-material",
+    "keys-held-in-external-module",
+    "not-applicable-to-subject"
+  ],
+  "productRules": [
+    {
+      "id": "P5",
+      "description": "Product declares at least one storage interface for key material at rest, or states why it has none",
+      "level": "MUST",
+      "constraint": {
+        "minInterfacesOfType": {
+          "interfaceType": "storage",
+          "min": 1
+        },
+        "orDeclaredAbsent": "storageInterfaceAbsence",
+        "absenceEnumRef": "storageAbsenceVocabulary"
+      },
+      "withholdable": false,
+      "note": "The structural rule a buyer most needs after P2. Responses describe the interfaces traffic crosses and are silent about where keys are kept. A product that keeps no keys, or keeps them in a hardware module outside the product, satisfies the rule by saying so, the same way P2 treats a product with no management surface."
+    },
+    {
+      "id": "P6",
+      "description": "Product states coverage of all interfaces, or of all externally reachable ones",
+      "level": "MUST",
+      "constraint": {
+        "productAttribute": "coverage",
+        "enumRef": "procurementCoverageVocabulary"
+      },
+      "withholdable": false,
+      "note": "P4 requires coverage to be stated. A partial disclosure cannot be compared across responses, because a missing interface could be absent or merely unlisted, so a buyer returns it. Stated as a new rule on the same attribute rather than as an override of P4, with its own narrower vocabulary."
+    }
+  ],
+  "interfaceRules": [],
+  "exclusions": [
+    {
+      "item": "Scoring, ranking or weighting of responses",
+      "reason": "A judgement, and the buyer's own. The profile decides whether a disclosure can be evaluated, not how it scores. See decision 0002."
+    },
+    {
+      "item": "Capability, roadmap and migration commitments",
+      "reason": "Asked for by a change-planning profile. A buyer who needs them names the PQC migration profile in the tender as well, and the supplier answers both with one richer document."
+    },
+    {
+      "item": "Algorithm requirements such as a minimum key size or an approved list",
+      "reason": "Policy applied to the disclosed facts, not a fact about the disclosure. A buyer evaluates them with its own versioned policy over a conforming document."
+    }
+  ],
+  "artifacts": {
+    "$comment": "C9. The examples are the Keycloak pass document from the PQC migration drafts, unchanged, and a copy with the storage interface removed. Verdicts depend on the same evaluator gaps as the migration examples (K7 services, K9 inheritance); see README.md.",
+    "mapping": "../pqc-migration-depths/mapping-cyclonedx-spdx.md",
+    "conformingExample": "../pqc-migration-depths/examples/cbom-keycloak-pqc-pass.cyclonedx.json",
+    "nonConformingExample": "examples/cbom-keycloak-procurement-fail.cyclonedx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-10-04",
+      "summary": "Initial draft. Extends the interface disclosure baseline v0.8: narrows accepted lifecycle stages, tightens I9 by removing withholdability, and adds product rules P5 (storage interface or stated absence) and P6 (coverage at least all-external).",
+      "changes": []
+    }
+  ],
+  "procurementCoverageVocabulary": [
+    "all",
+    "all-external"
+  ]
+}
