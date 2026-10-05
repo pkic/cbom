@@ -29,12 +29,9 @@ nav: uc-procurement
 
 <h2>What this shows</h2>
 <p>The Keycloak document written for the PQC migration profile is read, <strong>unchanged</strong>, against a
-procurement profile. This is the first worked example in the disclosure group. It is also the
-first demonstration of the claim the use-case pages make without showing: one rich document
-serves several consumers, each applying the profile that matches its decision.</p>
+procurement profile. This is the first worked example in the disclosure group. It is also the first time this section shows, rather than states, that one rich document can serve several consumers. Each consumer applies the profile that matches its own decision.</p>
 <p>It also shows the limit. The procurement profile asks for nothing the migration document lacks,
-so the document answers it. The reverse does not hold: a document written only for procurement
-could not answer the migration profile, because the capability attributes were never collected.</p>
+so the document answers it. The reverse is not true. A document written only for procurement could not answer the migration profile, because nobody collected the capability attributes.</p>
 <h2>Files</h2>
 <div style="overflow:auto">
 <table>
@@ -61,7 +58,7 @@ could not answer the migration profile, because the capability attributes were n
 </table>
 </div>
 <h2>What the profile adds</h2>
-<p>The profile selects and tightens. It adds no per-interface attribute.</p>
+<p>The profile selects facts and tightens rules. It does not add any per-interface attribute.</p>
 <div style="overflow:auto">
 <table>
 <thead>
@@ -80,12 +77,12 @@ could not answer the migration profile, because the capability attributes were n
 <tr>
 <td><code>I9</code> (override)</td>
 <td>Implementing library, no longer withholdable</td>
-<td>The buyer has to match advisories for the life of the contract. The tender's confidentiality terms answer the supplier's reason to withhold</td>
+<td>The buyer has to match advisories for the life of the contract. The tender's confidentiality terms deal with the supplier's reason to withhold it</td>
 </tr>
 <tr>
 <td><code>P5</code> (new)</td>
 <td>A storage interface for key material at rest, or a stated reason for having none</td>
-<td>Responses describe the paths traffic crosses and stay silent about where keys are kept</td>
+<td>Responses tend to describe the paths that traffic takes and say nothing about where keys are kept</td>
 </tr>
 <tr>
 <td><code>P6</code> (new)</td>
@@ -129,9 +126,7 @@ were checked by reading the documents against the rules, not by a patched tool.<
 <h2>What this asks of the group</h2>
 <ul>
 <li><strong>The evaluator work is now the bottleneck for two groups, not one.</strong> Until it reads services and
-  inherits through <code>provides</code>, no Keycloak example in either group gets a tool verdict. The standing
-  position has been that tooling waits until the profiles are right. This example is a reason to
-  look at that again for these two adapter features only.</li>
+  inherits through <code>provides</code>, no Keycloak example in either group gets a tool verdict. So far the group has agreed that tooling waits until the profiles are right. This example is a reason to revisit that position, for these two adapter features only.</li>
 <li><strong>Is P5 a procurement rule, or a baseline rule?</strong> If every consumer needs to know where keys are
   kept, it belongs beside P2 in the baseline, as P4's coverage rule did (Q34). It is kept here for
   now because no other drafted profile has asked for it.</li>

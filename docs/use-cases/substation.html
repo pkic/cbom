@@ -55,7 +55,7 @@ nav: uc-substation
 <tr>
 <td>Water utility telemetry (DNP3, Modbus)</td>
 <td>High sector relevance</td>
-<td>Mostly no cryptography at all. The planner's answer would be "conduit" for almost everything, which tests too little</td>
+<td>Most of it has no cryptography at all. The planner's answer would be "conduit" for almost everything, which tests too little</td>
 <td>Mention only</td>
 </tr>
 <tr>
@@ -196,12 +196,12 @@ nav: uc-substation
 </tr>
 <tr>
 <td>MMS and IEC 60870-5-104 run over TLS as profiled by IEC 62351-3:2023</td>
-<td>A device can only claim 62351-3 conformance for the groups and signature schemes that profile lists. The profile lists none that are post-quantum, so conformance to the profile is itself a blocker, separate from what the TLS library could do</td>
+<td>A device can only claim 62351-3 conformance for the groups and signature schemes that profile lists. The profile lists none that are post-quantum, so conformance to the profile is a blocker in its own right, whatever the TLS library could do</td>
 <td>IEC 62351-3:2023</td>
 </tr>
 <tr>
 <td>GDOI as used by RFC 8052 builds on RFC 6407</td>
-<td>No post-quantum key exchange is defined for it. G-IKEv2 (RFC 9838) is the IKEv2-based successor. It mixes preshared keys for quantum resistance but profiles no ML-KEM exchange</td>
+<td>No post-quantum key exchange is defined for it. G-IKEv2 (RFC 9838) is the IKEv2-based successor. It mixes in preshared keys for quantum resistance, but it does not profile an ML-KEM exchange</td>
 <td>RFC 8052, RFC 9838</td>
 </tr>
 <tr>
@@ -565,7 +565,7 @@ nav: uc-substation
 <p><strong>What a planner is expected to conclude:</strong></p>
 <ul>
 <li><strong>The protection traffic itself is not the migration target.</strong> Its integrity is already symmetric.</li>
-<li><strong>The key plane is the long pole.</strong> GDOI, role-based access tokens and certificate enrolment are all blocked by standards.</li>
+<li><strong>The key plane will take the longest.</strong> GDOI, role-based access tokens and certificate enrolment are all blocked by standards.</li>
 <li><strong>The control-centre link can be protected now at the conduit.</strong> IKEv2 with ML-KEM is in the RFC Editor queue, and RFC 9370 already allows hybrid exchanges. This holds while the gateway's 62351-3 TLS waits on the standard.</li>
 <li><strong>For each device model, <code>verifierReplaceable</code> splits the fleet</strong> into those that can be updated and those that must be replaced at refurbishment.</li>
 <li><strong><code>certificationImpact</code> turns every one of these actions into a schedule.</strong> No algorithm inventory shows any of this.</li>
@@ -601,7 +601,7 @@ nav: uc-substation
 <li>Has IEC TC 57 WG 15 started PQC work on IEC 62351-3, -6, -8 and -9?</li>
 <li>Is <code>certificationImpact</code> a product fact, or a deployment fact that belongs in the system document?</li>
 <li>Should <code>usage</code> stay in the system overlay, or become a general facility for derived CBOMs?</li>
-<li>Who can bring a protection IED supplier and a transmission or distribution operator to review the draft? Targeted requests to named people are the route.</li>
+<li>Who can bring a protection IED supplier and a transmission or distribution operator to review the draft? The best route is to ask named people directly.</li>
 </ol>
 <h2>Sources</h2>
 <ul>

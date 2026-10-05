@@ -62,3 +62,28 @@ cell without a new group, which is the test that the grouping is not shaped arou
   (how an overlay's verdict relates to the documents it cites).
 - The substation draft's decisions become 0024, and its component profile extends the core.
 - Follow-on work: write `profile-change-core.rules.json` and extend `check-family.py` to cover it.
+
+## Amendment, 4 October 2026: two further groups
+
+The two groups above are defined by what a profile asks for. Two more are defined by who produces
+the document and who relies on it. Both are proposed with this record and can be accepted or
+rejected separately from the first two.
+
+- **Operation.** The producer is the operator of a system, not the supplier of a product. The
+  subject is a deployed system, a service or an estate, mostly at lifecycle stages `configured` and
+  `observed`. The upper bound on what may be asked moves, because the black-box constraint does not
+  apply: an operator can state the data an interface carries, its confidentiality lifetime, what
+  was negotiated, and what changed since the last report. An operator document cites supplier
+  documents rather than repeating them, so it is an overlay. A profile in this group may extend the
+  baseline or the change core. Members: managed and cloud service disclosure and stored data
+  (moved from disclosure and change planning), harvest-now-decrypt-later exposure, migration
+  progress over time, and the operator's migration register. Owns Q36, Q37, Q45, Q67 and Q68.
+- **Assurance.** The reader is an auditor, assessor or regulator who relies on the document as
+  evidence. The cryptographic facts are usually the disclosure facts; what is added is provenance,
+  freshness and integrity. Members: regulatory and compliance reporting (moved from disclosure),
+  certification and validation evidence, and readiness assessment evidence. Owns Q14, Q29, Q60 and
+  Q44, and Discussions #18 and #37. This group may turn out to be requirements on the conformance
+  claim rather than a kind of profile; its first worked example decides.
+
+**Revival condition for merging Assurance back into Disclosure:** the first assurance profile adds
+no rule that a disclosure profile with a stricter claim could not carry.

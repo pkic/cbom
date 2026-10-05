@@ -1,0 +1,81 @@
+---
+nav: uc-operation
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Operation</title>
+<link rel="stylesheet" href="../methodology/styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Use Cases</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include usecases-nav.html %}
+
+<main>
+  <div class="crumb">GROUP</div>
+  <h1>Operation: the operator describes what it runs</h1>
+  <p class="lead">Use cases in which the CBOM is produced by the operator of a system rather than by the supplier of a product. The subject is a deployed system, a service or an estate, and what is reported is mostly configured or observed. An operator can state facts no supplier knows: what data crosses an interface and how long it must stay confidential, what was actually negotiated, which instances are still running, and what has changed since the last report.</p>
+  <div class="banner">Proposed in October 2026 as an amendment to draft decision 0023, which defined the first two groups. Not yet settled.</div>
+
+  <h2>What the group shares</h2>
+  <p>The first two groups are defined by what their profiles ask for. This one is defined by who produces the document. The producer can see the whole system. The black-box limit that shapes the supplier profiles does not apply, so a profile here can ask for more. A profile in this group can require the deployment facts that the interface disclosure baseline excludes as unknowable to a vendor: the payload an interface carries, its confidentiality lifetime, the number of instances, and the configuration as observed rather than as declared.</p>
+  <p>An operator document usually draws on supplier documents rather than repeating them. It cites the supplier CBOM for each product it runs and adds what only the operator knows. That makes it an overlay in the sense of <a href="../methodology/maturity.html">Maturity</a>, the same relation the substation system document has to its component documents.</p>
+  <p>A use case belongs here when the operator is the producer. An operator describing what it runs may still plan a change. A profile in this group can therefore extend either the baseline or the change core, and each use case decides which.</p>
+
+  <h2>Questions this group owns</h2>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Question</th><th>Why it lands here</th></tr></thead>
+    <tbody>
+      <tr><td>Q36, Q45</td><td>Where vendor-stated data facts end and operator-stated ones begin, and how the operator's half is linked to the supplier's document</td></tr>
+      <tr><td>Q37</td><td>The confidentiality-lifetime bands an operator would report against</td></tr>
+      <tr><td>Q67</td><td>Whether an estate is a subject a profile can declare, with its own completeness statement</td></tr>
+      <tr><td>Q68</td><td>What an overlay's verdict says about the supplier documents it cites</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Worked examples</h2>
+  <p>None yet. The obvious first one reuses work already done: an operator document for a Keycloak deployment that cites the supplier's Keycloak CBOM from the <a href="pqc-migration.html">PQC migration</a> example and adds the instance count, the realm data each token interface carries, and the TLS groups actually negotiated with the directory and the database.</p>
+
+  <h2>The use cases in this group</h2>
+
+  <h3 id="managed-service">Managed and cloud service disclosure</h3>
+  <p>A customer relies on a service it does not operate: an identity provider, a key management service, a payment gateway, a managed network. It has to decide whether to rely on it, and what to require of the provider. The producer here is not a vendor shipping a product it cannot see inside, but the operator of the service, who knows its configuration and its deployment.</p>
+  <p>That raises the limit on what may be asked, which is why it sits in this group. The operator can report the lifecycle stage <code>configured</code> or <code>observed</code>. It can also state facts that the product profiles leave out because they depend on the deployment. <strong>Proposed.</strong> So far only the consumer and the decision are named.</p>
+
+  <h3 id="stored-data">Stored data and archive protection</h3>
+  <p>A data owner decides which stores and archives to re-encrypt or re-wrap, and in what order. The order follows from how long the data has to stay confidential, set against the key establishment and key wrapping that protect it today. This is where harvest-now-decrypt-later exposure is most direct.</p>
+  <p>The producer is the operator, not a vendor, because only the operator knows what a store holds and for how long. The use case depends on how data is modelled alongside cryptography. That is still an open design note. <strong>Proposed.</strong></p>
+
+  <h3 id="hndl-exposure">Harvest-now-decrypt-later exposure</h3>
+  <p>A security function decides which of its systems are exposed to traffic recorded today and decrypted later, and which to migrate first on that ground. Exposure depends on two facts a supplier cannot state: what data crosses an interface, and how long that data has to stay confidential. Set against the key establishment the interface uses today, they give the window during which recorded traffic remains worth decrypting.</p>
+  <p>Some of these facts are known to the supplier after all. Credentials on a management interface and key material on a key-management interface follow from the interface's design, and they often have the longest lifetimes. Where the supplier's facts end and the operator's begin is Q36. <strong>Proposed.</strong> Depends on Q36, Q37 and Q45.</p>
+
+  <h3 id="migration-progress">Migration progress over time</h3>
+  <p>A migration programme lead, or a regulator receiving its reports, decides whether a migration is on track: how much has moved since the last report, how much remains, and why the numbers changed. The facts are two operator documents about the same estate at different dates, and the reason for each difference between them: an interface migrated, a product replaced, an instance retired, or an earlier finding that turned out to be a false positive.</p>
+  <p>Comparing two documents is covered by <a href="../methodology/versioning.html">Versioning</a>. This use case adds the reason for each change. Without it, nobody can tell a falling count apart from a scanner that stopped looking. Raised in member feedback on the Inventory chapter: "How much more do we have to do to be PQC ready?" <strong>Proposed.</strong></p>
+
+  <h3 id="migration-register">The operator's migration register</h3>
+  <p>An operator records, for each finding in its estate, the decision it took: the response, who owns it, the target date and the status. These are judgements and plans. Decisions 0002 and 0007 keep them out of a supplier's CBOM, because a supplier document records facts about a product and a date there is a promise the supplier may not control.</p>
+  <p>They belong in the operator's own document about its own estate, which is what this group is for. CycloneDX 2.0 gives them a native home in its root <code>risks</code> list, with an owner, a response strategy, a target date and a status for each risk. <strong>Proposed.</strong></p>
+
+  <div class="pagenav">
+    <a href="substation.html">← Substation Automation (OT)</a>
+    <a class="next" href="assurance.html">Next: Assurance →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</div>
+</body>
+</html>

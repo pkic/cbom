@@ -24,17 +24,17 @@ nav: uc-change
 <main>
   <div class="crumb">GROUP</div>
   <h1>Change planning: a richer document, a shared core</h1>
-  <p class="lead">Use cases whose profile adds facts the baseline does not have: capability per cryptographic purpose, what blocks it and who can clear it, what enabling it requires, and whether the far end can still be classical. Orientation is <code>both</code>. A document produced against the baseline alone cannot be evaluated against these profiles at all.</p>
+  <p class="lead">Use cases whose profile adds facts the baseline does not have: capability per cryptographic purpose, what blocks it and who can clear it, what enabling it requires, and whether the far end can still be classical. The orientation is <code>both</code>: what the product uses today and what it could use. A document produced against the baseline alone cannot be evaluated against these profiles at all.</p>
   <div class="banner">The grouping and the change core are proposed in draft decision 0023 and are not yet settled.</div>
 
   <h2>The change core</h2>
   <p>The profiles in this group share most of what they ask for. A profile has a single base, so a fact two of them need has to sit in a common ancestor rather than be defined twice. That ancestor is the change core.</p>
   <ul>
     <li><strong>In the core:</strong> <code>capabilityStatus</code>, <code>blockedBy</code> and <code>roadmapRef</code> per purpose; the <code>Supported</code> forms of the algorithm attributes; <code>enablementMethod</code> and <code>providerLocation</code>; <code>coexistence</code> and <code>negotiationControl</code>; <code>integrationConstraints</code>; <code>keyWrapping</code> and <code>keyWrappingSupported</code>.</li>
-    <li><strong>In the core as conditional rules:</strong> <code>updateMechanism</code>, <code>updateAuthority</code> and <code>keyReplaceable</code>, which apply only to update interfaces. The IoT and substation profiles need them; a product with no update interface owes nothing.</li>
+    <li><strong>In the core as conditional rules:</strong> <code>updateMechanism</code>, <code>updateAuthority</code> and <code>keyReplaceable</code>, which apply only to update interfaces. The IoT and substation profiles need them. A product with no update interface does not have to supply them.</li>
     <li><strong>Not in the core:</strong> what each profile adds for its own subject, shown in the last column of the table below.</li>
   </ul>
-  <p>The core is published beside the PQC migration profile as a sibling, declaring each shared rule under the id the migration profile already uses, so no rule id moves. Whether the core is specific to a post-quantum target or neutral about the target is open (Q66). If it is neutral, crypto-agility assessment needs no profile of its own.</p>
+  <p>The core is published as a sibling of the PQC migration profile. It declares each shared rule under the id that the migration profile already uses, so no rule id changes. Whether the core is specific to a post-quantum target or neutral about the target is open (Q66). If it is neutral, crypto-agility assessment needs no profile of its own.</p>
 <pre><code>interface-disclosure baseline
 └─ change-core                     orientation: both
    ├─ pqc-migration                product        └─ pqc-migration-extended (depth)
