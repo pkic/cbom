@@ -24,8 +24,8 @@ nav: uc-substation
 <main>
   <div class="crumb">CHANGE PLANNING · WORKED USE CASE · DRAFT</div>
   <h1>Substation automation (OT): from use case to profile</h1>
-  <p class="lead">A grid operator plans the post-quantum migration of one substation automation system. For each communication path, it decides whether to migrate the path in place, migrate only the key plane, carry the path on a conduit, or replace the device at its next refurbishment. This is an operational technology (OT) use case in the <a href="change-planning.html#substation">change-planning</a> group.</p>
-  <div class="banner warn">Draft for discussion. The values are illustrative. They are taken from the standards' profiles and will stay that way until a supplier volunteers a real product. The attribute and profile names are proposals made on this page. The component profile extends the change core (draft decision 0023); the decisions recorded here are numbered for draft decision 0024. The working text is kept in <code>drafts/ot-substation/</code>.</div>
+  <p class="lead">A grid operator plans the post-quantum migration of one substation automation system, and decides for each communication path whether to migrate it in place, migrate only the key plane, carry it on a conduit, or replace the device at its next refurbishment. An operational technology (OT) use case, in the <a href="change-planning.html#substation">change-planning</a> group.</p>
+  <div class="banner warn">Draft for discussion. Values are illustrative, taken from the standards' profiles, until a supplier volunteers a real product. Attribute and profile names are proposals of this page. The component profile extends the change core (draft decision 0023); the decisions recorded here are numbered for draft decision 0024. The working text is kept in <code>drafts/ot-substation/</code>.</div>
 
 <h2>Choice of case</h2>
 <p>The OT use case is the <strong>substation automation system (SAS) of an electricity grid operator</strong>.</p>
@@ -165,7 +165,7 @@ nav: uc-substation
     </svg>
     <figcaption>The reference system. Protection traffic stays inside the station zone and is protected with a symmetric MAC. Everything asymmetric sits elsewhere: the group key distribution, the TLS sessions to the HMI and the gateway, the engineering download, and the tunnel that carries the control-centre link across the conduit. Values are illustrative.</figcaption>
   </figure>
-<p><strong>The threats are weighted differently from Keycloak's.</strong> Protection and control traffic is confidential only for a short time. The quantum risk is forged authority: forged firmware, configuration downloads, commands and group keys. The WAN link to the control centre is the main harvest-now-decrypt-later exposure. The profile asks for facts per purpose and does not rank them (decision 0002).</p>
+<p><strong>The threat weighting differs from Keycloak's.</strong> Protection and control traffic is confidential only for a short time. The quantum risk is forged authority: forged firmware, configuration downloads, commands and group keys. The WAN link to the control centre is the main harvest-now-decrypt-later exposure. The profile asks for facts per purpose and does not rank them (decision 0002).</p>
 <h2>2. Producer constraints</h2>
 <p>There are two producers, and the black-box constraint applies to both.</p>
 <ul>
@@ -431,9 +431,9 @@ nav: uc-substation
       <rect x="20" y="288" width="685" height="34" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-dasharray="5 4"/>
       <text x="362" y="309" fill="#5b6472" text-anchor="middle">Operator: how many substations use this design, and its migration register. Outside both profiles</text>
     </svg>
-    <figcaption>Two kinds of document. Each supplier describes one product, which it can see as a whole. The integrator describes how the products are put together, and cites the supplier documents rather than repeating them. What the system verdict says about a component that conforms to nothing is open (Q68).</figcaption>
+    <figcaption>Two kinds of document. Each supplier describes one product it can see whole. The integrator describes how the products are put together, and cites the supplier documents rather than repeating them. What the system verdict says about a component that conforms to nothing is open (Q68).</figcaption>
   </figure>
-<p><strong>The edge model stays parked.</strong> In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so the condition for reviving it is not met. That condition would be met by a fact that belongs to the path rather than to any device, such as an end-to-end GOOSE transfer time. That fact is an operator requirement, so it stays out.</p>
+<p><strong>The edge model stays parked.</strong> In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so the revival trigger is not met. It would be met by a fact owned by the path rather than by any device, such as an end-to-end GOOSE transfer time. That fact is an operator requirement, so it stays out.</p>
 <h2>5. The worked example</h2>
 <p>The worked example is a reference SAS with generic components and values taken from the standards' profiles. Every value is marked illustrative until a supplier volunteers a real product.</p>
 <p><strong>Components:</strong></p>
@@ -485,7 +485,7 @@ nav: uc-substation
         <rect x="500" y="318" width="12" height="11" rx="2" fill="#b45309" stroke="#b91c1c" stroke-width="2"/><text x="517" y="327">no cryptography</text>
       </g>
     </svg>
-    <figcaption>The protection IED as its supplier describes it: ten interfaces, read from the outside. It has the same shape as the Keycloak diagram, but the cryptography is distributed differently. Most of the asymmetric cryptography is on the management side and in the key plane, not on the service interfaces that carry protection traffic.</figcaption>
+    <figcaption>The protection IED as its supplier describes it: ten interfaces, read from the outside. The same shape as the Keycloak diagram, with a different distribution. Most of the asymmetric cryptography is on the management side and in the key plane, not on the service interfaces that carry protection traffic.</figcaption>
   </figure>
 <p><strong>Protection IED interfaces:</strong></p>
 <div style="overflow:auto">
@@ -617,7 +617,7 @@ nav: uc-substation
 
   <div class="pagenav">
     <a href="iot.html">← IoT Device Estate</a>
-    <a class="next" href="operation.html">Next: Operation →</a>
+    <a class="next" href="proposing.html">Next: Proposing a Use Case →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
 </main>

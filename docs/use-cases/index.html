@@ -24,74 +24,77 @@ nav: uc-index
 <main>
   <div class="crumb">USE CASES</div>
   <h1>Use cases</h1>
-  <p class="lead">A CBOM profile is written for someone who has a decision to make. A use case names that person and the decision. Examples are a buyer comparing tenders, a responder tracing a security advisory, and a grid operator planning a migration. This section lists the use cases the working group has identified so far. For the most developed ones, it goes further: it shows the profile, applies it to a real product, and includes documents that can be checked against the profile.</p>
+  <p class="lead">A CBOM profile is written for someone who has a decision to make. A use case names that person and that decision: a buyer comparing tenders, a responder tracing an advisory, a grid operator planning a migration. This section collects the use cases the working group has identified, and takes the most developed of them through to a profile, a real product and documents that can be checked.</p>
 
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Kind of page</th><th>What it gives you</th></tr></thead>
     <tbody>
-      <tr><td><strong>Group pages</strong></td><td>What the use cases in a group have in common, and a short description of each one: <a href="disclosure.html">Disclosure</a>, <a href="change-planning.html">Change planning</a>, <a href="operation.html">Operation</a>, <a href="assurance.html">Assurance</a></td></tr>
-      <tr><td><strong>Worked examples</strong></td><td>One use case developed into a profile and applied to a real product. Each comes with a document that conforms to the profile and one that does not. <a href="pqc-migration.html">PQC migration</a>, applied to Keycloak, is the only complete example so far</td></tr>
-      <tr><td><strong>Writing one</strong></td><td><a href="proposing.html">How to propose a use case</a>, and the <a href="template.html">template</a> that every worked example follows</td></tr>
+      <tr><td><strong>Group pages</strong></td><td>What the use cases in a group have in common, and a description of each: <a href="disclosure.html">Disclosure</a>, <a href="change-planning.html">Change planning</a></td></tr>
+      <tr><td><strong>Worked examples</strong></td><td>One use case taken through to a profile, applied to a real product, with a document that conforms and one that does not. <a href="pqc-migration.html">PQC migration</a> on Keycloak is the complete one</td></tr>
+      <tr><td><strong>Writing one</strong></td><td><a href="proposing.html">How to propose a use case</a>, and the <a href="template.html">template</a> a worked example follows</td></tr>
     </tbody>
   </table>
   </div>
 
-  <h2>Four groups</h2>
-  <p>The use cases fall into four groups. The first two groups differ in what the profile asks for. This matters most to whoever has to produce the CBOM. The other two groups differ in who produces the document and who relies on it.</p>
+  <h2>Two groups</h2>
+  <p>Use cases fall into two groups. The difference matters most to whoever has to produce the CBOM.</p>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th>Group</th><th>What sets it apart</th><th>Who produces the CBOM</th><th>Examples</th></tr></thead>
+    <thead><tr><th style="width:50%"><a href="disclosure.html">Disclosure</a>: know what a product uses</th><th style="width:50%"><a href="change-planning.html">Change planning</a>: decide how to change it</th></tr></thead>
     <tbody>
-      <tr><td><strong><a href="disclosure.html">Disclosure</a></strong><br>know what a product uses</td><td>The profile chooses which facts a CBOM must contain. It chooses them from the facts that every CBOM already describes, such as interfaces, protocols, algorithms and the libraries that implement them. One CBOM from a supplier can answer every profile in this group</td><td>The supplier</td><td>Procurement, vulnerability response, due diligence</td></tr>
-      <tr><td><strong><a href="change-planning.html">Change planning</a></strong><br>decide how to change it</td><td>The profile adds facts that a basic CBOM does not contain. For each interface, it asks what the interface could support, what is blocking it, and what a change would cost. This richer CBOM can also answer the disclosure profiles</td><td>The supplier</td><td>PQC migration, IoT device estates, substation automation (OT)</td></tr>
-      <tr><td><strong><a href="operation.html">Operation</a></strong><br>describe what is running</td><td>The operator states facts that no supplier can know. Examples are what data crosses an interface, how long that data must stay confidential, which algorithms were actually negotiated, and what has changed since the last report. The operator's document refers to the suppliers' CBOMs instead of repeating them</td><td>The operator</td><td>Harvest-now-decrypt-later exposure, migration progress, managed services</td></tr>
-      <tr><td><strong><a href="assurance.html">Assurance</a></strong><br>rely on it as evidence</td><td>The reader is an auditor or a regulator who cannot ask follow-up questions. The facts are usually the same as in the disclosure group. What is added is proof of who made the document, when, and from what sources, and proof that it is still current</td><td>Supplier or operator</td><td>Compliance reporting, certification evidence</td></tr>
+      <tr>
+        <td>The profile chooses which facts a CBOM must carry from the set every CBOM already describes: interfaces, protocols, algorithms and the libraries that implement them.</td>
+        <td>The profile adds facts a basic CBOM does not have: what each interface could support, what is blocking it, and what changing it costs.</td>
+      </tr>
+      <tr>
+        <td>One CBOM from a supplier can answer every profile in this group.</td>
+        <td>A supplier has to produce a richer CBOM. That CBOM then answers the disclosure profiles as well.</td>
+      </tr>
+      <tr>
+        <td>Procurement, vulnerability response, compliance reporting, due diligence.</td>
+        <td>PQC migration, IoT device estates, substation automation, crypto-agility.</td>
+      </tr>
     </tbody>
   </table>
   </div>
-  <p>Disclosure and change planning are defined in draft decision 0023. Operation and assurance were added later as an amendment, and they are less settled. Use cases are not grouped by sector. A telecom operator and a grid operator who plan a migration make the same kind of decision. The terms that belong to a sector go into the profile for that sector. They do not need a separate use case.</p>
+  <p>A use case is not grouped by sector. A telecom operator and a grid operator planning a migration make the same kind of decision, and sector terms go into the profile, not into a separate use case.</p>
 
   <h2>All use cases</h2>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Use case</th><th>Who decides, and what</th><th>Group</th><th>Status</th><th>Worked example</th></tr></thead>
     <tbody>
-      <tr><td><a href="disclosure.html#procurement">Procurement and tender conformance</a></td><td>A buyer: whether a tender response describes its cryptography well enough to compare suppliers and to hold the chosen one to its answer</td><td>Disclosure</td><td>Draft worked example</td><td><a href="procurement.html">Read</a></td></tr>
+      <tr><td><a href="disclosure.html#procurement">Procurement and tender conformance</a></td><td>A buyer: whether a tender's cryptographic disclosure is complete enough to compare and hold the supplier to</td><td>Disclosure</td><td>Draft worked example</td><td><a href="procurement.html">Read</a></td></tr>
       <tr><td><a href="disclosure.html#supply-chain">Supply-chain transparency</a></td><td>A supplier: how to disclose once to every customer</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
       <tr><td><a href="disclosure.html#vulnerability">Vulnerability management and incident response</a></td><td>A responder: which services a published advisory reaches</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
-      <tr><td><a href="disclosure.html#due-diligence">Mergers and third-party due diligence</a></td><td>An acquirer: where the cryptographic risk is in an estate that it cannot inspect</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
+      <tr><td><a href="disclosure.html#compliance">Regulatory and compliance reporting</a></td><td>An auditor or regulator: whether a position meets a framework</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
+      <tr><td><a href="disclosure.html#due-diligence">Mergers and third-party due diligence</a></td><td>An acquirer: where the cryptographic risk sits in an estate it cannot inspect</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
+      <tr><td><a href="disclosure.html#managed-service">Managed and cloud service disclosure</a></td><td>A customer: whether to rely on a service it does not run</td><td>Disclosure</td><td>Proposed</td><td>—</td></tr>
       <tr><td><a href="disclosure.html#service-assurance">Service assurance</a></td><td>An assurance team: which customer services a weakness or a change reaches</td><td>Disclosure</td><td>Proposed</td><td>—</td></tr>
       <tr><td><a href="change-planning.html#pqc-readiness">PQC migration</a></td><td>A migration lead: which interfaces to migrate, in what order, at what cost</td><td>Change planning</td><td>Worked example</td><td><a href="pqc-migration.html">Read</a></td></tr>
-      <tr><td><a href="change-planning.html#iot">IoT device estate</a></td><td>A fleet operator: for each device model, whether to update it, replace it, shield it or accept the risk</td><td>Change planning</td><td>Draft worked example</td><td><a href="iot.html">Read</a></td></tr>
-      <tr><td><a href="change-planning.html#substation">Substation automation (OT)</a></td><td>A grid operator: for each communication path, whether to migrate it, shield it or replace the device</td><td>Change planning</td><td>Draft worked example</td><td><a href="substation.html">Read</a></td></tr>
+      <tr><td><a href="change-planning.html#iot">IoT device estate</a></td><td>A fleet operator: for each device model, update, replace, shield or accept</td><td>Change planning</td><td>Draft worked example</td><td><a href="iot.html">Read</a></td></tr>
+      <tr><td><a href="change-planning.html#substation">Substation automation (OT)</a></td><td>A grid operator: for each communication path, migrate, shield or replace</td><td>Change planning</td><td>Draft worked example</td><td><a href="substation.html">Read</a></td></tr>
       <tr><td><a href="change-planning.html#crypto-agility">Crypto-agility assessment</a></td><td>An architect: how hard replacing an algorithm would be</td><td>Change planning</td><td>Described</td><td>—</td></tr>
-      <tr><td><a href="change-planning.html#pki-estate">PKI and certificate estate migration</a></td><td>A PKI owner: which hierarchies to move, and in what order, while the relying parties catch up</td><td>Change planning</td><td>Proposed</td><td>—</td></tr>
-      <tr><td><a href="change-planning.html#code-signing">Code and firmware signing migration</a></td><td>A software publisher: when its signing keys can move, given the verifiers already in the field</td><td>Change planning</td><td>Proposed</td><td>—</td></tr>
-      <tr><td><a href="change-planning.html#shared-trust">Shared-trust network migration</a></td><td>A scheme operator: when every participant can move to a new trust anchor together</td><td>Change planning</td><td>Proposed</td><td>—</td></tr>
-      <tr><td><a href="operation.html#managed-service">Managed and cloud service disclosure</a></td><td>A customer: whether to rely on a service it does not run</td><td>Operation</td><td>Proposed</td><td>—</td></tr>
-      <tr><td><a href="operation.html#stored-data">Stored data and archive protection</a></td><td>A data owner: which stores and archives to re-encrypt first</td><td>Operation</td><td>Proposed</td><td>—</td></tr>
-      <tr><td><a href="operation.html#hndl-exposure">Harvest-now-decrypt-later exposure</a></td><td>A security team: which systems to migrate first, based on the data they carry and how long it must stay secret</td><td>Operation</td><td>Proposed</td><td>—</td></tr>
-      <tr><td><a href="operation.html#migration-progress">Migration progress over time</a></td><td>A programme lead or a regulator: whether a migration is on track, and why the numbers changed</td><td>Operation</td><td>Proposed</td><td>—</td></tr>
-      <tr><td><a href="operation.html#migration-register">The operator's migration register</a></td><td>An operator: the response, owner, date and status for each finding</td><td>Operation</td><td>Proposed</td><td>—</td></tr>
-      <tr><td><a href="assurance.html#compliance">Regulatory and compliance reporting</a></td><td>An auditor or regulator: whether a position meets a framework</td><td>Assurance</td><td>Described</td><td>—</td></tr>
-      <tr><td><a href="assurance.html#certification-evidence">Certification and validation evidence</a></td><td>An evaluator or a buyer: whether the CBOM matches what was certified, and whether it still does</td><td>Assurance</td><td>Proposed</td><td>—</td></tr>
-      <tr><td><a href="assurance.html#readiness-evidence">Readiness assessment evidence</a></td><td>An assessor: which level or status the evidence supports</td><td>Assurance</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="change-planning.html#pki-estate">PKI and certificate estate migration</a></td><td>A PKI owner: which hierarchies move, in what order, while relying parties catch up</td><td>Change planning</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="change-planning.html#code-signing">Code and firmware signing migration</a></td><td>A publisher: when signing keys can move, given the verifiers already deployed</td><td>Change planning</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="change-planning.html#stored-data">Stored data and archive protection</a></td><td>A data owner: which stores and archives to re-encrypt first</td><td>Change planning</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="change-planning.html#shared-trust">Shared-trust network migration</a></td><td>A scheme operator: when every participant can move to a new trust anchor</td><td>Change planning</td><td>Proposed</td><td>—</td></tr>
     </tbody>
   </table>
   </div>
-  <p style="font-size:13px;color:var(--muted)">A <strong>worked example</strong> has a checked profile, and documents that conform and do not conform to it. A <strong>draft worked example</strong> has a page in the same shape, but it is not yet settled. A use case that is <strong>described</strong> has its consumer, its decision and the needs of its profile written down. A <strong>proposed</strong> use case has only a named consumer and decision. The full definitions are on <a href="proposing.html#status">Proposing a use case</a>.</p>
+  <p style="font-size:13px;color:var(--muted)"><strong>Worked example</strong>: a checked profile with conforming and non-conforming documents. <strong>Draft worked example</strong>: written in that shape, not yet settled. <strong>Described</strong>: consumer, decision and what the profile needs are written. <strong>Proposed</strong>: consumer and decision named. Full definitions are on <a href="proposing.html#status">Proposing a use case</a>.</p>
 
   <h2 id="not-use-cases">What is not a use case</h2>
-  <p>People often suggest these two entries as use cases. They are really ways of applying a profile.</p>
+  <p>Two entries are often suggested as use cases and are ways of applying a profile instead.</p>
   <ul>
-    <li id="ci-gate"><strong>Continuous integration quality gate.</strong> A build pipeline fails a build when a CBOM does not conform to a profile. Any profile can be used in this way. What the pipeline needs is a validator that returns a clear exit status and report. <a href="../methodology/conformance.html">Conformance</a> and the <a href="../methodology/demo.html">Demo</a> cover this.</li>
-    <li><strong>Change impact between versions.</strong> This means comparing two CBOMs of the same product to see what has changed. It is a comparison between documents, and <a href="../methodology/versioning.html">Versioning</a> covers it.</li>
+    <li id="ci-gate"><strong>Continuous integration quality gate.</strong> A pipeline fails a build when a CBOM does not conform. Any profile can be applied this way; what it needs is a validator with a usable exit status and report, covered in <a href="../methodology/conformance.html">Conformance</a> and the <a href="../methodology/demo.html">Demo</a>.</li>
+    <li><strong>Change impact between versions.</strong> Comparing two CBOMs of the same product to see what changed. That is a difference between documents, covered in <a href="../methodology/versioning.html">Versioning</a>.</li>
   </ul>
 
   <h2>How this section relates to the methodology</h2>
-  <p>The <a href="../methodology/">methodology</a> is the working group's deliverable. It explains how to define a profile. Its page <a href="../methodology/use-cases.html">Starting from a use case</a> explains why every profile begins with a consumer and a decision. The methodology uses a small nginx example to illustrate its ideas, and it does not list any use cases. Everything about particular use cases, including the worked examples, is in this section.</p>
-  <div class="banner warn">The worked examples use the draft profiles from decision 0022. These are the interface disclosure baseline v0.8, PQC migration v0.7, and the extended depth of PQC migration. The methodology still describes the published versions, v0.7 and v0.6. The two sections will match once the working group adopts the drafts.</div>
+  <p>The <a href="../methodology/">methodology</a> is the working group's deliverable. It says how to define a profile, and <a href="../methodology/use-cases.html">Starting from a use case</a> explains why every profile begins with a consumer and a decision. It illustrates its concepts with a small nginx example and lists no use cases. Everything about particular use cases, including the worked examples, is in this section.</p>
+  <div class="banner warn">The worked examples use the draft profiles of decision 0022 (interface disclosure baseline v0.8, PQC migration v0.7 and its extended depth). The methodology still describes the published versions (v0.7 and v0.6). The two will match once the drafts are adopted.</div>
 
   <div class="pagenav">
     <span></span>
