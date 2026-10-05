@@ -24,8 +24,8 @@ nav: uc-substation
 <main>
   <div class="crumb">CHANGE PLANNING · WORKED USE CASE · DRAFT</div>
   <h1>Substation automation (OT): from use case to profile</h1>
-  <p class="lead">A grid operator plans the post-quantum migration of one substation automation system, and decides for each communication path whether to migrate it in place, migrate only the key plane, carry it on a conduit, or replace the device at its next refurbishment. An operational technology (OT) use case, in the <a href="change-planning.html#substation">change-planning</a> group.</p>
-  <div class="banner warn">Draft for discussion. Values are illustrative, taken from the standards' profiles, until a supplier volunteers a real product. Attribute and profile names are proposals of this page. The component profile extends the change core (draft decision 0023); the decisions recorded here are numbered for draft decision 0024. The working text is kept in <code>drafts/ot-substation/</code>.</div>
+  <p class="lead">A grid operator plans the post-quantum migration of one substation automation system. For each communication path, it decides whether to migrate the path in place, migrate only the key plane, carry the path on a conduit, or replace the device at its next refurbishment. This is an operational technology (OT) use case in the <a href="change-planning.html#substation">change-planning</a> group.</p>
+  <div class="banner warn">Draft for discussion. The values are illustrative. They are taken from the standards' profiles and will stay that way until a supplier volunteers a real product. The attribute and profile names are proposals made on this page. The component profile extends the change core (draft decision 0023); the decisions recorded here are numbered for draft decision 0024. The working text is kept in <code>drafts/ot-substation/</code>.</div>
 
 <h2>Choice of case</h2>
 <p>The OT use case is the <strong>substation automation system (SAS) of an electricity grid operator</strong>.</p>
@@ -55,7 +55,7 @@ nav: uc-substation
 <tr>
 <td>Water utility telemetry (DNP3, Modbus)</td>
 <td>High sector relevance</td>
-<td>Mostly no cryptography at all. The planner's answer would be "conduit" for almost everything, which tests too little</td>
+<td>Most of it has no cryptography at all. The planner's answer would be "conduit" for almost everything, which tests too little</td>
 <td>Mention only</td>
 </tr>
 <tr>
@@ -165,7 +165,7 @@ nav: uc-substation
     </svg>
     <figcaption>The reference system. Protection traffic stays inside the station zone and is protected with a symmetric MAC. Everything asymmetric sits elsewhere: the group key distribution, the TLS sessions to the HMI and the gateway, the engineering download, and the tunnel that carries the control-centre link across the conduit. Values are illustrative.</figcaption>
   </figure>
-<p><strong>The threat weighting differs from Keycloak's.</strong> Protection and control traffic is confidential only for a short time. The quantum risk is forged authority: forged firmware, configuration downloads, commands and group keys. The WAN link to the control centre is the main harvest-now-decrypt-later exposure. The profile asks for facts per purpose and does not rank them (decision 0002).</p>
+<p><strong>The threats are weighted differently from Keycloak's.</strong> Protection and control traffic is confidential only for a short time. The quantum risk is forged authority: forged firmware, configuration downloads, commands and group keys. The WAN link to the control centre is the main harvest-now-decrypt-later exposure. The profile asks for facts per purpose and does not rank them (decision 0002).</p>
 <h2>2. Producer constraints</h2>
 <p>There are two producers, and the black-box constraint applies to both.</p>
 <ul>
@@ -196,12 +196,12 @@ nav: uc-substation
 </tr>
 <tr>
 <td>MMS and IEC 60870-5-104 run over TLS as profiled by IEC 62351-3:2023</td>
-<td>A device can only claim 62351-3 conformance for the groups and signature schemes that profile lists. The profile lists none that are post-quantum, so conformance to the profile is itself a blocker, separate from what the TLS library could do</td>
+<td>A device can only claim 62351-3 conformance for the groups and signature schemes that profile lists. The profile lists none that are post-quantum, so conformance to the profile is a blocker in its own right, whatever the TLS library could do</td>
 <td>IEC 62351-3:2023</td>
 </tr>
 <tr>
 <td>GDOI as used by RFC 8052 builds on RFC 6407</td>
-<td>No post-quantum key exchange is defined for it. G-IKEv2 (RFC 9838) is the IKEv2-based successor. It mixes preshared keys for quantum resistance but profiles no ML-KEM exchange</td>
+<td>No post-quantum key exchange is defined for it. G-IKEv2 (RFC 9838) is the IKEv2-based successor. It mixes in preshared keys for quantum resistance, but it does not profile an ML-KEM exchange</td>
 <td>RFC 8052, RFC 9838</td>
 </tr>
 <tr>
@@ -431,9 +431,9 @@ nav: uc-substation
       <rect x="20" y="288" width="685" height="34" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-dasharray="5 4"/>
       <text x="362" y="309" fill="#5b6472" text-anchor="middle">Operator: how many substations use this design, and its migration register. Outside both profiles</text>
     </svg>
-    <figcaption>Two kinds of document. Each supplier describes one product it can see whole. The integrator describes how the products are put together, and cites the supplier documents rather than repeating them. What the system verdict says about a component that conforms to nothing is open (Q68).</figcaption>
+    <figcaption>Two kinds of document. Each supplier describes one product, which it can see as a whole. The integrator describes how the products are put together, and cites the supplier documents rather than repeating them. What the system verdict says about a component that conforms to nothing is open (Q68).</figcaption>
   </figure>
-<p><strong>The edge model stays parked.</strong> In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so the revival trigger is not met. It would be met by a fact owned by the path rather than by any device, such as an end-to-end GOOSE transfer time. That fact is an operator requirement, so it stays out.</p>
+<p><strong>The edge model stays parked.</strong> In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so the condition for reviving it is not met. That condition would be met by a fact that belongs to the path rather than to any device, such as an end-to-end GOOSE transfer time. That fact is an operator requirement, so it stays out.</p>
 <h2>5. The worked example</h2>
 <p>The worked example is a reference SAS with generic components and values taken from the standards' profiles. Every value is marked illustrative until a supplier volunteers a real product.</p>
 <p><strong>Components:</strong></p>
@@ -485,7 +485,7 @@ nav: uc-substation
         <rect x="500" y="318" width="12" height="11" rx="2" fill="#b45309" stroke="#b91c1c" stroke-width="2"/><text x="517" y="327">no cryptography</text>
       </g>
     </svg>
-    <figcaption>The protection IED as its supplier describes it: ten interfaces, read from the outside. The same shape as the Keycloak diagram, with a different distribution. Most of the asymmetric cryptography is on the management side and in the key plane, not on the service interfaces that carry protection traffic.</figcaption>
+    <figcaption>The protection IED as its supplier describes it: ten interfaces, read from the outside. It has the same shape as the Keycloak diagram, but the cryptography is distributed differently. Most of the asymmetric cryptography is on the management side and in the key plane, not on the service interfaces that carry protection traffic.</figcaption>
   </figure>
 <p><strong>Protection IED interfaces:</strong></p>
 <div style="overflow:auto">
@@ -565,7 +565,7 @@ nav: uc-substation
 <p><strong>What a planner is expected to conclude:</strong></p>
 <ul>
 <li><strong>The protection traffic itself is not the migration target.</strong> Its integrity is already symmetric.</li>
-<li><strong>The key plane is the long pole.</strong> GDOI, role-based access tokens and certificate enrolment are all blocked by standards.</li>
+<li><strong>The key plane will take the longest.</strong> GDOI, role-based access tokens and certificate enrolment are all blocked by standards.</li>
 <li><strong>The control-centre link can be protected now at the conduit.</strong> IKEv2 with ML-KEM is in the RFC Editor queue, and RFC 9370 already allows hybrid exchanges. This holds while the gateway's 62351-3 TLS waits on the standard.</li>
 <li><strong>For each device model, <code>verifierReplaceable</code> splits the fleet</strong> into those that can be updated and those that must be replaced at refurbishment.</li>
 <li><strong><code>certificationImpact</code> turns every one of these actions into a schedule.</strong> No algorithm inventory shows any of this.</li>
@@ -601,7 +601,7 @@ nav: uc-substation
 <li>Has IEC TC 57 WG 15 started PQC work on IEC 62351-3, -6, -8 and -9?</li>
 <li>Is <code>certificationImpact</code> a product fact, or a deployment fact that belongs in the system document?</li>
 <li>Should <code>usage</code> stay in the system overlay, or become a general facility for derived CBOMs?</li>
-<li>Who can bring a protection IED supplier and a transmission or distribution operator to review the draft? Targeted requests to named people are the route.</li>
+<li>Who can bring a protection IED supplier and a transmission or distribution operator to review the draft? The best route is to ask named people directly.</li>
 </ol>
 <h2>Sources</h2>
 <ul>
