@@ -85,6 +85,13 @@ meetings:
     duration: 60
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
+    agenda:
+      - "09:00 Welcome, apologies, and approval of the minutes of meeting 12 (Chair)"
+      - "09:05 Intermediate publication: agree scope, owner and target date (Chair)"
+      - "09:20 New standards versions, CycloneDX 2.0: set new poll dates and confirm the six questions (Chair)"
+      - "09:35 New voting mechanism: adopt the process and schedule the first polls (Vice-chair)"
+      - "09:45 Major changes since meeting 12: brief members and assign review requests (Chair)"
+      - "09:55 Any other business, actions and next meeting (Chair)"
 
   - number: 14
     date: 2026-10-14
