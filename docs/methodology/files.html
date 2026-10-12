@@ -24,7 +24,7 @@ nav: files
 <main>
   <div class="crumb">REFERENCE</div>
   <h1>Files and how to run them</h1>
-  <p class="lead">The machine-readable artifacts that constitute the example, together with the commands used to reproduce the conformance verdicts.</p>
+  <p class="lead">The machine-readable files that make up the example: the profile rules file, the example CBOMs and the validator. The commands below reproduce every conformance result shown in this documentation.</p>
 
   <h2>Artifacts</h2>
   <table>
@@ -33,18 +33,18 @@ nav: files
       <tr><td><a href="profile-interface-enumeration.rules.json">profile-interface-enumeration.rules.json</a></td><td>The entry profile of the interface family: the shallowest set of rules that still produces a usable inventory record. See <a href="maturity.html">Maturity</a></td></tr>
       <tr><td><a href="profile-interface-disclosure.md">profile-interface-disclosure.md</a></td><td>Prose profile specification (product-level and per-interface rules)</td></tr>
       <tr><td><a href="profile-interface-disclosure.rules.json">profile-interface-disclosure.rules.json</a></td><td>Machine-readable rules, including the <code>appliesTo</code> version range</td></tr>
-      <tr><td><a href="profile.schema.json">profile.schema.json</a></td><td>The shape of a rules file, so a third party can validate a profile without our checker. Not a substitute for C1 to C17: a schema can see that <code>objective</code> has a <code>decision</code> string, not whether the decision is one a consumer could act on</td></tr>
-      <tr><td><a href="claim.schema.json">claim.schema.json</a></td><td>The shape of a conformance claim, including the two consistency rules a schema can enforce &mdash; a refused entry carries no rule results, and an entry claiming conformance may not list a failed MUST</td></tr>
-      <tr><td><a href="claim-example.json">claim-example.json</a></td><td>A worked claim over both example profiles at once, bound to <code>cbom-pqc-pass</code> by digest</td></tr>
+      <tr><td><a href="profile.schema.json">profile.schema.json</a></td><td>The schema for a rules file. A third party can use it to validate a profile without our checker. The schema does not replace requirements C1 to C17. A schema can check that <code>objective</code> has a <code>decision</code> string, but not whether the decision is one a consumer could act on</td></tr>
+      <tr><td><a href="claim.schema.json">claim.schema.json</a></td><td>The schema for a conformance claim. It includes the two consistency rules that a schema can enforce: a refused entry carries no rule results, and an entry that claims conformance may not list a failed MUST rule</td></tr>
+      <tr><td><a href="claim-example.json">claim-example.json</a></td><td>A worked example of a claim that covers both example profiles at once, bound to <code>cbom-pqc-pass</code> by digest</td></tr>
       <tr><td><a href="mapping-cyclonedx-spdx.md">mapping-cyclonedx-spdx.md</a></td><td>Complete requirement-to-format mapping</td></tr>
       <tr><td><a href="cbom-pass.cyclonedx.json">cbom-pass.cyclonedx.json</a></td><td>Conforming example CBOM (CycloneDX 1.7)</td></tr>
-      <tr><td><a href="cbom-fail.cyclonedx.json">cbom-fail.cyclonedx.json</a></td><td>Non-conforming example; omits the management interface</td></tr>
+      <tr><td><a href="cbom-fail.cyclonedx.json">cbom-fail.cyclonedx.json</a></td><td>Non-conforming example. It omits the management interface</td></tr>
       <tr><td><a href="cbom-disclosure.cyclonedx.json">cbom-disclosure.cyclonedx.json</a></td><td>Non-conforming example exercising all four disclosure outcomes on one interface: a withheld library (permitted), an encryption algorithm declared unknown, an undeclared authentication algorithm, and a key exchange disclosed normally</td></tr>
-      <tr><td><a href="cbom-noadmin.cyclonedx.json">cbom-noadmin.cyclonedx.json</a></td><td>Conforming example with no management interface at all: a library with no configuration surface, satisfying product rule P2 by stating the absence rather than by having one</td></tr>
-      <tr><td><a href="cbom-entry-fail.cyclonedx.json">cbom-entry-fail.cyclonedx.json</a></td><td>Roughly what a scanner emits with no profile in mind. Valid CycloneDX, and below even the entry profile: it identifies no subject, states no completeness, classifies no interface and says nothing about where the reading came from</td></tr>
+      <tr><td><a href="cbom-noadmin.cyclonedx.json">cbom-noadmin.cyclonedx.json</a></td><td>Conforming example with no management interface at all: a library with no configuration surface, It satisfies product rule P2 by stating that there is no management interface, rather than by declaring one</td></tr>
+      <tr><td><a href="cbom-entry-fail.cyclonedx.json">cbom-entry-fail.cyclonedx.json</a></td><td>Roughly what a scanner produces when it is not working to any profile. It is valid CycloneDX, but it falls below even the entry profile. It identifies no subject, states no completeness, classifies no interface and says nothing about where the reading came from</td></tr>
       <tr><td><a href="profile-pqc-migration.rules.json">profile-pqc-migration.rules.json</a></td><td>The PQC migration profile, derived from the baseline via <code>extends</code></td></tr>
       <tr><td><a href="cbom-pqc-pass.cyclonedx.json">cbom-pqc-pass.cyclonedx.json</a></td><td>Conforming example for the migration profile; three interfaces at different readiness stages</td></tr>
-      <tr><td><a href="cbom-pqc-fail.cyclonedx.json">cbom-pqc-fail.cyclonedx.json</a></td><td>Non-conforming example exercising both conditional rules and the inherited-rule tightening</td></tr>
+      <tr><td><a href="cbom-pqc-fail.cyclonedx.json">cbom-pqc-fail.cyclonedx.json</a></td><td>Non-conforming example that exercises both conditional rules and the tightening of an inherited rule</td></tr>
       <tr><td><a href="validate_cbom.py">validate_cbom.py</a></td><td>Version-aware validator with profile composition. Checks a document against a profile</td></tr>
       <tr><td><a href="check_profile.py">check_profile.py</a></td><td>Well-formedness checker. Checks a profile against requirements C1 to C17 of <a href="conformance.html">Conformance</a></td></tr>
       <tr><td><a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a></td><td>Treatment of older CBOM files</td></tr>
@@ -78,21 +78,21 @@ python validate_cbom.py cbom-pass.cyclonedx.json profile-interface-disclosure.ru
 python validate_cbom.py cbom-1.8.json profile-interface-disclosure.rules.json   # newer:   accepted, review advised, exit 0
 python validate_cbom.py cbom-1.6.json profile-interface-disclosure.rules.json   # legacy:  accepted with a warning,  exit 0
 python validate_cbom.py cbom-1.5.json profile-interface-disclosure.rules.json   # refused: not assessed,            exit 4</code></pre>
-  <p>The last of these is the one worth running. A refusal is not a failure: the document was never assessed, so it exits 4 rather than 1, and no rule result is reported for it. A pipeline that treats any non-zero exit as a rejection will turn the age of a carrier format into a supplier's problem, which is what the distinct code exists to prevent.</p>
+  <p>The last of these commands is the most useful one to run. A refusal is not a failure. The document was never assessed, so the validator exits with 4 rather than 1 and reports no rule results for it. A pipeline that treats any non-zero exit code as a rejection will penalise a supplier for the age of its carrier format. The distinct exit code exists to prevent that.</p>
 
   <h2>The derived profile</h2>
   <p>The PQC migration profile extends the baseline, so evaluating against it also evaluates every baseline rule. The validator resolves the base, applies the overrides, and rejects any override that would relax an inherited rule.</p>
   <pre><code># conforms
 python validate_cbom.py cbom-pqc-pass.cyclonedx.json profile-pqc-migration.rules.json
 
-# does not conform, for three separate reasons
+# does not conform: five failures, of three kinds
 python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-pqc-migration.rules.json</code></pre>
-  <p>The failing document is worth reading alongside its verdict. Two failures come from conditional rules: an interface claiming enablement by software update without naming the version (<code>pqc-migration#I5</code>), and one declaring a capability committed for key establishment without saying what blocks it (<code>pqc-migration#G1.2</code>). Two more come from the group rule: a purpose the profile takes in scope with no entry at all, and a purpose it defers with no entry either &mdash; a deferred purpose still owes a status. The last arises from the extension itself. Its interconnect interface withholds <code>implementationPurl</code>, which the baseline permits. Evaluated against the baseline alone that document conforms; it fails here only because the derived profile removed withholdability from that rule.</p>
+  <p>Read the failing document alongside its verdict. Two failures come from conditional rules. In the first, an interface claims enablement by software update without naming the version (<code>pqc-migration#I5</code>). In the second, an interface declares a capability committed for key establishment without saying what blocks it (<code>pqc-migration#G1.2</code>). Two more failures come from the group rule. One is a purpose that the profile takes in scope but that has no entry at all. The other is a purpose that the profile defers, which also has no entry. A deferred purpose still requires a status. The last failure comes from the extension itself. The document's interconnect interface withholds <code>implementationPurl</code>, which the baseline permits. Evaluated against the baseline alone, the document conforms. It fails here only because the derived profile no longer allows that rule to be satisfied by withholding the value.</p>
   <pre><code># the same document against the base profile, which permits the withheld value
 python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-interface-disclosure.rules.json</code></pre>
 
   <h2>Checking a profile</h2>
-  <p>A profile is itself checkable, against requirements C1 to C17 of <a href="conformance.html">Conformance</a>. C1 to C7 and C11 to C17 are MUST requirements and determine the result; C8 to C10 are reported as warnings unless <code>--strict</code> is given.</p>
+  <p>A profile can itself be checked, against requirements C1 to C17 of <a href="conformance.html">Conformance</a>. C1 to C7 and C11 to C17 are MUST requirements and determine the result. C8 to C10 are reported as warnings unless <code>--strict</code> is given.</p>
   <pre><code># all three example profiles are well-formed
 python check_profile.py profile-interface-enumeration.rules.json
 python check_profile.py profile-interface-disclosure.rules.json

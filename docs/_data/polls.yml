@@ -48,34 +48,4 @@ meta:
     once and needs no account. If yours has not arrived, write to the working group
     mailing list, cbom@lists.pkic.org.
 
-polls:
-
-  - id: cyclonedx-2
-    title: CycloneDX 2.0 and the PQC migration profiles
-    meeting: 12
-    opens: 2026-10-01
-    closes: 2026-10-06
-    access: single-use
-    # Set to true once the Formbricks survey exists and the links have gone out.
-    published: false
-    questions:
-      - id: carrier
-        text: "CycloneDX 1.7 stays the carrier for the draft profiles, and 2.0 is added once Ecma ratifies it."
-        options: [Agree, Disagree, Abstain]
-        comment: true
-      - id: certifications
-        text: "Module validation and product certification use the new CycloneDX 2.0 certifications field."
-        options: [Agree, Disagree, Abstain]
-        comment: true
-      - id: risks
-        text: "The new CycloneDX 2.0 risk fields (response, owner, target date, status) are kept out of a supplier's conformance claim, in line with decisions 0002 and 0007."
-        options: [Agree, Disagree, Abstain]
-        comment: true
-      - id: perspectives
-        text: "Each PKIC CBOM profile is published with a matching CycloneDX 2.0 perspective."
-        options: [Agree, Disagree, Abstain]
-        comment: true
-      - id: feedback
-        text: "The working group sends CycloneDX its feedback on interfaces and endpoint roles, and on telling supported from in-use algorithms, while 2.0 is still open."
-        options: [Agree, Disagree, Abstain]
-        comment: true
+polls: []
