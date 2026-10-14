@@ -27,44 +27,44 @@ nav: uc-proposing
   <p class="lead">How a use case enters this section, how it is developed into a worked example, and what each status means. Read this before copying the <a href="template.html">template</a>.</p>
 
   <h2>When a use case is worth proposing</h2>
-  <p>A use case is worth proposing when a consumer and a decision can be named, and the facts that decision needs are not already required by the interface disclosure baseline. It is not a sector, a product or a field a format happens to offer. Starting from a format's fields produces a profile with no stated purpose and no way to argue about whether it asks for the right things.</p>
+  <p>A use case is worth proposing when a consumer and a decision can be named, and the facts that decision needs are not already required by the interface disclosure baseline. A use case is not a sector, a product, or a field that a format happens to offer. A profile written by starting from a format's fields has no stated purpose. There is then no basis for arguing whether it asks for the right things.</p>
   <ol>
     <li>Open a topic on the <a href="https://github.com/pkic/cbom/issues">aspect issues</a> stating the consumer, the actions being chosen between, and the questions that decision raises.</li>
-    <li>Add it to the register on the <a href="index.html">overview</a> and to its group page as <em>proposed</em>. If it fits neither group, raise that first: it may be a third kind of profile, or not a use case at all.</li>
-    <li>Copy the <a href="template.html">template</a> and work down it. A page that is only half filled in is still worth a pull request: the blank sections are the ones the working group has to answer.</li>
+    <li>Add it to the register on the <a href="index.html">overview</a> and to its group page as <em>proposed</em>. If it fits none of the groups, raise that first. It may need a new group, or it may not be a use case at all.</li>
+    <li>Copy the <a href="template.html">template</a> and work down it. Open a pull request even if the page is only half filled in. The blank sections show the working group what it still has to answer.</li>
   </ol>
-  <p>A use case that turns out to be served by an existing profile, by a depth of an existing family, or by the change core alone is a better outcome than a new profile, and should be argued for on that basis.</p>
+  <p>A use case may turn out to be served by an existing profile, by a depth of an existing profile family, or by the change core alone. A depth is a version of a profile that asks for more or fewer of the same facts. Any of these is a better outcome than a new profile. Argue for the use case on that basis.</p>
 
   <h2 id="status">Status</h2>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Status</th><th>What it requires</th></tr></thead>
     <tbody>
-      <tr><td><strong>Proposed</strong></td><td>A consumer and a decision are named. Nothing more. It is an invitation to develop the use case, not a commitment that it needs a profile.</td></tr>
+      <tr><td><strong>Proposed</strong></td><td>A consumer and a decision are named. Nothing more has been written. This status invites others to develop the use case. It does not commit the working group to writing a profile for it.</td></tr>
       <tr><td><strong>Described</strong></td><td>The consumer, the decision, the constraint the producer is under and what the profile would need are written on the group page.</td></tr>
-      <tr><td><strong>Draft worked example</strong></td><td>A page in the eight-part shape below exists. Rules, documents or verdicts are not yet settled, and the page says which.</td></tr>
+      <tr><td><strong>Draft worked example</strong></td><td>A page in the eight-part shape below exists. Some of its rules, documents or verdicts are not yet settled. The page says which ones.</td></tr>
       <tr><td><strong>Worked example</strong></td><td>A rules file that passes requirements C1 to C17 of <a href="../methodology/conformance.html">Conformance</a>, at least one document that conforms to it and one that does not, and verdicts checked with the validator.</td></tr>
     </tbody>
   </table>
   </div>
 
   <h2 id="shape">The shape of a worked example</h2>
-  <p>Every worked example follows the same eight parts, in the same order, because each part is the input to the next. The shape is the twelve steps of <a href="../methodology/method.html">Method</a> grouped for reading rather than for working. The <a href="template.html">template</a> is the same shape as a blank.</p>
+  <p>Every worked example follows the same eight parts, in the same order, because each part is the input to the next. The eight parts are the twelve steps of <a href="../methodology/method.html">Method</a>, grouped to suit a reader rather than someone carrying out the steps. The <a href="template.html">template</a> is the same shape as a blank.</p>
   <ol>
-    <li><strong>The decision being supported.</strong> Who the consumer is, what actions it is choosing between, and the questions it has to answer to choose. Stating the actions is what makes the rest checkable: a decision answerable in only one way is not a decision, and a profile written from one has no principled place to stop.</li>
-    <li><strong>The constraint the producer is under.</strong> What the party filling the document in can actually observe. An operator of its own service can be asked for more than a vendor shipping a product it cannot inspect, and a profile that ignores the difference is unsatisfiable rather than demanding.</li>
-    <li><strong>From questions to attributes.</strong> Each question turned into one fact that can be declared at the boundary. The questions that do not survive this step matter as much as the ones that do, and are recorded rather than dropped.</li>
+    <li><strong>The decision being supported.</strong> Who the consumer is, what actions it is choosing between, and the questions it has to answer to choose. Stating the actions makes the rest checkable. A decision that can only be answered one way is not a real decision. A profile written from such a decision has no principled point at which to stop adding requirements.</li>
+    <li><strong>The constraint the producer is under.</strong> What the party filling the document in can actually observe. An operator of its own service can be asked for more than a vendor shipping a product it cannot inspect. A profile that ignores this difference asks for facts the producer cannot supply, so no document can satisfy it.</li>
+    <li><strong>From questions to attributes.</strong> Each question is turned into one fact that can be declared at the boundary. Some questions cannot be turned into such a fact. They matter as much as the ones that can, so they are recorded rather than dropped.</li>
     <li><strong>The profile definition.</strong> The product-level, per-interface and group rules, with their conformance levels; any rule inherited from a base profile that this one tightens; and any rule that applies only under a stated condition.</li>
     <li><strong>A worked interface.</strong> One real interface with every required attribute filled in, so the rules can be read against something concrete rather than in the abstract.</li>
-    <li><strong>What the profile deliberately excludes.</strong> Each exclusion with its reason. Without this the profile cannot be reviewed: a reader cannot tell an exclusion that was argued from an attribute nobody thought of.</li>
+    <li><strong>What the profile deliberately excludes.</strong> Each exclusion with its reason. Without this list, the profile cannot be reviewed. A reader cannot tell an attribute that was deliberately excluded from one that nobody thought of.</li>
     <li><strong>Expressing it in a CBOM.</strong> How the attributes land in CycloneDX and SPDX, and which of them the formats have no native field for.</li>
     <li><strong>Recorded decisions and open questions.</strong> What was settled while writing it, and what the working group has not settled.</li>
   </ol>
 
   <h2>Why worked examples are kept out of the methodology</h2>
   <ul>
-    <li><strong>Instances multiply and a specification should not.</strong> If each worked example were part of the methodology, the length of the deliverable would depend on how many use cases exist.</li>
-    <li><strong>They have different readers.</strong> Someone assessing the methodology needs one example. Someone with a migration to plan needs theirs in full.</li>
+    <li><strong>The number of worked examples keeps growing, and the specification should not grow with it.</strong> If each worked example were part of the methodology, the length of the deliverable would depend on how many use cases exist.</li>
+    <li><strong>They have different readers.</strong> Someone assessing the methodology needs one example. Someone with a migration to plan needs the worked example for their own case in full.</li>
     <li><strong>They are governed differently.</strong> A profile is versioned and stewarded on its own schedule, as <a href="../methodology/governance.html">Governance</a> sets out.</li>
   </ul>
 

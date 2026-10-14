@@ -24,7 +24,7 @@ nav: objects
 <main>
   <div class="crumb">CONCEPT</div>
   <h1>Objects</h1>
-  <p class="lead">The methodology has about a dozen nouns, each introduced on the page where it became necessary. This page collects them, says what writes each one and how each is identified, and names what is deliberately not modelled. Nothing here is new. It is the material the other pages assume you have already assembled.</p>
+  <p class="lead">The methodology defines about a dozen objects, each introduced on the page where it is first needed. They are listed together here. For each object, the list gives the party or tool that creates it and how it is identified. It also names what the methodology deliberately leaves out. Nothing here is new: every object is defined on another page.</p>
 
   <p><a href="model.html">Model</a> covers the subject matter, meaning the cryptography a document describes. This page covers the documents themselves and the things that check them.</p>
 
@@ -33,17 +33,17 @@ nav: objects
     <thead><tr><th>Object</th><th>What it is</th><th>Written by</th></tr></thead>
     <tbody>
       <tr><td><strong>Subject</strong></td><td>The product, service or component a document describes. A profile declares which kind it accepts as its <code>subjectType</code>.</td><td>nobody; it is the thing being described</td></tr>
-      <tr><td><strong>Interface</strong></td><td>A cryptographic relationship the subject exposes at its boundary. The unit most rules apply to. See <a href="model.html">Model</a>.</td><td>producer, as part of a document</td></tr>
-      <tr><td><strong>CBOM revision</strong></td><td>One revision of the record for one subject, in one carrier format. An extract from an inventory rather than a thing that exists on its own. See <a href="inventory.html">Inventory</a>.</td><td>producer</td></tr>
-      <tr><td><strong>Variant</strong></td><td>The public or restricted form of a revision, distinguished by who may hold it. The public one carries markers where the restricted one carries values. See <a href="confidentiality.html">Confidentiality</a>.</td><td>producer</td></tr>
-      <tr><td><strong>Profile</strong></td><td>The minimum reporting requirements serving one stated consumer and one stated decision. A rules file, not a schema.</td><td>profile author</td></tr>
-      <tr><td><strong>Profile family</strong></td><td>A set of profiles related by extension and ordered by <a href="maturity.html">depth</a>, each containing the one below it. The shallowest is the entry profile. A profile that changes the consumer decision is a branch rather than a rung.</td><td>nobody declares it; it follows from <code>extends</code></td></tr>
-      <tr><td><strong>Rule</strong></td><td>One requirement. <code>P</code> is evaluated per product, <code>I</code> per interface, <code>G</code> per entry in a group. Local to its profile and cited as <code>tag#id</code>.</td><td>profile author</td></tr>
+      <tr><td><strong>Interface</strong></td><td>A cryptographic relationship the subject exposes at its boundary. Most rules apply to interfaces. See <a href="model.html">Model</a>.</td><td>producer, as part of a document</td></tr>
+      <tr><td><strong>CBOM revision</strong></td><td>One revision of the record for one subject, in one carrier format (the document format that carries the CBOM). It is extracted from an inventory and does not exist on its own. See <a href="inventory.html">Inventory</a>.</td><td>producer</td></tr>
+      <tr><td><strong>Variant</strong></td><td>A revision exists in a public form and a restricted form. The two variants differ in who may hold them. Where the restricted variant carries a value, the public variant carries a marker in its place. See <a href="confidentiality.html">Confidentiality</a>.</td><td>producer</td></tr>
+      <tr><td><strong>Profile</strong></td><td>The minimum reporting requirements for one stated consumer making one stated decision. A profile is a rules file, not a schema.</td><td>profile author</td></tr>
+      <tr><td><strong>Profile family</strong></td><td>A set of profiles in which each profile extends another. The profiles are ordered by <a href="maturity.html">depth</a>, meaning how much each one requires a producer to disclose. Each profile contains all the requirements of the one below it. The shallowest is the entry profile. A profile that changes the consumer decision is a branch: it starts a separate line instead of adding a level (a rung) to the existing one.</td><td>nobody declares it; it follows from each profile's <code>extends</code> field</td></tr>
+      <tr><td><strong>Rule</strong></td><td>One requirement. Rules with ids beginning <code>P</code> are evaluated once per product. Rules beginning <code>I</code> are evaluated once per interface. Rules beginning <code>G</code> are evaluated once for each entry in a group. A rule belongs to its own profile and is cited as <code>tag#id</code>.</td><td>profile author</td></tr>
       <tr><td><strong>Vocabulary</strong></td><td>A controlled list a rule constrains values against, such as the cryptographic purposes.</td><td>profile author, or inherited</td></tr>
-      <tr><td><strong>Conformance report</strong></td><td>The full result of evaluating one document against one profile, rule by rule, with the disclosure state of each.</td><td>a validator, where the evaluation ran</td></tr>
-      <tr><td><strong>Conformance claim</strong></td><td>The portable record of one or more evaluations, bound to a document by digest. The artifact that crosses an organisational boundary.</td><td>whoever ran the evaluation</td></tr>
-      <tr><td><strong>Policy</strong></td><td>External and versioned. Holds the judgements a CBOM deliberately does not carry, such as whether an algorithm is still acceptable. See <a href="policy-evaluation.html">Policy Evaluation</a>.</td><td>the consuming organisation</td></tr>
-      <tr><td><strong>Vulnerability statement</strong></td><td>External, and joined to a document rather than contained in one. It cites the document a claim already binds by digest. Conformance asserts nothing about it. See <a href="vulnerabilities.html">Vulnerabilities</a>.</td><td>whoever issues it, usually not the producer</td></tr>
+      <tr><td><strong>Conformance report</strong></td><td>The full result of evaluating one document against one profile. It gives the result for each rule and the disclosure state of each rule.</td><td>a validator, where the evaluation ran</td></tr>
+      <tr><td><strong>Conformance claim</strong></td><td>A portable record of one or more evaluations. It is bound to a document by the document's digest. The claim is the artifact that is passed from one organisation to another.</td><td>whoever ran the evaluation</td></tr>
+      <tr><td><strong>Policy</strong></td><td>Held outside the CBOM, and versioned. Holds the judgements a CBOM deliberately does not carry, such as whether an algorithm is still acceptable. See <a href="policy-evaluation.html">Policy Evaluation</a>.</td><td>the consuming organisation</td></tr>
+      <tr><td><strong>Vulnerability statement</strong></td><td>Held outside the CBOM. It is linked to a document rather than contained in one. It cites the document by the same digest that a conformance claim uses to bind to it. Conformance asserts nothing about the vulnerability statement. See <a href="vulnerabilities.html">Vulnerabilities</a>.</td><td>whoever issues it, usually not the producer</td></tr>
     </tbody>
   </table>
 
@@ -104,11 +104,11 @@ nav: objects
         <text x="556" y="152">cites</text>
       </g>
     </svg>
-    <figcaption>A profile constrains a revision and is evaluated against it. Policy reads the same revision and produces judgements the revision does not carry. A vulnerability statement cites the document by the digest a claim already binds.</figcaption>
+    <figcaption>A profile constrains a revision and is evaluated against it. Policy reads the same revision and produces judgements the revision does not carry. A vulnerability statement cites the revision by the same digest that a claim uses to bind to it.</figcaption>
   </figure>
 
   <h2>How each one is identified</h2>
-  <p>This is the question that recurs, and the answers were spread across five pages. Identity matters because a conformance claim has to be reproducible years later by somebody who was not there.</p>
+  <p>How each object is identified is a recurring question, and the answers were spread across five pages. Identity matters because a conformance claim has to be reproducible years later by somebody who was not present at the original evaluation.</p>
   <table>
     <thead><tr><th>Object</th><th>Identified by</th><th>Stable across</th></tr></thead>
     <tbody>
@@ -124,14 +124,14 @@ nav: objects
   </table>
 
   <h2>Two axes that get confused</h2>
-  <p>Both were one word until <a href="https://github.com/pkic/cbom/blob/main/decisions/0021-one-word-one-meaning.md">decision 0021</a>, and the distinction is worth holding on to.</p>
-  <p><strong>Capture phase</strong> belongs to a fact. <code>lifecycleStage</code> says whether a value was intended, implemented, configured or observed, which is how much weight the value carries. It can differ between two attributes in the same document. See <a href="lifecycle.html">Lifecycle Data</a>.</p>
-  <p><strong>Revision state</strong> belongs to a document. Created, signed, published, superseded. It is the same for every attribute in the document, and governance controls the transitions. See <a href="governance.html">Governance</a>.</p>
+  <p>Capture phase and revision state were described by a single word until <a href="https://github.com/pkic/cbom/blob/main/decisions/0021-one-word-one-meaning.md">decision 0021</a>. They are different things and must be kept apart.</p>
+  <p><strong>Capture phase</strong> belongs to a fact. <code>lifecycleStage</code> says whether a value was intended, implemented, configured or observed. This tells a reader how much weight the value carries. It can differ between two attributes in the same document. See <a href="lifecycle.html">Lifecycle Data</a>.</p>
+  <p><strong>Revision state</strong> belongs to a document. A document can be created, signed, published or superseded. Its revision state is the same for every attribute in the document. Governance controls how a document moves from one state to the next. See <a href="governance.html">Governance</a>.</p>
 
   <h2>What is deliberately not an object here</h2>
-  <p><strong>A judgement.</strong> Whether an interface is adequate, or how mature a supplier's disclosure is, is produced by policy at evaluation time and carries the policy version and the date applied. Storing it in a document would freeze an answer whose criteria move. A depth is a profile; a maturity level is a judgement read off one.</p>
-  <p><strong>An attestation.</strong> Nothing here establishes that a disclosed value is true. A signature covers origin and integrity, and a claim covers what was evaluated. A producer who states the wrong protocol version produces a document that signs, validates and verifies.</p>
-  <p><strong>A registry.</strong> Profiles, documents and claims all have to be stored and served somewhere, and the model says nothing about where. That is left to whoever operates the inventory, with the archive obligation in <a href="governance.html">Governance</a> as the one requirement placed on them.</p>
+  <p><strong>A judgement.</strong> A judgement states, for example, whether an interface is adequate or how mature a supplier's disclosure is. Policy produces the judgement at evaluation time. The judgement records the policy version and the date the policy was applied. Storing a judgement in a document would freeze an answer whose criteria change over time. A depth is a profile. A maturity level is a judgement derived from a depth.</p>
+  <p><strong>An attestation.</strong> Nothing here establishes that a disclosed value is true. A signature shows where a document came from and that it has not been altered. A claim shows what was evaluated. A producer who states the wrong protocol version still produces a document that can be signed, passes validation, and has a signature that verifies.</p>
+  <p><strong>A registry.</strong> Profiles, documents and claims all have to be stored and served somewhere, and the model says nothing about where. Storage is left to whoever operates the inventory. The only requirement placed on that operator is the archive obligation in <a href="governance.html">Governance</a>.</p>
 
   <div class="pagenav">
     <a href="model.html">← Model</a>

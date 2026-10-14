@@ -100,6 +100,12 @@ meetings:
     duration: 60
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
+    agenda:
+      - "18:00 Welcome, apologies, and approval of the minutes of meeting 13 (Chair)"
+      - "18:05 Additions over the past two weeks: the use-case section separated from the methodology and regrouped, the PQC migration depth drafts and decision 0022, the substation automation diagrams, and the plain-English pass — brief members and assign review requests (Chair)"
+      - "18:20 PKI Consortium conference and the December CBOM workshop: the tabletop-exercise draft, the hands-on part, what participants should leave with, and who presents (Chair)"
+      - "18:40 Voting: open the first polls under the new mechanism, and confirm their questions and closing dates (Vice-chair)"
+      - "18:55 Any other business, actions and next meeting (Chair)"
 
   - number: 15
     date: 2026-10-21
