@@ -1,8 +1,3 @@
----
-build:
-  render: never
----
-
 # Contributing
 
 This guide describes how work moves through the CBOM Profiles Working Group. The goal is that

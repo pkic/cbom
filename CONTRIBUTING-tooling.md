@@ -1,8 +1,3 @@
----
-build:
-  render: never
----
-
 # Maintaining the CBOM tooling registry
 
 > **Suggesting a tool?** You don't edit this file. Email the details to the working-group

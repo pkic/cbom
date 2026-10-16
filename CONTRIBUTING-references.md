@@ -1,8 +1,3 @@
----
-build:
-  render: never
----
-
 # Maintaining the CBOM reference register
 
 > **Contributing a reference?** You don't edit this file. Email the details to the

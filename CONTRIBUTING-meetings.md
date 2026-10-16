@@ -1,8 +1,3 @@
----
-build:
-  render: never
----
-
 # Maintaining meetings, presentations and polls
 
 > **Want a deck published, or spotted something wrong?** You don't edit these files. Email the

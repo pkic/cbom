@@ -1,10 +1,3 @@
----
-build:
-  render: never
----
-
-For the proposed native PKIC publication format and review/cutover rules, see [PUBLICATION.md](PUBLICATION.md).
-
 # CBOM Profiles Working Group
 
 This repository is the working home of the **PKI Consortium CBOM Profiles Working Group**.

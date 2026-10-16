@@ -17,7 +17,7 @@ PKIC defines the publishing capabilities shared by its working groups. This repo
 
 PKIC mounts this repository as a pinned content submodule under `content/wg/cbom/profiles`, using its ordinary Markdown renderer, site shell, navigation, image and download handling, search, and preview. The WG landing page and charter remain in the PKIC site repository. Updating content requires a reviewed source commit and a submodule update, as for the other content repositories. No CBOM-specific script runs during publication.
 
-Repository notes and internal plans are not public content. Root-level nonpublication Markdown declares `build.render: never`. PKIC's existing `ignoreFiles` configuration excludes `docs`, `doc`, `drafts`, `decisions`, `tools`, and `tests` from document discovery. Files linked as downloads remain available through the ordinary content-asset mechanism.
+Repository notes and internal plans are not public content. PKIC excludes common repository files such as README and contribution guides uniformly. Other root-level nonpublication Markdown declares `build.render: never`. Each nonpublication directory (`docs`, `doc`, `drafts`, `decisions`, `tools`, and `tests`) has an `_index.md` declaring both `build.render: never` for itself and `cascade.build.render: never` for its descendants. These are shared publishing fields, with no working-group path exceptions in PKIC. A child may override its inherited policy explicitly. Files linked as downloads remain available through the ordinary content-asset mechanism.
 
 ## Review and cutover
 
