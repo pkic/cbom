@@ -1,5 +1,7 @@
 # CBOM Profiles Working Group
 
+For the proposed native PKIC publishing format and its review/cutover rules, see [PUBLICATION.md](PUBLICATION.md).
+
 This repository is the working home of the **PKI Consortium CBOM Profiles Working Group**.
 Its purpose is to develop a single deliverable: a **specification for how to create a CBOM
 profile** — a vendor-neutral, format-independent methodology that any sector or organisation
