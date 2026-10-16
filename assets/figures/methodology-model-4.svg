@@ -1,0 +1,20 @@
+<svg width="720" height="185" viewBox="0 0 720 185" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12"><title>A publisher signing an artifact, the signed artifact carried by any means, and a device verifying it years later with no update path, bracketed as one signer to relying party relationship</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <rect x="16" y="62" width="160" height="56" rx="10" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <text x="96" y="86" fill="#1a2230" text-anchor="middle" font-weight="600">Publisher</text>
+      <text x="96" y="103" fill="#5b6472" text-anchor="middle" font-size="10.5">signs the artifact</text>
+      <rect x="290" y="66" width="140" height="48" rx="10" fill="#ffffff" stroke="#c9d3e0"></rect>
+      <text x="360" y="86" fill="#1a2230" text-anchor="middle" font-size="11">signed artifact</text>
+      <text x="360" y="102" fill="#5b6472" text-anchor="middle" font-size="10">carried by any means</text>
+      <rect x="544" y="62" width="160" height="56" rx="10" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <text x="624" y="82" fill="#1a2230" text-anchor="middle" font-weight="600">Device</text>
+      <text x="624" y="99" fill="#5b6472" text-anchor="middle" font-size="10.5">verifies, years later</text>
+      <text x="624" y="112" fill="#b45309" text-anchor="middle" font-size="10">no update path</text>
+      <line x1="176" y1="90" x2="290" y2="90" stroke="#c9d3e0" stroke-width="2"></line>
+      <polygon points="290,90 280,85 280,95" fill="#c9d3e0"></polygon>
+      <line x1="430" y1="90" x2="544" y2="90" stroke="#c9d3e0" stroke-width="2"></line>
+      <polygon points="544,90 534,85 534,95" fill="#c9d3e0"></polygon>
+      <path d="M96 128 L96 142 L624 142 L624 128" fill="none" stroke="#2563eb" stroke-width="2"></path>
+      <rect x="252" y="130" width="216" height="26" rx="13" fill="#ffffff" stroke="#2563eb"></rect>
+      <text x="360" y="147" fill="#1a2230" text-anchor="middle" font-size="11">the relationship: signer to relying party</text>
+      <text x="360" y="176" fill="#b45309" text-anchor="middle" font-size="11">the verifier's capability, not the signer's, sets what can be used</text>
+    </svg>

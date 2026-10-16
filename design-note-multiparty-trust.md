@@ -1,3 +1,8 @@
+---
+build:
+  render: never
+---
+
 # Design note: multi-party trust, and what payment rails actually need
 
 Working note for the PKIC CBOM Profiles Working Group.

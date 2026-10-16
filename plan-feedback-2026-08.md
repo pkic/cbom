@@ -1,3 +1,8 @@
+---
+build:
+  render: never
+---
+
 # Resolution plan: member feedback, August 2026
 
 Working note for the PKI Consortium CBOM Profiles Working Group.

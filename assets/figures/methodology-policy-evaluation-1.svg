@@ -1,0 +1,27 @@
+<svg width="720" height="250" viewBox="0 0 720 250" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12"><title>A box of CBOM facts and a box of policy criteria both feeding an evaluation step, which outputs a derived verdict carrying the policy version and the date applied</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <!-- facts -->
+      <rect x="20" y="40" width="200" height="76" rx="12" fill="#eefaf1" stroke="#15803d"></rect>
+      <text x="120" y="66" fill="#14532d" text-anchor="middle" font-weight="700">CBOM — facts</text>
+      <text x="120" y="86" fill="#39424f" text-anchor="middle" font-size="11">algorithms, versions, key sizes</text>
+      <text x="120" y="104" fill="#15803d" text-anchor="middle" font-size="10.5" font-family="monospace">stable · immutable revision</text>
+      <!-- policy -->
+      <rect x="20" y="140" width="200" height="76" rx="12" fill="#fff7ec" stroke="#b45309"></rect>
+      <text x="120" y="166" fill="#6b4a12" text-anchor="middle" font-weight="700">Policy — criteria</text>
+      <text x="120" y="186" fill="#39424f" text-anchor="middle" font-size="11">what counts as safe / mature</text>
+      <text x="120" y="204" fill="#b45309" text-anchor="middle" font-size="10.5" font-family="monospace">versioned · changes over time</text>
+      <!-- engine -->
+      <rect x="300" y="90" width="150" height="76" rx="12" fill="#ffffff" stroke="#2563eb"></rect>
+      <text x="375" y="124" fill="#1a2230" text-anchor="middle" font-weight="600">Evaluation</text>
+      <text x="375" y="142" fill="#5b6472" text-anchor="middle" font-size="10.5">applied at a point in time</text>
+      <!-- verdict -->
+      <rect x="530" y="90" width="170" height="76" rx="12" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <text x="615" y="118" fill="#1a2230" text-anchor="middle" font-weight="700">Derived verdict</text>
+      <text x="615" y="138" fill="#5b6472" text-anchor="middle" font-size="11">PQC posture · maturity</text>
+      <text x="615" y="156" fill="#5b6472" text-anchor="middle" font-size="10.5" font-family="monospace">carries policy version + date</text>
+      <!-- arrows -->
+      <g stroke="#2563eb" stroke-width="2" fill="none">
+        <line x1="220" y1="78" x2="300" y2="118"></line><polygon points="300,118 289,116 293,107" fill="#2563eb"></polygon>
+        <line x1="220" y1="178" x2="300" y2="138"></line><polygon points="300,138 293,149 289,140" fill="#2563eb"></polygon>
+        <line x1="450" y1="128" x2="530" y2="128"></line><polygon points="530,128 520,123 520,133" fill="#2563eb"></polygon>
+      </g>
+    </svg>

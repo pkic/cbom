@@ -1,3 +1,8 @@
+---
+build:
+  render: never
+---
+
 # Review: the proposed mandatory structured preamble
 
 Working note for the PKIC CBOM Profiles Working Group.

@@ -1,0 +1,55 @@
+<svg width="720" height="300" viewBox="0 0 720 300" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11.5"><title>A subject exposes interfaces, which are recorded in a CBOM revision that exists as a public and a restricted variant. A profile, belonging to a family and holding rules, is evaluated against the revision to produce a report and then a claim. A separate external policy reads the same revision and produces judgements the revision does not carry.</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <g>
+        <rect x="14" y="16" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"></rect>
+        <text x="74" y="34" fill="#1a2230" text-anchor="middle" font-weight="600">Subject</text>
+        <text x="74" y="49" fill="#5b6472" text-anchor="middle" font-size="10">product or service</text>
+        <rect x="14" y="96" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"></rect>
+        <text x="74" y="114" fill="#1a2230" text-anchor="middle" font-weight="600">Interfaces</text>
+        <text x="74" y="129" fill="#5b6472" text-anchor="middle" font-size="10">at its boundary</text>
+        <rect x="206" y="96" width="140" height="42" rx="9" fill="#ffffff" stroke="#2563eb"></rect>
+        <text x="276" y="114" fill="#1a2230" text-anchor="middle" font-weight="600">CBOM revision</text>
+        <text x="276" y="129" fill="#5b6472" text-anchor="middle" font-size="10">public and restricted</text>
+        <rect x="206" y="16" width="140" height="42" rx="9" fill="#f6f1fb" stroke="#7c5cbf"></rect>
+        <text x="276" y="34" fill="#1a2230" text-anchor="middle" font-weight="600">Profile</text>
+        <text x="276" y="49" fill="#5b6472" text-anchor="middle" font-size="10">in a family, holds rules</text>
+        <rect x="418" y="96" width="130" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"></rect>
+        <text x="483" y="114" fill="#1a2230" text-anchor="middle" font-weight="600">Report</text>
+        <text x="483" y="129" fill="#5b6472" text-anchor="middle" font-size="10">rule by rule</text>
+        <rect x="418" y="176" width="130" height="42" rx="9" fill="#eefaf1" stroke="#15803d"></rect>
+        <text x="483" y="194" fill="#1a2230" text-anchor="middle" font-weight="600">Claim</text>
+        <text x="483" y="209" fill="#5b6472" text-anchor="middle" font-size="10">bound by digest</text>
+        <rect x="206" y="236" width="140" height="42" rx="9" fill="#fff7ec" stroke="#b45309"></rect>
+        <text x="276" y="254" fill="#1a2230" text-anchor="middle" font-weight="600">Policy</text>
+        <text x="276" y="269" fill="#5b6472" text-anchor="middle" font-size="10">external, versioned</text>
+        <rect x="418" y="236" width="130" height="42" rx="9" fill="#fff7ec" stroke="#b45309"></rect>
+        <text x="483" y="254" fill="#1a2230" text-anchor="middle" font-weight="600">Judgement</text>
+        <text x="483" y="269" fill="#5b6472" text-anchor="middle" font-size="10">not in the CBOM</text>
+        <rect x="596" y="96" width="112" height="42" rx="9" fill="#fdf2f4" stroke="#b4365d"></rect>
+        <text x="652" y="114" fill="#1a2230" text-anchor="middle" font-weight="600">Vuln.</text>
+        <text x="652" y="129" fill="#5b6472" text-anchor="middle" font-size="10">statement</text>
+      </g>
+      <g stroke="#5b6472" stroke-width="1.6" fill="none">
+        <line x1="74" y1="58" x2="74" y2="96"></line><polygon points="74,96 69,86 79,86" fill="#5b6472"></polygon>
+        <line x1="134" y1="117" x2="206" y2="117"></line><polygon points="206,117 196,112 196,122" fill="#5b6472"></polygon>
+        <line x1="346" y1="117" x2="418" y2="117"></line><polygon points="418,117 408,112 408,122" fill="#5b6472"></polygon>
+        <line x1="483" y1="138" x2="483" y2="176"></line><polygon points="483,176 478,166 488,166" fill="#5b6472"></polygon>
+        <line x1="276" y1="138" x2="276" y2="236"></line><polygon points="276,236 271,226 281,226" fill="#5b6472"></polygon>
+        <line x1="346" y1="257" x2="418" y2="257"></line><polygon points="418,257 408,252 408,262" fill="#5b6472"></polygon>
+      </g>
+      <g stroke="#2563eb" stroke-width="1.6" fill="none">
+        <line x1="276" y1="58" x2="276" y2="96"></line><polygon points="276,96 271,86 281,86" fill="#2563eb"></polygon>
+      </g>
+      <g stroke="#b4365d" stroke-width="1.4" fill="none" stroke-dasharray="4 3">
+        <line x1="596" y1="150" x2="548" y2="190"></line><polygon points="548,190 556,182 560,191" fill="#b4365d"></polygon>
+      </g>
+      <g fill="#5b6472" font-size="10">
+        <text x="82" y="80">exposes</text>
+        <text x="146" y="110">recorded in</text>
+        <text x="352" y="110">evaluated to</text>
+        <text x="492" y="162">summarised as</text>
+        <text x="284" y="190">read by</text>
+        <text x="352" y="250">produces</text>
+        <text x="284" y="82">constrains</text>
+        <text x="556" y="152">cites</text>
+      </g>
+    </svg>

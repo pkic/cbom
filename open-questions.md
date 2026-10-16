@@ -1,3 +1,8 @@
+---
+build:
+  render: never
+---
+
 # Open questions register
 
 Working note for the PKI Consortium CBOM Profiles Working Group.

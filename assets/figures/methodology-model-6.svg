@@ -1,0 +1,26 @@
+<svg width="720" height="230" viewBox="0 0 720 230" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12"><title>One gateway box holding a single IPsec implementation, with lines fanning out to four peers: two using hybrid key exchange and two classical only</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <rect x="255" y="90" width="170" height="60" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"></rect>
+      <text x="340" y="113" fill="#1a2230" text-anchor="middle" font-weight="700">Gateway</text>
+      <text x="340" y="131" fill="#5b6472" text-anchor="middle" font-size="10.5">one IPsec implementation</text>
+      <rect x="560" y="16" width="146" height="40" rx="10" fill="#eefaf1" stroke="#15803d"></rect>
+      <text x="633" y="33" fill="#1a2230" text-anchor="middle" font-size="11">Peer A</text>
+      <text x="633" y="47" fill="#15803d" text-anchor="middle" font-size="10">hybrid key exchange</text>
+      <rect x="560" y="66" width="146" height="40" rx="10" fill="#fdeeee" stroke="#dc2626"></rect>
+      <text x="633" y="83" fill="#1a2230" text-anchor="middle" font-size="11">Peer B</text>
+      <text x="633" y="97" fill="#dc2626" text-anchor="middle" font-size="10">classical only</text>
+      <rect x="560" y="134" width="146" height="40" rx="10" fill="#fdeeee" stroke="#dc2626"></rect>
+      <text x="633" y="151" fill="#1a2230" text-anchor="middle" font-size="11">Peer C</text>
+      <text x="633" y="165" fill="#dc2626" text-anchor="middle" font-size="10">classical only</text>
+      <rect x="560" y="184" width="146" height="40" rx="10" fill="#eefaf1" stroke="#15803d"></rect>
+      <text x="633" y="201" fill="#1a2230" text-anchor="middle" font-size="11">Peer D</text>
+      <text x="633" y="215" fill="#15803d" text-anchor="middle" font-size="10">hybrid key exchange</text>
+      <g stroke="#c9d3e0" stroke-width="2" fill="none">
+        <line x1="425" y1="112" x2="560" y2="36"></line>
+        <line x1="425" y1="116" x2="560" y2="86"></line>
+        <line x1="425" y1="124" x2="560" y2="154"></line>
+        <line x1="425" y1="128" x2="560" y2="204"></line>
+      </g>
+      <text x="150" y="115" fill="#5b6472" text-anchor="middle" font-size="11">the product is one node</text>
+      <text x="150" y="133" fill="#5b6472" text-anchor="middle" font-size="11">its posture is four different answers</text>
+      <line x1="255" y1="120" x2="230" y2="120" stroke="#c9d3e0" stroke-width="2"></line>
+    </svg>

@@ -1,0 +1,38 @@
+<svg width="720" height="350" viewBox="0 0 720 350" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11"><title>A box labelled protection IED, firmware as shipped, internals not disclosed. On its left edge, four service interfaces: GOOSE trip messages, sampled values, TLS for MMS, and MMS with role-based access; and two management interfaces: firmware update and engineering download. On its right edge, the GDOI group key interface of type interconnect and the certificate enrolment interface of type management. On its bottom edge, time synchronisation of type peer, which carries no cryptography, and the store for device keys and trust anchors of type storage.</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <text x="360" y="24" fill="#1a2230" text-anchor="middle" font-weight="600" font-size="12">the profile describes the boundary, not the box</text>
+      <rect x="250" y="44" width="220" height="214" rx="14" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"></rect>
+      <text x="360" y="136" fill="#1a2230" text-anchor="middle" font-weight="700" font-size="15">Protection IED</text>
+      <text x="360" y="156" fill="#475569" text-anchor="middle">firmware as shipped</text>
+      <text x="360" y="176" fill="#64748b" text-anchor="middle" font-size="10.5">internals not disclosed</text>
+      <text x="360" y="191" fill="#64748b" text-anchor="middle" font-size="10.5">and not required</text>
+      <rect x="240" y="56" width="20" height="18" rx="4" fill="#0284c7"></rect><rect x="240" y="84" width="20" height="18" rx="4" fill="#0284c7"></rect><rect x="240" y="112" width="20" height="18" rx="4" fill="#0284c7"></rect><rect x="240" y="140" width="20" height="18" rx="4" fill="#0284c7"></rect>
+      <rect x="240" y="180" width="20" height="18" rx="4" fill="#6d28d9"></rect><rect x="240" y="208" width="20" height="18" rx="4" fill="#6d28d9"></rect>
+      <g fill="#1a2230" text-anchor="end">
+        <text x="232" y="69">GOOSE trip messages (svc-goose)</text>
+        <text x="232" y="97">Sampled values (svc-sv)</text>
+        <text x="232" y="125">TLS for MMS (tls-mms)</text>
+        <text x="232" y="153">MMS, role-based access (svc-mms)</text>
+        <text x="232" y="193">Firmware update (upd-fw)</text>
+        <text x="232" y="221">Engineering download (mgmt-eng)</text>
+      </g>
+      <rect x="460" y="62" width="20" height="18" rx="4" fill="#0f7a52"></rect><rect x="460" y="94" width="20" height="18" rx="4" fill="#6d28d9"></rect>
+      <g fill="#1a2230">
+        <text x="488" y="75">GDOI group keys (int-gdoi)</text>
+        <text x="488" y="107">Certificate enrolment (mgmt-enrol)</text>
+      </g>
+      <rect x="280" y="248" width="20" height="18" rx="4" fill="#b45309" stroke="#b91c1c" stroke-width="2"></rect><rect x="420" y="248" width="20" height="18" rx="4" fill="#475569"></rect>
+      <g fill="#1a2230" text-anchor="middle">
+        <text x="290" y="284">time synchronisation</text>
+        <text x="290" y="298" font-family="monospace" font-size="10">peer-ptp</text>
+        <text x="430" y="284">device keys, trust anchors</text>
+        <text x="430" y="298" font-family="monospace" font-size="10">sto-keys</text>
+      </g>
+      <g font-size="10.5" fill="#5b6472">
+        <rect x="70" y="318" width="12" height="11" rx="2" fill="#0284c7"></rect><text x="87" y="327">service</text>
+        <rect x="150" y="318" width="12" height="11" rx="2" fill="#6d28d9"></rect><text x="167" y="327">management</text>
+        <rect x="255" y="318" width="12" height="11" rx="2" fill="#0f7a52"></rect><text x="272" y="327">interconnect</text>
+        <rect x="360" y="318" width="12" height="11" rx="2" fill="#b45309"></rect><text x="377" y="327">peer</text>
+        <rect x="420" y="318" width="12" height="11" rx="2" fill="#475569"></rect><text x="437" y="327">storage</text>
+        <rect x="500" y="318" width="12" height="11" rx="2" fill="#b45309" stroke="#b91c1c" stroke-width="2"></rect><text x="517" y="327">no cryptography</text>
+      </g>
+    </svg>

@@ -1,0 +1,18 @@
+<svg width="720" height="250" viewBox="0 0 720 250" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="13"><title>A product outline for nginx 1.27.0 containing two interface cards, an HTTPS service interface and an SSH management interface, each giving its protocol, library and endpoint roles</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <rect x="40" y="20" width="640" height="210" rx="16" fill="#f2f6fc" stroke="#c9d3e0" stroke-dasharray="6 5"></rect>
+      <text x="60" y="46" fill="#5b6472" font-size="12" font-family="monospace">PRODUCT · nginx 1.27.0</text>
+      <rect x="70" y="64" width="270" height="140" rx="12" fill="#ffffff" stroke="#e2e7ef"></rect>
+      <rect x="70" y="64" width="270" height="4" rx="2" fill="#0284c7"></rect>
+      <text x="86" y="90" fill="#0284c7" font-size="11" font-weight="700" font-family="monospace">interfaceType · service</text>
+      <text x="86" y="112" fill="#1a2230" font-weight="600">HTTPS service interface</text>
+      <text x="86" y="132" fill="#5b6472" font-size="12">TLS 1.3 · via OpenSSL 3.4.0</text>
+      <text x="86" y="152" fill="#5b6472" font-size="12">client (browser) ↔ server (nginx)</text>
+      <text x="86" y="180" fill="#15803d" font-size="11.5" font-family="monospace">✓ all per-interface rules</text>
+      <rect x="380" y="64" width="270" height="140" rx="12" fill="#ffffff" stroke="#e2e7ef"></rect>
+      <rect x="380" y="64" width="270" height="4" rx="2" fill="#7c3aed"></rect>
+      <text x="396" y="90" fill="#7c3aed" font-size="11" font-weight="700" font-family="monospace">interfaceType · management</text>
+      <text x="396" y="112" fill="#1a2230" font-weight="600">Management interface</text>
+      <text x="396" y="132" fill="#5b6472" font-size="12">SSH 2.0 · via OpenSSH 9.6</text>
+      <text x="396" y="152" fill="#5b6472" font-size="12">client (admin) ↔ server (host)</text>
+      <text x="396" y="180" fill="#b45309" font-size="11.5" font-family="monospace">← rule P2 requires this exists</text>
+    </svg>

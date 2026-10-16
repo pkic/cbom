@@ -1,0 +1,27 @@
+<svg width="720" height="235" viewBox="0 0 720 235" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12"><title>The cryptographic inventory feeding an extract and scope step that selects, filters, redacts, signs and timestamps, producing an output CBOM for internal, external client and supply-chain consumers</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <rect x="18" y="80" width="140" height="74" rx="10" fill="#eefaf1" stroke="#15803d"></rect>
+      <text x="88" y="110" fill="#14532d" text-anchor="middle" font-weight="700">Cryptographic</text>
+      <text x="88" y="128" fill="#14532d" text-anchor="middle" font-weight="700">inventory</text>
+      <rect x="210" y="75" width="150" height="84" rx="10" fill="#ffffff" stroke="#2563eb"></rect>
+      <text x="285" y="104" fill="#1a2230" text-anchor="middle" font-weight="600">Extract &amp; scope</text>
+      <text x="285" y="123" fill="#5b6472" text-anchor="middle" font-size="10.5">select · filter · redact</text>
+      <text x="285" y="139" fill="#5b6472" text-anchor="middle" font-size="10.5">sign · timestamp</text>
+      <rect x="412" y="82" width="128" height="70" rx="10" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <text x="476" y="108" fill="#1a2230" text-anchor="middle" font-weight="700">Output CBOM</text>
+      <text x="476" y="128" fill="#15803d" text-anchor="middle" font-size="10.5" font-family="monospace">profile-validated</text>
+      <text x="655" y="26" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">CONSUMERS</text>
+      <rect x="596" y="40" width="116" height="32" rx="8" fill="#f2f6fc" stroke="#c9d3e0"></rect>
+      <text x="654" y="60" fill="#1a2230" text-anchor="middle" font-size="11">Internal use case</text>
+      <rect x="596" y="84" width="116" height="32" rx="8" fill="#f2f6fc" stroke="#c9d3e0"></rect>
+      <text x="654" y="104" fill="#1a2230" text-anchor="middle" font-size="11">External client</text>
+      <rect x="596" y="128" width="116" height="36" rx="8" fill="#f2f6fc" stroke="#c9d3e0"></rect>
+      <text x="654" y="145" fill="#1a2230" text-anchor="middle" font-size="10.5">Supply-chain</text>
+      <text x="654" y="158" fill="#1a2230" text-anchor="middle" font-size="10.5">response</text>
+      <rect x="210" y="180" width="330" height="30" rx="8" fill="#fff7ec" stroke="#b45309"></rect>
+      <text x="375" y="199" fill="#6b4a12" text-anchor="middle" font-size="10.5">the same profile validates the output CBOM before release</text>
+      <g stroke="#2563eb" stroke-width="2" fill="none">
+        <line x1="158" y1="117" x2="210" y2="117"></line><polygon points="210,117 200,112 200,122" fill="#2563eb"></polygon>
+        <line x1="360" y1="117" x2="412" y2="117"></line><polygon points="412,117 402,112 402,122" fill="#2563eb"></polygon>
+        <line x1="540" y1="112" x2="596" y2="56"></line><line x1="540" y1="117" x2="596" y2="100"></line><line x1="540" y1="122" x2="596" y2="146"></line>
+      </g>
+    </svg>

@@ -1,0 +1,21 @@
+<svg width="720" height="190" viewBox="0 0 720 190" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12"><title>A single transmitter with one arrow into a dashed boundary holding four named receivers and a note that further receivers join and leave over time</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <rect x="24" y="72" width="150" height="54" rx="10" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <text x="99" y="96" fill="#1a2230" text-anchor="middle" font-weight="600">Transmitter</text>
+      <text x="99" y="113" fill="#5b6472" text-anchor="middle" font-size="10.5">one sender</text>
+      <path d="M300 30 L300 168 L620 168 L620 30 Z" fill="#fff7ec" stroke="#b45309" stroke-dasharray="6 5"></path>
+      <text x="460" y="24" fill="#b45309" text-anchor="middle" font-size="11">one relationship, many endpoints</text>
+      <g>
+        <rect x="330" y="42" width="120" height="30" rx="8" fill="#ffffff" stroke="#c9d3e0"></rect>
+        <text x="390" y="61" fill="#1a2230" text-anchor="middle" font-size="10.5">Receiver 1</text>
+        <rect x="470" y="42" width="120" height="30" rx="8" fill="#ffffff" stroke="#c9d3e0"></rect>
+        <text x="530" y="61" fill="#1a2230" text-anchor="middle" font-size="10.5">Receiver 2</text>
+        <rect x="330" y="86" width="120" height="30" rx="8" fill="#ffffff" stroke="#c9d3e0"></rect>
+        <text x="390" y="105" fill="#1a2230" text-anchor="middle" font-size="10.5">Receiver 3</text>
+        <rect x="470" y="86" width="120" height="30" rx="8" fill="#ffffff" stroke="#c9d3e0"></rect>
+        <text x="530" y="105" fill="#1a2230" text-anchor="middle" font-size="10.5">Receiver 4</text>
+        <rect x="330" y="128" width="260" height="30" rx="8" fill="#ffffff" stroke="#c9d3e0"></rect>
+        <text x="460" y="147" fill="#5b6472" text-anchor="middle" font-size="10.5">further receivers, membership changing over time</text>
+      </g>
+      <line x1="174" y1="99" x2="300" y2="99" stroke="#b45309" stroke-width="2"></line>
+      <polygon points="300,99 290,94 290,104" fill="#b45309"></polygon>
+    </svg>

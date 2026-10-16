@@ -1,0 +1,18 @@
+<svg width="720" height="150" viewBox="0 0 720 150" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12"><title>A horizontal band of four carrier version ranges: below 1.6 refused, 1.6 accepted as legacy with a warning, 1.7 the accepted target, and above 1.7 accepted for review</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <rect x="30" y="60" width="150" height="34" fill="#fdeeee" stroke="#dc2626"></rect>
+      <rect x="180" y="60" width="180" height="34" fill="#fff7ec" stroke="#b45309"></rect>
+      <rect x="360" y="60" width="180" height="34" fill="#eefaf1" stroke="#15803d"></rect>
+      <rect x="540" y="60" width="150" height="34" fill="#eaf1ff" stroke="#2563eb"></rect>
+      <text x="105" y="82" fill="#dc2626" text-anchor="middle" font-weight="600">&lt; 1.6</text>
+      <text x="270" y="82" fill="#b45309" text-anchor="middle" font-weight="600">1.6</text>
+      <text x="450" y="82" fill="#15803d" text-anchor="middle" font-weight="600">1.7</text>
+      <text x="615" y="82" fill="#2563eb" text-anchor="middle" font-weight="600">&gt; 1.7</text>
+      <text x="105" y="116" fill="#5b6472" text-anchor="middle" font-size="11">refuse</text>
+      <text x="105" y="130" fill="#5b6472" text-anchor="middle" font-size="10">upgrade first</text>
+      <text x="270" y="116" fill="#5b6472" text-anchor="middle" font-size="11">legacy — accept, warn</text>
+      <text x="450" y="116" fill="#5b6472" text-anchor="middle" font-size="11">target — accept</text>
+      <text x="615" y="116" fill="#5b6472" text-anchor="middle" font-size="11">newer — accept, review</text>
+      <polygon points="450,44 444,54 456,54" fill="#15803d"></polygon>
+      <text x="450" y="38" fill="#15803d" text-anchor="middle" font-size="11" font-weight="700">this example</text>
+      <text x="30" y="26" fill="#5b6472" font-size="11" font-family="monospace">min = 1.6   tested = 1.7</text>
+    </svg>

@@ -1,3 +1,8 @@
+---
+build:
+  render: never
+---
+
 # Plan: addressing the methodology review findings
 
 Working note for the PKIC CBOM Profiles Working Group.

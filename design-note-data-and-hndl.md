@@ -1,3 +1,8 @@
+---
+build:
+  render: never
+---
+
 # Design note: modelling data alongside cryptography
 
 Working note for the PKI Consortium CBOM Profiles Working Group.

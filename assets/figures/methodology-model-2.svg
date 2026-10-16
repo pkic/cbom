@@ -1,0 +1,21 @@
+<svg width="720" height="190" viewBox="0 0 720 190" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12"><title>Browser, CDN or proxy, and origin server in a row, with the first leg labelled TLS 1.3 and the second leg drawn dashed and labelled TLS 1.0 or none</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <rect x="16" y="70" width="150" height="54" rx="10" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <text x="91" y="94" fill="#1a2230" text-anchor="middle" font-weight="600">Browser</text>
+      <text x="91" y="111" fill="#5b6472" text-anchor="middle" font-size="10.5">endpoint</text>
+      <rect x="285" y="70" width="150" height="54" rx="10" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <text x="360" y="94" fill="#1a2230" text-anchor="middle" font-weight="600">CDN / proxy</text>
+      <text x="360" y="111" fill="#5b6472" text-anchor="middle" font-size="10.5">endpoint to both</text>
+      <rect x="554" y="70" width="150" height="54" rx="10" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <text x="629" y="94" fill="#1a2230" text-anchor="middle" font-weight="600">Origin server</text>
+      <text x="629" y="111" fill="#5b6472" text-anchor="middle" font-size="10.5">endpoint</text>
+      <line x1="166" y1="97" x2="285" y2="97" stroke="#15803d" stroke-width="2"></line>
+      <rect x="176" y="40" width="100" height="24" rx="12" fill="#eefaf1" stroke="#15803d"></rect>
+      <text x="226" y="56" fill="#15803d" text-anchor="middle" font-size="10.5">TLS 1.3</text>
+      <line x1="435" y1="97" x2="554" y2="97" stroke="#dc2626" stroke-width="2" stroke-dasharray="5 4"></line>
+      <rect x="440" y="40" width="110" height="24" rx="12" fill="#fdeeee" stroke="#dc2626"></rect>
+      <text x="495" y="56" fill="#dc2626" text-anchor="middle" font-size="10.5">TLS 1.0 or none</text>
+      <path d="M16 140 L16 152 L285 152 L285 140" fill="none" stroke="#5b6472"></path>
+      <text x="150" y="170" fill="#5b6472" text-anchor="middle" font-size="11">what the padlock reports</text>
+      <path d="M435 140 L435 152 L704 152 L704 140" fill="none" stroke="#b45309"></path>
+      <text x="570" y="170" fill="#b45309" text-anchor="middle" font-size="11">not visible to the user, and often not inventoried</text>
+    </svg>

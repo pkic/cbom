@@ -1,3 +1,8 @@
+---
+build:
+  render: never
+---
+
 # Analysis: 2026 Minimum Elements for a Software Bill of Materials
 
 Working note for the PKIC CBOM Profiles Working Group.

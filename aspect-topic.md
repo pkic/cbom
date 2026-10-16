@@ -1,4 +1,6 @@
 ---
+build:
+  render: never
 name: Aspect topic
 about: Raise a topic or decision for one of the methodology aspects (scoping doc §3)
 title: "[3.x] <short topic title>"

@@ -1,0 +1,25 @@
+<svg width="720" height="150" viewBox="0 0 720 150" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12"><title>Five boxes chained by arrows: a CycloneDX 1.7 CBOM, a format gate checking the version band, product rules P1 to P4, interface rules I1 to I9, and a verdict</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <g font-size="12">
+        <rect x="10" y="55" width="110" height="52" rx="10" fill="#eef2f8" stroke="#c9d3e0"></rect>
+        <text x="65" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">CBOM</text>
+        <text x="65" y="94" fill="#5b6472" text-anchor="middle" font-size="10.5">CycloneDX 1.7</text>
+        <rect x="150" y="55" width="130" height="52" rx="10" fill="#ffffff" stroke="#2563eb"></rect>
+        <text x="215" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">Format gate</text>
+        <text x="215" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">version band</text>
+        <rect x="310" y="55" width="130" height="52" rx="10" fill="#ffffff" stroke="#c9d3e0"></rect>
+        <text x="375" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">Product rules</text>
+        <text x="375" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">P1–P4</text>
+        <rect x="470" y="55" width="130" height="52" rx="10" fill="#ffffff" stroke="#c9d3e0"></rect>
+        <text x="535" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">Interface rules</text>
+        <text x="535" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">I1–I9 × each</text>
+        <rect x="630" y="55" width="80" height="52" rx="10" fill="#eefaf1" stroke="#15803d"></rect>
+        <text x="670" y="80" fill="#15803d" text-anchor="middle" font-weight="700">Verdict</text>
+      </g>
+      <g stroke-width="2" fill="none">
+        <line x1="120" y1="81" x2="150" y2="81" stroke="#2563eb"></line><polygon points="150,81 140,76 140,86" fill="#2563eb"></polygon>
+        <line x1="280" y1="81" x2="310" y2="81" stroke="#2563eb"></line><polygon points="310,81 300,76 300,86" fill="#2563eb"></polygon>
+        <line x1="440" y1="81" x2="470" y2="81" stroke="#2563eb"></line><polygon points="470,81 460,76 460,86" fill="#2563eb"></polygon>
+        <line x1="600" y1="81" x2="630" y2="81" stroke="#2563eb"></line><polygon points="630,81 620,76 620,86" fill="#2563eb"></polygon>
+      </g>
+      <text x="215" y="128" fill="#dc2626" text-anchor="middle" font-size="10.5">a version below the minimum is refused at this stage</text>
+    </svg>

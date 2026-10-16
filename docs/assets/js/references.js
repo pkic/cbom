@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  var document = globalThis.document;
+  var window = globalThis.window;
+
   var results = document.getElementById('results');
   var refs    = Array.prototype.slice.call(results.querySelectorAll('.ref'));
   var q       = document.getElementById('q');

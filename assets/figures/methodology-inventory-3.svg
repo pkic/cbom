@@ -1,0 +1,45 @@
+<svg width="720" height="290" viewBox="0 0 720 290" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12"><title>A four-node transaction path from client through content delivery network and gateway to a service, with three hops. The middle hop is marked classical only and identified as the constraint. A separate bracket shows a signature relationship spanning the whole path. Below, four CBOM documents feed an inventory that holds the topology</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <rect x="20" y="52" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <rect x="210" y="52" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <rect x="400" y="52" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <rect x="590" y="52" width="110" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"></rect>
+      <text x="80" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">Client</text>
+      <text x="270" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">CDN</text>
+      <text x="460" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">Gateway</text>
+      <text x="645" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">Service</text>
+
+      <line x1="140" y1="73" x2="210" y2="73" stroke="#0f7a52" stroke-width="2"></line>
+      <line x1="330" y1="73" x2="400" y2="73" stroke="#dc2626" stroke-width="2"></line>
+      <line x1="520" y1="73" x2="590" y2="73" stroke="#0f7a52" stroke-width="2"></line>
+      <text x="175" y="42" fill="#0f7a52" text-anchor="middle" font-size="10">hybrid ML-KEM</text>
+      <text x="365" y="42" fill="#dc2626" text-anchor="middle" font-size="10" font-weight="700">classical only</text>
+      <text x="555" y="42" fill="#0f7a52" text-anchor="middle" font-size="10">hybrid ML-KEM</text>
+      <text x="365" y="28" fill="#dc2626" text-anchor="middle" font-size="10">the constraint</text>
+
+      <line x1="80" y1="112" x2="645" y2="112" stroke="#6d28d9" stroke-width="1.5" stroke-dasharray="4 3"></line>
+      <line x1="80" y1="106" x2="80" y2="118" stroke="#6d28d9" stroke-width="1.5"></line>
+      <line x1="645" y1="106" x2="645" y2="118" stroke="#6d28d9" stroke-width="1.5"></line>
+      <text x="362" y="128" fill="#6d28d9" text-anchor="middle" font-size="10.5">signature relationship, spanning every hop</text>
+
+      <rect x="20" y="160" width="90" height="30" rx="6" fill="#ffffff" stroke="#2563eb"></rect>
+      <rect x="210" y="160" width="90" height="30" rx="6" fill="#ffffff" stroke="#2563eb"></rect>
+      <rect x="400" y="160" width="90" height="30" rx="6" fill="#ffffff" stroke="#2563eb"></rect>
+      <rect x="590" y="160" width="90" height="30" rx="6" fill="#ffffff" stroke="#2563eb"></rect>
+      <text x="65" y="180" fill="#2563eb" text-anchor="middle" font-size="10.5" font-family="monospace">CBOM</text>
+      <text x="255" y="180" fill="#2563eb" text-anchor="middle" font-size="10.5" font-family="monospace">CBOM</text>
+      <text x="445" y="180" fill="#2563eb" text-anchor="middle" font-size="10.5" font-family="monospace">CBOM</text>
+      <text x="635" y="180" fill="#2563eb" text-anchor="middle" font-size="10.5" font-family="monospace">CBOM</text>
+
+      <g stroke="#c9d3e0" stroke-width="1.5" fill="none">
+        <line x1="65" y1="190" x2="300" y2="222"></line>
+        <line x1="255" y1="190" x2="330" y2="222"></line>
+        <line x1="445" y1="190" x2="390" y2="222"></line>
+        <line x1="635" y1="190" x2="420" y2="222"></line>
+      </g>
+
+      <rect x="200" y="224" width="320" height="48" rx="10" fill="#f2f6fc" stroke="#2563eb"></rect>
+      <text x="360" y="244" fill="#1a2230" text-anchor="middle" font-weight="700">Cryptographic inventory</text>
+      <text x="360" y="262" fill="#5b6472" text-anchor="middle" font-size="10.5">holds the topology; computes posture over the path</text>
+
+      <text x="20" y="212" fill="#5b6472" font-size="10">each product declares only its own boundary</text>
+    </svg>

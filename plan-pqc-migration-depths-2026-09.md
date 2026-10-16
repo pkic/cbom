@@ -1,3 +1,8 @@
+---
+build:
+  render: never
+---
+
 # Plan: a baseline and an extended PQC migration profile, informed by `cprofile.json`
 
 Working note for the PKIC CBOM Profiles Working Group.

@@ -1,0 +1,37 @@
+<svg width="720" height="268" viewBox="0 0 720 268" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12"><title>A device model on the left is the subject of the CBOM; many deployed instances in the middle are what the operator decides about; a gateway sits between the instances and the outside</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <rect x="20" y="78" width="150" height="92" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"></rect>
+      <text x="95" y="112" fill="#1a2230" text-anchor="middle" font-weight="700" font-size="14">Device model</text>
+      <text x="95" y="132" fill="#475569" text-anchor="middle" font-size="10.5">one CBOM</text>
+      <text x="95" y="148" fill="#64748b" text-anchor="middle" font-size="10.5">written by the vendor</text>
+      <text x="95" y="60" fill="#1a2230" text-anchor="middle" font-weight="600">the document describes this</text>
+
+      <path d="M178 124 L232 124" stroke="#8a94a1" stroke-width="1.5" fill="none"></path>
+      <path d="M232 124 l-7 -4 v8 z" fill="#8a94a1"></path>
+
+      <rect x="244" y="62" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"></rect>
+      <rect x="300" y="62" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"></rect>
+      <rect x="356" y="62" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"></rect>
+      <rect x="244" y="108" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"></rect>
+      <rect x="300" y="108" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"></rect>
+      <rect x="356" y="108" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"></rect>
+      <rect x="244" y="154" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"></rect>
+      <rect x="300" y="154" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"></rect>
+      <rect x="356" y="154" width="44" height="30" rx="6" fill="#ffffff" stroke="#c3ccd9"></rect>
+
+      <text x="322" y="44" fill="#1a2230" text-anchor="middle" font-weight="600">the decision is made about these</text>
+      <text x="322" y="204" fill="#5b6472" text-anchor="middle" font-size="11">configuration, location and remaining life vary per instance</text>
+      <text x="322" y="221" fill="#8a94a1" text-anchor="middle" font-size="10.5">and are held by the operator, not by the document</text>
+
+      <path d="M412 124 L462 124" stroke="#8a94a1" stroke-width="1.5" fill="none"></path>
+      <path d="M462 124 l-7 -4 v8 z" fill="#8a94a1"></path>
+
+      <rect x="474" y="94" width="96" height="60" rx="10" fill="#eaf1fe" stroke="#1c5fd6"></rect>
+      <text x="522" y="120" fill="#16409a" text-anchor="middle" font-weight="700" font-size="12.5">Gateway</text>
+      <text x="522" y="138" fill="#16409a" text-anchor="middle" font-size="10.5">may terminate</text>
+
+      <path d="M578 124 L628 124" stroke="#8a94a1" stroke-width="1.5" fill="none"></path>
+      <path d="M628 124 l-7 -4 v8 z" fill="#8a94a1"></path>
+      <text x="672" y="128" fill="#5b6472" text-anchor="middle" font-size="11">the outside world</text>
+
+      <text x="360" y="252" fill="#5b6472" text-anchor="middle" font-size="11">where cryptography terminates decides whether the device has to change at all</text>
+    </svg>

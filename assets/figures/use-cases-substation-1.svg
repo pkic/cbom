@@ -1,0 +1,77 @@
+<svg width="720" height="420" viewBox="0 0 720 420" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11"><title>The reference substation automation system. A station zone holds a station server with the GDOI key server and HMI, an engineering workstation, a protection IED, a bay controller and a station gateway. The protection IED and the bay controller exchange GOOSE and sampled values over multicast, protected by a symmetric MAC. The station server distributes group keys to them over GDOI and reaches them over MMS on TLS. The engineering workstation downloads configuration and firmware to the IED. The station gateway reaches the IEDs over MMS on TLS and the control centre over IEC 60870-5-104 on TLS. That link leaves the station through a WAN router that straddles the boundary between the station zone and the WAN, carrying the traffic in an IPsec tunnel set up with IKEv2.</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <text x="360" y="22" fill="#1a2230" text-anchor="middle" font-weight="600" font-size="12">one substation, two zones, one conduit</text>
+
+      <!-- zones -->
+      <rect x="15" y="36" width="520" height="340" rx="12" fill="#f8fafc" stroke="#94a3b8" stroke-dasharray="5 4"></rect>
+      <text x="29" y="56" fill="#5b6472" font-weight="600">station zone</text>
+      <rect x="575" y="36" width="130" height="340" rx="12" fill="#f8fafc" stroke="#94a3b8" stroke-dasharray="5 4"></rect>
+      <text x="589" y="56" fill="#5b6472" font-weight="600">WAN</text>
+
+      <!-- connections first, boxes paint over their ends -->
+      <g fill="none" stroke-width="1.6">
+        <!-- GDOI group keys: server to IED -->
+        <path d="M190 100 H330 V300" stroke="#6d28d9" stroke-dasharray="6 4"></path>
+        <!-- MMS over TLS: server (HMI) to IED -->
+        <path d="M150 140 L262 300" stroke="#0284c7"></path>
+        <!-- MMS over TLS: gateway to bay controller -->
+        <path d="M440 265 V300" stroke="#0284c7"></path>
+        <!-- engineering and firmware: workstation to IED -->
+        <path d="M190 325 H230" stroke="#6d28d9"></path>
+        <!-- GOOSE and SV: IED to bay controller -->
+        <path d="M370 325 H390" stroke="#0f7a52" stroke-width="4"></path>
+        <!-- 104 over TLS: gateway into router -->
+        <path d="M495 235 H515" stroke="#0284c7"></path>
+        <!-- IPsec tunnel: router to control centre -->
+        <path d="M580 265 L640 300" stroke="#0f7a52" stroke-width="2.4"></path>
+      </g>
+
+      <!-- boxes -->
+      <g stroke-width="1.6">
+        <rect x="40" y="70" width="150" height="70" rx="8" fill="#f1f5f9" stroke="#94a3b8"></rect>
+        <rect x="380" y="195" width="115" height="70" rx="8" fill="#f1f5f9" stroke="#94a3b8"></rect>
+        <rect x="40" y="300" width="150" height="50" rx="8" fill="#f1f5f9" stroke="#94a3b8"></rect>
+        <rect x="230" y="300" width="140" height="50" rx="8" fill="#f1f5f9" stroke="#94a3b8"></rect>
+        <rect x="390" y="300" width="105" height="50" rx="8" fill="#f1f5f9" stroke="#94a3b8"></rect>
+        <rect x="515" y="200" width="80" height="65" rx="8" fill="#dcfce7" stroke="#0f7a52"></rect>
+        <rect x="600" y="300" width="95" height="50" rx="8" fill="#f1f5f9" stroke="#94a3b8"></rect>
+      </g>
+      <g fill="#1a2230" text-anchor="middle">
+        <text x="115" y="94" font-weight="600">Station server</text>
+        <text x="115" y="110" fill="#5b6472">GDOI key server</text>
+        <text x="115" y="125" fill="#5b6472">HMI · enrolment</text>
+        <text x="437" y="222" font-weight="600">Station gateway</text>
+        <text x="437" y="238" fill="#5b6472">IEC 60870-5-104</text>
+        <text x="437" y="253" fill="#5b6472">over TLS</text>
+        <text x="115" y="322" font-weight="600">Engineering</text>
+        <text x="115" y="337" font-weight="600">workstation</text>
+        <text x="300" y="322" font-weight="600">Protection IED</text>
+        <text x="300" y="337" fill="#5b6472">bay level</text>
+        <text x="442" y="322" font-weight="600">Bay controller</text>
+        <text x="442" y="337" fill="#5b6472">bay level</text>
+        <text x="555" y="226" font-weight="600">WAN router</text>
+        <text x="555" y="242" fill="#5b6472">the conduit</text>
+        <text x="555" y="256" fill="#5b6472">IKEv2</text>
+        <text x="647" y="322" font-weight="600">Control</text>
+        <text x="647" y="337" font-weight="600">centre</text>
+      </g>
+
+      <!-- edge labels, clear of lines and boxes -->
+      <g font-size="10.5">
+        <text x="200" y="92" fill="#6d28d9">GDOI group keys</text>
+        <text x="214" y="196" fill="#0284c7">MMS over TLS</text>
+        <text x="446" y="287" fill="#0284c7">MMS / TLS</text>
+        <text x="380" y="368" fill="#0f7a52" text-anchor="middle">GOOSE, SV · multicast, MAC</text>
+        <text x="210" y="368" fill="#6d28d9" text-anchor="middle">configuration, firmware</text>
+        <text x="652" y="268" fill="#0f7a52">IPsec</text>
+        <text x="652" y="281" fill="#0f7a52">tunnel</text>
+      </g>
+
+      <!-- legend -->
+      <g font-size="10.5" fill="#5b6472">
+        <line x1="40" y1="400" x2="64" y2="400" stroke="#0284c7" stroke-width="1.6"></line><text x="70" y="404">TLS session</text>
+        <line x1="150" y1="400" x2="174" y2="400" stroke="#6d28d9" stroke-width="1.6" stroke-dasharray="6 4"></line><text x="180" y="404">key distribution</text>
+        <line x1="280" y1="400" x2="304" y2="400" stroke="#0f7a52" stroke-width="4"></line><text x="310" y="404">symmetric multicast</text>
+        <line x1="425" y1="400" x2="449" y2="400" stroke="#6d28d9" stroke-width="1.6"></line><text x="455" y="404">engineering</text>
+        <line x1="530" y1="400" x2="554" y2="400" stroke="#0f7a52" stroke-width="2.4"></line><text x="560" y="404">conduit tunnel</text>
+      </g>
+    </svg>

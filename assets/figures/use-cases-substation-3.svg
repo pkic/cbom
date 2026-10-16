@@ -1,0 +1,23 @@
+<svg width="720" height="330" viewBox="0 0 720 330" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11"><title>Five supplier documents on the left, one per component: protection IED, bay controller, station gateway, station server and WAN router, each a component CBOM conforming to pqc-migration-ot. On the right, the integrator's system document, conforming to sas-system, cites each of them by link and digest and states the use of every interface, the zones and conduits, who provides the key plane, and the IEC 62443-3-3 level as delivered. Below both, the operator holds instance data and its migration register, outside both profiles.</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <g fill="#5b6472" font-weight="600">
+        <text x="20" y="26">component documents, one per supplier</text>
+        <text x="420" y="26">system document, from the integrator</text>
+      </g>
+      <rect x="20" y="40" width="230" height="38" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.4"></rect><text x="34" y="56" fill="#1a2230" font-weight="600">Protection IED</text><text x="34" y="70" fill="#5b6472">supplier CBOM · pqc-migration-ot</text><line x1="420" y1="59" x2="254" y2="59" stroke="#6d28d9" stroke-width="1.3"></line><path d="M260 55 L252 59 L260 63" fill="none" stroke="#6d28d9" stroke-width="1.3"></path><rect x="20" y="88" width="230" height="38" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.4"></rect><text x="34" y="104" fill="#1a2230" font-weight="600">Bay controller</text><text x="34" y="118" fill="#5b6472">supplier CBOM · pqc-migration-ot</text><line x1="420" y1="107" x2="254" y2="107" stroke="#6d28d9" stroke-width="1.3"></line><path d="M260 103 L252 107 L260 111" fill="none" stroke="#6d28d9" stroke-width="1.3"></path><rect x="20" y="136" width="230" height="38" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.4"></rect><text x="34" y="152" fill="#1a2230" font-weight="600">Station gateway</text><text x="34" y="166" fill="#5b6472">supplier CBOM · pqc-migration-ot</text><line x1="420" y1="155" x2="254" y2="155" stroke="#6d28d9" stroke-width="1.3"></line><path d="M260 151 L252 155 L260 159" fill="none" stroke="#6d28d9" stroke-width="1.3"></path><rect x="20" y="184" width="230" height="38" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.4"></rect><text x="34" y="200" fill="#1a2230" font-weight="600">Station server</text><text x="34" y="214" fill="#5b6472">supplier CBOM · pqc-migration-ot</text><line x1="420" y1="203" x2="254" y2="203" stroke="#6d28d9" stroke-width="1.3"></line><path d="M260 199 L252 203 L260 207" fill="none" stroke="#6d28d9" stroke-width="1.3"></path><rect x="20" y="232" width="230" height="38" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.4"></rect><text x="34" y="248" fill="#1a2230" font-weight="600">WAN router</text><text x="34" y="262" fill="#5b6472">supplier CBOM · pqc-migration-ot</text><line x1="420" y1="251" x2="254" y2="251" stroke="#6d28d9" stroke-width="1.3"></line><path d="M260 247 L252 251 L260 255" fill="none" stroke="#6d28d9" stroke-width="1.3"></path>
+      <text x="337" y="83" fill="#6d28d9" text-anchor="middle" font-size="10.5">cites by link</text>
+      <text x="337" y="96" fill="#6d28d9" text-anchor="middle" font-size="10.5">and digest (S1)</text>
+      <rect x="420" y="40" width="285" height="230" rx="10" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.6"></rect>
+      <g fill="#1a2230">
+        <text x="436" y="64" font-weight="600">System CBOM · sas-system overlay</text>
+        <text x="436" y="92">Usage of every component interface:</text>
+        <text x="448" y="108" fill="#5b6472">in use, disabled, not connected (S2)</text>
+        <text x="436" y="134">Zones, and the conduit each</text>
+        <text x="436" y="150">inter-zone path crosses (S3)</text>
+        <text x="436" y="176">Who provides the key plane:</text>
+        <text x="448" y="192" fill="#5b6472">GDOI key server, enrolment (S4)</text>
+        <text x="436" y="218">IEC 62443-3-3 level as delivered (S5)</text>
+        <text x="436" y="250" fill="#5b6472">States no fact a component already states</text>
+      </g>
+      <rect x="20" y="288" width="685" height="34" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-dasharray="5 4"></rect>
+      <text x="362" y="309" fill="#5b6472" text-anchor="middle">Operator: how many substations use this design, and its migration register. Outside both profiles</text>
+    </svg>

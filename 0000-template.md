@@ -1,3 +1,8 @@
+---
+build:
+  render: never
+---
+
 # NNNN. <Short decision title>
 
 <!--

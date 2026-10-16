@@ -1,0 +1,39 @@
+<svg width="720" height="210" viewBox="0 0 720 210" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12"><title>Four boxes joined left to right by arrows: Create from build or scan, Sign for integrity and provenance, Publish to a registry, and Supersede by revision or retirement. Three dashed arrows lead down from Publish to three separate validation events, each producing a conformance claim, showing that validation does not advance the document.</title><rect width="100%" height="100%" fill="#ffffff"/>
+      <g>
+        <rect x="8" y="24" width="118" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"></rect>
+        <text x="67" y="46" fill="#1a2230" text-anchor="middle" font-weight="600">Create</text>
+        <text x="67" y="62" fill="#5b6472" text-anchor="middle" font-size="10">build / scan</text>
+        <rect x="152" y="24" width="118" height="46" rx="10" fill="#ffffff" stroke="#2563eb"></rect>
+        <text x="211" y="46" fill="#1a2230" text-anchor="middle" font-weight="600">Sign</text>
+        <text x="211" y="62" fill="#5b6472" text-anchor="middle" font-size="10">integrity, provenance</text>
+        <rect x="296" y="24" width="118" height="46" rx="10" fill="#eef2f8" stroke="#c9d3e0"></rect>
+        <text x="355" y="46" fill="#1a2230" text-anchor="middle" font-weight="600">Publish</text>
+        <text x="355" y="62" fill="#5b6472" text-anchor="middle" font-size="10">registry, access</text>
+        <rect x="440" y="24" width="140" height="46" rx="10" fill="#fff7ec" stroke="#b45309"></rect>
+        <text x="510" y="42" fill="#1a2230" text-anchor="middle" font-weight="600">Supersede</text>
+        <text x="510" y="56" fill="#5b6472" text-anchor="middle" font-size="9.5">revise: a successor exists</text>
+        <text x="510" y="66" fill="#5b6472" text-anchor="middle" font-size="9.5">retire: none does</text>
+      </g>
+      <g stroke="#2563eb" stroke-width="2" fill="none">
+        <line x1="126" y1="47" x2="152" y2="47"></line><polygon points="152,47 142,42 142,52" fill="#2563eb"></polygon>
+        <line x1="270" y1="47" x2="296" y2="47"></line><polygon points="296,47 286,42 286,52" fill="#2563eb"></polygon>
+        <line x1="414" y1="47" x2="440" y2="47"></line><polygon points="440,47 430,42 430,52" fill="#2563eb"></polygon>
+      </g>
+      <g stroke="#5b6472" stroke-width="1.4" fill="none" stroke-dasharray="4 3">
+        <line x1="330" y1="70" x2="150" y2="138"></line>
+        <line x1="355" y1="70" x2="355" y2="138"></line>
+        <line x1="380" y1="70" x2="560" y2="138"></line>
+      </g>
+      <g>
+        <rect x="80" y="140" width="140" height="38" rx="8" fill="#ffffff" stroke="#c9d3e0"></rect>
+        <text x="150" y="156" fill="#1a2230" text-anchor="middle" font-size="11">validation, March</text>
+        <text x="150" y="170" fill="#5b6472" text-anchor="middle" font-size="10">claim A</text>
+        <rect x="285" y="140" width="140" height="38" rx="8" fill="#ffffff" stroke="#c9d3e0"></rect>
+        <text x="355" y="156" fill="#1a2230" text-anchor="middle" font-size="11">validation, August</text>
+        <text x="355" y="170" fill="#5b6472" text-anchor="middle" font-size="10">claim B</text>
+        <rect x="490" y="140" width="140" height="38" rx="8" fill="#ffffff" stroke="#c9d3e0"></rect>
+        <text x="560" y="156" fill="#1a2230" text-anchor="middle" font-size="11">validation, next year</text>
+        <text x="560" y="170" fill="#5b6472" text-anchor="middle" font-size="10">claim C</text>
+      </g>
+      <text x="360" y="200" fill="#5b6472" text-anchor="middle" font-size="10.5">any number, by parties who never coordinate, and none of them advances the document</text>
+    </svg>

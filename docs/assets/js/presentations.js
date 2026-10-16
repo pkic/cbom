@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  var document = globalThis.document;
+  var window = globalThis.window;
+
   var results = document.getElementById('results');
   if (!results) return;               // the page renders no controls when empty
 
