@@ -22,8 +22,7 @@ So the first piece of work is choosing which decision to develop. Three candidat
 
 | Candidate | Consumer and decision | Why it might be the one |
 | --- | --- | --- |
-| **Fleet remediation**
-proposed | An operator of a deployed estate deciding, per device model, whether to update it, replace it, put something in front of it, or accept it | The device constraints described above matter most for this decision, and no existing profile serves it. The migration profile assumes that an interface can negotiate its algorithms and that the device has an update path. A large part of an IoT estate has neither. |
+| **Fleet remediation** proposed | An operator of a deployed estate deciding, per device model, whether to update it, replace it, put something in front of it, or accept it | The device constraints described above matter most for this decision, and no existing profile serves it. The migration profile assumes that an interface can negotiate its algorithms and that the device has an update path. A large part of an IoT estate has neither. |
 | Device procurement and certification | A buyer or certification body checking a device against a scheme before it is bought or placed on the market | It is close to the [procurement](../disclosure/#procurement-and-tender-conformance) and [compliance](../assurance/#regulatory-and-compliance-reporting) entries already in the catalogue. A more detailed version of one of those profiles (a "depth", in the methodology's terms) may serve it. In that case it would not need a profile of its own. |
 | Manufacturer support planning | A manufacturer deciding which of its shipped models to carry forward and which to end | The producer and the consumer are the same party. That is different from every other use case here. Because the manufacturer would be producing the document for itself, this use case probably needs no disclosure profile at all. |
 

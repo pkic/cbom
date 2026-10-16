@@ -24,12 +24,9 @@ Three different things can be assessed, and each is assessed against its own cri
 
 | Target | Assessed against | Assessed by | Result |
 | --- | --- | --- | --- |
-| **A CBOM document**
-a specific revision of a specific document | A specific version of a specific profile | A validator, mechanically | Conforms · Does not conform · Refused |
-| **A profile**
-the rules document itself | This methodology | Review, with mechanical checks on the rules file | Well-formed · Not well-formed |
-| **An evaluation tool**
-a validator implementation | This methodology's evaluation semantics | A conformance test suite | Conforms · Does not conform |
+| **A CBOM document** a specific revision of a specific document | A specific version of a specific profile | A validator, mechanically | Conforms · Does not conform · Refused |
+| **A profile** the rules document itself | This methodology | Review, with mechanical checks on the rules file | Well-formed · Not well-formed |
+| **An evaluation tool** a validator implementation | This methodology's evaluation semantics | A conformance test suite | Conforms · Does not conform |
 
 The three assessments depend on each other, and the dependency runs in one direction only. A verdict is the result of assessing a document against a profile. A verdict is meaningful only if the tool that produced it conforms to this methodology, and only if the profile used is well-formed. A document assessed by a non-conforming tool therefore has no established verdict. A verdict against a profile that is not well-formed establishes nothing either, because the rules used to measure the document were not valid rules.
 

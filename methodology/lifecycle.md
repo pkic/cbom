@@ -99,24 +99,10 @@ The table sets out who produces a CBOM at each stage, who typically consumes it,
 
 | Stage | Produced by | Consumed by | Use cases it supports |
 | --- | --- | --- | --- |
-| `intended`
-design | Architects and security architects, from design documents and threat models. | Architecture review boards; procurement teams writing requirements; the working group or sector body defining a profile. | [Crypto-agility assessment](../../use-cases/change-planning/#crypto-agility-assessment)
-[Procurement](../../use-cases/disclosure/#procurement-and-tender-conformance), for stating the requirement rather than checking it |
-| `implemented`
-build | Development and build teams, from source and dependency analysis in the pipeline. | The vendor's own product security function; downstream integrators; operator procurement; security operations holding a component inventory. | [Procurement and tender conformance](../../use-cases/disclosure/#procurement-and-tender-conformance)
-[CI quality gate](../../use-cases/#what-is-not-a-use-case)
-[Vulnerability management](../../use-cases/disclosure/#vulnerability-management-and-incident-response)
-[Supply-chain transparency](../../use-cases/disclosure/#supply-chain-transparency)
-[Crypto-agility assessment](../../use-cases/change-planning/#crypto-agility-assessment) |
-| `configured`
-deploy | Integrators, platform and infrastructure teams, from deployment configuration and policy bundles. | Deployment gates; internal risk and assurance; migration programme leads. | [PQC migration readiness](../../use-cases/change-planning/#pqc-migration)
-[CI quality gate](../../use-cases/#what-is-not-a-use-case), at the admission step
-[Compliance reporting](../../use-cases/assurance/#regulatory-and-compliance-reporting) |
-| `observed`
-runtime | Operations and monitoring teams, from scanning and telemetry against the running service. | Assurance and audit; incident responders; regulators receiving a reported position; customers asking what a service actually uses. | [PQC migration readiness](../../use-cases/change-planning/#pqc-migration), for actual rather than declared state
-[Incident response](../../use-cases/disclosure/#vulnerability-management-and-incident-response)
-[Compliance reporting](../../use-cases/assurance/#regulatory-and-compliance-reporting)
-[Due diligence](../../use-cases/disclosure/#mergers-and-third-party-risk-due-diligence) |
+| `intended` design | Architects and security architects, from design documents and threat models. | Architecture review boards; procurement teams writing requirements; the working group or sector body defining a profile. | [Crypto-agility assessment](../../use-cases/change-planning/#crypto-agility-assessment) [Procurement](../../use-cases/disclosure/#procurement-and-tender-conformance), for stating the requirement rather than checking it |
+| `implemented` build | Development and build teams, from source and dependency analysis in the pipeline. | The vendor's own product security function; downstream integrators; operator procurement; security operations holding a component inventory. | [Procurement and tender conformance](../../use-cases/disclosure/#procurement-and-tender-conformance) [CI quality gate](../../use-cases/#what-is-not-a-use-case) [Vulnerability management](../../use-cases/disclosure/#vulnerability-management-and-incident-response) [Supply-chain transparency](../../use-cases/disclosure/#supply-chain-transparency) [Crypto-agility assessment](../../use-cases/change-planning/#crypto-agility-assessment) |
+| `configured` deploy | Integrators, platform and infrastructure teams, from deployment configuration and policy bundles. | Deployment gates; internal risk and assurance; migration programme leads. | [PQC migration readiness](../../use-cases/change-planning/#pqc-migration) [CI quality gate](../../use-cases/#what-is-not-a-use-case), at the admission step [Compliance reporting](../../use-cases/assurance/#regulatory-and-compliance-reporting) |
+| `observed` runtime | Operations and monitoring teams, from scanning and telemetry against the running service. | Assurance and audit; incident responders; regulators receiving a reported position; customers asking what a service actually uses. | [PQC migration readiness](../../use-cases/change-planning/#pqc-migration), for actual rather than declared state [Incident response](../../use-cases/disclosure/#vulnerability-management-and-incident-response) [Compliance reporting](../../use-cases/assurance/#regulatory-and-compliance-reporting) [Due diligence](../../use-cases/disclosure/#mergers-and-third-party-risk-due-diligence) |
 
 ### Consumers who never produce
 

@@ -135,39 +135,29 @@ The first three can be acted on. The fourth can only be guessed at. A buyer who 
 
 Everything above can be understood without the rest of the documentation. The other sections expand on it.
 
-[
+### [Demo](../demo/)
 
-interactive
+*interactive*
 
-### Demo
+Review the example documents and open the interactive source demo to see each rule resolve, including the four disclosure outcomes.
 
-Run three documents against the profile and watch each rule resolve, including the four disclosure outcomes.
+### [Overview](../)
 
-](../demo/)[
+*map*
 
-map
+What each section covers, and three suggested routes through the material depending on why you are here.
 
-### Overview
+### [Challenges](../challenges/)
 
-What each section covers, and two suggested routes through the material depending on why you are here.
-
-](../)[
-
-background
-
-### Challenges
+*background*
 
 Why CBOMs behave the way Document A did, and what SBOM adoption already established about it.
 
-](../challenges/)[
+### [Method](../method/)
 
-procedure
-
-### Method
+*procedure*
 
 The twelve steps for defining a profile, if you are here to write one rather than to read one.
-
-](../method/)
 
 [Terms](../terms/) is a glossary and sits in the Reference group. Use it to look up an unfamiliar word. It is not intended to be read first.
 

@@ -12,8 +12,6 @@ linkTitle: Methodology
 
 A Cryptography Bill of Materials (CBOM) profile defines the subset of attributes that a CBOM is required to contain for a stated objective. It establishes a minimum reporting requirement rather than exhaustive coverage. This documentation describes the profile methodology using a worked example: an nginx web server whose CBOM is expressed in CycloneDX 1.7 and evaluated against a small, product-independent profile.
 
-PKIC CBOM Profiles WG illustrative CycloneDX 1.7 / ECMA-424 not normative
-
 **Meeting this for the first time?** Read the [Introduction](introduction/) first. It follows one product, its CBOM and one question a buyer asks about it, from start to finish. It takes about five minutes to read. This overview is easier to use once you have read it.
 
 ## Scope of this documentation
@@ -26,10 +24,12 @@ The sidebar lists the sections in the order a newcomer should read them. Concret
 
 Each section can be read on its own. You can read the sections in sidebar order, or follow one of the three routes below. Each route suits a particular role, and each assumes you have read the [Introduction](introduction/).
 
-| If you are | Read in this order | Why this route |
-| --- | --- | --- |
-| **Producing CBOMs**
-a vendor, or a build or release team | [Model](model/) → [Profile](profile/) → [Maturity](maturity/) → [Confidentiality](confidentiality/) → [Formats](formats/) → [Versioning](versioning/) |
+### Producing CBOMs
+
+For a vendor, or a build or release team.
+
+**Read in this order:** [Model](model/) → [Profile](profile/) → [Maturity](maturity/) → [Confidentiality](confidentiality/) → [Formats](formats/) → [Versioning](versioning/)
+
 -   **Model:** the terms used throughout.
 -   **Profile:** what a profile requires you to declare.
 -   **Maturity:** which profile in a family to aim for first, and how to move on to a more detailed one.
@@ -37,9 +37,11 @@ a vendor, or a build or release team | [Model](model/) → [Profile](profile/) �
 -   **Formats:** where each attribute is written in a CycloneDX or SPDX document.
 -   **Versioning:** what happens to CBOMs you have already published when a format or profile version changes.
 
- |
-| **Requiring and reading CBOMs**
-an operator or buyer assessing a supplier, an auditor or regulator | [Use Cases](use-cases/) → [Challenges](challenges/) → [Profile](profile/) → [Conformance](conformance/) → [Maturity](maturity/) → [Confidentiality](confidentiality/) → [Vulnerabilities](vulnerabilities/) → [Governance](governance/) |
+### Requiring and reading CBOMs
+
+For an operator or buyer assessing a supplier, an auditor or regulator.
+
+**Read in this order:** [Use Cases](use-cases/) → [Challenges](challenges/) → [Profile](profile/) → [Conformance](conformance/) → [Maturity](maturity/) → [Confidentiality](confidentiality/) → [Vulnerabilities](vulnerabilities/) → [Governance](governance/)
 
 -   **Use Cases:** what a profile can be written to require.
 -   **Challenges:** why the CBOM data supplied today is hard to use.
@@ -49,9 +51,11 @@ an operator or buyer assessing a supplier, an auditor or regulator | [Use Cases]
 -   **Vulnerabilities:** how to use a CBOM when a security advisory is published, and why a passing result says nothing about whether the cryptography is safe.
 -   **Governance:** the signing, provenance and retention that a conformance claim relies on.
 
- |
-| **Writing or approving a profile**
-working group members, sector bodies | [Model](model/) → [Method](method/) → [Profile](profile/) → [PQC Migration](../use-cases/pqc-migration/) → [Governance](governance/) |
+### Writing or approving a profile
+
+For working group members, sector bodies.
+
+**Read in this order:** [Model](model/) → [Method](method/) → [Profile](profile/) → [PQC Migration](../use-cases/pqc-migration/) → [Governance](governance/)
 
 -   **Model:** the terms used throughout.
 -   **Method:** the procedure for writing a profile.
@@ -59,197 +63,147 @@ working group members, sector bodies | [Model](model/) → [Method](method/) →
 -   **PQC Migration:** one profile taken through the procedure from start to finish.
 -   **Governance:** what happens after a profile is published.
 
- |
-
 Two sections are not part of any route. Read them when the topic comes up. [Data Exposure](data-exposure/) is a design note on the harvest-now-decrypt-later threat and the data attributes needed to measure it. [Related Work](related-work/) explains how CBOM profiles relate to other PKI Consortium work.
 
 ## Contents
 
-[
+### [Introduction](introduction/)
 
-start here
-
-### Introduction
+*start here*
 
 A worked example. A buyer asks a question about one product, and the product's CBOM cannot answer it. The example shows why, and how a profile makes the answer possible.
 
-](introduction/)[
+### [Demo](demo/)
 
-interactive
+*interactive*
 
-### Demo
+Review four example CBOMs and open the interactive source demo to evaluate them against the example profile. They show a conforming document, a document with a missing interface, the four disclosure outcomes (value, withheld, unknown and undeclared), and a product with no management interface.
 
-Evaluate four example CBOMs against the example profile in your browser. They show a conforming document, a document with a missing interface, the four disclosure outcomes (value, withheld, unknown and undeclared), and a product with no management interface.
+### [Use Cases](use-cases/)
 
-](demo/)[
-
-applied
-
-### Use Cases
+*applied*
 
 Why every profile starts from a use case: a named consumer and the decision that consumer has to make.
 
-](use-cases/)[
+### [Challenges](challenges/)
 
-background
-
-### Challenges
+*background*
 
 What SBOM adoption has taught, the further difficulties that are specific to cryptography, and the limits of current CBOM standards. These problems are the reason for a profile-based approach.
 
-](challenges/)[
+### [Inventory](inventory/)
 
-background
-
-### Inventory
+*background*
 
 How a CBOM differs from a cryptographic inventory. CBOMs feed an inventory. An organization can also extract a CBOM from its inventory for a particular consumer: an internal team, a client or auditor, or a customer in its supply chain.
 
-](inventory/)[
+### [Lifecycle Data](lifecycle/)
 
-background
-
-### Lifecycle Data
+*background*
 
 Cryptographic facts are captured at four stages: design, build, deployment and operation. What each stage can show, who captures it, and why the stage is recorded with each fact.
 
-](lifecycle/)[
+### [Model](model/)
 
-concept
-
-### Model
+*concept*
 
 The three terms the methodology is built on: a cryptographic relationship (where cryptography is applied between two parties), the endpoints at each end, and the cryptographic assets it uses. Illustrated with worked examples.
 
-](model/)[
+### [Objects](objects/)
 
-concept
-
-### Objects
+*concept*
 
 A reference list of every object the methodology defines. For each one: which party or tool creates it and how it is identified. Also lists what the methodology deliberately leaves out.
 
-](objects/)[
+### [Profile](profile/)
 
-core
-
-### Profile
+*core*
 
 The rules of the example profile, for the product as a whole and for each interface. The same rules serve two purposes: a specification for the party that produces a CBOM, and a checklist for the party that checks it.
 
-](profile/)[
+### [Conformance](conformance/)
 
-core
-
-### Conformance
+*core*
 
 What can be assessed, what a pass or fail result means, who may claim conformance, how a claim is recorded, and what a passing result does not tell you.
 
-](conformance/)[
+### [Maturity](maturity/)
 
-concept
-
-### Maturity
+*concept*
 
 How to publish a family of profiles that ask for progressively more detail. A supplier can start with a profile it can meet now and move to more demanding ones later. A buyer can see which profile a supplier has met.
 
-](maturity/)[
+### [Confidentiality](confidentiality/)
 
-concept
-
-### Confidentiality
+*concept*
 
 Most suppliers will publish one version of a CBOM and release a more complete version only under agreement. How a profile marks the attributes a supplier may withhold, and what a consumer can tell from the version it holds.
 
-](confidentiality/)[
+### [Policy Evaluation](policy-evaluation/)
 
-core
-
-### Policy Evaluation
+*core*
 
 Why a judgement such as "this interface is post-quantum safe" is not stored in a CBOM. The criteria change over time, so the judgement is made by an external, versioned policy applied to the facts in the CBOM.
 
-](policy-evaluation/)[
+### [Vulnerabilities](vulnerabilities/)
 
-concept
-
-### Vulnerabilities
+*concept*
 
 How information about cryptographic weaknesses is linked to a CBOM. The three documents involved (the CBOM, the advisory and the VEX statement) and who writes each. The difference between an implementation bug and a weak choice of algorithm. What a conforming CBOM does not tell you.
 
-](vulnerabilities/)[
+### [Method](method/)
 
-core
-
-### Method
+*core*
 
 The procedure for writing a profile: twelve steps in five stages (scope, content, rules, realisation and proof). Each stage has tests to apply, and the common mistakes are listed.
 
-](method/)[
+### [Worked use cases](../use-cases/)
 
-another section
-
-### Worked use cases
+*another section*
 
 Use cases taken through to a finished profile, in a separate section. PQC migration is complete. IoT device estates, substation automation and procurement are drafts.
 
-](../use-cases/)[
+### [Formats](formats/)
 
-mapping
-
-### Formats
+*mapping*
 
 Where each attribute of one profile is written in CycloneDX and in SPDX. Neither format has an object that represents an interface, so both attach interface attributes to the protocol asset, and some facts about a connection cannot be recorded.
 
-](formats/)[
+### [Data Exposure](data-exposure/)
 
-design note
-
-### Data Exposure
+*design note*
 
 Traffic recorded today can be decrypted once a quantum computer exists. The algorithms in a CBOM do not show this exposure on their own: it also depends on how long the data must stay confidential and whether the traffic can be captured. A design note on the data attributes needed to measure it.
 
-](data-exposure/)[
+### [Versioning](versioning/)
 
-operations
-
-### Versioning
+*operations*
 
 Three things carry their own version: the document format (for example CycloneDX 1.7), the profile, and the CBOM's content. How a profile declares the format versions it accepts, so that a tool can check this automatically.
 
-](versioning/)[
+### [Governance](governance/)
 
-operations
-
-### Governance
+*operations*
 
 How CBOMs and profiles are managed over their lifetime: signing and provenance, how a CBOM relates to an SBOM, change control, retention, and who maintains a profile after publication.
 
-](governance/)[
+### [Terms](terms/)
 
-reference
-
-### Terms
+*reference*
 
 Definitions of the terms used across the methodology, every attribute and its permitted values, and the terms the methodology considered and chose not to use, with the reason for each.
 
-](terms/)[
+### [Related Work](related-work/)
 
-reference
-
-### Related Work
+*reference*
 
 How CBOM profiles relate to the PQC Maturity Model and other PKI Consortium work, and where one depends on another.
 
-](related-work/)[
+### [Files](files/)
 
-reference
-
-### Files
+*reference*
 
 The profile rules file, the example CBOMs and the validator, with the commands to reproduce every result in this documentation.
-
-](files/)
 
 **Note for standards authors.** The numbered draft of the methodology orders its clauses differently from the sidebar. In the draft, Scope, Terms and Conformance come early, because a normative document must define its terms before it uses them. The working group maintains both orders.
 

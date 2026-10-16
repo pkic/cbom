@@ -99,8 +99,8 @@ CycloneDX 1.7 introduces the Cryptography Registry, which assigns stable identif
 | As written by the producer | Origin | Refers to |
 | --- | --- | --- |
 | `P-256` | NIST | The same curve. The three strings have no form in common, so a text comparison treats them as unrelated. |
-| `secp256r1` | SECG |
-| `prime256v1` | ANSI, used by OpenSSL |
+| `secp256r1` | SECG | The same curve. The three strings have no form in common, so a text comparison treats them as unrelated. |
+| `prime256v1` | ANSI, used by OpenSSL | The same curve. The three strings have no form in common, so a text comparison treats them as unrelated. |
 
 Compared as text, these are three distinct values. Compared as registry identifiers, they are one value. Symmetric algorithms raise a related difficulty: `AES256`, `AES-256-GCM`, and `AES_256_GCM` may or may not denote the same thing, because the first omits the mode that the others state. The registry also separates the algorithm from its parameters, so a query for deprecated key sizes does not depend on parsing a name.
 

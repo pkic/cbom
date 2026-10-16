@@ -1,5 +1,5 @@
 ---
-title: CBOM Profiles working material
+title: CBOM Profiles
 sideMenu: true
 weight: 0
 summary: Illustrative working draft methodology, worked use cases, references, tools,
@@ -31,61 +31,57 @@ The draft, explained against a subject anyone can check.
 
 The [methodology documentation](methodology/) sets out the approach in full and applies it to an ordinary example: an **nginx** web server, its CBOM expressed in CycloneDX 1.7, checked against a small product-independent profile. One CBOM conforms and one does not, and you can run the check yourself.
 
-It covers the vocabulary the methodology rests on, how a profile is written and validated, how the same profile maps onto CycloneDX and SPDX, how cryptographic weakness is communicated alongside a CBOM rather than inside one, what happens to older CBOM files, and how profiles are governed over time. Start with [the introduction](methodology/introduction/), the [model](methodology/model/), the [profile itself](methodology/profile/), or the [interactive conformance check](methodology/demo/).
+It covers the vocabulary the methodology rests on, how a profile is written and validated, how the same profile maps onto CycloneDX and SPDX, how cryptographic weakness is communicated alongside a CBOM rather than inside one, what happens to older CBOM files, and how profiles are governed over time. Start with [the introduction](methodology/introduction/), the [model](methodology/model/), the [profile itself](methodology/profile/), or the [conformance example](methodology/demo/).
 
 ## Explore the project
 
-Seven places to dig in.
+### [Methodology](methodology/)
 
-[Working draft
-
-### Methodology
+*Working draft*
 
 The deliverable itself — profiles, the relationship model, format mappings and governance — with a worked nginx example and a conformance check you can run.
 
-Read the methodology →](methodology/) [1 developed · 3 drafted
+### [Use cases](use-cases/)
 
-### Use cases
+*1 developed · 3 drafted*
 
 Every purpose a profile has been proposed for, in four groups: disclosure, change planning, operation and assurance. PQC migration on Keycloak is developed in full; procurement, IoT device estates and substation automation are drafted; the rest are described or held as placeholders.
 
-See the use cases →](use-cases/) [13 aspects
+### [Issues](issues/)
 
-### Issues
+*13 aspects*
 
 The thirteen methodology aspects, each tracked as a discussion block. This is where the work happens — read a topic, weigh in, or raise one.
 
-Open the aspects →](issues/) [73 sources
+### [References](references/)
 
-### References
+*73 sources*
 
-The evidence base — standards, regulation and guidance the methodology aligns to, filterable by category, status and jurisdiction.
+The evidence base — standards, regulation and guidance the methodology aligns to. The source register provides category, status, and jurisdiction filters.
 
-Browse the register →](references/) [39 tools
+### [Tooling](tooling/)
 
-### Tooling
+*39 tools*
 
 Software that generates, consumes, validates or analyses CBOMs, each linked to where its maintainer states CBOM support. A listing, not an endorsement.
 
-Browse the tools →](tooling/) [Agendas and recordings
+### [Meetings](meetings/)
 
-### Meetings
+*Agendas and recordings*
 
 When the group meets and what it plans to settle. Upcoming meetings carry an agenda; past ones carry the recording and the slides presented, ready to download.
 
-See the schedule →](meetings/) [No install required
+### [Contributing](contributing/)
 
-### Contributing
+*No install required*
 
 How to take part — join a discussion, raise an aspect topic, or suggest a reference by email. No command line, no YAML.
 
-Read the guide →](contributing/) [PKI Consortium
+### [Working group](/wg/cbom/)
 
-### Working group
+*PKI Consortium*
 
 The charter, membership and standing of the CBOM Profiles Working Group within the PKI Consortium.
-
-Visit the working group ↗](/wg/cbom/)
 
 ## Why a profile is needed
 

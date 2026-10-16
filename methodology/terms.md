@@ -22,10 +22,8 @@ The last table lists terms that were considered and not used, with the reason fo
 
 | Term | Definition | Developed in |
 | --- | --- | --- |
-| **Cryptographic relationship**
-also: edge | The place where cryptography is applied between parties. A relationship is not itself a cryptographic asset. The term was introduced by this methodology. | [Model](../model/) |
-| **Endpoint**
-also: node | A party to a cryptographic relationship. An endpoint need not be a running host, and the parties to a relationship need not exist at the same time. | [Model](../model/) |
+| **Cryptographic relationship** also: edge | The place where cryptography is applied between parties. A relationship is not itself a cryptographic asset. The term was introduced by this methodology. | [Model](../model/) |
+| **Endpoint** also: node | A party to a cryptographic relationship. An endpoint need not be a running host, and the parties to a relationship need not exist at the same time. | [Model](../model/) |
 | **Cryptographic asset** | An algorithm, protocol, certificate, or key used by a relationship. Corresponds to the CycloneDX component type of the same name. | [Model](../model/) |
 | **Interface** | A cryptographic relationship that is a communication interface between two parties. Interfaces are a subset of relationships. The term is kept because the profile's rules are written about interfaces. | [Model](../model/) |
 | **Node fact / edge fact** | A node fact is a property of a thing, such as a product (an endpoint, or node). An edge fact is a property of one use of that thing in a cryptographic relationship (an edge). "The product supports AES-256-GCM" is a node fact. "This connection negotiated AES-256-GCM" is an edge fact. | [Model](../model/) |
@@ -45,11 +43,9 @@ also: node | A party to a cryptographic relationship. An endpoint need not be a 
 | **Subject type** | What a profile describes: a `product`, a `service`, a `component`, or an `estate-subset`. It determines what a producer can reasonably be asked for. For example, a consumer that operates a service can be asked for more than a consumer that holds a product it cannot inspect. | [Method](../method/) |
 | **Accepted lifecycle stages** | The subset of lifecycle stages a profile will evaluate. An interface that reports a stage outside the set fails the rule that constrains the stage. This mirrors the way a document is refused when its carrier format version (the version of the format it is written in) is outside `appliesTo`. A derived profile may narrow the set and may not widen it. | [Conformance](../conformance/) |
 | **Decision options** | The actions a profile's consumer chooses between, stated explicitly. Listing the options is what makes the action-choice test checkable. A decision that can be answered in only one way is not a real decision. A profile written for such a decision has no principled point at which to stop adding rules. | [Method](../method/) |
-| **Product-level rule**
-also: structural rule | A rule constraining the set of interfaces a product declares, such as a required count or a required kind. A product-level rule can detect an omitted interface, which per-attribute rules cannot do. | [Profile](../profile/) |
+| **Product-level rule** also: structural rule | A rule constraining the set of interfaces a product declares, such as a required count or a required kind. A product-level rule can detect an omitted interface, which per-attribute rules cannot do. | [Profile](../profile/) |
 | **Per-interface rule** | A rule applied uniformly to every declared interface. | [Profile](../profile/) |
-| **Conformance level**
-also: obligation level | MUST, SHOULD or MAY, following BCP 14 (RFC 2119 and RFC 8174). Only MUST rules determine the verdict, which is the result of an evaluation. | [Conformance](../conformance/) |
+| **Conformance level** also: obligation level | MUST, SHOULD or MAY, following BCP 14 (RFC 2119 and RFC 8174). Only MUST rules determine the verdict, which is the result of an evaluation. | [Conformance](../conformance/) |
 | **Withholdable** | A property of a rule. If a rule is withholdable, the producer can satisfy it with a `withheld` marker, which states that the producer holds the value and declines to publish it. If the rule is not withholdable, a `withheld` marker fails the rule. | [Profile](../profile/) |
 | **Audience** | Who may hold a document, which in turn determines what the document may contain. A profile expresses audience in only one way: through its choice of which rules are `withholdable`. Suppose a profile permits no withholding on the contested rules. Only a restricted variant of a document (one released to a limited audience) can then conform to it. Such a profile is therefore a derived profile of the public one. A rules file cannot yet declare an audience. This is open question Q54. | [Confidentiality](../confidentiality/) |
 | **Verdict** | The result of evaluating one document revision against one profile version: *conforms*, *does not conform*, or *refused*. | [Conformance](../conformance/) |
@@ -118,12 +114,10 @@ Attributes shared across profiles, followed by those introduced by the PQC migra
 | Attribute | Permitted values |
 | --- | --- |
 | `interfaceType` | `management` · `service` · `interconnect` · `peer` · `storage` |
-| `lifecycleStage` | `intended` · `implemented` · `configured` · `observed`
-a profile accepts a subset of these; see profile scope |
+| `lifecycleStage` | `intended` · `implemented` · `configured` · `observed` a profile accepts a subset of these; see profile scope |
 | `subjectType` | `product` · `service` · `component` · `estate-subset` |
 | `orientation` | `inventory` · `migration` · `both` |
-| `cryptographicPurpose` | `key-establishment` · `encryption` · `entity-authentication` · `data-integrity` · `non-repudiation` · `key-protection` · `key-derivation`
-a sector profile might add values to this list; whether it is allowed to do so mirrors question Q35 and is unresolved |
+| `cryptographicPurpose` | `key-establishment` · `encryption` · `entity-authentication` · `data-integrity` · `non-repudiation` · `key-protection` · `key-derivation` a sector profile might add values to this list; whether it is allowed to do so mirrors question Q35 and is unresolved |
 | `coverage` | `all-external` · `all` · `partial` |
 | `capabilityStatus` | `available` · `committed` · `planned` · `under-evaluation` · `not-planned` |
 | `blockedBy` | `provider` · `product` · `hardware` · `standard` · `certification` |
@@ -154,8 +148,7 @@ a sector profile might add values to this list; whether it is allowed to do so m
 | **Carrier format** | The format in which a CBOM is serialized, such as CycloneDX or SPDX. Distinct from the profile expressed in it. | [Versioning](../versioning/) |
 | **Mapping** | The statement of where each profile attribute lives in a given format, including a canonical location where the format permits several. | [Formats](../formats/) |
 | **Format adapter** | The format-specific part of a validator, which extracts abstract attributes from a concrete document. It is the only part of a validator that changes from one format to another. | [Formats](../formats/) |
-| **Acceptance range**
-also: appliesTo | The carrier format versions a profile accepts, expressed as a minimum version and a tested version. | [Versioning](../versioning/) |
+| **Acceptance range** also: appliesTo | The carrier format versions a profile accepts, expressed as a minimum version and a tested version. | [Versioning](../versioning/) |
 | **Version bands** | The four bands into which a carrier format version can fall, measured against the acceptance range: unsupported below the minimum, legacy between the minimum and the tested version, target at the tested version, and newer above it. | [Versioning](../versioning/) |
 | **Encoding normalization** | Agreement on where a value is written, where a format permits more than one valid location. | [Formats](../formats/) |
 | **Naming normalization** | Agreement on how a value is expressed, so that equivalent values match. Addressed by the CycloneDX Cryptography Registry for algorithms. | [Formats](../formats/) |
@@ -166,10 +159,8 @@ also: appliesTo | The carrier format versions a profile accepts, expressed as a 
 | Term | Definition | Developed in |
 | --- | --- | --- |
 | **Cryptographic inventory** | An organization-wide, continuously maintained record of cryptography in use, aggregated from CBOMs and other sources. | [Inventory](../inventory/) |
-| **Extracted CBOM**
-also: output CBOM | A scoped snapshot drawn from an inventory for a specific consumer, filtered and redacted as required. | [Inventory](../inventory/) |
-| **Disclosure variant**
-public variant / restricted variant | One of two or more documents describing the same subject at the same content revision, differing only in which values have been replaced by a `withheld` marker. Each variant is prepared for the audience that may hold it. A variant is not a version. [Versioning](../versioning/) tracks three axes: carrier format, profile and content revision. Audience is not one of them. | [Confidentiality](../confidentiality/) |
+| **Extracted CBOM** also: output CBOM | A scoped snapshot drawn from an inventory for a specific consumer, filtered and redacted as required. | [Inventory](../inventory/) |
+| **Disclosure variant** public variant / restricted variant | One of two or more documents describing the same subject at the same content revision, differing only in which values have been replaced by a `withheld` marker. Each variant is prepared for the audience that may hold it. A variant is not a version. [Versioning](../versioning/) tracks three axes: carrier format, profile and content revision. Audience is not one of them. | [Confidentiality](../confidentiality/) |
 | **Redaction** | Replacing a value with a `withheld` marker on release. Redaction by *deletion* is a different act, and a worse one. A deleted value reads as `undeclared` and fails the rule. The reader then cannot tell a deliberate policy decision from a gap in the producer's tooling. | [Confidentiality](../confidentiality/) |
 | **Central / distributed / federated inventory** | Arrangements for where inventory data is held. In a federated arrangement, a profile defines the subset of data that is published upward. This makes inventories that are held separately comparable with one another. | [Inventory](../inventory/) |
 | **Supersedence** | The replacement of a CBOM revision by a newer one for the same subject, with the earlier revision retained for audit. | [Governance](../governance/) |
@@ -179,8 +170,7 @@ public variant / restricted variant | One of two or more documents describing th
 | Term | Definition | Developed in |
 | --- | --- | --- |
 | **Fact** | Something a producer observes or declares, recorded in the CBOM. | [Policy Evaluation](../policy-evaluation/) |
-| **Evaluation**
-also: derived judgement | A conclusion drawn from facts against criteria that change over time. An external policy produces it at the time the question is asked, and it is dated. It is never stored as a CBOM attribute. | [Policy Evaluation](../policy-evaluation/) |
+| **Evaluation** also: derived judgement | A conclusion drawn from facts against criteria that change over time. An external policy produces it at the time the question is asked, and it is dated. It is never stored as a CBOM attribute. | [Policy Evaluation](../policy-evaluation/) |
 | **Post-quantum posture** | An evaluation, not an attribute. Whether an interface's algorithms are considered quantum-safe, assessed against current guidance. | [Policy Evaluation](../policy-evaluation/) |
 | **Cryptographic maturity** | An evaluation, not an attribute, for the same reason as post-quantum posture. The [PQC Maturity Model](../related-work/) is an instance of this kind of external policy. | [Policy Evaluation](../policy-evaluation/) |
 | **Advisory** | A third party's statement that a named component, in a stated version range, carries a named weakness. An advisory is written by a maintainer, a numbering authority or a research team. It is not written by the subject's producer, and it is not part of a CBOM. | [Vulnerabilities](../vulnerabilities/) |
@@ -188,8 +178,7 @@ also: derived judgement | A conclusion drawn from facts against criteria that ch
 | **Implementation defect** | A weakness in code that performs cryptography. It has a version range, a patch and an identifier in a vulnerability feed. It is found by matching the implementing library (`I9`) against that feed. The CBOM contributes by showing which interfaces use that library. | [Vulnerabilities](../vulnerabilities/) |
 | **Algorithm or parameter weakness** | A weakness in a choice rather than in code: a deprecated algorithm, an inadequate key length, or a classical key exchange used against a quantum adversary. Such a weakness usually has no identifier and never has a patch. The remedy is to use a different algorithm or parameter. It is found by a [policy evaluation](../policy-evaluation/) of the disclosed facts, and the CBOM is the only evidence for that evaluation. | [Vulnerabilities](../vulnerabilities/) |
 | **Harvest now, decrypt later** | Capturing encrypted traffic or stored ciphertext now, to decrypt once a cryptographically relevant quantum computer exists. The exposure depends on how long the data must stay confidential, so it cannot be seen by examining the cryptography alone. | [Data Exposure](../data-exposure/) |
-| **Confidentiality lifetime**
-proposed | How long data carried over an interface must remain confidential after transmission. It is recorded in bands (fixed ranges of time) so that it is comparable between organizations. It is an attribute of a deployment, not of a product. It describes the traffic and not the document. The confidentiality of the CBOM itself is a separate subject, covered in [Confidentiality](../confidentiality/). | [Data Exposure](../data-exposure/) |
+| **Confidentiality lifetime** proposed | How long data carried over an interface must remain confidential after transmission. It is recorded in bands (fixed ranges of time) so that it is comparable between organizations. It is an attribute of a deployment, not of a product. It describes the traffic and not the document. The confidentiality of the CBOM itself is a separate subject, covered in [Confidentiality](../confidentiality/). | [Data Exposure](../data-exposure/) |
 | **Urgency ranking** | An evaluation, not an attribute. An ordering of interfaces by exposure to the harvest-now-decrypt-later threat. It is computed from disclosed facts and from an external estimate of when a cryptographically relevant quantum computer will exist. | [Data Exposure](../data-exposure/) |
 
 ## Related artifacts

@@ -94,10 +94,8 @@ The questions split into two groups. The first is about the interface: what it d
 
 | Profile | Extends | Adds |
 | --- | --- | --- |
-| **Baseline**
-`pkic.example.pqc-migration` v0.7 | Interface disclosure baseline v0.8 | Capability, enablement and blockers per interface and per purpose; module validation; key wrapping on storage. Makes one inherited rule stricter. |
-| **Extended**
-`pkic.example.pqc-migration-extended` v0.1 | The baseline above | Key management surfaces, key-store references, external dependencies, the obligation to declare storage, product certification. Tightens validated-mode availability to MUST. |
+| **Baseline** `pkic.example.pqc-migration` v0.7 | Interface disclosure baseline v0.8 | Capability, enablement and blockers per interface and per purpose; module validation; key wrapping on storage. Makes one inherited rule stricter. |
+| **Extended** `pkic.example.pqc-migration-extended` v0.1 | The baseline above | Key management surfaces, key-store references, external dependencies, the obligation to declare storage, product certification. Tightens validated-mode availability to MUST. |
 
 Both profiles serve the same consumer and the same decision. The extended profile therefore goes deeper into the same use case. It is not a branch serving a different purpose. Extension is monotonic: a CBOM conforming to the extended profile also conforms to the baseline, and to the interface profiles beneath it. Rule ids are local to the profile that declares them and are cited with that profile's tag as a prefix, so `pqc-migration#I1` and `interface-disclosure#I1` are different rules. See [Profile](../../methodology/profile/) for the scheme.
 
