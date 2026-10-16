@@ -23,6 +23,8 @@ Repository notes and internal plans are not public content. PKIC excludes common
 
 This is a proposed source reorganization. The existing Jekyll site under `docs/` is retained during review so published external links, the conformance example, and the interactive registers continue to work. It is not a second renderer embedded into PKIC. The initial native content is a one-time conversion of source revision `acee89668382c1acb3a847e2e2f0e49625f12b50`; no conversion tool or synchronization job is part of either repository.
 
+Native register and meeting changes belong in the root Markdown pages. In particular, scheduled/past meeting grouping is editorial content and does not move automatically when a build date changes. The retained Jekyll data and contribution guides describe the legacy site during review; they are not an ongoing import path for PKIC.
+
 Before accepting the cutover, review the Markdown against the existing source and approve which format becomes the editorial source of truth. Do not maintain parallel versions indefinitely. Once PKIC publication is accepted, retire the old editorial pages through a coordinated source-site redirect change. Confirm anchors and downloads before redirecting; the PKIC site cannot install redirects on `pkic.github.io`.
 
 ## Shared capabilities and remaining gaps

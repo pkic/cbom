@@ -294,4 +294,4 @@ The group's role is to orchestrate requirements at the business level and map th
  6.  Timeline, milestones and meeting cadence
 
 
-**For maintainers.** Meetings are one data file, [`docs/_data/meetings.yml`](https://github.com/pkic/cbom/blob/main/docs/_data/meetings.yml). A meeting moves from Upcoming to Previous on the first site build after its date, so publish the recording and the meeting moves itself. Polls are a second file, [`docs/_data/polls.yml`](https://github.com/pkic/cbom/blob/main/docs/_data/polls.yml). Field definitions and house rules are in [CONTRIBUTING-meetings.md](https://github.com/pkic/cbom/blob/main/CONTRIBUTING-meetings.md).
+**For maintainers.** Meeting dates, agendas, and recording availability are editorial content in `meetings.md`. Update the scheduled/past grouping and recording status in the same content change; the native renderer does not reclassify meeting dates. Future polls can use PKIC forms after their access rules and results visibility are agreed. See the [publication guide](https://github.com/pkic/cbom/blob/main/PUBLICATION.md).

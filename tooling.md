@@ -941,4 +941,4 @@ CycloneDX
 
 [Where CBOM support is stated ↗](https://tychon.io/tychoncryptographicinventory/)
 
-**Know a tool that should be here, or an entry that is out of date?** Email [cbom@lists.pkic.org](mailto:cbom@lists.pkic.org?subject=CBOM%20tool%20suggestion) with a link to where its maintainer states CBOM support — see [Contributing](../contributing/#suggest-a-tool). Maintainers add entries to [`docs/_data/tooling.yml`](https://github.com/pkic/cbom/blob/main/docs/_data/tooling.yml) following [CONTRIBUTING-tooling.md](https://github.com/pkic/cbom/blob/main/CONTRIBUTING-tooling.md).
+**Know a tool that should be here, or an entry that is out of date?** Email [cbom@lists.pkic.org](mailto:cbom@lists.pkic.org?subject=CBOM%20tool%20suggestion) with a link to where its maintainer states CBOM support — see [Contributing](../contributing/#suggest-a-tool). Maintainers update `tooling.md`, retaining the evidence link and nonendorsement statement, using the [shared publication format](https://github.com/pkic/cbom/blob/main/PUBLICATION.md).

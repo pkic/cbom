@@ -29,4 +29,4 @@ workshop cyclonedx pqca fundamentals use-cases
 
 [Download PDF ↓](../docs/assets/presentations/2025-10-28-advancing-cbom-workshop.pdf) [Open in browser](../docs/assets/presentations/2025-10-28-advancing-cbom-workshop.pdf)
 
-**For maintainers.** Presentations are one data file, [`docs/_data/presentations.yml`](https://github.com/pkic/cbom/blob/main/docs/_data/presentations.yml). A deck committed under `docs/assets/presentations/` is served from this site and its link cannot rot; one held elsewhere is linked with `url:` and marked *external*. Field definitions are in [CONTRIBUTING-meetings.md](https://github.com/pkic/cbom/blob/main/CONTRIBUTING-meetings.md).
+**For maintainers.** Update the presentation entries in `presentations.md`, retaining the date, presenters, venue, summary, and stable ID. Public decks stay under `docs/assets/presentations/` and use the shared download publisher; externally hosted decks use ordinary links. See the [publication guide](https://github.com/pkic/cbom/blob/main/PUBLICATION.md).
