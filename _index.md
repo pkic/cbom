@@ -11,11 +11,11 @@ aliases:
 > Illustrative working draft of the CBOM Profiles Working Group. This material is not an adopted deliverable.
 {.callout-info}
 
-PKI Consortium · Working Group
-
 The working home of the PKI Consortium CBOM Profiles Working Group. We are developing a single deliverable: a vendor-neutral, format-independent methodology for defining CBOM *profiles* — one that any sector can follow and that maps cleanly onto both CycloneDX and SPDX.
 
-[Read the methodology](methodology/introduction/) [See what we're working on](issues/) [Read the charter](https://pkic.org/wg/cbom/charter/)
+- [Read the methodology](methodology/introduction/)
+- [See what we're working on](issues/)
+- [Read the charter](https://pkic.org/wg/cbom/charter/)
 
 ## What we're building
 
