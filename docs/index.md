@@ -87,7 +87,7 @@ title: Overview
 <section class="wrap cards-section">
   <div class="section-head">
     <h2>Explore the project</h2>
-    <p>Seven places to dig in.</p>
+    <p>Nine places to dig in.</p>
   </div>
   <div class="card-grid">
     <a class="feature-card" href="{{ '/methodology/' | relative_url }}">
@@ -104,6 +104,14 @@ title: Overview
          planning, operation and assurance. PQC migration on Keycloak is developed in full; procurement, IoT device estates
          and substation automation are drafted; the rest are described or held as placeholders.</p>
       <span class="card-cta">See the use cases &#8594;</span>
+    </a>
+    <a class="feature-card" href="{{ '/training/' | relative_url }}">
+      <span class="card-kicker">Foundation track ready</span>
+      <h3>Training</h3>
+      <p>Short interactive modules that follow the methodology, 10 to 15 minutes each, with a
+         knowledge check at the end. Five Foundation modules are ready; the Concepts, Applying it
+         and Elective tracks follow.</p>
+      <span class="card-cta">Start the training &#8594;</span>
     </a>
     <a class="feature-card" href="{{ '/issues/' | relative_url }}">
       <span class="card-kicker">{{ naspects }} aspects</span>

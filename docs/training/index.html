@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CBOM Profiles — Training</title>
+<meta name="description" content="Short interactive training modules on cryptographic bills of materials and the PKI Consortium CBOM profiles methodology.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: course hub of module cards, then one course screen at a time inside a PKIC CBOM Profiles shell.
+   Tokens follow the methodology site's stylesheet (navy + blue on a light paper ground), with a dark set added. */
+:root{
+  --ink:#0f1b2d; --body:#29323d; --muted:#5f6b7a; --faint:#8a94a1;
+  --line:#e4e8ee; --line-strong:#c9d3e0; --line-soft:#eef1f5;
+  --bg:#f7f9fc; --panel:#ffffff; --panel2:#f2f5fa;
+  --mark-bg:#0f1b2d; --mark-fg:#ffffff;
+  --accent:#1c5fd6; --accent-h:#174fb4; --accent-ink:#16409a; --accent-soft:#eaf1fe; --on-accent:#ffffff;
+  --pass:#0f7a52; --pass-soft:#e3f4ec; --fail:#b02a2a; --fail-soft:#fbe9e9; --warn:#9a6300; --warn-soft:#fbf1dc;
+  --svc:#0369a1; --svc-soft:#e3f1fa; --mgmt:#6d28d9; --mgmt-soft:#f1eafd;
+  --font-ui:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --font-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --radius:10px; --radius-lg:16px;
+  --shadow:0 1px 2px rgba(15,27,45,.06),0 1px 3px rgba(15,27,45,.04);
+  --shadow-md:0 4px 14px rgba(15,27,45,.08);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ink:#eef3fa; --body:#cfd8e3; --muted:#9aa8ba; --faint:#6f7d90;
+  --line:#26354b; --line-strong:#3a4c66; --line-soft:#1b2a3f;
+  --bg:#0c1421; --panel:#132033; --panel2:#18273d;
+  --mark-bg:#e9eef6; --mark-fg:#0f1b2d;
+  --accent:#6f9dff; --accent-h:#8fb3ff; --accent-ink:#a9c4ff; --accent-soft:#182b4f; --on-accent:#0b1324;
+  --pass:#4cc38a; --pass-soft:#123326; --fail:#f07a7a; --fail-soft:#3a1719; --warn:#e3a94c; --warn-soft:#3a2a10;
+  --svc:#4ab3ea; --svc-soft:#0f2c40; --mgmt:#ad8cf7; --mgmt-soft:#271c45;
+  --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 4px 14px rgba(0,0,0,.35); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ink:#eef3fa; --body:#cfd8e3; --muted:#9aa8ba; --faint:#6f7d90;
+  --line:#26354b; --line-strong:#3a4c66; --line-soft:#1b2a3f;
+  --bg:#0c1421; --panel:#132033; --panel2:#18273d;
+  --mark-bg:#e9eef6; --mark-fg:#0f1b2d;
+  --accent:#6f9dff; --accent-h:#8fb3ff; --accent-ink:#a9c4ff; --accent-soft:#182b4f; --on-accent:#0b1324;
+  --pass:#4cc38a; --pass-soft:#123326; --fail:#f07a7a; --fail-soft:#3a1719; --warn:#e3a94c; --warn-soft:#3a2a10;
+  --svc:#4ab3ea; --svc-soft:#0f2c40; --mgmt:#ad8cf7; --mgmt-soft:#271c45;
+  --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 4px 14px rgba(0,0,0,.35); color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--font-ui);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+button{font-family:var(--font-ui);font-size:15px;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{color:var(--ink);text-wrap:balance}
+h1{font-family:var(--font-display);font-weight:600;font-size:clamp(30px,4.4vw,44px);line-height:1.15;margin:0;letter-spacing:-.01em}
+h2{font-family:var(--font-display);font-weight:600;font-size:clamp(23px,3vw,30px);line-height:1.2;margin:0}
+h3{font-size:17px;font-weight:600;margin:0 0 10px}
+h4{font-size:15px;font-weight:600;color:var(--ink);margin:16px 0 4px}
+p{margin:0 0 14px;max-width:70ch}
+.mono{font-family:var(--mono);font-size:.88em}
+.muted{color:var(--muted)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* header */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--panel)}
+header.site{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--panel) 90%,transparent);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line)}
+.hbar{max-width:1080px;margin:0 auto;padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{display:inline-flex;align-items:center;gap:10px;background:none;border:0;padding:0;color:var(--ink)}
+.brand-mark{font-family:var(--mono);font-weight:500;font-size:12.5px;letter-spacing:.05em;color:var(--mark-fg);background:var(--mark-bg);padding:5px 8px;border-radius:6px}
+.brand-text{font-family:var(--font-display);font-weight:600;font-size:17px}
+.hsep{color:var(--faint)}
+.hsection{font-family:var(--font-display);font-weight:600;font-size:16px;color:var(--muted)}
+.hright{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap}
+.hback{background:none;border:0;color:var(--muted);font-size:14px;padding:4px 0;text-decoration:none}
+.hlink{background:none;border:0;padding:0;cursor:pointer}
+.brand{text-decoration:none}
+.hback:hover{color:var(--accent)}
+
+.wrap{max-width:1080px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* hub */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:32px;align-items:end;padding-bottom:28px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.hero .lede{font-size:18px;color:var(--body);margin-top:12px;max-width:62ch}
+.pilot{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;font-size:14px;box-shadow:var(--shadow)}
+.pilot b{color:var(--ink)}
+.paths{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+.pathbtn{background:var(--panel);border:1px solid var(--line-strong);border-radius:999px;padding:7px 14px;font-size:14px;color:var(--body)}
+.pathbtn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.pathnote{font-size:14px;color:var(--muted);min-height:1.6em;margin-bottom:20px}
+.track{margin-top:30px}
+.track-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.track-head h2{font-size:22px}
+.track-head span{font-size:14px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;text-align:left;box-shadow:var(--shadow);transition:border-color .15s,box-shadow .15s,opacity .2s}
+button.card:hover{border-color:var(--accent);box-shadow:var(--shadow-md)}
+.card .ico{width:44px;height:44px;border-radius:10px;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center}
+.card .ico svg{width:26px;height:26px}
+.card.planned .ico{background:var(--panel2);color:var(--muted)}
+.card .code{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
+.card h3{font-size:16.5px;margin:2px 0 4px;line-height:1.35}
+.card p{font-size:14px;color:var(--muted);margin:0 0 10px}
+.card .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px}
+.card.dim{opacity:.38}
+.status{font-weight:600;font-size:13px}
+.status.go{color:var(--accent)}.status.done{color:var(--pass)}.status.plan{color:var(--faint);font-weight:500}
+
+/* course shell */
+.progress{display:flex;gap:4px;margin-bottom:18px}
+.progress span{flex:1;height:4px;border-radius:2px;background:var(--line)}
+.progress span.on{background:var(--accent)}
+.meta-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:22px}
+.meta-top b{font-family:var(--mono);font-weight:500;color:var(--ink)}
+.head{display:flex;gap:20px;align-items:center;padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.head .hico{flex:none;width:60px;height:60px;border-radius:14px;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center}
+.head .hico svg{width:34px;height:34px}
+.head .sub{color:var(--muted);font-size:16px;margin-top:4px}
+.titlebox{padding:12px 0 4px}
+.titlebox .sub{font-size:18px;color:var(--muted);margin-top:12px;max-width:64ch}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.two>*{min-width:0}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);min-width:0}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:28px 0 8px;padding:20px 0 0;border-top:1px solid var(--line)}
+.facts small{display:block;color:var(--muted);font-size:13px}
+.facts b{font-size:15px;color:var(--ink);font-weight:600}
+ul.dash{list-style:none;padding:0;margin:0}
+ul.dash li{position:relative;padding-left:22px;margin:7px 0}
+ul.dash li::before{content:"";position:absolute;left:2px;top:.72em;width:10px;height:2px;background:var(--accent)}
+.checks{list-style:none;padding:0;margin:0}
+.checks li{padding-left:30px;position:relative;margin:11px 0}
+.checks li::before{content:"";position:absolute;left:7px;top:4px;width:6px;height:12px;border:solid var(--pass);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.concept{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:18px 22px;margin-top:22px;color:var(--ink)}
+.concept small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--accent-ink);margin-bottom:6px}
+.cue{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ink);margin:6px 0 16px}
+.cue svg{width:22px;height:22px;color:var(--accent)}
+.note{font-size:14px;color:var(--muted)}
+.nav{display:flex;justify-content:space-between;margin-top:36px;padding-top:22px;border-top:1px solid var(--line);gap:12px}
+.btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:8px;padding:12px 24px;min-width:120px;font-weight:600}
+.btn:hover{background:var(--accent-h)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line-strong);font-weight:500}
+.btn.ghost:hover{border-color:var(--ink)}
+
+/* tables + chips */
+.tbl{overflow-x:auto;margin:8px 0 18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+.tbl.wide table{min-width:680px}
+th{background:var(--panel2);text-align:left;padding:11px 14px;font-weight:600;color:var(--ink);font-size:13.5px}
+td{padding:12px 14px;vertical-align:top;border-top:1px solid var(--line)}
+td:first-child{color:var(--ink)}
+.chip{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:500;margin:2px 4px 2px 0;white-space:nowrap}
+.c-pass{background:var(--pass-soft);color:var(--pass)}.c-fail{background:var(--fail-soft);color:var(--fail)}
+.c-warn{background:var(--warn-soft);color:var(--warn)}.c-info{background:var(--accent-soft);color:var(--accent-ink)}
+.c-mute{background:var(--panel2);color:var(--muted)}.c-mgmt{background:var(--mgmt-soft);color:var(--mgmt)}.c-svc{background:var(--svc-soft);color:var(--svc)}
+
+/* figures: inline SVG drawn from tokens so both themes work */
+figure{margin:20px 0;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 18px 14px;box-shadow:var(--shadow)}
+figure .scroll{overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:13.5px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft)}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--font-ui)}
+.s-panel{fill:var(--panel);stroke:var(--line-strong);stroke-width:1.2}
+.s-soft{fill:var(--panel2);stroke:var(--line-strong);stroke-width:1.2}
+.s-key{fill:var(--panel);stroke:var(--accent);stroke-width:1.8}
+.s-svcbox{fill:var(--svc-soft);stroke:var(--svc);stroke-width:1.4}
+.s-mgmtbox{fill:var(--mgmt-soft);stroke:var(--mgmt);stroke-width:1.4;stroke-dasharray:5 4}
+.s-failbox{fill:var(--fail-soft);stroke:var(--fail);stroke-width:1.2;stroke-dasharray:4 3}
+.s-passbox{fill:var(--pass-soft);stroke:var(--pass);stroke-width:1.2}
+.t-ink{fill:var(--ink)}.t-muted{fill:var(--muted)}.t-svc{fill:var(--svc)}.t-mgmt{fill:var(--mgmt)}.t-pass{fill:var(--pass)}.t-fail{fill:var(--fail)}.t-acc{fill:var(--accent-ink)}.t-warn{fill:var(--warn)}
+.t-mono{font-family:var(--mono)!important}
+.l-svc{stroke:var(--svc);stroke-width:2;fill:none}.l-mgmt{stroke:var(--mgmt);stroke-width:2;fill:none;stroke-dasharray:6 5}
+.l-pass{stroke:var(--pass);stroke-width:2;fill:none}.l-fail{stroke:var(--fail);stroke-width:2;fill:none;stroke-dasharray:6 5}
+.l-warn{stroke:var(--warn);stroke-width:2;fill:none}.l-mute{stroke:var(--line-strong);stroke-width:1.5;fill:none;stroke-dasharray:3 4}
+.l-acc{stroke:var(--accent);stroke-width:2;fill:none}
+.f-svc{fill:var(--svc)}.f-mgmt{fill:var(--mgmt)}.f-pass{fill:var(--pass)}.f-fail{fill:var(--fail)}.f-warn{fill:var(--warn)}.f-acc{fill:var(--accent)}
+
+/* document listing */
+.doc{background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;font-family:var(--mono);font-size:13px;line-height:1.65;overflow-x:auto;white-space:pre;color:var(--ink);margin:0}
+.doc .k{color:var(--muted)}.doc .s{color:var(--svc)}.doc .m{color:var(--mgmt)}.doc .x{color:var(--fail)}.doc .w{color:var(--warn)}
+.doc-title{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+
+/* do / don't */
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:8px}
+.dd>div{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;min-width:0;border-top:4px solid}
+.dont{border-top-color:var(--fail)!important}.do{border-top-color:var(--pass)!important}
+.dd h3{display:flex;align-items:center;gap:10px}
+.dont h3{color:var(--fail)}.do h3{color:var(--pass)}
+.ic{width:20px;height:20px;flex:none}
+.quote{font-family:var(--font-display);font-size:18px;color:var(--ink);margin:14px 0 4px}
+
+/* numbered steps */
+.steps{list-style:none;padding:0;margin:6px 0 20px;display:grid;gap:14px}
+.steps li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:14px}
+.steps .n{width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-weight:600;font-size:14px}
+.steps b{display:block;color:var(--ink)}
+
+/* explore (circles) */
+.explore{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:36px}
+.circles{display:grid;grid-template-columns:1fr 1fr;gap:24px 12px;align-content:start}
+.circ{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:10px;font-weight:600;font-size:14px;text-align:center;position:relative;color:var(--ink)}
+.circ .c{width:104px;height:104px;border-radius:50%;background:var(--panel);border:2px solid var(--line);display:grid;place-items:center;color:var(--accent-ink);box-shadow:var(--shadow);transition:border-color .15s}
+.circ .c svg{width:40px;height:40px}
+.circ[aria-pressed="true"] .c{border-color:var(--accent);background:var(--accent-soft)}
+.circ .done{position:absolute;top:2px;right:16px;width:22px;height:22px;border-radius:50%;background:var(--pass);display:none}
+.circ .done::after{content:"";position:absolute;left:8px;top:4px;width:5px;height:10px;border:solid var(--panel);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.circ.seen .done{display:block}
+.detail{border-left:1px solid var(--line);padding-left:36px;min-width:0}
+
+/* segmented tabs */
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:4px;margin-bottom:16px;max-width:100%}
+.seg button{background:none;border:0;border-radius:7px;padding:8px 14px;font-size:14px;color:var(--muted);text-align:left}
+.seg button[aria-selected="true"]{background:var(--panel);color:var(--ink);font-weight:600;box-shadow:var(--shadow)}
+
+/* rule explorer */
+.rules{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:28px}
+.rgroup{margin-bottom:18px}
+.rgroup .eyebrow{margin-bottom:8px}
+.rgrid{display:flex;flex-wrap:wrap;gap:8px}
+.rbtn{font-family:var(--mono);font-size:14px;font-weight:500;width:58px;height:44px;border-radius:8px;background:var(--panel);border:1px solid var(--line-strong);color:var(--ink);position:relative}
+.rbtn.p{border-left:4px solid var(--accent)}
+.rbtn.i{border-left:4px solid var(--svc)}
+.rbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rbtn.seen::after{content:"";position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--pass)}
+.rdetail{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);min-width:0}
+.rdetail .rid{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.rdetail h3{font-family:var(--font-display);font-size:21px;font-weight:600;margin:6px 0 10px}
+.rdetail dl{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 14px;margin:14px 0 0;font-size:14.5px}
+.rdetail dt{color:var(--muted)}
+.rdetail dd{margin:0;color:var(--body)}
+
+/* evaluator */
+.evalgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px;align-items:start}
+.evtable td{padding:9px 12px}
+.evtable td:last-child{text-align:right;white-space:nowrap}
+.evtable tr.pending .chip{opacity:.0}
+.evtable tr .why{display:block;font-size:12.5px;color:var(--muted)}
+.verdict{margin-top:12px;border-radius:var(--radius);padding:14px 16px;font-weight:600;display:flex;gap:10px;align-items:center;border:1px solid var(--line)}
+.verdict.ok{background:var(--pass-soft);color:var(--pass);border-color:transparent}
+.verdict.no{background:var(--fail-soft);color:var(--fail);border-color:transparent}
+.verdict.wait{background:var(--panel2);color:var(--muted);font-weight:500}
+.runrow{display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap}
+
+/* flip cards */
+.flips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.flip{background:none;border:0;padding:0;perspective:900px;min-height:230px;text-align:left}
+.flip .in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .5s;transform-style:preserve-3d}
+.flip[aria-pressed="true"] .in{transform:rotateY(180deg)}
+.flip .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel);padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow)}
+.flip .back{transform:rotateY(180deg);background:var(--panel2)}
+.flip .name{font-family:var(--mono);font-size:17px;font-weight:500;color:var(--ink)}
+.flip .tag{align-self:flex-start}
+.flip .front p,.flip .back p{font-size:14px;margin:0}
+.flip .turn{margin-top:auto;font-size:12.5px;color:var(--muted)}
+.flip .back b{color:var(--ink);font-size:13px;display:block}
+@media (prefers-reduced-motion:reduce){.flip .in{transition:none}}
+
+/* quiz */
+.q{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 22px;margin-bottom:14px}
+.q fieldset{border:0;padding:0;margin:0;min-width:0}
+.q legend{font-weight:600;color:var(--ink);padding:0;margin-bottom:6px}
+.q label{display:flex;gap:10px;align-items:flex-start;padding:7px 6px;cursor:pointer;border-radius:6px}
+.q label:hover{background:var(--panel2)}
+.q input{margin-top:5px;accent-color:var(--accent)}
+.fb{margin-top:6px;font-size:14.5px}
+.fb.ok{color:var(--pass)}.fb.no{color:var(--fail)}
+.score{font-size:19px;font-weight:600;margin-top:14px;color:var(--ink)}
+.src{font-size:13px;color:var(--muted);margin-top:26px;padding-top:14px;border-top:1px solid var(--line)}
+.disclaimer{font-size:12.5px;color:var(--faint);margin-top:18px}
+.nextup{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+
+@media (max-width:820px){
+  .hero,.two,.dd,.explore,.rules,.evalgrid{grid-template-columns:1fr}
+  .facts{grid-template-columns:1fr 1fr}
+  .flips{grid-template-columns:1fr 1fr}
+  .detail{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:22px}
+  .head{gap:14px}.head .hico{width:48px;height:48px}.head .hico svg{width:28px;height:28px}
+}
+/* tiles, record pairs, matrix, path toggles */
+.tiles3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:8px 0}
+.tile3{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;min-width:0;box-shadow:var(--shadow)}
+.tile3 h4{margin:0 0 6px;display:flex;gap:8px;align-items:center}
+.tile3 h4 svg{width:20px;height:20px;color:var(--accent);flex:none}
+.tile3 p{font-size:14px;margin:0;color:var(--body)}
+.pairs{display:grid;gap:14px}
+.pair{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.pair .recs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 12px}
+.rec{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:12.5px;line-height:1.6;overflow-x:auto;white-space:pre;color:var(--ink)}
+.rec .k{color:var(--muted)}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choices button{background:var(--panel);border:1px solid var(--line-strong);border-radius:999px;padding:6px 14px;font-size:14px}
+.choices button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pair .fb{margin-top:10px}
+.matrix{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) minmax(0,1fr);gap:8px;margin:10px 0}
+.matrix .mh{font-size:13px;font-weight:600;color:var(--muted);align-self:end;padding:4px 6px}
+.matrix .ml{font-size:13px;font-weight:600;color:var(--ink);align-self:center;padding:4px 6px}
+.mcell{background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--radius);padding:14px;text-align:left;min-height:92px;display:flex;flex-direction:column;gap:6px}
+.mcell[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.mcell b{color:var(--ink);font-size:14.5px}
+.mcell span{font-size:13px;color:var(--muted)}
+.hops{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:6px 0 10px}
+.hops .lab{font-size:13px;color:var(--muted);margin-bottom:4px}
+.hops .seg{margin:0;width:100%}
+.hops .seg button{flex:1;text-align:center}
+.pathres{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pathres>div{border-radius:var(--radius);padding:12px 14px;font-size:14.5px;border:1px solid var(--line);background:var(--panel)}
+.pathres b{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:2px}
+.pathres .good{background:var(--pass-soft);color:var(--pass);border-color:transparent}
+.pathres .bad{background:var(--fail-soft);color:var(--fail);border-color:transparent}
+.hop-pass{stroke:var(--pass);fill:none}.hop-fail{stroke:var(--fail);fill:none}
+@media (max-width:820px){.tiles3{grid-template-columns:1fr 1fr}.hops{grid-template-columns:1fr}.pathres{grid-template-columns:1fr}}
+@media (max-width:560px){.tiles3,.pair .recs{grid-template-columns:1fr}.matrix{grid-template-columns:minmax(0,90px) minmax(0,1fr) minmax(0,1fr)}}
+@media (max-width:460px){.flips{grid-template-columns:1fr}.flip,.flip .in{min-height:200px}.circ .c{width:88px;height:88px}}
+@media (prefers-reduced-motion:no-preference){.screen{animation:fade .25s ease}@keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><button class="hsection hlink" id="home">Training</button>
+    <span class="hright"><button class="hback" id="back-hub" hidden>← All modules</button><a class="hback" href="../">← Working group site</a></span>
+  </div>
+</header>
+<div class="wrap"><main id="app"></main></div>
+
+<script>
+/* ---------- icons: one line set, 48-unit grid, 2px stroke ---------- */
+const sv=(d)=>`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const I={
+  doc:sv('<path d="M12 5h17l9 9v29H12z"/><path d="M29 5v9h9"/><path d="m21 22-4 5 4 5M27 22l4 5-4 5"/>'),
+  decision:sv('<path d="M24 5v38M24 10h13l5 5-5 5H24M24 25H11l-5 5 5 5h13"/>'),
+  warn:sv('<path d="M24 6 4 41h40Z"/><path d="M24 19v10M24 35v.5"/>'),
+  inventory:sv('<ellipse cx="24" cy="11" rx="15" ry="5"/><path d="M9 11v26c0 3 7 5 15 5s15-2 15-5V11M9 24c0 3 7 5 15 5s15-2 15-5"/>'),
+  lifecycle:sv('<path d="M38 19A15 15 0 0 0 10 16M10 29a15 15 0 0 0 28 3"/><path d="M38 8v11H27M10 40V29h11"/>'),
+  relation:sv('<circle cx="10" cy="14" r="5"/><circle cx="38" cy="34" r="5"/><path d="M14 17l20 14"/><path d="M20 30h-8v-6M28 18h8v6"/>'),
+  rules:sv('<rect x="10" y="8" width="28" height="34" rx="3"/><path d="M18 5h12v6H18z"/><path d="m16 21 3 3 5-5M28 22h5M16 32l3 3 5-5M28 33h5"/>'),
+  verdict:sv('<circle cx="24" cy="20" r="13"/><path d="m18 20 4 4 8-8"/><path d="m16 30-3 12 11-4 11 4-3-12"/>'),
+  ladder:sv('<path d="M14 5v38M34 5v38M14 13h20M14 24h20M14 35h20"/>'),
+  withheld:sv('<path d="M4 24s7-12 20-12 20 12 20 12-7 12-20 12S4 24 4 24Z"/><circle cx="24" cy="24" r="6"/><path d="M8 40 40 8"/>'),
+  advisory:sv('<path d="M24 4 8 11v12c0 11 7 18 16 21 9-3 16-10 16-21V11Z"/><path d="M24 15v12M24 33v.5"/>'),
+  method:sv('<path d="M6 41h9v-9h9v-9h9v-9h9"/><circle cx="42" cy="8" r="2.5"/>'),
+  key:sv('<circle cx="15" cy="32" r="8"/><path d="M21 26 39 8m-7 7 5 5m-10 0 4 4"/>'),
+  mapping:sv('<rect x="4" y="7" width="16" height="22" rx="2"/><rect x="28" y="19" width="16" height="22" rx="2"/><path d="M20 14h10M27 11l3 3-3 3M28 35H18M21 32l-3 3 3 3"/>'),
+  signed:sv('<path d="M10 5h18l8 8v13"/><path d="M28 5v8h8M10 5v38h15"/><path d="M16 20h12M16 27h8"/><circle cx="35" cy="34" r="6"/><path d="m31 39-2 6 6-2 6 2-2-6"/>'),
+  grid:sv('<rect x="6" y="6" width="15" height="15" rx="2"/><rect x="27" y="6" width="15" height="15" rx="2"/><rect x="6" y="27" width="15" height="15" rx="2"/><rect x="27" y="27" width="15" height="15" rx="2"/>'),
+  bolt:sv('<path d="M27 4 10 27h13l-3 17 18-25H25Z"/>'),
+  hourglass:sv('<path d="M13 5h22M13 43h22M16 5c0 10 16 12 16 19S16 33 16 43M32 5c0 10-16 12-16 19s16 9 16 19"/>'),
+  list:sv('<rect x="10" y="7" width="28" height="35" rx="3"/><path d="M17 17h14M17 25h14M17 33h8"/>'),
+  hw:sv('<rect x="12" y="12" width="24" height="24" rx="3"/><rect x="19" y="19" width="10" height="10"/><path d="M18 6v6M24 6v6M30 6v6M18 36v6M24 36v6M30 36v6M6 18h6M6 24h6M6 30h6M36 18h6M36 24h6M36 30h6"/>'),
+  chain:sv('<rect x="4" y="17" width="18" height="14" rx="7"/><rect x="26" y="17" width="18" height="14" rx="7"/><path d="M15 24h18"/>'),
+  standards:sv('<path d="M6 10h12a6 6 0 0 1 6 6v26a5 5 0 0 0-5-5H6ZM42 10H30a6 6 0 0 0-6 6v26a5 5 0 0 1 5-5h13Z"/>'),
+  iface:sv('<rect x="4" y="15" width="13" height="18" rx="2"/><rect x="31" y="15" width="13" height="18" rx="2"/><path d="M17 24h14"/><circle cx="24" cy="24" r="3" fill="currentColor"/>'),
+  todo:sv('<path d="m8 13 4 4 7-7M8 29l4 4 7-7M25 14h16M25 30h16"/>'),
+  pointer:sv('<path d="M11 6l26 12-11 3-4 12Z"/><path d="m26 21 12 12"/>'),
+  x:'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="m8 8 8 8m0-8-8 8" stroke="var(--panel)" stroke-width="2"/></svg>',
+  ok:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10.5"/><path d="m7 12 3.5 3.5L17 9"/></svg>'
+};
+const head=(icon,t,s)=>`<div class="head"><div class="hico">${I[icon]}</div><div><h2>${t}</h2>${s?`<div class="sub">${s}</div>`:''}</div></div>`;
+const cue=t=>`<div class="cue">${I.pointer}<span>${t}</span></div>`;
+const dash=a=>`<ul class="dash">${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+const concept=t=>`<div class="concept"><small>KEY CONCEPT</small>${t}</div>`;
+const fig=(svg,cap)=>`<figure><div class="scroll">${svg}</div><figcaption>${cap}</figcaption></figure>`;
+const store={get(k){try{return JSON.parse(localStorage.getItem('pkic-cbom-training:'+k))}catch(e){return null}},set(k,v){try{localStorage.setItem('pkic-cbom-training:'+k,JSON.stringify(v))}catch(e){}}};
+
+/* ---------- catalogue: the planned series ---------- */
+const TRACKS=[
+ {id:'F',name:'Foundation',blurb:'Start here. What a CBOM is, why profiles exist, and why today\'s data is hard to use.'},
+ {id:'C',name:'Concepts',blurb:'The model, the profile and what a conformance verdict means.'},
+ {id:'A',name:'Applying it',blurb:'Writing a profile, a worked migration example, encoding and governance.'},
+ {id:'E',name:'Electives',blurb:'Use-case groups, sector examples and design notes.'}
+];
+const PATHS={
+ all:{label:'All modules',note:''},
+ producer:{label:'Producing CBOMs',ids:['F1','F2','C1','C2','C4','C5','A3','A4'],note:'For vendors, build and release teams.'},
+ buyer:{label:'Requiring and reading CBOMs',ids:['F1','F2','F3','E1','C2','C3','C4','C5','C6','A4'],note:'For operators, buyers, auditors and regulators.'},
+ author:{label:'Writing a profile',ids:['F1','F2','C1','A1','C2','A2','C4','A4'],note:'For working-group members and sector bodies.'}
+};
+const MODULES=[
+ {id:'F1',t:'CBOM essentials',s:'What a CBOM is and is not, the standards, how it joins to other BOMs, and why interfaces matter.',min:12,icon:'doc',ready:true},
+ {id:'F2',t:'Why a buyer names a profile',s:'One product, one CBOM, one question. Use cases, the thirteen baseline rules and the four disclosure outcomes.',min:13,icon:'decision',ready:true},
+ {id:'F3',t:'Why CBOM data is hard to use today',s:'Lessons from SBOM adoption and the challenges specific to CBOMs.',min:13,icon:'warn',ready:true},
+ {id:'F4',t:'CBOMs and the cryptographic inventory',s:'Correlating sources, extracting a CBOM for a consumer, and end-to-end posture.',min:15,icon:'inventory',ready:true},
+ {id:'F5',t:'Cryptographic data across the lifecycle',s:'Design, build, deployment and operation: who knows what, and when.',min:13,icon:'lifecycle',ready:true},
+ {id:'C1',t:'Relationships, endpoints and assets',s:'The vocabulary the methodology is written in, and why risk sits on relationships.',min:15,icon:'relation'},
+ {id:'C2',t:'Anatomy of a profile',s:'Two directions of use, three kinds of rule, disclosure states and composition.',min:15,icon:'rules'},
+ {id:'C3',t:'Conformance: what a verdict means',s:'What can be assessed, who may claim it, and what a pass does not assert.',min:12,icon:'verdict'},
+ {id:'C4',t:'Depth families: start shallow, then go deeper',s:'Entry profiles, deeper profiles and branches, and how a buyer asks for more.',min:12,icon:'ladder'},
+ {id:'C5',t:'Public and restricted CBOMs',s:'Two variants of one document, declared redaction, and what a reader can tell.',min:14,icon:'withheld'},
+ {id:'C6',t:'Facts, judgements and vulnerabilities',s:'Why verdicts live in versioned policy, and how CBOM, advisory and VEX join.',min:15,icon:'advisory'},
+ {id:'A1',t:'Writing a profile: the method',s:'Twelve steps in five stages, the tests at each step, and the ways it goes wrong.',min:15,icon:'method'},
+ {id:'A2',t:'Worked example: PQC migration profiles',s:'Keycloak under the baseline and the extended profile: capability, blockers, cost.',min:15,icon:'key'},
+ {id:'A3',t:'Encoding: CycloneDX, SPDX and versions',s:'One profile in two formats, the edge gap, and carrier version bands.',min:15,icon:'mapping'},
+ {id:'A4',t:'Governance: signing, provenance and the SBOM link',s:'Revision states, roles, signing, and the four ways to relate a CBOM to an SBOM.',min:12,icon:'signed'},
+ {id:'E1',t:'The use-case groups',s:'Disclosure, change planning, operation and assurance, with procurement as the pathfinder.',min:12,icon:'grid'},
+ {id:'E2',t:'OT and IoT worked examples',s:'Substation automation and device estates carried through to a profile.',min:15,icon:'bolt'},
+ {id:'E3',t:'Harvest-now-decrypt-later and data exposure',s:'Why the cryptography alone does not measure the threat. A design note.',min:10,icon:'hourglass'}
+];
+
+/* ---------- F2 figures ---------- */
+const FIG_TWO_IFACES=`<svg viewBox="0 0 720 230" role="img" aria-label="The nginx product has an HTTPS service interface used by web clients and an SSH management interface used by administrators. Document A describes only the HTTPS interface.">
+ <rect class="s-soft" x="16" y="34" width="150" height="54" rx="10"/><text class="t-ink" x="91" y="58" text-anchor="middle" font-weight="600" font-size="14">Web clients</text><text class="t-muted" x="91" y="76" text-anchor="middle" font-size="11.5">browsers, API callers</text>
+ <rect class="s-soft" x="16" y="146" width="150" height="54" rx="10"/><text class="t-ink" x="91" y="170" text-anchor="middle" font-weight="600" font-size="14">Administrators</text><text class="t-muted" x="91" y="188" text-anchor="middle" font-size="11.5">operators</text>
+ <path class="l-svc" d="M166 61H316"/><text class="t-svc" x="241" y="52" text-anchor="middle" font-size="12" font-weight="600">TLS 1.3</text>
+ <path class="l-mgmt" d="M166 173H316"/><text class="t-mgmt" x="241" y="164" text-anchor="middle" font-size="12" font-weight="600">SSH 2.0</text>
+ <rect class="s-key" x="300" y="12" width="190" height="206" rx="14"/><text class="t-ink" x="395" y="34" text-anchor="middle" font-weight="700" font-size="14">nginx 1.27.0</text><text class="t-muted" x="395" y="50" text-anchor="middle" font-size="11">the product</text>
+ <rect class="s-svcbox" x="316" y="62" width="158" height="44" rx="8"/><text class="t-svc" x="395" y="81" text-anchor="middle" font-weight="600" font-size="13">HTTPS</text><text class="t-svc" x="395" y="97" text-anchor="middle" font-size="11">service interface</text>
+ <rect class="s-mgmtbox" x="316" y="150" width="158" height="44" rx="8"/><text class="t-mgmt" x="395" y="169" text-anchor="middle" font-weight="600" font-size="13">SSH</text><text class="t-mgmt" x="395" y="185" text-anchor="middle" font-size="11">management interface</text>
+ <path class="l-pass" d="M474 84H548"/><path class="l-fail" d="M474 172H548"/>
+ <rect class="s-panel" x="548" y="12" width="156" height="206" rx="12"/><text class="t-ink" x="626" y="34" text-anchor="middle" font-weight="700" font-size="13.5">Document A</text><text class="t-muted" x="626" y="50" text-anchor="middle" font-size="11">the CBOM supplied</text>
+ <rect class="s-passbox" x="560" y="64" width="132" height="40" rx="7"/><text class="t-pass" x="626" y="82" text-anchor="middle" font-size="12" font-weight="600">[1] HTTPS service</text><text class="t-pass" x="626" y="97" text-anchor="middle" font-size="10.5">described in full</text>
+ <rect class="s-failbox" x="560" y="152" width="132" height="40" rx="7"/><text class="t-fail" x="626" y="170" text-anchor="middle" font-size="12" font-weight="600">no entry</text><text class="t-fail" x="626" y="185" text-anchor="middle" font-size="10.5">nothing required one</text>
+</svg>`;
+
+const FIG_DIRECTIONS=`<svg viewBox="0 0 720 170" role="img" aria-label="A producer uses the profile as a specification when generating the CBOM. A consumer uses the same profile as a checklist when validating it.">
+ <rect class="s-soft" x="16" y="52" width="190" height="66" rx="12"/><text class="t-ink" x="111" y="78" text-anchor="middle" font-weight="600" font-size="14">Producer</text><text class="t-muted" x="111" y="97" text-anchor="middle" font-size="11.5">build or scanner → CBOM</text>
+ <path class="l-pass" d="M206 85H276"/><path class="f-pass" d="M282 85l-11-5v10z"/><text class="t-pass" x="243" y="72" text-anchor="middle" font-size="12" font-weight="600">specification</text>
+ <rect class="s-key" x="282" y="40" width="156" height="90" rx="12"/><text class="t-ink" x="360" y="70" text-anchor="middle" font-weight="700" font-size="15">Profile</text><text class="t-muted" x="360" y="90" text-anchor="middle" font-size="11.5">13 rules, one decision</text><text class="t-acc t-mono" x="360" y="110" text-anchor="middle" font-size="11">P1–P4 · I1–I9</text>
+ <path class="l-warn" d="M438 85H508"/><path class="f-warn" d="M514 85l-11-5v10z"/><text class="t-warn" x="475" y="72" text-anchor="middle" font-size="12" font-weight="600">checklist</text>
+ <rect class="s-soft" x="514" y="52" width="190" height="66" rx="12"/><text class="t-ink" x="609" y="78" text-anchor="middle" font-weight="600" font-size="14">Consumer</text><text class="t-muted" x="609" y="97" text-anchor="middle" font-size="11.5">validator or CI gate checks the CBOM</text>
+</svg>`;
+
+const FIG_FOUR=`<svg viewBox="0 0 720 250" role="img" aria-label="A CBOM format distinguishes two states, present and absent. The methodology distinguishes four outcomes: value, withheld, unknown and undeclared. Withheld and unknown need an explicit marker in the document.">
+ <text class="t-muted" x="120" y="22" text-anchor="middle" font-size="11.5" letter-spacing="1">WHAT A FORMAT DISTINGUISHES</text>
+ <text class="t-muted" x="560" y="22" text-anchor="middle" font-size="11.5" letter-spacing="1">WHAT THE METHODOLOGY DISTINGUISHES</text>
+ <rect class="s-panel" x="40" y="46" width="160" height="50" rx="10"/><text class="t-ink" x="120" y="76" text-anchor="middle" font-weight="600" font-size="14">present</text>
+ <rect class="s-panel" x="40" y="170" width="160" height="50" rx="10"/><text class="t-ink" x="120" y="200" text-anchor="middle" font-weight="600" font-size="14">absent</text>
+ <rect class="s-passbox" x="460" y="36" width="200" height="40" rx="9"/><text class="t-pass t-mono" x="560" y="61" text-anchor="middle" font-size="14">value</text>
+ <rect class="s-panel" x="460" y="86" width="200" height="40" rx="9" style="stroke:var(--warn)"/><text class="t-warn t-mono" x="560" y="111" text-anchor="middle" font-size="14">withheld</text>
+ <rect class="s-panel" x="460" y="136" width="200" height="40" rx="9" style="stroke:var(--accent)"/><text class="t-acc t-mono" x="560" y="161" text-anchor="middle" font-size="14">unknown</text>
+ <rect class="s-failbox" x="460" y="186" width="200" height="40" rx="9"/><text class="t-fail t-mono" x="560" y="211" text-anchor="middle" font-size="14">undeclared</text>
+ <path class="l-pass" d="M200 71C320 71 340 56 460 56"/>
+ <path class="l-fail" d="M200 195C320 195 340 206 460 206"/>
+ <path class="l-mute" d="M200 71C300 80 360 106 460 106"/><path class="l-mute" d="M200 71C300 90 360 156 460 156"/>
+ <rect class="s-soft" x="262" y="112" width="132" height="40" rx="8"/><text class="t-ink" x="328" y="129" text-anchor="middle" font-size="11.5" font-weight="600">needs an explicit</text><text class="t-ink" x="328" y="144" text-anchor="middle" font-size="11.5" font-weight="600">marker in the CBOM</text>
+ <text class="t-muted" x="676" y="61" font-size="11.5">act on it</text><text class="t-muted" x="676" y="111" font-size="11.5">negotiate</text><text class="t-muted" x="676" y="161" font-size="11.5">ask why</text><text class="t-muted" x="676" y="211" font-size="11.5">guess</text>
+</svg>`;
+
+const FIG_SEVERAL=`<svg viewBox="0 0 720 250" role="img" aria-label="One baseline CBOM is evaluated against a procurement profile and a vulnerability-response profile without change. A PQC migration profile cannot be evaluated against it, because it needs capability facts the baseline never collected.">
+ <rect class="s-key" x="16" y="40" width="210" height="170" rx="14"/><text class="t-ink" x="121" y="66" text-anchor="middle" font-weight="700" font-size="14">One CBOM</text><text class="t-muted" x="121" y="83" text-anchor="middle" font-size="11.5">produced for the baseline</text>
+ <text class="t-muted" x="36" y="112" font-size="12">• interfaces and types</text><text class="t-muted" x="36" y="132" font-size="12">• protocols and versions</text><text class="t-muted" x="36" y="152" font-size="12">• algorithms per job</text><text class="t-muted" x="36" y="172" font-size="12">• endpoint roles</text><text class="t-muted" x="36" y="192" font-size="12">• implementing libraries</text>
+ <path class="l-pass" d="M226 80C330 80 340 50 450 50"/><path class="l-pass" d="M226 125H450"/><path class="l-fail" d="M226 170C330 170 340 200 450 200"/>
+ <rect class="s-passbox" x="450" y="26" width="254" height="48" rx="10"/><text class="t-pass" x="466" y="46" font-weight="600" font-size="13">Procurement profile</text><text class="t-pass" x="466" y="63" font-size="11.5">selects facts already present · evaluable</text>
+ <rect class="s-passbox" x="450" y="101" width="254" height="48" rx="10"/><text class="t-pass" x="466" y="121" font-weight="600" font-size="13">Vulnerability-response profile</text><text class="t-pass" x="466" y="138" font-size="11.5">selects facts already present · evaluable</text>
+ <rect class="s-failbox" x="450" y="176" width="254" height="48" rx="10"/><text class="t-fail" x="466" y="196" font-weight="600" font-size="13">PQC migration profile</text><text class="t-fail" x="466" y="213" font-size="11.5">adds capability, blocker, cost · not evaluable</text>
+</svg>`;
+
+/* ---------- F2 data ---------- */
+const RULES={
+ P1:{g:'p',t:'Declare at least one cryptographic interface',lvl:'MUST',c:'minInterfaces: 1',why:'A CBOM that describes no interface answers nothing.'},
+ P2:{g:'p',t:'Declare at least one management interface, or state that there is none',lvl:'MUST',c:'minInterfacesOfType: {management, 1}, orDeclaredAbsent',why:'Document A fails this rule. A hardware token with no configuration surface hides nothing by not having one, so a statement that there is none satisfies the rule. Saying nothing does not.'},
+ P3:{g:'p',t:'Identify the subject the document describes',lvl:'MUST',c:'subjectIdentified: {startsWith: pkg:}',why:'An unidentified record cannot be matched to a deployment, or compared with the same product\'s record from last quarter.'},
+ P4:{g:'p',t:'State how complete the list of interfaces is',lvl:'MUST',c:'coverage: all | all-external | partial',why:'Without this, a missing interface could mean that it does not exist, or that the producer chose not to list it. The reader cannot tell which.'},
+ I1:{g:'i',t:'protocol',lvl:'MUST',why:'Names the protocol: TLS, SSH, IPsec and similar.'},
+ I2:{g:'i',t:'protocolVersion',lvl:'MUST',why:'Names the version. An advisory usually names one.'},
+ I3:{g:'i',t:'keyExchange',lvl:'MUST',why:'Says how the session key is agreed.'},
+ I4:{g:'i',t:'encryption',lvl:'MUST',why:'Says what protects the traffic once the key is agreed.'},
+ I5:{g:'i',t:'authentication',lvl:'MUST',why:'Says how each end proves who it is.'},
+ I6:{g:'i',t:'endpointRoles',lvl:'MUST',why:'Says who is at each end, so the reader can place the interface in a topology.'},
+ I7:{g:'i',t:'interfaceType',lvl:'MUST',why:'One of five values, including service, management and interconnect. Product rule P2 is checked against this attribute.'},
+ I8:{g:'i',t:'lifecycleStage',lvl:'MUST',why:'Says whether the value was intended, implemented, configured or observed. This tells the reader how much weight to give it.'},
+ I9:{g:'i',t:'implementationPurl',lvl:'MUST',wh:true,why:'Names the library that implements the interface, so an advisory against that library can be matched. This is the only rule in the profile that a producer may answer by withholding the value.'}
+};
+const DOCS={
+ A:{label:'Document A',sub:'nginx · HTTPS only',
+  listing:`<span class="k">subject    </span> nginx 1.27.0
+<span class="k">purl       </span> pkg:generic/nginx@1.27.0
+<span class="k">coverage   </span> all-external
+<span class="k">interfaces </span> 1 declared
+
+<span class="s">[1] HTTPS   service · TLS 1.3</span>
+    kex X25519 · enc AES-256-GCM
+    auth RSA-2048 · roles client/server
+    stage configured
+    impl pkg:generic/openssl@3.4.0
+
+<span class="x">— no management interface
+— no statement that there is none</span>`,
+  res:[['P1','pass','1 interface declared'],['P2','fail','no management interface and no statement of absence'],['P3','pass','subject has a package URL'],['P4','pass','coverage: all-external'],['I1–I8','pass','all present on 1 interface'],['I9','pass','value on HTTPS']],
+  ok:false,note:'Document A contains no false statement, and every attribute it carries is correct. It fails because it leaves out the one thing its reader needs. No check based on the format alone can find this.'},
+ B:{label:'Document B',sub:'nginx · HTTPS and SSH',
+  listing:`<span class="k">subject    </span> nginx 1.27.0
+<span class="k">purl       </span> pkg:generic/nginx@1.27.0
+<span class="k">coverage   </span> all-external
+<span class="k">interfaces </span> 2 declared
+
+<span class="s">[1] HTTPS   service · TLS 1.3</span>
+    kex X25519 · enc AES-256-GCM
+    auth RSA-2048 · roles client/server
+    stage configured
+    impl pkg:generic/openssl@3.4.0
+
+<span class="m">[2] SSH     management · SSH 2.0</span>
+    kex curve25519 · enc ChaCha20-Poly1305
+    auth Ed25519 · roles admin/host
+    stage configured
+    impl <span class="w">withheld</span>`,
+  res:[['P1','pass','2 interfaces declared'],['P2','pass','SSH is a management interface'],['P3','pass','subject has a package URL'],['P4','pass','coverage: all-external'],['I1–I8','pass','all present on 2 interfaces'],['I9','warn','value on HTTPS · withheld on SSH, and I9 is withholdable']],
+  ok:true,note:'The SSH interface marks its implementing library as withheld. I9 is the one withholdable rule, so the document conforms. The buyer now knows the supplier took a position, and can challenge it in negotiation.'},
+ C:{label:'Document C',sub:'TLS library · nothing to configure',
+  listing:`<span class="k">subject    </span> libexample 2.1.0 (library)
+<span class="k">purl       </span> pkg:generic/libexample@2.1.0
+<span class="k">coverage   </span> all
+<span class="k">management </span> absent: no-configuration-surface
+<span class="k">interfaces </span> 1 declared
+
+<span class="s">[1] TLS     client · TLS 1.3</span>
+    kex X25519 · enc AES-256-GCM
+    auth ECDSA P-256 · roles client/server
+    stage implemented
+    impl pkg:generic/openssl@3.4.0`,
+  res:[['P1','pass','1 interface declared'],['P2','pass','absence stated, with a reason from the profile\'s vocabulary'],['P3','pass','subject has a package URL'],['P4','pass','coverage: all'],['I1–I8','pass','all present on 1 interface'],['I9','pass','value on TLS client']],
+  ok:true,note:'A library has nothing to configure, so it has no management interface. It satisfies P2 by stating why. If it had said nothing, it would fail P2 exactly as Document A does.'}
+};
+const OUTCOMES=[
+ {n:'value',cls:'c-pass',tag:'act on it',front:'The value is in the document.',says:'It knows the value and has published it.',must:'Yes.'},
+ {n:'withheld',cls:'c-warn',tag:'negotiate',front:'A marker says the value exists but is not published.',says:'It knows the value and has decided not to publish it.',must:'Only where the rule is marked withholdable.'},
+ {n:'unknown',cls:'c-info',tag:'ask why',front:'A marker says the producer cannot determine the value.',says:'It does not know the value.',must:'No. It is reported separately from an attribute that is simply missing.'},
+ {n:'undeclared',cls:'c-fail',tag:'guess',front:'Nothing is said at all.',says:'Nothing. The reader cannot tell which of the other three applies.',must:'No.'}
+];
+const QUIZ_F2=[
+ {q:'Document A describes the HTTPS interface accurately and in full, but leaves out the SSH management interface. Against the Interface Disclosure Baseline it:',o:['Conforms, because every statement in it is true','Fails P2, because conformance is measured against what the decision needs','Fails I1 to I9, because the interface rules are incomplete'],a:1,e:'Accuracy is not the test. The profile asks whether the document carries what its reader needs to decide.'},
+ {q:'Why does "send us everything" fail as a request?',o:['CBOM formats cannot encode every operation','A complete list buries the few facts the decision depends on, and no supplier will produce it','Large documents cannot be signed'],a:1,e:'Completeness is relative to a purpose. A profile sets the minimum a decision needs and then stops.'},
+ {q:'The SSH interface in Document B marks its implementing library as withheld. What happens under the baseline?',o:['It fails I9','It passes, because I9 is marked withholdable','It is treated as undeclared'],a:1,e:'Withheld is a declared position. It satisfies a MUST rule only where the profile marks that rule withholdable, and I9 is the one such rule.'},
+ {q:'Which of these is a use case that a profile can be written for?',o:['The telecom sector','The CycloneDX cryptoProperties field','A migration lead choosing which interfaces to upgrade first, from a stated set of actions'],a:2,e:'A use case needs a named consumer, a decision between actions, and the questions behind it. A sector or a format field is only a setting.'},
+ {q:'A supplier produces baseline-conforming CBOMs. A buyer now asks for conformance to a PQC migration profile. What is needed?',o:['Nothing; the buyer re-evaluates the same documents','New facts: what each interface could support, what blocks it, and what changing it costs','The buyer derives capability from the algorithms listed'],a:1,e:'A migration profile adds facts the baseline never collected. More baseline documents do not answer it.'}
+];
+
+/* ---------- F1 data (existing course, restyled) ---------- */
+const BOMS={
+  sbom:{t:'SBOM: software components',icon:'list',html:`<p><b>The SBOM lists the software components in a product.</b> The CBOM says which of those components implements each cryptographic function.</p>${dash(['<b>Join on:</b> the implementing library, named with the same identifier in both, for example a package URL such as <span class="mono">pkg:generic/openssl@3.5.6</span>.','<b>Why it matters:</b> when a library advisory is published, the SBOM finds the products that contain it. The CBOM shows which interfaces it protects.'])}`},
+  hbom:{t:'HBOM: hardware',icon:'hw',html:`<p><b>The HBOM lists hardware:</b> HSMs, TPMs, secure elements, crypto accelerators and network cards with offload.</p>${dash(['<b>Join on:</b> the hardware component that holds keys or performs operations for an interface.','<b>Why it matters:</b> where cryptography is fixed in hardware, migration needs a hardware refresh, not a software update. The CBOM records that as a blocker.'])}`},
+  vex:{t:'VEX: vulnerability statements',icon:'advisory',html:`<p><b>A VEX statement says whether a product is affected by a specific advisory.</b> It changes whenever new advisories appear. The product does not.</p>${dash(['<b>Join on:</b> the CBOM document digest and the implementing library identifier.','<b>Rule:</b> keep vulnerability status out of the CBOM. A CBOM revision is a fixed record. An embedded verdict goes out of date while the product stays the same.'])}`},
+  inv:{t:'Cryptographic inventory',icon:'inventory',html:`<p><b>The inventory is the organisation's own record across its estate.</b> It is built from many CBOMs plus network and configuration discovery, and maintained over time.</p>${dash(['<b>CBOM:</b> one product, one point in time, exchanged between parties.','<b>Inventory:</b> the whole estate, continuously maintained, kept by the user organisation.','Correlating records from different sources is the hard part. Record which key was used to decide that two records describe the same thing.'])}`}
+};
+const QUIZ_F1=[
+ {q:'A supplier sends a CBOM listing every algorithm in its product but no interfaces. What can you not answer?',o:['Which library implements AES','Which connections, including the admin interface, would be affected by a weakness in one key exchange','Which CycloneDX version was used'],a:1,e:'Decisions depend on where cryptography is used between parties. An algorithm list does not show that.'},
+ {q:'Should a CBOM carry an attribute such as "pqcReady: yes"?',o:['Yes, it saves the buyer work','No. Record the facts and let a versioned external policy make the judgement','Only for CNSA 2.0 products'],a:1,e:'Criteria change while the product does not, so a stored verdict goes out of date. Facts can be re-evaluated.'},
+ {q:'How is a CBOM linked to vulnerability information?',o:['Vulnerabilities are listed inside the CBOM','Joined: a VEX statement cites the CBOM digest and the library identifier','They are not linked'],a:1,e:'Joined, not merged. Each artifact changes at its own rate.'},
+ {q:'Why does a buyer need a profile, not just "send us your CBOM"?',o:['The format defines what may be recorded, not what must be recorded for a decision','CycloneDX requires one','Profiles make documents smaller'],a:0,e:'Completeness is relative to a purpose. A profile states the minimum facts one decision needs.'},
+ {q:'A supplier cannot yet support ML-KEM on one interface because a standard is unfinished. What should the CBOM say?',o:['A planned date for that interface','A capability status, the blocker (standard) and a link to the roadmap','Nothing'],a:1,e:'A blocker tells the planner how to respond. A date that depends on an unfinished standard is not one the supplier can keep.'}
+];
+
+/* ---------- shared screen builders ---------- */
+function titleScreen(m,o){return {min:1,next:'Begin module →',render:()=>`
+  <div class="titlebox"><div class="eyebrow">Module ${m.id} · ${TRACKS.find(t=>t.id===m.id[0]).name}</div>
+  <h1 style="margin-top:10px">${m.t}</h1><div class="sub">${o.sub}</div></div>
+  <div class="two" style="margin-top:28px">
+    <div class="box"><h3>Learning objectives</h3>${dash(o.obj)}</div>
+    <div class="box"><h3>Completion requirements</h3>${dash(o.req)}${o.pre?`<h4>Before this module</h4><p class="note" style="margin:0">${o.pre}</p>`:''}</div>
+  </div>
+  <div class="facts"><div><small>Audience</small><b>${o.aud}</b></div><div><small>Format</small><b>Interactive</b></div><div><small>Duration</small><b>${m.min} minutes</b></div><div><small>Level</small><b>${o.level}</b></div></div>`}}
+function quizScreen(mid,Q){return {min:1.5,render:()=>`${head('todo','Knowledge check','Score 80% or higher to complete the module')}
+  <form id="quiz">${Q.map((x,i)=>`<div class="q"><fieldset><legend>${i+1}. ${x.q}</legend>${x.o.map((o,j)=>`<label for="q${i}o${j}"><input type="radio" name="q${i}" id="q${i}o${j}" value="${j}"> <span>${o}</span></label>`).join('')}<div class="fb" id="fb${i}" aria-live="polite"></div></fieldset></div>`).join('')}
+  <button class="btn" type="submit">Check answers</button><div class="score" id="score" aria-live="polite"></div></form>`,
+  init(){document.getElementById('quiz').onsubmit=e=>{e.preventDefault();let s=0;Q.forEach((x,i)=>{const c=document.querySelector(`input[name=q${i}]:checked`);const f=document.getElementById('fb'+i);const ok=c&&+c.value===x.a;if(ok)s++;f.className='fb '+(ok?'ok':'no');f.textContent=(ok?'Correct. ':c?'Not quite. ':'No answer. ')+x.e});const p=Math.round(s/Q.length*100);const pass=p>=80;document.getElementById('score').textContent=`Score: ${p}%. ${pass?'Module complete.':'Review the sections and try again.'}`;if(pass){const d=store.get('done')||{};d[mid]=true;store.set('done',d)}}}}}
+
+/* ---------- F1 screens ---------- */
+const F1=[];
+F1.push(titleScreen(MODULES[0],{sub:'What a CBOM is and is not, which standards apply, how it links to other BOMs, and why interfaces decide whether it is useful.',
+ obj:['What a CBOM is, and what it is not.','Which standards and formats apply, and who is asking for CBOMs.','How a CBOM joins to SBOMs, HBOMs, VEX and the inventory.','Why a CBOM must describe interfaces, not only algorithms.','How profiles make a CBOM fit a decision.','What producers and buyers should do now.'],
+ req:['Review the seven sections.','Pass the knowledge check with a score of 80% or higher.'],aud:'Product owners, developers, security architects and procurement',level:'Foundation'}));
+F1.push({min:1.5,render:()=>`${head('doc','What a CBOM is','One product, one point in time, exchanged between parties')}
+  <p>A <b>cryptographic bill of materials (CBOM)</b> is a machine-readable description of the cryptography one product or component contains and uses, produced at a defined point in time. The supplier produces it. The buyer or operator uses it.</p>
+  <div class="tbl wide"><table><thead><tr><th>A CBOM records</th><th>Example</th></tr></thead><tbody>
+   <tr><td><b>Interfaces</b>: where cryptography is applied between parties</td><td>HTTPS service, inbound; SSH admin, inbound; database connection, outbound</td></tr>
+   <tr><td><b>Protocols and algorithms</b> used and supported on each interface</td><td>TLS 1.3; key exchange <span class="mono">X25519MLKEM768</span>; authentication ECDSA P-256; encryption AES-256-GCM</td></tr>
+   <tr><td><b>Keys and certificates</b>: metadata, never key material</td><td>Server certificate, ECDSA P-256, expires 2027-06</td></tr>
+   <tr><td><b>Implementing component</b></td><td>Bundled OpenSSL 3.5.6; customer-supplied JDK</td></tr>
+   <tr><td><b>Document facts</b>: subject, version, lifecycle stage, author, tool</td><td>Product 4.2.0, release build, generated in CI</td></tr>
+  </tbody></table></div>
+  ${concept('Each CBOM revision is a fixed record of facts. When the product changes, issue a new revision. Do not edit the old one.')}`});
+F1.push({min:1.5,render:()=>`${head('advisory','What a CBOM is not','The common confusions')}
+  <div class="dd">
+   <div class="dont"><h3>${I.x} A CBOM is not</h3>
+    <h4>An organisation-wide inventory</h4>${dash(['The inventory covers the whole estate and is maintained continuously. CBOMs are one of its inputs.'])}
+    <h4>A verdict</h4>${dash(['No "quantum-safe", "pqcReady" or maturity scores. Criteria change while the product does not.'])}
+    <h4>A vulnerability report</h4>${dash(['Vulnerability status lives in VEX statements that point at the CBOM.'])}
+    <h4>A list of every cryptographic call</h4>${dash(['Thousands of entries hide the few facts a decision needs.'])}
+    <h4>A roadmap date</h4>${dash(['Future capability is stated as a status and a blocker, with a link to the roadmap.'])}</div>
+   <div class="do"><h3>${I.ok} A CBOM is</h3>
+    <h4>Facts about one product</h4>${dash(['What is used and supported, on which interface, implemented by which component.'])}
+    <h4>A baseline that links to context</h4>${dash(['Vulnerability, configuration, operation and algorithm-strength information sit elsewhere and link to it. Each changes at its own rate.'])}
+    <h4>Honest about gaps</h4>${dash(['A missing value is marked <b>withheld</b> (known, not disclosed) or <b>unknown</b> (the producer cannot determine it). The 2026 SBOM minimum elements require the same distinction.'])}
+    <h4>Shareable in two forms</h4>${dash(['A public variant, and a restricted variant for buyers under agreement, so sensitive detail is not published.'])}</div>
+  </div>`});
+F1.push({min:1.5,render:()=>`${head('standards','Standards and who is asking','Formats, methods and buyer requirements')}
+  <div class="tbl wide"><table><thead><tr><th>Item</th><th>What it provides</th><th>Status</th></tr></thead><tbody>
+   <tr><td><b>CycloneDX 1.6</b></td><td>First version with cryptographic assets: algorithms, certificates, protocols, keys and related material</td><td><span class="chip c-pass">Published 2024</span></td></tr>
+   <tr><td><b>CycloneDX 1.7 / ECMA-424 2nd edition</b></td><td>Adds the Cryptography Registry for consistent algorithm names</td><td><span class="chip c-pass">Published</span></td></tr>
+   <tr><td><b>SPDX 3.x</b></td><td>Cryptographic object model</td><td><span class="chip c-mute">In development</span></td></tr>
+   <tr><td><b>2026 SBOM minimum elements</b><br><span class="note">CISA, NSA, FBI and 15+ international agencies</span></td><td>Baseline for any BOM: author signature, generation context, tool, version, unknown versus withheld</td><td><span class="chip c-pass">Published 29 Jul 2026</span></td></tr>
+   <tr><td><b>CBOM profiles methodology</b><br><span class="note">PKI Consortium working group</span></td><td>How to state which facts a CBOM must carry for a purpose, in CycloneDX or SPDX</td><td><span class="chip c-mute">Draft</span></td></tr>
+   <tr><td><b>PQC Maturity Model, level 4</b><br><span class="note">PKI Consortium</span></td><td>Requires CBOM support from products. Does not define the content</td><td><span class="chip c-pass">v1.0.1</span></td></tr>
+  </tbody></table></div>
+  <h3 style="margin-top:6px">Buyers asking now</h3>
+  ${dash(['<b>Germany:</b> joint BMDS, BMI and BSI guidance (published 12 Oct 2026) says CBOMs can be written into contracts.','<b>United States:</b> EO 14412 calls for CBOMs. CISA guidance is expected around March 2027.','<b>India:</b> the task-force roadmap recommends CBOMs with products sold to government and critical infrastructure from 1 April 2027.'])}
+  ${concept('The format says what a CBOM <i>may</i> contain. It does not say what it <i>must</i> contain. That is the job of a profile.')}`});
+F1.push({min:1.5,render:()=>`${head('chain','How a CBOM links to other BOMs','Joined, not merged')}
+  <p>Each artifact answers a different question and changes at a different rate. They stay separate and are joined through shared identifiers.</p>
+  ${cue('Select each topic to learn more')}
+  <div class="explore"><div class="circles">${Object.entries(BOMS).map(([k,v])=>`<button class="circ" data-bom="${k}" aria-pressed="false"><span class="c">${I[v.icon]}</span><span class="done"></span>${v.t}</button>`).join('')}</div>
+  <div class="detail" id="bomd" aria-live="polite"></div></div>`,
+  init(){const sel=k=>{document.querySelectorAll('[data-bom]').forEach(b=>{const on=b.dataset.bom===k;b.setAttribute('aria-pressed',on);if(on)b.classList.add('seen')});document.getElementById('bomd').innerHTML=`<h3>${BOMS[k].t}</h3>${BOMS[k].html}`};
+    document.querySelectorAll('[data-bom]').forEach(b=>b.onclick=()=>sel(b.dataset.bom));sel('sbom');}});
+F1.push({min:2,render:()=>`${head('iface','Why interfaces matter','Questions are about use, not inventory')}
+  <ol class="steps">
+   <li><span class="n">1</span><div><b>The example</b>A supplier's CBOM for a web server lists TLS 1.3, X25519, AES-256-GCM, an RSA certificate and OpenSSL. Every entry is true. It does not mention the SSH interface administrators use.</div></li>
+   <li><span class="n">2</span><div><b>The question</b>A weakness is published against a key exchange used by SSH. Is this product affected? The CBOM cannot answer.</div></li>
+   <li><span class="n">3</span><div><b>The fix</b>Declare every interface, including management, and record its facts on the interface, not on the nearest algorithm.</div></li>
+  </ol>
+  <div class="tbl wide"><table><thead><tr><th>Interface</th><th>Type</th><th>Protocol</th><th>Key exchange</th><th>Implemented by</th><th>Far end</th></tr></thead><tbody>
+   <tr><td><b>Web UI and API, inbound</b></td><td><span class="chip c-svc">service</span></td><td>TLS 1.3</td><td class="mono">X25519MLKEM768</td><td>Bundled OpenSSL 3.5.6</td><td>Clients</td></tr>
+   <tr><td><b>Admin SSH, inbound</b></td><td><span class="chip c-mgmt">management</span></td><td>SSH 2</td><td class="mono">curve25519-sha256</td><td>Bundled OpenSSH 8.9</td><td>Operators</td></tr>
+   <tr><td><b>Database, outbound</b></td><td><span class="chip c-mute">interconnect</span></td><td>TLS 1.2</td><td class="mono">ECDHE P-256</td><td>Customer-supplied JDK</td><td>Customer's DB</td></tr>
+  </tbody></table></div>
+  ${dash(['<b>Supported is not negotiated:</b> record both what the interface supports and what it uses by default.','<b>One connection can be several interfaces:</b> a CDN or proxy that terminates TLS creates a separate leg.','<b>The weaker end decides:</b> the far end, and who controls it, determine the outcome.'])}
+  ${concept('External interfaces with their key exchange are exactly what harvest-now-decrypt-later planning needs. An interface list gives that without a full cryptographic scan.')}`});
+F1.push({min:1.5,render:()=>`${head('rules','Profiles: a CBOM fit for a decision','Completeness is relative to a purpose')}
+  <p>A <b>profile</b> is a short list of rules stating which facts a CBOM must carry for one stated reader making one stated decision. It is a minimum reporting requirement, not a new format, and a validator can check a document against it.</p>
+  <div class="two">
+   <div class="box"><h3>What a profile sets</h3>${dash(['<b>A floor:</b> the facts the decision needs, so nothing essential is left out.','<b>A scope:</b> the decision stops the list growing, so the producer is not asked for everything.','<b>An orientation:</b> inventory (current state) or migration (capability and readiness).','<b>For each rule:</b> whether the value may be withheld.'])}</div>
+   <div class="box"><h3>Migration profiles add</h3>${dash(['<b>Capability status</b> per interface and purpose.','<b>Blocker:</b> <span class="mono">standard</span>, <span class="mono">dependency</span> or <span class="mono">implementation</span>.','<b>Roadmap reference:</b> where the supplier\'s commitment, and any date, is published.'])}<p style="margin-top:12px;font-size:15px">The blocker tells a planner how to respond: wait for the standard, chase a third party, or hold the supplier to its own work.</p></div>
+  </div>`});
+F1.push({min:0.5,render:()=>`${head('todo','What to do now','')}
+  <div class="two">
+   <div class="box"><h3>If you build products</h3><ul class="checks">
+    <li><b>Generate a CBOM per release</b> in the build, in CycloneDX. Version and sign it.</li>
+    <li><b>Declare every interface,</b> including management, with what it supports and uses.</li>
+    <li><b>Name the implementing component</b> with the same identifier as in the SBOM.</li>
+    <li><b>Record facts, not verdicts.</b> Mark values as withheld or unknown rather than leaving gaps.</li>
+    <li><b>State capability status and blocker</b> for interfaces not yet quantum-safe.</li></ul></div>
+   <div class="box"><h3>If you buy or operate products</h3><ul class="checks">
+    <li><b>Say what the CBOM is for:</b> cite a profile, not "send everything".</li>
+    <li><b>Ask for interfaces first,</b> starting with external ones.</li>
+    <li><b>Join, don't merge:</b> link CBOMs to SBOMs, VEX and your own policy.</li>
+    <li><b>Feed your inventory</b> and record how records from different sources were matched.</li>
+    <li><b>Check conformance</b> against the profile before relying on a CBOM.</li></ul></div>
+  </div>`});
+F1.push(quizScreen('F1',QUIZ_F1));
+F1.push({min:0,next:null,render:()=>`${head('doc','Cryptographic bills of materials','Facts about interfaces, joined to everything else')}
+  <p style="font-size:18px">A CBOM is a fixed record of the cryptography one product uses. It is useful when it describes interfaces, follows a profile and stays separate from verdicts and vulnerability status.</p>
+  <h3 style="margin-top:22px">Follow these practices</h3>
+  ${dash(['Declare every interface, including management.','Record facts. Leave verdicts to versioned policy.','Join CBOMs to SBOMs, HBOMs and VEX. Do not merge them.','Mark values as withheld or unknown instead of leaving gaps.','State capability status and blocker, not dates.','Ask for CBOMs against a stated profile.'])}
+  <div class="nextup"><button class="btn" data-goto="F2">Next module: F2 Why a buyer names a profile →</button></div>
+  <p class="src">Sources: CycloneDX 1.6 and 1.7 (ECMA-424); 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026); PKI Consortium CBOM Profiles methodology (draft) and PQC Maturity Model v1.0.1; BMDS/BMI/BSI guidance §4.6 (12 Oct 2026); EO 14412; India Quantum-Safe Ecosystem roadmap (May 2026).</p>`});
+
+/* ---------- F2 screens ---------- */
+const F2=[];
+F2.push(titleScreen(MODULES[1],{sub:'One product, one CBOM and one buyer\'s question. Why an accurate CBOM can still be useless, and what a profile does about it.',
+ obj:['Explain why a CBOM format alone cannot tell you whether a document is useful.','Describe a use case as a consumer, a decision between actions, and the questions behind it.','Read the product rules and interface rules of a profile.','Evaluate a CBOM against a profile, one rule at a time.','Tell the four disclosure outcomes apart, and act on each.','Explain why "send us your CBOM" is not one request.'],
+ req:['Review the eight sections.','Pass the knowledge check with a score of 80% or higher.'],pre:'F1 CBOM essentials, or equivalent familiarity with what a CBOM records.',aud:'Buyers, operators, product owners and profile authors',level:'Foundation'}));
+
+F2.push({min:1.5,render:()=>`${head('iface','The problem, in one example','An accurate document that cannot answer the question')}
+  <p>A vendor supplies an nginx web server with a CBOM. The CBOM says the product uses AES-256-GCM, X25519 and RSA-2048. It names a server certificate for example.com, and says OpenSSL 3.4.0 implements the cryptography. Every statement is true.</p>
+  ${fig(FIG_TWO_IFACES,'<b>Figure 1.</b> The product has two cryptographic interfaces. Document A describes one of them.')}
+  <ol class="steps">
+   <li><span class="n">1</span><div><b>Three months later</b>A weakness is published against a key exchange that SSH uses. You have to say whether the product is affected, and if it is, which of your several hundred instances.</div></li>
+   <li><span class="n">2</span><div><b>Document A cannot answer</b>It describes the web interface in full. It says nothing about the SSH interface that administrators log in to.</div></li>
+   <li><span class="n">3</span><div><b>The vendor was not careless</b>Nothing required it to declare the management interface. Document A is the ordinary result of asking for a CBOM without saying what it is for.</div></li>
+  </ol>
+  ${concept('A CBOM format defines what a document <i>may</i> record. It does not define what a document <i>must</i> record. Document A complies with the format and leaves the buyer no better off.')}`});
+
+F2.push({min:1,render:()=>`${head('warn','Why asking for everything does not work','Completeness is relative to a purpose')}
+  <p>The obvious fix is to ask for everything. That makes matters worse.</p>
+  <div class="dd">
+   <div class="dont"><h3>${I.x} Requests that fail</h3>
+    <p class="quote">"Send us your CBOM."</p><p class="note">The supplier decides what to include. You receive Document A.</p>
+    <p class="quote">"Send us everything."</p><p class="note">A large product performs thousands of cryptographic operations. A list of all of them buries the two or three facts your decision depends on. No supplier will produce it.</p></div>
+   <div class="do"><h3>${I.ok} A request that works</h3>
+    <p class="quote">"Send a CBOM that conforms to the Interface Disclosure Baseline v0.7."</p>
+    ${dash(['It names the reader and the decision.','It lists the facts that must be present, and stops there.','A validator can check the document before anyone relies on it.'])}</div>
+  </div>
+  ${concept('"Does this document contain everything?" has no answer. "Does it contain what this decision needs?" has one, once the decision is written down in a form that a machine can check.')}`});
+
+F2.push({min:1.5,render:()=>`${head('decision','Start from the use case','A consumer, a decision, and the questions behind it')}
+  <p>A use case consists of a consumer and a decision. You need three things before you can write a profile.</p>
+  <ol class="steps">
+   <li><span class="n">1</span><div><b>The consumer, named by role</b>A buyer, a vulnerability responder, a migration lead.</div></li>
+   <li><span class="n">2</span><div><b>The actions to choose between</b>A decision with only one possible outcome is not a decision. A profile written for it has no point at which to stop adding rules.</div></li>
+   <li><span class="n">3</span><div><b>The questions the consumer must answer</b>Each question becomes a fact the CBOM must carry.</div></li>
+  </ol>
+  <div class="tbl"><table><thead><tr><th style="width:130px">Interface Disclosure Baseline v0.7</th><th></th></tr></thead><tbody>
+   <tr><td><b>Reader</b></td><td>An operator or buyer holding a product it did not build and cannot inspect, and keeping a cryptographic inventory across an estate.</td></tr>
+   <tr><td><b>Decision</b></td><td>When a weakness is published against an algorithm, a protocol version or a library, which deployed interfaces are affected. And, compared with last quarter's record, what has changed.</td></tr>
+   <tr><td><b>Actions</b></td><td>${dash(['Record the interfaces and take no further action.','Reconfigure, upgrade or isolate an affected interface.','Ask the producer for a fuller disclosure.','Reject the submission as insufficient for the inventory.'])}</td></tr>
+  </tbody></table></div>
+  <div class="two">
+   <div class="box"><h3>Same product, different needs</h3><p style="margin:0">A <b>vulnerability responder</b> needs the implementing library and can ignore endpoint roles. A <b>procurement team</b> checking an interface baseline needs the endpoint roles and can ignore the implementing library.</p></div>
+   <div class="box"><h3>Not a use case</h3><p style="margin:0">A sector, a product category, or a field that a CBOM format offers. Each of these can be the <i>setting</i> for a use case. Sector vocabulary belongs in the profile written for that use case.</p></div>
+  </div>`});
+
+F2.push({min:1.5,render:()=>`${head('rules','What a profile is','A minimum reporting requirement, not a format')}
+  <p>A <b>profile</b> is a short list of rules stating which attributes a CBOM must carry to support one stated decision, for one stated reader. The same rules serve both parties.</p>
+  ${fig(FIG_DIRECTIONS,'<b>Figure 2.</b> The producer uses the profile as a specification when it generates the CBOM. The consumer uses it as a checklist when it validates the CBOM.')}
+  <div class="dd">
+   <div class="do"><h3>${I.ok} A profile is</h3>${dash(['A short list of rules, tied to one reader and one decision.','Two kinds of rule: rules about the set of interfaces, and rules applied to each interface.','Checkable by a validator.','Usable in CycloneDX or SPDX, given a mapping.'])}</div>
+   <div class="dont"><h3>${I.x} A profile is not</h3>${dash(['A schema or a new format.','A list of everything a product does.','A judgement on whether the cryptography is good.'])}</div>
+  </div>
+  ${concept('No rule asks whether the cryptography is any good. Post-quantum readiness is a judgement made against criteria that change. It lives in versioned policy outside the CBOM. The CBOM carries the facts, and the policy reaches a dated verdict.')}`});
+
+F2.push({min:2,render:()=>`${head('rules','The thirteen rules','Interface Disclosure Baseline v0.7')}
+  ${cue('Select a rule to see what it requires and why')}
+  <div class="rules">
+   <div>
+    <div class="rgroup"><div class="eyebrow">Product rules · the set of interfaces</div><div class="rgrid">${['P1','P2','P3','P4'].map(k=>`<button class="rbtn p" data-rule="${k}" aria-pressed="false">${k}</button>`).join('')}</div></div>
+    <div class="rgroup"><div class="eyebrow">Interface rules · every declared interface</div><div class="rgrid">${['I1','I2','I3','I4','I5','I6','I7','I8','I9'].map(k=>`<button class="rbtn i" data-rule="${k}" aria-pressed="false">${k}</button>`).join('')}</div></div>
+    <p class="note" id="rcount">0 of 13 rules viewed</p>
+   </div>
+   <div class="rdetail" id="rdetail" aria-live="polite"></div>
+  </div>
+  ${concept('Product rules catch omissions, which no rule about a single attribute can do. A document can describe its service interface perfectly, pass every interface rule, and still fail P2.')}`,
+  init(){const seen=new Set();const sel=k=>{const r=RULES[k];seen.add(k);
+    document.querySelectorAll('[data-rule]').forEach(b=>{const on=b.dataset.rule===k;b.setAttribute('aria-pressed',on);if(seen.has(b.dataset.rule))b.classList.add('seen')});
+    document.getElementById('rcount').textContent=`${seen.size} of 13 rules viewed`;
+    document.getElementById('rdetail').innerHTML=`<div class="rid">${k} · ${r.g==='p'?'product rule':'interface rule'}</div><h3>${r.g==='i'?`<span class="mono" style="font-size:.9em">${r.t}</span>`:r.t}</h3><p style="margin:0">${r.why}</p>
+     <dl><dt>Level</dt><dd><span class="chip c-info">${r.lvl}</span>${r.wh?'<span class="chip c-warn">withholdable</span>':''}</dd>${r.c?`<dt>Constraint</dt><dd class="mono">${r.c}</dd>`:''}<dt>Applies to</dt><dd>${r.g==='p'?'The document as a whole.':'Each interface the document declares, however many there are.'}</dd></dl>`};
+    document.querySelectorAll('[data-rule]').forEach(b=>b.onclick=()=>sel(b.dataset.rule));sel('P2');}});
+
+F2.push({min:2,render:()=>`${head('verdict','Evaluate three documents','Conformance is measured against what the decision needs')}
+  ${cue('Choose a document, then run the evaluation')}
+  <div class="seg" role="tablist">${Object.entries(DOCS).map(([k,d])=>`<button role="tab" data-doc="${k}" aria-selected="false">${d.label}<span class="muted" style="font-weight:400"> · ${d.sub}</span></button>`).join('')}</div>
+  <div class="evalgrid">
+   <div><p class="doc-title" id="evtitle"></p><pre class="doc" id="evdoc"></pre></div>
+   <div><div class="tbl" style="margin-top:0"><table class="evtable"><thead><tr><th>Rule</th><th>Finding</th><th>Result</th></tr></thead><tbody id="evrows"></tbody></table></div>
+    <div class="runrow"><button class="btn" id="evrun">Run evaluation</button><span class="note" id="evhint">Against Interface Disclosure Baseline v0.7</span></div>
+    <div class="verdict wait" id="evverdict">Not yet evaluated</div></div>
+  </div>
+  <p id="evnote" class="note" style="margin-top:16px" hidden></p>`,
+  init(){let cur='A',timer=null;const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+   const chip=s=>s==='pass'?'<span class="chip c-pass">passes</span>':s==='fail'?'<span class="chip c-fail">fails</span>':'<span class="chip c-warn">passes · withheld</span>';
+   const show=k=>{cur=k;clearTimeout(timer);const d=DOCS[k];
+    document.querySelectorAll('[data-doc]').forEach(b=>b.setAttribute('aria-selected',b.dataset.doc===k));
+    document.getElementById('evtitle').textContent=d.label+', as supplied';document.getElementById('evdoc').innerHTML=d.listing;
+    document.getElementById('evrows').innerHTML=d.res.map(r=>`<tr class="pending"><td class="mono">${r[0]}</td><td><span class="why" style="font-size:13.5px;color:var(--body)">${r[2]}</span></td><td>${chip(r[1])}</td></tr>`).join('');
+    const v=document.getElementById('evverdict');v.className='verdict wait';v.textContent='Not yet evaluated';document.getElementById('evnote').hidden=true;document.getElementById('evrun').disabled=false;};
+   const run=()=>{const d=DOCS[cur];const rows=[...document.querySelectorAll('#evrows tr')];document.getElementById('evrun').disabled=true;let i=0;
+    const step=()=>{if(i<rows.length){rows[i].classList.remove('pending');i++;timer=setTimeout(step,reduce?0:260)}else{const v=document.getElementById('evverdict');v.className='verdict '+(d.ok?'ok':'no');v.innerHTML=(d.ok?I.ok+' Conforms':I.x+' Does not conform');const n=document.getElementById('evnote');n.textContent=d.note;n.hidden=false;document.getElementById('evrun').disabled=false}};step();};
+   document.querySelectorAll('[data-doc]').forEach(b=>b.onclick=()=>show(b.dataset.doc));document.getElementById('evrun').onclick=run;show('A');}});
+
+F2.push({min:1.5,render:()=>`${head('withheld','The four disclosure outcomes','A withheld value is a position. A missing value is a guess.')}
+  <p>A CBOM format can say only two things about an attribute: present or absent. The methodology distinguishes four outcomes, because the reader acts differently on each.</p>
+  ${fig(FIG_FOUR,'<b>Figure 3.</b> "Present" maps to a value and "absent" to undeclared. Withheld and unknown need an explicit marker, which the formats do not provide natively.')}
+  ${cue('Select each card to turn it over')}
+  <div class="flips">${OUTCOMES.map((o,i)=>`<button class="flip" data-flip="${i}" aria-pressed="false" aria-label="${o.n}: turn card"><div class="in">
+    <div class="face front"><span class="name">${o.n}</span><span class="chip ${o.cls} tag">${o.tag}</span><p>${o.front}</p><span class="turn">Turn over ↻</span></div>
+    <div class="face back"><span class="name">${o.n}</span><div><b>What it says about the producer</b><p>${o.says}</p></div><div><b>Satisfies a MUST rule?</b><p>${o.must}</p></div></div>
+   </div></button>`).join('')}</div>
+  ${concept('The first three outcomes can be acted on. The fourth can only be guessed at. A buyer who cannot tell a deliberate omission from an oversight has no basis for asking the supplier to fix it.')}`,
+  init(){document.querySelectorAll('[data-flip]').forEach(b=>b.onclick=()=>b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true'))}});
+
+F2.push({min:1,render:()=>`${head('ladder','One document, several profiles','And the limit: a profile cannot ask for facts that were never collected')}
+  <p>Different buyers can apply different profiles to the same unchanged CBOM. One customer evaluates it against a procurement profile and another against a vulnerability-response profile. The supplier republishes nothing in between.</p>
+  ${fig(FIG_SEVERAL,'<b>Figure 4.</b> Profiles that select from facts already in the document can share it. A migration profile adds facts, so a baseline document cannot satisfy it.')}
+  <p>Sharing works only while each profile selects from facts the document already carries. Knowing which algorithms an interface uses today answers none of a migration planner's questions. A migration profile therefore adds facts: what each interface could support, what blocks it, and what changing it costs.</p>
+  ${concept('"Supply a CBOM" is not one request. Name the profile and its version. A supplier that has produced baseline documents has not met a migration request by producing more of them.')}`});
+
+F2.push(quizScreen('F2',QUIZ_F2));
+F2.push({min:0,next:null,render:()=>`${head('decision','Name the profile, then check the document','Summary')}
+  <p style="font-size:18px">An accurate CBOM can still fail its reader. A profile names the reader, the decision and the facts that decision needs, so a supplier can meet it and a buyer can check it.</p>
+  <h3 style="margin-top:22px">Follow these practices</h3>
+  ${dash(['Write down the reader, the decision and the actions before you ask for a CBOM.','Ask for conformance to a named profile and version. Never ask for "your CBOM" or for "everything".','Check conformance with a validator before you rely on a document.','Treat <span class="mono">withheld</span> as a position to negotiate and <span class="mono">undeclared</span> as a defect to fix.','Keep verdicts such as post-quantum readiness in versioned policy, outside the CBOM.','Ask for a deeper profile when your decision needs facts the baseline never collected.'])}
+  <div class="nextup"><button class="btn" data-goto="F3">Next module: F3 Why CBOM data is hard to use today →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Introduction, Use Cases, Profile and Demo; Interface Disclosure Baseline v0.7 and its example CBOMs (nginx 1.27.0, libexample 2.1.0) in CycloneDX 1.7.</p>
+  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. Field names follow CycloneDX 1.7 / ECMA-424 2nd edition.</p>`});
+
+/* ================= F3 Why CBOM data is hard to use today ================= */
+const FIG_SEQ=`<svg viewBox="0 0 720 230" role="img" aria-label="Two sequences over three years. In the first, the minimum is met every year and nothing says what comes next. In the second, each deferred subject carries a status, which moves from planned to in progress to a deeper profile being met.">
+ <text class="t-muted" x="300" y="22" text-anchor="middle" font-size="11.5" letter-spacing="1">YEAR 1</text><text class="t-muted" x="470" y="22" text-anchor="middle" font-size="11.5" letter-spacing="1">YEAR 2</text><text class="t-muted" x="640" y="22" text-anchor="middle" font-size="11.5" letter-spacing="1">YEAR 3</text>
+ <text class="t-ink" x="16" y="62" font-weight="600" font-size="13">Minimum, with nothing</text><text class="t-ink" x="16" y="80" font-weight="600" font-size="13">said about the rest</text>
+ <rect class="s-panel" x="230" y="44" width="140" height="44" rx="9"/><text class="t-ink" x="300" y="71" text-anchor="middle" font-size="12.5">minimum met</text>
+ <rect class="s-panel" x="400" y="44" width="140" height="44" rx="9"/><text class="t-ink" x="470" y="71" text-anchor="middle" font-size="12.5">minimum met</text>
+ <rect class="s-failbox" x="570" y="44" width="140" height="44" rx="9"/><text class="t-fail" x="640" y="71" text-anchor="middle" font-size="12.5">minimum met</text>
+ <path class="l-mute" d="M370 66h30M540 66h30"/>
+ <text class="t-fail" x="470" y="108" text-anchor="middle" font-size="12">the first stage becomes the permanent answer</text>
+ <text class="t-ink" x="16" y="160" font-weight="600" font-size="13">Minimum, plus a status</text><text class="t-ink" x="16" y="178" font-weight="600" font-size="13">for each deferred subject</text>
+ <rect class="s-panel" x="230" y="142" width="140" height="44" rx="9"/><text class="t-ink" x="300" y="161" text-anchor="middle" font-size="12.5">minimum met</text><text class="t-warn t-mono" x="300" y="177" text-anchor="middle" font-size="11">keys: planned</text>
+ <rect class="s-panel" x="400" y="142" width="140" height="44" rx="9"/><text class="t-ink" x="470" y="161" text-anchor="middle" font-size="12.5">minimum met</text><text class="t-acc t-mono" x="470" y="177" text-anchor="middle" font-size="11">keys: in progress</text>
+ <rect class="s-passbox" x="570" y="142" width="140" height="44" rx="9"/><text class="t-pass" x="640" y="169" text-anchor="middle" font-size="12.5" font-weight="600">deeper profile met</text>
+ <path class="l-acc" d="M370 164h30M540 164h30"/>
+ <text class="t-pass" x="470" y="208" text-anchor="middle" font-size="12">the consumer can see progress and has a basis to ask for more</text>
+</svg>`;
+
+const FIG_EDGE=`<svg viewBox="0 0 720 210" role="img" aria-label="A TLS session between a web client and an nginx server is the relationship. Current formats have no object for it. The assets used in it, TLS 1.3, X25519, AES-256-GCM and an RSA certificate, are modelled as objects, and the relationship's classifiers end up attached to the protocol asset.">
+ <rect class="s-soft" x="16" y="34" width="140" height="56" rx="10"/><text class="t-ink" x="86" y="58" text-anchor="middle" font-weight="600" font-size="13.5">Endpoint A</text><text class="t-muted" x="86" y="76" text-anchor="middle" font-size="11.5">web client</text>
+ <rect class="s-soft" x="564" y="34" width="140" height="56" rx="10"/><text class="t-ink" x="634" y="58" text-anchor="middle" font-weight="600" font-size="13.5">Endpoint B</text><text class="t-muted" x="634" y="76" text-anchor="middle" font-size="11.5">nginx server</text>
+ <path class="l-fail" d="M156 62H564"/>
+ <text class="t-fail" x="360" y="44" text-anchor="middle" font-size="12.5" font-weight="600">the relationship (edge): no first-class object</text>
+ <text class="t-muted" x="360" y="80" text-anchor="middle" font-size="11.5">its classifiers: endpoint roles, interface type</text>
+ <path class="l-mute" d="M200 92v36M312 92v36M424 92v36M536 92v36"/>
+ <rect class="s-passbox" x="150" y="128" width="100" height="34" rx="7"/><text class="t-pass" x="200" y="150" text-anchor="middle" font-size="12">TLS 1.3</text>
+ <rect class="s-passbox" x="262" y="128" width="100" height="34" rx="7"/><text class="t-pass" x="312" y="150" text-anchor="middle" font-size="12">X25519</text>
+ <rect class="s-passbox" x="374" y="128" width="100" height="34" rx="7"/><text class="t-pass" x="424" y="150" text-anchor="middle" font-size="12">AES-256-GCM</text>
+ <rect class="s-passbox" x="486" y="128" width="100" height="34" rx="7"/><text class="t-pass" x="536" y="150" text-anchor="middle" font-size="12">RSA-2048 cert</text>
+ <text class="t-warn" x="200" y="184" text-anchor="middle" font-size="11.5" font-weight="600">edge classifiers end up here</text>
+ <text class="t-pass" x="480" y="184" text-anchor="middle" font-size="11.5">assets (nodes): modelled today</text>
+</svg>`;
+
+const FIG_NORM=`<svg viewBox="0 0 720 200" role="img" aria-label="Two kinds of normalization. Naming: three spellings of one algorithm resolve to one registry identifier. Encoding: one fact that can sit in two valid places in a document resolves, through the mapping, to one canonical location.">
+ <rect class="s-soft" x="12" y="12" width="340" height="176" rx="12"/><text class="t-ink" x="32" y="38" font-weight="700" font-size="13.5">Naming: the value itself</text>
+ <rect class="s-panel" x="32" y="58" width="132" height="28" rx="6"/><text class="t-ink t-mono" x="98" y="77" text-anchor="middle" font-size="12">AES256</text>
+ <rect class="s-panel" x="32" y="96" width="132" height="28" rx="6"/><text class="t-ink t-mono" x="98" y="115" text-anchor="middle" font-size="12">AES-256-GCM</text>
+ <rect class="s-panel" x="32" y="134" width="132" height="28" rx="6"/><text class="t-ink t-mono" x="98" y="153" text-anchor="middle" font-size="12">aes_256_gcm</text>
+ <path class="l-acc" d="M164 72C200 72 200 110 224 110M164 110H224M164 148C200 148 200 110 224 110"/>
+ <rect class="s-key" x="224" y="88" width="112" height="44" rx="9"/><text class="t-ink" x="280" y="107" text-anchor="middle" font-size="12" font-weight="600">one registry</text><text class="t-ink" x="280" y="123" text-anchor="middle" font-size="12" font-weight="600">identifier</text>
+ <rect class="s-soft" x="368" y="12" width="340" height="176" rx="12"/><text class="t-ink" x="388" y="38" font-weight="700" font-size="13.5">Encoding: where the value sits</text>
+ <text class="t-muted" x="388" y="62" font-size="11.5">one fact: key exchange X25519</text>
+ <rect class="s-panel" x="388" y="76" width="170" height="28" rx="6"/><text class="t-ink t-mono" x="473" y="95" text-anchor="middle" font-size="11.5">in the cipher suite</text>
+ <rect class="s-panel" x="388" y="120" width="170" height="28" rx="6"/><text class="t-ink t-mono" x="473" y="139" text-anchor="middle" font-size="11.5">as a referenced asset</text>
+ <path class="l-acc" d="M558 90C580 90 580 112 594 112M558 134C580 134 580 112 594 112"/>
+ <rect class="s-key" x="594" y="90" width="100" height="44" rx="9"/><text class="t-ink" x="644" y="109" text-anchor="middle" font-size="12" font-weight="600">mapping:</text><text class="t-ink" x="644" y="125" text-anchor="middle" font-size="12" font-weight="600">one location</text>
+ <text class="t-muted" x="538" y="174" text-anchor="middle" font-size="11.5">both locations are valid CycloneDX</text>
+</svg>`;
+
+const LESSONS={
+ harm:{t:'Harmonization',prob:'Many vendor-specific formats and delivery methods made reconciliation at scale impossible.',impl:'Agree how each attribute is expressed, rather than mandating one format. A profile says what must be disclosed. A mapping fixes how each attribute is encoded in each format. Several formats can then coexist and still be reconciled.'},
+ prof:{t:'Profiling',prob:'Listing everything did not make a bill of materials more useful. The many entries hid the few that mattered for a decision.',impl:'Define a minimum, purpose-specific set of attributes for each objective. That is what a profile does.'},
+ seq:{t:'Sequencing',prob:'Producers read the published minimum elements as the most they had to supply. They met the minimum and stopped. Consumers had no basis for asking for more, because nothing said what came next.',impl:'A profile may defer part of the information. When it does, it must place an obligation on the deferred part. Otherwise the first stage becomes the permanent answer.'},
+ norm:{t:'Normalization',prob:'Different producers wrote the same value in different ways, which blocked automated processing.',impl:'Agree identifiers (syntactic normalization) and attribute meanings (semantic normalization), so that CBOMs from different producers can be compared.'}
+};
+const GAPS={
+ life:{t:'Lifecycle state',icon:'lifecycle',html:`<p>"The product uses AES-256-GCM" can mean four things. The algorithm may be <b>intended</b> in the design, <b>implemented</b> in the binary, <b>configured</b> in a deployment, or <b>observed</b> on the wire.</p>${dash(['A vendor build CBOM and an operator runtime scan can both be correct and still differ.','Without an explicit stage, a consumer cannot tell capability from use. Module F5 covers this in depth.'])}`},
+ depth:{t:'Depth of disclosure',icon:'ladder',html:`<p><b>Too much detail</b> hides what matters and can expose intellectual property. <b>Too little</b> hides risk. A profile sets a minimum, and its scope limits how much the producer is asked to disclose.</p>${dash(['<b>Time is the third factor.</b> Few suppliers can answer a mature profile at the start. A profile pitched at what suppliers produce today will still be pitched there in three years.','So a profile that defers a subject still asks the producer to say where that subject stands.'])}`},
+ four:{t:'Missing values',icon:'withheld',html:`<p>Most tooling treats an attribute as present or missing. That merges four situations: <span class="mono">value</span>, <span class="mono">withheld</span>, <span class="mono">unknown</span> and <span class="mono">undeclared</span>.</p>${dash(['<b>Unknown</b> points to a limit of the producing process. It may justify better tooling, or less weight on the result.','<b>Withheld</b> is a policy decision. The information exists and could be released on other terms, such as under an NDA.','A vendor whose scanner cannot see hardware cryptography is not in the same position as one that chose not to publish a library version. An empty field treats them the same.','Neither CycloneDX nor SPDX has a native field for these markers, so the mapping defines a convention.'])}`},
+ tool:{t:'Tooling confidence',icon:'advisory',html:`<p>Automated tools can miss cryptography that is <b>loaded dynamically</b>, <b>driven by configuration</b> or <b>provided by hardware</b>.</p>${dash(['A CBOM is no more reliable than the process that produced it.','Provenance matters, and so does signing where it is feasible.','Confidence also depends on the lifecycle stage at which the CBOM was captured.'])}`}
+};
+const PAIRS=[
+ {a:`<span class="k">source</span>  vendor CBOM
+<span class="k">type  </span>  library
+<span class="k">id    </span>  pkg:generic/openssl@3.4.0
+<span class="k">role  </span>  implementing library`,b:`<span class="k">source</span>  build-time scan
+<span class="k">type  </span>  library
+<span class="k">id    </span>  pkg:generic/openssl@3.4.0
+<span class="k">used  </span>  TLS service interface`,ans:0,e:'Same. Both records use the same package URL, an established identifier for software components. Baseline rule I9 requires exactly this form.'},
+ {a:`<span class="k">source</span>  vendor CBOM
+<span class="k">type  </span>  certificate
+<span class="k">sha256</span>  9f3a…c41e`,b:`<span class="k">source</span>  runtime discovery
+<span class="k">type  </span>  certificate
+<span class="k">issuer</span>  CN=Example CA
+<span class="k">serial</span>  0x2a7f`,ans:2,e:'Cannot tell. Both identifier forms are workable, but tools disagree on which to use. Unless one record carries both, the inventory may hold two records of one certificate.'},
+ {a:`<span class="k">document   </span>  product X, rev 3
+<span class="k">interfaceId</span>  svc-1
+<span class="k">protocol   </span>  TLS 1.3`,b:`<span class="k">document   </span>  product Y, rev 1
+<span class="k">interfaceId</span>  svc-1
+<span class="k">protocol   </span>  TLS 1.3`,ans:1,e:'Different. interfaceId is chosen by each producer and has no meaning outside its own document. Matching on it would merge two distinct interfaces.'}
+];
+
+const QUIZ_F3=[
+ {q:'Why is harmonization not a demand for one format?',o:['CycloneDX is technically better than SPDX','Organizations are committed to different formats and the formats keep changing. Consistency comes from a profile plus a mapping for each format','SPDX cannot carry any cryptographic data'],a:1,e:'What has to be consistent is the information: which attributes are disclosed, and where each sits in a given format.'},
+ {q:'A profile defers key management to a later stage. What should it ask for now?',o:['Nothing. Declare keys out of scope','A one-word status for the deferred subject','A full key inventory anyway'],a:1,e:'Out of scope costs the producer nothing and tells the consumer nothing. A status costs almost nothing and shows how far the work has got.'},
+ {q:'What is the edge gap?',o:['The formats have no names for post-quantum algorithms','There is no first-class object for the relationship where cryptography is applied between two parties, so its classifiers are attached to a protocol asset','The formats cannot describe HSMs'],a:1,e:'The standards describe what a component contains, not the connections in which it is used.'},
+ {q:'An algorithm appears as AES256 in one CBOM and AES-256-GCM in another. Which remedy applies?',o:['The mapping, which fixes where the value sits','The CycloneDX 1.7 Cryptography Registry, which gives a stable identifier for the value','Conformance checking'],a:1,e:'Naming normalization concerns the value. Encoding normalization, done by the mapping, concerns where the value sits.'},
+ {q:'Where do identity requirements for assets belong?',o:['In each consumer\'s inventory tooling only','In the profile, which states the identifier form for each asset class it covers','In a VEX statement'],a:1,e:'The identity problem has no general solution. A profile turns it into a decision made once, as rule I9 does for the implementing library.'}
+];
+const F3=[];
+F3.push(titleScreen(MODULES.find(m=>m.id==='F3'),{sub:'Why the CBOM data supplied today is hard to use, what SBOM adoption already taught, and what a profile methodology has to do about it.',
+ obj:['Name the four lessons from SBOM adoption and what each means for CBOMs.','Explain why a minimum without an obligation on the rest becomes permanent.','Describe the edge gap in current CBOM standards.','Tell naming normalization from encoding normalization.','Recognize when two records may or may not describe the same asset.','State the requirements a profile methodology must meet.'],
+ req:['Review the eight sections.','Pass the knowledge check with a score of 80% or higher.'],pre:'F2 Why a buyer names a profile.',aud:'Buyers, operators, product owners and tool builders',level:'Foundation'}));
+
+F3.push({min:1.5,render:()=>`${head('standards','Lessons from SBOM adoption','What separated successful SBOM deployments from difficult ones')}
+  <p>Four properties distinguished SBOM deployments that worked from those that did not. Each applies equally to CBOMs exchanged between many vendors.</p>
+  ${cue('Select each lesson')}
+  <div class="seg" role="tablist">${Object.entries(LESSONS).map(([k,v])=>`<button role="tab" data-les="${k}" aria-selected="false">${v.t}</button>`).join('')}</div>
+  <div class="two" id="lesd" aria-live="polite"></div>
+  ${concept('Harmonization does not mean one format. A single format is neither achievable nor necessary. The profile is written once, a mapping is defined for each format, and consumers reconcile CBOMs from several formats. The 2026 SBOM minimum elements take the same position and name both SPDX and CycloneDX.')}`,
+  init(){const sel=k=>{document.querySelectorAll('[data-les]').forEach(b=>b.setAttribute('aria-selected',b.dataset.les===k));const v=LESSONS[k];
+    document.getElementById('lesd').innerHTML=`<div class="box"><div class="eyebrow">Problem observed with SBOMs</div><p style="margin:8px 0 0">${v.prob}</p></div><div class="box" style="border-color:var(--accent)"><div class="eyebrow">Implication for CBOMs</div><p style="margin:8px 0 0">${v.impl}</p></div>`};
+    document.querySelectorAll('[data-les]').forEach(b=>b.onclick=()=>sel(b.dataset.les));sel('harm');}});
+
+F3.push({min:1.5,render:()=>`${head('ladder','Sequencing: when the minimum becomes the maximum','A deferred subject still needs an obligation')}
+  <p>The SBOM minimum elements were meant as a floor. Producers read them as a ceiling. A CBOM profile that asks for part of the information first has the same risk.</p>
+  ${fig(FIG_SEQ,'<b>Figure 1.</b> The same minimum, with and without a status on the deferred subject. Only the second gives the consumer a reason and a basis to ask for more.')}
+  <div class="tbl"><table><thead><tr><th>How the profile treats a deferred subject</th><th>Cost to the producer</th><th>What the consumer learns</th></tr></thead><tbody>
+   <tr><td>States it is out of scope</td><td>Nothing</td><td>Nothing</td></tr>
+   <tr><td>Requires a one-word status, such as <span class="mono">planned</span> or <span class="mono">in progress</span></td><td>Almost nothing</td><td>How far the work has progressed</td></tr>
+  </tbody></table></div>
+  <div class="box"><h3>Coverage is a separate question</h3><p style="margin:0">The 2026 minimum elements require an SBOM to include every component, including transitive dependencies, with no minimum depth. A profile does something different. It says which attributes are mandatory for a purpose. It never permits a producer to leave components out.</p></div>`});
+
+F3.push({min:1.5,render:()=>`${head('relation','The edge gap','The standards describe what a component contains, not where it is used')}
+  <p>Current CBOM standards model cryptographic assets as nodes: algorithms, keys, certificates and protocols. They have no object for the <b>relationship</b>, the point at which cryptography is applied between two parties. A TLS connection is an example. It is where assets are used, not an asset in itself.</p>
+  ${fig(FIG_EDGE,'<b>Figure 2.</b> Some classifiers belong to the connection, such as the endpoint roles in a session. With no object for the connection, they are attached to the protocol asset. The edge is represented as though it were a node.')}
+  ${dash(['<b>Why it matters:</b> the questions buyers ask are about connections. Which interfaces negotiate a classical key exchange? Who is at the far end?','<b>How the methodology responds:</b> it models interfaces explicitly and states, in the mapping, where each relationship attribute is written. Module C1 covers the relationship model.'])}`});
+
+F3.push({min:1.5,render:()=>`${head('mapping','Naming, encoding and format coverage','Three reasons two correct CBOMs cannot be compared')}
+  ${fig(FIG_NORM,'<b>Figure 3.</b> Naming normalization fixes the value. Encoding normalization fixes where the value sits. A consumer needs both to read CBOMs from different producers with one parser.')}
+  <div class="tiles3">
+   <div class="tile3"><h4>${I.list} Inconsistent names</h4><p>Deployments show one algorithm written several ways. The CycloneDX 1.7 Cryptography Registry gives stable identifiers. CBOMs written to earlier versions carry free text, which the consumer normalizes on intake.</p></div>
+   <div class="tile3"><h4>${I.mapping} Several valid encodings</h4><p>CycloneDX and SPDX both allow one fact to sit in different valid places. The mapping defines one canonical location per profile attribute, so a consumer reads each value from one place.</p></div>
+   <div class="tile3"><h4>${I.standards} Uneven format coverage</h4><p>SPDX 3.0.1 has no cryptographic model like CycloneDX's, so SPDX users often link a CycloneDX CBOM. SPDX is adding one. When it lands, only the SPDX column of the mapping changes. The profile stays the same.</p></div>
+  </div>
+  <p class="note">Positions described as of the methodology draft. Check the current state of each specification.</p>`});
+
+F3.push({min:1.5,render:()=>`${head('warn','Gaps a reader cannot see','Four ways a CBOM can mislead without saying anything false')}
+  ${cue('Select each topic to learn more')}
+  <div class="explore"><div class="circles">${Object.entries(GAPS).map(([k,v])=>`<button class="circ" data-gap="${k}" aria-pressed="false"><span class="c">${I[v.icon]}</span><span class="done"></span>${v.t}</button>`).join('')}</div>
+  <div class="detail" id="gapd" aria-live="polite"></div></div>`,
+  init(){const sel=k=>{document.querySelectorAll('[data-gap]').forEach(b=>{const on=b.dataset.gap===k;b.setAttribute('aria-pressed',on);if(on)b.classList.add('seen')});document.getElementById('gapd').innerHTML=`<h3>${GAPS[k].t}</h3>${GAPS[k].html}`};
+    document.querySelectorAll('[data-gap]').forEach(b=>b.onclick=()=>sel(b.dataset.gap));sel('life');}});
+
+F3.push({min:1.5,render:()=>`${head('chain','The environment, and the passage of time','What the cryptography alone does not tell you')}
+  <div class="two">
+   <div class="box"><h3>Linking cryptography to its environment</h3>${dash(['The <b>library version</b> decides whether modes such as hybrid key exchange are available.','<b>Where it runs</b> matters: software, an HSM or a TEE. Cryptography in a TEE may need a hardware replacement rather than a software update.','So CBOMs are read with SBOMs, and sometimes HBOMs. The links between these artifacts are not yet mature.'])}</div>
+   <div class="box"><h3>Three ways a CBOM can be "older"</h3>
+    <div class="tbl" style="margin:4px 0 8px"><table><tbody>
+     <tr><td><b>Standard</b></td><td>CycloneDX 1.6 versus 1.7</td></tr>
+     <tr><td><b>Profile</b></td><td>Baseline v0.6 versus v0.7</td></tr>
+     <tr><td><b>Content</b></td><td>The product's CBOM regenerated for a new release</td></tr>
+    </tbody></table></div>
+    <p class="note" style="margin:0">Treating "older" as one idea produces wrong verdicts. Each axis is handled on its own. Module A3 covers versioning.</p></div>
+  </div>`});
+
+F3.push({min:2,render:()=>`${head('inventory','Is it the same asset?','Correlation across tools and across time')}
+  <p>An inventory takes records from a vendor CBOM, a build-time scan and a runtime discovery tool. Each names things its own way. If the inventory decides wrongly, it counts one asset twice or merges two. It does not report either error.</p>
+  ${cue('Decide whether each pair describes the same asset')}
+  <div class="pairs">${PAIRS.map((p,i)=>`<div class="pair"><div class="recs"><div class="rec">${p.a}</div><div class="rec">${p.b}</div></div>
+   <div class="choices" role="group" aria-label="Pair ${i+1}">${['Same asset','Different assets','Cannot tell'].map((c,j)=>`<button data-pair="${i}" data-c="${j}" aria-pressed="false">${c}</button>`).join('')}</div><div class="fb" id="pfb${i}" aria-live="polite"></div></div>`).join('')}</div>
+  <div class="tbl wide" style="margin-top:18px"><table><thead><tr><th>Asset class</th><th>Identity available today</th><th>Assessment</th></tr></thead><tbody>
+   <tr><td>Software components</td><td>Package URL (formerly CPE)</td><td><span class="chip c-pass">Workable</span></td></tr>
+   <tr><td>Certificates</td><td>SHA-256 fingerprint, or issuer and serial number</td><td><span class="chip c-warn">Workable; tools disagree on which</span></td></tr>
+   <tr><td>Keys</td><td>No agreed identifier. A key in an HSM has only a local label or handle</td><td><span class="chip c-fail">The hard case</span></td></tr>
+   <tr><td>Algorithms</td><td>Registry identifiers, several competing</td><td><span class="chip c-warn">Being settled</span></td></tr>
+   <tr><td>Interfaces</td><td><span class="mono">interfaceId</span>, chosen freely by the producer</td><td><span class="chip c-mute">A label inside one document</span></td></tr>
+  </tbody></table></div>
+  ${concept('A profile can require an identifier form for each asset class it covers. Rule I9 already does this for the implementing library. Identity has no general solution, but this turns it into a decision made once per profile.')}`,
+  init(){document.querySelectorAll('[data-pair]').forEach(b=>b.onclick=()=>{const i=+b.dataset.pair,c=+b.dataset.c,p=PAIRS[i];
+    document.querySelectorAll(`[data-pair="${i}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));
+    const f=document.getElementById('pfb'+i);const ok=c===p.ans;f.className='fb '+(ok?'ok':'no');f.textContent=(ok?'Correct. ':'Not quite. ')+p.e;})}});
+
+F3.push({min:1,render:()=>`${head('rules','What a profile methodology has to do','The challenges reduce to a short list of requirements')}
+  <div class="tbl wide"><table><thead><tr><th>Requirement</th><th>Answers</th><th>Where it is covered</th></tr></thead><tbody>
+   <tr><td><b>Limit what must be disclosed</b> (profiling)</td><td>Profiling lesson, depth of disclosure</td><td>F2, C2, C4</td></tr>
+   <tr><td><b>Place an obligation on deferred subjects</b></td><td>Sequencing lesson</td><td>C4</td></tr>
+   <tr><td><b>Fix encoding and naming</b> (normalization)</td><td>Harmonization, several valid encodings, inconsistent names</td><td>A3</td></tr>
+   <tr><td><b>Distinguish four disclosure outcomes</b></td><td>Missing values</td><td>F2, C3, C5</td></tr>
+   <tr><td><b>Record lifecycle state explicitly</b></td><td>Lifecycle ambiguity, tooling confidence</td><td>F5</td></tr>
+   <tr><td><b>Model relationships explicitly</b></td><td>The edge gap</td><td>C1</td></tr>
+   <tr><td><b>Require identifier forms</b></td><td>Correlation across tools and time</td><td>F4, C2</td></tr>
+  </tbody></table></div>
+  ${concept('The formats keep developing, so the methodology stays separate from them. When a specification adds capability, the mapping is updated and the profile is unchanged.')}`});
+
+F3.push(quizScreen('F3',QUIZ_F3));
+F3.push({min:0,next:null,render:()=>`${head('warn','Why CBOM data is hard to use today','Summary')}
+  <p style="font-size:18px">CBOMs inherit the SBOM lessons and add problems of their own: no object for relationships, several names and encodings for one fact, unclear lifecycle state, and no shared identity for some assets.</p>
+  <h3 style="margin-top:22px">Follow these practices</h3>
+  ${dash(['Ask for consistent information through a profile and mapping, not for one format.','When a profile defers a subject, require a status for it.','Normalize names on intake, and read each value from the location the mapping defines.','Require an explicit lifecycle stage and the four disclosure outcomes.','State the identifier form you need for each asset class in the profile you cite.'])}
+  <div class="nextup"><button class="btn" data-goto="F4">Next module: F4 CBOMs and the cryptographic inventory →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Challenges; 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026); CycloneDX 1.7 / ECMA-424 2nd edition and the Cryptography Registry; SPDX 3.0.1.</p>
+  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. Positions on the formats reflect the draft and may have moved.</p>`});
+
+/* ================= F4 CBOMs and the cryptographic inventory ================= */
+const FIG_INV=`<svg viewBox="0 0 720 240" role="img" aria-label="A vendor CBOM, a build CBOM and a runtime or configuration scan feed a normalization step, which forms the cryptographic inventory. The inventory supports risk, compliance, migration and supply-chain requests.">
+ <text class="t-muted" x="95" y="24" text-anchor="middle" font-size="11" letter-spacing="1">SOURCES</text>
+ <rect class="s-soft" x="20" y="38" width="150" height="36" rx="8"/><text class="t-ink" x="95" y="61" text-anchor="middle" font-size="12.5">Vendor CBOM</text><text class="t-muted t-mono" x="95" y="88" text-anchor="middle" font-size="10">implemented</text>
+ <rect class="s-soft" x="20" y="100" width="150" height="36" rx="8"/><text class="t-ink" x="95" y="123" text-anchor="middle" font-size="12.5">Build CBOM</text>
+ <rect class="s-soft" x="20" y="162" width="150" height="36" rx="8"/><text class="t-ink" x="95" y="185" text-anchor="middle" font-size="12.5">Runtime / config scan</text><text class="t-muted t-mono" x="95" y="212" text-anchor="middle" font-size="10">configured · observed</text>
+ <path class="l-acc" d="M170 56C210 56 215 104 250 110M170 118H250M170 180C210 180 215 134 250 128"/>
+ <rect class="s-key" x="250" y="74" width="134" height="90" rx="10"/><text class="t-ink" x="317" y="108" text-anchor="middle" font-weight="600" font-size="13">Normalization</text><text class="t-muted" x="317" y="126" text-anchor="middle" font-size="11">profiles · registry</text><text class="t-muted" x="317" y="142" text-anchor="middle" font-size="11">correlation</text>
+ <path class="l-acc" d="M384 119H440"/><path class="f-acc" d="M448 119l-10-5v10z"/>
+ <rect class="s-passbox" x="448" y="74" width="150" height="90" rx="10"/><text class="t-pass" x="523" y="106" text-anchor="middle" font-weight="700" font-size="13">Cryptographic</text><text class="t-pass" x="523" y="124" text-anchor="middle" font-weight="700" font-size="13">inventory</text><text class="t-muted" x="523" y="146" text-anchor="middle" font-size="11">queryable, maintained</text>
+ <text class="t-muted" x="664" y="24" text-anchor="middle" font-size="11" letter-spacing="1">USES</text>
+ <rect class="s-panel" x="622" y="38" width="86" height="32" rx="7"/><text class="t-ink" x="665" y="58" text-anchor="middle" font-size="11.5">Risk</text>
+ <rect class="s-panel" x="622" y="84" width="86" height="32" rx="7"/><text class="t-ink" x="665" y="104" text-anchor="middle" font-size="11.5">Compliance</text>
+ <rect class="s-panel" x="622" y="130" width="86" height="32" rx="7"/><text class="t-ink" x="665" y="150" text-anchor="middle" font-size="11.5">Migration</text>
+ <rect class="s-panel" x="622" y="176" width="86" height="40" rx="7"/><text class="t-ink" x="665" y="193" text-anchor="middle" font-size="11">Supply-chain</text><text class="t-ink" x="665" y="207" text-anchor="middle" font-size="11">request</text>
+ <path class="l-mute" d="M598 104L622 54M598 114L622 100M598 126L622 146M598 136L622 196"/>
+</svg>`;
+
+const FIG_CORR=`<svg viewBox="0 0 720 210" role="img" aria-label="Two invisible correlation errors. Left: one certificate identified by fingerprint in one source and by issuer and serial in another becomes two records. Right: two different products both label an interface svc-1, and matching on that label merges them into one record.">
+ <text class="t-ink" x="180" y="24" text-anchor="middle" font-weight="700" font-size="13.5">Counted twice</text>
+ <rect class="s-soft" x="20" y="40" width="150" height="46" rx="8"/><text class="t-ink" x="95" y="59" text-anchor="middle" font-size="11.5">vendor CBOM</text><text class="t-muted t-mono" x="95" y="76" text-anchor="middle" font-size="10.5">sha256 9f3a…</text>
+ <rect class="s-soft" x="190" y="40" width="150" height="46" rx="8"/><text class="t-ink" x="265" y="59" text-anchor="middle" font-size="11.5">runtime discovery</text><text class="t-muted t-mono" x="265" y="76" text-anchor="middle" font-size="10.5">issuer + serial</text>
+ <path class="l-mute" d="M95 86v40M265 86v40"/>
+ <rect class="s-failbox" x="30" y="126" width="130" height="34" rx="7"/><text class="t-fail" x="95" y="148" text-anchor="middle" font-size="11.5">certificate #1</text>
+ <rect class="s-failbox" x="200" y="126" width="130" height="34" rx="7"/><text class="t-fail" x="265" y="148" text-anchor="middle" font-size="11.5">certificate #2</text>
+ <text class="t-muted" x="180" y="188" text-anchor="middle" font-size="11.5">one certificate in reality</text>
+ <path class="l-mute" d="M360 20v180"/>
+ <text class="t-ink" x="540" y="24" text-anchor="middle" font-weight="700" font-size="13.5">Merged wrongly</text>
+ <rect class="s-soft" x="380" y="40" width="150" height="46" rx="8"/><text class="t-ink" x="455" y="59" text-anchor="middle" font-size="11.5">product X CBOM</text><text class="t-muted t-mono" x="455" y="76" text-anchor="middle" font-size="10.5">interfaceId svc-1</text>
+ <rect class="s-soft" x="550" y="40" width="150" height="46" rx="8"/><text class="t-ink" x="625" y="59" text-anchor="middle" font-size="11.5">product Y CBOM</text><text class="t-muted t-mono" x="625" y="76" text-anchor="middle" font-size="10.5">interfaceId svc-1</text>
+ <path class="l-mute" d="M455 86C455 110 540 106 540 126M625 86C625 110 540 106 540 126"/>
+ <rect class="s-failbox" x="465" y="126" width="150" height="34" rx="7"/><text class="t-fail" x="540" y="148" text-anchor="middle" font-size="11.5">interface "svc-1"</text>
+ <text class="t-muted" x="540" y="188" text-anchor="middle" font-size="11.5">two interfaces in reality</text>
+</svg>`;
+
+const FIG_EXTRACT=`<svg viewBox="0 0 720 230" role="img" aria-label="The inventory feeds an extract and scope step that selects, filters, redacts, signs and timestamps. The output CBOM is validated against the requesting profile and goes to an internal team, an external client or a supply-chain requester.">
+ <rect class="s-passbox" x="16" y="74" width="140" height="74" rx="10"/><text class="t-pass" x="86" y="106" text-anchor="middle" font-weight="700" font-size="13">Cryptographic</text><text class="t-pass" x="86" y="124" text-anchor="middle" font-weight="700" font-size="13">inventory</text>
+ <path class="l-acc" d="M156 111H204"/><path class="f-acc" d="M212 111l-10-5v10z"/>
+ <rect class="s-key" x="212" y="64" width="160" height="94" rx="10"/><text class="t-ink" x="292" y="92" text-anchor="middle" font-weight="600" font-size="13">Extract and scope</text><text class="t-muted" x="292" y="112" text-anchor="middle" font-size="11">select · filter · redact</text><text class="t-muted" x="292" y="128" text-anchor="middle" font-size="11">record provenance</text><text class="t-muted" x="292" y="144" text-anchor="middle" font-size="11">sign</text>
+ <path class="l-acc" d="M372 111H416"/><path class="f-acc" d="M424 111l-10-5v10z"/>
+ <rect class="s-panel" x="424" y="76" width="136" height="70" rx="10"/><text class="t-ink" x="492" y="104" text-anchor="middle" font-weight="700" font-size="13">Output CBOM</text><text class="t-pass t-mono" x="492" y="124" text-anchor="middle" font-size="10.5">profile-validated</text>
+ <text class="t-muted" x="650" y="24" text-anchor="middle" font-size="11" letter-spacing="1">CONSUMERS</text>
+ <rect class="s-soft" x="596" y="38" width="112" height="32" rx="7"/><text class="t-ink" x="652" y="58" text-anchor="middle" font-size="11">Internal team</text>
+ <rect class="s-soft" x="596" y="84" width="112" height="32" rx="7"/><text class="t-ink" x="652" y="104" text-anchor="middle" font-size="11">External client</text>
+ <rect class="s-soft" x="596" y="130" width="112" height="40" rx="7"/><text class="t-ink" x="652" y="147" text-anchor="middle" font-size="11">Supply-chain</text><text class="t-ink" x="652" y="161" text-anchor="middle" font-size="11">requester</text>
+ <path class="l-mute" d="M560 104L596 54M560 111H596M560 118L596 150"/>
+ <rect class="s-panel" x="212" y="184" width="348" height="32" rx="8" style="stroke:var(--warn)"/><text class="t-warn" x="386" y="205" text-anchor="middle" font-size="11.5">the profile the requester names validates the output before release</text>
+</svg>`;
+
+const FIG_PATH=`<svg viewBox="0 0 720 280" role="img" aria-label="A transaction path from client through CDN and gateway to a service, with three hops whose key exchange you can change. A signature relationship spans the whole path. Each product's CBOM describes only its own boundary; the inventory holds the topology and computes the posture of the path.">
+ <rect class="s-soft" x="20" y="52" width="120" height="42" rx="9"/><text class="t-ink" x="80" y="78" text-anchor="middle" font-weight="600" font-size="13">Client</text>
+ <rect class="s-soft" x="210" y="52" width="120" height="42" rx="9"/><text class="t-ink" x="270" y="78" text-anchor="middle" font-weight="600" font-size="13">CDN</text>
+ <rect class="s-soft" x="400" y="52" width="120" height="42" rx="9"/><text class="t-ink" x="460" y="78" text-anchor="middle" font-weight="600" font-size="13">Gateway</text>
+ <rect class="s-soft" x="590" y="52" width="110" height="42" rx="9"/><text class="t-ink" x="645" y="78" text-anchor="middle" font-weight="600" font-size="13">Service</text>
+ <path id="hop0" class="hop-pass" stroke-width="3" d="M140 73H210"/><text id="hopt0" class="t-pass" x="175" y="40" text-anchor="middle" font-size="11">hybrid ML-KEM</text>
+ <path id="hop1" class="hop-fail" stroke-width="3" d="M330 73H400"/><text id="hopt1" class="t-fail" x="365" y="40" text-anchor="middle" font-size="11" font-weight="700">classical</text>
+ <path id="hop2" class="hop-pass" stroke-width="3" d="M520 73H590"/><text id="hopt2" class="t-pass" x="555" y="40" text-anchor="middle" font-size="11">hybrid ML-KEM</text>
+ <path id="sigl" style="stroke:var(--mgmt)" stroke-width="1.6" stroke-dasharray="5 4" fill="none" d="M80 114H645M80 108v12M645 108v12"/>
+ <text id="sigt" class="t-mgmt" x="362" y="132" text-anchor="middle" font-size="11.5">originator signature (ECDSA), verified by the service: spans every hop</text>
+ <rect class="s-key" x="20" y="164" width="90" height="28" rx="6"/><rect class="s-key" x="210" y="164" width="90" height="28" rx="6"/><rect class="s-key" x="400" y="164" width="90" height="28" rx="6"/><rect class="s-key" x="590" y="164" width="90" height="28" rx="6"/>
+ <text class="t-acc t-mono" x="65" y="183" text-anchor="middle" font-size="11">CBOM</text><text class="t-acc t-mono" x="255" y="183" text-anchor="middle" font-size="11">CBOM</text><text class="t-acc t-mono" x="445" y="183" text-anchor="middle" font-size="11">CBOM</text><text class="t-acc t-mono" x="635" y="183" text-anchor="middle" font-size="11">CBOM</text>
+ <path class="l-mute" d="M65 192L300 226M255 192L330 226M445 192L390 226M635 192L420 226"/>
+ <text class="t-muted" x="20" y="154" font-size="10.5">each CBOM declares only its own boundary</text>
+ <rect class="s-key" x="200" y="226" width="320" height="46" rx="10"/><text class="t-ink" x="360" y="245" text-anchor="middle" font-weight="700" font-size="13">Cryptographic inventory</text><text class="t-muted" x="360" y="263" text-anchor="middle" font-size="11">holds the topology · computes posture over the path</text>
+</svg>`;
+
+const ARRANGE={
+ central:{t:'Central',html:`<p><b>One store.</b> Data is gathered from across the estate, normalized on the way in, and queried centrally.</p>${dash(['<b>Strength:</b> estate-wide queries are simple, and normalization happens once.','<b>Cost:</b> the central store must be kept current, and it can become a bottleneck for the teams that own the systems.'])}`},
+ dist:{t:'Distributed',html:`<p><b>Data stays with its owners:</b> business units, subsidiaries or regions. Estate-wide questions are answered by querying across them or collecting summaries.</p>${dash(['<b>Strength:</b> suits devolved ownership, and rules on data residency or confidentiality that prevent pooling.','<b>Cost:</b> each participant may normalize differently. An estate-wide answer is only as good as the agreement between them.'])}`},
+ fed:{t:'Federated',html:`<p><b>The common middle position.</b> Detail stays local, and an agreed subset is published upward for estate-wide reporting.</p>${dash(['<b>A shared profile is most useful here.</b> If every participant validates against it, the published subsets are comparable even though the inventories are run separately.','Each participant normalizes for itself. Mergers, acquisitions and outsourcing push organizations toward this arrangement, planned or not.'])}`}
+};
+const EXCH=[
+ ['doc','Subject and scope','State exactly what the extract covers and the criteria used to select its content.'],
+ ['lifecycle','Provenance and time','Record the inventory revision and the time the snapshot was drawn.'],
+ ['signed','Authenticity','Sign a CBOM issued to an external party so its origin and integrity can be checked.'],
+ ['withheld','Declared redaction','Mark removed attributes as withheld. Never redact silently.'],
+ ['mapping','Format and version','Agree the carrier format and version. The mapping and the profile\'s accepted range decide what can be produced.'],
+ ['verdict','No derived evaluations','Leave post-quantum posture out. The recipient derives it with its own policy.'],
+ ['chain','Identity and re-request','Use stable identifiers so the recipient can join SBOM and HBOM and ask for an update later.'],
+ ['rules','Request and response','The request names the profile and scope. The producer validates the response and keeps it for audit.'],
+ ['advisory','Trust asymmetry','Inputs may come from lower-trust sources and need verification. Outputs carry your own attestation.']
+];
+const QUIZ_F4=[
+ {q:'Which of these describes a cryptographic inventory rather than a CBOM?',o:['A point-in-time, versioned revision','It correlates cryptography across components and over time','Disclosure and conformance for one component'],a:1,e:'A CBOM is one artifact at one point in time. The inventory spans the estate and is maintained continuously.'},
+ {q:'An inventory merges records but does not record why. What goes wrong?',o:['Nothing, as long as the merge was right','Nobody can audit the merge, or correct it when a producer changes its identifier scheme','The inventory cannot be signed'],a:1,e:'Decide the join key per asset class, and record which key was used for each merge.'},
+ {q:'A partner asks for a CBOM of a service you supply. What do you do before release?',o:['Send an export of the relevant inventory records','Scope it, mark redactions as withheld, record the inventory revision and time, sign it, and validate it against the profile the partner named','Remove sensitive attributes so the document looks complete'],a:1,e:'The same profile that validates CBOMs coming in validates the extract going out.'},
+ {q:'Hops 1 and 3 negotiate hybrid ML-KEM; hop 2 is classical. An ECDSA signature from the originator spans the path. What is the posture?',o:['Quantum-safe, since two of three hops are hybrid','Transit is governed by the classical hop. The signature is assessed separately and remains classical','It cannot be assessed at all'],a:1,e:'For protection in transit the weakest hop governs. A relationship that spans the path is composed on its own.'},
+ {q:'Where do business criticality and data retention periods belong?',o:['In the CBOM, next to each interface','Outside the CBOM, linked from the inventory through stable identifiers','Nowhere; they are not relevant to cryptography'],a:1,e:'They are properties of the business and change on their own schedule. Link to the CMDB rather than copy it.'}
+];
+
+const F4=[];
+F4.push(titleScreen(MODULES.find(m=>m.id==='F4'),{sub:'How CBOMs feed an organization\'s cryptographic inventory, how CBOMs are drawn back out of it, and what it takes to judge a whole transaction path.',
+ obj:['Tell a CBOM from a cryptographic inventory.','Explain how records from different sources are correlated, and the two errors to avoid.','Extract a CBOM for a consumer and validate it before release.','Compare central, distributed and federated inventories.','Explain how the posture of a path is composed.','Name the non-cryptographic context an inventory needs, and where it lives.'],
+ req:['Review the seven sections.','Pass the knowledge check with a score of 80% or higher.'],pre:'F3 Why CBOM data is hard to use today.',aud:'Security architects, inventory owners, migration leads and procurement',level:'Foundation'}));
+
+F4.push({min:1.5,render:()=>`${head('inventory','A CBOM is not an inventory','One describes an artifact. The other is the organization\'s own record.')}
+  <div class="tbl wide"><table><thead><tr><th>Property</th><th>CBOM</th><th>Cryptographic inventory</th></tr></thead><tbody>
+   <tr><td>Scope</td><td>One artifact or component</td><td>The whole estate</td></tr>
+   <tr><td>Unit</td><td>A document, for example in CycloneDX</td><td>A maintained dataset or register</td></tr>
+   <tr><td>Producer</td><td>A build pipeline or a scan of one component</td><td>A central function that aggregates many sources</td></tr>
+   <tr><td>Time</td><td>Point in time, versioned revisions</td><td>Continuously maintained, longitudinal</td></tr>
+   <tr><td>Correlation</td><td>Describes one component's cryptography</td><td>Correlates across components and over time</td></tr>
+   <tr><td>Purpose</td><td>Disclosure and conformance for one component</td><td>Risk, compliance and migration planning for the organization</td></tr>
+  </tbody></table></div>
+  ${fig(FIG_INV,'<b>Figure 1.</b> CBOMs and discovery data are normalized and correlated to form the inventory. Vendor CBOMs are usually at the implemented or configured stage. Runtime discovery is at the observed stage, and the inventory keeps the two apart.')}`});
+
+F4.push({min:2,render:()=>`${head('relation','Correlation: deciding what is the same thing','Most of the difficulty sits in one box of the diagram')}
+  ${fig(FIG_CORR,'<b>Figure 2.</b> The two correlation errors. Neither is visible in the resulting inventory.')}
+  <ol class="steps">
+   <li><span class="n">1</span><div><b>Decide the join key for each asset class, and record which one you used</b>A join key is the attribute, or set of attributes, used to decide that two records describe the same thing. Without a record of it, nobody can audit a merge or correct it later.</div></li>
+   <li><span class="n">2</span><div><b>Hold correlation across time, not only across tools</b>Tracking migration means comparing this quarter with last quarter. For interfaces, build your own stable key from attributes that do not change: the subject, the protocol and the endpoint roles. Accept that it breaks if a producer restructures its interfaces.</div></li>
+   <li><span class="n">3</span><div><b>Turn identity into a procurement requirement</b>Specify the identifier form suppliers must use for each asset class, as rule I9 does for the implementing library. For those classes, the correlation problem disappears.</div></li>
+  </ol>
+  <div class="tbl"><table><thead><tr><th>Merge log entry (example)</th><th>Join key used</th></tr></thead><tbody>
+   <tr><td>Vendor CBOM cert + discovery cert → one record</td><td class="mono">sha256 fingerprint</td></tr>
+   <tr><td>Discovery cert + CMDB cert → one record</td><td class="mono">issuer + serial</td></tr>
+   <tr><td>Q2 HTTPS interface + Q3 HTTPS interface → same interface</td><td class="mono">subject + protocol + endpoint roles</td></tr>
+  </tbody></table></div>`});
+
+F4.push({min:1.5,render:()=>`${head('signed','Extracting a CBOM for a consumer','The inventory is a source of CBOMs as well as a destination')}
+  <p>An extracted CBOM is a scoped snapshot of the inventory, made for one consumer. That may be an internal team, an external client or auditor, or a customer making a supply-chain request.</p>
+  ${fig(FIG_EXTRACT,'<b>Figure 3.</b> Extraction for a named consumer. The output is checked against the profile the requester named before it is released.')}
+  ${concept('One profile works in both directions. On input it validates the CBOMs supplied to the inventory. On output it validates a CBOM drawn from the inventory before release. One set of rules governs both the assembly of the inventory and the disclosures drawn from it.')}`});
+
+F4.push({min:1.5,render:()=>`${head('grid','Central, distributed or federated','An inventory does not have to be a single database')}
+  ${cue('Select each arrangement')}
+  <div class="seg" role="tablist">${Object.entries(ARRANGE).map(([k,v])=>`<button role="tab" data-arr="${k}" aria-selected="false">${v.t}</button>`).join('')}</div>
+  <div class="box" id="arrd" aria-live="polite"></div>
+  ${concept('In a federated inventory the profile defines what every participant must provide, and each participant normalizes for itself. That is what makes separately run inventories comparable.')}`,
+  init(){const sel=k=>{document.querySelectorAll('[data-arr]').forEach(b=>b.setAttribute('aria-selected',b.dataset.arr===k));document.getElementById('arrd').innerHTML=`<h3>${ARRANGE[k].t} inventory</h3>${ARRANGE[k].html}`};
+   document.querySelectorAll('[data-arr]').forEach(b=>b.onclick=()=>sel(b.dataset.arr));sel('fed');}});
+
+F4.push({min:2.5,render:()=>`${head('chain','Posture across a whole path','A CBOM sees one boundary. The inventory sees the path.')}
+  <p>A CBOM describes the cryptography at one subject's boundary. It cannot record what sits on the other side of an interface, because the same product is deployed into a different topology at every site. The posture of a path is assembled by the inventory.</p>
+  ${cue('Change the key exchange on each hop, and the signature algorithm')}
+  <div class="hops">${['Client → CDN','CDN → Gateway','Gateway → Service'].map((l,i)=>`<div><div class="lab">${l}</div><div class="seg" role="group">${['hybrid','classical'].map(v=>`<button data-hop="${i}" data-v="${v}" aria-selected="false">${v==='hybrid'?'hybrid ML-KEM':'classical'}</button>`).join('')}</div></div>`).join('')}</div>
+  <div class="hops" style="grid-template-columns:minmax(0,1fr)"><div><div class="lab">Originator signature</div><div class="seg" role="group" style="max-width:360px">${['ECDSA','ML-DSA'].map(v=>`<button data-sig="${v}" aria-selected="false">${v}</button>`).join('')}</div></div></div>
+  ${fig(FIG_PATH,'<b>Figure 4.</b> For protection in transit, the weakest hop governs. A signature spans every hop at once, so its strength does not depend on any single hop and is composed on its own.')}
+  <div class="pathres" aria-live="polite"><div id="pr-transit"></div><div id="pr-sig"></div></div>
+  <h3 style="margin-top:22px">What linking needs</h3>
+  ${dash(['<b>Stable identity</b> for the interfaces being linked. Module F3 explains why this is the first obstacle.','<b>A topology record:</b> this interface connects to that one. Only the operator knows this, and it changes with the deployment, not with any product.','<b>A rule for composing posture</b> along the path, applied separately for each relationship and dated like any other derived judgement.'])}`,
+  init(){const st={hops:['hybrid','classical','hybrid'],sig:'ECDSA'};
+   const draw=()=>{st.hops.forEach((v,i)=>{const p=document.getElementById('hop'+i),t=document.getElementById('hopt'+i);p.setAttribute('class',v==='hybrid'?'hop-pass':'hop-fail');t.setAttribute('class',v==='hybrid'?'t-pass':'t-fail');t.textContent=v==='hybrid'?'hybrid ML-KEM':'classical';t.setAttribute('font-weight',v==='hybrid'?'400':'700')});
+    document.getElementById('sigt').textContent=`originator signature (${st.sig}), verified by the service: spans every hop`;
+    document.querySelectorAll('[data-hop]').forEach(b=>b.setAttribute('aria-selected',st.hops[+b.dataset.hop]===b.dataset.v));
+    document.querySelectorAll('[data-sig]').forEach(b=>b.setAttribute('aria-selected',st.sig===b.dataset.sig));
+    const weak=st.hops.map((v,i)=>v==='classical'?i:-1).filter(i=>i>=0);const names=['Client → CDN','CDN → Gateway','Gateway → Service'];
+    const t=document.getElementById('pr-transit');t.className=weak.length?'bad':'good';t.innerHTML=`<b>Protection in transit</b>${weak.length?`Classical. Governed by ${weak.map(i=>names[i]).join(' and ')}.`:'Hybrid on every hop.'}`;
+    const s=document.getElementById('pr-sig');s.className=st.sig==='ML-DSA'?'good':'bad';s.innerHTML=`<b>Signature relationship</b>${st.sig==='ML-DSA'?'Post-quantum, whatever the hops negotiate.':'Classical, even if every hop is hybrid. A future quantum computer could forge it.'}`};
+   document.querySelectorAll('[data-hop]').forEach(b=>b.onclick=()=>{st.hops[+b.dataset.hop]=b.dataset.v;draw()});
+   document.querySelectorAll('[data-sig]').forEach(b=>b.onclick=()=>{st.sig=b.dataset.sig;draw()});draw();}});
+
+F4.push({min:1.5,render:()=>`${head('list','Context that is not cryptographic','Whether X25519 matters depends on data held elsewhere')}
+  <div class="tbl wide"><table><thead><tr><th>Context</th><th>Typical source</th><th>What it supports</th></tr></thead><tbody>
+   <tr><td>Business criticality and ownership</td><td>CMDB, service catalogue</td><td>Which systems to migrate first, and who is accountable</td></tr>
+   <tr><td>Data classification and retention</td><td>Data governance records</td><td>Harvest-now-decrypt-later exposure: data kept confidential for decades is more urgent</td></tr>
+   <tr><td>Regulatory scope and jurisdiction</td><td>Compliance register</td><td>Which deadlines and requirements apply</td></tr>
+   <tr><td>Topology and network exposure</td><td>Network and infrastructure records</td><td>Internet-facing versus private-segment interfaces</td></tr>
+   <tr><td>Software and hardware composition</td><td>SBOM, HBOM, asset register</td><td>Library update, configuration change or hardware replacement</td></tr>
+   <tr><td>Lifecycle and support status</td><td>Asset management, vendor roadmaps</td><td>Systems that will never get a quantum-safe update</td></tr>
+   <tr><td>Third-party relationships</td><td>Procurement records</td><td>Which suppliers to approach, and what they must provide</td></tr>
+  </tbody></table></div>
+  <div class="dd">
+   <div class="do"><h3>${I.ok} Link to it</h3><p style="margin:0">Join inventory records to these systems through stable identifiers. Reference the CMDB entry rather than copying it, because a copy drifts out of date.</p></div>
+   <div class="dont"><h3>${I.x} Keep it out of the CBOM</h3><p style="margin:0">A CBOM describes its subject's cryptography. Criticality and data classification are properties of the business, and they change on their own schedule.</p></div>
+  </div>`});
+
+F4.push({min:1.5,render:()=>`${head('todo','Rules for exchanging CBOMs','Nine points to settle when the inventory is both source and destination')}
+  <div class="tiles3">${EXCH.map(e=>`<div class="tile3"><h4>${I[e[0]]}${e[1]}</h4><p>${e[2]}</p></div>`).join('')}</div>`});
+
+F4.push(quizScreen('F4',QUIZ_F4));
+F4.push({min:0,next:null,render:()=>`${head('inventory','CBOMs and the cryptographic inventory','Summary')}
+  <p style="font-size:18px">CBOMs flow into the inventory as inputs and out of it as scoped disclosures. Correlation, a shared profile and context from outside cryptography turn them into decisions about the estate.</p>
+  <h3 style="margin-top:22px">Follow these practices</h3>
+  ${dash(['Record the join key behind every merge, and build a stable key for interfaces.','Specify the identifier form suppliers must use for each asset class.','Validate CBOMs against the same profile on the way in and on the way out.','Mark redactions as withheld, record provenance, and sign what you release.','Compose path posture in the inventory, separately for each relationship.','Link to business context. Do not copy it into the CBOM.'])}
+  <div class="nextup"><button class="btn" data-goto="F5">Next module: F5 Cryptographic data across the lifecycle →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Inventory, Challenges and Governance; 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026).</p>
+  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
+
+/* ================= F5 Cryptographic data across the lifecycle ================= */
+const FIG_STAGES=`<svg viewBox="0 0 720 290" role="img" aria-label="A timeline of four lifecycle stages. Design gives intended, produced by architects. Build gives implemented, produced by development. Deploy gives configured, produced by integrators. Runtime gives observed, produced by operations. A bracket from Build to Runtime marks the readiness gap.">
+ <path class="l-mute" d="M40 58H680" style="stroke-dasharray:none"/>
+ <circle cx="120" cy="58" r="7" class="f-mgmt"/><circle cx="290" cy="58" r="7" class="f-acc"/><circle cx="460" cy="58" r="7" class="f-svc" style="fill:var(--svc)"/><circle cx="630" cy="58" r="7" class="f-pass"/>
+ <g text-anchor="middle">
+  <text class="t-ink" x="120" y="38" font-weight="700" font-size="13">Design</text><text class="t-ink" x="290" y="38" font-weight="700" font-size="13">Build</text><text class="t-ink" x="460" y="38" font-weight="700" font-size="13">Deploy</text><text class="t-ink" x="630" y="38" font-weight="700" font-size="13">Runtime</text>
+  <rect class="s-panel" x="55" y="76" width="130" height="150" rx="10"/><rect class="s-panel" x="225" y="76" width="130" height="150" rx="10"/><rect class="s-panel" x="395" y="76" width="130" height="150" rx="10"/><rect class="s-panel" x="565" y="76" width="130" height="150" rx="10"/>
+  <text class="t-mgmt t-mono" x="120" y="100" font-weight="500" font-size="12">intended</text><text class="t-acc t-mono" x="290" y="100" font-weight="500" font-size="12">implemented</text><text class="t-svc t-mono" x="460" y="100" font-weight="500" font-size="12">configured</text><text class="t-pass t-mono" x="630" y="100" font-weight="500" font-size="12">observed</text>
+  <text class="t-muted" x="120" y="121" font-size="11">planned cryptography</text><text class="t-muted" x="290" y="121" font-size="11">what the binary can do</text><text class="t-muted" x="460" y="121" font-size="11">what deploy permits</text><text class="t-muted" x="630" y="121" font-size="11">what was negotiated</text>
+  <text class="t-ink" x="120" y="150" font-size="11">architects</text><text class="t-ink" x="290" y="150" font-size="11">dev and build</text><text class="t-ink" x="460" y="150" font-size="11">integrators, platform</text><text class="t-ink" x="630" y="150" font-size="11">operations</text>
+  <text class="t-muted" x="120" y="168" font-size="10.5">design docs,</text><text class="t-muted" x="120" y="182" font-size="10.5">threat models</text>
+  <text class="t-muted" x="290" y="168" font-size="10.5">source and</text><text class="t-muted" x="290" y="182" font-size="10.5">dependency scans</text>
+  <text class="t-muted" x="460" y="168" font-size="10.5">config files,</text><text class="t-muted" x="460" y="182" font-size="10.5">policy bundles</text>
+  <text class="t-muted" x="630" y="168" font-size="10.5">TLS scans,</text><text class="t-muted" x="630" y="182" font-size="10.5">telemetry</text>
+  <text class="t-mgmt" x="120" y="210" font-size="10.5">aspiration</text><text class="t-acc" x="290" y="210" font-size="10.5">capability</text><text class="t-svc" x="460" y="210" font-size="10.5">intent in place</text><text class="t-pass" x="630" y="210" font-size="10.5">actuality</text>
+ </g>
+ <path class="l-warn" d="M290 244v12H630v-12"/>
+ <text class="t-warn" x="460" y="276" text-anchor="middle" font-size="12" font-weight="600">the readiness gap: capability is not what is running</text>
+</svg>`;
+
+const FIG_GAP=`<svg viewBox="0 0 720 200" role="img" aria-label="One HTTPS interface at three stages. Implemented: the library supports X25519MLKEM768. Configured: the deployment allows only X25519 and P-256. Observed: X25519 is negotiated. The product is capable, but the deployment is not quantum-safe.">
+ <text class="t-ink" x="16" y="26" font-weight="700" font-size="13.5">One interface: HTTPS service</text>
+ <rect class="s-passbox" x="16" y="48" width="210" height="96" rx="10"/><text class="t-acc t-mono" x="32" y="72" font-size="12">implemented</text><text class="t-ink" x="32" y="96" font-size="12.5">library supports</text><text class="t-pass t-mono" x="32" y="116" font-size="12">X25519MLKEM768</text><text class="t-muted" x="32" y="134" font-size="11">vendor build CBOM</text>
+ <path class="l-mute" d="M226 96h28"/>
+ <rect class="s-panel" x="254" y="48" width="210" height="96" rx="10" style="stroke:var(--warn)"/><text class="t-svc t-mono" x="270" y="72" font-size="12">configured</text><text class="t-ink" x="270" y="96" font-size="12.5">groups permitted</text><text class="t-warn t-mono" x="270" y="116" font-size="12">X25519, P-256</text><text class="t-muted" x="270" y="134" font-size="11">deployment config</text>
+ <path class="l-mute" d="M464 96h28"/>
+ <rect class="s-failbox" x="492" y="48" width="210" height="96" rx="10"/><text class="t-pass t-mono" x="508" y="72" font-size="12">observed</text><text class="t-ink" x="508" y="96" font-size="12.5">negotiated on the wire</text><text class="t-fail t-mono" x="508" y="116" font-size="12">X25519</text><text class="t-muted" x="508" y="134" font-size="11">runtime scan</text>
+ <path class="l-warn" d="M120 156v10H598v-10"/>
+ <text class="t-warn" x="360" y="188" text-anchor="middle" font-size="12" font-weight="600">every record is correct; the difference between them is the finding</text>
+</svg>`;
+
+const FIG_HANDOFF=`<svg viewBox="0 0 720 210" role="img" aria-label="The four stages split across two organizations. The vendor holds intended and implemented; the operator holds configured and observed. Between intended and implemented, design intent is often lost. Between implemented and configured, the organization changes. Between configured and observed, the running system drifts from its configuration.">
+ <rect class="s-soft" x="16" y="20" width="330" height="34" rx="8"/><text class="t-ink" x="181" y="42" text-anchor="middle" font-weight="600" font-size="12.5">Vendor</text>
+ <rect class="s-soft" x="374" y="20" width="330" height="34" rx="8"/><text class="t-ink" x="539" y="42" text-anchor="middle" font-weight="600" font-size="12.5">Operator</text>
+ <rect class="s-panel" x="16" y="72" width="130" height="44" rx="9"/><text class="t-mgmt t-mono" x="81" y="99" text-anchor="middle" font-size="12">intended</text>
+ <rect class="s-panel" x="216" y="72" width="130" height="44" rx="9"/><text class="t-acc t-mono" x="281" y="99" text-anchor="middle" font-size="12">implemented</text>
+ <rect class="s-panel" x="374" y="72" width="130" height="44" rx="9"/><text class="t-svc t-mono" x="439" y="99" text-anchor="middle" font-size="12">configured</text>
+ <rect class="s-panel" x="574" y="72" width="130" height="44" rx="9"/><text class="t-pass t-mono" x="639" y="99" text-anchor="middle" font-size="12">observed</text>
+ <path class="l-fail" d="M146 94H216M346 94H374M504 94H574"/>
+ <circle cx="181" cy="94" r="5" class="f-fail"/><circle cx="360" cy="94" r="5" class="f-fail"/><circle cx="539" cy="94" r="5" class="f-fail"/>
+ <text class="t-fail" x="181" y="146" text-anchor="middle" font-size="12" font-weight="600">intent lost</text><text class="t-muted" x="181" y="164" text-anchor="middle" font-size="11">rarely machine-readable;</text><text class="t-muted" x="181" y="179" text-anchor="middle" font-size="11">deliberate or incidental?</text>
+ <text class="t-fail" x="360" y="146" text-anchor="middle" font-size="12" font-weight="600">organization changes</text><text class="t-muted" x="360" y="164" text-anchor="middle" font-size="11">vendor cannot see the deployment;</text><text class="t-muted" x="360" y="179" text-anchor="middle" font-size="11">operator cannot see the binary</text>
+ <text class="t-fail" x="539" y="146" text-anchor="middle" font-size="12" font-weight="600">drift</text><text class="t-muted" x="539" y="164" text-anchor="middle" font-size="11">the running system stops</text><text class="t-muted" x="539" y="179" text-anchor="middle" font-size="11">matching its configuration</text>
+</svg>`;
+
+const FIG_TRACK=`<svg viewBox="0 0 720 170" role="img" aria-label="Four revisions of one interface's CBOM record form an audit trail: revision 1 implemented classical, revision 2 implemented with hybrid support, revision 3 configured with hybrid enabled, revision 4 observed negotiating X25519MLKEM768.">
+ <path class="l-acc" d="M60 70H660"/>
+ <g text-anchor="middle">
+  <circle cx="90" cy="70" r="8" class="f-acc"/><circle cx="270" cy="70" r="8" class="f-acc"/><circle cx="450" cy="70" r="8" class="f-acc"/><circle cx="630" cy="70" r="8" class="f-pass"/>
+  <text class="t-muted t-mono" x="90" y="44" font-size="11">rev 1</text><text class="t-muted t-mono" x="270" y="44" font-size="11">rev 2</text><text class="t-muted t-mono" x="450" y="44" font-size="11">rev 3</text><text class="t-muted t-mono" x="630" y="44" font-size="11">rev 4</text>
+  <text class="t-acc t-mono" x="90" y="102" font-size="11.5">implemented</text><text class="t-acc t-mono" x="270" y="102" font-size="11.5">implemented</text><text class="t-svc t-mono" x="450" y="102" font-size="11.5">configured</text><text class="t-pass t-mono" x="630" y="102" font-size="11.5">observed</text>
+  <text class="t-ink" x="90" y="124" font-size="12">X25519 only</text><text class="t-ink" x="270" y="124" font-size="12">hybrid supported</text><text class="t-ink" x="450" y="124" font-size="12">hybrid enabled</text><text class="t-pass" x="630" y="124" font-size="12" font-weight="600">X25519MLKEM768</text>
+  <text class="t-muted" x="90" y="144" font-size="11">vendor release</text><text class="t-muted" x="270" y="144" font-size="11">vendor release</text><text class="t-muted" x="450" y="144" font-size="11">operator config</text><text class="t-pass" x="630" y="144" font-size="11">negotiated on the wire</text>
+ </g>
+</svg>`;
+
+const STAGES={
+ intended:{phase:'Design',by:'Architects and security architects, from design documents and threat models.',est:'What the architecture is specified to use.',not:'What was actually built.',fp:'An algorithm specified in the design but never implemented.',fn:'Cryptography added during implementation, such as inside libraries and dependencies, that the design did not foresee.',use:'Architecture review boards; procurement teams writing requirements; bodies defining a profile.'},
+ implemented:{phase:'Build',by:'Development and build teams, from source and dependency analysis in the pipeline.',est:'What the shipped code or binary is capable of. This is the vendor build CBOM.',not:'What a deployment enables. Capability in the code is not proof of use.',fp:'Compiled-in cipher suites or providers that no deployment uses.',fn:'Cryptography loaded at runtime, provided by an HSM or TEE, or reached through dependencies the scanner does not cover.',use:'The vendor\'s product security team; integrators; operator procurement; CI quality gates; vulnerability management.'},
+ configured:{phase:'Deploy',by:'Integrators and platform teams, from deployment configuration and policy bundles.',est:'What the deployed configuration permits.',not:'Whether live sessions match the configuration. Running systems drift.',fp:'An algorithm the configuration permits but that is never negotiated.',fn:'Cryptography outside the inspected configuration, such as built-in defaults or out-of-band channels.',use:'Deployment gates; internal risk and assurance; migration programme leads; compliance reporting.'},
+ observed:{phase:'Runtime',by:'Operations and monitoring teams, from scanning and telemetry of the running service.',est:'What was negotiated on the wire.',not:'Whether it stays true. A later configuration change can make it out of date.',fp:'Cryptography seen only in a scan probe or a transient session.',fn:'Paths not exercised during the observation window, such as failover, administrative or rarely used interfaces.',use:'Assurance and audit; incident responders; regulators; customers asking what a service actually uses.'}
+};
+const MATRIX={
+ 'yy':{t:'Capable and running',d:'The interface has reached the quantum-safe target, and the service CBOM shows it in use. Keep observing for drift.'},
+ 'yn':{t:'Capable, not running',d:'The readiness gap. A configuration change may be enough. The plan is a reconfiguration, not a purchase.'},
+ 'ny':{t:'Running, but the product says it cannot',d:'The records disagree. Check the stage and provenance of each before trusting either, and ask the supplier.'},
+ 'nn':{t:'Not capable, not running',d:'The product cannot reach the target as shipped. The plan needs a software update or a hardware refresh. The product CBOM says which.'}
+};
+const QUIZ_F5=[
+ {q:'A vendor build CBOM shows an interface supports ML-KEM. Is the deployment quantum-safe today?',o:['Yes, the product supports it','Not known. Implemented shows capability. You need configured or observed data from a service CBOM','Yes, if the CBOM is signed'],a:1,e:'A product CBOM on its own overstates readiness. The readiness gap sits between capability and what runs.'},
+ {q:'At which stages are false positives most common?',o:['The early stages, intended and implemented, which report what is possible','The observed stage','All stages equally'],a:0,e:'False positives fall toward runtime. False negatives do not simply fall: the kind of cryptography that is missed changes.'},
+ {q:'What does a runtime scan typically miss?',o:['Cryptography negotiated in normal sessions','Paths not exercised during the observation window, such as failover or administrative interfaces','Nothing; observed data is complete'],a:1,e:'Each stage has its own blind spot. Reading a product CBOM with a service CBOM reduces both kinds of error.'},
+ {q:'A CBOM records its generation context only as "after build". What should the consumer do?',o:['Assume it was observed','Place it after build, record that configured and observed cannot be told apart, and not guess','Reject it'],a:1,e:'The 2026 minimum elements value maps onto two stages here. Record the limitation instead of guessing the finer stage.'},
+ {q:'Why must the lifecycle stage be recorded rather than assumed?',o:['Because the formats require it','Because the party that produces the data is usually not the party that reads it, and the content alone does not show the phase','Because it makes the document smaller'],a:1,e:'A consumer who receives a CBOM usually did not generate it.'}
+];
+
+const F5=[];
+F5.push(titleScreen(MODULES.find(m=>m.id==='F5'),{sub:'Who knows what about a product\'s cryptography, at which phase, and how sure they can be. Why capability is not use, and why migration planning needs both views.',
+ obj:['Name the four lifecycle stages and what each does and does not establish.','Relate the stages to the SBOM generation context.','Recognize the typical false positives and false negatives at each stage.','Explain the readiness gap.','Tell a product CBOM from a service CBOM, and why migration needs both.','Identify where data is lost as it moves between organizations.'],
+ req:['Review the seven sections.','Pass the knowledge check with a score of 80% or higher.'],pre:'F4 CBOMs and the cryptographic inventory.',aud:'Migration leads, operators, product security teams and auditors',level:'Foundation'}));
+
+F5.push({min:1.5,render:()=>`${head('lifecycle','Four lifecycle stages','The same statement means four different things')}
+  <p>"The product uses AES-256-GCM" depends on when, and by whom, the fact was captured. The <span class="mono">lifecycleStage</span> attribute records that. Version 1 of the model has four values, one per interface, each tied to a phase with its own producer and data source.</p>
+  ${fig(FIG_STAGES,'<b>Figure 1.</b> From left to right, the producer changes from architects at design to operators at runtime. Each stage answers a different question from a different source.')}
+  ${concept('A profile can require the stage to be declared, as the baseline does with rule I8. It can also require a specific stage: a runtime-assurance profile might require <span class="mono">observed</span>, while a procurement profile might accept <span class="mono">implemented</span> from a vendor build.')}`});
+
+F5.push({min:2,render:()=>`${head('rules','What each stage can tell you','And where each one is wrong')}
+  ${cue('Select a stage')}
+  <div class="seg" role="tablist">${Object.keys(STAGES).map(k=>`<button role="tab" data-stg="${k}" aria-selected="false"><span class="mono">${k}</span></button>`).join('')}</div>
+  <div id="stgd" aria-live="polite"></div>`,
+  init(){const sel=k=>{const s=STAGES[k];document.querySelectorAll('[data-stg]').forEach(b=>b.setAttribute('aria-selected',b.dataset.stg===k));
+   document.getElementById('stgd').innerHTML=`<div class="two"><div class="box"><div class="eyebrow">${s.phase} · produced by</div><p style="margin:8px 0 14px">${s.by}</p><div class="eyebrow">Establishes</div><p style="margin:8px 0 14px">${s.est}</p><div class="eyebrow">Does not establish</div><p style="margin:8px 0 0">${s.not}</p></div>
+    <div class="box"><div class="eyebrow" style="color:var(--warn)">Typical false positive · reported, not in effect</div><p style="margin:8px 0 14px">${s.fp}</p><div class="eyebrow" style="color:var(--fail)">Typical false negative · in effect, not reported</div><p style="margin:8px 0 14px">${s.fn}</p><div class="eyebrow">Read by</div><p style="margin:8px 0 0">${s.use}</p></div></div>`};
+   document.querySelectorAll('[data-stg]').forEach(b=>b.onclick=()=>sel(b.dataset.stg));sel('implemented');}});
+
+F5.push({min:1,render:()=>`${head('standards','Lifecycle stage and SBOM generation context','A producer following the 2026 minimum elements already has most of this')}
+  <p>The 2026 SBOM minimum elements add <b>SBOM Generation Context</b>: the lifecycle phase, and the data available, when the SBOM was generated. The reasoning is the same as here. Data differs by phase, and a consumer assessing risk needs to know which phase.</p>
+  <div class="tbl"><table><thead><tr><th>Lifecycle stage</th><th>Generation context</th></tr></thead><tbody>
+   <tr><td class="mono">intended</td><td>before build</td></tr>
+   <tr><td class="mono">implemented</td><td>build</td></tr>
+   <tr><td class="mono">configured</td><td>after build, with a more specific identifier</td></tr>
+   <tr><td class="mono">observed</td><td>after build, with a more specific identifier</td></tr>
+  </tbody></table></div>
+  <div class="box"><h3>Why "after build" is split in two</h3><p style="margin:0">PQC migration depends on the difference between what a deployment permits and what it actually negotiates. When only "after build" is available, place the CBOM after build, record that the finer stage is unknown, and do not guess it.</p></div>`});
+
+F5.push({min:1.5,render:()=>`${head('warn','The readiness gap','Capable software does not mean post-quantum cryptography is running')}
+  <p>PQC-capable software and hardware do not guarantee that post-quantum cryptography is configured and active, or that it stays active after configuration changes. In large migrations, interoperability and performance problems regularly appear as a system moves from one stage to the next.</p>
+  ${fig(FIG_GAP,'<b>Figure 2.</b> A vendor\'s implemented record and an operator\'s observed scan can both be correct and still differ. Record each fact with its stage, so the difference is visible.')}
+  ${concept('Record a fact with its lifecycle stage, never as a bare fact. A CBOM that holds both views makes the readiness gap explicit.')}`});
+
+F5.push({min:2,render:()=>`${head('doc','Product CBOM and service CBOM','Migration planning needs both')}
+  <div class="two">
+   <div class="box"><h3>Product CBOM</h3>${dash(['Describes what a product contains or can use.','Produced by the vendor at build time, shipped with a release.','Stage: <span class="mono">implemented</span>.','Tends to over-report capability and under-report runtime and hardware cryptography.'])}</div>
+   <div class="box"><h3>Service CBOM</h3>${dash(['Describes what a running service actually uses.','Produced by the operator from configuration and the wire.','Stages: <span class="mono">configured</span> and <span class="mono">observed</span>.','Under-reports paths not exercised while it was captured. Relationships exist at this level.'])}</div>
+  </div>
+  ${cue('Compare the two for one interface: select a cell')}
+  <div class="matrix">
+   <span></span><span class="mh">Service CBOM: target running</span><span class="mh">Service CBOM: not running</span>
+   <span class="ml">Product CBOM: capable</span><button class="mcell" data-mx="yy" aria-pressed="false"><b>${MATRIX.yy.t}</b></button><button class="mcell" data-mx="yn" aria-pressed="false"><b>${MATRIX.yn.t}</b></button>
+   <span class="ml">Product CBOM: not capable</span><button class="mcell" data-mx="ny" aria-pressed="false"><b>${MATRIX.ny.t}</b></button><button class="mcell" data-mx="nn" aria-pressed="false"><b>${MATRIX.nn.t}</b></button>
+  </div>
+  <div class="box" id="mxd" aria-live="polite"></div>`,
+  init(){const sel=k=>{document.querySelectorAll('[data-mx]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mx===k));document.getElementById('mxd').innerHTML=`<h3>${MATRIX[k].t}</h3><p style="margin:0">${MATRIX[k].d}</p>`};
+   document.querySelectorAll('[data-mx]').forEach(b=>b.onclick=()=>sel(b.dataset.mx));sel('yn');}});
+
+F5.push({min:1.5,render:()=>`${head('relation','Where the hand-offs fail','Stages are separated by a change of organization as often as by time')}
+  ${fig(FIG_HANDOFF,'<b>Figure 3.</b> Data is lost or becomes less reliable each time it crosses one of these boundaries.')}
+  <p>The party that produces the data is usually not the party that needs it. Regulators, auditors, customers and acquirers only ever consume CBOMs. They cannot tell from the content which phase it describes, so provenance and lifecycle stage matter most to them.</p>
+  ${concept('A profile can require the lifecycle stage to be declared. That makes these gaps visible. It cannot close them: closing them needs some party to produce data it does not produce today.')}`});
+
+F5.push({min:1,render:()=>`${head('ladder','Tracking progress over time','Successive revisions form an audit trail')}
+  <p>Each CBOM revision is a fixed record. As an interface moves from <span class="mono">implemented</span> to <span class="mono">configured</span> to <span class="mono">observed</span> with post-quantum cryptography enabled, the series of revisions gives internal governance and regulators a verifiable record of the migration.</p>
+  ${fig(FIG_TRACK,'<b>Figure 4.</b> One interface across four revisions. The inventory can only follow it if it can tell that each record describes the same interface, which is why F4 stresses a stable interface key.')}`});
+
+F5.push(quizScreen('F5',QUIZ_F5));
+F5.push({min:0,next:null,render:()=>`${head('lifecycle','Cryptographic data across the lifecycle','Summary')}
+  <p style="font-size:18px">A cryptographic fact means little without its stage. Capability comes from the vendor, use comes from the operator, and migration planning reads the two side by side, one interface at a time.</p>
+  <h3 style="margin-top:22px">Follow these practices</h3>
+  ${dash(['Record every fact with its lifecycle stage.','Require the stage you need in the profile you cite: observed for runtime assurance, implemented may do for procurement.','Read product CBOMs and service CBOMs together, interface by interface.','Treat a difference between implemented and observed as a finding, not an error.','When only coarse generation context is available, record the limitation instead of guessing.','Keep revisions as the audit trail of your migration.'])}
+  <div class="concept" style="margin-top:22px"><small>FOUNDATION TRACK COMPLETE</small>You have finished the Foundation modules. The Concepts track starts with C1 Relationships, endpoints and assets.</div>
+  <div class="nextup"><button class="btn" data-goto="hub">All modules</button></div>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Lifecycle Data, Inventory and Versioning; 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026), SBOM Generation Context.</p>
+  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
+
+const COURSES={F1,F2,F3,F4,F5};
+
+/* ---------- hub ---------- */
+let pathSel=store.get('path')||'all';
+function hub(){
+  const done=store.get('done')||{};const pos=store.get('pos')||{};
+  const ids=PATHS[pathSel].ids;
+  const tot=ids?ids.reduce((a,id)=>a+MODULES.find(m=>m.id===id).min,0):MODULES.reduce((a,m)=>a+m.min,0);
+  const card=m=>{const inPath=!ids||ids.includes(m.id);
+    const st=m.ready?(done[m.id]?'<span class="status done">Completed ✓</span>':pos[m.id]?`<span class="status go">Resume at screen ${pos[m.id]+1} →</span>`:'<span class="status go">Start →</span>'):'<span class="status plan">In preparation</span>';
+    const inner=`<span class="ico">${I[m.icon]}</span><span><span class="code">${m.id} · ${m.min} min</span><h3>${m.t}</h3><p>${m.s}</p><span class="row">${st}</span></span>`;
+    return m.ready?`<button class="card${inPath?'':' dim'}" data-open="${m.id}">${inner}</button>`:`<div class="card planned${inPath?'':' dim'}">${inner}</div>`};
+  document.getElementById('app').innerHTML=`<section class="screen">
+   <div class="hero"><div><div class="eyebrow">PKI Consortium · CBOM Profiles Working Group</div><h1 style="margin-top:10px">Cryptographic bills of materials, profile by profile</h1>
+    <p class="lede">A series of short modules that follows the CBOM profiles methodology. Each takes 10 to 15 minutes and ends with a knowledge check.</p></div>
+    <div class="pilot"><b>Foundation track ready.</b> F1 to F5 can be taken now. The other ${MODULES.filter(m=>!m.ready).length} modules show the planned series. Your progress is saved in this browser only.</div></div>
+   <div class="eyebrow" style="margin-bottom:10px">Learning path</div>
+   <div class="paths">${Object.entries(PATHS).map(([k,p])=>`<button class="pathbtn" data-path="${k}" aria-pressed="${k===pathSel}">${p.label}</button>`).join('')}</div>
+   <div class="pathnote">${PATHS[pathSel].note?PATHS[pathSel].note+' ':''}${ids?ids.length:MODULES.length} modules, about ${Math.round(tot/6)/10} hours.${ids?' Order: '+ids.join(' → '):''}</div>
+   ${TRACKS.map(t=>{const ms=MODULES.filter(m=>m.id[0]===t.id);return `<div class="track"><div class="track-head"><h2>${t.name}</h2><span>${t.blurb}</span></div><div class="cards">${ms.map(card).join('')}</div></div>`}).join('')}
+   <p class="disclaimer" style="margin-top:36px">Built from the <a href="../methodology/">CBOM profiles methodology</a>, which is illustrative and not a normative deliverable of the working group. Send comments and corrections through the <a href="https://github.com/pkic/cbom/issues">working group issues</a>.</p>
+  </section>`;
+  document.querySelectorAll('[data-path]').forEach(b=>b.onclick=()=>{pathSel=b.dataset.path;store.set('path',pathSel);hub()});
+  document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openModule(b.dataset.open));
+}
+
+/* ---------- course player ---------- */
+let mod=null,cur=0;
+function openModule(id,at){mod=id;const pos=store.get('pos')||{};cur=at??pos[id]??0;try{history.replaceState(null,'','#'+id.toLowerCase())}catch(e){}go(cur)}
+function toHub(){mod=null;try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}document.getElementById('back-hub').hidden=true;hub();window.scrollTo(0,0)}
+function go(to){const S=COURSES[mod];cur=Math.max(0,Math.min(S.length-1,to));const s=S[cur];const m=MODULES.find(x=>x.id===mod);
+  document.getElementById('back-hub').hidden=false;
+  const left=S.slice(cur).reduce((a,b)=>a+b.min,0);
+  const nav=`<div class="nav">${cur>0?'<button class="btn ghost" id="prev">← Back</button>':'<span></span>'}${s.next===null?'<button class="btn ghost" id="restart">Restart module</button>':`<button class="btn" id="next">${s.next||'Next →'}</button>`}</div>`;
+  document.getElementById('app').innerHTML=`<div class="progress" aria-hidden="true">${S.map((_,i)=>`<span class="${i<=cur?'on':''}"></span>`).join('')}</div>
+   <div class="meta-top"><span><b>${m.id}</b> · ${m.t}</span><span>Screen ${cur+1} of ${S.length}${left?` · about ${Math.ceil(left)} min left`:''}</span></div>
+   <section class="screen">${s.render()}${nav}</section>`;
+  s.init&&s.init();
+  const p=document.getElementById('prev');if(p)p.onclick=()=>go(cur-1);
+  const n=document.getElementById('next');if(n)n.onclick=()=>go(cur+1);
+  const r=document.getElementById('restart');if(r)r.onclick=()=>go(0);
+  document.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>b.dataset.goto==='hub'?toHub():openModule(b.dataset.goto,0));
+  const pos=store.get('pos')||{};pos[mod]=cur;store.set('pos',pos);
+  window.scrollTo(0,0);}
+document.getElementById('home').onclick=toHub;
+document.getElementById('back-hub').onclick=toHub;
+document.addEventListener('keydown',e=>{if(!mod||e.target.closest('input,textarea'))return;if(e.key==='ArrowRight'&&COURSES[mod][cur].next!==null)go(cur+1);if(e.key==='ArrowLeft'&&cur>0)go(cur-1)});
+const h=(location.hash||'').slice(1).toUpperCase();
+if(COURSES[h])openModule(h);else hub();
+</script>
+</body>
+</html>
