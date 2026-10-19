@@ -28,11 +28,15 @@ nav: uc-pqc
   <div class="banner warn">Illustrative, and in review. The profiles and example documents follow draft decision 0022, which revises the migration profile to v0.7, adds a second, more demanding profile (the extended depth), and states how application-layer interfaces are expressed in CycloneDX. The attribute names are proposals made for this example, not established terms. The Keycloak values are taken from its documentation and issue tracker; the few still to be verified are marked.</div>
 
   <h2>The decision being supported</h2>
-  <p>An operator runs a product it did not build and cannot inspect. It needs to answer three questions about every interface that product exposes, and it needs the answers in a form it can aggregate across hundreds of instances.</p>
+  <p>An operator or enterprise architect evaluating a product it did not build and cannot inspect must determine how and when that product can transition to post-quantum cryptography. Beyond basic asset inventory (what algorithms are currently in use), the migration decision is driven by fundamental integration, enforcement, and planning questions across every exposed interface:</p>
   <ul>
-    <li>Can this interface be made quantum-safe at all, and if so with which algorithms?</li>
-    <li>What would it take: a configuration change, a software update, or new hardware?</li>
-    <li>What breaks when we do it, and can we do it while the other end is still classical?</li>
+    <li><strong>Quantum-safe capability and algorithm support:</strong> Can this interface support post-quantum cryptography, which algorithms (for key exchange, authentication, and key wrapping) can it negotiate, and what is it actively using today? (Motivates the <code>G1</code> capability group, one entry per purpose, and <code>protocolVersionsSupported</code>).</li>
+    <li><strong>Ease of integration and enablement route:</strong> How easily can post-quantum capability be enabled when integrating the product into an existing architecture—is it already enabled, a configuration change, a software update, a licence upgrade, or a hardware replacement? Which product version introduces it? (Motivates <code>enablementMethod</code>, <code>minimumProductVersion</code>, <code>providerLocation</code>).</li>
+    <li><strong>Negotiation strategy and operator enforcement:</strong> How does the interface select algorithms with peers (e.g., strict whitelist, prioritized preference order, client-controlled, or dynamic policy), and does the integrating user/operator have the control to configure and enforce post-quantum algorithms while refusing classical fallbacks? (Motivates <code>negotiationStrategy</code>, <code>negotiationControl</code>).</li>
+    <li><strong>Architectural friction and integration constraints:</strong> What will break or encounter friction during integration (e.g., signature or ciphertext size limits, HTTP header/cookie thresholds, MTU fragmentation, intermediary proxy issues, or latency overhead)? (Motivates <code>integrationConstraints</code>).</li>
+    <li><strong>Blockers and roadmap accountability:</strong> If an interface cannot yet support quantum-safe algorithms, what is the exact obstacle (dependency provider, product code, hardware, protocol standards, or formal certification), who has the power to resolve it, and what target release is committed on the vendor roadmap? (Motivates <code>capabilityStatus</code>, <code>blockedBy</code>, <code>roadmapRef</code>).</li>
+    <li><strong>Module validation and compliance:</strong> Is the implementing cryptographic provider formally validated under a recognized scheme (e.g., FIPS 140-3, ISO 19790), and is the post-quantum capability usable within that validated mode? (Motivates <code>moduleValidationScheme</code>, <code>moduleValidationRef</code>, <code>validatedModeAvailability</code>).</li>
+    <li><strong>Key management and ecosystem dependencies:</strong> Can the product's management surfaces create, hold, and rotate the required post-quantum key types, are stored keys protected at rest, and what external dependencies (CAs, identity providers, directories) must migrate first? (Motivates <code>keyManagementFunction</code>, <code>keyOperations</code>, <code>keyTypesSupported</code>, <code>keyStoreRef</code>, <code>externalDependencies</code>).</li>
   </ul>
   <p>An inventory of algorithms cannot answer any of these questions. Knowing which algorithms an interface uses today leaves all three unanswered. The questions concern what the interface is capable of, how that capability is enabled, and what enabling it costs in interoperability. A migration profile therefore has to require the facts those answers rest on.</p>
 
@@ -158,18 +162,18 @@ nav: uc-pqc
   <p>This gives thirteen interfaces. The seven TLS interfaces all use the Java runtime's cryptographic providers. The four application-layer interfaces are implemented by Keycloak itself.</p>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th>Interface</th><th>Type</th><th>Protocol</th><th>What it protects</th></tr></thead>
+    <thead><tr><th>Interface</th><th>Type</th><th>Endpoint role</th><th>Protocol</th><th>What it protects</th></tr></thead>
     <tbody>
-      <tr><td><code>tls-https</code></td><td>service</td><td>TLS 1.2, 1.3</td><td>The main listener, carrying OIDC, SAML and the Admin API. Certificate supplied by the operator</td></tr>
-      <tr><td><code>svc-oidc</code></td><td>service</td><td>OIDC 1.0</td><td>ID and access tokens, signed RS256 with the realm key. Encryption off by default</td></tr>
-      <tr><td><code>svc-saml</code></td><td>service</td><td>SAML 2.0</td><td>Assertions, signed RSA-SHA256 with the realm key</td></tr>
-      <tr><td><code>svc-http</code></td><td>service</td><td>HTTP</td><td>Nothing. Off by default in production mode. Often used behind a TLS-terminating proxy</td></tr>
-      <tr><td><code>mgmt-admin</code></td><td>management</td><td>Admin REST</td><td>Administration by bearer token. Also the surface that generates and imports realm keys</td></tr>
-      <tr><td><code>tls-mgmt</code></td><td>management</td><td>TLS 1.2, 1.3</td><td>Health and metrics on port 9000. Inherits the main listener's TLS settings by default</td></tr>
-      <tr><td><code>int-db</code>, <code>int-ldap</code>, <code>int-broker</code>, <code>int-smtp</code></td><td>interconnect</td><td>TLS 1.2, 1.3</td><td>Outbound connections to the database, the directory, external identity providers and the mail server</td></tr>
-      <tr><td><code>svc-broker-tokens</code></td><td>interconnect</td><td>OIDC 1.0</td><td>Verification of tokens issued by external identity providers</td></tr>
-      <tr><td><code>int-cache</code></td><td>peer</td><td>TLS 1.3, mutual</td><td>Cluster transport. RSA-2048 certificate generated by Keycloak, stored in the database, rotated every 30 days</td></tr>
-      <tr><td><code>sto-realm-keys</code></td><td>storage</td><td>&mdash;</td><td>Realm keys and the cluster key, held in the database without wrapping</td></tr>
+      <tr><td><code>tls-https</code></td><td>service</td><td><code>server</code></td><td>TLS 1.2, 1.3</td><td>The main listener, carrying OIDC, SAML and the Admin API. Certificate supplied by the operator</td></tr>
+      <tr><td><code>svc-oidc</code></td><td>service</td><td><code>server</code></td><td>OIDC 1.0</td><td>ID and access tokens, signed RS256 with the realm key. Encryption off by default</td></tr>
+      <tr><td><code>svc-saml</code></td><td>service</td><td><code>server</code></td><td>SAML 2.0</td><td>Assertions, signed RSA-SHA256 with the realm key</td></tr>
+      <tr><td><code>svc-http</code></td><td>service</td><td><code>server</code></td><td>HTTP</td><td>Nothing. Off by default in production mode. Often used behind a TLS-terminating proxy</td></tr>
+      <tr><td><code>mgmt-admin</code></td><td>management</td><td><code>server</code></td><td>Admin REST</td><td>Administration by bearer token. Also the surface that generates and imports realm keys</td></tr>
+      <tr><td><code>tls-mgmt</code></td><td>management</td><td><code>server</code></td><td>TLS 1.2, 1.3</td><td>Health and metrics on port 9000. Inherits the main listener's TLS settings by default</td></tr>
+      <tr><td><code>int-db</code>, <code>int-ldap</code>, <code>int-broker</code>, <code>int-smtp</code></td><td>interconnect</td><td><code>client</code></td><td>TLS 1.2, 1.3</td><td>Outbound connections to the database, the directory, external identity providers and the mail server</td></tr>
+      <tr><td><code>svc-broker-tokens</code></td><td>interconnect</td><td><code>client</code></td><td>OIDC 1.0</td><td>Verification of tokens issued by external identity providers</td></tr>
+      <tr><td><code>int-cache</code></td><td>peer</td><td><code>peer</code></td><td>TLS 1.3, mutual</td><td>Cluster transport. RSA-2048 certificate generated by Keycloak, stored in the database, rotated every 30 days</td></tr>
+      <tr><td><code>sto-realm-keys</code></td><td>storage</td><td>&mdash;</td><td>&mdash;</td><td>Realm keys and the cluster key, held in the database without wrapping</td></tr>
     </tbody>
   </table>
   </div>
@@ -180,22 +184,38 @@ nav: uc-pqc
   <table>
     <thead><tr><th>What the consumer needs to know</th><th>Attribute that supplies it</th><th>Depth, and the Keycloak case</th></tr></thead>
     <tbody>
-      <tr><td>Which interface are we talking about, and does it matter?</td><td><code>interfaceType</code></td><td>Baseline. The token interface and the TLS interface that carries it are separate entries</td></tr>
+      <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">1 · Cryptographic Surface &amp; Boundary Scoping</th></tr>
+      <tr><td>Which interface are we talking about, and what role does it play?</td><td><code>interfaceType</code></td><td>Baseline. The token interface and its TLS carrier are separate entries</td></tr>
+      <tr><td>Who controls cipher-suite negotiation at this interface?</td><td><code>endpointRole</code></td><td>Baseline. A server controls what it offers; a client follows. Keycloak is a server on all inbound interfaces, a client on all outbound ones, and a peer on the cluster transport.</td></tr>
       <tr><td>What protocol, and which versions can it speak?</td><td><code>protocol</code>, <code>protocolVersionsSupported</code></td><td>Baseline. The cluster transport speaks TLS 1.3 only</td></tr>
-      <tr><td>What is it doing now?</td><td><code>keyExchange</code>, <code>authentication</code></td><td>Baseline. X25519 on TLS; RS256 on tokens; <code>none</code> for token encryption</td></tr>
-      <tr><td>What else could it do without changing the product?</td><td><code>keyExchangeSupported</code>, <code>authenticationSupported</code></td><td>Baseline. The JDK 21 groups, none of them post-quantum</td></tr>
-      <tr><td>How do we switch it on?</td><td><code>enablementMethod</code>, <code>minimumProductVersion</code></td><td>Baseline. <code>not-available</code> on every Keycloak interface today</td></tr>
-      <tr><td>Is this a software change or a hardware one?</td><td><code>providerLocation</code>, <code>implementationPurl</code></td><td>Baseline. Software throughout; the JDK or Keycloak itself</td></tr>
-      <tr><td>Can the module we are obliged to use do it?</td><td><code>moduleValidationScheme</code>, <code>moduleValidationRef</code>, <code>validatedModeAvailability</code></td><td>Baseline, new in v0.7. Keycloak's validated mode is an opt-in Bouncy Castle FIPS module</td></tr>
-      <tr><td>Are stored keys exposed as well as traffic?</td><td><code>keyWrapping</code>, <code>keyWrappingSupported</code></td><td>Baseline, new in v0.7. Realm keys are stored unwrapped</td></tr>
-      <tr><td>Can we migrate while the far end is still classical?</td><td><code>coexistence</code>, <code>negotiationControl</code></td><td>Baseline. Several realm keys can be active at once</td></tr>
-      <tr><td>What is likely to break?</td><td><code>integrationConstraints</code></td><td>Baseline. ML-DSA-signed tokens exceed the 4 KB browser cookie limit</td></tr>
-      <tr><td>If it cannot do this yet, what is stopping it, and who can change that?</td><td><code>capabilityStatus</code>, <code>blockedBy</code>, <code>roadmapRef</code>, per purpose</td><td>Baseline. Four different blockers across thirteen interfaces</td></tr>
-      <tr><td>Can the product create and hold the new key?</td><td><code>keyManagementFunction</code>, <code>keyOperations</code>, <code>keyTypesSupported</code>, <code>keyTypes</code>, <code>keyStoreLocation</code></td><td>Extended. The Admin API cannot generate an ML-DSA key</td></tr>
-      <tr><td>Which surface manages this interface's key?</td><td><code>keyStoreRef</code></td><td>Extended. Tokens: the Admin API. TLS: files, out of band. Cluster: the product itself</td></tr>
-      <tr><td>What else has to move first?</td><td><code>externalDependencies</code></td><td>Extended. The certificate authority, the directory, external identity providers</td></tr>
-      <tr><td>Where is data stored, and is that declared?</td><td>storage interfaces, or a stated absence</td><td>Extended. The key store in the database</td></tr>
+      <tr><td>Where is data stored at rest, and is that declared?</td><td>storage interfaces, or a stated absence</td><td>Extended. The key store in the database</td></tr>
       <tr><td>How much should we trust this record?</td><td><code>lifecycleStage</code></td><td>Baseline. <code>implemented</code> where Keycloak fixes the value, <code>configured</code> where it depends on the operator's certificate</td></tr>
+
+      <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">2 · Current Algorithms &amp; Quantum-Safe Capability</th></tr>
+      <tr><td>What is supported now?</td><td><code>keyExchange</code>, <code>authentication</code></td><td>Baseline. X25519 on TLS; RS256 on tokens; <code>none</code> for token encryption</td></tr>
+      <tr><td>Are stored keys exposed at rest as well as traffic?</td><td><code>keyWrapping</code> (the <code>key-wrapping</code> purpose entry of <code>G1</code>)</td><td>Baseline, new in v0.7. Realm keys are stored unwrapped</td></tr>
+
+      <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">3 · Enablement Route &amp; Deployment Cost</th></tr>
+      <tr><td>How do we switch it on, and from which product version?</td><td><code>enablementMethod</code>, <code>minimumProductVersion</code> (members of each <code>G1</code> entry)</td><td>Baseline. <code>not-available</code> on every Keycloak interface today</td></tr>
+      <tr><td>Is this a software change or a hardware one, and which component supplies it?</td><td><code>providerLocation</code>, <code>implementationPurl</code></td><td>Baseline. Software throughout; the JDK or Keycloak itself</td></tr>
+
+      <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">4 · Negotiation Strategy &amp; Operator Enforcement</th></tr>
+      <tr><td>How does the interface negotiate, and can the operator configure or enforce it?</td><td><code>negotiationStrategy</code>, <code>negotiationControl</code> (members of each <code>G1</code> entry)</td><td>Baseline. Strategy defines selection mode; control indicates whether the integrator can customize it and refuse classical fallbacks</td></tr>
+
+      <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">5 · Architectural Constraints &amp; Integration Friction</th></tr>
+      <tr><td>What is likely to break or encounter friction during integration?</td><td><code>integrationConstraints</code> (member of each <code>G1</code> entry)</td><td>Baseline. ML-DSA-signed tokens exceed the 4 KB browser cookie limit</td></tr>
+
+      <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">6 · Blockers &amp; Roadmap Accountability</th></tr>
+      <tr><td>If it cannot do this yet, what is stopping it, and who can change that?</td><td><code>capabilityStatus</code>, <code>blockedBy</code>, <code>roadmapRef</code> (members of each <code>G1</code> entry)</td><td>Baseline. Four different blockers across thirteen interfaces</td></tr>
+
+      <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">7 · Module Validation &amp; Regulatory Compliance</th></tr>
+      <tr><td>Can the validated module we are obliged to use do it?</td><td><code>moduleValidationScheme</code>, <code>moduleValidationRef</code>, <code>validatedModeAvailability</code> (member <code>G1.10</code> of each entry)</td><td>Baseline, new in v0.7. Keycloak's validated mode is an opt-in Bouncy Castle FIPS module</td></tr>
+      <tr><td>Is the overall product certified under a formal security scheme?</td><td><code>productCertificationScheme</code></td><td>Extended. Common Criteria or EUCC evaluated configuration</td></tr>
+
+      <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">8 · Key Management Lifecycle &amp; Ecosystem Dependencies</th></tr>
+      <tr><td>Can the product create, import, and hold the new key types?</td><td><code>keyManagementFunction</code>, <code>keyOperations</code>, <code>keyTypesSupported</code>, <code>keyTypes</code>, <code>keyStoreLocation</code></td><td>Extended. The Admin API cannot generate an ML-DSA key</td></tr>
+      <tr><td>Which surface manages this interface's key?</td><td><code>keyStoreRef</code></td><td>Extended. Tokens: the Admin API. TLS: files, out of band. Cluster: the product itself</td></tr>
+      <tr><td>What else in the ecosystem has to move first?</td><td><code>externalDependencies</code></td><td>Extended. The certificate authority, the directory, external identity providers</td></tr>
     </tbody>
   </table>
   </div>
@@ -251,8 +271,27 @@ nav: uc-pqc
     </tbody>
   </table>
   </div>
-
-  <h3>Extended: rules added at the second depth</h3>
+  <h4>Group rule G1: capability, one entry per cryptographic purpose</h4>
+  <p>The group is keyed to the cryptographic purpose vocabulary, with coverage declared as <code>full</code> so every purpose the profile covers owes an entry (C13). Group members are evaluated inside each entry, so a conditional guard such as <code>blockedBy</code> refers to that entry's own <code>capabilityStatus</code>. A guard may be removed (tightening) but never added or narrowed.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>#</th><th>Member attribute</th><th>Level</th><th>Guard / values and purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>G1.1</code></td><td><code>algorithms</code></td><td>MUST</td><td>Algorithms usable for this purpose, including hybrid constructions.</td></tr>
+      <tr><td><code>G1.2</code></td><td><code>enablementMethod</code></td><td>MUST</td><td><code>already-enabled</code> · <code>configuration</code> · <code>software-update</code> · <code>hardware-change</code> · <code>licence</code> · <code>not-available</code>. Separates cheap changes from expensive ones.</td></tr>
+      <tr><td><code>G1.3</code></td><td><code>minimumProductVersion</code></td><td>conditional MUST</td><td>When <code>enablementMethod</code> is <code>software-update</code>: the version that provides the capability.</td></tr>
+      <tr><td><code>G1.4</code></td><td><code>negotiationStrategy</code></td><td>MUST</td><td><code>static</code> · <code>exclusive</code> · <code>preference-order</code> · <code>client-controlled</code> · <code>dynamic</code>. Governs algorithm selection.</td></tr>
+      <tr><td><code>G1.5</code></td><td><code>negotiationControl</code></td><td>SHOULD</td><td><code>configurable</code> · <code>fixed</code> · <code>policy-controlled</code> (along with the configuration mechanism). Identifies whether the integrator can customize algorithm selection, reorder priorities, or refuse fallbacks.</td></tr>
+      <tr><td><code>G1.6</code></td><td><code>integrationConstraints</code></td><td>SHOULD</td><td>Known effects of enabling the capability: size limits, intermediaries, performance.</td></tr>
+      <tr><td><code>G1.7</code></td><td><code>capabilityStatus</code></td><td>MUST</td><td><code>available</code> · <code>committed</code> · <code>planned</code> · <code>under-evaluation</code> · <code>not-planned</code>. A commitment class rather than a date.</td></tr>
+      <tr><td><code>G1.8</code></td><td><code>blockedBy</code></td><td>conditional MUST</td><td>When <code>capabilityStatus</code> is not <code>available</code>: <code>provider</code> · <code>product</code> · <code>hardware</code> · <code>standard</code> · <code>certification</code>.</td></tr>
+      <tr><td><code>G1.9</code></td><td><code>roadmapRef</code></td><td>MAY</td><td>Reference to a roadmap entry carrying the target release.</td></tr>
+      <tr><td><code>G1.10</code></td><td><code>validatedModeAvailability</code></td><td>conditional SHOULD</td><td>Where the capability is available: <code>in-validated-mode</code> · <code>outside-validated-mode-only</code> · <code>no-validated-mode</code>.</td></tr>
+    </tbody>
+  </table>
+  </div>
+ 
+   <h3>Extended: rules added at the second depth</h3>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>#</th><th>Attribute or rule</th><th>Level</th><th>Applies to, and purpose</th></tr></thead>
@@ -309,19 +348,33 @@ nav: uc-pqc
   <p>The table compares two interfaces: the TLS listener and the token service it carries. Values marked <em>configured</em> depend on the certificate the operator installs. The example assumes RSA-2048.</p>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th>Attribute</th><th><code>tls-https</code></th><th><code>svc-oidc</code></th></tr></thead>
+    <thead><tr><th>Attribute / Group member</th><th><code>tls-https</code></th><th><code>svc-oidc</code></th></tr></thead>
     <tbody>
       <tr><td><code>interfaceType</code></td><td><code>service</code></td><td><code>service</code></td></tr>
+      <tr><td><code>endpointRole</code></td><td><code>server</code></td><td><code>server</code></td></tr>
       <tr><td><code>protocol</code> / <code>protocolVersionsSupported</code></td><td><code>TLS</code> / <code>1.2</code>, <code>1.3</code></td><td><code>OIDC</code> / <code>1.0</code></td></tr>
       <tr><td><code>keyExchange</code></td><td><code>X25519</code></td><td><code>none</code> (tokens are signed, not encrypted)</td></tr>
-      <tr><td><code>keyExchangeSupported</code></td><td><code>x25519</code>, <code>secp256r1</code>, <code>secp384r1</code>, <code>secp521r1</code>, <code>x448</code>, <code>ffdhe2048</code></td><td><code>RSA-OAEP</code>, <code>RSA-OAEP-256</code>, <code>ECDH-ES</code></td></tr>
+      <tr><td><strong>capability, key-establishment</strong></td><td colspan="2"><em>Group entry <code>G1</code> for key-establishment</em></td></tr>
+      <tr><td><code>algorithms</code></td><td><code>x25519</code>, <code>secp256r1</code>, <code>secp384r1</code>, <code>secp521r1</code>, <code>x448</code>, <code>ffdhe2048</code></td><td><code>RSA-OAEP</code>, <code>RSA-OAEP-256</code>, <code>ECDH-ES</code></td></tr>
+      <tr><td><code>capabilityStatus</code></td><td><code>planned</code></td><td><code>under-evaluation</code></td></tr>
+      <tr><td><code>blockedBy</code></td><td><code>provider</code></td><td><code>standard</code></td></tr>
+      <tr><td><code>enablementMethod</code></td><td><code>software-update</code> (via runtime) / <code>not-available</code> today</td><td><code>not-available</code></td></tr>
+      <tr><td><code>minimumProductVersion</code></td><td>JDK 27</td><td>—</td></tr>
+      <tr><td><code>negotiationStrategy</code></td><td><code>preference-order</code></td><td><code>preference-order</code></td></tr>
+      <tr><td><code>negotiationControl</code></td><td><code>configurable</code> (named groups set by JVM property <code>jdk.tls.namedGroups</code>)</td><td><code>configurable</code> (algorithm selected per client configuration)</td></tr>
+      <tr><td><code>integrationConstraints</code></td><td>certificate and key are operator-supplied files</td><td>—</td></tr>
       <tr><td><code>authentication</code></td><td><code>RSA-2048</code> (configured)</td><td><code>RS256</code></td></tr>
-      <tr><td><code>authenticationSupported</code></td><td>ECDSA, EdDSA and RSA signature schemes</td><td>RS, PS and ES families, <code>EdDSA</code>, HS</td></tr>
+      <tr><td><strong>capability, entity-authentication</strong></td><td colspan="2"><em>Group entry <code>G1</code> for entity-authentication</em></td></tr>
+      <tr><td><code>algorithms</code></td><td>ECDSA, EdDSA and RSA signature schemes</td><td>RS, PS and ES families, <code>EdDSA</code>, HS</td></tr>
+      <tr><td><code>capabilityStatus</code></td><td><code>under-evaluation</code></td><td><code>committed</code></td></tr>
+      <tr><td><code>blockedBy</code></td><td><code>standard</code></td><td><code>standard</code></td></tr>
+      <tr><td><code>enablementMethod</code></td><td><code>not-available</code></td><td><code>not-available</code> (committed upstream)</td></tr>
+      <tr><td><code>minimumProductVersion</code></td><td>—</td><td>—</td></tr>
+      <tr><td><code>negotiationStrategy</code></td><td><code>preference-order</code></td><td><code>preference-order</code>: several realm keys can be active at once</td></tr>
+      <tr><td><code>negotiationControl</code></td><td><code>configurable</code> (signature schemes set in TLS cipher configuration)</td><td><code>configurable</code> (signature algorithm set per realm and per client)</td></tr>
+      <tr><td><code>integrationConstraints</code></td><td>operator-supplied certificates</td><td>ML-DSA-65 tokens exceed the 4 KB browser cookie limit; relying parties must accept a new key type</td></tr>
+      <tr><td><code>providerLocation</code></td><td><code>software</code></td><td><code>software</code></td></tr>
       <tr><td><code>implementationPurl</code></td><td>the Red Hat build of OpenJDK 21</td><td><code>pkg:maven/org.keycloak/keycloak-services@26.7.3</code></td></tr>
-      <tr><td><code>enablementMethod</code></td><td><code>not-available</code></td><td><code>not-available</code></td></tr>
-      <tr><td><code>coexistence</code></td><td><code>simultaneous</code></td><td><code>simultaneous</code>: several realm keys can be active at once</td></tr>
-      <tr><td><code>negotiationControl</code></td><td>named groups set by the JVM property <code>jdk.tls.namedGroups</code></td><td>signature algorithm set per realm and per client</td></tr>
-      <tr><td><code>integrationConstraints</code></td><td>certificate and key are operator-supplied files</td><td>ML-DSA-65 tokens exceed the 4 KB browser cookie limit; relying parties must accept a new key type</td></tr>
       <tr><td><code>moduleValidationScheme</code></td><td><code>none</code> in default mode</td><td><code>none</code> in default mode</td></tr>
       <tr><td><code>lifecycleStage</code></td><td><code>configured</code></td><td><code>implemented</code></td></tr>
     </tbody>
@@ -329,10 +382,10 @@ nav: uc-pqc
   </div>
 
   <h3>Capability, per purpose</h3>
-  <p>Capability is stated per cryptographic purpose, because the purposes of one interface migrate on different timetables. Across Keycloak the two purposes that matter most look like this.</p>
+  <p>Capability is stated per cryptographic purpose: one group entry for <code>key-establishment</code>, one for <code>entity-authentication</code>, and one for <code>key-wrapping</code> (the last on storage interfaces only). Each entry carries the same flat members <code>G1.1</code> to <code>G1.10</code>. The purposes of one interface migrate on different timetables, so they are answered separately. Across Keycloak the two purposes that matter most look like this.</p>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th>Interfaces</th><th><code>key-establishment</code></th><th><code>entity-authentication</code></th></tr></thead>
+    <thead><tr><th>Interfaces</th><th><code>key-establishment</code> entry</th><th><code>entity-authentication</code> entry</th></tr></thead>
     <tbody>
       <tr><td>The six JDK TLS interfaces</td><td><code>planned</code>, blocked by <code>provider</code>, roadmap: JEP 527</td><td><code>under-evaluation</code>, blocked by <code>standard</code></td></tr>
       <tr><td><code>int-cache</code></td><td><code>planned</code>, blocked by <code>provider</code></td><td><code>under-evaluation</code>, blocked by <code>product</code>: the key type is fixed</td></tr>
@@ -389,15 +442,32 @@ nav: uc-pqc
     <li><strong>Everything else is a property</strong> under the <code>pkic:profile:</code> namespace: interface type, endpoint roles, the capability group and the key-management attributes, none of which CycloneDX models.</li>
     <li><strong>Related documents are linked, not copied.</strong> The CBOM references its companion SBOM and the supplier's security advisories.</li>
   </ul>
-  <p>The token interface, in outline:</p>
+  <p>The token interface (<code>svc-oidc</code>), showing baseline properties and its <code>G1</code> capability entries in outline:</p>
 <pre><code>"services": [{
   "bom-ref": "service:svc-oidc",
   "name": "OIDC and OAuth 2.0 token issuance (JOSE)",
   "endpoints": ["https://{hostname}/realms/{realm}/protocol/openid-connect"],
   "properties": [
     { "name": "pkic:profile:interfaceType", "value": "service" },
+    { "name": "pkic:profile:endpointRole",  "value": "server" },
     { "name": "pkic:profile:protocol",      "value": "OIDC" },
-    { "name": "pkic:profile:keyExchange",   "value": "none" }
+    { "name": "pkic:profile:keyExchange",   "value": "none" },
+    { "name": "pkic:profile:authentication", "value": "RS256" },
+    { "name": "pkic:profile:lifecycleStage", "value": "implemented" },
+
+    /* Group G1: Key Establishment entry */
+    { "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",        "value": "under-evaluation" },
+    { "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",               "value": "standard" },
+    { "name": "pkic:profile:capabilityByPurpose:key-establishment:enablementMethod",         "value": "not-available" },
+
+    /* Group G1: Entity Authentication entry (token signing) */
+    { "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",    "value": "committed" },
+    { "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",           "value": "standard" },
+    { "name": "pkic:profile:capabilityByPurpose:entity-authentication:enablementMethod",     "value": "not-available" },
+    { "name": "pkic:profile:capabilityByPurpose:entity-authentication:negotiationStrategy", "value": "preference-order" },
+    { "name": "pkic:profile:capabilityByPurpose:entity-authentication:negotiationControl",  "value": "configurable" },
+    { "name": "pkic:profile:capabilityByPurpose:entity-authentication:integrationConstraints", "value": "ML-DSA-65 tokens exceed the 4 KB browser cookie limit" },
+    { "name": "pkic:profile:capabilityByPurpose:entity-authentication:roadmapRef",          "value": "https://github.com/keycloak/keycloak/issues/43690" }
   ]
 }],
 "dependencies": [
@@ -407,7 +477,7 @@ nav: uc-pqc
   { "ref": "lib:keycloak-services", "provides": ["service:svc-oidc", "service:svc-saml",
                                                   "service:mgmt-admin", "service:svc-broker-tokens"] }
 ]</code></pre>
-  <p>Where an attribute is unavailable, the four disclosure outcomes apply. <code>none</code> is a value, not a marker: it states that no algorithm is applied for that job, as with Keycloak's unencrypted tokens. A supplier that does not know whether an interface can coexist records <code>coexistence</code> as <code>unknown</code> instead of guessing, because a wrong answer produces a plan that fails at cutover.</p>
+  <p>Where an attribute is unavailable, the four disclosure outcomes apply. <code>none</code> is a value, not a marker: it states that no algorithm is applied for that job, as with Keycloak's unencrypted tokens.</p>
 
   <h2>The example documents</h2>
   <p>Four CycloneDX documents make the use case testable. Each non-conforming document differs from its conforming partner in one attribute, so it fails exactly one rule.</p>
@@ -415,7 +485,7 @@ nav: uc-pqc
     <thead><tr><th>Document</th><th>Verdict</th></tr></thead>
     <tbody>
       <tr><td><code>cbom-keycloak-pqc-pass</code></td><td>Conforms to the baseline, and to the interface profiles beneath it</td></tr>
-      <tr><td><code>cbom-keycloak-pqc-fail</code></td><td>Fails <code>pqc-migration#I12</code>: the storage interface omits <code>keyWrappingSupported</code></td></tr>
+      <tr><td><code>cbom-keycloak-pqc-fail</code></td><td>Fails <code>pqc-migration#G1.1</code>: the storage interface omits the <code>key-wrapping</code> capability entry</td></tr>
       <tr><td><code>cbom-keycloak-pqc-extended-pass</code></td><td>Conforms to the extended profile and every shallower depth</td></tr>
       <tr><td><code>cbom-keycloak-pqc-extended-fail</code></td><td>Fails <code>pqc-migration-extended#I3</code>: the Admin API omits <code>keyTypesSupported</code></td></tr>
     </tbody>
@@ -438,10 +508,10 @@ nav: uc-pqc
         <td>3.10</td>
       </tr>
           <tr>
-        <td><a href="https://github.com/pkic/cbom/blob/main/decisions/0010-cryptographic-purpose-vocabulary.md">0010</a></td>
-        <td><strong>Capability is stated per cryptographic purpose.</strong> One status per interface cannot express the ordinary position: key agreement done, identity proof not yet.</td>
-        <td>3.7</td>
-      </tr>
+            <td><a href="https://github.com/pkic/cbom/blob/main/decisions/0010-cryptographic-purpose-vocabulary.md">0010</a></td>
+            <td><strong>Capability is stated per cryptographic purpose.</strong> Migration attributes (status, blocker, enablement, negotiation strategy, constraints) are flat members of a purpose-keyed group rule (<code>G1</code>, one entry per purpose: key-establishment, entity-authentication, key-wrapping) rather than nested inside one attribute per mechanism.</td>
+            <td>3.7</td>
+          </tr>
       <tr>
         <td><a href="https://github.com/pkic/cbom/blob/main/decisions/0019-a-family-ordered-by-depth.md">0019</a></td>
         <td><strong>Adoption is staged by a family of profiles ordered by depth.</strong> The baseline and extended profiles are two depths of one family.</td>
