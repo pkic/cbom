@@ -24,7 +24,7 @@ nav: introduction
 <main>
   <div class="crumb">START HERE</div>
   <h1>Introduction</h1>
-  <p class="lead">This section assumes no prior knowledge of bills of materials. It follows one product, one CBOM and one question the CBOM cannot answer, then shows what a profile does about it. Every other section expands on something that happens here.</p>
+  <p class="lead">No prior knowledge of bills of materials is assumed. A buyer asks a question about one product. The product's CBOM cannot answer it. A profile changes that, by stating which facts the CBOM must contain. Every other section expands on a step in this example.</p>
 
   <h2>The problem, in one example</h2>
   <p>A vendor supplies an nginx web server and, with it, a CBOM. From that document you learn that the product uses AES-256-GCM, X25519 and RSA-2048, that it holds a server certificate for <code>example.com</code>, and that OpenSSL 3.4.0 implements the cryptography. Every statement in it is true.</p>
@@ -46,19 +46,19 @@ not declared  the interface an administrator logs in to
               (on this product, SSH via OpenSSH)</code></pre>
 
   <p>Three months later a weakness is published against a key exchange that SSH uses. The question that lands on your desk is whether this product is affected, and if it is, which of the several hundred instances you operate.</p>
-  <p>Document A cannot answer. It describes the interface that serves web traffic and says nothing about the interface an administrator connects to. The vendor was not careless. It described the interface it declared accurately and in full, and nothing obliged it to declare the other one.</p>
+  <p>Document A cannot answer. It describes the interface that serves web traffic and says nothing about the interface an administrator connects to. The vendor was not careless. It described the HTTPS service interface accurately and in full. Nothing required it to declare the management interface as well.</p>
   <p>A CBOM format defines what a document <em>may</em> record. It does not define what a document <em>must</em> record. A vendor that answers a request for a CBOM with Document A has complied with the format and left the buyer no better off.</p>
   <p>Document A is not an unusual document. It is the ordinary result of asking a supplier for a CBOM without saying what the CBOM is for.</p>
 
   <h2>Why asking for everything does not work</h2>
-  <p>The obvious remedy makes matters worse. A large product performs thousands of cryptographic operations, and a document listing all of them buries the two or three facts any particular decision turns on. Exhaustive coverage is not useful coverage, and in practice no supplier would produce it.</p>
-  <p>There is no absolute standard of completeness for a CBOM. Completeness is relative to a purpose. So the question worth asking is not "does this document contain everything", which has no answer, but "does it contain what this decision needs", which does. That second question has an answer only if the decision has been written down first, in a form that something other than a person can check.</p>
+  <p>The obvious remedy is to ask for everything, and it makes matters worse. A large product performs thousands of cryptographic operations. A document listing all of them buries the two or three facts that any particular decision depends on. Covering everything does not make a document useful, and in practice no supplier would produce such a document.</p>
+  <p>There is no absolute standard of completeness for a CBOM. Completeness is relative to a purpose. The question "does this document contain everything?" therefore has no answer. The question "does it contain what this decision needs?" does have one. That second question can be answered only if the decision has first been written down in a form that a machine, and not only a person, can check.</p>
 
   <h2>What a profile is</h2>
   <p>A profile is a short list of rules stating which attributes a CBOM must carry to support one stated decision, for one stated reader. It is a minimum reporting requirement. It is not a schema, and it is not a format.</p>
 
   <h3>The example used throughout: the Interface Disclosure Baseline</h3>
-  <p>Every profile begins by naming who reads the document and what they are deciding. Without those two, there is no principled place for the list of rules to stop.</p>
+  <p>Every profile begins by naming who reads the document and what they are deciding. Without a named reader and a named decision, there is no principled point at which to stop adding rules.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th></th><th>The Interface Disclosure Baseline, v0.7</th></tr></thead>
@@ -69,7 +69,7 @@ not declared  the interface an administrator logs in to
     </tbody>
   </table>
   </div>
-  <p>Naming four actions is what makes the rest of the profile arguable. A reader with only one available action is not deciding anything, and a profile written from that has no test for whether it asks for the right things.</p>
+  <p>Naming the four actions is what allows the rest of the profile to be justified or challenged. A reader with only one available action is not making a decision. A profile written for such a reader has no test for whether it asks for the right things.</p>
   <p>The baseline has thirteen rules, of two kinds.</p>
 
   <h3>Product rules: constraints on the set of interfaces</h3>
@@ -77,12 +77,12 @@ not declared  the interface an administrator logs in to
     <thead><tr><th>#</th><th>The document must</th><th>Level</th><th>Because</th></tr></thead>
     <tbody>
       <tr><td>P1</td><td>declare at least one cryptographic interface</td><td><span class="must">MUST</span></td><td>A CBOM describing no interface answers nothing.</td></tr>
-      <tr><td>P2</td><td>declare at least one management interface, or state that there is none</td><td><span class="must">MUST</span></td><td>This is the rule Document A fails. A hardware token with no configuration surface hides nothing by lacking one, so declared absence satisfies the rule and silence does not.</td></tr>
+      <tr><td>P2</td><td>declare at least one management interface, or state that there is none</td><td><span class="must">MUST</span></td><td>This is the rule Document A fails. A hardware token with no configuration surface hides nothing by not having one. A statement that there is no management interface therefore satisfies the rule. Saying nothing does not.</td></tr>
       <tr><td>P3</td><td>identify the subject it describes</td><td><span class="must">MUST</span></td><td>An unidentified record cannot be matched to a deployment, or compared with the same product's record from last quarter.</td></tr>
       <tr><td>P4</td><td>state how complete its list of interfaces is</td><td><span class="must">MUST</span></td><td>Otherwise a missing interface is uninterpretable. It could mean the interface does not exist, or that the producer chose not to list it.</td></tr>
     </tbody>
   </table>
-  <p>These four are the rules that catch omission, which no per-attribute rule can. A document can describe its service interface impeccably, pass every attribute rule, and still fail P2.</p>
+  <p>These four rules catch omissions, which no rule about a single attribute can do. A document can describe its service interface impeccably, pass every attribute rule, and still fail P2.</p>
 
   <h3>Interface rules: constraints on each one</h3>
   <p>These apply uniformly to every interface the document declares, however many that is.</p>
@@ -98,14 +98,14 @@ not declared  the interface an administrator logs in to
       <tr><td>I6</td><td><code>endpointRoles</code></td><td><span class="must">MUST</span></td><td>Who is at each end, so the interface can be located in a topology</td></tr>
       <tr><td>I7</td><td><code>interfaceType</code></td><td><span class="must">MUST</span></td><td>One of five values, among them service, management and interconnect. P2 is checked against this</td></tr>
       <tr><td>I8</td><td><code>lifecycleStage</code></td><td><span class="must">MUST</span></td><td>Whether the value was intended, implemented, configured or observed, which is how much weight the reader should give it</td></tr>
-      <tr><td>I9</td><td><code>implementationPurl</code></td><td><span class="must">MUST</span></td><td>Which library implements it, so an advisory against that library can be matched. The one rule here a producer may answer by withholding</td></tr>
+      <tr><td>I9</td><td><code>implementationPurl</code></td><td><span class="must">MUST</span></td><td>Which library implements it, so an advisory against that library can be matched. This is the only rule in the profile that a producer may answer by withholding the value</td></tr>
     </tbody>
   </table>
   </div>
-  <p>Thirteen rules is the entire profile. It is short deliberately. It names the minimum that supports one decision and then stops, which is what makes it possible for a vendor to satisfy it and for a buyer to insist on it.</p>
+  <p>Thirteen rules is the entire profile. It is short on purpose. It names the minimum needed to support one decision and then stops. Because the profile is short, a vendor can satisfy it and a buyer can insist on it.</p>
 
   <h3>What the profile does not say</h3>
-  <p>No rule asks whether the cryptography is any good. Whether a product is post-quantum ready is not a fact about the product. It is a judgement made against criteria that change over time, and it is kept outside the document, in versioned <a href="policy-evaluation.html">policy</a>. The CBOM carries the facts. The policy reaches the verdict, and is dated so that a reader can tell which criteria produced it.</p>
+  <p>No rule asks whether the cryptography is any good. Whether a product is post-quantum ready is not a fact about the product. It is a judgement made against criteria that change over time, and it is kept outside the document, in versioned <a href="policy-evaluation.html">policy</a>. The CBOM carries the facts. The policy reaches the verdict. The verdict is dated so that a reader can tell which criteria produced it.</p>
 
   <h2>Evaluating two documents against the profile</h2>
   <p>Document A is the one above. Document B is the same product described by a supplier who declared both interfaces, the HTTPS service interface and the SSH management interface.</p>
@@ -122,34 +122,34 @@ not declared  the interface an administrator logs in to
     </tbody>
   </table>
   </div>
-  <div class="banner">Document A contains no false statement, and every attribute it does carry is correct. It fails because conformance is measured against a decision rather than against truth. An accurate document that omits the one thing its reader needs is the failure a profile exists to catch, and no check the format alone can perform will find it.</div>
+  <div class="banner">Document A contains no false statement, and every attribute it does carry is correct. It fails because conformance is measured against what a decision needs, not against whether the statements are true. A profile exists to catch exactly this failure: an accurate document that omits the one thing its reader needs. No check based on the format alone can find it.</div>
   <p>The <a href="demo.html">Demo</a> runs both of these in the browser, along with a third: a library with no administrative surface at all, which satisfies P2 by saying so.</p>
 
   <h2>The four disclosure outcomes</h2>
-  <p>One refinement is worth meeting early, because it recurs throughout. In Document B the management interface does not name its implementing library. It carries a marker saying the value is withheld, and rule I9 accepts that, because I9 is the one rule in this profile marked withholdable.</p>
-  <p>The marker matters to whoever reads the document. A withheld value is a position the producer has taken and can be challenged on in a negotiation. An absent value could be anything. So the methodology separates four outcomes for any attribute, where the CBOM formats offer only present and absent.</p>
+  <p>One refinement recurs throughout the methodology. In Document B the management interface does not name its implementing library. It carries a marker saying the value is withheld, and rule I9 accepts that, because I9 is the one rule in this profile marked withholdable.</p>
+  <p>The marker matters to the reader of the document. A withheld value is a position the producer has taken, and the reader can challenge it in a negotiation. An absent value could mean anything. For this reason the methodology distinguishes four outcomes for any attribute. The CBOM formats distinguish only two: present and absent.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Outcome</th><th>What it says about the producer</th><th>Satisfies a MUST rule?</th></tr></thead>
     <tbody>
-      <tr><td><strong>supplied</strong></td><td>It knows the value and has published it</td><td>Yes</td></tr>
+      <tr><td><strong>value</strong></td><td>It knows the value and has published it</td><td>Yes</td></tr>
       <tr><td><strong>withheld</strong></td><td>It knows the value and has decided not to publish it</td><td>Only where the rule is marked withholdable</td></tr>
-      <tr><td><strong>unknown</strong></td><td>It does not know the value</td><td>No, but it is reported separately from silence</td></tr>
+      <tr><td><strong>unknown</strong></td><td>It does not know the value</td><td>No, but it is reported separately from an attribute that is simply missing</td></tr>
       <tr><td><strong>undeclared</strong></td><td>Nothing was said, and the reader cannot tell which of the other three applies</td><td>No</td></tr>
     </tbody>
   </table>
   </div>
-  <p>The first three can be acted on. The fourth can only be guessed at, and a buyer who cannot tell a deliberate omission from an oversight has no basis for asking the supplier to fix it.</p>
+  <p>The first three can be acted on. The fourth can only be guessed at. A buyer who cannot tell a deliberate omission from an oversight has no basis for asking the supplier to fix it.</p>
 
   <h2>Where to go next</h2>
-  <p>Nothing above depends on the rest of the documentation, and the rest of the documentation expands on it.</p>
+  <p>Everything above can be understood without the rest of the documentation. The other sections expand on it.</p>
   <div class="cards">
     <a class="card" href="demo.html"><div class="num">interactive</div><h3>Demo</h3><p>Run three documents against the profile and watch each rule resolve, including the four disclosure outcomes.</p></a>
     <a class="card" href="index.html"><div class="num">map</div><h3>Overview</h3><p>What each section covers, and two suggested routes through the material depending on why you are here.</p></a>
     <a class="card" href="challenges.html"><div class="num">background</div><h3>Challenges</h3><p>Why CBOMs behave the way Document A did, and what SBOM adoption already established about it.</p></a>
     <a class="card" href="method.html"><div class="num">procedure</div><h3>Method</h3><p>The twelve steps for defining a profile, if you are here to write one rather than to read one.</p></a>
   </div>
-  <p><a href="terms.html">Terms</a> is a glossary and sits in the Reference group. It is there for when a word is unfamiliar, not something to read first.</p>
+  <p><a href="terms.html">Terms</a> is a glossary and sits in the Reference group. Use it to look up an unfamiliar word. It is not intended to be read first.</p>
 
   <p style="font-size:13px;color:var(--muted)">This documentation works a single example, an nginx web server expressed in CycloneDX 1.7, all the way through. The material is illustrative and demonstrates the methodology; it is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>
 

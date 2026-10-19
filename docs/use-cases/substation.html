@@ -24,8 +24,8 @@ nav: uc-substation
 <main>
   <div class="crumb">CHANGE PLANNING · WORKED USE CASE · DRAFT</div>
   <h1>Substation automation (OT): from use case to profile</h1>
-  <p class="lead">A grid operator plans the post-quantum migration of one substation automation system, and decides for each communication path whether to migrate it in place, migrate only the key plane, carry it on a conduit, or replace the device at its next refurbishment. An operational technology (OT) use case, in the <a href="change-planning.html#substation">change-planning</a> group.</p>
-  <div class="banner warn">Draft for discussion. Values are illustrative, taken from the standards' profiles, until a supplier volunteers a real product. Attribute and profile names are proposals of this page. The component profile extends the change core (draft decision 0023); the decisions recorded here are numbered for draft decision 0024. The working text is kept in <code>drafts/ot-substation/</code>.</div>
+  <p class="lead">A grid operator plans the post-quantum migration of one substation automation system. For each communication path, the operator decides whether to migrate it in place, migrate only the key plane, carry it on a conduit, or replace the device at its next refurbishment. This is an operational technology (OT) use case in the <a href="change-planning.html#substation">change-planning</a> group.</p>
+  <div class="banner warn">Draft for discussion. The values are illustrative. They are taken from the profiles in the published standards, and they stay illustrative until a supplier volunteers a real product. The attribute and profile names are proposals, not agreed names. The component profile extends the change core, the core profile shared by the change-planning use cases (draft decision 0023). The decisions proposed on this page are numbered for draft decision 0024. The working text is kept in <code>drafts/ot-substation/</code>.</div>
 
 <h2>Choice of case</h2>
 <p>The OT use case is the <strong>substation automation system (SAS) of an electricity grid operator</strong>.</p>
@@ -49,19 +49,19 @@ nav: uc-substation
 <tr>
 <td>OPC UA plant cell (open62541)</td>
 <td>A real product with public documentation of its security policies</td>
-<td>Close to the Keycloak pattern: one product, session security. It would teach the method little that is new</td>
+<td>It follows the same pattern as the Keycloak use case: one product that secures sessions. It would add little that is new to the method</td>
 <td>Kept as a possible second component</td>
 </tr>
 <tr>
 <td>Water utility telemetry (DNP3, Modbus)</td>
 <td>High sector relevance</td>
-<td>Most of it has no cryptography at all. The planner's answer would be "conduit" for almost everything, which tests too little</td>
+<td>Most of it has no cryptography at all. The planner would answer "carry it on a conduit" for almost every path, so the case would test too little of the profile</td>
 <td>Mention only</td>
 </tr>
 <tr>
 <td>Secure remote access into OT</td>
 <td>Real harvest-now-decrypt-later exposure</td>
-<td>An IT product at an OT boundary. Too close to Keycloak</td>
+<td>It is an IT product that sits at the OT boundary. It is too similar to the Keycloak use case</td>
 <td>Mention only</td>
 </tr>
 </tbody>
@@ -71,12 +71,12 @@ nav: uc-substation
 <p>A grid operator plans the PQC migration of one substation automation system: the station level, the bay level, and the link to the control centre. For each communication path it decides one of four actions:</p>
 <ul>
 <li><strong>migrate in place</strong>, by configuration or firmware;</li>
-<li><strong>migrate the key plane only</strong>, where the data plane is already symmetric;</li>
-<li><strong>carry the path on a conduit</strong>, such as the WAN tunnel to the control centre;</li>
+<li><strong>migrate the key plane only</strong>, where the data plane is already symmetric. The data plane is the protected traffic itself. The key plane is the mechanism that distributes the keys for that traffic;</li>
+<li><strong>carry the path on a conduit</strong>, such as the WAN tunnel to the control centre. A conduit is a protected channel that carries traffic between security zones;</li>
 <li><strong>replace the device</strong> at its next scheduled refurbishment.</li>
 </ul>
-<p>It also needs to know whether any trust anchor will outlive the algorithm that protects it.</p>
-<p><strong>Consumer:</strong> the grid operator's protection and control engineering function, working with its system integrator. <strong>Supporting consumer:</strong> the national competent authority under NIS2, which reads the same facts at a higher level.</p>
+<p>The operator also needs to know whether any trust anchor will stay in service longer than the algorithm that protects it stays safe.</p>
+<p><strong>Consumer:</strong> the grid operator's protection and control engineering function, working with its system integrator. <strong>Supporting consumer:</strong> the national competent authority under NIS2, which uses the same facts in less detail.</p>
 <p>The operator's questions:</p>
 <ol>
 <li>Where does asymmetric cryptography sit in this system, and which paths depend on it?</li>
@@ -163,15 +163,15 @@ nav: uc-substation
         <line x1="530" y1="400" x2="554" y2="400" stroke="#0f7a52" stroke-width="2.4"/><text x="560" y="404">conduit tunnel</text>
       </g>
     </svg>
-    <figcaption>The reference system. Protection traffic stays inside the station zone and is protected with a symmetric MAC. Everything asymmetric sits elsewhere: the group key distribution, the TLS sessions to the HMI and the gateway, the engineering download, and the tunnel that carries the control-centre link across the conduit. Values are illustrative.</figcaption>
+    <figcaption>The reference system. Protection traffic stays inside the station zone and is protected with a symmetric MAC. All asymmetric cryptography sits elsewhere: the group key distribution, the TLS sessions to the HMI (human-machine interface) and the gateway, the engineering download, and the tunnel that carries the control-centre link across the conduit. Values are illustrative.</figcaption>
   </figure>
-<p><strong>The threat weighting differs from Keycloak's.</strong> Protection and control traffic is confidential only for a short time. The quantum risk is forged authority: forged firmware, configuration downloads, commands and group keys. The WAN link to the control centre is the main harvest-now-decrypt-later exposure. The profile asks for facts per purpose and does not rank them (decision 0002).</p>
+<p><strong>The threats are weighted differently from the Keycloak use case.</strong> Protection and control traffic needs to stay confidential only for a short time. The quantum risk is that an attacker forges something that carries authority: firmware, configuration downloads, commands or group keys. The WAN link to the control centre is the main harvest-now-decrypt-later exposure. The profile asks for the facts for each purpose and does not rank them (decision 0002).</p>
 <h2>2. Producer constraints</h2>
-<p>There are two producers, and the black-box constraint applies to both.</p>
+<p>There are two producers. The black-box constraint applies to both: each producer can describe only what it can see from its own position.</p>
 <ul>
-<li><strong>The IED supplier</strong> publishes a component CBOM for one product at one firmware version. The supplier does not know the substation, the zones or which interfaces are switched on.</li>
-<li><strong>The integrator</strong> publishes a system document, built from the substation configuration description (SCL). It knows which component interfaces are in use, how the zones are cut, and which device implements each conduit. It does not see inside the components.</li>
-<li><strong>The operator</strong> supplies instance data, such as how many substations use the same design. That data stays out of every profile.</li>
+<li><strong>The IED supplier</strong> publishes a component CBOM. An IED (intelligent electronic device) is a protection relay, bay controller or similar field device. The supplier's CBOM covers one product at one firmware version. The supplier does not know the substation, the zones or which interfaces are switched on.</li>
+<li><strong>The integrator</strong> publishes a system document, built from the substation configuration description (SCL). It knows which component interfaces are in use, how the system is divided into zones, and which device implements each conduit. It does not see inside the components.</li>
+<li><strong>The operator</strong> supplies instance data. Instance data describes the operator's own deployments, such as how many substations use the same design. No profile covers that data.</li>
 </ul>
 <p>Constraints that shape the attributes:</p>
 <div style="overflow:auto">
@@ -185,18 +185,18 @@ nav: uc-substation
 </thead>
 <tbody>
 <tr>
-<td>GOOSE and SV are authenticated with a MAC: HMAC or GMAC with group keys</td>
-<td>The data plane is not a migration target. The key plane is. Keys reach devices through IEC 62351-9 group key distribution (GDOI, RFC 8052)</td>
+<td>GOOSE (protection event messages) and SV (sampled values) are authenticated with a message authentication code (MAC): HMAC or GMAC with group keys</td>
+<td>The data plane, meaning the messages themselves, is not a migration target. The key plane, meaning how the group keys are distributed, is a migration target. Keys reach devices through IEC 62351-9 group key distribution (GDOI, RFC 8052)</td>
 <td>IEC 62351-6:2020</td>
 </tr>
 <tr>
 <td>GOOSE is a layer-2 multicast message with a 3 ms budget for trip messages</td>
-<td>Per-message signatures are not feasible. An ML-DSA-44 signature is 2,420 bytes. This limit is permanent and is stated once, as an integration constraint</td>
+<td>Per-message signatures are not feasible. An ML-DSA-44 signature is 2,420 bytes. This limit will not change. The profile records it once, as an integration constraint</td>
 <td>IEC 61850-5 performance class P2/P3; FIPS 204</td>
 </tr>
 <tr>
 <td>MMS and IEC 60870-5-104 run over TLS as profiled by IEC 62351-3:2023</td>
-<td>A device can only claim 62351-3 conformance for the groups and signature schemes that profile lists. The profile lists none that are post-quantum, so conformance to the profile is a blocker in its own right, whatever the TLS library could do</td>
+<td>A device can only claim 62351-3 conformance for the key exchange groups and signature schemes that the 62351-3 profile lists. That profile lists no post-quantum ones. Conformance to 62351-3 therefore blocks migration on its own, even if the device's TLS library supports post-quantum algorithms</td>
 <td>IEC 62351-3:2023</td>
 </tr>
 <tr>
@@ -206,7 +206,7 @@ nav: uc-substation
 </tr>
 <tr>
 <td>A device's firmware is verified by its bootloader or boot ROM</td>
-<td>Whether the verification algorithm and anchor can change in the field decides between update and replacement</td>
+<td>If the verification algorithm and its trust anchor can be changed in the field, the device can be updated. If they cannot, the device must be replaced</td>
 <td>EU PQC roadmap: products should accept updates signed with quantum-safe algorithms</td>
 </tr>
 <tr>
@@ -216,7 +216,7 @@ nav: uc-substation
 </tr>
 <tr>
 <td>Field life of 20 to 30 years, aligned to primary-plant refurbishment</td>
-<td>Trust anchor validity and the replacement window matter more than release dates</td>
+<td>How long trust anchors stay valid, and when each device is due for replacement, matter more than product release dates</td>
 <td></td>
 </tr>
 </tbody>
@@ -232,10 +232,10 @@ nav: uc-substation
       </g>
       <rect x="10" y="52" width="170" height="44" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.4"/><text x="95.0" y="71" text-anchor="middle" fill="#1a2230">GOOSE and SV</text><text x="95.0" y="86" text-anchor="middle" fill="#5b6472">trip, sampled values</text><line x1="180" y1="74" x2="200" y2="74" stroke="#5b6472" stroke-width="1.3"/><rect x="200" y="52" width="160" height="44" rx="6" fill="#dcfce7" stroke="#0f7a52" stroke-width="1.4"/><text x="280.0" y="71" text-anchor="middle" fill="#1a2230">HMAC or GMAC</text><text x="280.0" y="86" text-anchor="middle" fill="#5b6472">with a group key</text><line x1="360" y1="74" x2="380" y2="74" stroke="#5b6472" stroke-width="1.3" stroke-dasharray="4 3"/><rect x="380" y="52" width="170" height="44" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.4"/><text x="465.0" y="71" text-anchor="middle" fill="#1a2230">GDOI key server</text><text x="465.0" y="86" text-anchor="middle" fill="#5b6472">IKEv1 phase 1</text><rect x="565" y="52" width="148" height="44" rx="22" fill="#ffffff" stroke="#b45309" stroke-width="2"/><text x="639.0" y="71" text-anchor="middle" fill="#b45309" font-weight="600">data plane resistant</text><text x="639.0" y="86" text-anchor="middle" fill="#b45309">key plane: standard</text><rect x="10" y="108" width="170" height="44" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.4"/><text x="95.0" y="127" text-anchor="middle" fill="#1a2230">MMS</text><text x="95.0" y="142" text-anchor="middle" fill="#5b6472">control, settings</text><line x1="180" y1="130" x2="200" y2="130" stroke="#5b6472" stroke-width="1.3"/><rect x="200" y="108" width="160" height="44" rx="6" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.4"/><text x="280.0" y="127" text-anchor="middle" fill="#1a2230">TLS, IEC 62351-3</text><text x="280.0" y="142" text-anchor="middle" fill="#5b6472">ECDHE, ECDSA</text><line x1="360" y1="130" x2="380" y2="130" stroke="#5b6472" stroke-width="1.3" stroke-dasharray="4 3"/><rect x="380" y="108" width="170" height="44" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.4"/><text x="465.0" y="127" text-anchor="middle" fill="#1a2230">device certificate</text><text x="465.0" y="142" text-anchor="middle" fill="#5b6472">EST or SCEP</text><rect x="565" y="108" width="148" height="44" rx="22" fill="#ffffff" stroke="#b45309" stroke-width="2"/><text x="639.0" y="134" text-anchor="middle" fill="#b45309" font-weight="600">blocked: standard</text><rect x="10" y="164" width="170" height="44" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.4"/><text x="95.0" y="183" text-anchor="middle" fill="#1a2230">Role-based access</text><text x="95.0" y="198" text-anchor="middle" fill="#5b6472">IEC 62351-8</text><line x1="180" y1="186" x2="200" y2="186" stroke="#5b6472" stroke-width="1.3"/><rect x="200" y="164" width="160" height="44" rx="6" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.4"/><text x="280.0" y="190" text-anchor="middle" fill="#1a2230">token signature</text><line x1="360" y1="186" x2="380" y2="186" stroke="#5b6472" stroke-width="1.3" stroke-dasharray="4 3"/><rect x="380" y="164" width="170" height="44" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.4"/><text x="465.0" y="190" text-anchor="middle" fill="#1a2230">token issuer key</text><rect x="565" y="164" width="148" height="44" rx="22" fill="#ffffff" stroke="#b45309" stroke-width="2"/><text x="639.0" y="190" text-anchor="middle" fill="#b45309" font-weight="600">blocked: standard</text><rect x="10" y="220" width="170" height="44" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.4"/><text x="95.0" y="246" text-anchor="middle" fill="#1a2230">Firmware image</text><line x1="180" y1="242" x2="200" y2="242" stroke="#5b6472" stroke-width="1.3"/><rect x="200" y="220" width="160" height="44" rx="6" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.4"/><text x="280.0" y="246" text-anchor="middle" fill="#1a2230">signature at boot</text><line x1="360" y1="242" x2="380" y2="242" stroke="#5b6472" stroke-width="1.3" stroke-dasharray="4 3"/><rect x="380" y="220" width="170" height="44" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.4"/><text x="465.0" y="239" text-anchor="middle" fill="#1a2230">key and algorithm</text><text x="465.0" y="254" text-anchor="middle" fill="#5b6472">in boot ROM or loader</text><rect x="565" y="220" width="148" height="44" rx="22" fill="#ffffff" stroke="#b91c1c" stroke-width="2"/><text x="639.0" y="239" text-anchor="middle" fill="#b91c1c" font-weight="600">blocked: product</text><text x="639.0" y="254" text-anchor="middle" fill="#b91c1c">or replace at refit</text><rect x="10" y="276" width="170" height="44" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.4"/><text x="95.0" y="295" text-anchor="middle" fill="#1a2230">Control-centre link</text><text x="95.0" y="310" text-anchor="middle" fill="#5b6472">IEC 60870-5-104</text><line x1="180" y1="298" x2="200" y2="298" stroke="#5b6472" stroke-width="1.3"/><rect x="200" y="276" width="160" height="44" rx="6" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.4"/><text x="280.0" y="302" text-anchor="middle" fill="#1a2230">TLS inside a tunnel</text><line x1="360" y1="298" x2="380" y2="298" stroke="#5b6472" stroke-width="1.3" stroke-dasharray="4 3"/><rect x="380" y="276" width="170" height="44" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.4"/><text x="465.0" y="295" text-anchor="middle" fill="#1a2230">WAN router</text><text x="465.0" y="310" text-anchor="middle" fill="#5b6472">IKEv2, the conduit</text><rect x="565" y="276" width="148" height="44" rx="22" fill="#ffffff" stroke="#0369a1" stroke-width="2"/><text x="639.0" y="295" text-anchor="middle" fill="#0369a1" font-weight="600">can move first</text><text x="639.0" y="310" text-anchor="middle" fill="#0369a1">hybrid ML-KEM</text>
     </svg>
-    <figcaption>Data plane and key plane. The protection messages that the 3 ms budget applies to already use symmetric cryptography, so they are not the migration target. Every asymmetric dependency sits one step to the right, in key distribution, enrolment, token signing and firmware verification. Most of those wait on a standard. The one path that can move first is the control-centre link, at the conduit. Status values are illustrative.</figcaption>
+    <figcaption>Data plane and key plane. The protection messages that the 3 ms budget applies to already use symmetric cryptography, so they are not the migration target. Every asymmetric dependency sits one column to the right, where the keys or trust come from: key distribution, certificate enrolment, token signing and firmware verification. Most of those are blocked until a standard adds post-quantum algorithms. The only path that can migrate first is the control-centre link, by upgrading the conduit that carries it. Status values are illustrative.</figcaption>
   </figure>
 <h2>3. From questions to attributes</h2>
-<p>The baseline pqc-migration attributes carry most of the load. Only two new ones are needed.</p>
+<p>The baseline attributes, which the pqc-migration profile already defines, answer most of the operator's questions. Only two new component attributes are needed. The system document adds two more.</p>
 <div style="overflow:auto">
 <table>
 <thead>
@@ -262,14 +262,14 @@ nav: uc-substation
 <td>Baseline</td>
 </tr>
 <tr>
-<td>Can it migrate while the far end is still classical</td>
+<td>Can it migrate while the other end still uses classical algorithms</td>
 <td><code>coexistence</code>, <code>negotiationControl</code></td>
 <td>Baseline. One-way multicast needs a defined value: <code>not-applicable</code></td>
 </tr>
 <tr>
-<td>What breaks</td>
+<td>What breaks if the cryptography changes</td>
 <td><code>integrationConstraints</code></td>
-<td>Baseline. Carries the GOOSE frame and timing limit as a structured entry</td>
+<td>Baseline. Records the GOOSE frame size and timing limits as a structured entry</td>
 </tr>
 <tr>
 <td>Which interface delivers this interface's keys</td>
@@ -311,14 +311,14 @@ nav: uc-substation
 </div>
 <p><strong>Tried and rejected:</strong></p>
 <ul>
-<li><strong>A crypto-plane attribute.</strong> Separate interfaces (K2) combined with purpose already separate the data plane from the key plane.</li>
-<li><strong><code>timingClass</code>.</strong> It is an integration constraint, not a new attribute.</li>
+<li><strong>A crypto-plane attribute.</strong> It is not needed. The data plane and the key plane are already separate interfaces (K2), and the purpose of each interface tells them apart.</li>
+<li><strong><code>timingClass</code>.</strong> A timing limit is an integration constraint, so it does not need a new attribute.</li>
 <li><strong>Per-path latency budgets.</strong> They are the operator's requirement, not a supplier fact.</li>
 <li><strong><code>compensatingControl</code>.</strong> It is a design decision. It belongs in the operator's register, not in either CBOM.</li>
 </ul>
 <h2>4. Profiles</h2>
 <p>There are two profiles: one for the component, one for the system.</p>
-<p><strong><code>pqc-migration-ot</code></strong> (component). It extends the change core monotonically (decision 0004). The core supplies the baseline capability attributes and, as conditional rules on update interfaces, <code>keyReplaceable</code>, <code>updateAuthority</code> and <code>updateMechanism</code>.</p>
+<p><strong><code>pqc-migration-ot</code></strong> (component). It extends the change core monotonically: it adds rules and does not relax any (decision 0004). The core supplies the baseline capability attributes. It also supplies <code>keyReplaceable</code>, <code>updateAuthority</code> and <code>updateMechanism</code>, as conditional rules that apply to update interfaces.</p>
 <div style="overflow:auto">
 <table>
 <thead>
@@ -332,7 +332,7 @@ nav: uc-substation
 <tr>
 <td>Inherited</td>
 <td>All change-core rules, including the conditional update-path rules</td>
-<td>as the core</td>
+<td>same as in the core</td>
 </tr>
 <tr>
 <td>I-OT1</td>
@@ -362,7 +362,7 @@ nav: uc-substation
 </tbody>
 </table>
 </div>
-<p><strong><code>sas-system</code></strong> (integrator). This is a derived overlay: it references the component CBOMs and does not copy them.</p>
+<p><strong><code>sas-system</code></strong> (integrator). This is a derived overlay. An overlay is a document that adds facts on top of other CBOMs. It references the component CBOMs and does not copy them.</p>
 <div style="overflow:auto">
 <table>
 <thead>
@@ -403,9 +403,9 @@ nav: uc-substation
 </div>
 <p><strong>Dependencies:</strong></p>
 <ul>
-<li>The update-path attributes now sit in the change core and are shared with IoT. If IoT question Q63 (permanent versus temporary limits) changes them, both profiles follow.</li>
-<li>How the overlay's verdict relates to the component documents it cites is Q68.</li>
-<li>A system as the subject has to be accepted by the scope declaration (decision 0008).</li>
+<li>The update-path attributes are now part of the change core, so the IoT profile uses them too. If IoT question Q63 (permanent versus temporary limits) changes them, both profiles change with them.</li>
+<li>Open question Q68 asks how the overlay's verdict relates to the component documents it cites.</li>
+<li>The scope declaration (decision 0008) must accept a whole system, not only a product, as the subject of a CBOM.</li>
 </ul>
   <figure>
     <svg viewBox="0 0 720 330" role="img" aria-label="Five supplier documents on the left, one per component: protection IED, bay controller, station gateway, station server and WAN router, each a component CBOM conforming to pqc-migration-ot. On the right, the integrator's system document, conforming to sas-system, cites each of them by link and digest and states the use of every interface, the zones and conduits, who provides the key plane, and the IEC 62443-3-3 level as delivered. Below both, the operator holds instance data and its migration register, outside both profiles." xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11">
@@ -431,11 +431,11 @@ nav: uc-substation
       <rect x="20" y="288" width="685" height="34" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-dasharray="5 4"/>
       <text x="362" y="309" fill="#5b6472" text-anchor="middle">Operator: how many substations use this design, and its migration register. Outside both profiles</text>
     </svg>
-    <figcaption>Two kinds of document. Each supplier describes one product it can see whole. The integrator describes how the products are put together, and cites the supplier documents rather than repeating them. What the system verdict says about a component that conforms to nothing is open (Q68).</figcaption>
+    <figcaption>Two kinds of document. Each supplier describes one product, which it can see in full. The integrator describes how the products are put together, and cites the supplier documents rather than repeating them. It is still an open question what the system verdict says about a component that conforms to no profile (Q68).</figcaption>
   </figure>
-<p><strong>The edge model stays parked.</strong> In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so the revival trigger is not met. It would be met by a fact owned by the path rather than by any device, such as an end-to-end GOOSE transfer time. That fact is an operator requirement, so it stays out.</p>
+<p><strong>The edge model stays parked.</strong> The edge model would treat a path between devices as an object with its own facts. It was parked, to be revived only when a fact belongs to a path and not to any device. In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so the condition for reviving the edge model is not met. A fact that belongs to the path itself would meet it, such as an end-to-end GOOSE transfer time. That fact is an operator requirement, so it stays out of the profiles.</p>
 <h2>5. The worked example</h2>
-<p>The worked example is a reference SAS with generic components and values taken from the standards' profiles. Every value is marked illustrative until a supplier volunteers a real product.</p>
+<p>The worked example is a reference SAS. It uses generic components, and its values are taken from the profiles in the published standards. Every value is marked illustrative until a supplier volunteers a real product.</p>
 <p><strong>Components:</strong></p>
 <ul>
 <li>a protection IED;</li>
@@ -485,7 +485,7 @@ nav: uc-substation
         <rect x="500" y="318" width="12" height="11" rx="2" fill="#b45309" stroke="#b91c1c" stroke-width="2"/><text x="517" y="327">no cryptography</text>
       </g>
     </svg>
-    <figcaption>The protection IED as its supplier describes it: ten interfaces, read from the outside. The same shape as the Keycloak diagram, with a different distribution. Most of the asymmetric cryptography is on the management side and in the key plane, not on the service interfaces that carry protection traffic.</figcaption>
+    <figcaption>The protection IED as its supplier describes it: ten interfaces, described from the outside. The diagram has the same layout as the Keycloak diagram, but the cryptography is distributed differently. Most of the asymmetric cryptography is on the management side and in the key plane, not on the service interfaces that carry protection traffic.</figcaption>
   </figure>
 <p><strong>Protection IED interfaces:</strong></p>
 <div style="overflow:auto">
@@ -521,13 +521,13 @@ nav: uc-substation
 <td><code>svc-mms</code></td>
 <td>service</td>
 <td>MMS, with IEC 62351-8 role-based access tokens</td>
-<td>The token signature is the authority. <code>blockedBy: standard</code></td>
+<td>The token signature is what grants authority. <code>blockedBy: standard</code></td>
 </tr>
 <tr>
 <td><code>int-gdoi</code></td>
 <td>interconnect</td>
 <td>GDOI over IKEv1 phase 1</td>
-<td>The key plane. <code>blockedBy: standard</code>. The successor, G-IKEv2, is published but not profiled for IEC 62351-9</td>
+<td>This interface is the key plane. <code>blockedBy: standard</code>. The successor, G-IKEv2, is published but not profiled for IEC 62351-9</td>
 </tr>
 <tr>
 <td><code>mgmt-enrol</code></td>
@@ -566,9 +566,9 @@ nav: uc-substation
 <ul>
 <li><strong>The protection traffic itself is not the migration target.</strong> Its integrity is already symmetric.</li>
 <li><strong>The key plane will take the longest.</strong> GDOI, role-based access tokens and certificate enrolment are all blocked by standards.</li>
-<li><strong>The control-centre link can be protected now at the conduit.</strong> IKEv2 with ML-KEM is in the RFC Editor queue, and RFC 9370 already allows hybrid exchanges. This holds while the gateway's 62351-3 TLS waits on the standard.</li>
-<li><strong>For each device model, <code>verifierReplaceable</code> splits the fleet</strong> into those that can be updated and those that must be replaced at refurbishment.</li>
-<li><strong><code>certificationImpact</code> turns every one of these actions into a schedule.</strong> No algorithm inventory shows any of this.</li>
+<li><strong>The control-centre link can be protected now at the conduit.</strong> IKEv2 with ML-KEM is in the RFC Editor queue, and RFC 9370 already allows hybrid exchanges. This works even while the gateway's 62351-3 TLS is still blocked by the standard.</li>
+<li><strong>For each device model, <code>verifierReplaceable</code> splits the fleet</strong> into devices that can be updated and devices that must be replaced at refurbishment.</li>
+<li><strong><code>certificationImpact</code> turns every one of these actions into a schedule.</strong> It shows the testing and certification cost of each action. An inventory that lists only algorithms shows none of this.</li>
 </ul>
 <h2>6. What the profiles deliberately exclude</h2>
 <ul>
@@ -579,11 +579,11 @@ nav: uc-substation
 </ul>
 <h2>7. Expressing it in CycloneDX</h2>
 <ul>
-<li><strong>Components follow the Keycloak pattern (K7).</strong> TLS is a protocol component. GOOSE, SV, MMS, IEC 60870-5-104 and GDOI are services, because the CycloneDX protocol types do not include them. Each service depends on what carries it.</li>
+<li><strong>Components are modelled as in the Keycloak use case (K7).</strong> TLS is a protocol component. GOOSE, SV, MMS, IEC 60870-5-104 and GDOI are services, because the CycloneDX protocol types do not include them. Each service has a dependency on the component that carries it.</li>
 <li><strong>The group-key relationship is a dependency.</strong> <code>svc-goose</code> depends on the key material, and the key material on <code>int-gdoi</code>. <code>keyStoreRef</code> points to <code>int-gdoi</code>.</li>
 <li><strong>The system document is a separate BOM.</strong> It references component BOMs through BOM-Link with a hash. <code>usage</code> and <code>conduitRef</code> are <code>pkic:profile:</code> properties.</li>
-<li><strong>Zones have no native home in 1.7.</strong> In 2.0 the blueprint model (zones, boundaries and flows) is the candidate. This case is the first worked use for it, and a concrete input to the CycloneDX feedback on the edge gap.</li>
-<li><strong>Certification.</strong> <code>certificationScheme</code> maps to <code>certifications</code> in 2.0 and is a property in 1.7, as for module validation.</li>
+<li><strong>CycloneDX 1.7 has no native way to express zones.</strong> In CycloneDX 2.0, the blueprint model (zones, boundaries and flows) is the candidate for expressing them. This case is the first worked use of the blueprint model, and a concrete input to the CycloneDX feedback on the edge gap.</li>
+<li><strong>Certification.</strong> In CycloneDX 2.0, <code>certificationScheme</code> maps to <code>certifications</code>. In 1.7 it is a property, in the same way as module validation.</li>
 </ul>
 <h2>8. Proposed decisions and open questions</h2>
 <p><strong>Proposed decisions</strong> (for a draft decision 0024):</p>
@@ -597,7 +597,7 @@ nav: uc-substation
 </ul>
 <p><strong>Open questions:</strong></p>
 <ol>
-<li>Does IEC 62351-9:2023 already profile G-IKEv2, or only GDOI over IKEv1? This changes the <code>int-gdoi</code> finding.</li>
+<li>Does IEC 62351-9:2023 already profile G-IKEv2, or only GDOI over IKEv1? The answer changes the <code>int-gdoi</code> finding.</li>
 <li>Has IEC TC 57 WG 15 started PQC work on IEC 62351-3, -6, -8 and -9?</li>
 <li>Is <code>certificationImpact</code> a product fact, or a deployment fact that belongs in the system document?</li>
 <li>Should <code>usage</code> stay in the system overlay, or become a general facility for derived CBOMs?</li>

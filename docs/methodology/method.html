@@ -24,11 +24,11 @@ nav: method
 <main>
   <div class="crumb">CORE</div>
   <h1>How to define a CBOM profile</h1>
-  <p class="lead">This section states the procedure. The sections before it establish what a profile is and the vocabulary it is written in; the sections after it show the procedure applied. A sector body adopting this methodology follows the twelve steps below.</p>
+  <p class="lead">The procedure for writing a profile has twelve steps. A sector body adopting this methodology follows them in order. The earlier sections define what a profile is and the terms it uses. The worked use cases show the procedure applied.</p>
   <div class="banner warn">This procedure is derived from how the worked example in this documentation was actually built. It is a proposal for the working group to accept, amend or reject, and is not yet an agreed position.</div>
 
   <h2>The shape of the work</h2>
-  <p>The steps group into five stages. The order matters more than it might appear: each stage constrains the next, and the most common way to produce an unusable profile is to begin in the middle, at the point where attributes are chosen.</p>
+  <p>The twelve steps are grouped into five stages. The order of the stages matters, because each stage sets limits on the next one. The most common way to produce an unusable profile is to start in the middle, by choosing attributes before the scope has been set.</p>
   <figure>
     <svg viewBox="0 0 720 210" role="img" aria-label="Five stages: Scope, Content, Rules, Realisation, Proof, with a feedback loop from Proof back to Content" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <title>The five stages of defining a profile</title>
@@ -69,33 +69,39 @@ nav: method
       <text x="430" y="170" fill="#9a6300" text-anchor="middle" font-size="11">building the examples usually sends you back to the attributes</text>
       <text x="430" y="190" fill="#5b6472" text-anchor="middle" font-size="11">the procedure is iterative; stage 5 is a test of stages 2 and 3, not a formality</text>
     </svg>
-    <figcaption>Five stages. The feedback path is the normal case: a profile that has never been run against a real document has not been checked.</figcaption>
+    <figcaption>The five stages of defining a profile. Returning from stage 5 to stage 2 is normal. A profile has not been checked until it has been run against a real document.</figcaption>
   </figure>
 
   <h2>Stage 1 — Scope</h2>
 
   <h3>Step 1. Name the consumer and the decision</h3>
-  <p>Write down who will read a CBOM evaluated against this profile, and what they will do differently depending on what it says. Both halves are required. A named consumer with no decision produces a profile that collects data nobody acts on; a decision with no named consumer produces one that nobody is accountable for satisfying.</p>
-  <p>The test to apply: state the decision as a sentence containing a choice. "Whether to schedule this system for upgrade, replacement, or no action" passes. "To understand our cryptographic position" does not, and a profile written from it will grow until it demands everything.</p>
-  <p>Write the choices down as <code>objective.decisionOptions</code> rather than leaving them implied in the sentence. Two or more are required, which is what turns the test above from advice into something <code>check_profile.py</code> enforces under C1. A profile whose author cannot list a second option has not yet found the decision.</p>
+  <p>Write down who will read a CBOM evaluated against this profile, and what they will do differently depending on what it says. You need both. If you name a consumer but no decision, the profile collects data that nobody acts on. If you name a decision but no consumer, nobody is accountable for satisfying the profile.</p>
+  <p>To test the decision, state it as a sentence that contains a choice. "Whether to schedule this system for upgrade, replacement, or no action" passes the test. "To understand our cryptographic position" fails it. A profile written from that second sentence keeps growing until it demands everything.</p>
+  <p>Record the choices explicitly in <code>objective.decisionOptions</code>. Do not leave them implied in the sentence. At least two options are required. Because the options are recorded as data, <code>check_profile.py</code> can enforce the test under rule C1. If the author cannot list a second option, the profile does not yet have a real decision.</p>
 
   <h3>Step 2. Establish the subject and its boundary</h3>
-  <p>Decide what the profile describes: a <code>product</code>, a deployed <code>service</code>, a <code>component</code>, or a bounded part of an estate (<code>estate-subset</code>). Then decide where the boundary sits, which means deciding what the producer can reasonably declare. A profile for a product a consumer cannot inspect is limited to what is observable or assertable at its interfaces. A profile for an operator's own service can ask for more.</p>
-  <p>The boundary is a feasibility constraint and setting it early prevents work on attributes nobody will supply. The test: for each thing you intend to ask for, could the producer answer without disclosing something it has a legitimate reason to protect? See the black-box discussion in <a href="../use-cases/pqc-migration.html">PQC Migration</a> for a worked instance.</p>
-  <p>Three further decisions belong here rather than later, because each bounds what the profile can ask for. Which <strong>relationship types</strong> the rules will constrain, from the vocabulary in <a href="model.html">Model</a>. Which <strong>cryptographic purposes</strong> the profile requires in depth: a profile may address key establishment now and entity authentication later, and saying so here is what lets the rules be written once and quantified over the declared set rather than rewritten per stage. And which <strong>lifecycle stages</strong> the profile will accept: a procurement or migration profile has no use for cryptography a producer merely <code>intended</code>, while a disclosure baseline should record whatever the producer can report and leave the narrowing to profiles derived from it. Then state the profile's <strong>orientation</strong>: <code>inventory</code> if it reports what interfaces do, <code>migration</code> if it reports what they could do, <code>both</code> if it reports both. That declaration is not descriptive. Under C12 an inventory profile may require no forward-looking attribute, and a profile declaring <code>both</code> must require the present-state attribute behind every capability attribute it asks for, so that capability never arrives instead of present state. All four are recorded as the <code>scope</code> object required by C11, and the third is an acceptance constraint rather than a description — an interface reporting a stage the profile does not accept fails the rule that constrains the stage.</p>
+  <p>Decide what the profile describes: a <code>product</code>, a deployed <code>service</code>, a <code>component</code>, or a bounded part of an estate (<code>estate-subset</code>). Then decide where the boundary sits. The boundary is the limit of what the producer can reasonably declare. If the consumer cannot inspect the product, the profile can only ask for what can be observed or asserted at the product's interfaces. A profile for an operator's own service can ask for more.</p>
+  <p>The boundary limits what the profile can feasibly ask for. Setting it early avoids work on attributes that no producer will supply. To test the boundary, ask this of each item you intend to request: could the producer answer without disclosing something it has a legitimate reason to protect? See the black-box discussion in <a href="../use-cases/pqc-migration.html">PQC Migration</a> for a worked instance.</p>
+  <p>Four further decisions belong in stage 1 and not later, because each one limits what the profile can ask for. All four are recorded in the <code>scope</code> object that rule C11 requires.</p>
+  <ul>
+    <li><strong>Relationship types.</strong> Decide which relationship types the rules will constrain, using the vocabulary in <a href="model.html">Model</a>.</li>
+    <li><strong>Cryptographic purposes.</strong> Decide which cryptographic purposes the profile requires in full detail. A profile may address key establishment now and entity authentication later. If the profile declares its set of purposes here, the rules can be written once and applied to every purpose in the declared set. Otherwise they have to be rewritten for each stage.</li>
+    <li><strong>Lifecycle stages.</strong> Decide which lifecycle stages the profile will accept. A procurement or migration profile has no use for cryptography that the producer reports only as <code>intended</code>. A disclosure baseline should record whatever the producer can report, and leave it to profiles derived from the baseline to narrow the accepted stages. This decision is an acceptance constraint. If an interface reports a stage that the profile does not accept, the interface fails the rule that constrains the stage.</li>
+    <li><strong>Orientation.</strong> State the profile's orientation: <code>inventory</code> if it reports what interfaces do, <code>migration</code> if it reports what they could do, <code>both</code> if it reports both. The orientation limits the rules the profile may contain. Under C12, an inventory profile may not require any forward-looking attribute. A profile that declares <code>both</code> must require the present-state attribute behind every capability attribute it asks for. As a result, a producer can never report capability in place of present state.</li>
+  </ul>
 
   <h3>Also in stage 1: decide whether you are extending</h3>
-  <p>Before deriving questions, establish whether an existing profile already covers part of the ground. If one does, the new profile can extend it, inheriting its rules and stating only additions and tightenings. If the new profile would need to relax anything the candidate base requires, it is an independent profile and should be written as one. That choice is made once, early, because it determines what the remaining steps produce: an extension states differences, while an independent profile states everything.</p>
+  <p>Before deriving questions, establish whether an existing profile already covers part of the ground. If one does, the new profile can extend it, inheriting its rules and stating only additions and tightenings. If the new profile would need to relax any requirement of the candidate base profile, it is an independent profile and should be written as one. Make this choice once, at the start, because it determines what the remaining steps produce. An extension states only its differences from the base profile. An independent profile states all of its requirements in full.</p>
   <p>The rules governing extension, including why relaxation is excluded, are in <a href="profile.html">Profile</a>.</p>
 
   <h2>Stage 2 — Content</h2>
 
   <h3>Step 3. Derive the questions</h3>
-  <p>From the decision, enumerate the questions the consumer must answer to make it. Keep them as questions, phrased in the consumer's own language, and resist converting them to attributes yet. This is the step most often skipped, and omitting it produces profiles that mirror the fields a format happens to offer.</p>
+  <p>From the decision, enumerate the questions the consumer must answer to make it. Keep them as questions, phrased in the consumer's own language. Do not convert them to attributes yet. This step is the one most often skipped. Profiles written without it tend to copy the fields that a format happens to offer.</p>
   <p>Expect between three and a dozen. If the list runs much longer, the decision in step 1 was probably too broad and should be split into separate profiles.</p>
 
   <h3>Step 4. Convert each question into a declarable attribute</h3>
-  <p>Work through the questions and, for each, identify what would have to be disclosed to answer it. One question may need several attributes, and several questions may share one. Two properties are required of every attribute: it must be declarable at the boundary established in step 2, and it must be capable of being wrong in principle, which makes conformance meaningful.</p>
+  <p>Work through the questions and, for each, identify what would have to be disclosed to answer it. One question may need several attributes, and several questions may share one. Every attribute must have two properties. First, the producer must be able to declare it at the boundary set in step 2. Second, a declared value must be capable, in principle, of being wrong. If no value could ever be wrong, conformance to the attribute would mean nothing.</p>
   <p>Express attributes in format-independent terms. Use the vocabulary in <a href="model.html">the model</a>, so that an attribute belongs clearly to a relationship, an endpoint, or an asset. Attributes that turn out to belong to none of those are usually judgements, which step 5 handles.</p>
 
   <h4>Naming conventions</h4>
@@ -109,51 +115,51 @@ nav: method
       <tr><td>Names describe what is disclosed, not what it implies</td><td>—</td><td><code>keyExchangeSupported</code>, never <code>pqcReady</code></td></tr>
     </tbody>
   </table>
-  <p>The fourth convention is a restatement of step 5 at the level of naming. A name that describes a conclusion tends to smuggle the conclusion back in even when the values beneath it are facts.</p>
-  <p>Where an existing profile has already published an attribute, later profiles reuse the name and its meaning without redefining it. Divergence here is the easiest way to make two profiles unusable together, and it is not always visible to whoever introduces it.</p>
+  <p>The fourth convention applies step 5 to names. Step 5 removes judgements from the attribute list. A name that describes a conclusion, such as <code>pqcReady</code>, brings that judgement back into the profile even when the values under it are facts.</p>
+  <p>Where an existing profile has already published an attribute, later profiles reuse the name and its meaning without redefining it. If a later profile changes the name or the meaning, the two profiles can no longer be used together. The author who introduces the difference does not always notice it.</p>
 
   <h3>Step 5. Separate facts from judgements</h3>
-  <p>Review the attribute list and remove anything that is a conclusion drawn against criteria that change over time. Post-quantum posture and cryptographic maturity are the two clearest cases. These belong to an external, versioned policy that reads the profile's facts and produces a dated verdict, and the reasoning is set out in <a href="policy-evaluation.html">Policy Evaluation</a>.</p>
-  <p>The test: if the same disclosed values could yield a different answer next year without the product changing, it is a judgement. Keep the inputs, discard the conclusion.</p>
+  <p>Review the attribute list and remove anything that is a conclusion drawn against criteria that change over time. Post-quantum posture and cryptographic maturity are the two clearest cases. These conclusions belong in an external, versioned policy. The policy reads the facts that the profile collects and produces a dated verdict, meaning an assessment that holds as of a stated date. The reasoning is set out in <a href="policy-evaluation.html">Policy Evaluation</a>.</p>
+  <p>To test an attribute, ask whether the same disclosed values could give a different answer next year without any change to the product. If they could, the attribute is a judgement. Keep the facts that feed the judgement, and remove the judgement itself.</p>
 
   <h2>Stage 3 — Rules</h2>
 
   <h3>Step 6. Assign conformance levels and disclosure treatment</h3>
-  <p>Give every attribute a level using BCP 14 keywords. Then decide, per attribute, what happens when a value is absent. Under the three-state model an attribute may be unknown to the producer or deliberately withheld, and a profile must say which attributes may be withheld and still conform. A procurement profile may permit none; a supply-chain disclosure profile will permit several.</p>
-  <p>The test for each attribute: what should a consumer conclude if this is missing? An attribute whose absence changes nothing does not need to be mandatory, and possibly does not need to be in the profile.</p>
+  <p>Give every attribute a level using BCP 14 keywords. Then decide, for each attribute, what happens when its value is absent. Under the disclosure model, every attribute has one of four outcomes: value, withheld, unknown or undeclared. A value can be missing because the producer does not know it, or because the producer has deliberately withheld it. The profile must say which attributes a producer may withhold while the document still conforms. A procurement profile may permit none. A supply-chain disclosure profile will permit several.</p>
+  <p>For each attribute, ask what a consumer should conclude if the value is missing. If its absence changes nothing, the attribute does not need to be mandatory, and it may not need to be in the profile at all.</p>
 
   <h3>Step 7. Add the structural rules</h3>
-  <p>Per-attribute rules catch misstatement. They do not catch omission, because a rule about interfaces says nothing about an interface that was never declared. Structural rules constrain the set: how many of a thing must be present, and of which kinds.</p>
-  <p>This is where a profile requires that a management interface exists at all, or that the producer states whether its list is complete. Structural rules are product-independent by construction, since they constrain kinds and counts and never name an instance.</p>
+  <p>Per-attribute rules detect values that are stated wrongly. They do not detect things that are left out, because a rule about interfaces cannot check an interface that was never declared. Structural rules constrain the whole set of declared items. They state how many of a thing must be present, and of which kinds.</p>
+  <p>Structural rules are how a profile requires that a management interface exists at all, or that the producer states whether its list is complete. Structural rules never depend on a particular product, because they constrain kinds and counts and never name an instance.</p>
 
-  <p>Structural rules belong in the earliest version of a profile, and in the earliest stage of a family. Declaring that an interface exists is cheap for a producer; describing it in depth is what costs. A profile that defers the structural rules to a later stage in order to look undemanding lets a supplier conform while omitting an entire interface, which is the failure the worked example is built around. Depth is what a later stage adds; the shape of the answer is settled at the start.</p>
+  <p>Structural rules belong in the earliest version of a profile, and in the shallowest profile of a family. A family is a series of profiles, each asking for more than the one before. It costs a producer little to declare that an interface exists. Describing the interface in detail is what costs effort. Some profiles defer the structural rules to a deeper profile so that they look less demanding. Such a profile lets a supplier conform while leaving out an entire interface. The worked example is built around this failure. A deeper profile adds detail. The structural rules, which set what the answer must contain, are settled at the start.</p>
 
   <h3>Step 8. State the exclusions</h3>
-  <p>Write down what the profile deliberately does not ask for, and why. This is not padding. It pre-empts the reasonable objection that something obvious was forgotten, it records the boundary decision from step 2 in a form a reader can check, and it makes later expansion a deliberate act.</p>
+  <p>Write down what the profile deliberately does not ask for, and why. The list of exclusions answers in advance the reasonable objection that something obvious was forgotten. It records the boundary decision from step 2 in a form a reader can check. It also means that any later expansion of the profile has to be a deliberate decision.</p>
 
   <h2>Stage 4 — Realisation</h2>
 
   <h3>Step 9. Define the format mapping</h3>
-  <p>For each format the profile must support, state where every attribute lives. Because formats permit the same information to be encoded in more than one valid way, the mapping fixes a canonical location so consumers read from one place. Record the naming and encoding normalization the mapping assumes. The conventions and the reasoning are in <a href="formats.html">Formats</a>.</p>
+  <p>For each format the profile must support, state where each attribute is located in that format. Formats allow the same information to be encoded in more than one valid way. The mapping therefore fixes one canonical location, so that consumers read each attribute from one place. Record the normalization of names and encodings that the mapping assumes. The conventions and the reasoning are in <a href="formats.html">Formats</a>.</p>
   <p>The profile itself stays format-independent. Adding support for a further format adds a mapping and changes no requirement.</p>
 
-  <h3>Step 10. Declare the carrier acceptance range</h3>
-  <p>State which format versions the profile accepts, using a minimum and a tested version, so that older documents are handled deliberately. The bands and the reasoning are in <a href="versioning.html">Versioning</a>.</p>
+  <h3>Step 10. Declare the carrier acceptance range (the accepted format versions)</h3>
+  <p>The carrier is the format, and the format version, in which a CBOM is written. State which format versions the profile accepts. Give a minimum version and a tested version, so that documents in older versions are handled deliberately and not by accident. <a href="versioning.html">Versioning</a> describes the bands into which format versions are sorted, and the reasoning behind them.</p>
 
   <h3>Step 11. Record the decisions and their revival triggers</h3>
-  <p>Where a choice was made against a defensible alternative, record it with the condition that should cause it to be revisited. A decision without a trigger tends to be either re-argued from scratch or never re-examined. The working group's decision-record template applies, and <a href="governance.html">Governance</a> covers how profiles evolve after publication.</p>
+  <p>Where one option was chosen over a defensible alternative, record the decision together with the condition that should cause it to be revisited. That condition is the revival trigger. Without a trigger, a decision tends either to be re-argued from scratch or never to be re-examined. The working group's decision-record template applies, and <a href="governance.html">Governance</a> covers how profiles evolve after publication.</p>
 
   <h2>Stage 5 — Proof</h2>
 
   <h3>Step 12. Build the examples and run them</h3>
-  <p>Produce at least two documents: one that conforms and one that fails for a specific, stated reason. Implement the rules in machine-readable form and run a validator over both. A profile that has never been executed has not been tested, and the failures this step surfaces are usually in the attribute definitions rather than in the tooling.</p>
-  <p>Expect to return to stage 2. Attributes that read well in prose turn out to be ambiguous when something has to decide whether a document satisfies them, and conditional or list-valued attributes are where this happens most.</p>
+  <p>Produce at least two documents: one that conforms and one that fails for a specific, stated reason. Implement the rules in machine-readable form and run a validator over both. A profile has not been tested until its rules have been run. The failures this step finds are usually in the attribute definitions, not in the tooling.</p>
+  <p>Expect to return to stage 2. An attribute that reads well in prose can turn out to be ambiguous when a validator has to decide whether a document satisfies it. This happens most often with conditional attributes and with attributes whose value is a list.</p>
 
-  <h2>Staging a profile across releases</h2>
-  <p>A profile that asks for everything a mature producer could supply will be satisfied by nobody at the start, and one pitched at what producers can supply today will still be pitched there in three years. Publishing a family in stages is the usual answer, and two rules keep it honest.</p>
-  <p><strong>Every stage supports a decision of its own.</strong> A stage is a profile, so C1 applies to it: it names a consumer and a decision and states the options that consumer chooses between. The tempting alternative &mdash; making the first stage the attributes that are cheapest to produce &mdash; yields something a supplier can be certified against and a consumer can do nothing with. The first stage is not the easiest questions; it is the smallest set that answers a real one.</p>
-  <p><strong>What a stage defers, it still asks about.</strong> Depth is what a stage withholds, not the subject. A profile requiring full detail for key establishment can require a one-word status for entity authentication, and should: it costs the producer a single enumerated value, it tells the consumer where the longest-lead work stands, and it gives the next stage something to have improved on. Without it the deferred subject is simply absent, and the first stage becomes the permanent answer &mdash; the pattern SBOM minimum elements fell into, described in <a href="challenges.html">Challenges</a>.</p>
-  <p>Where the date by which a stage stops being acceptable belongs is a separate question, and not one a profile should answer. A profile cannot know a given consumer's risk position, and a standards body setting commercial deadlines for parties it has no relationship with tends to be ignored rather than followed. The profile makes the stages nameable and checkable; a contract makes one of them due.</p>
+  <h2>Releasing a profile as a family of depths</h2>
+  <p>A profile that asks for everything a mature producer could supply will not be met by any producer at the start. A profile set at what producers can supply today will still be set at that level in three years. The usual answer is to publish a family of profiles ordered by depth, with each depth asking for more than the one before (see <a href="maturity.html">Maturity</a>). Two rules keep this approach honest.</p>
+  <p><strong>Every depth supports a decision of its own.</strong> A depth is a profile, so rule C1 applies to it. Each depth names a consumer and a decision, and states the options that the consumer chooses between. It is tempting to build the first depth from the attributes that are cheapest to produce. A supplier could be certified against such a depth, but a consumer could not use it to make any decision. The first depth should therefore be the smallest set of questions that answers a real decision, and not the set of easiest questions.</p>
+  <p><strong>What a depth defers, it still asks about.</strong> A depth may leave the detail of a subject to a deeper profile, but it does not leave out the subject itself. For example, a profile that requires full detail for key establishment can require a one-word status for entity authentication, and it should. The status costs the producer a single enumerated value. It tells the consumer where the work with the longest lead time stands. It also gives the next depth a starting point to improve on. Without the status, the deferred subject is simply absent from the document, and the first depth becomes a permanent floor. SBOM minimum elements fell into this pattern, as described in <a href="challenges.html">Challenges</a>.</p>
+  <p>A separate question is who sets the date after which a depth is no longer acceptable. A profile should not set that date. A profile cannot know a given consumer's risk position. A standards body that sets commercial deadlines for parties it has no relationship with also tends to be ignored. The profile gives each depth a name and makes it checkable. A contract between the parties sets when a particular depth is required.</p>
 
   <h2>When a profile is finished</h2>
   <p>The criteria for a first release, as opposed to a perfect one:</p>
@@ -162,8 +168,8 @@ nav: method
     <li>Every attribute traces back to a question, and every question to the decision.</li>
     <li>No attribute encodes a judgement that policy should make.</li>
     <li>No rule names a product, a vendor, or an interface instance.</li>
-    <li>Absence is defined for every attribute, including which may be withheld.</li>
-    <li>Structural rules exist, so that omission is detectable.</li>
+    <li>For every attribute, the profile defines what absence means, including whether the attribute may be withheld.</li>
+    <li>Structural rules exist, so that missing items can be detected.</li>
     <li>Exclusions are written down with reasons.</li>
     <li>A mapping exists for at least one format, with a stated acceptance range.</li>
     <li>A conforming and a non-conforming example exist, and a validator agrees with both.</li>
@@ -178,8 +184,8 @@ nav: method
       <tr><td>No named decision</td><td>The profile grows during review because every suggestion seems reasonable and nothing rules anything out.</td><td>State the decision as a choice. Suggestions that do not affect it are out of scope.</td></tr>
       <tr><td>Encoding a judgement</td><td>An attribute such as a readiness rating, whose correct value changes when guidance changes.</td><td>Keep the inputs and move the conclusion to an external policy.</td></tr>
       <tr><td>Naming an instance</td><td>A rule requires a particular identifier value, so the profile only applies to one product.</td><td>Constrain kinds and counts. The baseline profile in this documentation was corrected for exactly this.</td></tr>
-      <tr><td>A stage that becomes a floor</td><td>A profile addresses part of the problem and says nothing about the rest, so a supplier conforms while a whole subject is absent from the document and no later profile has a baseline to improve on.</td><td>Require a statement of position for what the profile defers, even where it requires no detail. One enumerated value costs a producer almost nothing and is the difference between a stage and a ceiling.</td></tr>
-      <tr><td>Treating absence as one thing</td><td>A consumer cannot distinguish a producer that lacks the data from one withholding it.</td><td>Apply the four disclosure outcomes and decide withholdability per attribute.</td></tr>
+      <tr><td>A depth that becomes a permanent floor</td><td>A profile addresses part of the problem and says nothing about the rest, so a supplier conforms while a whole subject is absent from the document and no later profile has a baseline to improve on.</td><td>Require a statement of position for what the profile defers, even where it requires no detail. One enumerated value costs a producer almost nothing. Without it, the depth becomes a permanent floor that later profiles do not build on.</td></tr>
+      <tr><td>Treating absence as one thing</td><td>A consumer cannot distinguish a producer that lacks the data from one withholding it.</td><td>Apply the four disclosure outcomes, and decide for each attribute whether a producer may withhold it.</td></tr>
     </tbody>
   </table>
 

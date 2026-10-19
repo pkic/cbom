@@ -24,16 +24,16 @@ nav: dataexp
 <main>
   <div class="crumb">DESIGN NOTE</div>
   <h1>Data exposure and the harvest-now-decrypt-later threat</h1>
-  <p class="lead">An adversary able to record encrypted traffic today can decrypt it once a cryptographically relevant quantum computer exists. The exposure this creates is not visible in the cryptography a CBOM currently discloses, because it depends on how long the data carried must remain confidential and on whether the traffic can be captured at all. This section sets out what has to be recorded to make that exposure assessable, and where those facts belong.</p>
-  <div class="banner warn">Illustrative. The attributes proposed here are a draft for working group discussion. They are not part of the example profiles, and the scope decision they rest on is recorded as an open question.</div>
+  <p class="lead">An adversary who records encrypted traffic today can decrypt it once a cryptographically relevant quantum computer exists. This is the harvest-now-decrypt-later threat. The exposure it creates is not visible in the cryptography a CBOM currently discloses. It also depends on how long the data must remain confidential, and on whether the traffic can be captured at all. Assessing the exposure needs further facts, and those facts belong partly to the supplier and partly to the operator.</p>
+  <div class="banner warn">Illustrative. The attributes proposed here are a draft for working group discussion. They are not part of the example profiles. They depend on a decision about scope: which kind of CBOM the attributes belong in. That decision is recorded as an open question.</div>
 
   <h2>What makes this threat different</h2>
-  <p>Most cryptographic risk is prospective. A weakness discovered in an algorithm affects the traffic protected by it from that point forward, and the remedy is to stop using it. This threat is retrospective. Traffic captured and stored today is decrypted years later, when the capability arrives, and no action taken at that point recovers the confidentiality of data that has already been recorded.</p>
-  <p>The consequence for planning is that the decision to migrate has to be taken before the capability exists, and the window in which the decision matters is closing while the estimate of when the capability arrives remains uncertain. An organization that waits for confirmation has already lost the traffic it was protecting.</p>
-  <p>The threat therefore applies unevenly. Data that ceases to be sensitive within a year is largely unaffected, because a recording made today has little value by the time it can be read. Data that must remain confidential for decades is exposed now, regardless of the algorithm protecting it, if that algorithm is one a quantum computer will break.</p>
+  <p>Most cryptographic risk is prospective: it affects traffic sent in the future. A weakness discovered in an algorithm affects the traffic protected by that algorithm from that point forward. The remedy is to stop using the algorithm. The harvest-now-decrypt-later threat is retrospective: it affects traffic already sent. Traffic captured and stored today is decrypted years later, when the capability arrives. Here the capability means a cryptographically relevant quantum computer. No action taken at that point can restore the confidentiality of data that has already been recorded.</p>
+  <p>As a result, the decision to migrate has to be taken before the capability exists. The time in which that decision still makes a difference is running out. Meanwhile, the estimate of when the capability will arrive remains uncertain. An organization that waits for confirmation will already have lost the confidentiality of the traffic it was protecting.</p>
+  <p>The threat therefore does not affect all data equally. Data that ceases to be sensitive within a year is largely unaffected, because a recording made today has little value by the time it can be read. Data that must remain confidential for decades is exposed now, regardless of the algorithm protecting it, if that algorithm is one a quantum computer will break.</p>
 
   <h2>Why the cryptography alone does not answer the question</h2>
-  <p>Consider two interfaces on two products. Both terminate TLS 1.3, both negotiate X25519 for key exchange and AES-256-GCM for encryption, and both authenticate with an RSA-2048 certificate. Against every attribute the baseline profile requires, the two are identical. Their exposure to this threat is not comparable.</p>
+  <p>Consider two interfaces on two products. Both terminate TLS 1.3, both negotiate X25519 for key exchange and AES-256-GCM for encryption, and both authenticate with an RSA-2048 certificate. For every attribute that the baseline profile (the Interface Disclosure Baseline) requires, the two interfaces are identical. Yet their exposure to this threat is very different.</p>
 
   <figure>
     <svg viewBox="0 0 720 260" role="img" aria-label="Two panels showing interfaces with identical cryptography. The left carries a public status page over the internet with a confidentiality lifetime under one year and low exposure. The right carries clinical records over the internet with a lifetime over fifteen years and high exposure" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
@@ -74,21 +74,21 @@ nav: dataexp
   </figure>
 
   <h2>The three quantities</h2>
-  <p>The assessment reduces to a comparison between three periods, in the formulation Mosca gives. Two of them describe the organization and one describes the world.</p>
+  <p>The assessment comes down to comparing three periods of time. This formulation is due to Mosca. Two of the periods describe the organization. The third describes the outside world.</p>
   <table>
     <thead><tr><th>Quantity</th><th>Meaning</th><th>Known by</th></tr></thead>
     <tbody>
       <tr><td><strong>Confidentiality lifetime</strong></td><td>How long the data carried must remain confidential after it is transmitted</td><td>The data owner, which is the operator and not the vendor</td></tr>
-      <tr><td><strong>Migration time</strong></td><td>How long it takes to move the interface to quantum-safe cryptography</td><td>Derived from vendor capability and operator capacity. The migration profile records the vendor half</td></tr>
+      <tr><td><strong>Migration time</strong></td><td>How long it takes to move the interface to quantum-safe cryptography</td><td>Derived from what the vendor's product can support and from the operator's capacity to make the change. The migration profile records the vendor's part</td></tr>
       <tr><td><strong>Time to capability</strong></td><td>How long until a cryptographically relevant quantum computer exists</td><td>Nobody. It is an estimate that changes with published research and national guidance</td></tr>
     </tbody>
   </table>
-  <p>Where the first two added together exceed the third, data being transmitted now will be readable before it stops being sensitive. The organization is already exposed, and the exposure grows with every day the interface continues to operate.</p>
-  <p>The methodology supplies the second quantity through the migration profile, which records what a capability requires and what is blocking it. It supplies nothing at all for the first. That is the gap this section addresses.</p>
+  <p>Suppose the confidentiality lifetime plus the migration time is greater than the time to capability. Then data being transmitted now will be readable before it stops being sensitive. The organization is already exposed, and the exposure grows with every day the interface continues to operate.</p>
+  <p>The methodology supplies the migration time through the migration profile. That profile records what is needed to reach a quantum-safe capability and what is blocking it. The methodology supplies nothing for the confidentiality lifetime. The proposals on this page are intended to fill that gap.</p>
 
   <h2>Two kinds of data, with different owners</h2>
-  <p>Which party can state these facts depends on which kind of data an interface carries, and the answer is not the same for every interface.</p>
-  <p><strong>Conveyed payload</strong> is whatever the customer chooses to send. A vendor shipping a device does not know what that will be, and the same product carries public information at one site and long-lived personal records at another. A requirement on the vendor to classify it produces a refusal or a guess, and the latter is worse because it will be relied on.</p>
+  <p>Which party can state these facts depends on the kind of data an interface carries. Different interfaces carry different kinds of data, so the answer differs from one interface to another.</p>
+  <p><strong>Conveyed payload</strong> is whatever the customer chooses to send. A vendor shipping a device does not know what that will be. The same product may carry public information at one site and long-lived personal records at another. If the vendor is required to classify the payload, the vendor will either refuse or guess. A guess is worse than a refusal, because consumers will rely on it.</p>
   <p><strong>Intrinsic data</strong> is what an interface must carry to function, and the vendor knows precisely what it is because the vendor designed the interface. A management interface carries administrative credentials. A key management interface carries key material. An update channel carries a signed image and the signature verifying it. An enrolment interface carries device identity and private key material.</p>
   <div style="overflow:auto">
   <table>
@@ -104,16 +104,16 @@ nav: dataexp
   </div>
 
   <h3>The intrinsic case carries the worse exposure</h3>
-  <p>The exposure in the vendor-knowable half is the greater of the two.</p>
+  <p>Of the two kinds of data, intrinsic data carries the greater exposure. This is the kind the vendor can describe.</p>
   <p>Take a management session protected by a classical key exchange, carrying a device credential. An adversary records the session now and decrypts it in 2035. If that credential is a certificate with a twenty-year validity, or a key held in hardware that cannot be rotated in the field, the adversary does not obtain stale information. It obtains a working secret. The confidentiality lifetime of that payload equals the lifetime of the credential, and the vendor knows that lifetime because the vendor chose it.</p>
-  <p>Ordinary business information loses sensitivity as it ages, which is what makes short confidentiality lifetimes tolerable. Credentials and key material do not, and may still be live when the recording is read. A model that admits only operator knowledge discards the half of the problem where the consequences are most serious.</p>
+  <p>Ordinary business information loses sensitivity as it ages, which is what makes short confidentiality lifetimes tolerable. Credentials and key material do not lose sensitivity in this way, and may still be live when the recording is read. A model that accepts only facts stated by the operator leaves out intrinsic data. Intrinsic data is the half of the problem where the consequences are most serious.</p>
 
   <h2>Where each fact belongs</h2>
-  <p><a href="lifecycle.html">Lifecycle Data</a> separates a <strong>product CBOM</strong>, describing what a vendor ships, from a <strong>service or deployment CBOM</strong>, describing what an operator runs in a particular configuration. The proposal is that intrinsic data is declared in the first and conveyed payload in the second, so that each fact is stated by the party competent to state it. That is the test the methodology applies throughout.</p>
-  <div class="banner warn">Open, and recorded as Q36. An earlier draft of this section placed all facts about data at deployment scope, on the grounds that a vendor cannot know them. That is right for payload and wrong for intrinsic data. Where the boundary falls needs deciding, and some interfaces sit near it: a database connection carries payload in general and credentials at session establishment. The options are set out in <code>design-note-data-and-hndl.md</code>.</div>
+  <p><a href="lifecycle.html">Lifecycle Data</a> separates a <strong>product CBOM</strong>, describing what a vendor ships, from a <strong>service or deployment CBOM</strong>, describing what an operator runs in a particular configuration. The proposal is that intrinsic data is declared in the product CBOM and conveyed payload in the service or deployment CBOM. Each fact is then stated by the party that is able to state it. The methodology applies this same test everywhere: a fact is recorded by the party that knows it.</p>
+  <div class="banner warn">This point is open and is recorded as Q36. An earlier draft of this page placed all facts about data at deployment scope, meaning in the deployment CBOM, on the grounds that a vendor cannot know them. That is right for payload and wrong for intrinsic data. The working group needs to decide where the boundary between the two kinds of data falls. Some interfaces are close to that boundary. For example, a database connection carries payload in general, but carries credentials when the session is established. The options are set out in <code>design-note-data-and-hndl.md</code>.</div>
 
   <h2>Proposed attributes</h2>
-  <p>The following are candidates for a deployment-scope profile. Names follow the conventions in <a href="method.html">Method</a>, and each is a fact the operator can state rather than a judgement about the result.</p>
+  <p>The attributes in the table are candidates for a deployment-scope profile, that is, a profile that applies to the deployment CBOM. Their names follow the conventions in <a href="method.html">Method</a>. Each attribute records a fact that the operator can state. None of them records a judgement about the result of the assessment.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Attribute</th><th>What it records</th><th>Notes</th></tr></thead>
@@ -121,34 +121,34 @@ nav: dataexp
       <tr>
         <td><code>confidentialityLifetime</code></td>
         <td>How long the data carried must remain confidential</td>
-        <td>Recorded in bands: under 1 year, 1 to 5 years, 5 to 15 years, over 15 years, indefinite. Bands are comparable between organizations, which specific durations and classification labels are not. This is the attribute the assessment depends on</td>
+        <td>Recorded in bands: under 1 year, 1 to 5 years, 5 to 15 years, over 15 years, indefinite. A band is a fixed range of time. Bands can be compared between organizations. Specific durations and classification labels cannot. The assessment depends on this attribute</td>
       </tr>
       <tr>
         <td><code>exposure</code></td>
         <td>Where the traffic runs</td>
-        <td>From a controlled vocabulary: <code>public-internet</code>, <code>partner-network</code>, <code>private-network</code>, <code>physical-local</code>. Determines whether interception at scale is plausible</td>
+        <td>From a controlled vocabulary: <code>public-internet</code>, <code>partner-network</code>, <code>private-network</code>, <code>physical-local</code>. The value determines whether large-scale interception of the traffic is plausible</td>
       </tr>
       <tr>
         <td><code>dataClassification</code></td>
         <td>The operator's own classification of the data</td>
-        <td>Optional, and states the scheme it is drawn from. Classification labels are not comparable between organizations or jurisdictions, so this supports internal use and does not support aggregation across suppliers</td>
+        <td>Optional. The value names the classification scheme it is drawn from. Classification labels are not comparable between organizations or jurisdictions. This attribute is therefore useful within one organization, but its values cannot be combined across suppliers</td>
       </tr>
       <tr>
         <td><code>retentionAtRest</code></td>
         <td>Whether ciphertext is stored, and for how long</td>
-        <td>The threat applies to stored ciphertext as much as to captured traffic. A backup or archive interface may carry the higher exposure, and is easier to overlook because it is not a network connection</td>
+        <td>The threat applies to stored ciphertext as much as to captured traffic. A backup or archive interface may carry the higher exposure. It is also easier to overlook, because it is not a network connection</td>
       </tr>
     </tbody>
   </table>
   </div>
-  <p><code>confidentialityLifetime</code> carries most of the value. If the working group adopts one attribute from this list, that is the one, because it is the quantity the comparison needs and because the others qualify rather than supply it.</p>
+  <p><code>confidentialityLifetime</code> is the most valuable of the four attributes. If the working group adopts only one attribute from this list, it should be <code>confidentialityLifetime</code>. It supplies the quantity that the comparison needs. The other attributes add detail to that quantity but do not supply it.</p>
 
-  <h3>Bands, and why not dates</h3>
-  <p>A date implies a precision the answer does not have. An operator asked how long clinical records must stay confidential will reasonably say decades, and a profile that demands a date invites either a fabricated one or an empty field. Bands also aggregate: a migration programme wants to know how many interfaces fall in the longest band, and that question is answerable across suppliers only if the bands are the same everywhere.</p>
+  <h3>Why bands are used instead of dates</h3>
+  <p>A date suggests more precision than the answer has. An operator asked how long clinical records must stay confidential will reasonably say decades. A profile that demands a date will get either an invented date or an empty field. Bands can also be counted across interfaces. A migration programme wants to know how many interfaces fall in the longest band. That question can be answered across suppliers only if every supplier uses the same bands.</p>
 
   <h2>What stays outside the CBOM</h2>
-  <p>The date at which a cryptographically relevant quantum computer is expected is not a fact about any product, and no CBOM should record it. It is an estimate that moves with published research and with national guidance, and a document that embedded it would be authoritative in appearance and wrong in substance within a year.</p>
-  <p>Under the treatment in <a href="policy-evaluation.html">Policy Evaluation</a>, that estimate is an input to external versioned policy. The resulting urgency ranking is a derived judgement, computed at the time of asking, carrying the policy version and the date it was applied. This is the same treatment the methodology already gives post-quantum posture, so the machinery exists and no new mechanism is required.</p>
+  <p>The date at which a cryptographically relevant quantum computer is expected is not a fact about any product, and no CBOM should record it. It is an estimate that changes with published research and with national guidance. A document that included the estimate would look authoritative, but the estimate in it would be wrong within a year.</p>
+  <p><a href="policy-evaluation.html">Policy Evaluation</a> describes how such an estimate is handled. The estimate is an input to an external policy that carries its own version number. Applying the policy produces an urgency ranking. The ranking is a derived judgement. It is calculated when someone asks for it, and it records the policy version and the date the policy was applied. The methodology already handles post-quantum posture in the same way. The mechanism therefore already exists, and nothing new is needed.</p>
   <table>
     <thead><tr><th>Held in</th><th>What it carries</th></tr></thead>
     <tbody>
@@ -159,18 +159,18 @@ nav: dataexp
   </table>
 
   <h2>Storage as well as transit</h2>
-  <p>Discussion of this threat usually assumes network capture, and the transit case is the clearer one. Stored ciphertext is exposed in the same way and by a shorter route, since an adversary that obtains a backup has the recording without needing to intercept anything. Storage interfaces are already within the model, and the <code>storage</code> value in the interface type vocabulary exists for them. A deployment profile addressing this threat should require them to be declared, and the <code>retentionAtRest</code> attribute is where the duration is recorded.</p>
+  <p>Discussion of this threat usually assumes that traffic is captured on the network, and that case is easier to see. Stored ciphertext is exposed in the same way, and an adversary can reach it more easily. An adversary that obtains a backup already has the recording, without needing to intercept anything. The model already covers storage interfaces. The <code>storage</code> value in the interface type vocabulary exists for them. A deployment profile addressing this threat should require them to be declared, and the <code>retentionAtRest</code> attribute is where the duration is recorded.</p>
 
   <h2>Open points</h2>
   <ul>
-    <li>Whether data attributes are accepted as deployment scope only, and excluded from product CBOMs. This is the decision the rest of the section rests on.</li>
+    <li>Where the boundary falls between intrinsic data, declared in the product CBOM, and conveyed payload, declared at deployment scope (Q36). The other proposals on this page depend on this decision.</li>
     <li>Where the band boundaries fall. The values above follow the periods that appear in published migration guidance, and the group may prefer others.</li>
-    <li>Whether <code>dataClassification</code> earns its place, given that it cannot be aggregated across organizations and the classification schemes it draws on are not public.</li>
+    <li>Whether <code>dataClassification</code> should be included. Its values cannot be combined across organizations, and the classification schemes it draws on are not public.</li>
     <li>Whether storage interfaces need attributes of their own beyond retention.</li>
     <li>Whether a deployment-scope profile should be written as an extension of the interface disclosure baseline or as an independent profile. The composition rules in <a href="profile.html">Profile</a> permit either.</li>
   </ul>
 
-  <div class="banner">The cryptography an interface uses is not sufficient to assess this threat. The missing information is a property of the data, and which party can state it depends on the kind of data: the vendor knows what an interface must carry in order to function, and only the operator knows what is sent across it. Recording each at the scope where it is known, and leaving the threat estimate to external policy, keeps every fact in the document verifiable by the party that stated it.</div>
+  <div class="banner">The cryptography an interface uses is not sufficient to assess this threat. The missing information is a property of the data. Which party can state it depends on the kind of data. The vendor knows what an interface must carry in order to function. Only the operator knows what is sent across it. Each fact should be recorded at the scope where it is known, and the threat estimate should be left to external policy. Every fact in the document can then be verified by the party that stated it.</div>
 
   <div class="pagenav">
     <a href="formats.html">← Formats</a>

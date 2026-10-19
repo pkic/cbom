@@ -24,22 +24,22 @@ nav: versioning
 <main>
   <div class="crumb">OPERATIONS</div>
   <h1>Handling older CBOM files</h1>
-  <p class="lead">The term "older" is ambiguous until the versions involved are separated. Three items each carry a version and change independently. A conformance claim must reference all three to be reproducible.</p>
+  <p class="lead">"An older CBOM" can mean three different things, because three items each carry their own version and change independently: the document format (for example CycloneDX 1.7), the profile, and the CBOM's content. A conformance claim must state all three versions, or nobody can repeat the check and get the same result.</p>
 
   <h2>Three version axes</h2>
   <table>
     <thead><tr><th>Axis</th><th>Example</th><th>Changes when</th></tr></thead>
     <tbody>
       <tr><td><strong>Carrier format</strong></td><td>CycloneDX <code>specVersion</code> 1.6 → 1.7</td><td>the SBOM/CBOM standard is revised</td></tr>
-      <tr><td><strong>Profile</strong></td><td><code>interface-disclosure</code> v0.2 → v0.3</td><td>the requirements change</td></tr>
+      <tr><td><strong>Profile</strong></td><td><code>interface-disclosure</code> v0.6 → v0.7</td><td>the requirements change</td></tr>
       <tr><td><strong>Content revision</strong></td><td>a product's CBOM <code>version</code> over time</td><td>the product or a re-scan changes</td></tr>
     </tbody>
   </table>
-  <p>A newly generated CBOM (a new content revision) may still be serialized in CycloneDX 1.6 (an older carrier) and evaluated against profile v0.3 (newer rules). Conflating these axes is a common error.</p>
-  <p>Two of these axes are now recorded data rather than local convention. The 2026 minimum elements guidance adds SBOM Data Format Name and SBOM Data Format Version, which give the carrier axis, and SBOM Version, which gives the content-revision axis. Its Frequency element expects a new bill of materials for each build or release, so content revisions are produced as a matter of course rather than on request. A producer meeting that baseline supplies the two values a validator needs to place a document on both axes. See <a href="../references/">References</a>.</p>
+  <p>The carrier format is the document format in which a CBOM is written. The three axes vary independently. For example, a newly generated CBOM (a new content revision) may still be serialized in CycloneDX 1.6 (an older carrier) and evaluated against profile v0.7 (newer rules). A common error is to treat the three axes as one.</p>
+  <p>The values for two of these axes are now recorded as data in the bill of materials, rather than left to local convention. The 2026 minimum elements guidance adds the elements SBOM Data Format Name and SBOM Data Format Version, which record the carrier version. It also adds SBOM Version, which records the content revision. Its Frequency element expects a new bill of materials for each build or release. Content revisions are therefore produced as a matter of course rather than on request. A producer that meets the minimum elements guidance supplies the two values a validator needs to place a document on both axes. See <a href="../references/">References</a>.</p>
 
   <h2>Carrier version bands</h2>
-  <p>The profile declares an acceptance range so that older CBOMs are handled explicitly. The rules file specifies <code>"appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } }</code>, and the validator applies a four-band policy:</p>
+  <p>The profile declares the range of carrier versions it accepts, so that the validator handles older CBOMs by a stated rule. The rules file specifies <code>"appliesTo": { "cyclonedx": { "min": "1.6", "tested": "1.7" } }</code>. The validator then places each CBOM in one of four bands (ranges of carrier versions), and each band receives its own treatment:</p>
   <figure>
     <svg viewBox="0 0 720 150" role="img" aria-label="A horizontal band of four carrier version ranges: below 1.6 refused, 1.6 accepted as legacy with a warning, 1.7 the accepted target, and above 1.7 accepted for review" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <rect x="30" y="60" width="150" height="34" fill="#fdeeee" stroke="#dc2626"/>
@@ -59,13 +59,13 @@ nav: versioning
       <text x="450" y="38" fill="#15803d" text-anchor="middle" font-size="11" font-weight="700">this example</text>
       <text x="30" y="26" fill="#5b6472" font-size="11" font-family="monospace">min = 1.6   tested = 1.7</text>
     </svg>
-    <figcaption>A declared range provides a migration window, so that existing 1.6 CBOMs are not invalidated when 1.7 is published, together with a defined lower bound below which evaluation could produce an incorrect verdict.</figcaption>
+    <figcaption>A declared range does two things. It provides a migration window, so that existing 1.6 CBOMs are not invalidated when 1.7 is published. It also sets a defined lower bound. Below that bound, evaluation could produce an incorrect verdict (pass or fail result).</figcaption>
   </figure>
-  <p>The validator reports the band in which the CBOM falls. All four bands can be observed by evaluating the example CBOM at 1.7 and at 1.8, 1.6 and 1.5 copies. Four bands need four inputs: 1.7 is the tested version, 1.8 is newer than tested, 1.6 falls in the legacy window, and 1.5 is below the minimum and is refused.</p>
+  <p>The validator reports the band in which the CBOM falls. To observe all four bands, evaluate the example CBOM, which is at 1.7, and copies of it at 1.8, 1.6 and 1.5. Each band needs its own input. 1.7 is the tested version, 1.8 is newer than tested, 1.6 falls in the legacy window, and 1.5 is below the minimum and is refused.</p>
 
   <h2>A major carrier revision: CycloneDX 2.0</h2>
   <p>CycloneDX 2.0 is in development, with Ecma ratification expected around the end of 2026. The observations below were made against the development branch <code>2.0-dev-safety</code> (20 September 2026) and should be revisited against the released schema.</p>
-  <p>The <em>newer</em> band assumes the adapter can still read the fields shared with the tested version. That holds between minor versions. It does not hold for 2.0: a CycloneDX 1.7 worked example fails the 2.0 schema with 19 errors. Until an adapter for 2.0 exists, a change of major version should be treated as <em>unsupported</em>.</p>
+  <p>The <em>newer</em> band assumes that the adapter (the part of the validator that reads a carrier format) can still read the fields that a newer version shares with the tested version. That assumption holds between minor versions. It does not hold for 2.0: a CycloneDX 1.7 worked example fails the 2.0 schema with 19 errors. Until an adapter for 2.0 exists, a change of major version should be treated as <em>unsupported</em>.</p>
   <table>
     <thead><tr><th>CycloneDX 1.7</th><th>CycloneDX 2.0</th></tr></thead>
     <tbody>
@@ -77,24 +77,24 @@ nav: versioning
       <tr><td><code>curve</code> (deprecated in 1.7)</td><td><code>ellipticCurve</code>, enumerated</td></tr>
     </tbody>
   </table>
-  <p>These six changes made the example valid 2.0 without altering any profile attribute, so the upgrade is mechanical. For the profiles:</p>
+  <p>Applying these six changes made the example valid against the 2.0 schema without altering any profile attribute. The upgrade is therefore mechanical. CycloneDX 2.0 has the following consequences for the profiles:</p>
   <ul>
-    <li><strong>Paths change, attributes do not.</strong> Rules that read a Package URL, a supplier or a service need new paths.</li>
-    <li><strong>New native homes.</strong> <code>certifications</code> on any component can carry module validation and product certification. <code>agility</code> partly covers enablement and negotiation. <code>rotation</code> and <code>renewal</code> describe how keys and certificates are replaced. The capability-by-purpose group still has no native home.</li>
-    <li><strong>Migration management is a risk register.</strong> The new <code>risks</code> array carries status, owner, response and target date. These are judgements, not product facts, and belong in an operator's CBOM rather than a supplier's conformance claim (decisions 0002 and 0007).</li>
-    <li><strong>Perspectives</strong> mark JSONPath expressions as required, recommended or optional. They cannot express conditions or vocabularies, so they could accompany a profile but not replace it.</li>
+    <li><strong>Paths change, attributes do not.</strong> The profile attributes stay the same, but the locations of their values in the document change. Rules that read a Package URL, a supplier or a service need new paths.</li>
+    <li><strong>New native fields for some profile attributes.</strong> <code>certifications</code> on any component can carry module validation and product certification. <code>agility</code> partly covers enablement and negotiation. <code>rotation</code> and <code>renewal</code> describe how keys and certificates are replaced. The capability-by-purpose group still has no native field in CycloneDX 2.0.</li>
+    <li><strong>Migration management maps to a risk register.</strong> The new <code>risks</code> array carries status, owner, response and target date. These values are judgements, not product facts. They belong in an operator's CBOM rather than a supplier's conformance claim (decisions 0002 and 0007).</li>
+    <li><strong>Perspectives</strong> mark JSONPath expressions as required, recommended or optional. They cannot express conditions or vocabularies. Perspectives could therefore accompany a profile, but could not replace it.</li>
     <li><strong>Terminology.</strong> CycloneDX 2.0 uses "profile" and "interface" for other concepts. Say "PKIC CBOM profile" where both appear.</li>
-    <li><strong>The edge gap remains.</strong> The blueprint model's flows and boundaries describe a deployed system for threat analysis, not a product's cryptographic interface.</li>
+    <li><strong>The edge gap remains.</strong> CycloneDX 2.0 adds a blueprint model with flows and boundaries. That model describes a deployed system for threat analysis. It does not describe a product's cryptographic interface, so it does not close the gap.</li>
   </ul>
-  <p>Position pending working-group review: CycloneDX 1.7 remains the tested carrier; 2.0 is added once it is ratified and an adapter exists.</p>
+  <p>Proposed position, pending working-group review: CycloneDX 1.7 remains the tested carrier. CycloneDX 2.0 will be added once it is ratified and an adapter for it exists.</p>
 
   <h2>Supporting recommendations</h2>
   <ul>
-    <li><strong>Normalize at the adapter.</strong> Prefer CycloneDX 1.7 Cryptography Registry identifiers where present; for 1.6 free-text names, apply a versioned name map before the rules are evaluated.</li>
-    <li><strong>Upgrade rather than reject.</strong> Convert a legacy but supported CBOM mechanically (raise the version, attach registry identifiers, record provenance) rather than rejecting it; the conversion re-encodes existing facts and adds none. This is consistent with the expectation in the minimum elements guidance that organizations accommodate updates to bill-of-materials data, including corrections.</li>
-    <li><strong>Pin the profile version</strong> in every conformance claim, and tighten rules behind dated grace windows, so that a warning is emitted before a result changes to a failure.</li>
+    <li><strong>Normalize at the adapter.</strong> Prefer CycloneDX 1.7 Cryptography Registry identifiers where they are present. CycloneDX 1.6 CBOMs use free-text algorithm names. For those, apply a versioned name map before the rules are evaluated.</li>
+    <li><strong>Upgrade rather than reject.</strong> Convert a legacy but supported CBOM mechanically (raise the version, attach registry identifiers, record provenance) rather than rejecting it. The conversion re-encodes existing facts and adds no new ones. This is consistent with the expectation in the minimum elements guidance that organizations accommodate updates to bill-of-materials data, including corrections.</li>
+    <li><strong>Pin the profile version</strong> in every conformance claim. When a rule is tightened, enforce the tightening only after a dated grace window. During that window the validator emits a warning, so that the warning comes before the result changes to a failure.</li>
     <li><strong>Deprecate, rather than delete, vocabulary.</strong> If <code>interfaceType</code> values change, retain recognition of the former values (mapped to their replacements) for at least one profile major version.</li>
-    <li><strong>Track freshness and supersedence</strong> so that an older content revision is not treated as incorrect without cause.</li>
+    <li><strong>Track freshness and supersedence</strong> (whether a newer revision has replaced a CBOM), so that an older content revision is not treated as incorrect without cause.</li>
   </ul>
 
   <div class="banner">The full treatment is provided in <a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a>, and the acceptance range is enforced by the format gate in <code>validate_cbom.py</code>; see <a href="files.html">Files</a>.</div>

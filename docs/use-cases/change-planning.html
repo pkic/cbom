@@ -24,17 +24,17 @@ nav: uc-change
 <main>
   <div class="crumb">GROUP</div>
   <h1>Change planning: a richer document, a shared core</h1>
-  <p class="lead">Use cases whose profile adds facts the baseline does not have: capability per cryptographic purpose, what blocks it and who can clear it, what enabling it requires, and whether the far end can still be classical. The orientation is <code>both</code>: what the product uses today and what it could use. A document produced against the baseline alone cannot be evaluated against these profiles at all.</p>
+  <p class="lead">In these use cases, the profile adds facts that the interface disclosure baseline does not have. For each cryptographic purpose, it asks what the interface is capable of, what blocks that capability and who can clear the blocker, and what enabling it requires. It also asks whether the other end of the connection can still use classical cryptography. The orientation is <code>both</code>, which means the document reports what the product uses today and what it could use. A document produced against the baseline alone cannot be evaluated against these profiles at all.</p>
   <div class="banner">The grouping and the change core are proposed in draft decision 0023 and are not yet settled.</div>
 
   <h2>The change core</h2>
-  <p>The profiles in this group share most of what they ask for. A profile has a single base, so a fact two of them need has to sit in a common ancestor rather than be defined twice. That ancestor is the change core.</p>
+  <p>The profiles in this group share most of what they ask for. Each profile extends exactly one base profile. A fact that two profiles both need therefore has to be defined in a profile that both of them extend, rather than defined twice. That shared base profile is the change core.</p>
   <ul>
     <li><strong>In the core:</strong> <code>capabilityStatus</code>, <code>blockedBy</code> and <code>roadmapRef</code> per purpose; the <code>Supported</code> forms of the algorithm attributes; <code>enablementMethod</code> and <code>providerLocation</code>; <code>coexistence</code> and <code>negotiationControl</code>; <code>integrationConstraints</code>; <code>keyWrapping</code> and <code>keyWrappingSupported</code>.</li>
     <li><strong>In the core as conditional rules:</strong> <code>updateMechanism</code>, <code>updateAuthority</code> and <code>keyReplaceable</code>, which apply only to update interfaces. The IoT and substation profiles need them. A product with no update interface does not have to supply them.</li>
     <li><strong>Not in the core:</strong> what each profile adds for its own subject, shown in the last column of the table below.</li>
   </ul>
-  <p>The core is published as a sibling of the PQC migration profile. It declares each shared rule under the id that the migration profile already uses, so no rule id changes. Whether the core is specific to a post-quantum target or neutral about the target is open (Q66). If it is neutral, crypto-agility assessment needs no profile of its own.</p>
+  <p>The core is published as a sibling of the PQC migration profile. Both the core and the PQC migration profile extend the interface disclosure baseline. The core declares each shared rule under the id that the migration profile already uses, so no rule id changes. The tree below shows the intended structure, with the PQC migration profile moved under the core. That move is deferred, and is the same choice as Q51. It is still open whether the core assumes a post-quantum target or works for any target algorithm (Q66). If it works for any target, crypto-agility assessment needs no profile of its own.</p>
 <pre><code>interface-disclosure baseline
 └─ change-core                     orientation: both
    ├─ pqc-migration                product        └─ pqc-migration-extended (depth)
@@ -48,14 +48,14 @@ sas-system                         overlay over component documents (system)</co
     <thead><tr><th>Page</th><th>Subject</th><th>What it shows</th><th>State</th></tr></thead>
     <tbody>
       <tr><td><strong><a href="pqc-migration.html">PQC Migration</a></strong></td><td>product</td><td>Keycloak 26.7.3: thirteen interfaces, four different blockers, two depths of one family</td><td>Developed. In review</td></tr>
-      <tr><td><strong><a href="iot.html">IoT Device Estate</a></strong></td><td>device model</td><td>Permanent limits, third-party update authority, a model described and instances decided about</td><td>Drafted. Blocked on Q62, Q63, Q65</td></tr>
+      <tr><td><strong><a href="iot.html">IoT Device Estate</a></strong></td><td>device model</td><td>Permanent limits, a third party that controls updates, and a document that describes a device model while decisions are made about deployed instances</td><td>Drafted. Blocked on Q62, Q63, Q65</td></tr>
       <tr><td><strong><a href="substation.html">Substation Automation</a></strong></td><td>system</td><td>A symmetric data plane with an asymmetric key plane; certification cost; a component profile and a system overlay</td><td>Drafted. Illustrative values</td></tr>
     </tbody>
   </table>
   </div>
 
   <h2>Attributes emphasised</h2>
-  <p>The change-planning use cases compared across the attributes of the core.</p>
+  <p>The table compares the change-planning use cases across the attributes of the core.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr>
@@ -69,25 +69,25 @@ sas-system                         overlay over component documents (system)</co
     </tbody>
   </table>
   </div>
-  <p style="font-size:13px;color:var(--muted)">Placeholder entries have no row until they are drafted. Marking them now would record a guess as an emphasis.</p>
+  <p style="font-size:13px;color:var(--muted)">Placeholder entries have no row until they are drafted. Any emphasis marked for them now would only be a guess.</p>
 
   <h2>The use cases in this group</h2>
 
   <h3 id="pqc-readiness">PQC migration</h3>
   <p>An operator has to decide which systems to migrate, in what order, and what each will cost. That means separating the systems needing only a configuration change from those requiring a software update, and both from those tied to hardware that must be replaced. The consumers are migration programme leads and, increasingly, the regulators they report to.</p>
-  <p>A profile for this purpose requires the algorithms an interface currently uses and those it is able to use, so that capability and actuality can be compared, together with the lifecycle stage that says which is being reported. It does not ask for a readiness verdict, because that judgement depends on criteria which change over time and belongs in an external policy. This use case is developed in detail on the <a href="pqc-migration.html">PQC Migration</a> tab.</p>
+  <p>A profile for this purpose requires the algorithms an interface currently uses and the algorithms it is able to use. This lets a reader compare what the interface could do with what it actually does. The profile also requires the lifecycle stage, which says which of the two is being reported. It does not ask for a readiness verdict. That judgement depends on criteria which change over time, so it belongs in an external policy. This use case is developed in detail on the <a href="pqc-migration.html">PQC Migration</a> tab.</p>
 
   <h3 id="iot">IoT device estates</h3>
-  <p>An operator of a large deployed estate of constrained devices decides, per device model, whether the cryptography can be changed in place, whether the device has to be replaced, whether something in front of it can carry the cryptography instead, or whether the exposure is accepted and documented. Scale is what changes the problem: each action costs the unit price multiplied by the number deployed, plus the cost of physically reaching each one.</p>
-  <p>Three things make this more than a sector flavour of the first entry. A capability answer of no can be permanent, because the limit is available flash or a frame size fixed by a radio standard rather than a decision somebody could take differently. The party able to install new firmware is often neither the manufacturer nor the operator. And the document describes a device model while the decision is made about deployed instances of it, so the producer cannot state the things that vary per instance and the operator has to join them in from its own records. A profile for this purpose therefore needs attributes none of the others do: whether an update mechanism exists, who can trigger it, and whether key material fixed at manufacture can be replaced at all. This use case is drafted on the <a href="iot.html">IoT Device Estate</a> tab, where the choice of consumer is still open.</p>
+  <p>An operator of a large deployed estate of constrained devices decides, per device model, whether the cryptography can be changed in place, whether the device has to be replaced, whether something in front of it can carry the cryptography instead, or whether the exposure is accepted and documented. Scale changes the problem. Each action costs the unit price multiplied by the number deployed, plus the cost of physically reaching each one.</p>
+  <p>Three things make this more than a sector variant of PQC migration. First, a capability answer of no can be permanent. The limit may be the available flash memory, or a frame size fixed by a radio standard. Neither is a decision somebody could take differently. Second, the party able to install new firmware is often neither the manufacturer nor the operator. Third, the document describes a device model, while the decision is made about deployed instances of it. The producer cannot state the things that vary between instances, so the operator has to add them from its own records. A profile for this purpose therefore needs attributes none of the others do: whether an update mechanism exists, who can trigger it, and whether key material fixed at manufacture can be replaced at all. This use case is drafted on the <a href="iot.html">IoT Device Estate</a> tab, where the choice of consumer is still open.</p>
 
   <h3 id="substation">Substation automation (OT)</h3>
-  <p>A grid operator plans the migration of one substation automation system and decides, for each communication path, whether to migrate it in place, migrate only the key plane where the messages themselves are already protected symmetrically, carry the path on a conduit, or replace the device at its next refurbishment. Protection messages carry a 3 ms budget and cannot take a post-quantum signature; the exposure sits in group key distribution, certificate enrolment and firmware verification instead.</p>
-  <p>Two things distinguish it from the first entry. The subject is a system assembled by an integrator from several suppliers' products, so it needs a component profile and a system overlay. And the cost of a change includes re-certification. <strong>Drafted</strong>, with illustrative values, on the <a href="substation.html">Substation Automation</a> page.</p>
+  <p>A grid operator plans the migration of one substation automation system. For each communication path, it chooses one of four actions. It can migrate the path in place. Where the messages themselves are already protected with symmetric cryptography, it can migrate only the key plane, meaning the mechanisms that distribute and manage the keys. It can carry the path on a conduit. Or it can replace the device at its next refurbishment. Protection messages have a time budget of 3 ms and cannot carry a post-quantum signature. The exposure lies instead in group key distribution, certificate enrolment and firmware verification.</p>
+  <p>Two things distinguish it from PQC migration. The subject is a system assembled by an integrator from several suppliers' products. It therefore needs a component profile for the products and a system overlay, which is a document that references the component documents. And the cost of a change includes re-certification. <strong>Drafted</strong>, with illustrative values, on the <a href="substation.html">Substation Automation</a> page.</p>
 
   <h3 id="crypto-agility">Crypto-agility assessment</h3>
-  <p>Before an algorithm needs replacing, an architecture or risk function wants to know how hard replacing it would be. The answer is rarely uniform across an estate, and the interfaces that will cause trouble are usually identifiable in advance where an assessment has been carried out.</p>
-  <p>The determining factor is whether cryptography is reachable through a replaceable provider or fixed in place, which makes the implementing library and its location the central attributes. Keeping key exchange, encryption and authentication as separate attributes rather than a single cipher-suite string also matters, because agility usually differs between them.</p>
+  <p>Before an algorithm needs replacing, an architecture or risk function wants to know how hard replacing it would be. The answer is rarely the same across an estate. Where an assessment has been carried out, the interfaces that will cause trouble can usually be identified in advance.</p>
+  <p>The determining factor is whether cryptography is reachable through a replaceable provider or fixed in place, which makes the implementing library and its location the central attributes. Keeping key exchange, encryption and authentication as separate attributes rather than a single cipher-suite string also matters, because how easily each can be replaced usually differs.</p>
 
   <h3 id="pki-estate">PKI and certificate estate migration</h3>
   <p>A PKI owner decides which hierarchies and certificate profiles move to post-quantum algorithms, in what order, and whether to run a parallel or a composite hierarchy while relying parties catch up. The deciding fact is one no other profile asks for: whether the relying parties that validate a given certificate population can process the new algorithms at all.</p>
@@ -95,15 +95,15 @@ sas-system                         overlay over component documents (system)</co
 
   <h3 id="code-signing">Code and firmware signing migration</h3>
   <p>A publisher of software or firmware decides when it can move its signing keys to a new algorithm. It is constrained less by its own signing service than by the verifiers already deployed: a boot ROM that verifies one algorithm with one fixed key decides the timetable for every device that carries it.</p>
-  <p>It shares the update-path facts with the IoT and substation entries, which is why those facts belong in the change core rather than in any one profile. <strong>Proposed.</strong></p>
+  <p>This use case needs the same update-path facts as the IoT and substation use cases. That is why those facts belong in the change core rather than in any one profile. <strong>Proposed.</strong></p>
 
   <h3 id="stored-data">Stored data and archive protection</h3>
   <p>A data owner decides which stores and archives to re-encrypt or re-wrap, and in what order. The order follows from how long the data has to stay confidential, set against the key establishment and key wrapping that protect it today. This is where harvest-now-decrypt-later exposure is most direct.</p>
-  <p>The producer is the operator, not a vendor, because only the operator knows what a store holds and for how long. It depends on how data is modelled alongside cryptography, which is an open design note. <strong>Proposed.</strong></p>
+  <p>The producer is the operator, not a vendor, because only the operator knows what a store holds and for how long. The use case depends on how data is modelled alongside cryptography. That is still an open design note. <strong>Proposed.</strong></p>
 
   <h3 id="shared-trust">Shared-trust network migration</h3>
   <p>The operator of a closed network with many participants, such as a payment or settlement scheme, decides whether and when every participant can move to a new shared trust anchor. No participant can move alone, and the slowest participant sets the date.</p>
-  <p>The baseline describes two-party relationships and cannot describe this yet. It is blocked on the multi-party trust model in the design note of the same name. <strong>Proposed.</strong></p>
+  <p>The baseline describes relationships between two parties. It cannot yet describe a trust anchor shared by many participants. This use case is waiting on the multi-party trust model, which is set out in the design note of that name. <strong>Proposed.</strong></p>
 
   <div class="pagenav">
     <a href="procurement.html">← Procurement</a>
