@@ -61,7 +61,7 @@ otherwise.
 
 Version 1.7 introduces the Cryptography Registry, an authoritative, machine-readable list of
 algorithm families with stable identifiers. It addresses the situation in which one producer
-records `AES256` and another records `AES_256_CBC`, which prevents automated comparison.
+records `AES-256-GCM` and another records `aes_256_gcm`, which prevents automated comparison.
 
 Implications for older CBOMs:
 
