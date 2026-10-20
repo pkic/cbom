@@ -223,6 +223,30 @@
     },
     {
       "id": "I10",
+      "attribute": "moduleValidationScheme",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "moduleValidationSchemeVocabulary"
+      },
+      "withholdable": false,
+      "note": "Added in v0.8 (moved here from pqc-migration v0.7 in the revision that aligned the drafts with the use-case page). The scheme under which the cryptographic module implementing this interface is validated, or 'none'. It is a present-state fact, so it belongs to an inventory profile: a consumer holding a weakness notice needs to know whether the affected module is a validated one. Validation status is public, so withholding protects nothing. Moving it here adds a MUST for every profile that extends this one. See decision 0022."
+    },
+    {
+      "id": "I11",
+      "attribute": "moduleValidationRef",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "moduleValidationScheme",
+        "notEquals": "none"
+      },
+      "note": "Added in v0.8. The certificate or approval reference under the declared scheme. External policy derives from it which algorithms the module is approved for; the profile records the reference and not the derived flag. Conditional: applies wherever a scheme other than 'none' is declared. A notEquals guard holds when moduleValidationScheme is absent, so omitting I10 fails this rule as well (see decision 0022, absent-attribute cascade)."
+    },
+    {
+      "id": "I12",
       "attribute": "keyWrapping",
       "level": "MUST",
       "constraint": {
@@ -234,7 +258,7 @@
         "equals": "storage"
       },
       "schemeRef": "algorithm",
-      "note": "Added in v0.8. On a storage interface: the algorithm that protects the data keys, for example RSA-OAEP over an AES key, or 'none' where the product does not wrap them. It stands in for I3 on storage, and it is a different attribute because it is a different job: wrapping keys at rest is the key-protection purpose, not key establishment between parties. It belongs at this depth because it answers this profile's decision. When RSA weakens, a storage path whose data keys are wrapped under RSA is one of the affected interfaces. I4 (encryption) and I9 (implementationPurl) apply to storage unchanged. See decision 0022."
+      "note": "Added in v0.8. On a storage interface: the algorithm that protects the data keys now, for example RSA-OAEP over an AES key, or 'none' where the product does not wrap them. It stands in for I3 (keyExchange) and I5 (authentication) on storage, and it is a different attribute because it is a different job: wrapping keys at rest is the key-wrapping purpose, not key establishment between parties. It is the present-state form; the capability form, keyWrappingSupported, is pqc-migration#I6, in the same relation as keyExchange (I3) to keyExchangeSupported (pqc-migration#I2). It belongs at this depth because it answers this profile's decision. When RSA weakens, a storage path whose data keys are wrapped under RSA is one of the affected interfaces. I4 (encryption) and I9 (implementationPurl) apply to storage unchanged. See decision 0022."
     }
   ],
   "exclusions": [
@@ -348,7 +372,11 @@
         },
         {
           "kind": "tightening",
-          "summary": "Added I10 (keyWrapping), MUST on a storage interface. A document declaring a storage interface now states how its data keys are protected. See decision 0022."
+          "summary": "Added I12 (keyWrapping), MUST on a storage interface. A document declaring a storage interface now states how its data keys are protected. See decision 0022."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Added I10 (moduleValidationScheme), MUST, and I11 (moduleValidationRef), MUST where a scheme other than 'none' is declared. Both were drafted in pqc-migration v0.7 and moved here because they state present state. Every profile extending this one now inherits two further MUSTs; a document conforming to v0.7 does not conform to v0.8 until it states the validation of each interface's implementing module. See decision 0022."
         },
         {
           "kind": "editorial",
@@ -368,6 +396,14 @@
     "library": "purl",
     "subject": "purl"
   },
+  "$commentModuleValidation": "The schemes under which the cryptographic module implementing an interface has been validated. Only schemes that validate the cryptographic implementation itself are listed. Common Criteria and EUCC evaluate a product against a protection profile, which is a different object; they are carried at product level in the pqc-migration-extended profile and are deliberately absent here, so one attribute never mixes the two. 'iso-19790' covers national schemes built on it. 'national-crypto-approval' covers approval of a module by a national authority outside those schemes. 'none' is a complete answer and keeps the rule cheap for products with no regulated market. See decision 0022.",
+  "moduleValidationSchemeVocabulary": [
+    "fips-140-2",
+    "fips-140-3",
+    "iso-19790",
+    "national-crypto-approval",
+    "none"
+  ],
   "coverageVocabulary": [
     "all-external",
     "all",

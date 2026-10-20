@@ -5,12 +5,12 @@ Working drafts for decision 0022. Nothing here is published by the site.
 | File | Status |
 |---|---|
 | `profile-interface-enumeration.rules.json` | v0.2 draft. Channel rules I1, I2 skip storage interfaces. Well-formed, clean |
-| `profile-interface-disclosure.rules.json` | v0.8 draft. Channel rules skip storage; adds I10 `keyWrapping`. Well-formed, clean |
+| `profile-interface-disclosure.rules.json` | v0.8 draft. Channel rules skip storage; adds I10 `moduleValidationScheme`, I11 `moduleValidationRef`, I12 `keyWrapping`. Well-formed, clean |
 | `profile-pqc-migration.rules.json` | Baseline v0.7 draft, pinned to the disclosure draft above. Well-formed under C1–C17 with `--strict` |
 | `profile-pqc-migration-extended.rules.json` | Extended v0.1 draft. Well-formed under C1–C17 with `--strict`. The evaluator work these drafts need is listed under `$pendingTooling` |
 | `0022-pqc-migration-family-depths.md` | Decision record draft |
-| `examples/cbom-keycloak-pqc-pass.cyclonedx.json` | Conforms to pqc-migration v0.7 (and the shallower depths). Uses native fields (K8), inheritance from the providing library (K9) and document-level references (K10) |
-| `examples/cbom-keycloak-pqc-fail.cyclonedx.json` | Fails pqc-migration#I12 only |
+| `examples/cbom-keycloak-pqc-pass.cyclonedx.json` | Conforms to pqc-migration v0.7 (and the shallower depths). Uses native fields (K8), inheritance from the providing library (K9) and document-level references (K10). Still carries the earlier model (purpose `key-protection`, no `negotiationStrategy`); to be updated |
+| `examples/cbom-keycloak-pqc-fail.cyclonedx.json` | Intended to fail the group rule pqc-migration#G1 only (no `key-wrapping` entry on `sto-realm-keys`). Still carries the earlier model; to be updated |
 | `examples/cbom-keycloak-pqc-extended-pass.cyclonedx.json` | Conforms to pqc-migration-extended v0.1 and every shallower depth |
 | `examples/cbom-keycloak-pqc-extended-fail.cyclonedx.json` | Fails pqc-migration-extended#I3 only |
 | `mapping-cyclonedx-spdx.md` | Draft mapping: application-layer interfaces as CycloneDX services (K7). Replaces the published mapping on promotion |

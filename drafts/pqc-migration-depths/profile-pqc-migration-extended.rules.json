@@ -1,5 +1,5 @@
 {
-  "$comment": "Illustrative machine-readable CBOM profile. DERIVED: the extended depth of the PQC migration family (decisions 0019 and 0022). It extends pqc-migration v0.7 and serves the same consumer and the same decision; it answers the decision's middle clause, what enabling the capability requires, more completely. The baseline asks what an interface can do. This depth asks what surrounds the interface and has to move with it or before it: the key management surface that must generate and hold the new key, the external services the interface depends on, and the setting that switches the capability on. Rules are numbered from P1, I1 in this profile's own space and cited as 'pqc-migration-extended#I1'. The information types come from cprofile.json: key_management_interfaces, security_controls[].external_dependencies, governing_parameters and the existence of data_at_rest_protection. DRAFT v0.1. Two rules are written against evaluator behaviour that does not exist yet; they are listed under '$pendingTooling' and nothing here claims they are evaluated correctly today.",
+  "$comment": "Illustrative machine-readable CBOM profile. DERIVED: the extended depth of the PQC migration family (decisions 0019 and 0022). It extends pqc-migration v0.7 and serves the same consumer and the same decision; it answers the decision's middle clause, what enabling the capability requires, more completely. The baseline asks what an interface can do. This depth asks what surrounds the interface and has to move with it or before it: the key management surface that must generate and hold the new key, the external services the interface depends on, and the setting that switches the capability on (proposed, see '$proposedGroupMember'). Rules are numbered from P1, I1 in this profile's own space and cited as 'pqc-migration-extended#I1'. The information types come from cprofile.json: key_management_interfaces, security_controls[].external_dependencies, governing_parameters and the existence of data_at_rest_protection. DRAFT v0.1. Rules are written against evaluator behaviour that does not exist yet, including two proposed additions to the group rule format and a third for extending an inherited group (G1.10); they are listed under '$pendingTooling' and in decision 0022, and nothing here claims they are evaluated correctly today.",
   "profileId": "pkic.example.pqc-migration-extended",
   "profileTag": "pqc-migration-extended",
   "title": "PQC Migration, Extended Depth (Example)",
@@ -18,7 +18,7 @@
     ]
   },
   "scope": {
-    "$comment": "C11. The baseline's scope with one change: key-protection is taken in depth. That asks more of a document and so is a tightening. The key management and storage rules below are what key-protection in depth means at an interface boundary. Every purpose still owes a status under the inherited G1.",
+    "$comment": "C11. The baseline's scope with one change: key-wrapping is taken in depth. That asks more of a document and so is a tightening: the key-wrapping entry of the inherited G1 then owes all nine members, not only G1.6, G1.7 and G1.9. The key management and storage rules below are what key-wrapping in depth means at an interface boundary. Every purpose that applies to an interface still owes a status under the inherited G1. 'encryption' stays a deferred purpose (decision 0010).",
     "subjectType": "product",
     "orientation": "both",
     "relationshipTypes": [
@@ -31,9 +31,8 @@
     ],
     "cryptographicPurposes": [
       "key-establishment",
-      "encryption",
       "entity-authentication",
-      "key-protection"
+      "key-wrapping"
     ]
   },
   "extends": {
@@ -114,9 +113,9 @@
   ],
   "overrides": [
     {
-      "id": "pqc-migration#G1.4",
+      "id": "pqc-migration#G1.9",
       "level": "MUST",
-      "note": "Tightened from SHOULD. At this depth the consumer is sequencing actual changes, and a capability usable only outside validated mode is not usable by a regulated operator. Keeps the id of the profile that introduced it."
+      "note": "Tightened from SHOULD to MUST. The guard is kept (capabilityStatus equals available), so the result is a conditional MUST: a guard may be removed or kept by a derived profile, never added or narrowed. At this depth the consumer is sequencing actual changes, and a capability usable only outside validated mode is not usable by a regulated operator. Keeps the id of the profile that introduced it. Was pqc-migration#G1.4 before the group was renumbered."
     }
   ],
   "productRules": [
@@ -133,7 +132,7 @@
         "absenceEnumRef": "storageAbsenceVocabulary"
       },
       "withholdable": false,
-      "note": "The pattern of interface-disclosure#P2 applied to storage. Stored ciphertext is exposed to harvest-now-decrypt-later by a shorter route than captured traffic, and a backup or archive path is the interface most easily left out because it is not a network listener. 'storage-delegated-to-platform' is the honest answer for a product that persists through a database or file system it does not control. Source: cprofile 'data_at_rest_protection'. Once a storage interface is declared, the base profiles describe it: keyWrapping from the Interface Disclosure Baseline and keyWrappingSupported from the migration baseline. This depth adds only the obligation to declare it."
+      "note": "The pattern of interface-disclosure#P2 applied to storage. Stored ciphertext is exposed to harvest-now-decrypt-later by a shorter route than captured traffic, and a backup or archive path is the interface most easily left out because it is not a network listener. 'storage-delegated-to-platform' is the honest answer for a product that persists through a database or file system it does not control. Source: cprofile 'data_at_rest_protection'. Once a storage interface is declared, the base profiles describe it: keyWrapping (interface-disclosure#I12) from the Interface Disclosure Baseline, keyWrappingSupported (pqc-migration#I6) from the migration baseline, and the key-wrapping entry of pqc-migration#G1. This depth adds only the obligation to declare it."
     },
     {
       "id": "P2",
@@ -277,22 +276,27 @@
       "list": true,
       "withholdable": false,
       "note": "Services outside the product this interface's cryptography depends on at run time, or 'none'. Source: cprofile 'security_controls[].external_dependencies' and 'revocation_check'."
-    },
-    {
-      "id": "I10",
+    }
+  ],
+  "$proposedGroupMember": {
+    "$comment": "PROPOSED FORMAT ADDITION 3, deliberately not in 'groupRules' so that composition and check_profile.py keep working. enablementSetting was interface rule I10, guarded on enablementMethod. enablementMethod is now a member of pqc-migration#G1 and has a value per purpose, so an interface-level guard has no single value to test: the defect the group design exists to remove. As a member it would read the enablementMethod of its own entry. The rules format has no way for a derived profile to add a member to an inherited group (it can override an inherited member's level, nothing more), so the member is recorded here for the working group to decide. Until a format for it exists, enablementSetting is not evaluated. See '$pendingTooling' and decision 0022.",
+    "extends": "pqc-migration#G1",
+    "member": {
+      "id": "G1.10",
       "attribute": "enablementSetting",
       "level": "SHOULD",
       "constraint": {
         "present": true
       },
       "withholdable": false,
+      "inScopeOnly": true,
       "requiredWhen": {
         "attribute": "enablementMethod",
         "equals": "configuration"
       },
-      "note": "Where the capability is enabled by configuration: the named setting or settings that enable it, as published in the product's documentation. Turns 'enable the capability' from a support ticket into an action. Source: cprofile 'governing_parameters' of a 'quantum_safe_migration_policy' or 'tls_policy' control."
+      "note": "Where this purpose's capability is enabled by configuration: the named setting or settings that enable it, as published in the product's documentation. Turns 'enable the capability' from a support ticket into an action. Source: cprofile 'governing_parameters' of a 'quantum_safe_migration_policy' or 'tls_policy' control. Would be cited as pqc-migration-extended#G1.10; it was pqc-migration-extended#I10."
     }
-  ],
+  },
   "exclusions": [
     {
       "item": "Cipher suite lists",
@@ -337,6 +341,10 @@
   ],
   "$pendingTooling": [
     {
+      "item": "Proposed rules-format additions for the capability group (decision 0022, point 8)",
+      "detail": "(1) 'keyApplicability' on pqc-migration#G1: a guard per purpose key, evaluated against the interface, so that a storage interface owes only the key-wrapping entry and every other interface owes the other six. (2) 'inScopeOnly' on pqc-migration#G1.1 to G1.5: extends the existing skip of MAY members for a purpose outside scope.cryptographicPurposes to flagged members, so a deferred purpose owes G1.6, G1.7 and G1.9 only. (3) A way for a derived profile to add a member to an inherited group, needed for enablementSetting ('$proposedGroupMember' above). None is read by validate_cbom.py, profile.schema.json or check_profile.py today. Until they are, the validator requires an entry for all seven purposes on every interface and all nine members in every entry, and does not see enablementSetting. Addition (1) also needs a line in decision 0014 that a derived profile may not narrow the guard."
+    },
+    {
       "item": "CycloneDX services are not read as interfaces",
       "detail": "The adapter enumerates protocol components only. Under the draft mapping (K7), application-layer interfaces and key stores are CycloneDX services: protocol and version come from properties, and algorithms from the components the service lists in its dependencies entry. Until the adapter reads services, product rules undercount interfaces and every service-level rule is unevaluated. Only services carrying pkic:profile:interfaceType are interfaces; the others (HTTPS, JDBC, LDAP, SMTP over TLS) are declared for layering and are followed through the dependency graph, not counted."
     },
@@ -358,7 +366,7 @@
     },
     {
       "item": "Scope purposes in check_scope_narrows",
-      "detail": "The check does not read cryptographicPurposes, so adding key-protection here is not verified as a tightening and dropping a purpose would not be caught."
+      "detail": "The check does not read cryptographicPurposes, so adding key-wrapping here is not verified as a tightening and dropping a purpose would not be caught."
     },
     {
       "item": "CycloneDX adapter reads a fixed list of attributes",
@@ -370,7 +378,7 @@
     },
     {
       "item": "A notEquals guard holds when the guarded attribute is absent",
-      "detail": "pqc-migration#I11 (moduleValidationRef, required when moduleValidationScheme is not 'none') therefore fails alongside I10 when the scheme is omitted, and G1.2 alongside G1.1. Either accepted as a cascade and documented, or a guard is treated as not met when its attribute is absent."
+      "detail": "interface-disclosure#I11 (moduleValidationRef, required when moduleValidationScheme is not 'none') therefore fails alongside interface-disclosure#I10 when the scheme is omitted, and pqc-migration#G1.7 (blockedBy, required when capabilityStatus is not 'available') alongside pqc-migration#G1.6 when the status is omitted. The storage guard on interface-disclosure#I1, #I2, #I3, #I5 and #I6 and on the G1 key applicability (interfaceType notEquals 'storage') behaves the same way when interfaceType is omitted, alongside interface-disclosure#I7. Either accepted as a cascade and documented, or a guard is treated as not met when its attribute is absent. Open decision for the working group (decision 0022)."
     }
   ],
   "artifacts": {
@@ -383,7 +391,7 @@
     {
       "version": "0.1",
       "date": "2026-09-26",
-      "summary": "Initial draft. Extends pqc-migration v0.7. Adds product rules P1 and P2, interface rules I1 to I10, and tightens pqc-migration#G1.4 to MUST. Takes key-protection in depth. Derived from the information types in cprofile.json. See decision 0022.",
+      "summary": "Initial draft. Extends pqc-migration v0.7. Adds product rules P1 and P2, interface rules I1 to I9, the group member G1.10 (enablementSetting) on the inherited G1, and tightens pqc-migration#G1.9 to MUST, keeping its guard (a conditional MUST). Takes key-wrapping in depth. Derived from the information types in cprofile.json. See decision 0022.",
       "changes": [
         {
           "kind": "editorial",
