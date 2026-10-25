@@ -1,31 +1,31 @@
 {
   "claimFormat": "pkic.cbom.conformance-claim",
   "claimFormatVersion": "0.1",
-  "issued": "2026-08-24T15:19:38+00:00",
+  "issued": "2026-10-25T09:00:00+00:00",
   "subject": {
-    "identifier": "pkg:generic/example-gateway@9.0.4",
-    "identifierFallback": "Example Gateway@9.0.4"
+    "identifier": "pkg:oci/keycloak?repository_url=quay.io/keycloak/keycloak&tag=26.7.3",
+    "identifierFallback": "Keycloak@26.7.3"
   },
   "document": {
-    "file": "cbom-pqc-pass.cyclonedx.json",
+    "file": "cbom-keycloak-product.cdx.json",
     "digest": {
       "alg": "sha-256",
-      "value": "ebf058629a37e057f41be88eb166870d25db2984a31770af3263ec7ea6f89826"
+      "value": "1b8fff9dad590241b73d19c37a23ab566c4e01113ec8e00d5adaca2c3f146897"
     },
     "carrier": {
       "format": "cyclonedx",
-      "version": "1.7"
+      "version": "2.0"
     }
   },
   "profiles": [
     {
       "profileId": "pkic.example.interface-disclosure",
       "profileTag": "interface-disclosure",
-      "version": "0.7",
+      "version": "0.9",
       "chain": [
         {
           "profileId": "pkic.example.interface-disclosure",
-          "version": "0.7",
+          "version": "0.9",
           "profileTag": "interface-disclosure"
         }
       ],
@@ -36,22 +36,25 @@
         "failed": [],
         "withheld": [],
         "unknown": [],
-        "undeclared": [],
-        "assessed": 31
+        "undeclared": [
+          "interface-disclosure#R6"
+        ],
+        "unresolved": [],
+        "assessed": 167
       }
     },
     {
       "profileId": "pkic.example.pqc-migration",
       "profileTag": "pqc-migration",
-      "version": "0.6",
+      "version": "0.8",
       "chain": [
         {
           "profileId": "pkic.example.interface-disclosure",
-          "version": "0.7"
+          "version": "0.9"
         },
         {
           "profileId": "pkic.example.pqc-migration",
-          "version": "0.6",
+          "version": "0.8",
           "profileTag": "pqc-migration"
         }
       ],
@@ -63,15 +66,106 @@
         "withheld": [],
         "unknown": [],
         "undeclared": [
-          "svc-api-tls/pqc-migration#G1.3[encryption]",
-          "svc-api-tls/pqc-migration#G1.3[key-establishment]",
-          "mgmt-ssh/pqc-migration#G1.3[encryption]",
-          "mgmt-ssh/pqc-migration#G1.3[key-establishment]",
-          "ic-ipsec/pqc-migration#G1.3[encryption]",
-          "ic-ipsec/pqc-migration#G1.3[entity-authentication]",
-          "ic-ipsec/pqc-migration#G1.3[key-establishment]"
+          "interface-disclosure#R6",
+          "crypto:protocol:tls-https/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:tls-https/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:tls-mgmt/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:tls-mgmt/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:int-db/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:int-db/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:int-ldap/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:int-ldap/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:int-broker/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:int-broker/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:int-smtp/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:int-smtp/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:int-cache/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:int-cache/pqc-migration#G1.3[entity-authentication]",
+          "service:svc-oidc/pqc-migration#G1.3[encryption]",
+          "service:svc-oidc/pqc-migration#G1.3[key-establishment]",
+          "service:svc-saml/pqc-migration#G1.3[encryption]",
+          "service:svc-saml/pqc-migration#G1.3[entity-authentication]",
+          "service:svc-saml/pqc-migration#G1.3[key-establishment]",
+          "service:svc-http/pqc-migration#G1.3[encryption]",
+          "service:svc-http/pqc-migration#G1.3[entity-authentication]",
+          "service:svc-http/pqc-migration#G1.3[key-establishment]",
+          "service:mgmt-admin/pqc-migration#G1.3[encryption]",
+          "service:mgmt-admin/pqc-migration#G1.3[key-establishment]",
+          "service:svc-broker-tokens/pqc-migration#G1.3[encryption]",
+          "service:svc-broker-tokens/pqc-migration#G1.3[key-establishment]",
+          "service:sto-realm-keys/pqc-migration#G1.3[encryption]",
+          "service:sto-realm-keys/pqc-migration#G1.3[entity-authentication]",
+          "service:sto-realm-keys/pqc-migration#G1.3[key-establishment]"
         ],
-        "assessed": 110
+        "unresolved": [],
+        "assessed": 637
+      }
+    },
+    {
+      "profileId": "pkic.example.pqc-migration-extended",
+      "profileTag": "pqc-migration-extended",
+      "version": "0.1",
+      "chain": [
+        {
+          "profileId": "pkic.example.pqc-migration",
+          "version": "0.8"
+        },
+        {
+          "profileId": "pkic.example.pqc-migration-extended",
+          "version": "0.1",
+          "profileTag": "pqc-migration-extended"
+        }
+      ],
+      "assessed": true,
+      "verdict": "conforms",
+      "carrierBand": "target",
+      "rules": {
+        "failed": [],
+        "withheld": [],
+        "unknown": [],
+        "undeclared": [
+          "interface-disclosure#R6",
+          "crypto:protocol:tls-https/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:tls-https/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:tls-https/pqc-migration#G1.3[key-protection]",
+          "crypto:protocol:tls-mgmt/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:tls-mgmt/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:tls-mgmt/pqc-migration#G1.3[key-protection]",
+          "crypto:protocol:int-db/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:int-db/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:int-db/pqc-migration#G1.3[key-protection]",
+          "crypto:protocol:int-ldap/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:int-ldap/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:int-ldap/pqc-migration#G1.3[key-protection]",
+          "crypto:protocol:int-broker/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:int-broker/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:int-broker/pqc-migration#G1.3[key-protection]",
+          "crypto:protocol:int-smtp/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:int-smtp/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:int-smtp/pqc-migration#G1.3[key-protection]",
+          "crypto:protocol:int-cache/pqc-migration#G1.3[encryption]",
+          "crypto:protocol:int-cache/pqc-migration#G1.3[entity-authentication]",
+          "crypto:protocol:int-cache/pqc-migration#G1.3[key-protection]",
+          "service:svc-oidc/pqc-migration#G1.3[encryption]",
+          "service:svc-oidc/pqc-migration#G1.3[key-establishment]",
+          "service:svc-saml/pqc-migration#G1.3[encryption]",
+          "service:svc-saml/pqc-migration#G1.3[entity-authentication]",
+          "service:svc-saml/pqc-migration#G1.3[key-establishment]",
+          "service:svc-http/pqc-migration#G1.3[encryption]",
+          "service:svc-http/pqc-migration#G1.3[entity-authentication]",
+          "service:svc-http/pqc-migration#G1.3[key-establishment]",
+          "service:svc-http/pqc-migration#G1.3[key-protection]",
+          "service:mgmt-admin/pqc-migration#G1.3[encryption]",
+          "service:mgmt-admin/pqc-migration#G1.3[key-establishment]",
+          "service:svc-broker-tokens/pqc-migration#G1.3[encryption]",
+          "service:svc-broker-tokens/pqc-migration#G1.3[key-establishment]",
+          "service:sto-realm-keys/pqc-migration#G1.3[encryption]",
+          "service:sto-realm-keys/pqc-migration#G1.3[entity-authentication]",
+          "service:sto-realm-keys/pqc-migration#G1.3[key-establishment]",
+          "service:sto-realm-keys/pqc-migration#G1.3[key-protection]"
+        ],
+        "unresolved": [],
+        "assessed": 782
       }
     }
   ],
@@ -89,6 +183,7 @@
     "that the document is complete, beyond whatever completeness rule the profile carries",
     "that every relevant interface was declared",
     "that the cryptography is adequate, now or later; that judgement belongs to versioned policy",
-    "anything about a withheld value beyond the fact that withholding was permitted here"
+    "anything about a withheld value beyond the fact that withholding was permitted here",
+    "anything inherited from a cited document the evaluator was not given; those rules are listed as unresolved"
   ]
 }

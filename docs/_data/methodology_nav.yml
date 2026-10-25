@@ -42,6 +42,7 @@
     - { id: confidentiality, title: Confidentiality, url: confidentiality.html }
     - { id: policyeval,   title: Policy Evaluation, url: policy-evaluation.html }
     - { id: vulns,        title: Vulnerabilities,   url: vulnerabilities.html }
+    - { id: context, title: Context Pointers, url: context.html }
 
 - group: Applying it
   items:

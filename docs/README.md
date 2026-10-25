@@ -62,8 +62,8 @@ Two sections are hand-written HTML rather than Markdown:
 
 | Path | Served at | Holds |
 |---|---|---|
-| `methodology/` | `/cbom/methodology/` | The working draft of the methodology, explained against a worked example: an nginx web server, its CBOM in CycloneDX 1.7, evaluated against a small product-independent profile. |
-| `use-cases/` | `/cbom/use-cases/` | Use cases developed in full, from a consumer's decision to a finished profile. One so far: PQC migration. |
+| `methodology/` | `/cbom/methodology/` | The working draft of the methodology, explained against one worked example: Keycloak 26.7.3, described by a vendor's product record and an operator's deployment records in CycloneDX 2.0, evaluated against a family of product-independent profiles. |
+| `use-cases/` | `/cbom/use-cases/` | The register of use cases, in four groups (disclosure, change planning, operation and assurance). Three are worked examples with published profiles, all applied to Keycloak 26.7.3: PQC migration, procurement and deployment disclosure. IoT device estates and substation automation are drafts. |
 
 Each page carries a two-line front matter block so that Jekyll processes it, which is what allows
 the shared navigation include to work. No layout is applied, so each page still controls its own
@@ -72,9 +72,10 @@ markup.
 The two sections are separate because the methodology is the deliverable and a worked use case is
 an instance of applying it: instances multiply with the number of sectors that want one, and the
 length of the deliverable should not. The argument is set out on `use-cases/index.html`. The
-methodology keeps the general part — why the use case comes first, the catalogue of eight purposes,
-and which attributes each emphasises — in `methodology/use-cases.html`, which is a different page
-from the section index and is easy to confuse with it.
+methodology keeps the general part in `methodology/use-cases.html`: why the use case comes first,
+and why one document can serve several profiles only up to a limit. That page lists no use cases.
+It keeps anchors for the entries it once listed, and links each one to its page in `use-cases/`.
+It is a different page from the section index and is easy to confuse with it.
 
 `use-cases/` has no stylesheet of its own and links `../methodology/styles.css`, which is the
 design system for both. `methodology/pqc-migration.html` is a redirect stub: that page moved to
@@ -144,13 +145,16 @@ twenty files and was done with a script each time. That is why the include exist
 | `lifecycle.html` | Lifecycle data across development and deployment |
 | `data-exposure.html` | Data exposure and the harvest-now-decrypt-later threat |
 | `model.html` | The cryptographic relationship model |
+| `objects.html` | The objects the methodology defines, who creates each one and how it is identified |
 | `profile.html` | The profile: rules, dual use, conformance |
 | `conformance.html` | What conformance means, and what a verdict does not assert |
 | `maturity.html` | Profile maturity: a family of profiles ordered by depth, and the entry profile |
+| `confidentiality.html` | Public and restricted variants of a CBOM, and how withholding is marked |
 | `policy-evaluation.html` | Policy evaluation: facts against derived judgements |
 | `method.html` | How to define a CBOM profile (the procedure) |
-| `use-cases.html` | Use cases for profiles: the catalogue of eight purposes, and why purpose comes first |
+| `use-cases.html` | Starting from a use case: why every profile begins with a consumer and a decision. Lists no use cases |
 | `vulnerabilities.html` | How cryptographic weakness is communicated alongside a CBOM rather than inside one |
+| `context.html` | Context pointers: what a CBOM points to and does not carry, and how reference rules check the pointer |
 | `pqc-migration.html` | Redirect stub. The page is now `use-cases/pqc-migration.html` |
 | `formats.html` | CycloneDX and SPDX mapping |
 | `versioning.html` | Handling older CBOM files |
@@ -160,54 +164,66 @@ twenty files and was done with a script each time. That is why the include exist
 | `demo.html` | Interactive conformance evaluation |
 | `terms.html` | Terms and definitions (Reference group) |
 
-The Use Cases section, for comparison, is two files:
+The Use Cases section, for comparison, has eleven files:
 
 | File | Section |
 |---|---|
-| `use-cases/index.html` | What a worked use case contains, which of the eight are developed, and why they are not in the methodology |
-| `use-cases/pqc-migration.html` | PQC migration: one use case from the consumer's decision to a complete profile definition |
+| `use-cases/index.html` | Overview: the groups, the register of all use cases with their status, and why use cases are not in the methodology |
+| `use-cases/disclosure.html` | Disclosure group: profiles that choose among the baseline's facts |
+| `use-cases/procurement.html` | Procurement: the procurement profile v0.1 applied to the Keycloak product record (worked example) |
+| `use-cases/change-planning.html` | Change planning group: profiles that add capability facts, and the proposed change core |
+| `use-cases/pqc-migration.html` | PQC migration: one use case from the consumer's decision to two profile depths (worked example) |
+| `use-cases/iot.html` | IoT device estate (draft worked example) |
+| `use-cases/substation.html` | Substation automation, OT (draft worked example) |
+| `use-cases/operation.html` | Operation group: documents written by the operator, with the deployment disclosure profile v0.1 (worked example) |
+| `use-cases/assurance.html` | Assurance group: a reader relies on the document as evidence |
+| `use-cases/proposing.html` | How a use case is proposed, and what each status means |
+| `use-cases/template.html` | Template for a worked use case |
 
 The machine-readable artifacts for the PQC migration profile stay in `methodology/` with the other
 profiles and documents, because `tests/run-profile-tests.sh` and `files.html` path them there and
 splitting the artifacts would make the suite harder to read than the page being one directory away.
 
-Machine-readable artifacts in the same folder:
+Machine-readable artifacts in the same folder (the full list, with expected verdicts, is on
+`files.html`):
 
-| File | Purpose |
+| Path | Purpose |
 |---|---|
-| `profile-interface-enumeration.rules.json` | The entry profile of the interface family: the shallowest rules that still give a usable inventory record. |
-| `profile-interface-disclosure.md` | The profile specification, including the relationship taxonomy. |
-| `profile-interface-disclosure.rules.json` | The same profile as machine-readable rules. |
-| `mapping-cyclonedx-spdx.md` | Requirement-to-format mapping for both formats. |
-| `cbom-pass.cyclonedx.json` | Conforming example CBOM. |
-| `cbom-fail.cyclonedx.json` | Non-conforming example; omits the management interface. Conforms at the family's entry depth. |
-| `cbom-disclosure.cyclonedx.json` | Non-conforming example exercising all four disclosure outcomes on one interface. |
-| `cbom-noadmin.cyclonedx.json` | Conforming example with no management interface, satisfying P2 by stating the absence. |
-| `cbom-entry-fail.cyclonedx.json` | Roughly what a scanner emits with no profile in mind; below even the entry profile. |
-| `profile-pqc-migration.rules.json` | The PQC migration profile, derived from the baseline via `extends`. |
-| `cbom-pqc-pass.cyclonedx.json` | Conforming example for the migration profile. |
-| `cbom-pqc-fail.cyclonedx.json` | Non-conforming example exercising conditional rules and the tightening. |
-| `validate_cbom.py` | Version-aware validator, with profile composition. Checks a document against a profile. |
-| `check_profile.py` | Well-formedness checker. Checks a profile against requirements C1 to C17 of the Conformance section. |
-| `profile.schema.json` | The shape of a rules file, so a third party can validate a profile without our checker. |
-| `claim.schema.json` | The shape of a conformance claim. |
-| `claim-example.json` | A worked claim over two profiles at once, bound to a document by digest. |
+| `profile-*.rules.json` | Six profiles: interface-enumeration (entry), interface-disclosure (the baseline), deployment-disclosure, pqc-migration, pqc-migration-extended, procurement. |
+| `profile-interface-disclosure.md` | The baseline's specification, including the relationship taxonomy. |
+| `mapping-cyclonedx-spdx.md` | Where each rule's facts sit in CycloneDX 2.0, CycloneDX 1.6/1.7 (legacy) and SPDX. |
+| `examples/` | The Keycloak example CBOMs in CycloneDX 2.0. `examples/legacy/` holds CycloneDX 1.7 documents; `examples/results/` holds policy results. |
+| `policies/` | Two example policies: the readiness gap and an algorithm transition. |
+| `perspectives/` | One CycloneDX 2.0 perspective per profile, generated from its rules. Informative only. |
+| `validate_cbom.py` | Validator. Reads CycloneDX 2.0 and 1.x; `--with` supplies documents a record cites. |
+| `check_profile.py` | Well-formedness checker for profiles (requirements C1 to C18). |
+| `evaluate_policy.py` | Applies a policy to CBOMs and writes a result that names every CBOM by digest. |
+| `compare_stages.py` | Lays a product record, a configured record and an observation side by side. |
+| `cdx17_to_20.py` | Converts a CycloneDX 1.6/1.7 CBOM to 2.0. |
+| `profile.schema.json`, `claim.schema.json`, `policy.schema.json`, `policy-result.schema.json` | Published schemas. |
+| `claim-example.json` | A worked claim over three profiles, bound to a document by digest. |
+| `demo-reports.json` | Reports the demonstration page renders, generated by `tools/build_demo_reports.py`. |
 | `versioning-and-legacy-cboms.md` | Design note on handling older CBOM files. |
 
-Both tools are exercised by `tests/run-profile-tests.sh` in the repository root, which CI runs on
-any change under `docs/methodology/`.
+The examples, perspectives and demo reports are generated by scripts in `tools/`. All of it is
+exercised by `tests/run-profile-tests.sh` in the repository root, which CI runs on any change
+under `docs/methodology/`.
 
 Running the validator:
 
 ```bash
 cd docs/methodology
-python3 validate_cbom.py cbom-pass.cyclonedx.json profile-interface-disclosure.rules.json
-python3 validate_cbom.py cbom-fail.cyclonedx.json profile-interface-disclosure.rules.json
+python3 validate_cbom.py examples/cbom-keycloak-product.cdx.json profile-interface-disclosure.rules.json
+python3 validate_cbom.py examples/cbom-keycloak-product-fail-P2.cdx.json profile-interface-disclosure.rules.json
+python3 validate_cbom.py examples/cbom-keycloak-deployment-configured.cdx.json \
+    profile-deployment-disclosure.rules.json --with examples/cbom-keycloak-product.cdx.json
 ```
 
 The first conforms. The second fails product rule P2, because it declares no management
-interface. Exit status is 0 for conformance and 1 otherwise, so the validator can be used
-directly as a CI gate.
+interface. The third conforms, and checks its citation of the product record by hash. Exit status
+is 0 for conformance and 1 for non-conformance. Other codes mark a usage error (2), a profile error
+(3), a refusal because the carrier version is below the profile's minimum (4) and a claim mismatch
+(5). A CI gate must not treat a refusal as a failure, because a refused document was never assessed.
 
 ## Building locally
 
@@ -252,5 +268,6 @@ A change to the design system needs applying in both.
 ## Status
 
 The methodology documentation is an illustrative working draft, not an adopted deliverable of
-the working group. Field names are aligned to CycloneDX 1.7 / ECMA-424 (2nd Edition) and should
-be checked against the current specifications before operational use.
+the working group. Field names target CycloneDX 2.0, pinned to the 2.0-dev schema of 23 October 2026 until the
+release (decision 0025); CycloneDX 1.6 and 1.7 are read as legacy. Check them against the current
+specifications before operational use.

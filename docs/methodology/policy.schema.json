@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pkic.org/cbom/schema/policy.schema.json",
+  "title": "CBOM example policy",
+  "$comment": "Structural schema for an example policy evaluated by evaluate_policy.py. A policy is versioned data plus a named evaluation method. Policies are kept outside CBOMs and outside profiles, because the criteria change while the facts do not (decision 0002).",
+  "type": "object",
+  "required": [
+    "policyFormat",
+    "policyFormatVersion",
+    "policyId",
+    "version",
+    "method",
+    "classification"
+  ],
+  "properties": {
+    "policyFormat": {
+      "const": "pkic.cbom.policy"
+    },
+    "policyFormatVersion": {
+      "type": "string"
+    },
+    "policyId": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "illustrative",
+        "draft",
+        "adopted"
+      ]
+    },
+    "source": {
+      "type": "object"
+    },
+    "method": {
+      "enum": [
+        "algorithm-transition",
+        "readiness-gap"
+      ]
+    },
+    "inputs": {
+      "type": "object"
+    },
+    "classification": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "names",
+          "quantumVulnerable"
+        ],
+        "properties": {
+          "names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "family": {
+            "type": "string"
+          },
+          "securityStrength": {
+            "type": "integer"
+          },
+          "quantumVulnerable": {
+            "type": "boolean"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "schedule": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "when"
+        ],
+        "properties": {
+          "when": {
+            "type": "object"
+          },
+          "status": {
+            "enum": [
+              "acceptable",
+              "deprecated",
+              "disallowed"
+            ]
+          },
+          "deprecatedAfter": {
+            "type": "string",
+            "format": "date"
+          },
+          "disallowedAfter": {
+            "type": "string",
+            "format": "date"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "purposes": {
+      "type": "object"
+    },
+    "classes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "changelog": {
+      "type": "array"
+    }
+  }
+}

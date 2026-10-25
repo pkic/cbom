@@ -1,0 +1,219 @@
+{
+  "policyFormat": "pkic.cbom.policy",
+  "policyFormatVersion": "0.1",
+  "policyId": "pkic.example.policy.algorithm-transition",
+  "version": "0.1",
+  "title": "Quantum-vulnerable algorithm transition (NIST IR 8547 initial public draft)",
+  "status": "illustrative",
+  "$comment": "An example policy, not advice. It applies the transition schedule of NIST IR 8547 (initial public draft, November 2024, not final as of October 2026) to the algorithms a CBOM discloses. The schedule is data in this file; the evaluation method is implemented by evaluate_policy.py. The judgement is computed at evaluation time and recorded in a result that points to the CBOM by digest (decision 0002). Check the schedule against the NIST publication before relying on it.",
+  "source": {
+    "title": "NIST IR 8547 ipd, Transition to Post-Quantum Cryptography Standards",
+    "url": "https://csrc.nist.gov/pubs/ir/8547/ipd",
+    "published": "2024-11-12",
+    "status": "draft"
+  },
+  "method": "algorithm-transition",
+  "inputs": {
+    "profiles": [
+      "pkic.example.interface-disclosure"
+    ],
+    "attributes": [
+      "keyExchange",
+      "authentication",
+      "encryption",
+      "keyExchangeSupported",
+      "authenticationSupported"
+    ]
+  },
+  "classification": [
+    {
+      "names": [
+        "RSA-1024"
+      ],
+      "family": "RSA",
+      "securityStrength": 80,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "RSA-2048",
+        "RS256",
+        "RS384",
+        "RS512",
+        "PS256",
+        "PS384",
+        "PS512",
+        "RSA-SHA256",
+        "RSA-OAEP",
+        "RSA-OAEP-256",
+        "rsa_pkcs1_sha256",
+        "rsa_pss_rsae_sha256",
+        "rsa_pss_rsae_sha384",
+        "rsa_pss_rsae_sha512",
+        "rsa_pss_pss_sha256",
+        "RSA-SHA384",
+        "RSA-SHA512"
+      ],
+      "family": "RSA",
+      "securityStrength": 112,
+      "quantumVulnerable": true,
+      "note": "JOSE and TLS names do not carry the RSA key size. They are classified at 112 bits, the strength of the RSA-2048 keys Keycloak generates by default; a record that states a larger key in its key material is classified by that key."
+    },
+    {
+      "names": [
+        "RSA-3072"
+      ],
+      "family": "RSA",
+      "securityStrength": 128,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "ffdhe2048"
+      ],
+      "family": "FFDH",
+      "securityStrength": 112,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "ffdhe3072"
+      ],
+      "family": "FFDH",
+      "securityStrength": 128,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "X25519",
+        "secp256r1",
+        "P-256",
+        "ECDH-ES",
+        "ES256",
+        "ECDSA-P256-SHA256",
+        "ecdsa_secp256r1_sha256",
+        "Ed25519",
+        "EdDSA",
+        "ed25519",
+        "ECDSA-SHA256"
+      ],
+      "family": "EC",
+      "securityStrength": 128,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "secp384r1",
+        "P-384",
+        "ES384",
+        "ecdsa_secp384r1_sha384",
+        "ECDSA-SHA384"
+      ],
+      "family": "EC",
+      "securityStrength": 192,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "X448",
+        "Ed448",
+        "ed448"
+      ],
+      "family": "EC",
+      "securityStrength": 224,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "secp521r1",
+        "P-521",
+        "ES512",
+        "ecdsa_secp521r1_sha512",
+        "ECDSA-SHA512"
+      ],
+      "family": "EC",
+      "securityStrength": 256,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "X25519MLKEM768",
+        "SecP256r1MLKEM768",
+        "SecP384r1MLKEM1024",
+        "ML-KEM-768",
+        "ML-KEM-1024",
+        "ML-KEM-512"
+      ],
+      "family": "ML-KEM",
+      "quantumVulnerable": false,
+      "note": "Hybrid groups are classified by their post-quantum component."
+    },
+    {
+      "names": [
+        "ML-DSA-44",
+        "ML-DSA-65",
+        "ML-DSA-87",
+        "mldsa44",
+        "mldsa65",
+        "mldsa87",
+        "SLH-DSA-SHA2-128s",
+        "SLH-DSA-SHAKE-128s"
+      ],
+      "family": "ML-DSA/SLH-DSA",
+      "quantumVulnerable": false
+    },
+    {
+      "names": [
+        "AES-128",
+        "AES-128-GCM",
+        "AES-256-GCM",
+        "ChaCha20-Poly1305",
+        "HMAC-SHA512",
+        "HS256",
+        "HS384",
+        "HS512"
+      ],
+      "family": "symmetric",
+      "quantumVulnerable": false,
+      "note": "Symmetric algorithms are outside the IR 8547 public-key transition."
+    }
+  ],
+  "schedule": [
+    {
+      "when": {
+        "quantumVulnerable": true,
+        "securityStrengthBelow": 112
+      },
+      "status": "disallowed",
+      "note": "Already disallowed under SP 800-131A."
+    },
+    {
+      "when": {
+        "quantumVulnerable": true,
+        "securityStrength": 112
+      },
+      "deprecatedAfter": "2030-12-31",
+      "disallowedAfter": "2035-12-31"
+    },
+    {
+      "when": {
+        "quantumVulnerable": true,
+        "securityStrengthAtLeast": 128
+      },
+      "disallowedAfter": "2035-12-31"
+    },
+    {
+      "when": {
+        "quantumVulnerable": false
+      },
+      "status": "acceptable"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-10-25",
+      "summary": "Initial example."
+    }
+  ]
+}

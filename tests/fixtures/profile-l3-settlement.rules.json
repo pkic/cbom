@@ -1,5 +1,5 @@
 {
-  "$comment": "TEST FIXTURE \u2014 valid, and the point of it is the numbering. This is a third-level profile: it extends the PQC migration profile, which extends the interface disclosure baseline. It declares its own P1 and its own I1, both of which are already used as local ids by BOTH ancestors. Under decision 0011 that is not a collision, because an id is local to the profile that declares it and is cited as '<profileTag>#<ruleId>'. A report against this profile therefore shows interface-disclosure#I1, pqc-migration#I1 and sector-settlement#I1 side by side. It also tightens one member of a group rule it inherits from its parent, which is the case decision 0014 added. Not a published profile; it exists to prove the scheme survives three levels.",
+  "$comment": "TEST FIXTURE — valid, and the point of it is the numbering. This is a third-level profile: it extends the PQC migration profile, which extends the interface disclosure baseline. It declares its own P1 and its own I1, both of which are already used as local ids by BOTH ancestors. Under decision 0011 that is not a collision, because an id is local to the profile that declares it and is cited as '<profileTag>#<ruleId>'. A report against this profile therefore shows interface-disclosure#I1, pqc-migration#I1 and sector-settlement#I1 side by side. It also tightens one member of a group rule it inherits from its parent, which is the case decision 0014 added. Not a published profile; it exists to prove the scheme survives three levels.",
   "profileId": "pkic.test.sector-settlement",
   "profileTag": "sector-settlement",
   "title": "Settlement operator procurement (test fixture)",
@@ -16,7 +16,7 @@
   },
   "extends": {
     "profileId": "pkic.example.pqc-migration",
-    "version": "0.6",
+    "version": "0.8",
     "file": "../../docs/methodology/profile-pqc-migration.rules.json"
   },
   "appliesTo": {
@@ -32,8 +32,7 @@
       "interface"
     ],
     "lifecycleStages": [
-      "configured",
-      "observed"
+      "implemented"
     ]
   },
   "overrides": [

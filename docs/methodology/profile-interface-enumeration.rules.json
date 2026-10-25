@@ -3,7 +3,7 @@
   "profileId": "pkic.example.interface-enumeration",
   "profileTag": "interface-enumeration",
   "title": "Interface Enumeration (Example entry profile)",
-  "version": "0.1",
+  "version": "0.3",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
   "objective": {
     "$comment": "C1. The consumer here is at an earlier moment than the baseline's: they are not yet matching a published weakness against an algorithm, because they do not yet know what the estate contains. The decision is about where to look and whom to ask, and it is a real decision with real options, which is what keeps this profile from being a content-free first step. A profile whose decision was 'to have started' would fail C1, and would deserve to.",
@@ -18,8 +18,7 @@
     "$note": "This profile cannot answer 'which interfaces are affected by a weakness in AES-GCM', and is not written as though it could. It answers 'which interfaces exist, what do they speak, and is this list the whole list' — which is the question that has to be answered first, and the one an operator most often cannot answer today. A consumer needing the first question answered names the Interface Disclosure Baseline instead, and should not accept conformance here as a substitute for it."
   },
   "scope": {
-    "$comment": "C11. The same subject, relationship type and orientation as the Interface Disclosure Baseline, which is what allows the two to sit on one ladder: a family ordered by depth differs in how much it asks, not in what it is about. All four lifecycle stages are accepted, because a first inventory takes whatever the producer can report. See decision 0008 for the scope object and decision 0019 for the family.",
-    "subjectType": "product",
+    "$comment": "C11. The same relationship type and orientation as the Interface Disclosure Baseline, which is what allows the two to sit on one ladder: a family ordered by depth differs in how much it asks, not in what it is about. Both subject types the baseline accepts are accepted here. All four lifecycle stages are accepted, because a first inventory takes whatever the producer can report, including a design intention; the baseline does not accept 'intended'. An observed record with gaps that fails the baseline can still conform here. See decisions 0008, 0019 and 0025.",
     "orientation": "inventory",
     "relationshipTypes": [
       "interface"
@@ -29,13 +28,17 @@
       "implemented",
       "configured",
       "observed"
+    ],
+    "subjectTypes": [
+      "product",
+      "deployment"
     ]
   },
   "appliesTo": {
-    "$comment": "C2. Identical to the Interface Disclosure Baseline's range. A deeper profile in a family may narrow the carrier range and may not widen it, so the entry profile sets the widest range the family will ever accept.",
+    "$comment": "Carrier acceptance. The target is CycloneDX 2.0, pinned to CycloneDX/specification 2.0-dev commit 76f185c (23 October 2026) until Ecma ratifies the release; the pinned schema is in tests/schemas/cyclonedx-2.0. 'min' is the oldest version the adapter reads: CycloneDX 1.6 and 1.7 documents are evaluated and flagged legacy, because the tools that produce CBOMs today emit 1.x. Below 'min', evaluation is refused. A derived profile may narrow this range and may not widen it.",
     "cyclonedx": {
       "min": "1.6",
-      "tested": "1.7"
+      "tested": "2.0"
     }
   },
   "disclosure": {
@@ -59,9 +62,11 @@
     "partial"
   ],
   "identifierSchemes": {
-    "$comment": "C14. Only the two asset classes this profile's rules constrain. The algorithm and library schemes the baseline declares are absent because no rule here names an algorithm or a library: a scheme nobody applies reads as authoritative while constraining nothing, which C14 rejects in both directions.",
     "protocol": "cyclonedx-cryptography-registry",
-    "subject": "purl"
+    "subject": {
+      "product": "purl",
+      "deployment": "tag-uri"
+    }
   },
   "productRules": [
     {
@@ -78,12 +83,15 @@
       "description": "Document identifies the subject it describes",
       "constraint": {
         "subjectIdentified": {
-          "startsWith": "pkg:"
+          "startsWith": {
+            "product": "pkg:",
+            "deployment": "tag:"
+          }
         }
       },
       "withholdable": false,
       "schemeRef": "subject",
-      "note": "Same id and same constraint as the baseline's P3. A record that does not say which version of what it describes cannot be matched to a deployment or compared with the same product's record from last quarter, and an inventory of unidentified subjects is not an inventory. This is the one rule that has to be at the entry depth whatever else is deferred."
+      "note": "Revised in v0.9. The form of the identifier depends on the subject type the document declares (P5). A product is identified by a package URL. A deployment has no package URL. It is identified by a tag URI (RFC 4151), such as 'tag:example.org,2026:deployment/sso-prod'. A tag URI can be minted by anyone who controls a domain name, with no registration, which is the situation of an operator naming its own deployments. A URN would need a registered namespace. Two records of the same deployment must use the same identifier."
     },
     {
       "id": "P4",
@@ -95,6 +103,26 @@
       },
       "withholdable": false,
       "note": "Same id and same constraint as the baseline's P4. Without it a short interface list is uninterpretable: silence could mean the product has two interfaces or that the producer listed two of nine. At the entry depth that ambiguity would be fatal, because the list is nearly all the document carries."
+    },
+    {
+      "id": "P5",
+      "description": "Document declares which type of subject it describes, from the types the profile accepts",
+      "level": "MUST",
+      "constraint": {
+        "subjectDeclared": true
+      },
+      "withholdable": false,
+      "note": "New in v0.9. A consumer cannot tell from the content alone whether a record describes a product as built or one deployment of it, and the two answer different questions. Decision 0008 made the profile declare its subject; this makes the document declare its own, so the two can be compared mechanically."
+    },
+    {
+      "id": "P6",
+      "description": "Document declares one lifecycle stage, and every interface reports that stage",
+      "level": "MUST",
+      "constraint": {
+        "singleStage": true
+      },
+      "withholdable": false,
+      "note": "New in v0.9. One stage per document. A vendor's build record and an operator's scan are produced by different parties at different times, and each answers a different question. Mixing stages in one document makes an interface count meaningless (one boundary declared twice) and lets a producer fill a gap at one stage with a value from another. The readiness gap is shown by joining a document at one stage to a document at another (see the deployment profile), not by merging them. The document's stage is carried natively in metadata.lifecycles; a per-interface lifecycleStage, where present, must agree."
     }
   ],
   "interfaceRules": [
@@ -106,7 +134,12 @@
         "present": true
       },
       "withholdable": false,
-      "schemeRef": "protocol"
+      "schemeRef": "protocol",
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Guarded in v0.2: not required of a storage interface. A storage interface is data at rest and has no protocol, peer or handshake, so this rule could not be satisfied honestly by one. A network path to remote storage is declared as its own service or interconnect interface and owes this rule there. See decision 0022."
     },
     {
       "id": "I2",
@@ -116,7 +149,11 @@
         "present": true
       },
       "withholdable": false,
-      "note": "The version is required at the entry depth because a protocol name without one does not narrow anything: most published weaknesses are against a version, not against a protocol."
+      "note": "The version is required at the entry depth because a protocol name without one does not narrow anything: most published weaknesses are against a version, not against a protocol. Guarded in v0.2: not required of a storage interface. A storage interface is data at rest and has no protocol, peer or handshake, so this rule could not be satisfied honestly by one. A network path to remote storage is declared as its own service or interconnect interface and owes this rule there. See decision 0022.",
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      }
     },
     {
       "id": "I7",
@@ -170,10 +207,10 @@
     }
   ],
   "artifacts": {
-    "$comment": "C9. The conforming example is the document the Interface Disclosure Baseline rejects, which is the whole argument for publishing this profile: a producer whose document fails the baseline is not producing nothing. The non-conforming example is what a scanner emits with no profile in mind, which is what the entry depth is set above.",
+    "$comment": "C9. The deployment observation with a gap fails the baseline and conforms here, which is what an entry depth is for.",
     "mapping": "mapping-cyclonedx-spdx.md",
-    "conformingExample": "cbom-fail.cyclonedx.json",
-    "nonConformingExample": "cbom-entry-fail.cyclonedx.json"
+    "conformingExample": "examples/cbom-keycloak-deployment-observed-fail-unknown.cdx.json",
+    "nonConformingExample": "examples/legacy/cbom-keycloak-scanner-output.cdx.json"
   },
   "changelog": [
     {
@@ -181,6 +218,34 @@
       "date": "2026-09-12",
       "summary": "Initial draft. The entry profile of the interface family: product rules P1, P3 and P4, per-interface rules I1, I2, I7 and I8, each carrying the id the Interface Disclosure Baseline uses for the same rule.",
       "changes": []
+    },
+    {
+      "version": "0.2",
+      "date": "2026-09-26",
+      "changes": [
+        {
+          "kind": "relaxing",
+          "summary": "I1 (protocol) and I2 (protocolVersion) no longer apply to a storage interface. The interface type vocabulary has always offered 'storage', and no storage interface could satisfy either rule honestly. No verdict on an existing example changes, because none declares a storage interface. Kept identical to the same rules in the Interface Disclosure Baseline v0.8, as the family check requires. See decision 0022."
+        }
+      ]
+    },
+    {
+      "version": "0.3",
+      "date": "2026-10-25",
+      "changes": [
+        {
+          "kind": "relaxing",
+          "summary": "'scope.subjectTypes' replaces 'subjectType' and accepts 'product' and 'deployment'. P3 takes its identifier form from the subject type: a package URL for a product, a tag URI for a deployment."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Added P5 (the document declares its subject type) and P6 (one lifecycle stage per document), with the ids and definitions the baseline uses."
+        },
+        {
+          "kind": "editorial",
+          "summary": "The carrier target is CycloneDX 2.0. CycloneDX 1.6 and 1.7 are read as legacy."
+        }
+      ]
     }
   ]
 }

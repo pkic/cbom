@@ -1,0 +1,166 @@
+---
+nav: context
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Context Pointers</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include methodology-nav.html %}
+
+<main>
+  <div class="crumb">CONCEPT</div>
+  <h1>Context pointers</h1>
+  <p class="lead">A CBOM records cryptographic facts about one subject at one stage. A consumer usually needs more than those facts: the SBOM of the same product, the vendor's vulnerability statements, the configuration a deployment record was read from, the evidence behind an observation. These artefacts change on their own schedule, or another party holds them. A CBOM therefore does not carry them. It points to them. A profile states which pointers a document must contain, and the validator checks them.</p>
+
+  <h2>The construct</h2>
+  <p>A profile declares two things: the kinds of context it knows about, and the rules that require a pointer to one of them. The rules form a separate kind of rule, with the letter <strong>R</strong>, beside product rules (P) and interface rules (I). They are cited like any other rule, for example <code>interface-disclosure#R2</code>.</p>
+  <h3>Context kinds</h3>
+  <p>The profile's <code>contextKinds</code> block defines each kind. For each kind, it names the CycloneDX <code>externalReferences</code> types that can carry it, and its <strong>form</strong>:</p>
+  <ul>
+    <li><code>document</code>: a fixed artefact. The pointer binds it by a hash, so a consumer can tell whether the artefact has changed.</li>
+    <li><code>endpoint</code>: a feed, an API or a web page whose content changes over time. The pointer names its access protocol, so a consumer knows how to read it.</li>
+    <li><code>document-or-endpoint</code>: either of the two, as the producer chooses.</li>
+  </ul>
+  <h3>Reference rules</h3>
+  <p>A reference rule names the kind it requires and sets these fields:</p>
+  <table>
+    <thead><tr><th>Field</th><th>What it says</th></tr></thead>
+    <tbody>
+      <tr><td><code>context</code></td><td>The context kind the pointer must have.</td></tr>
+      <tr><td><code>at</code></td><td>Where the pointer sits: on the <code>document</code> (the subject) or on each <code>interface</code>.</td></tr>
+      <tr><td><code>level</code></td><td>MUST, SHOULD or MAY.</td></tr>
+      <tr><td><code>hashRequired</code></td><td>Whether the pointer must carry a hash of the target. The value <code>when-document</code> requires a hash only when the target is a document.</td></tr>
+      <tr><td><code>withholdable</code></td><td>Whether the producer may withhold the pointer. See <a href="confidentiality.html">Confidentiality</a>.</td></tr>
+      <tr><td><code>orDeclaredAbsent</code></td><td>Whether the producer may state instead that no such artefact exists, with a value from <code>contextAbsenceVocabulary</code>: <code>not-published</code> or <code>not-applicable-to-subject</code>.</td></tr>
+      <tr><td><code>requiredWhen</code></td><td>The condition under which the rule applies, such as a subject type, a document stage, or an attribute value.</td></tr>
+    </tbody>
+  </table>
+  <p>The baseline's rule R2 shows the fields together:</p>
+  <pre><code>{
+  "id": "R2",
+  "context": "vulnerability-statements",
+  "at": "document",
+  "level": "MUST",
+  "hashRequired": "when-document",
+  "orDeclaredAbsent": "contextAbsenceVocabulary",
+  "withholdable": false,
+  "requiredWhen": { "subjectType": "product" }
+}</code></pre>
+  <p>The profile checker tests every profile against check C18. Every reference rule must name a context kind that the profile family defines, and that kind must be carried by real CycloneDX reference types. A profile cannot require a pointer that no document can express.</p>
+
+  <h2>Two principles</h2>
+  <h3>Conformance checks the pointer, never the target</h3>
+  <p>The validator checks that the pointer is present and well formed. It checks that a document pointer carries a hash where the rule requires one, and that an endpoint pointer names its access protocol. Where the evaluator receives the target itself, as with a cited document passed with <code>--with</code>, it checks that the hash matches. It never evaluates the target's content. A Keycloak product record that points to the OSV API passes rule R3 whether or not OSV holds any advisory for Keycloak. A deployment record that points to a data register passes rule R3 of the Deployment Disclosure profile without anyone reading the register.</p>
+  <p>This is decision 0020 generalised by <a href="https://github.com/pkic/cbom/blob/main/decisions/0025-baseline-consolidation.md">decision 0025</a>. A CBOM records facts that change when the product or the deployment changes. Context that changes on another trigger, or that another party holds, is joined and not merged.</p>
+  <h3>Direction follows time</h3>
+  <p>A record points to two kinds of target. The first kind exists when the producer writes the record: the companion SBOM, the configuration revision the record was read from, the evidence it was built on. The second kind is a place where later statements will appear: a VEX feed, an advisory API. The record can name that place in advance, because the place exists even though the statements do not yet.</p>
+  <p>Judgements made afterwards point the other way. A conformance claim and a policy result point to the record by its SHA-256 digest. A record never points to them. If it did, every new judgement would require a new revision of the record, and the record would stop being a stable statement of fact. <a href="policy-evaluation.html">Policy Evaluation</a> describes the result format.</p>
+
+  <h2>Three kinds of reference</h2>
+  <p>A CBOM uses three kinds of reference. Only the third is a context pointer.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Kind</th><th>Points to</th><th>Form</th><th>Examples</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Internal</strong></td><td>Another object in the same document</td><td>A <code>bom-ref</code></td><td><code>keyStoreRef</code>, which names another object in the same record by its <code>bom-ref</code></td></tr>
+      <tr><td><strong>Cross-document</strong></td><td>Another CBOM or SBOM, or one object in it</td><td>A BOM-Link (<code>urn:cdx:&lt;serial&gt;/&lt;version&gt;</code>, optionally <code>#&lt;bom-ref&gt;</code>) and a SHA-256 hash</td><td><code>correspondsTo</code>, cited documents, the companion SBOM</td></tr>
+      <tr><td><strong>Context</strong></td><td>An artefact that is not a BOM</td><td>A URL, with a hash for a document and an access protocol for an endpoint</td><td>Advisories, the security contact, the configuration source, the data register</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>A BOM-Link is the CycloneDX way to name one revision of another BOM, and one object inside it. Two references look like pointers and are not. The PQC migration profile's per-purpose <code>roadmapRef</code> (group rule G1) stays a group attribute that holds a URL. Module validation and product certification are native <code>certifications[]</code> in CycloneDX 2.0, so they need no pointer.</p>
+
+  <h2>The catalogue</h2>
+  <p>The profiles define the following kinds. The last column gives the value in the Keycloak example records, where they carry one. The Keycloak hashes and the operator's URLs are illustrative.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Kind</th><th>Rule</th><th>Requirement</th><th>Form</th><th>Carrier types</th><th>Keycloak value</th></tr></thead>
+    <tbody>
+      <tr><td><code>sbom</code></td><td><code>interface-disclosure#R1</code></td><td>MUST, product</td><td>document, hash required</td><td><code>bom</code></td><td>Product record: the companion SBOM of the same image, <code>urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1</code> with a SHA-256 hash</td></tr>
+      <tr><td><code>vulnerability-statements</code></td><td><code>interface-disclosure#R2</code></td><td>MUST, product; or a stated absence</td><td>document (with hash) or endpoint (with access protocol)</td><td><code>vulnerability-assertion</code>, <code>exploitability-statement</code></td><td>Product record: stated absence <code>not-published</code>. Upstream Keycloak publishes no VEX.</td></tr>
+      <tr><td><code>advisories</code></td><td><code>interface-disclosure#R3</code></td><td>SHOULD, product</td><td>endpoint: <code>web-page</code>, <code>csaf-provider</code>, <code>osv-api</code>, <code>ghsa-api</code></td><td><code>advisories</code></td><td>Product record: <code>https://github.com/keycloak/keycloak/security/advisories</code> (<code>web-page</code>) and <code>https://api.osv.dev/v1/query</code> (<code>osv-api</code>)</td></tr>
+      <tr><td><code>security-contact</code></td><td><code>interface-disclosure#R4</code></td><td>SHOULD, product</td><td>endpoint</td><td><code>security-contact</code>, <code>rfc-9116</code></td><td>Product record: <code>https://github.com/keycloak/keycloak/security/policy</code> (<code>web-page</code>)</td></tr>
+      <tr><td><code>configuration-guidance</code></td><td><code>interface-disclosure#R5</code></td><td>MUST on an interface whenever I3, I4 or I5 is <code>deployment-defined</code></td><td>endpoint</td><td><code>documentation</code>, <code>configuration</code></td><td>Product record: <code>https://www.keycloak.org/server/enabletls</code> on the HTTPS listener, and <code>https://www.keycloak.org/server/management-interface</code> on the management listener</td></tr>
+      <tr><td><code>design-intent</code></td><td><code>interface-disclosure#R6</code></td><td>MAY</td><td>document or endpoint</td><td><code>threat-model</code>, <code>adversary-model</code>, <code>documentation</code></td><td>None. The validator reports a warning.</td></tr>
+      <tr><td><code>cited-document</code></td><td><code>deployment-disclosure#P1</code></td><td>MUST, deployment</td><td>document: BOM-Link and SHA-256 hash</td><td><code>bom</code></td><td>Configured record cites the product record. Observed record cites the configured record and the product record.</td></tr>
+      <tr><td><code>configuration-source</code></td><td><code>deployment-disclosure#R1</code></td><td>MUST at <code>configured</code></td><td>document or endpoint</td><td><code>configuration</code>, <code>codified-infrastructure</code>, <code>vcs</code></td><td>Configured record: <code>https://git.example.org/platform/sso-config/-/commit/4f2a9c1e7b</code></td></tr>
+      <tr><td><code>observation-evidence</code></td><td><code>deployment-disclosure#R2</code></td><td>SHOULD at <code>observed</code>, on each interface; withholdable</td><td>document, hash required</td><td><code>evidence</code>, <code>runtime-analysis-report</code>, <code>log</code></td><td>Observed record: for example, a sensor summary for the ingress, <code>https://evidence.example.org/sso-prod/2026-10-25/ing-tls-zeek-summary.json</code> with a SHA-256 hash</td></tr>
+      <tr><td><code>data-register</code></td><td><code>deployment-disclosure#R3</code></td><td>SHOULD; withholdable</td><td>document or endpoint</td><td><code>risk-assessment</code>, <code>other</code></td><td>Configured and observed records: <code>https://grc.example.org/registers/data/sso-prod</code>. The register holds data classification and confidentiality lifetime per interface, which decide harvest-now-decrypt-later exposure (Q36, Q37, Q45). See <a href="data-exposure.html#data-register">Data Exposure</a>.</td></tr>
+      <tr><td><code>issuer-policy</code></td><td><code>deployment-disclosure#R4</code></td><td>MAY</td><td>endpoint</td><td><code>documentation</code></td><td>Configured record: <code>https://pki.example.org/cps</code>, the practice statement of the internal CA that issues the ingress, database and directory certificates</td></tr>
+      <tr><td><code>support-lifecycle</code></td><td><code>pqc-migration#R1</code></td><td>SHOULD; or a stated absence</td><td>endpoint</td><td><code>support</code>, <code>release-notes</code>, <code>documentation</code></td><td>Product record: stated absence <code>not-published</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Four further kinds have names, because assurance profiles will need them. No profile requires them yet.</p>
+  <table>
+    <thead><tr><th>Kind</th><th>What it points to</th></tr></thead>
+    <tbody>
+      <tr><td><code>code-analysis</code></td><td>Code-analysis findings about how the product calls its cryptography (failure mode 6, integration).</td></tr>
+      <tr><td><code>protocol-testing</code></td><td>Protocol tests of the running service (failure mode 10, composition and negotiation). CycloneDX 2.0 carries it as a <code>test-report</code> reference.</td></tr>
+      <tr><td><code>build-provenance</code></td><td>A build provenance attestation, such as a SLSA or Sigstore attestation.</td></tr>
+      <tr><td><code>platform-assessment</code></td><td>An assessment of the platform's randomness and environment (failure mode 9).</td></tr>
+    </tbody>
+  </table>
+  <p><a href="lifecycle.html#failure-modes">Lifecycle Data</a> describes the failure modes.</p>
+
+  <h2>How a pointer is carried in CycloneDX</h2>
+  <p>A pointer is an entry in <code>externalReferences</code>. A document-level pointer sits on the subject. An interface-level pointer, such as configuration guidance or observation evidence, sits on the interface's component. Each entry carries four things:</p>
+  <ul>
+    <li>a CycloneDX reference <code>type</code>, from the carrier types of its kind;</li>
+    <li>the property <code>pkic:profile:context</code>, which names the kind. The property is needed because kinds share types: <code>documentation</code> alone can carry configuration guidance, design intent, an issuer policy or a support lifecycle;</li>
+    <li>for an endpoint, the property <code>pkic:profile:accessProtocol</code>, from <code>web-page</code>, <code>csaf-provider</code>, <code>osv-api</code>, <code>ghsa-api</code>, <code>vex-document</code> or <code>other</code>;</li>
+    <li>for a document, a <code>hashes</code> entry with a SHA-256 value.</li>
+  </ul>
+  <p>CycloneDX 2.0 allows properties on external references, which makes the two properties possible. Two pointers from the Keycloak product record show both forms:</p>
+  <pre><code>"externalReferences": [
+  {
+    "type": "bom",
+    "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1",
+    "properties": [ { "name": "pkic:profile:context", "value": "sbom" } ],
+    "hashes": [ { "alg": "SHA-256", "content": "11234911bf74…" } ]
+  },
+  {
+    "type": "advisories",
+    "url": "https://api.osv.dev/v1/query",
+    "properties": [
+      { "name": "pkic:profile:context",        "value": "advisories" },
+      { "name": "pkic:profile:accessProtocol", "value": "osv-api" }
+    ]
+  }
+]</code></pre>
+  <p>A stated absence is a property on the subject, named after the kind. The Keycloak product record carries <code>pkic:profile:contextAbsent:vulnerability-statements</code> with the value <code>not-published</code>, and the same for <code>support-lifecycle</code>.</p>
+
+  <h2>What is deliberately not pointed to</h2>
+  <ul>
+    <li><strong>Judgements made after the record.</strong> A record does not point to a conformance claim or a policy result about itself. Those point to the record by digest.</li>
+    <li><strong>The vulnerability data itself.</strong> The record points to where advisories and VEX statements are published. It carries none of them. <a href="vulnerabilities.html#end-to-end">Vulnerabilities</a> follows the join from the record to the advisories.</li>
+    <li><strong>Facts that have a native field.</strong> Module validation and product certification are <code>certifications[]</code> in CycloneDX 2.0. Key rotation and renewal are native too. A pointer would duplicate them.</li>
+    <li><strong>Planning information per purpose.</strong> The PQC migration profile keeps <code>roadmapRef</code> as a group attribute beside the capability status it explains, such as Keycloak's ML-DSA token signing, <code>committed</code>, with roadmap issue #43690.</li>
+    <li><strong>The content of any target.</strong> No rule checks what a target says. A consumer who relies on a target reads it and judges it separately.</li>
+  </ul>
+
+  <div class="banner">In short. A context pointer names an artefact that a CBOM needs and does not carry. A profile defines the kinds of context, the reference types that carry each kind, and whether the target is a document bound by a hash or an endpoint with an access protocol. Reference rules say which pointers a document must contain. Conformance checks the pointer and never the target. A record points to what exists when it is written and to the places where later statements will appear. Judgements made afterwards point to the record by digest.</div>
+
+  <div class="pagenav">
+    <a href="vulnerabilities.html">← Vulnerabilities</a>
+    <a class="next" href="use-cases.html">Next: Starting from a Use Case →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+</main>
+</div>
+</body>
+</html>

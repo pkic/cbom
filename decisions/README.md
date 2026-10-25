@@ -35,6 +35,13 @@ document conforming to the previous version does not conform to this one. It als
 points open rather than deciding them — whether `randomness` is a purpose, and how a sector
 profile widens the vocabulary — so it can be accepted in part.
 
+## The October 2026 baseline
+
+Record 0025 instantiates every choice that was pending in October 2026, so that the working group
+has one consistent set of profiles, examples, policies and tools to use and challenge. Its choices
+are provisional and listed one by one, so each can be reopened on its own. Record 0022 is
+published with it. Numbers 0023 and 0024 are reserved by the drafts that cite them.
+
 ## Index
 
 | # | Title | Aspect | Status | Date |
@@ -60,6 +67,8 @@ profile widens the vocabulary — so it can be accepted in part.
 | [0019](./0019-a-family-ordered-by-depth.md) | Adoption is staged by a family of profiles ordered by depth, not by a maturity field | 3.9 | Proposed | 2026-09-12 |
 | [0020](./0020-cbom-joined-to-vulnerability-statements.md) | A CBOM is joined to vulnerability statements, not merged with them | 3.3 | Proposed | 2026-09-12 |
 | [0021](./0021-one-word-one-meaning.md) | A word means one thing: keyCoverage, and revision states | 3.7 | Proposed | 2026-09-15 |
+| [0022](./0022-pqc-migration-family-depths.md) | The PQC migration family has two depths, and a storage interface is described as data at rest | 3.9 | Proposed | 2026-09-26 |
+| [0025](./0025-baseline-consolidation.md) | A consistent baseline: every pending choice instantiated, built on Keycloak | all | Proposed | 2026-10-25 |
 
 <!-- Add a row per decision, newest at the bottom:
 | 0008 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |
@@ -67,7 +76,7 @@ profile widens the vocabulary — so it can be accepted in part.
 
 ## Why every record says Proposed
 
-All twenty-one carry the status **Proposed**, and for an alpha that is the correct status rather than
+All twenty-three carry the status **Proposed**, and for an alpha that is the correct status rather than
 a backlog.
 
 These records are written while building the methodology and its worked example, so that the

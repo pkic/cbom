@@ -1,5 +1,11 @@
 # Draft: procurement profile, and one document read by two profiles
 
+> **Promoted, 25 October 2026.** The profiles, examples and decision record from this draft are
+> published with the consolidated baseline (decision 0025). See `docs/methodology/` for the
+> profiles and `docs/methodology/examples/` for the Keycloak records. The working notes that remain
+> here are kept for their reasoning. File paths in them refer to the draft as it was.
+
+
 Working draft, 4 October 2026. Disclosure group (draft decision 0023), catalogue entry 2. Nothing
 here is published by the site.
 

@@ -64,12 +64,18 @@ M = os.path.join(ROOT, "docs", "methodology")
 FAMILY = ["profile-interface-enumeration.rules.json",
           "profile-interface-disclosure.rules.json"]
 
-DOCUMENTS = ["cbom-entry-fail.cyclonedx.json", "cbom-fail.cyclonedx.json",
-             "cbom-disclosure.cyclonedx.json", "cbom-noadmin.cyclonedx.json",
-             "cbom-pass.cyclonedx.json"]
+DOCUMENTS = ["examples/legacy/cbom-keycloak-scanner-output.cdx.json",
+             "examples/cbom-keycloak-product-fail-P2.cdx.json",
+             "examples/cbom-keycloak-product-disclosure-states.cdx.json",
+             "examples/cbom-keycloak-product-intended.cdx.json",
+             "examples/cbom-keycloak-deployment-observed-fail-unknown.cdx.json",
+             "examples/cbom-keycloak-product.cdx.json",
+             "examples/cbom-keycloak-deployment-configured.cdx.json"]
 
 LEVELS = {"MAY": 0, "SHOULD": 1, "MUST": 2}
 SECTIONS = ("productRules", "interfaceRules", "groupRules")
+# Reference rules are not compared: the entry depth asks for no context
+# pointers, and every pointer the baseline adds is an addition at depth.
 VOCABULARY_REFS = ("enumRef", "keyVocabularyRef", "absenceEnumRef")
 
 

@@ -1,5 +1,5 @@
 {
-  "$comment": "TEST FIXTURE \u2014 deliberately invalid. Lowers the inherited endpointRoles minimum from 2 to 1. Until decision 0013 only 'level' and 'withholdable' were compared, so this was accepted and the document was evaluated against a weaker rule than the base's while the report claimed no override relaxed anything. Not a real profile; do not copy.",
+  "$comment": "TEST FIXTURE — deliberately invalid. Lowers the inherited endpointRoles minimum from 2 to 1. Until decision 0013 only 'level' and 'withholdable' were compared, so this was accepted and the document was evaluated against a weaker rule than the base's while the report claimed no override relaxed anything. Not a real profile; do not copy.",
   "profileId": "pkic.test.relax-mincount",
   "profileTag": "relax-mincount",
   "title": "Relaxing a minimum count (test fixture)",
@@ -14,7 +14,7 @@
   },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.7",
+    "version": "0.9",
     "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
   },
   "appliesTo": {
@@ -30,7 +30,6 @@
       "interface"
     ],
     "lifecycleStages": [
-      "intended",
       "implemented",
       "configured",
       "observed"

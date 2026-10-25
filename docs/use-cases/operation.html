@@ -25,12 +25,12 @@ nav: uc-operation
   <div class="crumb">GROUP</div>
   <h1>Operation: the operator describes what it runs</h1>
   <p class="lead">Use cases in which the CBOM is produced by the operator of a system rather than by the supplier of a product. The subject is a deployed system, a service or an estate, and what is reported is mostly configured or observed. An operator can state facts no supplier knows: what data crosses an interface and how long it must stay confidential, what was actually negotiated, which instances are still running, and what has changed since the last report.</p>
-  <div class="banner">Proposed in October 2026 as an amendment to draft decision 0023, which defined the first two groups. Not yet settled.</div>
+  <div class="banner">Proposed in October 2026 as an amendment to draft decision 0023, which defined the first two groups. The group is not yet settled. Its first profile, deployment disclosure v0.1, is published as part of the consolidated baseline (decision 0025), with two Keycloak deployment records.</div>
 
   <h2>What the group shares</h2>
   <p>The Disclosure and Change planning groups are each defined by the facts their profiles ask for. The Operation group is defined by who produces the document: the operator of the system. The operator can see the whole deployed system. A supplier cannot see how its product is deployed, so supplier profiles only ask for facts that can be known from the product itself. That limit does not apply to an operator, so a profile in this group can ask for more. It can require the deployment facts that the interface disclosure baseline excludes because a vendor cannot know them: the payload an interface carries, its confidentiality lifetime, the number of instances, and the configuration as observed rather than as declared.</p>
-  <p>An operator document usually draws on supplier documents rather than repeating them. It cites the supplier CBOM for each product it runs and adds what only the operator knows. A document that cites other documents and adds to them is an overlay, as defined in <a href="../methodology/maturity.html">Maturity</a>. The substation system document has the same relation to its component documents.</p>
-  <p>A use case belongs in this group when the operator produces the document. An operator describing what it runs may also be planning a change. A profile in this group can therefore extend either the interface disclosure baseline or the change core, which is the shared base of the change-planning profiles. Each use case decides which of the two to extend.</p>
+  <p>An operator document usually draws on supplier documents rather than repeating them. It cites the supplier CBOM for each product it runs, by BOM-Link and SHA-256 hash, and adds what only the operator knows. A document that cites other documents and adds to them is an overlay, as defined in <a href="../methodology/maturity.html">Maturity</a>. The substation system document has the same relation to its component documents.</p>
+  <p>A use case belongs in this group when the operator produces the document. An operator describing what it runs may also be planning a change. A profile in this group can therefore extend either the interface disclosure baseline or the change core, which is the shared base of the change-planning profiles. Each use case decides which of the two to extend. The first profile, deployment disclosure, extends the baseline.</p>
 
   <h2>Questions this group owns</h2>
   <div style="overflow:auto">
@@ -45,22 +45,51 @@ nav: uc-operation
   </table>
   </div>
 
-  <h2>Worked examples</h2>
-  <p>None yet. A natural first example would reuse work already done. It would be an operator document for a Keycloak deployment. The document would cite the supplier's Keycloak CBOM from the <a href="pqc-migration.html">PQC migration</a> example and add the instance count, the realm data each token interface carries, and the TLS groups actually negotiated with the directory and the database.</p>
+  <h2>Worked example: deployment disclosure v0.1</h2>
+  <p>The profile is <a href="../methodology/profile-deployment-disclosure.rules.json"><code>profile-deployment-disclosure.rules.json</code></a>, version 0.1. It extends the interface disclosure baseline v0.9. Its consumer is an operator, or an assessor acting for one, responsible for a deployment built from products it did not build. The decision is, for each interface of the deployment: which published weakness affects it, whether what the deployment permits matches what it was seen to do, and where the deployment falls short of what its products can do.</p>
+  <p>The profile accepts one subject type, <code>deployment</code>, and two stages, <code>configured</code> and <code>observed</code>. It excludes <code>implemented</code>, because a deployment record that repeats the vendor's build facts adds nothing. It cites the vendor's record instead. The vendor writes the product record. The operator writes one deployment record per stage. The records are joined, not merged.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Rule</th><th>Level</th><th>What it requires</th></tr></thead>
+    <tbody>
+      <tr><td><code>P1</code></td><td>MUST</td><td>The record cites each document it builds on by BOM-Link (<code>urn:cdx:&lt;serial&gt;/&lt;version&gt;</code>) and SHA-256 hash. When the consumer supplies the cited document, the validator checks its serial number, version and hash.</td></tr>
+      <tr><td><code>I1</code></td><td>MUST</td><td><code>correspondsTo</code>: the interface in a cited document that this interface realises, as a BOM-Link to its <code>bom-ref</code>, or the literal <code>no-product-document</code>. The implementing library is inherited across this join. Present-state facts are never inherited.</td></tr>
+      <tr><td><code>I2</code></td><td>MUST at observed</td><td><code>observationMethod</code>: how each observed value was obtained (<code>active-probe</code>, <code>passive-sensor</code>, <code>endpoint-query</code>, <code>platform-query</code>, <code>inspection</code>).</td></tr>
+      <tr><td><code>I3</code></td><td>MUST at observed</td><td><code>observedAt</code>: the time or interval of the observation.</td></tr>
+      <tr><td><code>R1</code></td><td>MUST at configured</td><td>A pointer to the configuration revision the record was read from.</td></tr>
+      <tr><td><code>R2</code></td><td>SHOULD at observed</td><td>A pointer to the evidence an observed value was taken from. Withholdable, because evidence often carries internal addresses.</td></tr>
+      <tr><td><code>R3</code></td><td>SHOULD</td><td>A pointer to the operator's data register, which records what data each interface carries and how long it must stay confidential. Withholdable. The record points to the register and does not carry it.</td></tr>
+      <tr><td><code>R4</code></td><td>MAY</td><td>A pointer to the certificate policy of the CA that issues the deployment's certificates.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The examples describe an illustrative operator, Example Org, running Keycloak 26.7.3 at <code>sso.example.org</code>. The operator ends TLS at an ingress (nginx with OpenSSL 3.5) and runs Keycloak behind it with its plaintext HTTP listener enabled. Both records cite the vendor's <a href="../methodology/examples/cbom-keycloak-product.cdx.json">product record</a>.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Record</th><th>What it shows</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td><a href="../methodology/examples/cbom-keycloak-deployment-configured.cdx.json"><code>cbom-keycloak-deployment-configured.cdx.json</code></a></td><td>The deployment read from its configuration repository, realm exports and JVM settings. Values are the sets the deployment permits.</td><td>conforms</td></tr>
+      <tr><td><a href="../methodology/examples/cbom-keycloak-deployment-observed.cdx.json"><code>cbom-keycloak-deployment-observed.cdx.json</code></a></td><td>The deployment observed from 18 to 25 October 2026. Each interface names its observation methods. It cites the configured record, and follows the implementing library through two joins: observed to configured to product.</td><td>conforms</td></tr>
+      <tr><td><a href="../methodology/examples/cbom-keycloak-deployment-configured-fail-literal.cdx.json"><code>cbom-keycloak-deployment-configured-fail-literal.cdx.json</code></a></td><td>The database connection keeps the product record's <code>peer-defined</code>. At <code>configured</code> the operator knows the answer.</td><td>fails baseline I3, I4 and I5 on that interface</td></tr>
+      <tr><td><a href="../methodology/examples/cbom-keycloak-deployment-observed-fail-unknown.cdx.json"><code>cbom-keycloak-deployment-observed-fail-unknown.cdx.json</code></a></td><td>The database connection was observed through <code>pg_stat_ssl</code> alone, which does not report the group.</td><td>fails baseline I3; conforms to the entry profile</td></tr>
+      <tr><td><a href="../methodology/examples/cbom-keycloak-deployment-observed-fail-P1.cdx.json"><code>cbom-keycloak-deployment-observed-fail-P1.cdx.json</code></a></td><td>The configured record it cites has changed since it was cited.</td><td>fails deployment P1 (hash mismatch)</td></tr>
+      <tr><td><a href="../methodology/examples/cbom-keycloak-deployment-observed-outside.cdx.json"><code>cbom-keycloak-deployment-observed-outside.cdx.json</code></a></td><td>An outside assessor who could not reach the management interfaces. It states them as <code>not-reached</code>, with coverage <code>partial</code>.</td><td>passes P2; fails I9 on the ingress, because the library is not visible; conforms to the entry profile</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The observed record shows two things the configured record cannot. 29% of ingress sessions still negotiate X25519 alone, although the deployment permits X25519MLKEM768. Tokens for one client are still signed with RS256. The readiness-gap policy evaluates the joined records and reports a class for each interface and purpose. It computes the gap from the join and never stores it in a record. Its result is <a href="../methodology/examples/results/result-readiness-gap-sso-prod.json"><code>result-readiness-gap-sso-prod.json</code></a>. See <a href="../methodology/policy-evaluation.html">Policy Evaluation</a>.</p>
 
   <h2>The use cases in this group</h2>
 
   <h3 id="managed-service">Managed and cloud service disclosure</h3>
-  <p>A customer relies on a service it does not operate: an identity provider, a key management service, a payment gateway, a managed network. It has to decide whether to rely on it, and what to require of the provider. Here the producer is the operator of the service, not a vendor shipping a product. The operator knows the service's configuration and deployment, which a vendor cannot see.</p>
-  <p>A profile can therefore ask more of the operator than of a vendor. That is why this use case sits in this group. The operator can report the lifecycle stage <code>configured</code> or <code>observed</code>. It can also state facts that the product profiles leave out because they depend on the deployment. <strong>Proposed.</strong> So far only the consumer and the decision are named.</p>
+  <p>The producer is the operator of the service, so the use case shares this group's premise. Its description is in the <a href="disclosure.html#managed-service">Disclosure</a> group, where the register lists it. <strong>Proposed.</strong></p>
 
   <h3 id="stored-data">Stored data and archive protection</h3>
-  <p>A data owner decides which stores and archives to re-encrypt or re-wrap, and in what order. The order follows from how long the data has to stay confidential, set against the key establishment and key wrapping that protect it today. This is where harvest-now-decrypt-later exposure is most direct.</p>
-  <p>The producer is the operator, not a vendor, because only the operator knows what a store holds and for how long. The use case depends on how data is modelled alongside cryptography. That is still an open design note. <strong>Proposed.</strong></p>
+  <p>Only the operator knows what a store holds and for how long, so the use case shares this group's premise. Its description is in the <a href="change-planning.html#stored-data">Change planning</a> group, where the register lists it. <strong>Proposed.</strong></p>
 
   <h3 id="hndl-exposure">Harvest-now-decrypt-later exposure</h3>
   <p>A security function decides which of its systems are exposed to traffic recorded today and decrypted later, and which to migrate first on that ground. Exposure depends on two facts a supplier cannot state: what data crosses an interface, and how long that data has to stay confidential. Combined with the key establishment the interface uses today, these two facts give the window during which recorded traffic remains worth decrypting.</p>
-  <p>Some of these facts are known to the supplier, however. Credentials on a management interface and key material on a key-management interface follow from the interface's design, and they often have the longest lifetimes. Q36 asks where the supplier's facts end and the operator's begin. <strong>Proposed.</strong> Depends on Q36, Q37 and Q45.</p>
+  <p>Some of these facts are known to the supplier, however. Credentials on a management interface and key material on a key-management interface follow from the interface's design, and they often have the longest lifetimes. Q36 asks where the supplier's facts end and the operator's begin. The deployment profile already gives the operator's half a place: rule R3 points to the operator's data register. <strong>Proposed.</strong> Depends on Q36, Q37 and Q45.</p>
 
   <h3 id="migration-progress">Migration progress over time</h3>
   <p>A migration programme lead, or a regulator receiving its reports, decides whether a migration is on track: how much has moved since the last report, how much remains, and why the numbers changed. The facts needed are two operator documents about the same estate at different dates, and the reason for each difference between them: an interface migrated, a product replaced, an instance retired, or an earlier finding that turned out to be a false positive.</p>
@@ -68,7 +97,7 @@ nav: uc-operation
 
   <h3 id="migration-register">The operator's migration register</h3>
   <p>An operator records, for each finding in its estate, the decision it took: the response, who owns it, the target date and the status. These are judgements and plans. Decisions 0002 and 0007 keep them out of a supplier's CBOM, because a supplier document records facts about a product and a date there is a promise the supplier may not control.</p>
-  <p>They belong in the operator's own document about its own estate. Documents of that kind are what this group covers. CycloneDX 2.0 gives them a native home in its root <code>risks</code> list, with an owner, a response strategy, a target date and a status for each risk. <strong>Proposed.</strong></p>
+  <p>They belong in the operator's own document about its own estate. Documents of that kind are what this group covers. CycloneDX 2.0 gives them a native home in its root <code>risks</code> list, with an owner, a response strategy, a target date and a status for each risk. The validator ignores <code>risks</code> for conformance, and a supplier's product record should not carry them. <strong>Proposed.</strong></p>
 
   <div class="pagenav">
     <a href="substation.html">← Substation Automation (OT)</a>

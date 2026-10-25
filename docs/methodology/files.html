@@ -24,88 +24,218 @@ nav: files
 <main>
   <div class="crumb">REFERENCE</div>
   <h1>Files and how to run them</h1>
-  <p class="lead">The machine-readable files that make up the example: the profile rules file, the example CBOMs and the validator. The commands below reproduce every conformance result shown in this documentation.</p>
+  <p class="lead">The machine-readable files that make up the example: six PKIC CBOM profiles, four schemas, sixteen example CBOMs built on Keycloak 26.7.3, two policies with three results, six perspectives and five tools. The commands reproduce every conformance result and policy result shown in the methodology. Every choice they embody is recorded in <a href="https://github.com/pkic/cbom/blob/main/decisions/0025-baseline-consolidation.md">decision 0025</a>.</p>
 
-  <h2>Artifacts</h2>
+  <h2>Profiles</h2>
   <table>
     <thead><tr><th>File</th><th>Description</th></tr></thead>
     <tbody>
-      <tr><td><a href="profile-interface-enumeration.rules.json">profile-interface-enumeration.rules.json</a></td><td>The entry profile of the interface family: the shallowest set of rules that still produces a usable inventory record. See <a href="maturity.html">Maturity</a></td></tr>
-      <tr><td><a href="profile-interface-disclosure.md">profile-interface-disclosure.md</a></td><td>Prose profile specification (product-level and per-interface rules)</td></tr>
-      <tr><td><a href="profile-interface-disclosure.rules.json">profile-interface-disclosure.rules.json</a></td><td>Machine-readable rules, including the <code>appliesTo</code> version range</td></tr>
-      <tr><td><a href="profile.schema.json">profile.schema.json</a></td><td>The schema for a rules file. A third party can use it to validate a profile without our checker. The schema does not replace requirements C1 to C17. A schema can check that <code>objective</code> has a <code>decision</code> string, but not whether the decision is one a consumer could act on</td></tr>
-      <tr><td><a href="claim.schema.json">claim.schema.json</a></td><td>The schema for a conformance claim. It includes the two consistency rules that a schema can enforce: a refused entry carries no rule results, and an entry that claims conformance may not list a failed MUST rule</td></tr>
-      <tr><td><a href="claim-example.json">claim-example.json</a></td><td>A worked example of a claim that covers both example profiles at once, bound to <code>cbom-pqc-pass</code> by digest</td></tr>
-      <tr><td><a href="mapping-cyclonedx-spdx.md">mapping-cyclonedx-spdx.md</a></td><td>Complete requirement-to-format mapping</td></tr>
-      <tr><td><a href="cbom-pass.cyclonedx.json">cbom-pass.cyclonedx.json</a></td><td>Conforming example CBOM (CycloneDX 1.7)</td></tr>
-      <tr><td><a href="cbom-fail.cyclonedx.json">cbom-fail.cyclonedx.json</a></td><td>Non-conforming example. It omits the management interface</td></tr>
-      <tr><td><a href="cbom-disclosure.cyclonedx.json">cbom-disclosure.cyclonedx.json</a></td><td>Non-conforming example exercising all four disclosure outcomes on one interface: a withheld library (permitted), an encryption algorithm declared unknown, an undeclared authentication algorithm, and a key exchange disclosed normally</td></tr>
-      <tr><td><a href="cbom-noadmin.cyclonedx.json">cbom-noadmin.cyclonedx.json</a></td><td>Conforming example with no management interface at all: a library with no configuration surface, It satisfies product rule P2 by stating that there is no management interface, rather than by declaring one</td></tr>
-      <tr><td><a href="cbom-entry-fail.cyclonedx.json">cbom-entry-fail.cyclonedx.json</a></td><td>Roughly what a scanner produces when it is not working to any profile. It is valid CycloneDX, but it falls below even the entry profile. It identifies no subject, states no completeness, classifies no interface and says nothing about where the reading came from</td></tr>
-      <tr><td><a href="profile-pqc-migration.rules.json">profile-pqc-migration.rules.json</a></td><td>The PQC migration profile, derived from the baseline via <code>extends</code></td></tr>
-      <tr><td><a href="cbom-pqc-pass.cyclonedx.json">cbom-pqc-pass.cyclonedx.json</a></td><td>Conforming example for the migration profile; three interfaces at different readiness stages</td></tr>
-      <tr><td><a href="cbom-pqc-fail.cyclonedx.json">cbom-pqc-fail.cyclonedx.json</a></td><td>Non-conforming example that exercises both conditional rules and the tightening of an inherited rule</td></tr>
-      <tr><td><a href="validate_cbom.py">validate_cbom.py</a></td><td>Version-aware validator with profile composition. Checks a document against a profile</td></tr>
-      <tr><td><a href="check_profile.py">check_profile.py</a></td><td>Well-formedness checker. Checks a profile against requirements C1 to C17 of <a href="conformance.html">Conformance</a></td></tr>
-      <tr><td><a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a></td><td>Treatment of older CBOM files</td></tr>
+      <tr><td><a href="profile-interface-enumeration.rules.json">profile-interface-enumeration.rules.json</a></td><td>Entry depth, v0.3. The shallowest set of rules that still produces a usable inventory record. Accepts products and deployments at every stage, including <code>intended</code>. See <a href="maturity.html">Maturity</a></td></tr>
+      <tr><td><a href="profile-interface-disclosure.rules.json">profile-interface-disclosure.rules.json</a></td><td>The baseline, v0.9. Document-level rules P1 to P6, per-interface rules I1 to I11 and reference rules R1 to R6. Accepts products and deployments at <code>implemented</code>, <code>configured</code> and <code>observed</code></td></tr>
+      <tr><td><a href="profile-deployment-disclosure.rules.json">profile-deployment-disclosure.rules.json</a></td><td>Deployment records, v0.1, extending the baseline. Cited documents by BOM-Link and SHA-256, <code>correspondsTo</code>, observation method and window, and four context pointers</td></tr>
+      <tr><td><a href="profile-pqc-migration.rules.json">profile-pqc-migration.rules.json</a></td><td>PQC migration, v0.8, extending the baseline. Capability attributes I1 to I12, capability per purpose (G1) and the support-lifecycle pointer. Products at <code>implemented</code></td></tr>
+      <tr><td><a href="profile-pqc-migration-extended.rules.json">profile-pqc-migration-extended.rules.json</a></td><td>PQC migration, extended depth, v0.1, extending pqc-migration. Key management and storage (decision 0022)</td></tr>
+      <tr><td><a href="profile-procurement.rules.json">profile-procurement.rules.json</a></td><td>Procurement, v0.1, extending the baseline. A storage interface or a stated reason for none, coverage <code>all</code> or <code>all-external</code>, and an implementing library that may not be withheld</td></tr>
+    </tbody>
+  </table>
+  <p>Every profile declares the carrier range <code>min 1.6</code>, <code>tested 2.0</code>. See <a href="versioning.html">Versioning</a>.</p>
+
+  <h2>Schemas</h2>
+  <table>
+    <thead><tr><th>File</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><a href="profile.schema.json">profile.schema.json</a></td><td>The schema for a rules file. A third party can use it to validate a profile without our checker. It does not replace requirements C1 to C18: a schema can check that <code>objective</code> has a <code>decision</code> string, but not whether the decision is one a consumer could act on</td></tr>
+      <tr><td><a href="claim.schema.json">claim.schema.json</a></td><td>The schema for a conformance claim. It enforces two consistency rules: a refused entry carries no rule results, and an entry that claims conformance may not list a failed MUST rule</td></tr>
+      <tr><td><a href="policy.schema.json">policy.schema.json</a></td><td>The schema for a policy: versioned data plus a named evaluation method</td></tr>
+      <tr><td><a href="policy-result.schema.json">policy-result.schema.json</a></td><td>The schema for a policy result. A result names the policy id, version and digest, the evaluation date, every CBOM it read by SHA-256 digest, and what it does not assert</td></tr>
     </tbody>
   </table>
 
-  <h2>Running the validator</h2>
-  <pre><code># conforms (CycloneDX 1.7)
-python validate_cbom.py cbom-pass.cyclonedx.json profile-interface-disclosure.rules.json
+  <h2>Example CBOMs</h2>
+  <p>All examples describe Keycloak 26.7.3. The product records describe the container image as the vendor builds it. The deployment records describe an illustrative operator, Example Org, running <code>sso.example.org</code>, where TLS ends at an nginx ingress using OpenSSL 3.5 and Keycloak runs with its HTTP listener enabled behind it. Every file is CycloneDX 2.0, except the two under <code>examples/legacy/</code>, which are CycloneDX 1.7.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>File</th><th>What it shows</th><th>Expected verdict</th></tr></thead>
+    <tbody>
+      <tr><td><a href="examples/cbom-keycloak-product.cdx.json">cbom-keycloak-product.cdx.json</a></td><td>The vendor's build record of the container image, with 13 cryptographic interfaces</td><td class="pass">Conforms to enumeration, baseline, pqc-migration, pqc-migration-extended and procurement</td></tr>
+      <tr><td><a href="examples/legacy/cbom-keycloak-product-1.7.cdx.json">legacy/cbom-keycloak-product-1.7.cdx.json</a></td><td>The same facts in CycloneDX 1.7</td><td class="pass">The same verdicts, flagged legacy</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-product-fail-R5.cdx.json">cbom-keycloak-product-fail-R5.cdx.json</a></td><td>The HTTPS listener states <code>deployment-defined</code> without a pointer to the configuration guide</td><td class="fail">Fails baseline R5 only</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-product-fail-P2.cdx.json">cbom-keycloak-product-fail-P2.cdx.json</a></td><td>The management interfaces are left out, with no reason given</td><td class="fail">Fails baseline P2; conforms to entry</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-product-disclosure-states.cdx.json">cbom-keycloak-product-disclosure-states.cdx.json</a></td><td>The four disclosure outcomes, spread across three interfaces: the OIDC library withheld, the cluster authentication unknown and the SAML encryption undeclared</td><td class="fail">Fails I5 (unknown) and I4 (undeclared); the withheld library is permitted; conforms to entry</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-product-fail-pqc-I12.cdx.json">cbom-keycloak-product-fail-pqc-I12.cdx.json</a></td><td>The storage interface's key-wrapping capability is missing</td><td class="fail">Fails pqc-migration I12 only</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-product-fail-ext-I3.cdx.json">cbom-keycloak-product-fail-ext-I3.cdx.json</a></td><td>The key types the Admin API can generate are missing</td><td class="fail">Fails extended I3 only</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-product-fail-procurement-P5.cdx.json">cbom-keycloak-product-fail-procurement-P5.cdx.json</a></td><td>The storage interface is missing</td><td class="fail">Fails procurement P5 only</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-product-intended.cdx.json">cbom-keycloak-product-intended.cdx.json</a></td><td>A design record for Keycloak 27.0 with ML-DSA-65</td><td class="fail">Fails baseline I8 on every interface, and I3 to I5 where it repeats build-time literals; conforms to entry</td></tr>
+      <tr><td><a href="examples/legacy/cbom-keycloak-scanner-output.cdx.json">legacy/cbom-keycloak-scanner-output.cdx.json</a></td><td>Untargeted scanner output in CycloneDX 1.7</td><td class="fail">Fails entry P1, P3, P4, P5 and P6</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-deployment-configured.cdx.json">cbom-keycloak-deployment-configured.cdx.json</a></td><td>Example Org's configured record. It cites the product record</td><td class="pass">Conforms to the deployment profile</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-deployment-configured-fail-literal.cdx.json">cbom-keycloak-deployment-configured-fail-literal.cdx.json</a></td><td><code>peer-defined</code> kept at <code>configured</code></td><td class="fail">Fails I3, I4 and I5 on the database connection</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-deployment-observed.cdx.json">cbom-keycloak-deployment-observed.cdx.json</a></td><td>The deployment observed from 18 to 25 October 2026, with an observation method per interface. It cites the configured record and the product record</td><td class="pass">Conforms to the deployment profile</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-deployment-observed-fail-unknown.cdx.json">cbom-keycloak-deployment-observed-fail-unknown.cdx.json</a></td><td>The database group is <code>unknown</code>, because the observer had only <code>pg_stat_ssl</code></td><td class="fail">Fails baseline I3; conforms to entry. A record with gaps lands one depth down</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-deployment-observed-fail-P1.cdx.json">cbom-keycloak-deployment-observed-fail-P1.cdx.json</a></td><td>The configured record it cites has changed since</td><td class="fail">Fails deployment P1 (hash mismatch) when the configured record is supplied</td></tr>
+      <tr><td><a href="examples/cbom-keycloak-deployment-observed-outside.cdx.json">cbom-keycloak-deployment-observed-outside.cdx.json</a></td><td>An outside assessor's observation. The management port was not reached</td><td class="fail">P2 passes through <code>not-reached</code>; fails I9 on the ingress, whose library is not visible; conforms to entry</td></tr>
+    </tbody>
+  </table>
+  </div>
 
-# does not conform; fails product rule P2 (no management interface)
-python validate_cbom.py cbom-fail.cyclonedx.json profile-interface-disclosure.rules.json
+  <h2>Policies and results</h2>
+  <table>
+    <thead><tr><th>File</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><a href="policies/policy-readiness-gap.policy.json">policies/policy-readiness-gap.policy.json</a></td><td>Example policy, method <code>readiness-gap</code>. Joins a product record, a configured record and an observed record, and places each interface and purpose in one gap class</td></tr>
+      <tr><td><a href="policies/policy-algorithm-transition.policy.json">policies/policy-algorithm-transition.policy.json</a></td><td>Example policy, method <code>algorithm-transition</code>. Classifies each disclosed algorithm against the schedule in the NIST IR 8547 initial public draft (November 2024, not final as of October 2026)</td></tr>
+      <tr><td><a href="examples/results/result-readiness-gap-sso-prod.json">examples/results/result-readiness-gap-sso-prod.json</a></td><td>The readiness gap for <code>sso.example.org</code>, evaluated on 2026-10-25 from the product, configured and observed records. Ingress key establishment is <code>enabled-not-negotiated</code>; the plaintext proxy hop and the management port are <code>unprotected</code>; token signing and Keycloak's own TLS are <code>not-capable</code>; the product HTTPS listener is <code>not-deployed</code></td></tr>
+      <tr><td><a href="examples/results/result-algorithm-transition-keycloak-product.json">examples/results/result-algorithm-transition-keycloak-product.json</a></td><td>The algorithm-transition policy applied to the product record on 2026-10-25</td></tr>
+      <tr><td><a href="examples/results/result-algorithm-transition-sso-prod-observed.json">examples/results/result-algorithm-transition-sso-prod-observed.json</a></td><td>The algorithm-transition policy applied to the observed deployment record on 2026-10-25</td></tr>
+    </tbody>
+  </table>
+  <p>See <a href="policy-evaluation.html">Policy Evaluation</a>.</p>
+
+  <h2>Perspectives</h2>
+  <p>Each profile has one CycloneDX 2.0 perspective in <code>perspectives/</code>: <a href="perspectives/perspective-interface-enumeration.cdx.json">interface-enumeration</a>, <a href="perspectives/perspective-interface-disclosure.cdx.json">interface-disclosure</a>, <a href="perspectives/perspective-deployment-disclosure.cdx.json">deployment-disclosure</a>, <a href="perspectives/perspective-pqc-migration.cdx.json">pqc-migration</a>, <a href="perspectives/perspective-pqc-migration-extended.cdx.json">pqc-migration-extended</a> and <a href="perspectives/perspective-procurement.cdx.json">procurement</a>. A perspective lists the JSONPath expressions a generic 2.0 tool can check for presence. It is generated from the rules file and is informative only. The rules file is normative. See <a href="formats.html">Formats</a>.</p>
+
+  <h2>Tools</h2>
+  <table>
+    <thead><tr><th>File</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><a href="validate_cbom.py">validate_cbom.py</a></td><td>Validates a CBOM against a profile. Reads CycloneDX 2.0 and 1.x, resolves profile composition, follows joins to cited documents given with <code>--with</code>, and issues and verifies conformance claims. Exit 0 conforms, 1 does not conform, 2 usage error, 3 profile error, 4 refused, 5 claim mismatch</td></tr>
+      <tr><td><a href="check_profile.py">check_profile.py</a></td><td>Checks a profile against requirements C1 to C18 of <a href="conformance.html">Conformance</a>. C18 requires every reference rule to name a defined context kind carried by real CycloneDX reference types</td></tr>
+      <tr><td><a href="evaluate_policy.py">evaluate_policy.py</a></td><td>Evaluates CBOMs against a policy at a stated date and writes a policy result</td></tr>
+      <tr><td><a href="compare_stages.py">compare_stages.py</a></td><td>Lays the product, configured and observed records side by side, one row per interface, by following <code>correspondsTo</code>. It makes no judgement</td></tr>
+      <tr><td><a href="cdx17_to_20.py">cdx17_to_20.py</a></td><td>Converts a CycloneDX 1.6 or 1.7 CBOM to CycloneDX 2.0. Its docstring lists every conversion</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Other files</h2>
+  <table>
+    <thead><tr><th>File</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><a href="claim-example.json">claim-example.json</a></td><td>A conformance claim for the Keycloak product record, bound to it by SHA-256 digest. It covers the baseline v0.9, pqc-migration v0.8 and pqc-migration-extended v0.1, each with its whole chain</td></tr>
+      <tr><td><a href="demo-reports.json">demo-reports.json</a></td><td>The reports the <a href="demo.html">Demo</a> page renders. Generated by the validator; do not edit</td></tr>
+      <tr><td><a href="profile-interface-disclosure.md">profile-interface-disclosure.md</a></td><td>Prose specification of the baseline</td></tr>
+      <tr><td><a href="mapping-cyclonedx-spdx.md">mapping-cyclonedx-spdx.md</a></td><td>The full mapping of every rule and attribute to CycloneDX 2.0, CycloneDX 1.6/1.7 (legacy) and SPDX 3.0.1</td></tr>
+      <tr><td><a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a></td><td>Treatment of older CBOM files: the carrier range, legacy reading, conversion and re-pinning</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Files in the repository</h2>
+  <p>Some files are not published with the site, because they build or check what is published.</p>
+  <ul>
+    <li><code>tools/build_keycloak_examples.py</code> writes every example CBOM. It builds each document in CycloneDX 1.7 form from <code>tools/keycloak/source-product-1.7.json</code> and converts it with <code>cdx17_to_20.py</code>. It writes a cited document before the document that cites it, so every citation carries the right hash.</li>
+    <li><code>tools/build_perspectives.py</code> writes the six perspectives from the rules files.</li>
+    <li><code>tools/build_demo_reports.py</code> writes <code>demo-reports.json</code> with the validator.</li>
+    <li><code>tests/schemas/cyclonedx-2.0/</code> holds the CycloneDX 2.0 schema pinned to <code>CycloneDX/specification</code> branch <code>2.0-dev</code>, commit <code>76f185c</code> (23 October 2026).</li>
+    <li><code>tests/run-profile-tests.sh</code> runs the test suite. It checks every example's verdicts, validates the examples and perspectives against their CycloneDX schema, and checks that the demonstration matches the validator. See <code>tests/README.md</code>.</li>
+  </ul>
+
+  <h2>Running the validator</h2>
+  <p>Run the commands from <code>docs/methodology/</code>.</p>
+  <pre><code># conforms to the baseline (CycloneDX 2.0)
+python3 validate_cbom.py examples/cbom-keycloak-product.cdx.json profile-interface-disclosure.rules.json
+
+# does not conform; fails P2 (no management interface, and no reason given)
+python3 validate_cbom.py examples/cbom-keycloak-product-fail-P2.cdx.json profile-interface-disclosure.rules.json
 
 # the same document at the family's entry depth, which does not require a
 # management interface: conforms. See Maturity.
-python validate_cbom.py cbom-fail.cyclonedx.json profile-interface-enumeration.rules.json
+python3 validate_cbom.py examples/cbom-keycloak-product-fail-P2.cdx.json profile-interface-enumeration.rules.json
 
 # JSON output, for integration into a continuous-integration gate
-python validate_cbom.py cbom-pass.cyclonedx.json profile-interface-disclosure.rules.json --json</code></pre>
+python3 validate_cbom.py examples/cbom-keycloak-product.cdx.json profile-interface-disclosure.rules.json --json</code></pre>
+
+  <h2>Deployment records and joins</h2>
+  <p>A deployment record cites the records it builds on. Give the validator the cited records with <code>--with</code>, and it checks each citation's serial number, version and hash, and follows <code>correspondsTo</code> to inherit the implementing library.</p>
+  <pre><code># the configured record, with the product record it cites: conforms
+python3 validate_cbom.py examples/cbom-keycloak-deployment-configured.cdx.json profile-deployment-disclosure.rules.json \
+    --with examples/cbom-keycloak-product.cdx.json
+
+# the observed record, with both records it cites: conforms
+python3 validate_cbom.py examples/cbom-keycloak-deployment-observed.cdx.json profile-deployment-disclosure.rules.json \
+    --with examples/cbom-keycloak-product.cdx.json --with examples/cbom-keycloak-deployment-configured.cdx.json
+
+# the cited configured record has changed: fails deployment-disclosure#P1
+python3 validate_cbom.py examples/cbom-keycloak-deployment-observed-fail-P1.cdx.json profile-deployment-disclosure.rules.json \
+    --with examples/cbom-keycloak-product.cdx.json --with examples/cbom-keycloak-deployment-configured.cdx.json</code></pre>
+  <p>Without <code>--with</code>, the validator checks each citation for form only. It reports an inherited value as unresolved, not failed. <code>cbom-keycloak-deployment-observed-fail-P1.cdx.json</code> therefore conforms when the configured record is not supplied, because the evaluator cannot see that the record has changed.</p>
 
   <h2>Reproducing the version bands</h2>
-  <pre><code># four bands need four inputs: 1.7 is the tested version, and these are the rest
-python - &lt;&lt;'PY'
+  <pre><code># four bands need four inputs: the 2.0 example, the 1.7 legacy example, and two copies
+python3 - &lt;&lt;'PY'
 import json
-b = json.load(open("cbom-pass.cyclonedx.json"))
-for v in ("1.8", "1.6", "1.5"):
-    b["specVersion"] = v
-    json.dump(b, open(f"cbom-{v}.json", "w"))
+b = json.load(open("examples/cbom-keycloak-product.cdx.json"))
+b["specVersion"] = "2.1"
+json.dump(b, open("cbom-2.1.json", "w"))
+b = json.load(open("examples/legacy/cbom-keycloak-product-1.7.cdx.json"))
+b["specVersion"] = "1.5"
+json.dump(b, open("cbom-1.5.json", "w"))
 PY
-python validate_cbom.py cbom-pass.cyclonedx.json profile-interface-disclosure.rules.json  # target:  exit 0
-python validate_cbom.py cbom-1.8.json profile-interface-disclosure.rules.json   # newer:   accepted, review advised, exit 0
-python validate_cbom.py cbom-1.6.json profile-interface-disclosure.rules.json   # legacy:  accepted with a warning,  exit 0
-python validate_cbom.py cbom-1.5.json profile-interface-disclosure.rules.json   # refused: not assessed,            exit 4</code></pre>
+python3 validate_cbom.py examples/cbom-keycloak-product.cdx.json profile-interface-disclosure.rules.json              # target:  exit 0
+python3 validate_cbom.py examples/legacy/cbom-keycloak-product-1.7.cdx.json profile-interface-disclosure.rules.json   # legacy:  accepted with a warning,  exit 0
+python3 validate_cbom.py cbom-2.1.json profile-interface-disclosure.rules.json   # newer:   accepted, review advised, exit 0
+python3 validate_cbom.py cbom-1.5.json profile-interface-disclosure.rules.json   # refused: not assessed,            exit 4</code></pre>
   <p>The last of these commands is the most useful one to run. A refusal is not a failure. The document was never assessed, so the validator exits with 4 rather than 1 and reports no rule results for it. A pipeline that treats any non-zero exit code as a rejection will penalise a supplier for the age of its carrier format. The distinct exit code exists to prevent that.</p>
 
-  <h2>The derived profile</h2>
-  <p>The PQC migration profile extends the baseline, so evaluating against it also evaluates every baseline rule. The validator resolves the base, applies the overrides, and rejects any override that would relax an inherited rule.</p>
-  <pre><code># conforms
-python validate_cbom.py cbom-pqc-pass.cyclonedx.json profile-pqc-migration.rules.json
+  <h2>The derived profiles</h2>
+  <p>pqc-migration, pqc-migration-extended and procurement extend the baseline, directly or through pqc-migration, so evaluating against one of them also evaluates every baseline rule. The validator resolves the base, applies the overrides, and rejects any override that would relax an inherited rule.</p>
+  <pre><code># the product record conforms to all three
+python3 validate_cbom.py examples/cbom-keycloak-product.cdx.json profile-pqc-migration.rules.json
+python3 validate_cbom.py examples/cbom-keycloak-product.cdx.json profile-pqc-migration-extended.rules.json
+python3 validate_cbom.py examples/cbom-keycloak-product.cdx.json profile-procurement.rules.json
 
-# does not conform: five failures, of three kinds
-python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-pqc-migration.rules.json</code></pre>
-  <p>Read the failing document alongside its verdict. Two failures come from conditional rules. In the first, an interface claims enablement by software update without naming the version (<code>pqc-migration#I5</code>). In the second, an interface declares a capability committed for key establishment without saying what blocks it (<code>pqc-migration#G1.2</code>). Two more failures come from the group rule. One is a purpose that the profile takes in scope but that has no entry at all. The other is a purpose that the profile defers, which also has no entry. A deferred purpose still requires a status. The last failure comes from the extension itself. The document's interconnect interface withholds <code>implementationPurl</code>, which the baseline permits. Evaluated against the baseline alone, the document conforms. It fails here only because the derived profile no longer allows that rule to be satisfied by withholding the value.</p>
-  <pre><code># the same document against the base profile, which permits the withheld value
-python validate_cbom.py cbom-pqc-fail.cyclonedx.json profile-interface-disclosure.rules.json</code></pre>
+# each failing example fails one rule of one depth
+python3 validate_cbom.py examples/cbom-keycloak-product-fail-pqc-I12.cdx.json profile-pqc-migration.rules.json            # pqc-migration#I12
+python3 validate_cbom.py examples/cbom-keycloak-product-fail-ext-I3.cdx.json profile-pqc-migration-extended.rules.json    # pqc-migration-extended#I3
+python3 validate_cbom.py examples/cbom-keycloak-product-fail-procurement-P5.cdx.json profile-procurement.rules.json      # procurement#P5</code></pre>
+
+  <h2>Conformance claims</h2>
+  <pre><code># issue a claim for several profiles at once, bound to the document by digest
+python3 validate_cbom.py examples/cbom-keycloak-product.cdx.json \
+    profile-interface-disclosure.rules.json profile-pqc-migration.rules.json profile-pqc-migration-extended.rules.json --claim
+
+# re-check a claim against the document and the profiles it names: exit 0, or 5 on a mismatch
+python3 validate_cbom.py examples/cbom-keycloak-product.cdx.json claim-example.json --verify-claim</code></pre>
 
   <h2>Checking a profile</h2>
-  <p>A profile can itself be checked, against requirements C1 to C17 of <a href="conformance.html">Conformance</a>. C1 to C7 and C11 to C17 are MUST requirements and determine the result. C8 to C10 are reported as warnings unless <code>--strict</code> is given.</p>
-  <pre><code># all three example profiles are well-formed
-python check_profile.py profile-interface-enumeration.rules.json
-python check_profile.py profile-interface-disclosure.rules.json
-python check_profile.py profile-pqc-migration.rules.json
+  <p>A profile can itself be checked, against requirements C1 to C18 of <a href="conformance.html">Conformance</a>. C1 to C7 and C11 to C18 are MUST requirements and determine the result. C8 to C10 are reported as warnings unless <code>--strict</code> is given.</p>
+  <pre><code># all six profiles are well-formed
+for p in profile-*.rules.json; do python3 check_profile.py "$p"; done
 
 # require the SHOULD material as well: exclusions, companion artifacts, changelog
-python check_profile.py profile-interface-disclosure.rules.json --strict
+python3 check_profile.py profile-interface-disclosure.rules.json --strict
 
 # machine-readable findings
-python check_profile.py profile-pqc-migration.rules.json --json</code></pre>
+python3 check_profile.py profile-pqc-migration.rules.json --json</code></pre>
   <p>The test suite carries one deliberately defective profile per MUST requirement, so that each check is itself tested. See <code>tests/fixtures/</code> and <code>tests/README.md</code> in the repository.</p>
 
-  <div class="banner">The <a href="demo.html">Demo</a> section performs the same evaluation in the browser for the baseline profile, over the four baseline documents above. It reads the rules file rather than a copy of it, and <code>tests/check-demo.py</code> requires its results to match this validator's, rule by rule, on all four. Standards, regulation and specifications cited across this documentation are listed in the <a href="../references/">reference register</a>.</div>
+  <h2>Policies and stages</h2>
+  <pre><code># the readiness gap for sso.example.org, at the fixed evaluation date
+python3 evaluate_policy.py policies/policy-readiness-gap.policy.json \
+    examples/cbom-keycloak-product.cdx.json examples/cbom-keycloak-deployment-configured.cdx.json \
+    examples/cbom-keycloak-deployment-observed.cdx.json --date 2026-10-25 --out result.json
+
+# the algorithm-transition policy applied to the product record
+python3 evaluate_policy.py policies/policy-algorithm-transition.policy.json \
+    examples/cbom-keycloak-product.cdx.json --date 2026-10-25 --out result.json
+
+# what each stage reports for each interface, side by side
+python3 compare_stages.py examples/cbom-keycloak-product.cdx.json \
+    examples/cbom-keycloak-deployment-configured.cdx.json examples/cbom-keycloak-deployment-observed.cdx.json
+
+# convert a CycloneDX 1.7 CBOM to 2.0
+python3 cdx17_to_20.py examples/legacy/cbom-keycloak-product-1.7.cdx.json converted-2.0.json</code></pre>
+  <p>A policy result points to the CBOMs it read, by digest. A CBOM never points to a result.</p>
+
+  <h2>Sources for the Keycloak facts</h2>
+  <p>The example CBOMs cite these sources for the product facts:</p>
+  <ul>
+    <li>Keycloak, Configuring TLS: <a href="https://www.keycloak.org/server/enabletls">https://www.keycloak.org/server/enabletls</a> (the operator-supplied server certificate)</li>
+    <li>Keycloak, Configuring the management interface: <a href="https://www.keycloak.org/server/management-interface">https://www.keycloak.org/server/management-interface</a> (port 9000, health and metrics)</li>
+    <li>Keycloak issue #39933, realm key material stored in plaintext: <a href="https://github.com/keycloak/keycloak/issues/39933">https://github.com/keycloak/keycloak/issues/39933</a></li>
+    <li>Keycloak issue #43690, ML-DSA token signing: <a href="https://github.com/keycloak/keycloak/issues/43690">https://github.com/keycloak/keycloak/issues/43690</a></li>
+    <li>JEP 527, the Java runtime change that post-quantum key exchange in Keycloak's own TLS waits on: <a href="https://openjdk.org/jeps/527">https://openjdk.org/jeps/527</a></li>
+    <li>Keycloak security advisories and security policy: <a href="https://github.com/keycloak/keycloak/security/advisories">https://github.com/keycloak/keycloak/security/advisories</a>, <a href="https://github.com/keycloak/keycloak/security/policy">https://github.com/keycloak/keycloak/security/policy</a></li>
+  </ul>
+
+  <div class="banner">The <a href="demo.html">Demo</a> page renders <code>demo-reports.json</code> and evaluates nothing itself. <code>tools/build_demo_reports.py</code> generates the reports with <code>validate_cbom.py</code>, and <code>tests/check-demo.py</code> fails if the committed file differs from a fresh run (decision 0018). Standards, regulation and specifications cited across the methodology are listed in the <a href="../references/">reference register</a>.</div>
 
   <div class="pagenav">
     <a href="related-work.html">← Related Work</a>

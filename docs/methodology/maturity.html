@@ -34,13 +34,13 @@ nav: maturity
   <h2>Why these are not called maturity levels</h2>
   <p>This documentation already uses "maturity level" for something that a profile deliberately is not. <a href="related-work.html">Related Work</a> describes how this methodology relates to the consortium's <a href="https://pkic.org/wg/pqc/pqcmm/">PQC Maturity Model</a> (PQCMM). Both have the same subject: a product assessed from the outside. A PQCMM level is a <em>judgement</em>. An external, versioned policy derives it from the facts that a document discloses. <a href="policy-evaluation.html">Policy Evaluation</a> states that such judgements are computed at the time of evaluation and are not recorded as attributes. The reason is that the criteria change over time while the product stays the same.</p>
   <p>A profile is the other half of that arrangement. It defines the facts that the judgement reads. If both were called "maturity level", the documentation would use the phrase with two meanings, and profiles exclude one of those meanings, the judgement, on principle. This project has already had to resolve one clash of terminology. It is cheaper to settle the term now, before anyone cites the numbering.</p>
-  <p>The normative term is <strong>depth</strong>. A family of profiles is ordered by depth, and its shallowest member is the <strong>entry profile</strong>. The page keeps "Maturity" in its title because that is the word readers look for. The obvious alternative words already have other meanings in this documentation:</p>
+  <p>The normative term is <strong>depth</strong>. A family of profiles is ordered by depth, and its shallowest member is the <strong>entry profile</strong>. "Maturity" stays in the title because that is the word readers look for. The obvious alternative words already have other meanings in this documentation:</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Word</th><th>Already means</th></tr></thead>
     <tbody>
       <tr><td><code>level</code></td><td>How binding one rule is: MUST, SHOULD or MAY. It is a field in every rules file.</td></tr>
-      <tr><td><code>stage</code></td><td><code>lifecycleStage</code>: where the reported fact came from — intended, implemented, configured or observed.</td></tr>
+      <tr><td><code>stage</code></td><td><code>lifecycleStage</code>: where the facts in a document came from — intended, implemented, configured or observed. A document has one stage.</td></tr>
       <tr><td><code>band</code></td><td>The ranges of carrier (document format) versions that a profile accepts, described in <a href="versioning.html">Versioning</a>: target, legacy, newer, refused.</td></tr>
       <tr><td>tier</td><td>Position in a supply chain, and a pattern of profile ownership in <a href="governance.html">Governance</a>.</td></tr>
       <tr><td>maturity level</td><td>A judgement derived from disclosed facts by external policy, which a profile is not.</td></tr>
@@ -49,39 +49,66 @@ nav: maturity
   </div>
 
   <h2>The family as it stands</h2>
-  <p>The family currently has two profiles at different depths and one branch. A branch is a derived profile that serves a different decision, as explained in the next section. One test document conforms to the shallower profile but not to the deeper one.</p>
+  <p>The interface family has two profiles at different depths: Interface Enumeration v0.3 and the Interface Disclosure Baseline v0.9. Three branches extend the baseline. A branch is a derived profile that serves a different decision, as explained in the next section. The PQC migration branch has a depth of its own. Several test documents conform to the shallower interface profile but not to the deeper one.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Profile</th><th>Asks for</th><th>Rules</th><th>Position</th></tr></thead>
     <tbody>
       <tr>
-        <td><a href="profile-interface-enumeration.rules.json">Interface Enumeration</a> v0.1</td>
-        <td>What the product is, which interfaces it exposes, what each speaks and at which version, how the report was taken, and whether the list is the whole list.</td>
-        <td>P1, P3, P4, I1, I2, I7, I8</td>
-        <td>The entry profile. No profile in the family is shallower.</td>
+        <td><a href="profile-interface-enumeration.rules.json">Interface Enumeration</a> v0.3</td>
+        <td>What the subject is and whether it is a product or a deployment, which interfaces it exposes, what each speaks and at which version, which stage the report describes, and whether the list is the whole list.</td>
+        <td>P1, P3, P4, P5, P6, I1, I2, I7, I8</td>
+        <td>The entry profile. No profile in the family is shallower. It accepts all four stages, including <code>intended</code>.</td>
       </tr>
       <tr>
-        <td><a href="profile-interface-disclosure.md">Interface Disclosure Baseline</a> v0.7</td>
-        <td>Everything above, and the algorithms for each cryptographic job, the endpoint roles, the implementing library, and a management interface or a stated reason there is none.</td>
-        <td>adds P2, I3, I4, I5, I6, I9</td>
-        <td>One depth deeper than the entry profile. It adds six rules and shares seven rules unchanged.</td>
+        <td><a href="profile-interface-disclosure.md">Interface Disclosure Baseline</a> v0.9</td>
+        <td>Everything above, and the algorithms for each cryptographic job, the endpoint roles, the implementing library, key wrapping on storage, the default state, a management interface or a stated reason there is none, and pointers to the context the document does not carry.</td>
+        <td>adds P2, I3, I4, I5, I6, I9, I10, I11 and reference rules R1–R6</td>
+        <td>One depth deeper than the entry profile. It shares nine rules unchanged and adds eight, plus its reference rules. It does not accept <code>intended</code>.</td>
       </tr>
       <tr>
-        <td><a href="../use-cases/pqc-migration.html">PQC Migration</a> v0.6</td>
-        <td>Per-interface capability by cryptographic purpose, what enabling it requires, and what is blocking it.</td>
-        <td>adds a group rule and its members</td>
+        <td><a href="../use-cases/pqc-migration.html">PQC Migration</a> v0.8</td>
+        <td>For a product as built: per-interface capability by cryptographic purpose, what enabling it requires, what is blocking it, module validation, and key-wrapping capability on storage.</td>
+        <td>extends the baseline: adds I1–I12, the group rule G1 and R1 <code>support-lifecycle</code>; makes I9 non-withholdable</td>
         <td>A <strong>branch</strong>, not a greater depth. See below.</td>
+      </tr>
+      <tr>
+        <td><a href="profile-pqc-migration-extended.rules.json">PQC Migration Extended</a> v0.1</td>
+        <td>Everything PQC Migration asks, and key management and storage: the key types the management interfaces can generate, where keys are stored, external dependencies, and storage interfaces declared or their absence stated.</td>
+        <td>extends PQC Migration: adds P1, P2, I1–I10; tightens <code>pqc-migration#G1.4</code></td>
+        <td>One depth deeper <em>within</em> the migration branch. It serves the same decision with one added option, and the same orientation. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0022-pqc-migration-family-depths.md">decision 0022</a>.</td>
+      </tr>
+      <tr>
+        <td><a href="profile-procurement.rules.json">Procurement</a> v0.1</td>
+        <td>For a product offered in a tender: a storage interface or a stated absence, coverage of all interfaces or all external ones, and the implementing library with no withholding.</td>
+        <td>extends the baseline: adds P5, P6; makes I9 non-withholdable</td>
+        <td>A branch. Its decision is whether a tender response is complete enough to compare and to hold the supplier to.</td>
+      </tr>
+      <tr>
+        <td><a href="profile-deployment-disclosure.rules.json">Deployment Disclosure</a> v0.1</td>
+        <td>For a deployment at <code>configured</code> or <code>observed</code>: the records it cites by BOM-Link and hash, the product interface each of its interfaces realises, and how and when each observed value was obtained.</td>
+        <td>extends the baseline: adds P1, I1–I3 and R1–R4</td>
+        <td>A branch. Its consumer is the operator, and its decision includes where a deployment falls short of what its products can do.</td>
       </tr>
     </tbody>
   </table>
   </div>
-  <p>The entry profile declares each shared rule under the same id that the baseline uses for it. The gaps in the entry profile's numbering (no P2, no I3 to I6, no I9) therefore mark exactly the rules that the next depth adds. Reusing ids in this way is unambiguous because each id is cited together with a profile tag. The same rule appears in a report as <code>interface-enumeration#I1</code> at one depth and <code>interface-disclosure#I1</code> at the other, so a reader can see which profile's requirements were applied.</p>
-  <p>A document that was already in the repository shows that the entry depth is worth having. <code>cbom-fail</code> is named for the verdict the baseline gives it. It omits the management interface, so it fails product rule P2 of the baseline. It does conform to the entry profile. A producer in that position is still producing a usable document, but before the entry profile existed there was no profile for that document to conform to. At the other end, <code>cbom-entry-fail</code> conforms to neither profile. It is roughly what a scanner produces with no profile in mind. It records a TLS asset that the scanner found, and nothing about what the interface is for. The entry depth is set between these two documents. It asks for more than untargeted scanner output, and for less than the full disclosure that the baseline requires.</p>
+  <p>The entry profile declares each shared rule under the same id that the baseline uses for it. The gaps in the entry profile's numbering (no P2, no I3 to I6, no I9 to I11) therefore mark exactly the rules that the next depth adds. Reusing ids in this way is unambiguous because each id is cited together with a profile tag. The same rule appears in a report as <code>interface-enumeration#I1</code> at one depth and <code>interface-disclosure#I1</code> at the other, so a reader can see which profile's requirements were applied.</p>
+  <p>The Keycloak examples show that the entry depth is worth having. <code>cbom-keycloak-product-fail-P2.cdx.json</code> leaves out the management interfaces with no reason, so it fails product rule P2 of the baseline. It does conform to the entry profile. A producer in that position is still producing a usable document, but before the entry profile existed there was no profile for that document to conform to. Five more examples sit between the depths in the same way:</p>
+  <ul>
+    <li><code>cbom-keycloak-product-disclosure-states.cdx.json</code> declares one algorithm <code>unknown</code> and leaves another undeclared.</li>
+    <li><code>cbom-keycloak-product-intended.cdx.json</code> is a design record for Keycloak 27.0 at the <code>intended</code> stage, which only the entry profile accepts.</li>
+    <li><code>cbom-keycloak-deployment-observed-fail-unknown.cdx.json</code> is an observed record whose database group is <code>unknown</code>. A record with gaps conforms one depth down.</li>
+    <li><code>cbom-keycloak-deployment-configured-fail-literal.cdx.json</code> keeps <code>peer-defined</code> on the database connection at <code>configured</code>, which the baseline accepts only at <code>implemented</code>.</li>
+    <li><code>cbom-keycloak-deployment-observed-outside.cdx.json</code> is an outside assessor's observation that cannot name the library at the ingress, so it fails baseline I9.</li>
+  </ul>
+  <p>At the other end, <code>legacy/cbom-keycloak-scanner-output.cdx.json</code> conforms to neither profile. It is untargeted scanner output in CycloneDX 1.7. It records the cryptographic assets the scanner found, and nothing about what each interface is for. It fails entry rules P1, P3, P4, P5 and P6. The entry depth is set between these documents. It asks for more than untargeted scanner output, and for less than the full disclosure that the baseline requires.</p>
 
   <h2>Depth and branch are different relations</h2>
   <p>Depth and branch both use monotonic extension, and the extension mechanism treats them the same way. However, a family is planned and read differently depending on which of the two relations links its profiles.</p>
   <p><strong>Depth</strong> asks for more information to support the same decision. The entry profile and the baseline serve one consumer with one question: which interfaces does a published weakness reach? The two profiles differ in how much they demand before that question can be answered. Both declare orientation <code>inventory</code>. A producer moves between them by disclosing more about the same interfaces.</p>
   <p><strong>A branch</strong> serves a different decision. The migration profile is derived from the baseline, but its consumer is planning a migration, not maintaining an inventory. The migration profile therefore declares orientation <code>both</code> and asks for statements about a future state. A producer cannot reach it by disclosing more of the same facts, so a supplier at the entry depth is not two steps away from it. Suppose a branch were presented as a rung, meaning one step in the sequence of depths. Producers would then be told to work in the wrong order. Buyers would be told that a single number ranks suppliers who are in fact answering different questions.</p>
+  <p>The two other branches follow the same reasoning. Procurement keeps the baseline's orientation, <code>inventory</code>, but serves a buyer deciding whether a tender response is complete enough to compare and to enforce. Deployment Disclosure also keeps <code>inventory</code>, but its consumer is the operator, and its decision adds a comparison the baseline cannot make: whether a deployment does what its products can do. PQC Migration Extended, by contrast, is a depth within the migration branch. It keeps the migration profile's decision, adds one decision option, and keeps the orientation <code>both</code>.</p>
   <p>To tell a depth from a branch, compare the derived profile with its base. If the derived profile's <code>objective</code> states the same decision and its <code>scope.orientation</code> is the same, it is a depth. If either differs, it is a branch.</p>
   <p>This test does not identify a third relation. Two profiles can state the same decision and the same orientation and differ only in their intended audience. For example, a profile can have the same rules as another, except that the producer may no longer withhold values for the contested rules, because the recipient is bound by an agreement. <a href="confidentiality.html">Confidentiality</a> explains why such a profile is published as a pair with its counterpart at the same depth, and not as the next depth up. A producer reaches it by signing an agreement, not by learning something new about its own product. Presenting it as a higher rung would place a producer that <em>will not tell you</em> on the same scale as a producer that <em>cannot tell you</em>.</p>
   <p>A fourth relation is not a relation between profiles. An <strong>overlay</strong> is a profile for a document that references other documents instead of describing a subject directly. An example is an integrator's system document that cites each supplier's component CBOM by digest. It states which of each supplier's interfaces are used and how the parts connect. An overlay is neither a deeper profile nor a branch, because it does not extend the component profile. It constrains a different document, whose facts are added on top of the facts in the component documents. The substation and service-assurance entries in the <a href="../use-cases/">use cases</a> both need one. How an overlay's obligations relate to those of the documents it cites is not settled, and is recorded as Q68.</p>
@@ -101,7 +128,7 @@ nav: maturity
     </tbody>
   </table>
   </div>
-  <p>When one profile declares <code>extends</code> on another, the validator already enforces most of these conditions. It refuses a profile that relaxes its base before it evaluates any document. The two profiles in this family are <em>siblings</em>, which means that neither extends the other. The baseline was published first and does not name the entry profile as its base. Re-parenting the baseline, so that it extends the entry profile, would move seven rule ids to another profile tag. That would change every citation of those ids in this documentation, in the test suite, and in any report already issued. The working group must decide whether that cost is worth paying. Until it decides, the claim that the two profiles form a ladder is an assertion about two independent profiles. Every assertion in this repository has a check, and the check for this one is <code>tests/check-family.py</code>. It requires every condition in the table of conditions. It also requires that every committed document that conforms to the baseline also conforms to the entry profile. Finally, it reports the documents that sit between the two depths. If every document conformed to every profile, the family would in effect have only one rung, whatever it declares.</p>
+  <p>When one profile declares <code>extends</code> on another, the validator already enforces most of these conditions. It refuses a profile that relaxes its base before it evaluates any document. The two depths of the interface family are <em>siblings</em>, which means that neither extends the other. The branches, by contrast, each declare <code>extends</code>, so the validator enforces monotonicity for them. The baseline was published first and does not name the entry profile as its base. Re-parenting the baseline, so that it extends the entry profile, would move nine rule ids to another profile tag. That would change every citation of those ids in this documentation, in the test suite, and in any report already issued. The working group must decide whether that cost is worth paying. Until it decides, the claim that the two profiles form a ladder is an assertion about two independent profiles. Every assertion in this repository has a check, and the check for this one is <code>tests/check-family.py</code>. It requires every condition in the table of conditions. It also requires that every committed document that conforms to the baseline also conforms to the entry profile. Finally, it reports the documents that sit between the two depths. If every document conformed to every profile, the family would in effect have only one rung, whatever it declares.</p>
 
   <h2>What a depth must not become</h2>
   <p><strong>A permanent floor.</strong> The obvious objection to an entry profile is that suppliers will treat its floor as the most they need to supply, and stop there. Nothing in the profile itself can prevent that, and preventing it is not the profile's job. A profile states a requirement. The consumer decides which requirement to ask for. The control therefore lies in what the buyer asks for. A buyer names the profile and version it requires, and a date by which the deeper profile is required. This is the same question as the grace-window question in <a href="versioning.html">Versioning</a>. A conformance claim names the profile it met, so a statement that a document "conforms" always shows which depth was reached. A family makes the depth visible in this way. A single baseline profile does not.</p>
@@ -112,9 +139,9 @@ nav: maturity
 
   <h2>Moving to a deeper profile, and asking for one</h2>
   <p>When a family is built this way, a producer's work list is generated by the validator and does not have to be negotiated. A producer that conforms at the entry depth runs the deeper profile against the same document. The rule ids that fail are the gap between the two depths. Each item in the gap is named, and the items can be counted:</p>
-  <pre><code>cbom-fail.cyclonedx.json conforms to interface-enumeration,
+  <pre><code>examples/cbom-keycloak-product-fail-P2.cdx.json conforms to interface-enumeration,
   and interface-disclosure#P2 stands between it and interface-disclosure</code></pre>
-  <p>This line is real output from the test suite. The test suite reports the gap in the same way for the test document that exercises the disclosure states. That document falls short of the baseline only because the algorithms for one interface are missing.</p>
+  <p>This line is real output from <code>tests/check-family.py</code>. The check reports the gap in the same way for the other documents between the depths. The document that exercises the disclosure states falls short of the baseline on two rules: <code>interface-disclosure#I5</code> on the cluster interface, where the algorithm is <code>unknown</code>, and <code>interface-disclosure#I4</code> on the SAML interface, where it is undeclared. The observed record with an unknown database group falls short on <code>interface-disclosure#I3</code> alone.</p>
   <p>The same pattern already appears inside a single profile, at the level of cryptographic purposes. The migration profile requires full detail for three cryptographic purposes, and still requires a status for all seven. As a result, a supplier cannot conform while ignoring entity authentication. A buyer also sees the blockers that take longest to resolve in the first document, not the third. A family ordered by depth applies the same idea at the level of whole profiles. The shallow depth is cheap to reach. It states openly what it does not cover, so the subjects it does not cover remain visible.</p>
 
   <h2>What is not settled</h2>
@@ -123,9 +150,9 @@ nav: maturity
     <thead><tr><th>Question</th><th>What turns on it</th></tr></thead>
     <tbody>
       <tr><td>Where a family is recorded, if not in its profiles</td><td>A consumer holding an entry-profile claim cannot see from the artifact that deeper profiles exist. Recorded as Q50.</td></tr>
-      <tr><td>Whether the baseline is re-parented to extend the entry profile</td><td>Re-parenting would make the validator enforce the ladder through extension, and most of the family test would no longer be needed. It moves seven rule ids to another tag and changes every citation of them. Recorded as Q51.</td></tr>
+      <tr><td>Whether the baseline is re-parented to extend the entry profile</td><td>Re-parenting would make the validator enforce the ladder through extension, and most of the family test would no longer be needed. It moves nine rule ids to another tag and changes every citation of them. Recorded as Q51.</td></tr>
       <tr><td>Whether a rules file should distinguish a deferral from a permanent exclusion</td><td>One field currently carries both. Recorded as Q52.</td></tr>
-      <tr><td>Whether depths are numbered, and whether a consortium profile may be published as an entry depth at all</td><td>A number invites the ranking of suppliers that this page argues against. A name is harder to demand in a contract. Recorded as Q53.</td></tr>
+      <tr><td>Whether depths are numbered, and whether a consortium profile may be published as an entry depth at all</td><td>A number invites a ranking of suppliers, which the depth model is meant to avoid. A name is harder to demand in a contract. Recorded as Q53.</td></tr>
     </tbody>
   </table>
   </div>

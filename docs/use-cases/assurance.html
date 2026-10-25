@@ -31,6 +31,7 @@ nav: uc-assurance
   <h2>What the group shares</h2>
   <p>In this group, provenance and freshness matter most. Provenance is who produced the document and from what. Freshness is whether it is still current. A reported position only means something to an external reader if it says when it was produced and from what. That makes the lifecycle stage and the date of each statement as important as the statement itself. An assurance reader also needs to know that the document it holds is the one that was evaluated, and that nothing has replaced it.</p>
   <p>The methodology already provides part of this. A conformance claim is bound to one document by the document's digest, and it lists each profile separately (decision 0015). A claim can also be re-checked. What it does not yet say is how the digest is computed so that two producers agree, whether profiles themselves are signed, who may declare conformance, and what a claim means once the document it binds is superseded.</p>
+  <p>The consolidated baseline (decision 0025) adds two pieces. First, judgements made after a record is written point to the record by digest, and a record never points to them. A conformance claim and a policy result both work this way. Second, the baseline names four kinds of context that assurance profiles are expected to require: <code>code-analysis</code>, <code>protocol-testing</code> (the CycloneDX 2.0 <code>test-report</code> reference type), <code>build-provenance</code> (an SLSA or Sigstore attestation) and <code>platform-assessment</code>. No published profile requires them yet. See <a href="../methodology/context.html">Context Pointers</a>.</p>
   <p>One document can serve both the disclosure and the assurance use cases. This is because an assurance profile adds no new cryptographic facts. It adds requirements on the document's provenance and on its conformance claim.</p>
 
   <h2>Questions this group owns</h2>
@@ -48,7 +49,7 @@ nav: uc-assurance
   </div>
 
   <h2>Worked examples</h2>
-  <p>None yet. A first one could take the Keycloak supplier document, add a conformance claim bound by digest, and work through what a regulator receiving it under NIS2 would still need to know before relying on it.</p>
+  <p>None yet. A first one could take the Keycloak product record, <a href="../methodology/examples/cbom-keycloak-product.cdx.json"><code>cbom-keycloak-product.cdx.json</code></a>, and the conformance claim already published for it, <a href="../methodology/claim-example.json"><code>claim-example.json</code></a>, which binds the record by its SHA-256 digest. It would then work through what a regulator receiving the pair under NIS2 would still need to know before relying on it.</p>
 
   <h2>The use cases in this group</h2>
 
@@ -57,7 +58,7 @@ nav: uc-assurance
   <p>The cryptographic facts are largely the disclosure baseline's. A profile encodes what a given framework expects, so that conformance can be evidenced by a dated artifact that an auditor can re-check. Because the reader is external, provenance and lifecycle stage carry more weight than usual. A reported position only means something if it says when it was produced and from what. A jurisdiction-specific profile also lets a global vendor satisfy the requirement once and report against it in several places.</p>
 
   <h3 id="certification-evidence">Certification and validation evidence</h3>
-  <p>An evaluator or certification body checks a product against a scheme such as FIPS 140-3 module validation, Common Criteria or IEC 62443-4-2, and decides whether the cryptography a CBOM describes matches what was evaluated. A buyer asks the same question when it relies on a supplier's claim of validation. The cryptographic facts already exist: the module validation attributes of the PQC migration profile, and the <code>certifications</code> field of CycloneDX 2.0. What matters for evidence is whether the document is bound to the version and configuration that were evaluated, and whether it still is.</p>
+  <p>An evaluator or certification body checks a product against a scheme such as FIPS 140-3 module validation, Common Criteria or IEC 62443-4-2, and decides whether the cryptography a CBOM describes matches what was evaluated. A buyer asks the same question when it relies on a supplier's claim of validation. The cryptographic facts already exist: the module validation attributes of the PQC migration profile, which CycloneDX 2.0 carries natively in <code>certifications[]</code>, together with product certification. What matters for evidence is whether the document is bound to the version and configuration that were evaluated, and whether it still is.</p>
   <p><strong>Proposed.</strong></p>
 
   <h3 id="readiness-evidence">Readiness assessment evidence</h3>

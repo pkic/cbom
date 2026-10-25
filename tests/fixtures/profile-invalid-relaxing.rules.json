@@ -1,5 +1,5 @@
 {
-  "$comment": "TEST FIXTURE \u2014 deliberately invalid. This profile extends the interface disclosure baseline and tries to relax an inherited rule, lowering I3 (keyExchange) from MUST to SHOULD and making I1 withholdable. Extension is monotonic, so the validator must reject it with exit code 3 rather than evaluating any CBOM against it. Not a real profile; do not copy.",
+  "$comment": "TEST FIXTURE — deliberately invalid. This profile extends the interface disclosure baseline and tries to relax an inherited rule, lowering I3 (keyExchange) from MUST to SHOULD and making I1 withholdable. Extension is monotonic, so the validator must reject it with exit code 3 rather than evaluating any CBOM against it. Not a real profile; do not copy.",
   "profileId": "pkic.test.invalid-relaxing",
   "profileTag": "invalid-relaxing",
   "title": "Invalid relaxing profile (test fixture)",
@@ -14,7 +14,7 @@
   },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.7",
+    "version": "0.9",
     "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
   },
   "appliesTo": {
@@ -37,7 +37,6 @@
       "interface"
     ],
     "lifecycleStages": [
-      "intended",
       "implemented",
       "configured",
       "observed"

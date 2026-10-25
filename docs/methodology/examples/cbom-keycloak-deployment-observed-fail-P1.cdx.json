@@ -1,0 +1,904 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "NON-CONFORMING EXAMPLE. The observed record, except that the hash it records for the configured record does not match that record. This is what a consumer sees when the configured record is revised after the observation cited it. Fails deployment-disclosure#P1.",
+  "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-7263740b5ef6",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-25T08:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "discovery"
+      }
+    ],
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "testssl.sh",
+          "version": "3.2"
+        },
+        {
+          "type": "application",
+          "name": "Zeek",
+          "version": "7.0"
+        },
+        {
+          "type": "application",
+          "name": "Example Org JWKS reader",
+          "version": "0.3"
+        }
+      ]
+    },
+    "supplier": {
+      "name": "Example Org (illustrative operator)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "deployment:sso-prod",
+        "name": "sso.example.org identity service (production)",
+        "description": "Keycloak 26.7.3 on Kubernetes, two replicas, behind a TLS-terminating ingress.",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "deployment"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "partial"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": {
+                  "name": "tag-uri",
+                  "description": "A tag URI (RFC 4151)."
+                },
+                "value": "tag:example.org,2026:deployment/sso-prod"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Org (illustrative operator)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:x25519mlkem768",
+          "name": "X25519MLKEM768",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "kem"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:x25519",
+          "name": "X25519",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:secp384r1",
+          "name": "secp384r1",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:aes-256-gcm",
+          "name": "AES-256-GCM",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "ae"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:aes-128-gcm",
+          "name": "AES-128-GCM",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "ae"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:ecdsa-p256",
+          "name": "ECDSA-P256-SHA256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:rsa-2048",
+          "name": "RSA-2048",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:es256",
+          "name": "ES256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:rs256",
+          "name": "RS256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:rsa-sha256",
+          "name": "RSA-SHA256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:key:realm-keys",
+          "name": "Realm key rows in the database (read in clear)",
+          "cryptoProperties": {
+            "assetType": "related-crypto-material",
+            "relatedCryptoMaterialProperties": {
+              "type": "private-key",
+              "state": "active",
+              "securedBy": {
+                "mechanism": "none"
+              }
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:protocol:ing-tls",
+          "name": "TLS at the ingress (sso.example.org:443)",
+          "cryptoProperties": {
+            "assetType": "protocol",
+            "protocolProperties": {
+              "type": "tls",
+              "version": "1.3",
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519mlkem768"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-256-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-128-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:ecdsa-p256"
+                }
+              ]
+            }
+          },
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:browser-or-relying-party"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:ingress"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#crypto:protocol:ing-tls"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "passive-sensor"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "active-probe"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:observationSummary",
+              "value": "Groups negotiated: X25519MLKEM768 71%, X25519 29% of 1.2 million sessions."
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "evidence",
+              "url": "https://evidence.example.org/sso-prod/2026-10-25/ing-tls-zeek-summary.json",
+              "comment": "Evidence extract. Illustrative hash.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "observation-evidence"
+                }
+              ],
+              "hashes": [
+                {
+                  "alg": "SHA-256",
+                  "content": "6548836c3c6d795dbee1383a87864990ce56284c19b7542f89816d33cc61b04e"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:protocol:int-db",
+          "name": "TLS to PostgreSQL",
+          "cryptoProperties": {
+            "assetType": "protocol",
+            "protocolProperties": {
+              "type": "tls",
+              "version": "1.3",
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-256-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:rsa-2048"
+                }
+              ]
+            }
+          },
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:database"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#crypto:protocol:int-db"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "platform-query"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "passive-sensor"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "active-probe"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:observationSummary",
+              "value": "Version and cipher from pg_stat_ssl; group from the ServerHello; certificate from testssl.sh --starttls postgres."
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "evidence",
+              "url": "https://evidence.example.org/sso-prod/2026-10-25/int-db.json",
+              "comment": "Evidence extract. Illustrative hash.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "observation-evidence"
+                }
+              ],
+              "hashes": [
+                {
+                  "alg": "SHA-256",
+                  "content": "eb835a2c0b3233c031508b45276af1d368d95bb8176839a6779e7c0f0be2f3dc"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:protocol:int-ldap",
+          "name": "LDAPS to the corporate directory",
+          "cryptoProperties": {
+            "assetType": "protocol",
+            "protocolProperties": {
+              "type": "tls",
+              "version": "1.2",
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:secp384r1"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-256-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:rsa-2048"
+                }
+              ]
+            }
+          },
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:directory"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#crypto:protocol:int-ldap"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "passive-sensor"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "evidence",
+              "url": "https://evidence.example.org/sso-prod/2026-10-25/int-ldap.json",
+              "comment": "Evidence extract. Illustrative hash.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "observation-evidence"
+                }
+              ],
+              "hashes": [
+                {
+                  "alg": "SHA-256",
+                  "content": "69bd0aa4ad3691e331d19f27b191648c994af1b186d497c1b0792c4c98034a5a"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:protocol:int-cache",
+          "name": "Mutual TLS between the two Keycloak replicas",
+          "cryptoProperties": {
+            "assetType": "protocol",
+            "protocolProperties": {
+              "type": "tls",
+              "version": "1.3",
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-256-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:rsa-2048"
+                }
+              ]
+            }
+          },
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "peer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:keycloak-node"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:keycloak-node"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#crypto:protocol:int-cache"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "active-probe"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:disclosure:context:observation-evidence",
+              "value": "withheld"
+            }
+          ]
+        },
+        {
+          "bom-ref": "service:svc-http",
+          "name": "HTTP from the ingress to Keycloak (port 8080)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "HTTP"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.1"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:ingress"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#service:svc-http"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "passive-sensor"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:mgmt-health",
+          "name": "Health and metrics (port 9000)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "HTTP"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.1"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:monitoring"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#service:mgmt-health"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "active-probe"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:svc-oidc",
+          "name": "OIDC token issuance, realm 'corp'",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "OIDC"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:issuer",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:relying-party",
+              "value": "endpoint:client-application"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#service:svc-oidc"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "endpoint-query"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:observationSummary",
+              "value": "The JWKS publishes an ES256 and an RS256 key. Tokens for 'legacy-portal' are RS256."
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "evidence",
+              "url": "https://evidence.example.org/sso-prod/2026-10-25/jwks-corp.json",
+              "comment": "Evidence extract. Illustrative hash.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "observation-evidence"
+                }
+              ],
+              "hashes": [
+                {
+                  "alg": "SHA-256",
+                  "content": "3335d6a5f008e1f9a88d1cdead9aa88bdc805ecdea7d633e4b271bb73faa14d7"
+                }
+              ]
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:svc-saml",
+          "name": "SAML 2.0 assertions, realm 'corp'",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SAML"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:identity-provider",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:service-provider",
+              "value": "endpoint:client-application"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#service:svc-saml"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "endpoint-query"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:mgmt-admin",
+          "name": "Admin REST API (master realm tokens)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "Admin REST (OAuth 2.0 bearer)"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:administrator",
+              "value": "endpoint:admin-client"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#service:mgmt-admin"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "endpoint-query"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:sto-realm-keys",
+          "name": "Realm key persistence (PostgreSQL)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#service:sto-realm-keys"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "inspection"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:observationSummary",
+              "value": "Private keys read in clear from the component configuration table."
+            }
+          ],
+          "type": "service"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "deployment:sso-prod",
+      "dependsOn": [
+        "crypto:protocol:ing-tls",
+        "crypto:protocol:int-db",
+        "crypto:protocol:int-ldap",
+        "crypto:protocol:int-cache",
+        "service:svc-http",
+        "service:mgmt-health",
+        "service:svc-oidc",
+        "service:svc-saml",
+        "service:mgmt-admin",
+        "service:sto-realm-keys"
+      ]
+    },
+    {
+      "ref": "service:svc-oidc",
+      "dependsOn": [
+        "crypto:algo:es256",
+        "crypto:algo:rs256"
+      ]
+    },
+    {
+      "ref": "service:svc-saml",
+      "dependsOn": [
+        "crypto:algo:rsa-sha256"
+      ]
+    },
+    {
+      "ref": "service:mgmt-admin",
+      "dependsOn": [
+        "crypto:algo:rs256"
+      ]
+    },
+    {
+      "ref": "service:sto-realm-keys",
+      "dependsOn": [
+        "crypto:key:realm-keys"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "incomplete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1",
+      "comment": "The configured record this observation was compared with.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "36504fdd8c1d94127edec589390c869d4410c15e10673a82ced3e86a1c6a055f"
+        }
+      ]
+    },
+    {
+      "type": "bom",
+      "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1",
+      "comment": "The product CBOM of the image.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1b8fff9dad590241b73d19c37a23ab566c4e01113ec8e00d5adaca2c3f146897"
+        }
+      ]
+    },
+    {
+      "type": "risk-assessment",
+      "url": "https://grc.example.org/registers/data/sso-prod",
+      "comment": "Data classification and confidentiality lifetime per interface. Not reproduced here.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "data-register"
+        }
+      ]
+    }
+  ]
+}

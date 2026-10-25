@@ -62,9 +62,10 @@ nav: conformance
   <h2>1. A CBOM document conforming to a profile</h2>
   <p>A CBOM document conforms to a profile version when all of the following hold.</p>
   <ul>
-    <li>The carrier format is the standard the CBOM is written in, such as CycloneDX. The document's carrier format and version fall within the range of versions the profile declares that it accepts. See <a href="versioning.html">Versioning</a>.</li>
-    <li>Every product-level rule at MUST level is satisfied.</li>
+    <li>The carrier format is the standard the CBOM is written in, such as CycloneDX. The document's carrier format and version fall within the range of versions the profile declares that it accepts. For every example profile the target is CycloneDX 2.0, and the validator reads CycloneDX 1.6 and 1.7 as legacy. See <a href="versioning.html">Versioning</a>.</li>
+    <li>Every product-level rule at MUST level is satisfied. These include the rules that the document declares its subject type and one lifecycle stage, and that both are among those the profile accepts.</li>
     <li>Every declared interface satisfies every per-interface rule at MUST level.</li>
+    <li>Every applicable reference rule at MUST level is satisfied. A reference rule requires a pointer to context the document does not carry, such as its companion SBOM. The validator checks the pointer, never the target.</li>
     <li>Where a rule is satisfied by a disclosure marker rather than by a value, the profile marks that rule as withholdable. A withholdable rule is one the producer may satisfy by declaring the value withheld instead of disclosing it.</li>
   </ul>
   <p>Rules at SHOULD and MAY level are evaluated and reported, but they do not decide the verdict. If an author wants a requirement to decide the verdict, the author states it at MUST level. A consumer may sometimes treat a SHOULD rule as binding anyway. That consumer has misread the profile. If the author meant MUST, the fix is for the author to raise the rule to MUST level.</p>
@@ -97,6 +98,16 @@ nav: conformance
   </div>
   <p>A document can therefore conform while withholding some values. A consumer who reads only the verdict will not know that values were withheld. For this reason a conformance report states the disclosure state of every rule it assessed. A consumer who acts on the verdict alone ignores the part of the result that is most likely to matter commercially. The clearest example is a public variant and a restricted variant of the same document. Both variants conform, but only one of them answers the consumer's question. See <a href="confidentiality.html">Confidentiality</a>.</p>
 
+  <h3>Records that cite other records</h3>
+  <p>The vendor writes the product record, at the <code>implemented</code> stage. The operator writes deployment records, at <code>configured</code> and <code>observed</code>. Each record has one subject and one stage. A deployment record does not restate the vendor's build facts. It <strong>cites</strong> the records it builds on, each by a BOM-Link (<code>urn:cdx:&lt;serial&gt;/&lt;version&gt;</code>) and a SHA-256 hash. Each of its interfaces names the interface it realises with <code>pkic:profile:correspondsTo</code>, or states <code>no-product-document</code> where the supplier publishes no CBOM. See <a href="model.html">Model</a> and <a href="https://github.com/pkic/cbom/blob/main/decisions/0025-baseline-consolidation.md">decision 0025</a>.</p>
+  <p>A verdict on a deployment record depends on what the evaluator was given.</p>
+  <ul>
+    <li>When the caller supplies a cited record (<code>validate_cbom.py ... --with &lt;cited record&gt;</code>), the validator checks its serial number, version and hash. A changed revision fails the deployment profile's P1. <code>cbom-keycloak-deployment-observed-fail-P1.cdx.json</code> shows this case.</li>
+    <li>Only implementation facts, such as the implementing library (<code>implementationPurl</code>), follow the join. Present-state facts never do, because each belongs to one stage.</li>
+    <li>When the caller does not supply a cited record, the validator reports each inherited value as <code>OPEN</code> (unresolved), not as failed. An unresolved rule does not decide the verdict. The report lists it, and a claim lists it under <code>unresolved</code> and states that it asserts nothing about it.</li>
+  </ul>
+  <p>One rule has a route that depends on a cited record. At <code>observed</code>, baseline P2 passes when a cited configured record declares a management interface that the observer could not reach. An observer with nothing to cite, such as an outside assessor, states <code>not-reached</code> instead, and the validator accepts that reason only with coverage <code>partial</code>.</p>
+
   <h3>Conformance to more than one profile</h3>
   <p>A document evaluated against several profiles receives one verdict per profile. A verdict against one profile implies nothing about conformance to any other profile. There is one exception. Where one profile extends another, conformance to the derived profile also implies conformance to the base profile version that the derived profile pins, meaning names by identifier and version. This holds because extension is monotonic: a derived profile cannot relax an inherited rule. See the composition rules in <a href="profile.html">Profile</a>.</p>
 
@@ -119,12 +130,13 @@ nav: conformance
       <tr><td>C8</td><td>The profile states what it deliberately excludes, and why.</td><td>SHOULD</td></tr>
       <tr><td>C9</td><td>The profile is accompanied by a mapping to at least one carrier format, and by at least one document that conforms and one that does not.</td><td>SHOULD</td></tr>
       <tr><td>C10</td><td>The profile carries a changelog classifying each change as tightening, relaxing, or editorial.</td><td>SHOULD</td></tr>
-      <tr><td>C11</td><td>The profile declares its scope: the type of subject it describes, its orientation, the relationship types its rules constrain, and the lifecycle stages of reported data it accepts.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C11</td><td>The profile declares its scope: the subject types it accepts, its orientation, the relationship types its rules constrain, and the lifecycle stages of reported data it accepts.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C12</td><td>The rules the profile imposes are consistent with the orientation it declares.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C14</td><td>Identifier schemes are declared for every asset class the rules constrain, and no scheme is declared that no rule applies.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C15</td><td>The profile carries a tag, and no profile it inherits from already uses that tag.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C16</td><td>Rule identifiers are local to the profile, and each carries the letter of the section it sits in.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C17</td><td>Every rule can pass a document and can fail one: it has a constraint, the constraint is one the evaluator implements, and any vocabulary it names is declared.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C18</td><td>Every reference rule names a context kind that the profile or its base defines, and that kind is carried by real CycloneDX reference types.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C13</td><td>Every group rule is keyed to a declared vocabulary, and a profile that declares a subset of that vocabulary in scope still requires an answer for the rest.</td><td><strong>MUST</strong></td></tr>
     </tbody>
   </table>
@@ -132,20 +144,20 @@ nav: conformance
   <p>C3, C6 and C7 are the requirements that review most often has to enforce. Each can be broken by a rules file that still loads and runs without errors. For example, a profile that names a particular instance still evaluates documents without error. However, it evaluates them for that one deployment rather than for the product.</p>
 
   <h3>The scope declaration</h3>
-  <p>C11 requires the scope to be declared as one object, rather than as separate fields scattered through the profile. The reason is that the subject type, the relationship types and the accepted lifecycle stages together describe a single boundary. Step 2 of <a href="method.html">Method</a> decides all of them at once.</p>
+  <p>C11 requires the scope to be declared as one object, rather than as separate fields scattered through the profile. The reason is that the subject types, the relationship types and the accepted lifecycle stages together describe a single boundary. Step 2 of <a href="method.html">Method</a> decides all of them at once.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Member</th><th>Values</th><th>What it settles</th></tr></thead>
     <tbody>
-      <tr><td><code>subjectType</code></td><td><code>product</code>, <code>service</code>, <code>component</code>, <code>estate-subset</code></td><td>Whether the profile applies to the thing a consumer is holding. A profile for a product a consumer cannot inspect can ask for less than one for a service the consumer operates.</td></tr>
+      <tr><td><code>subjectTypes</code></td><td>a set drawn from <code>product</code>, <code>deployment</code>, <code>service</code>, <code>component</code>, <code>system</code>, <code>estate-subset</code></td><td>Which kinds of subject the profile applies to. The example baseline accepts <code>product</code> and <code>deployment</code>, because its rules describe an interface the same way for both. A derived profile narrows the set, as it narrows the stages: PQC migration and procurement accept <code>product</code>, and deployment disclosure accepts <code>deployment</code>. Each document then declares its own subject type, and the validator compares the two. The older single <code>subjectType</code> field is read as a set of one.</td></tr>
       <tr><td><code>relationshipTypes</code></td><td>the relationship types named in <a href="model.html">Model</a>; today only <code>interface</code></td><td>Which kinds of cryptographic relationship the rules constrain. The profile declares these types, and the checker compares the declaration with the rules instead of trusting it. A scope statement that no longer matches the rules still reads as authoritative, so it is worse than no statement at all.</td></tr>
       <tr><td><code>orientation</code></td><td><code>inventory</code>, <code>migration</code>, <code>both</code></td><td>Whether the profile reports what an interface does, what it could do, or both. The value is more than a label, because C12 requires the rules to be consistent with it. It uses the same vocabulary the working group uses for its own aspects, except for <code>n-a</code>.</td></tr>
-      <tr><td><code>lifecycleStages</code></td><td>a subset of <code>intended</code>, <code>implemented</code>, <code>configured</code>, <code>observed</code></td><td>Which stages of reported data the profile will accept, in the same sense that <code>appliesTo</code> settles which carrier versions it will accept. An interface reporting a stage outside the set fails the rule that constrains the stage.</td></tr>
+      <tr><td><code>lifecycleStages</code></td><td>a subset of <code>intended</code>, <code>implemented</code>, <code>configured</code>, <code>observed</code></td><td>Which stages of reported data the profile will accept, in the same sense that <code>appliesTo</code> settles which carrier versions it will accept. A document has one stage, carried in <code>metadata.lifecycles</code>. An interface reporting a stage outside the set fails the rule that constrains the stage.</td></tr>
     </tbody>
   </table>
   </div>
-  <p>Of the four members, <code>lifecycleStages</code> is the one that changes verdicts. Without it, a document could report every interface at the <code>intended</code> stage and still conform. Such a document would describe cryptography the producer plans to build, not cryptography that exists.</p>
-  <p>Reporting planned cryptography is acceptable for a disclosure baseline, so the example baseline profile accepts all four stages. It is not acceptable for a procurement or migration profile. The example migration profile therefore accepts only the three stages that describe cryptography that exists. A derived profile may narrow the set of accepted stages. It may not widen the set, for the same reason that it may not relax a rule.</p>
+  <p>Of the members, <code>subjectTypes</code> and <code>lifecycleStages</code> are the ones that change verdicts. Without <code>lifecycleStages</code>, a document could report every interface at the <code>intended</code> stage and still conform. Such a document would describe cryptography the producer plans to build, not cryptography that exists.</p>
+  <p>In the example family, the entry profile, Interface Enumeration, accepts all four stages, because a first inventory takes whatever a producer can report. The disclosure baseline does not accept <code>intended</code>, because a design intention answers nothing about deployed interfaces. A vendor's intention belongs in a capability status, an operator's intention in a policy or tender, and a design document in a pointer under baseline R6. PQC migration and procurement accept only <code>implemented</code>. Deployment disclosure accepts only <code>configured</code> and <code>observed</code>. A derived profile may narrow the set of accepted stages and subject types. It may not widen either set, for the same reason that it may not relax a rule.</p>
 
   <h3>Orientation, and why it is checked rather than taken on trust</h3>
   <p>A document can describe both the present state of an interface and its declared capability. Both appear in the same document, about the same interface, under attribute names that differ only by a suffix. <code>keyExchange</code> is the key exchange an interface negotiates today. <code>keyExchangeSupported</code> is every key exchange it could negotiate.</p>
@@ -175,12 +187,12 @@ nav: conformance
 
   <h3>C15 and C16: identifiers that can be cited</h3>
   <p>A rule identifier is local to the profile that declares it. A rule is therefore cited as <code>&lt;profileTag&gt;#&lt;ruleId&gt;</code>, and three profiles in one family may each declare their own <code>I1</code>. This approach moves the uniqueness requirement off the rule identifiers and onto the tag. No author can coordinate rule identifiers across a whole family, but an author picks a tag only once. C15 checks that the tag is unique. Without C15, a citation could resolve to two different rules, and a stored conformance claim would no longer identify which rule it refers to. With C15, a base profile can add a rule without first checking which identifiers its derived profiles already use.</p>
-  <p>C16 fixes the meaning of the letter in a rule identifier, so that the author does not choose it. <code>P</code> means the rule is evaluated once per product, <code>I</code> once per declared interface, and <code>G</code> once per entry in a group. The tag already says which profile a rule belongs to, so the letter can tell the reader how often the rule is evaluated. C16 does not require the numbers to run without gaps. A released identifier is never reused, so gaps are expected. A checker that demanded a contiguous sequence would forbid exactly what the no-reuse rule exists to allow. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0011-rule-numbering-across-a-family.md">decision 0011</a>.</p>
+  <p>C16 fixes the meaning of the letter in a rule identifier, so that the author does not choose it. <code>P</code> means the rule is evaluated once per document, <code>I</code> once per declared interface, <code>G</code> once per entry in a group, and <code>R</code> once per document or once per interface, as the reference rule states. The tag already says which profile a rule belongs to, so the letter can tell the reader how often the rule is evaluated. C16 does not require the numbers to run without gaps. A released identifier is never reused, so gaps are expected. A checker that demanded a contiguous sequence would forbid exactly what the no-reuse rule exists to allow. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0011-rule-numbering-across-a-family.md">decision 0011</a>.</p>
 
   <h3>The claim: the artifact read without the inputs</h3>
   <p>Two of the conformance targets are checked by someone who holds the inputs: a document against a profile, and a profile against the methodology. The <strong>claim</strong> is a separate artifact. It is the only one read by someone who does not hold the inputs. That reader is typically a buyer in a different organisation, reading the claim months later.</p>
   <p>A claim is a machine-readable document. It is bound to one CBOM by digest. It lists every profile that was evaluated, each with its own verdict and its whole pinned chain of base profiles. It also carries the disclosure states and the non-assertions inside itself, rather than pointing to them elsewhere. The non-assertions are the statements of what a verdict does not establish.</p>
-  <p>The non-assertions matter most. Every point in the table at the end of this page about what a verdict does not establish is repeated inside every claim. The reason is that the person reading a claim will not have read this page, and the word &ldquo;conforms&rdquo; invites more inference than it supports.</p>
+  <p>The non-assertions matter most. Every point in the table under <a href="#not-asserted">What a conformance verdict does not assert</a> is repeated inside every claim. The reason is that the person reading a claim will not have read the methodology, and the word &ldquo;conforms&rdquo; invites more inference than it supports.</p>
   <p>A claim can be re-checked. Running <code>--verify-claim</code> confirms the digest and re-runs each profile the claim names. Re-checking cannot establish that the disclosed values are true, and no future version of the check will be able to. A producer who misstates a protocol version still produces a claim that verifies correctly. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0015-a-conformance-claim-is-checkable.md">decision 0015</a>, and <a href="https://github.com/pkic/cbom/blob/main/decisions/0016-what-an-spdx-only-claim-asserts.md">0016</a> for what an SPDX-only claim may assert.</p>
 
   <h3>C17: rules that cannot fail</h3>
@@ -193,8 +205,11 @@ nav: conformance
   <p>C13 already rejected the third case for group keys. C17 covers the remaining cases. The validator refuses a profile that breaks C17, instead of issuing a verdict against it.</p>
   <p>C17 applies the principle behind C13 more widely: every rule in a profile must be capable of failing a document. C17 is written as a requirement, rather than left to review, because none of the three defects is visible when you read the file. Each defect produces a rule that looks ordinary.</p>
 
-  <p>C1 to C7 and C11 to C17 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports on each requirement in turn. C8 to C10 are checked where the profile declares the material, and are reported as warnings that do not affect the result unless <code>--strict</code> is given.</p>
-  <p>All three example profiles pass: the entry profile of the interface family, the disclosure baseline and the migration profile. The test suite also carries one deliberately defective profile for each MUST requirement, so that the checks themselves are tested.</p>
+  <h3>C18: reference rules that point at something real</h3>
+  <p>A reference rule names a context kind, such as <code>sbom</code> or <code>configuration-guidance</code>. The profile defines each kind once, in <code>contextKinds</code>, with the CycloneDX reference types that can carry it and its form: a fixed document bound by a hash, or an endpoint that names its access protocol. C18 requires every reference rule to name a defined kind, and every kind to list real CycloneDX reference types. A kind whose carrier list names no real type could never be satisfied by a valid document, so the rule could only fail.</p>
+
+  <p>C1 to C7 and C11 to C18 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports on each requirement in turn. C8 to C10 are checked where the profile declares the material, and are reported as warnings that do not affect the result unless <code>--strict</code> is given.</p>
+  <p>All six example profiles pass: Interface Enumeration v0.3, the Interface Disclosure Baseline v0.9, Deployment Disclosure v0.1, PQC Migration v0.8, PQC Migration Extended v0.1 and Procurement v0.1. The test suite also carries deliberately defective profiles for the MUST requirements, so that the checks themselves are tested.</p>
   <p>The tool does not replace review. C3 in particular is enforced through indirect structural checks. A rule that names a specific instance in a way the checker does not model would therefore still pass.</p>
 
   <h2>3. An evaluation tool conforming to this methodology</h2>
@@ -215,28 +230,29 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>The reference validator signals T5 through its exit code: 0 for conforms, 1 for does not conform, 2 for a usage error, 3 for a profile error such as a relaxing override, and 4 for a refusal.</p>
+  <p>The reference validator signals T5 through its exit code: 0 for conforms, 1 for does not conform, 2 for a usage error, 3 for a profile error such as a relaxing override, 4 for a refusal, and 5 for a claim that does not match a re-run evaluation.</p>
   <p>Exit code 4 exists because of T1. A caller that cannot tell a refusal from a failure will reject a producer because of the age of its carrier format.</p>
   <p>Until August 2026 the validator printed <code>DOES NOT CONFORM</code> and exited 1 on a refusal. It merged the two results that must not be merged. The test suite asserted that exit code, so the test held the defect in place instead of catching it.</p>
   <p>The methodology requires only that the distinction between the two results reaches the caller. The particular codes are an implementation choice, and another tool may signal it differently.</p>
 
-  <p>This site runs two tools, so the expectation that two tools return the same verdict can be tested. <code>validate_cbom.py</code> is the reference implementation. The <a href="demo.html">Demo</a> page is a second one: a static page cannot run Python, so the evaluation is written again in JavaScript.</p>
-  <p>The demo previously carried its own copy of the rules as well. The page stated that its results matched the reference tool, but nothing checked either the copied rules or the results. The demo now fetches the rules from the published rules file, so the rules are stated in one place only. The evaluation logic is still a second implementation. For that reason <code>tests/check-demo.py</code> runs the page's own functions over the four example documents. It requires the same verdict, the same outcome for every rule, the same disclosure state for every value, and the same carrier band.</p>
-  <p>The demo and the reference tool had diverged once before this check existed. A published page that silently disagrees with the specification is worse than no page at all. Before the check, the statement that two tools return the same verdict had no evidence behind it. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0018-the-demonstration-is-checked-against-the-tool.md">decision 0018</a>.</p>
+  <p><code>validate_cbom.py</code> is the reference implementation. The <a href="demo.html">Demo</a> page used to be a second one: a static page cannot run Python, so the evaluation was written again in JavaScript, and <code>tests/check-demo.py</code> compared the two. The demo and the reference tool had diverged once before that check existed. A published page that silently disagrees with the specification is worse than no page at all.</p>
+  <p>The demo no longer evaluates anything. <code>tools/build_demo_reports.py</code> runs the validator over the examples and writes <code>demo-reports.json</code>, and the page renders that file. <code>tests/check-demo.py</code> regenerates the reports and fails if the committed file differs. It also fails if the page holds a copy of any rules file. This changes how <a href="https://github.com/pkic/cbom/blob/main/decisions/0018-the-demonstration-is-checked-against-the-tool.md">decision 0018</a> is met, not what it requires: the page shows what the reference tool says.</p>
 
   <h2>Making and recording a claim</h2>
   <p>A conformance claim is a statement by an identified party that a named document revision was assessed against a named profile version and produced a stated verdict.</p>
 
   <h3>What a claim cites</h3>
   <p>A claim names three things: the profile and its version, the carrier format and its version, and the content revision of the document that was assessed. A claim missing any of the three cannot be reproduced, and a claim that cannot be reproduced cannot be audited. Where a derived profile was used, the claim also names the base and the version it pins.</p>
-  <pre><code>Conforms to:
-  pkic.example.pqc-migration v0.6
-    extending pkic.example.interface-disclosure v0.7
-Carrier: CycloneDX 1.7
-Content revision: 3
+  <pre><code>Document: cbom-keycloak-product.cdx.json  (Keycloak 26.7.3 product record)
+Conforms to:
+  pkic.example.pqc-migration v0.8
+    extending pkic.example.interface-disclosure v0.9
+Carrier: CycloneDX 2.0
+Content revision: 1
 Assessed by: Example Ltd (self-declared)
-Assessed on: 2026-08-09
-Tool: validate_cbom.py 0.2</code></pre>
+Assessed on: 2026-10-25
+Tool: validate_cbom.py</code></pre>
+  <p>A claim about a deployment record also lists, under <code>unresolved</code>, every rule the evaluator could not settle because it was not given a cited record. <a href="claim-example.json">claim-example.json</a> is a complete claim.</p>
 
   <h3>Who may claim</h3>
   <p>A claim is made by the party that performed the evaluation, and identifies that party. A producer evaluating its own document makes a self-declared claim, which is permitted and is labelled as such. A claim made by a party other than the producer is an attested claim, and carries whatever additional weight the relying party assigns to the attesting party.</p>
@@ -246,7 +262,7 @@ Tool: validate_cbom.py 0.2</code></pre>
   <p>A claim is fixed to the revision it assessed and does not roll forward. A new content revision needs a new evaluation. So does a new profile version, and where that version tightened a rule, a document that conformed before may no longer conform. The changelog is what tells a producer whether re-evaluation is likely to be needed, and that is why the methodology asks for every change to be classified.</p>
   <div class="banner warn">Open point. Whether a tightening obliges a grace window before a consumer may reject documents produced against the previous version, and whether that window belongs to the profile or to the agreement between the parties, is not settled. Recorded as Q15.</div>
 
-  <h2>What a conformance verdict does not assert</h2>
+  <h2 id="not-asserted">What a conformance verdict does not assert</h2>
   <p>The verdict is a statement about disclosure only. It does not make the following claims, although it is often mistaken for them.</p>
   <div style="overflow:auto">
   <table>
@@ -257,7 +273,9 @@ Tool: validate_cbom.py 0.2</code></pre>
       <tr><td>That the cryptography described is adequate</td><td>Adequacy is a derived judgement made by external versioned policy, deliberately kept out of the document. See <a href="policy-evaluation.html">Policy Evaluation</a>.</td></tr>
       <tr><td>That the document is complete</td><td>A profile is a minimum reporting requirement. Cryptography outside the profile's scope may exist and is not required to be disclosed.</td></tr>
       <tr><td>That every relevant interface was declared</td><td>Product rules constrain the set of declared interfaces by kind and count. An undeclared interface that no product rule requires is invisible to the evaluation.</td></tr>
-      <tr><td>That the cryptography described is free of known vulnerabilities</td><td>A third party asserts a weakness about a component. Whether the weakness affects this product is a judgement the producer publishes separately, as a VEX statement. A profile requires the facts that let a consumer join the weakness to the VEX statement. It does not require a verdict on vulnerability. See <a href="vulnerabilities.html">Vulnerabilities</a>.</td></tr>
+      <tr><td>That the cryptography described is free of known vulnerabilities</td><td>A third party asserts a weakness about a component. Whether the weakness affects this product is a judgement the producer publishes separately, as a VEX statement. A profile requires the facts that let a consumer join the weakness to the VEX statement. The baseline also requires a pointer to where the producer publishes such statements, or a statement that it publishes none (R2). It does not require a verdict on vulnerability. See <a href="vulnerabilities.html">Vulnerabilities</a>.</td></tr>
+      <tr><td>That an artefact the document points to is correct, current or reachable</td><td>A reference rule checks the pointer, never the target. Where the evaluator holds a cited document, it checks the hash, and nothing more. The content of an SBOM, a VEX feed or a configuration guide is outside the verdict.</td></tr>
+      <tr><td>Anything inherited from a cited record the evaluator was not given</td><td>The validator reports such a rule as unresolved, and the verdict does not count it. A consumer who needs it settled supplies the cited record and evaluates again.</td></tr>
       <tr><td>That the product is suitable for a given purpose</td><td>Suitability is the consumer's decision. The profile exists to supply the facts that decision needs.</td></tr>
     </tbody>
   </table>

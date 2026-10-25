@@ -26,23 +26,25 @@ nav: objects
   <h1>Objects</h1>
   <p class="lead">The methodology defines about a dozen objects, each introduced on the page where it is first needed. They are listed together here. For each object, the list gives the party or tool that creates it and how it is identified. It also names what the methodology deliberately leaves out. Nothing here is new: every object is defined on another page.</p>
 
-  <p><a href="model.html">Model</a> covers the subject matter, meaning the cryptography a document describes. This page covers the documents themselves and the things that check them.</p>
+  <p><a href="model.html">Model</a> covers the subject matter, meaning the cryptography a document describes. The objects defined here are the documents themselves and the things that check them.</p>
 
   <h2>What there is</h2>
   <table>
     <thead><tr><th>Object</th><th>What it is</th><th>Written by</th></tr></thead>
     <tbody>
-      <tr><td><strong>Subject</strong></td><td>The product, service or component a document describes. A profile declares which kind it accepts as its <code>subjectType</code>.</td><td>nobody; it is the thing being described</td></tr>
-      <tr><td><strong>Interface</strong></td><td>A cryptographic relationship the subject exposes at its boundary. Most rules apply to interfaces. See <a href="model.html">Model</a>.</td><td>producer, as part of a document</td></tr>
-      <tr><td><strong>CBOM revision</strong></td><td>One revision of the record for one subject, in one carrier format (the document format that carries the CBOM). It is extracted from an inventory and does not exist on its own. See <a href="inventory.html">Inventory</a>.</td><td>producer</td></tr>
+      <tr><td><strong>Subject</strong></td><td>The product or deployment a document describes. A profile declares which kinds it accepts as its <code>subjectTypes</code>. Each document declares its own type, under baseline rule P5.</td><td>nobody; it is the thing being described</td></tr>
+      <tr><td><strong>Cryptographic interface</strong></td><td>A cryptographic relationship the subject exposes at its boundary. Most rules apply to cryptographic interfaces. CycloneDX 2.0 has its own, different "interface" concept, so the methodology uses the full term where confusion is possible. In a deployment record, each cryptographic interface names the product interface it realises (<code>correspondsTo</code>). See <a href="model.html">Model</a>.</td><td>producer, as part of a document</td></tr>
+      <tr><td><strong>CBOM revision</strong></td><td>One revision of the record for one subject, in one carrier format (the document format that carries the CBOM). It is extracted from an inventory and does not exist on its own. A revision carries one lifecycle stage. The vendor writes the product record, at <code>implemented</code>. The operator writes deployment records, at <code>configured</code> and <code>observed</code>, and each deployment record cites the records it builds on. See <a href="inventory.html">Inventory</a>.</td><td>producer</td></tr>
       <tr><td><strong>Variant</strong></td><td>A revision exists in a public form and a restricted form. The two variants differ in who may hold them. Where the restricted variant carries a value, the public variant carries a marker in its place. See <a href="confidentiality.html">Confidentiality</a>.</td><td>producer</td></tr>
       <tr><td><strong>Profile</strong></td><td>The minimum reporting requirements for one stated consumer making one stated decision. A profile is a rules file, not a schema.</td><td>profile author</td></tr>
       <tr><td><strong>Profile family</strong></td><td>A set of profiles in which each profile extends another. The profiles are ordered by <a href="maturity.html">depth</a>, meaning how much each one requires a producer to disclose. Each profile contains all the requirements of the one below it. The shallowest is the entry profile. A profile that changes the consumer decision is a branch: it starts a separate line instead of adding a level (a rung) to the existing one.</td><td>nobody declares it; it follows from each profile's <code>extends</code> field</td></tr>
-      <tr><td><strong>Rule</strong></td><td>One requirement. Rules with ids beginning <code>P</code> are evaluated once per product. Rules beginning <code>I</code> are evaluated once per interface. Rules beginning <code>G</code> are evaluated once for each entry in a group. A rule belongs to its own profile and is cited as <code>tag#id</code>.</td><td>profile author</td></tr>
+      <tr><td><strong>Rule</strong></td><td>One requirement. Rules with ids beginning <code>P</code> are evaluated once per product. Rules beginning <code>I</code> are evaluated once per interface. Rules beginning <code>G</code> are evaluated once for each entry in a group. Rules beginning <code>R</code> are reference rules: they check the pointers a document carries to context it does not contain. A rule belongs to its own profile and is cited as <code>tag#id</code>.</td><td>profile author</td></tr>
+      <tr><td><strong>Context pointer</strong></td><td>A reference from a document to an artefact it does not carry, such as the companion SBOM, a vulnerability statement feed or a configuration guide. A profile defines the kinds of context. A pointer to a fixed document carries a hash. A pointer to a feed or an API names its access protocol. Conformance checks the pointer and never the target. See <a href="context.html">Context Pointers</a>.</td><td>producer, as part of a document</td></tr>
       <tr><td><strong>Vocabulary</strong></td><td>A controlled list a rule constrains values against, such as the cryptographic purposes.</td><td>profile author, or inherited</td></tr>
       <tr><td><strong>Conformance report</strong></td><td>The full result of evaluating one document against one profile. It gives the result for each rule and the disclosure state of each rule.</td><td>a validator, where the evaluation ran</td></tr>
       <tr><td><strong>Conformance claim</strong></td><td>A portable record of one or more evaluations. It is bound to a document by the document's digest. The claim is the artifact that is passed from one organisation to another.</td><td>whoever ran the evaluation</td></tr>
-      <tr><td><strong>Policy</strong></td><td>Held outside the CBOM, and versioned. Holds the judgements a CBOM deliberately does not carry, such as whether an algorithm is still acceptable. See <a href="policy-evaluation.html">Policy Evaluation</a>.</td><td>the consuming organisation</td></tr>
+      <tr><td><strong>Policy</strong></td><td>Held outside the CBOM, and versioned. Holds the judgements a CBOM deliberately does not carry, such as whether an algorithm is still acceptable. A policy is versioned data plus a named evaluation method. Two example policies are published under <code>policies/</code>. See <a href="policy-evaluation.html">Policy Evaluation</a>.</td><td>the consuming organisation</td></tr>
+      <tr><td><strong>Policy result</strong></td><td>The output of evaluating a policy on a date. It names the policy id, version and digest, the evaluation date, and every CBOM it read, by SHA-256 digest. It also states what it does not assert. A result points to the records it read; a record never points to a result.</td><td>whoever evaluated the policy</td></tr>
       <tr><td><strong>Vulnerability statement</strong></td><td>Held outside the CBOM. It is linked to a document rather than contained in one. It cites the document by the same digest that a conformance claim uses to bind to it. Conformance asserts nothing about the vulnerability statement. See <a href="vulnerabilities.html">Vulnerabilities</a>.</td><td>whoever issues it, usually not the producer</td></tr>
     </tbody>
   </table>
@@ -53,7 +55,7 @@ nav: objects
       <g>
         <rect x="14" y="16" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"/>
         <text x="74" y="34" fill="#1a2230" text-anchor="middle" font-weight="600">Subject</text>
-        <text x="74" y="49" fill="#5b6472" text-anchor="middle" font-size="10">product or service</text>
+        <text x="74" y="49" fill="#5b6472" text-anchor="middle" font-size="10">product or deployment</text>
         <rect x="14" y="96" width="120" height="42" rx="9" fill="#eef2f8" stroke="#c9d3e0"/>
         <text x="74" y="114" fill="#1a2230" text-anchor="middle" font-weight="600">Interfaces</text>
         <text x="74" y="129" fill="#5b6472" text-anchor="middle" font-size="10">at its boundary</text>
@@ -112,20 +114,21 @@ nav: objects
   <table>
     <thead><tr><th>Object</th><th>Identified by</th><th>Stable across</th></tr></thead>
     <tbody>
-      <tr><td>Subject</td><td>An identifier in the form the profile names, usually a <code>purl</code></td><td>revisions of the document</td></tr>
-      <tr><td>Interface</td><td><code>interfaceId</code>, chosen by the producer. No profile constrains it.</td><td>nothing; it is a label</td></tr>
-      <tr><td>CBOM revision</td><td>Content revision, and a digest when a claim or a vulnerability statement cites it</td><td>nothing; a new revision is a new document</td></tr>
+      <tr><td>Subject</td><td>An identifier in the form the profile names. In the baseline, a product is identified by a package URL (<code>purl</code>), and a deployment by a tag URI (RFC 4151), such as <code>tag:example.org,2026:deployment/sso-prod</code></td><td>revisions of the document</td></tr>
+      <tr><td>Cryptographic interface</td><td><code>interfaceId</code>, chosen by the producer. No profile constrains it. Across a join, a deployment interface names a product interface by a BOM-Link, <code>urn:cdx:&lt;serial&gt;/&lt;version&gt;#&lt;bom-ref&gt;</code></td><td>nothing; it is a label. The BOM-Link is stable for the revision it names</td></tr>
+      <tr><td>CBOM revision</td><td>Serial number and version, written as a BOM-Link <code>urn:cdx:&lt;serial&gt;/&lt;version&gt;</code>, and a SHA-256 digest when a deployment record, a claim, a policy result or a vulnerability statement cites it</td><td>nothing; a new revision is a new document</td></tr>
       <tr><td>Profile</td><td><code>profileId</code> and version, cited together</td><td>a published version is never altered</td></tr>
       <tr><td>Profile, in a citation</td><td><code>profileTag</code>, the short handle</td><td>the life of the profile</td></tr>
       <tr><td>Rule</td><td><code>tag#id</code>, such as <code>interface-disclosure#I9</code>. The id belongs to the profile that introduced it, not to one that later tightened it.</td><td>every version after it appears; a released id is never reused</td></tr>
       <tr><td>Claim</td><td>The digest of the document it is about</td><td>nothing; a new revision needs a new claim</td></tr>
-      <tr><td>Policy</td><td>Its own version, recorded alongside any judgement it produced</td><td>whatever the consuming organisation decides</td></tr>
+      <tr><td>Policy</td><td>Its id, version and digest, recorded in every result it produced</td><td>whatever the consuming organisation decides</td></tr>
+      <tr><td>Policy result</td><td>The policy it applied, the evaluation date and the digests of the CBOMs it read</td><td>nothing; a new evaluation is a new result</td></tr>
     </tbody>
   </table>
 
   <h2>Two axes that get confused</h2>
   <p>Capture phase and revision state were described by a single word until <a href="https://github.com/pkic/cbom/blob/main/decisions/0021-one-word-one-meaning.md">decision 0021</a>. They are different things and must be kept apart.</p>
-  <p><strong>Capture phase</strong> belongs to a fact. <code>lifecycleStage</code> says whether a value was intended, implemented, configured or observed. This tells a reader how much weight the value carries. It can differ between two attributes in the same document. See <a href="lifecycle.html">Lifecycle Data</a>.</p>
+  <p><strong>Capture phase</strong> belongs to the facts. <code>lifecycleStage</code> says whether the values were implemented, configured or observed. This tells a reader how much weight the values carry. Under baseline rule P6 a document carries one stage for all its facts, natively in <code>metadata.lifecycles</code>. Where an interface also carries its own <code>lifecycleStage</code>, the two must agree. The baseline does not accept <code>intended</code>; only the entry profile does. See <a href="lifecycle.html">Lifecycle Data</a>.</p>
   <p><strong>Revision state</strong> belongs to a document. A document can be created, signed, published or superseded. Its revision state is the same for every attribute in the document. Governance controls how a document moves from one state to the next. See <a href="governance.html">Governance</a>.</p>
 
   <h2>What is deliberately not an object here</h2>

@@ -24,8 +24,9 @@ nav: profile
 <main>
   <div class="crumb">CORE</div>
   <h1>The profile: Interface Disclosure Baseline</h1>
-  <p class="lead">This profile is product-independent. Its rules are structural: they say which categories of interface must exist, and what each one must disclose. Written that way, they apply to any product. No rule names a specific product or a specific interface instance.</p>
-  <div class="banner warn">A profile must not bind a rule to a specific product or interface. An earlier draft incorrectly required <code>interfaceId</code> to equal <code>"nginx-https"</code>. Rules instead constrain the set of interfaces and the attributes of each interface.</div>
+  <p class="lead">The Interface Disclosure Baseline, v0.9, is product-independent. Its rules are structural: they say which categories of cryptographic interface must exist, what each one must disclose, and which context the document must point to. Written that way, they apply to any product and to any deployment of it. No rule names a specific product or a specific interface instance. The worked example is Keycloak 26.7.3, and the full write-up is <a href="profile-interface-disclosure.md">profile-interface-disclosure.md</a>.</p>
+  <div class="banner warn">A profile must not bind a rule to a specific product or interface. An early draft wrongly required <code>interfaceId</code> to equal <code>"nginx-https"</code>. Rules instead constrain the set of interfaces and the attributes of each interface.</div>
+  <div class="banner">The carrier target is CycloneDX 2.0, pinned to the <code>2.0-dev</code> schema of 23 October 2026 (commit <code>76f185c</code>) until Ecma ratifies the release. The validator reads CycloneDX 1.6 and 1.7 as legacy and flags them. CycloneDX 2.0 has its own <code>profiles</code> element and its own blueprint "interface". Neither is the concept the PKIC work uses. Where confusion is possible, the methodology says <em>PKIC CBOM profile</em> and <em>cryptographic interface</em>. The choices behind v0.9 are recorded in <a href="https://github.com/pkic/cbom/blob/main/decisions/0025-baseline-consolidation.md">decision 0025</a>.</div>
 
   <h2>Two directions of use</h2>
   <p>The profile contains one attribute table. Two different parties use that same table for two different purposes.</p>
@@ -50,59 +51,95 @@ nav: profile
     <figcaption>The profile serves as a specification for the party that generates the CBOM and as a conformance checklist for the party that consumes it.</figcaption>
   </figure>
 
-  <h2>Three kinds of rule</h2>
+  <h2>Subjects and stages</h2>
+  <p>One baseline serves two subject types. The vendor writes the <strong>product record</strong>: what the product does as built, at the <code>implemented</code> stage. The operator writes <strong>deployment records</strong>: what one deployment permits (<code>configured</code>) and what it was seen to do (<code>observed</code>). The rules describe an interface the same way in both. Only the subject identifier and some reference rules differ, and the profile keys them by subject type.</p>
+  <table>
+    <thead><tr><th>Subject type</th><th>Written by</th><th>Stages</th><th>Identifier (P3)</th></tr></thead>
+    <tbody>
+      <tr><td><code>product</code></td><td>vendor</td><td><code>implemented</code></td><td>a Package URL, such as <code>pkg:oci/keycloak?repository_url=quay.io/keycloak/keycloak&amp;tag=26.7.3</code></td></tr>
+      <tr><td><code>deployment</code></td><td>operator</td><td><code>configured</code>, <code>observed</code></td><td>a tag URI (RFC 4151), such as <code>tag:example.org,2026:deployment/sso-prod</code></td></tr>
+    </tbody>
+  </table>
+  <p>A tag URI is an identifier that anyone who controls a domain name can mint, with no registration. That suits an operator naming its own deployments, which have no Package URL.</p>
+  <p><strong>One document has one subject and one stage.</strong> The document carries its stage natively in CycloneDX <code>metadata.lifecycles</code>: <code>build</code> means implemented, <code>operations</code> means configured, and <code>discovery</code> means observed. A per-interface <code>lifecycleStage</code>, where present, must agree. A vendor's build record and an operator's scan come from different parties at different times. Mixing them in one document would count one boundary twice, and would let a producer fill a gap at one stage with a value from another. The readiness gap comes from <a href="model.html">joining</a> a record at one stage to a record at another, not from merging them.</p>
+  <p>The meaning of a present-state value such as <code>keyExchange</code> depends on the stage. At <code>implemented</code> it is the product's default as shipped. At <code>configured</code> it is the set the deployment permits. At <code>observed</code> it is the set seen during the observation window.</p>
+  <p><strong>The baseline does not accept <code>intended</code>.</strong> A design intention says nothing about deployed interfaces. A vendor's intention is a capability status under the PQC migration profile: Keycloak's ML-DSA token signing, for example, is <code>committed</code> (issue #43690). An operator's intention is a requirement, held in a policy or a tender. A design document is context, and the document points to it under R6. The entry profile, Interface Enumeration, still accepts <code>intended</code>.</p>
+
+  <h2>Four kinds of rule</h2>
   <figure>
-    <svg viewBox="0 0 720 250" role="img" aria-label="A product outline for nginx 1.27.0 containing two interface cards, an HTTPS service interface and an SSH management interface, each giving its protocol, library and endpoint roles" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="13">
+    <svg viewBox="0 0 720 250" role="img" aria-label="A product outline for Keycloak 26.7.3 containing two interface cards, a TLS service interface on port 8443 and a TLS management interface on port 9000, each giving its protocol, library and endpoint roles" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="13">
       <rect x="40" y="20" width="640" height="210" rx="16" fill="#f2f6fc" stroke="#c9d3e0" stroke-dasharray="6 5"/>
-      <text x="60" y="46" fill="#5b6472" font-size="12" font-family="monospace">PRODUCT · nginx 1.27.0</text>
+      <text x="60" y="46" fill="#5b6472" font-size="12" font-family="monospace">PRODUCT · Keycloak 26.7.3 (container image)</text>
       <rect x="70" y="64" width="270" height="140" rx="12" fill="#ffffff" stroke="#e2e7ef"/>
       <rect x="70" y="64" width="270" height="4" rx="2" fill="#0284c7"/>
       <text x="86" y="90" fill="#0284c7" font-size="11" font-weight="700" font-family="monospace">interfaceType · service</text>
-      <text x="86" y="112" fill="#1a2230" font-weight="600">HTTPS service interface</text>
-      <text x="86" y="132" fill="#5b6472" font-size="12">TLS 1.3 · via OpenSSL 3.4.0</text>
-      <text x="86" y="152" fill="#5b6472" font-size="12">client (browser) ↔ server (nginx)</text>
+      <text x="86" y="112" fill="#1a2230" font-weight="600">Main HTTPS listener (8443)</text>
+      <text x="86" y="132" fill="#5b6472" font-size="12">TLS 1.3 · OpenJDK 21 · on by default</text>
+      <text x="86" y="152" fill="#5b6472" font-size="12">client (browser) ↔ Keycloak</text>
       <text x="86" y="180" fill="#15803d" font-size="11.5" font-family="monospace">✓ all per-interface rules</text>
       <rect x="380" y="64" width="270" height="140" rx="12" fill="#ffffff" stroke="#e2e7ef"/>
       <rect x="380" y="64" width="270" height="4" rx="2" fill="#7c3aed"/>
       <text x="396" y="90" fill="#7c3aed" font-size="11" font-weight="700" font-family="monospace">interfaceType · management</text>
-      <text x="396" y="112" fill="#1a2230" font-weight="600">Management interface</text>
-      <text x="396" y="132" fill="#5b6472" font-size="12">SSH 2.0 · via OpenSSH 9.6</text>
-      <text x="396" y="152" fill="#5b6472" font-size="12">client (admin) ↔ server (host)</text>
+      <text x="396" y="112" fill="#1a2230" font-weight="600">Management listener (9000)</text>
+      <text x="396" y="132" fill="#5b6472" font-size="12">TLS 1.3 · OpenJDK 21 · off by default</text>
+      <text x="396" y="152" fill="#5b6472" font-size="12">client (monitoring) ↔ Keycloak</text>
       <text x="396" y="180" fill="#b45309" font-size="11.5" font-family="monospace">← rule P2 requires this exists</text>
     </svg>
-    <figcaption>Product rule P2 requires at least one <code>management</code> interface. Omitting the management interface, as the non-conforming CBOM does, fails rule P2 even when the service interface is fully described.</figcaption>
+    <figcaption>Two of the 13 interfaces in the Keycloak product record. Product rule P2 requires at least one <code>management</code> interface. <code>cbom-keycloak-product-fail-P2.cdx.json</code> leaves out both management interfaces and fails P2, even though every interface it does declare is fully described.</figcaption>
   </figure>
 
-  <h3>Product-level rules (constraints on the set of interfaces)</h3>
+  <h3>Product-level rules (constraints on the document and its set of interfaces)</h3>
   <table>
     <thead><tr><th>#</th><th>Requirement</th><th>Level</th><th>Constraint</th></tr></thead>
     <tbody>
       <tr><td>P1</td><td>Declare at least one cryptographic interface</td><td><span class="must">MUST</span></td><td><code>minInterfaces: 1</code></td></tr>
-      <tr><td>P2</td><td>Declare at least one <code>management</code> interface, <strong>or state why there is none</strong></td><td><span class="must">MUST</span></td><td><code>minInterfacesOfType: {management, 1}</code>, <code>orDeclaredAbsent</code></td></tr>
-      <tr><td>P3</td><td>Identify the subject the document describes</td><td><span class="must">MUST</span></td><td><code>subjectIdentified: {startsWith: pkg:}</code></td></tr>
-      <tr><td>P4</td><td>State how complete the declared interface set is</td><td><span class="must">MUST</span></td><td><code>productAttribute: coverage</code></td></tr>
+      <tr><td>P2</td><td>Declare at least one <code>management</code> interface, <strong>or state why there is none</strong></td><td><span class="must">MUST</span></td><td><code>minInterfacesOfType: {management, 1}</code>, <code>orDeclaredAbsent</code>, <code>orCitedDeclares</code></td></tr>
+      <tr><td>P3</td><td>Identify the subject the document describes: a Package URL for a product, a tag URI for a deployment</td><td><span class="must">MUST</span></td><td><code>subjectIdentified: {product: pkg:, deployment: tag:}</code></td></tr>
+      <tr><td>P4</td><td>State how complete the declared interface set is: <code>all</code>, <code>all-external</code> or <code>partial</code></td><td><span class="must">MUST</span></td><td><code>productAttribute: coverage</code></td></tr>
+      <tr><td>P5</td><td>Declare the subject type, <code>product</code> or <code>deployment</code></td><td><span class="must">MUST</span></td><td><code>subjectDeclared</code></td></tr>
+      <tr><td>P6</td><td>Declare one lifecycle stage, and report that stage on every interface</td><td><span class="must">MUST</span></td><td><code>singleStage</code></td></tr>
     </tbody>
   </table>
   <p>P1 and P2 catch omissions. Per-attribute rules cannot catch them, because those rules only check the interfaces a document actually declares. For example, a document may describe its service interface accurately and say nothing about how the product is administered. That document passes every interface rule, but it fails P2. A producer satisfies P2 in one of two ways: by declaring a management interface, or by stating that the subject has none. Some subjects, such as a library or a hardware token with no configuration surface, have no management interface. Stating that absence hides nothing. What P2 rules out is saying nothing at all about management. P2 therefore applies the <a href="#disclosure">disclosure model</a> (the rules for how a producer accounts for information it does not supply) to the structure of the document rather than to a single attribute.</p>
-  <p>P3 and P4 make the document usable as a record of a specific product, not only as a description. Without P3, a CBOM does not have to say which product, or which version of it, the document describes. The CBOM then cannot be matched to a deployment or compared with the same product's CBOM from last quarter. Without P4, a reader cannot interpret a missing interface. The interface might not exist, or the producer might have chosen not to list it, and those two situations are entirely different. The Conformance section identifies these two gaps as the non-assertions (things a CBOM leaves unstated) most likely to cause difficulty in procurement. P3 and P4 are the rules that address them.</p>
+  <p>Two more routes through P2 apply only to an <code>observed</code> record. If the observer could not reach the management interface, P2 passes when a configured record that the document cites declares one. The gap stays visible through the join, as an interface with no observed counterpart. An observer with no configured record to cite, such as an outside assessor, states the reason <code>not-reached</code>. The validator accepts that reason only with coverage <code>partial</code>. The report says which route the document took.</p>
+  <p>P3 and P4 make the document usable as a record of a specific subject, not only as a description. Without P3, a CBOM does not have to say which product or deployment it describes. The CBOM then cannot be matched to anything else or compared with the same subject's CBOM from last quarter. Without P4, a reader cannot interpret a missing interface. The interface might not exist, or the producer might have chosen not to list it, and those two situations are entirely different. The Conformance section identifies these two gaps as the non-assertions (things a CBOM leaves unstated) most likely to cause difficulty in procurement. P3 and P4 are the rules that address them.</p>
+  <p>P5 and P6 make the subject and the stage explicit. A consumer cannot tell from the content alone whether a record describes a product as built or one deployment of it. P5 makes the document say so, and P6 keeps one document to one stage.</p>
 
   <h3>Per-interface rules (applied to every interface)</h3>
   <p>Attribute names follow the conventions in <a href="method.html">Method</a>. A bare name describes the interface's present state, so <code>keyExchange</code> is the key exchange the interface uses now. A profile that needs to record what an interface is declared to support adds the <code>Supported</code> suffix to the name. The <a href="../use-cases/pqc-migration.html">PQC Migration</a> profile does this.</p>
   <table>
     <thead><tr><th>#</th><th>Attribute</th><th>Level</th><th>Notes</th></tr></thead>
     <tbody>
-      <tr><td>I1</td><td><code>protocol</code></td><td><span class="must">MUST</span></td><td>TLS, SSH, IPsec, and similar</td></tr>
-      <tr><td>I2</td><td><code>protocolVersion</code></td><td><span class="must">MUST</span></td><td></td></tr>
-      <tr><td>I3</td><td><code>keyExchange</code></td><td><span class="must">MUST</span></td><td>registry algorithm identifier</td></tr>
-      <tr><td>I4</td><td><code>encryption</code></td><td><span class="must">MUST</span></td><td>bulk or AEAD algorithm</td></tr>
-      <tr><td>I5</td><td><code>authentication</code></td><td><span class="must">MUST</span></td><td>certificate signature (TLS) or host key (SSH)</td></tr>
-      <tr><td>I6</td><td><code>endpointRoles</code></td><td><span class="must">MUST</span></td><td>at least two endpoints</td></tr>
+      <tr><td>I1</td><td><code>protocol</code></td><td><span class="must">MUST</span></td><td>TLS, SSH, IPsec, OIDC, SAML, and similar. Not required of a storage interface</td></tr>
+      <tr><td>I2</td><td><code>protocolVersion</code></td><td><span class="must">MUST</span></td><td>Not required of a storage interface</td></tr>
+      <tr><td>I3</td><td><code>keyExchange</code></td><td><span class="must">MUST</span></td><td>registry algorithm identifier, or a <a href="#literals">literal</a>. Not required of a storage interface</td></tr>
+      <tr><td>I4</td><td><code>encryption</code></td><td><span class="must">MUST</span></td><td>bulk or AEAD algorithm, or a literal</td></tr>
+      <tr><td>I5</td><td><code>authentication</code></td><td><span class="must">MUST</span></td><td>the signature that proves the sender: certificate signature (TLS), host key (SSH) or token signature (OIDC, SAML), or a literal. Not required of a storage interface</td></tr>
+      <tr><td>I6</td><td><code>endpointRoles</code></td><td><span class="must">MUST</span></td><td>at least two endpoints. Not required of a storage interface</td></tr>
       <tr><td>I7</td><td><code>interfaceType</code></td><td><span class="must">MUST</span></td><td>from the controlled vocabulary</td></tr>
-      <tr><td>I8</td><td><code>lifecycleStage</code></td><td><span class="must">MUST</span></td><td>see <a href="lifecycle.html">Lifecycle Data</a></td></tr>
+      <tr><td>I8</td><td><code>lifecycleStage</code></td><td><span class="must">MUST</span></td><td><code>implemented</code>, <code>configured</code> or <code>observed</code>. The interface's own value, or the document's stage where it has none. See <a href="lifecycle.html">Lifecycle Data</a></td></tr>
       <tr><td>I9</td><td><code>implementationPurl</code></td><td><span class="must">MUST</span></td><td>Package URL of the implementing library. Withholdable, which means the producer may decline to publish the value. A <code>withheld</code> marker satisfies the rule, but silent omission does not. I9 is the only rule in this table where the disclosure state decides whether the rule passes.</td></tr>
+      <tr><td>I10</td><td><code>keyWrapping</code></td><td><span class="must">MUST</span> on a storage interface</td><td>the algorithm that protects the data keys at rest, or <code>none</code>. It stands in for I3 on storage</td></tr>
+      <tr><td>I11</td><td><code>defaultState</code></td><td>SHOULD, at <code>implemented</code></td><td><code>enabled</code> or <code>disabled</code>: whether the interface is active in the product's default configuration</td></tr>
     </tbody>
   </table>
-  <div class="banner good">A CBOM conforms if and only if the carrier format (the document format, such as CycloneDX) is accepted, every product-level MUST rule holds, and every declared interface satisfies every per-interface MUST rule. <code>interfaceId</code> is an instance label chosen by the producer and is not constrained by the profile. The full statement of what conformance means, including what a passing verdict (the pass or fail result of an evaluation) does not assert, is in <a href="conformance.html">Conformance</a>.</div>
+  <p>A storage interface is data at rest. It has no protocol, peer or handshake, so the channel rules (I1, I2, I3, I5 and I6) do not apply to it, and I10 takes the place of I3. A network path to remote storage is declared as its own service or interconnect interface and owes the channel rules there. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0022-pqc-migration-family-depths.md">decision 0022</a>.</p>
+  <p>I11 exists because some interfaces are present in a product and off by default. Keycloak's plaintext HTTP listener is one. Declared without <code>defaultState</code>, it reads as an active plaintext interface. Left out, it hides the interface that becomes the plaintext hop behind a TLS-terminating proxy. In a deployment record, every declared interface is active, so I11 applies only at <code>implemented</code>.</p>
+
+  <h3 id="literals">Literal values</h3>
+  <p>I3, I4 and I5 accept three literal values in place of an algorithm. A literal is a value, not a disclosure marker, and it stands alone.</p>
+  <table>
+    <thead><tr><th>Literal</th><th>Meaning</th><th>Accepted at</th><th>Keycloak example</th></tr></thead>
+    <tbody>
+      <tr><td><code>none</code></td><td>The interface applies no algorithm for this job.</td><td>any stage</td><td>Token encryption is off by default, so the OIDC interface declares <code>keyExchange</code> <code>none</code>.</td></tr>
+      <tr><td><code>deployment-defined</code></td><td>The product does not fix the value. The operator chooses it.</td><td><code>implemented</code> only</td><td>The operator supplies the server certificate, so the HTTPS listener declares <code>authentication</code> <code>deployment-defined</code>.</td></tr>
+      <tr><td><code>peer-defined</code></td><td>The other endpoint decides the value, or the product negotiates it with that endpoint.</td><td><code>implemented</code> only</td><td>On the connection Keycloak opens to its database, the database decides the group and the certificate.</td></tr>
+    </tbody>
+  </table>
+  <p>At <code>configured</code> or <code>observed</code>, the producer holds the answer and must give it. <code>cbom-keycloak-deployment-configured-fail-literal.cdx.json</code> keeps <code>peer-defined</code> at <code>configured</code> and fails I3, I4 and I5 on the database connection. Without the two stage-restricted literals, a truthful build record of Keycloak failed I5 on 7 of its 13 interfaces. <a href="https://github.com/pkic/cbom/blob/main/decisions/0012-what-a-disclosure-baseline-requires.md">Decision 0012</a> states the principle: a rule that no legitimate subject can satisfy honestly is wrong, not strict.</p>
+  <p><code>none</code> differs from the disclosure markers. <code>none</code> is a claim about the product. <code>unknown</code> reports that the producer does not know, and <code>withheld</code> reports that the producer declines to say.</p>
+
+  <div class="banner good">A CBOM conforms if and only if the carrier format (the document format, such as CycloneDX) is accepted, every product-level MUST rule holds, every applicable reference rule at MUST level holds, and every declared interface satisfies every per-interface MUST rule. <code>interfaceId</code> is an instance label chosen by the producer and is not constrained by the profile. The full statement of what conformance means, including what a passing verdict (the pass or fail result of an evaluation) does not assert, is in <a href="conformance.html">Conformance</a>.</div>
   <p>Derived evaluations such as post-quantum posture are deliberately not profile attributes. They are computed by an external policy from the disclosed facts, because the criteria on which they depend change over time. See <a href="policy-evaluation.html">Policy Evaluation</a>.</p>
 
   <h3>Group rules (one answer per key, within an interface)</h3>
@@ -112,6 +149,24 @@ nav: profile
   <p>The <a href="../use-cases/pqc-migration.html">PQC Migration</a> profile uses a group rule, keyed by <a href="model.html">cryptographic purpose</a>. Rule <code>pqc-migration#G1</code> requires an entry per purpose, and its member <code>G1.2</code> requires a blocker wherever <em>that purpose's</em> status is not <code>available</code>.</p>
   <p>A group rule also declares its <strong>key coverage</strong> (<code>keyCoverage</code>). Key coverage is the set of vocabulary values for which an interface must carry an entry. It may be every value in the vocabulary, or only the values that the profile's scope declares.</p>
   <p>The choice of key coverage matters most for a profile that addresses only part of a problem. It decides whether that profile can serve as one depth in a family of profiles, or becomes a permanent floor for the purposes it covers. With full key coverage, the profile still requires a status for each purpose it defers, so a consumer learns where each deferred purpose stands. With key coverage limited to the purposes in scope, the deferred purposes disappear from the document entirely. A later profile then has no baseline (no recorded starting point) to improve on. <a href="conformance.html">C13</a> checks which key coverage a profile uses. The check is needed because a profile written with either setting loads and runs without error.</p>
+
+  <h3 id="reference-rules">Reference rules (pointers to context the document does not carry)</h3>
+  <p>A <strong>reference rule</strong> requires the document to point to an artefact that it does not carry. Its letter is <code>R</code>. <a href="https://github.com/pkic/cbom/blob/main/decisions/0020-cbom-joined-to-vulnerability-statements.md">Decision 0020</a> set the principle for vulnerability statements, and reference rules generalise it: a CBOM records facts that change when the product or deployment changes, and it joins, rather than merges, context that changes on another trigger or that another party holds.</p>
+  <p>A profile defines its <strong>context kinds</strong> in <code>contextKinds</code>. For each kind it names the CycloneDX <code>externalReferences</code> types that can carry it, and its form. A <code>document</code> is a fixed artefact, and the pointer binds it by a hash. An <code>endpoint</code> is a feed or API whose content changes, and the pointer names its access protocol. Some kinds accept either form.</p>
+  <table>
+    <thead><tr><th>#</th><th>Context kind</th><th>Level</th><th>Applies to</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>R1</td><td><code>sbom</code></td><td><span class="must">MUST</span></td><td>product</td><td>The SBOM of the same subject, as a BOM-Link with a SHA-256 hash.</td></tr>
+      <tr><td>R2</td><td><code>vulnerability-statements</code></td><td><span class="must">MUST</span></td><td>product</td><td>A VEX or CSAF VEX document with its hash, or a feed or API with its access protocol, or the stated absence <code>not-published</code>. Silence fails.</td></tr>
+      <tr><td>R3</td><td><code>advisories</code></td><td>SHOULD</td><td>product</td><td>An endpoint with access protocol <code>web-page</code>, <code>csaf-provider</code>, <code>osv-api</code> or <code>ghsa-api</code>.</td></tr>
+      <tr><td>R4</td><td><code>security-contact</code></td><td>SHOULD</td><td>product</td><td>Where to report a weakness or ask for a fuller disclosure: <code>rfc-9116</code> or <code>security-contact</code>.</td></tr>
+      <tr><td>R5</td><td><code>configuration-guidance</code></td><td><span class="must">MUST</span></td><td>each interface where I3, I4 or I5 is <code>deployment-defined</code></td><td>Where the operator makes the choice the product leaves open.</td></tr>
+      <tr><td>R6</td><td><code>design-intent</code></td><td>MAY</td><td>any</td><td>A threat model or design document. Design intention lives here, not in a lifecycle stage.</td></tr>
+    </tbody>
+  </table>
+  <p>In CycloneDX, each pointer is an external reference with the property <code>pkic:profile:context</code>, which names the kind. Two kinds can share one reference type, so the type alone is not enough. An endpoint also carries <code>pkic:profile:accessProtocol</code>. CycloneDX 2.0 allows properties on external references.</p>
+  <p>Two principles apply to every reference rule. First, <strong>conformance checks the pointer, never the target</strong>. The validator checks that the pointer is present and well formed, and checks the hash where it holds the target. It never evaluates what the target says. Second, <strong>direction follows time</strong>. A record points to artefacts that exist when the producer writes it, such as its SBOM, and to the places where later statements will appear, such as a VEX feed or an advisory API. A judgement made afterwards, such as a conformance claim or a policy result, points to the record by digest. A record never points to a judgement about itself.</p>
+  <p>The Keycloak product record shows R1 to R5 in use. It cites its SBOM by BOM-Link and hash. It states <code>not-published</code> for vulnerability statements, because upstream Keycloak publishes none. It names the GitHub advisory page and the OSV API. It points to the Keycloak security policy. Its HTTPS listener points to the Keycloak guide for setting the server certificate, and its management listener points to the guide for the management interface. <code>cbom-keycloak-product-fail-R5.cdx.json</code> removes that guide pointer from the HTTPS listener and fails R5 only. Derived profiles add their own kinds. The deployment profile cites the records it builds on under its P1, with the context <code>cited-document</code>, and adds <code>configuration-source</code>, <code>observation-evidence</code>, <code>data-register</code> and <code>issuer-policy</code>. The PQC migration profile adds <code>support-lifecycle</code>.</p>
 
   <h2 id="disclosure">Disclosure states</h2>
   <p>An attribute with no value may be missing for several different reasons, and the profile keeps those reasons apart. Following the 2026 SBOM minimum elements, a producer states whether the information is unknown to it or is being withheld.</p>
@@ -124,8 +179,8 @@ nav: profile
       <tr><td><code>undeclared</code></td><td>Neither a value nor a marker was supplied.</td><td>Fails.</td></tr>
     </tbody>
   </table>
-  <p>An unknown value does not satisfy a MUST rule, because the requirement has not been met. It is still reported separately from an undeclared one. An <code>unknown</code> marker records a limit of the producer's process. An undeclared attribute records that the producer never addressed the question.</p>
-  <p>In this profile only I9 is withholdable. I9 is withholdable because a producer can decline to publish a library version and still meet the purpose of the disclosure. A procurement profile might permit no withholding at all.</p>
+  <p>An unknown value does not satisfy a MUST rule at any stage, because the requirement has not been met. A record with gaps conforms one depth down, at the entry profile, instead: <code>cbom-keycloak-deployment-observed-fail-unknown.cdx.json</code> reports the database group as <code>unknown</code>, fails baseline I3, and conforms to Interface Enumeration. The validator still reports an unknown value separately from an undeclared one. An <code>unknown</code> marker records a limit of the producer's process. An undeclared attribute records that the producer never addressed the question.</p>
+  <p>In this profile only I9 is withholdable. I9 is withholdable because a producer can decline to publish a library version and still meet part of the purpose of the disclosure. The verdict stays "conforms", and the report shows the withholding. The PQC migration and procurement profiles both make I9 non-withholdable. <code>cbom-keycloak-product-disclosure-states.cdx.json</code> shows all four outcomes: its withheld library is permitted, and it fails I5 on the cluster interface (<code>unknown</code>) and I4 on the SAML interface (undeclared).</p>
   <p>The choice of which rules are withholdable also decides a larger question. It decides whether a public document can conform to the profile, or whether only a document released under an agreement can conform. <a href="confidentiality.html">Confidentiality</a> covers that question. One kind of consumer, the vulnerability responder, cannot accept a withheld I9 at all. Incident response depends entirely on matching a library against a vulnerability feed. If I9 is withheld, the responder has no library to match. For that reason, <a href="vulnerabilities.html">Vulnerabilities</a> treats the withholding of I9 as the open question that blocks that use case. See <a href="challenges.html">Challenges</a> and <a href="demo.html">Demo</a>.</p>
 
   <h2 id="composition">Composition: how profiles relate to each other</h2>
@@ -153,7 +208,7 @@ nav: profile
       <text x="548" y="20" fill="#5b6472" text-anchor="middle" font-size="11" font-family="monospace">EXTENSION</text>
       <rect x="470" y="42" width="156" height="42" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
       <text x="548" y="62" fill="#1a2230" text-anchor="middle" font-size="11.5">base profile</text>
-      <text x="548" y="77" fill="#5b6472" text-anchor="middle" font-size="10">interface disclosure v0.7</text>
+      <text x="548" y="77" fill="#5b6472" text-anchor="middle" font-size="10">interface disclosure v0.9</text>
       <rect x="470" y="120" width="156" height="42" rx="10" fill="#eafaf1" stroke="#0f7a52"/>
       <text x="548" y="140" fill="#1a2230" text-anchor="middle" font-size="11.5">derived profile</text>
       <text x="548" y="155" fill="#5b6472" text-anchor="middle" font-size="10">adds and tightens only</text>
@@ -170,7 +225,7 @@ nav: profile
   <p>Independent evaluation depends on two conditions. First, attribute names are global across the methodology, so a name means the same thing in every profile that uses it. That is why the naming conventions and the attribute table in <a href="terms.html">Terms</a> apply to all profiles rather than to each one in isolation. Second, a verdict is always reported per profile, so conformance to one says nothing about another.</p>
 
   <h3>Extension</h3>
-  <p>A profile may declare that it extends another. It then inherits every rule of the base and states only what it adds or changes. A sector baseline built on a general one, and the <a href="../use-cases/pqc-migration.html">PQC migration</a> profile built on the interface disclosure baseline, are both of this kind.</p>
+  <p>A profile may declare that it extends another. It then inherits every rule of the base and states only what it adds or changes. A sector baseline built on a general one is of this kind. So are the three example profiles built on the interface disclosure baseline v0.9: <a href="../use-cases/pqc-migration.html">PQC migration</a> v0.8, procurement v0.1 and deployment disclosure v0.1. PQC migration extended v0.1 extends PQC migration v0.8 in turn.</p>
   <p>Extension is <strong>monotonic</strong>. A derived profile may add rules and tighten inherited ones. It may not relax them. This restriction guarantees the property that makes extension useful: a document that conforms to the derived profile also conforms to the base. Without the restriction, a claim of conformance to a sector profile "based on" the baseline would tell a consumer nothing at all about the baseline, and the word "based" would mislead the consumer.</p>
   <table>
     <thead><tr><th>Operation on an inherited rule</th><th>Permitted</th><th>Why</th></tr></thead>
@@ -200,6 +255,7 @@ nav: profile
   <h3>Pinning, ranges and identifiers</h3>
   <ul>
     <li><strong>The base version is pinned.</strong> A derived profile names the base profile and the exact version it extends. A later release of the base has no effect until the derived profile's author re-pins and re-checks, which follows the general treatment of profile versions in <a href="versioning.html">Versioning</a>.</li>
+    <li><strong>Accepted subject types and stages may narrow, never widen.</strong> The baseline accepts the subject types <code>product</code> and <code>deployment</code> and the stages <code>implemented</code>, <code>configured</code> and <code>observed</code>. PQC migration and procurement narrow both to a product at <code>implemented</code>. Deployment disclosure narrows them to a deployment at <code>configured</code> or <code>observed</code>.</li>
     <li><strong>The carrier acceptance range may narrow, never widen.</strong> The carrier acceptance range is the range of document format versions a profile accepts. A derived profile cannot accept a format version the base excludes, since the base's adapter may be unable to read it.</li>
     <li><strong>Inherited rules keep the identifiers the base gave them.</strong> A report can then trace any failure to the profile that imposed it. See <em>Rule identifiers</em> for how identifiers are allocated.</li>
     <li><strong>An inherited group can be tightened without restating it.</strong> A derived profile may tighten one <em>member</em> of a group it inherited, naming that member by its qualified id (<code>pqc-migration#G1.3</code>), and may widen the group's <code>keyCoverage</code>. Members it does not name are inherited unchanged, and so is the key vocabulary. Restating the whole group would discard both the unchanged members and the key vocabulary. A restated group would also silently replace the base's coverage. Coverage may be widened and never narrowed. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0014-tightening-an-inherited-group.md">decision 0014</a>.</li>
@@ -208,8 +264,8 @@ nav: profile
   </ul>
 
   <h3>Rule identifiers</h3>
-  <p>A rule identifier is local to the profile that declares it. The citable form is the profile's tag (its short name) followed by the identifier, for example <code>interface-disclosure#I9</code>. No shorter form names a rule. Three profiles in one family may each declare an <code>I1</code>, and in the worked example three of them do.</p>
-  <p>The letter in an identifier shows how often the rule is evaluated. It is fixed by the section the rule sits in rather than chosen by the author. <code>P</code> means once per product, <code>I</code> once per declared interface, and <code>G</code> once per entry in a group, with members numbered under their group as <code>G1.2</code>. Numbering restarts at 1 in every profile, at every level of a family.</p>
+  <p>A rule identifier is local to the profile that declares it. The citable form is the profile's tag (its short name) followed by the identifier, for example <code>interface-disclosure#I9</code>. No shorter form names a rule. Several profiles in one family may each declare an <code>I1</code>, and in the example family five of them do.</p>
+  <p>The letter in an identifier shows which kind of rule it is and how often the rule is evaluated. It is fixed by the section the rule sits in rather than chosen by the author. <code>P</code> means once per document, <code>I</code> once per declared interface, <code>G</code> once per entry in a group, with members numbered under their group as <code>G1.2</code>, and <code>R</code> a reference rule, evaluated once per document or once per interface as the rule states. Numbering restarts at 1 in every profile, at every level of a family.</p>
   <p>This scheme has two consequences.</p>
   <ul>
     <li><strong>A rule keeps the identifier of the profile that introduced it</strong>, however far down the family it is later tightened. The migration profile makes the baseline's <code>implementationPurl</code> rule non-withholdable, but that rule is still <code>interface-disclosure#I9</code>. The tightening is recorded against <code>interface-disclosure#I9</code>, and a report names both the rule and the profile that tightened it.</li>
@@ -219,16 +275,18 @@ nav: profile
   <p>Identifiers do not appear in CBOM documents at all. They appear in conformance reports and in claims, which is why they have to be stable and why they have to say which profile they came from. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0011-rule-numbering-across-a-family.md">decision 0011</a>.</p>
 
   <h3>Expressing a conformance claim</h3>
-  <p>A conformance claim is the artifact that passes from one organisation to another. A producer hands the claim to a consumer who was not present when the evaluation ran, and who may read it months later. The claim is a machine-readable document with <a href="claim.schema.json">its own schema</a>. The shape below is illustrative. <a href="claim-example.json">claim-example.json</a> is a real claim, covering both example profiles at once.</p>
+  <p>A conformance claim is the artifact that passes from one organisation to another. A producer hands the claim to a consumer who was not present when the evaluation ran, and who may read it months later. The claim is a machine-readable document with <a href="claim.schema.json">its own schema</a>. The shape below is illustrative. <a href="claim-example.json">claim-example.json</a> is a real claim about the Keycloak product record. It covers three profiles at once: the baseline, PQC migration and PQC migration extended.</p>
   <p>Four properties make a claim checkable. A claim is <strong>bound to one document by digest</strong> (a hash of the document), so the claim no longer matches if it is placed beside a different CBOM. It <strong>lists every profile separately</strong>, with its own verdict and its whole pinned chain, because a document can conform to one profile and fail another. It carries the <strong>disclosure states</strong> alongside the verdict, because &ldquo;conforms&rdquo; with the implementing library withheld is a different answer from &ldquo;conforms&rdquo; with it supplied. And the claim itself lists <strong>what it does not assert</strong>, rather than referring to another document for that list. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0015-a-conformance-claim-is-checkable.md">decision 0015</a>.</p>
-  <pre><code>Conforms to:
-  pkic.example.pqc-migration v0.6            (tag: pqc-migration)
-    extending pkic.example.interface-disclosure v0.7   (tag: interface-disclosure)
-  pkic.example.interface-disclosure v0.7     (independently evaluated)
-Carrier: CycloneDX 1.7
-Content revision: 3</code></pre>
+  <pre><code>Document: cbom-keycloak-product.cdx.json  (sha-256 1b8fff9d...)
+Conforms to:
+  pkic.example.pqc-migration v0.8            (tag: pqc-migration)
+    extending pkic.example.interface-disclosure v0.9   (tag: interface-disclosure)
+  pkic.example.interface-disclosure v0.9     (independently evaluated)
+Carrier: CycloneDX 2.0
+Content revision: 1</code></pre>
   <p>The tags have a function in the claim. A report attached to the claim cites rules as <code>pqc-migration#I4</code>, and a reader needs the claim to say which profile that tag belongs to.</p>
   <p><strong>A claim is useful only if a consumer can re-check it.</strong> A consumer holding the claim and the document runs <code>validate_cbom.py &lt;cbom&gt; &lt;claim&gt; --verify-claim</code>. The command confirms the digest, re-runs every profile the claim names, and reports where the claim and the new results disagree. A mismatch exits with <code>5</code> rather than <code>1</code>, because a mismatch is a finding about the claim, not a verdict on the document. Someone holding a bad claim and a good document should evaluate the document. An exit code meaning &ldquo;does not conform&rdquo; would wrongly point them at the document.</p>
+  <p>A claim about a deployment record depends on the records it cites. If the evaluator was not given a cited record, it reports each rule that depends on an inherited value as unresolved, and the claim lists those rules under <code>unresolved</code>. The claim's <code>notAsserted</code> list also says that it asserts nothing about them.</p>
   <p>Verification cannot establish that the disclosed values are true. A producer who states <code>TLS 1.3</code> for an interface actually running <code>TLS 1.2</code> produces a claim that verifies perfectly. The claim's own <code>notAsserted</code> list states this limitation, and the list will always include it. Proving that values are true is attestation, which is a different problem. If the claim format implied that it provided attestation, that would be the most damaging error it could make.</p>
 
   <h3>Machine-readable form</h3>
@@ -236,8 +294,9 @@ Content revision: 3</code></pre>
   <pre><code>{
   "profileId": "pkic.example.pqc-migration",
   "profileTag": "pqc-migration",
-  "version": "0.6",
-  "extends": { "profileId": "pkic.example.interface-disclosure", "version": "0.7" },
+  "version": "0.8",
+  "extends": { "profileId": "pkic.example.interface-disclosure", "version": "0.9" },
+  "scope": { "subjectTypes": ["product"], "lifecycleStages": ["implemented"], ... },
   "overrides": [
     { "id": "interface-disclosure#I9", "level": "MUST", "withholdable": false }
   ],
@@ -249,32 +308,37 @@ Content revision: 3</code></pre>
   <p>The most important rule covers a constraint that the comparison does not recognise. An override carrying such a constraint is <em>refused</em>, rather than assumed to be monotonic. A checker that passes what it cannot assess produces the same green report as a checker that has actually checked. Wrongly passing an override in this way is a worse failure than wrongly refusing it. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0013-monotonicity-covers-constraints.md">decision 0013</a>.</p>
 
   <h2>Conformance pipeline</h2>
-  <p>The validator takes a CBOM and applies four stages in sequence: the format gate, the product rules, the interface rules and the verdict. The content stages are evaluated only if the format stage accepts the CBOM.</p>
+  <p>The validator takes a CBOM and applies its stages in sequence: the format gate, the product rules, the document-level reference rules, the interface rules with their interface-level reference rules, and the verdict. It evaluates the content stages only if the format gate accepts the CBOM. The format gate accepts CycloneDX 2.0 as the target, reads 1.6 and 1.7 as legacy, accepts a version above 2.0 with a note, and refuses anything below 1.6.</p>
+  <p>A deployment record cites the records it builds on. When the caller supplies them with <code>--with</code>, the validator checks each citation's serial number, version and SHA-256 hash, and resolves inherited facts through the join. When the caller does not supply them, the validator reports each inherited value as <code>OPEN</code> (unresolved) rather than failed.</p>
   <figure>
-    <svg viewBox="0 0 720 150" role="img" aria-label="Five boxes chained by arrows: a CycloneDX 1.7 CBOM, a format gate checking the version band, product rules P1 to P4, interface rules I1 to I9, and a verdict" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+    <svg viewBox="0 0 720 150" role="img" aria-label="Six boxes chained by arrows: a CycloneDX 2.0 CBOM, a format gate checking the version band, product rules P1 to P6, reference rules, interface rules I1 to I11, and a verdict" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <g font-size="12">
-        <rect x="10" y="55" width="110" height="52" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
-        <text x="65" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">CBOM</text>
-        <text x="65" y="94" fill="#5b6472" text-anchor="middle" font-size="10.5">CycloneDX 1.7</text>
-        <rect x="150" y="55" width="130" height="52" rx="10" fill="#ffffff" stroke="#2563eb"/>
-        <text x="215" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">Format gate</text>
-        <text x="215" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">version band</text>
-        <rect x="310" y="55" width="130" height="52" rx="10" fill="#ffffff" stroke="#c9d3e0"/>
-        <text x="375" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">Product rules</text>
-        <text x="375" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">P1–P4</text>
-        <rect x="470" y="55" width="130" height="52" rx="10" fill="#ffffff" stroke="#c9d3e0"/>
-        <text x="535" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">Interface rules</text>
-        <text x="535" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">I1–I9 × each</text>
-        <rect x="630" y="55" width="80" height="52" rx="10" fill="#eefaf1" stroke="#15803d"/>
-        <text x="670" y="80" fill="#15803d" text-anchor="middle" font-weight="700">Verdict</text>
+        <rect x="6" y="55" width="96" height="52" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
+        <text x="54" y="78" fill="#1a2230" text-anchor="middle" font-weight="600">CBOM</text>
+        <text x="54" y="94" fill="#5b6472" text-anchor="middle" font-size="10.5">CycloneDX 2.0</text>
+        <rect x="124" y="55" width="106" height="52" rx="10" fill="#ffffff" stroke="#2563eb"/>
+        <text x="177" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">Format gate</text>
+        <text x="177" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">version band</text>
+        <rect x="252" y="55" width="106" height="52" rx="10" fill="#ffffff" stroke="#c9d3e0"/>
+        <text x="305" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">Product rules</text>
+        <text x="305" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">P1–P6</text>
+        <rect x="380" y="55" width="106" height="52" rx="10" fill="#ffffff" stroke="#c9d3e0"/>
+        <text x="433" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">References</text>
+        <text x="433" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">R1–R4, R6</text>
+        <rect x="508" y="55" width="114" height="52" rx="10" fill="#ffffff" stroke="#c9d3e0"/>
+        <text x="565" y="76" fill="#1a2230" text-anchor="middle" font-weight="600">Interface rules</text>
+        <text x="565" y="92" fill="#5b6472" text-anchor="middle" font-size="10.5">I1–I11, R5 × each</text>
+        <rect x="644" y="55" width="70" height="52" rx="10" fill="#eefaf1" stroke="#15803d"/>
+        <text x="679" y="80" fill="#15803d" text-anchor="middle" font-weight="700">Verdict</text>
       </g>
       <g stroke-width="2" fill="none">
-        <line x1="120" y1="81" x2="150" y2="81" stroke="#2563eb"/><polygon points="150,81 140,76 140,86" fill="#2563eb"/>
-        <line x1="280" y1="81" x2="310" y2="81" stroke="#2563eb"/><polygon points="310,81 300,76 300,86" fill="#2563eb"/>
-        <line x1="440" y1="81" x2="470" y2="81" stroke="#2563eb"/><polygon points="470,81 460,76 460,86" fill="#2563eb"/>
-        <line x1="600" y1="81" x2="630" y2="81" stroke="#2563eb"/><polygon points="630,81 620,76 620,86" fill="#2563eb"/>
+        <line x1="102" y1="81" x2="124" y2="81" stroke="#2563eb"/><polygon points="124,81 114,76 114,86" fill="#2563eb"/>
+        <line x1="230" y1="81" x2="252" y2="81" stroke="#2563eb"/><polygon points="252,81 242,76 242,86" fill="#2563eb"/>
+        <line x1="358" y1="81" x2="380" y2="81" stroke="#2563eb"/><polygon points="380,81 370,76 370,86" fill="#2563eb"/>
+        <line x1="486" y1="81" x2="508" y2="81" stroke="#2563eb"/><polygon points="508,81 498,76 498,86" fill="#2563eb"/>
+        <line x1="622" y1="81" x2="644" y2="81" stroke="#2563eb"/><polygon points="644,81 634,76 634,86" fill="#2563eb"/>
       </g>
-      <text x="215" y="128" fill="#dc2626" text-anchor="middle" font-size="10.5">a version below the minimum is refused at this stage</text>
+      <text x="177" y="128" fill="#dc2626" text-anchor="middle" font-size="10.5">a version below 1.6 is refused at this stage</text>
     </svg>
     <figcaption>The pipeline is shown interactively in the <a href="demo.html">Demo</a> section, and the version bands are described in the <a href="versioning.html">Versioning</a> section.</figcaption>
   </figure>

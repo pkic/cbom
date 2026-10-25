@@ -1,0 +1,212 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile for a deployment, written by its operator. It extends the Interface Disclosure Baseline, narrowed to the subject type 'deployment' and to the stages 'configured' and 'observed'. A deployment record cites the product records it builds on and joins each interface to the product interface it realises, so the readiness gap can be read one interface at a time. It is the first profile of the Operation group of use cases. The worked example is an illustrative operator running Keycloak 26.7.3.",
+  "profileId": "pkic.example.deployment-disclosure",
+  "profileTag": "deployment-disclosure",
+  "title": "Deployment Disclosure (Example)",
+  "version": "0.1",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.9",
+    "file": "profile-interface-disclosure.rules.json"
+  },
+  "objective": {
+    "$comment": "C1. The consumer is the operator, or an assessor working for the operator. The decision is the baseline's decision applied to one deployment, plus the comparison the baseline cannot make: whether the deployment does what its products can do.",
+    "consumer": "An operator, or an assessor acting for one, responsible for a deployment built from products it did not build.",
+    "decision": "For each interface of this deployment: which published weakness affects it, whether what the deployment permits and what it was seen to do match, and where the deployment falls short of what its products are capable of.",
+    "decisionOptions": [
+      "record the deployment and take no further action",
+      "reconfigure an interface the products already support",
+      "schedule an upgrade or replacement where the products cannot reach the target",
+      "investigate a difference between the configured and the observed record"
+    ]
+  },
+  "scope": {
+    "$comment": "Narrows the base to one subject type and two stages. 'implemented' is excluded: a deployment record that repeats a vendor's build facts adds nothing; it cites the vendor's document instead (P1).",
+    "subjectTypes": [
+      "deployment"
+    ],
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured",
+      "observed"
+    ]
+  },
+  "appliesTo": {
+    "$comment": "Carrier acceptance. The target is CycloneDX 2.0, pinned to CycloneDX/specification 2.0-dev commit 76f185c (23 October 2026) until Ecma ratifies the release; the pinned schema is in tests/schemas/cyclonedx-2.0. 'min' is the oldest version the adapter reads: CycloneDX 1.6 and 1.7 documents are evaluated and flagged legacy, because the tools that produce CBOMs today emit 1.x. Below 'min', evaluation is refused. A derived profile may narrow this range and may not widen it.",
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Document cites the documents it builds on, each by BOM-Link and hash",
+      "level": "MUST",
+      "constraint": {
+        "citesDocuments": {
+          "min": 1,
+          "hashRequired": true
+        }
+      },
+      "withholdable": false,
+      "note": "A deployment is built from products. The operator's record cites each product's CBOM rather than restating its build facts, and an observed record also cites the configured record it was compared with. The hash fixes which revision was cited, so a later change to the cited document is detected rather than silently absorbed. Where the evaluator is given the cited document, it checks that the serial number, version and hash match."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "correspondsTo",
+      "level": "MUST",
+      "constraint": {
+        "refersToCited": {
+          "literals": [
+            "no-product-document"
+          ]
+        }
+      },
+      "withholdable": false,
+      "note": "The interface in a cited document that this interface realises, as a BOM-Link (urn:cdx:<serial>/<version>#<bom-ref>). This is the join that shows the readiness gap one interface at a time. It is also the path by which implementation facts reach the deployment record: implementationPurl (base I9) is inherited from the corresponding interface when the deployment record does not state it. Present-state facts are never inherited, because they belong to a stage. 'no-product-document' is a fact: the supplier of this part of the deployment publishes no CBOM."
+    },
+    {
+      "id": "I2",
+      "attribute": "observationMethod",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "observationMethodVocabulary"
+      },
+      "withholdable": false,
+      "list": true,
+      "requiredWhen": {
+        "attribute": "lifecycleStage",
+        "equals": "observed"
+      },
+      "note": "How each observed value was obtained. A single source rarely sees every attribute: a database's TLS view gives version and cipher, a passive sensor sees the group in a TLS 1.3 ServerHello, and only an active probe sees a TLS 1.3 server certificate. Naming the methods tells a consumer what the record could and could not have seen."
+    },
+    {
+      "id": "I3",
+      "attribute": "observedAt",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "lifecycleStage",
+        "equals": "observed"
+      },
+      "note": "The time or ISO 8601 interval of the observation. An observation goes out of date with the next configuration change, and a consumer can only judge that with the date."
+    }
+  ],
+  "observationMethodVocabulary": [
+    "active-probe",
+    "passive-sensor",
+    "endpoint-query",
+    "platform-query",
+    "inspection"
+  ],
+  "$commentObservationMethod": "'active-probe': a client the observer controls connects and records the outcome (testssl.sh, sslyze). 'passive-sensor': traffic between the real parties is recorded (Zeek, flow telemetry). 'endpoint-query': a published endpoint is read (a JWKS, SAML metadata). 'platform-query': the platform reports on its own sessions (pg_stat_ssl). 'inspection': stored state is read directly (a key table).",
+  "contextKinds": {
+    "configuration-source": {
+      "carrier": [
+        "configuration",
+        "codified-infrastructure",
+        "vcs"
+      ],
+      "form": "document-or-endpoint"
+    },
+    "observation-evidence": {
+      "carrier": [
+        "evidence",
+        "runtime-analysis-report",
+        "log"
+      ],
+      "form": "document"
+    },
+    "data-register": {
+      "carrier": [
+        "risk-assessment",
+        "other"
+      ],
+      "form": "document-or-endpoint"
+    },
+    "issuer-policy": {
+      "carrier": [
+        "documentation"
+      ],
+      "form": "endpoint"
+    }
+  },
+  "referenceRules": [
+    {
+      "id": "R1",
+      "context": "configuration-source",
+      "at": "document",
+      "level": "MUST",
+      "hashRequired": false,
+      "withholdable": false,
+      "requiredWhen": {
+        "documentStage": "configured"
+      },
+      "note": "The revision of the configuration the record was read from: a commit in the configuration repository, or the infrastructure code. Without it, drift between the configured and the observed record cannot be traced to a change. The URL should name an immutable revision."
+    },
+    {
+      "id": "R2",
+      "context": "observation-evidence",
+      "at": "interface",
+      "level": "SHOULD",
+      "hashRequired": true,
+      "withholdable": true,
+      "requiredWhen": {
+        "documentStage": "observed"
+      },
+      "note": "The evidence an observed value was taken from: a scan report, a sensor log extract, a query result. Withholdable, because evidence often carries internal addresses and is shared on request rather than published."
+    },
+    {
+      "id": "R3",
+      "context": "data-register",
+      "at": "document",
+      "level": "SHOULD",
+      "hashRequired": false,
+      "withholdable": true,
+      "note": "Where the operator records what data each interface carries and how long it must stay confidential. These facts decide harvest-now-decrypt-later exposure and are excluded from the CBOM (base exclusions; Q36, Q37, Q45). The record points to the register; it does not carry it."
+    },
+    {
+      "id": "R4",
+      "context": "issuer-policy",
+      "at": "document",
+      "level": "MAY",
+      "hashRequired": false,
+      "withholdable": false,
+      "note": "The certificate policy or practice statement of the CA that issues the deployment's certificates. The CA is an external dependency (pqc-migration-extended I9): an interface cannot present an ML-DSA chain before its CA issues one."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "Build facts already stated in a product document",
+      "reason": "Cited under P1 and joined per interface under I1. Restating them creates two sources for one fact."
+    },
+    {
+      "item": "The content of the data register, evidence and configuration",
+      "reason": "Referenced under R1-R3. They change on their own triggers, and are often more sensitive than the CBOM."
+    }
+  ],
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-10-25",
+      "summary": "Initial draft, built on the Keycloak lifecycle example.",
+      "changes": []
+    }
+  ],
+  "artifacts": {
+    "$comment": "C9.",
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "examples/cbom-keycloak-deployment-configured.cdx.json",
+    "nonConformingExample": "examples/cbom-keycloak-deployment-configured-fail-literal.cdx.json"
+  }
+}
