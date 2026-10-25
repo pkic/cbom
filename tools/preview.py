@@ -112,6 +112,14 @@ def build_section(name: str, nav_file: str, include: str, label: str,
     pages, assets, written = 0, 0, set()
     for path in sorted(src.iterdir()):
         if path.is_dir():
+            # Data directories (examples/, policies/, perspectives/) are copied
+            # as they are, so links to the example files work in the preview.
+            if path.name.startswith(("_", ".")) or path.name == "__pycache__":
+                continue
+            shutil.copytree(path, out_dir / path.name, dirs_exist_ok=True,
+                            ignore=shutil.ignore_patterns("__pycache__"))
+            written.add(path.name)
+            assets += sum(1 for p in path.rglob("*") if p.is_file())
             continue
         if path.suffix != ".html":
             shutil.copy2(path, out_dir / path.name)  # styles.css, the JSON, the scripts
