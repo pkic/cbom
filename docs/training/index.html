@@ -217,6 +217,7 @@ svg text{font-family:var(--font-ui)}
 .rbtn{font-family:var(--mono);font-size:14px;font-weight:500;width:58px;height:44px;border-radius:8px;background:var(--panel);border:1px solid var(--line-strong);color:var(--ink);position:relative}
 .rbtn.p{border-left:4px solid var(--accent)}
 .rbtn.i{border-left:4px solid var(--svc)}
+.rbtn.r{border-left:4px solid var(--warn)}
 .rbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .rbtn.seen::after{content:"";position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--pass)}
 .rdetail{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);min-width:0}
@@ -375,7 +376,7 @@ const PATHS={
 };
 const MODULES=[
  {id:'F1',t:'CBOM essentials',s:'What a CBOM is and is not, the standards, how it joins to other BOMs, and why interfaces matter.',min:12,icon:'doc',ready:true},
- {id:'F2',t:'Why a buyer names a profile',s:'One product, one CBOM, one question. Use cases, the thirteen baseline rules and the four disclosure outcomes.',min:13,icon:'decision',ready:true},
+ {id:'F2',t:'Why a buyer names a profile',s:'One product, one CBOM, one question. Use cases, the baseline rules and the four disclosure outcomes.',min:13,icon:'decision',ready:true},
  {id:'F3',t:'Why CBOM data is hard to use today',s:'Lessons from SBOM adoption and the challenges specific to CBOMs.',min:13,icon:'warn',ready:true},
  {id:'F4',t:'CBOMs and the cryptographic inventory',s:'Correlating sources, extracting a CBOM for a consumer, and end-to-end posture.',min:15,icon:'inventory',ready:true},
  {id:'F5',t:'Cryptographic data across the lifecycle',s:'Design, build, deployment and operation: who knows what, and when.',min:13,icon:'lifecycle',ready:true},
@@ -395,24 +396,24 @@ const MODULES=[
 ];
 
 /* ---------- F2 figures ---------- */
-const FIG_TWO_IFACES=`<svg viewBox="0 0 720 230" role="img" aria-label="The nginx product has an HTTPS service interface used by web clients and an SSH management interface used by administrators. Document A describes only the HTTPS interface.">
- <rect class="s-soft" x="16" y="34" width="150" height="54" rx="10"/><text class="t-ink" x="91" y="58" text-anchor="middle" font-weight="600" font-size="14">Web clients</text><text class="t-muted" x="91" y="76" text-anchor="middle" font-size="11.5">browsers, API callers</text>
+const FIG_TWO_IFACES=`<svg viewBox="0 0 720 230" role="img" aria-label="Keycloak has service interfaces used by users and applications, and management interfaces used by administrators. Document A describes the service interfaces and leaves out the management interfaces.">
+ <rect class="s-soft" x="16" y="34" width="150" height="54" rx="10"/><text class="t-ink" x="91" y="58" text-anchor="middle" font-weight="600" font-size="14">Web clients</text><text class="t-muted" x="91" y="76" text-anchor="middle" font-size="11.5">browsers, applications</text>
  <rect class="s-soft" x="16" y="146" width="150" height="54" rx="10"/><text class="t-ink" x="91" y="170" text-anchor="middle" font-weight="600" font-size="14">Administrators</text><text class="t-muted" x="91" y="188" text-anchor="middle" font-size="11.5">operators</text>
  <path class="l-svc" d="M166 61H316"/><text class="t-svc" x="241" y="52" text-anchor="middle" font-size="12" font-weight="600">TLS 1.3</text>
- <path class="l-mgmt" d="M166 173H316"/><text class="t-mgmt" x="241" y="164" text-anchor="middle" font-size="12" font-weight="600">SSH 2.0</text>
- <rect class="s-key" x="300" y="12" width="190" height="206" rx="14"/><text class="t-ink" x="395" y="34" text-anchor="middle" font-weight="700" font-size="14">nginx 1.27.0</text><text class="t-muted" x="395" y="50" text-anchor="middle" font-size="11">the product</text>
- <rect class="s-svcbox" x="316" y="62" width="158" height="44" rx="8"/><text class="t-svc" x="395" y="81" text-anchor="middle" font-weight="600" font-size="13">HTTPS</text><text class="t-svc" x="395" y="97" text-anchor="middle" font-size="11">service interface</text>
- <rect class="s-mgmtbox" x="316" y="150" width="158" height="44" rx="8"/><text class="t-mgmt" x="395" y="169" text-anchor="middle" font-weight="600" font-size="13">SSH</text><text class="t-mgmt" x="395" y="185" text-anchor="middle" font-size="11">management interface</text>
+ <path class="l-mgmt" d="M166 173H316"/><text class="t-mgmt" x="241" y="164" text-anchor="middle" font-size="12" font-weight="600">Admin API</text>
+ <rect class="s-key" x="300" y="12" width="190" height="206" rx="14"/><text class="t-ink" x="395" y="34" text-anchor="middle" font-weight="700" font-size="14">Keycloak 26.7.3</text><text class="t-muted" x="395" y="50" text-anchor="middle" font-size="11">the product</text>
+ <rect class="s-svcbox" x="316" y="62" width="158" height="44" rx="8"/><text class="t-svc" x="395" y="81" text-anchor="middle" font-weight="600" font-size="13">HTTPS, OIDC, SAML</text><text class="t-svc" x="395" y="97" text-anchor="middle" font-size="11">service interfaces</text>
+ <rect class="s-mgmtbox" x="316" y="150" width="158" height="44" rx="8"/><text class="t-mgmt" x="395" y="169" text-anchor="middle" font-weight="600" font-size="13">Admin API, port 9000</text><text class="t-mgmt" x="395" y="185" text-anchor="middle" font-size="11">management interfaces</text>
  <path class="l-pass" d="M474 84H548"/><path class="l-fail" d="M474 172H548"/>
  <rect class="s-panel" x="548" y="12" width="156" height="206" rx="12"/><text class="t-ink" x="626" y="34" text-anchor="middle" font-weight="700" font-size="13.5">Document A</text><text class="t-muted" x="626" y="50" text-anchor="middle" font-size="11">the CBOM supplied</text>
- <rect class="s-passbox" x="560" y="64" width="132" height="40" rx="7"/><text class="t-pass" x="626" y="82" text-anchor="middle" font-size="12" font-weight="600">[1] HTTPS service</text><text class="t-pass" x="626" y="97" text-anchor="middle" font-size="10.5">described in full</text>
+ <rect class="s-passbox" x="560" y="64" width="132" height="40" rx="7"/><text class="t-pass" x="626" y="82" text-anchor="middle" font-size="12" font-weight="600">11 interfaces</text><text class="t-pass" x="626" y="97" text-anchor="middle" font-size="10.5">described in full</text>
  <rect class="s-failbox" x="560" y="152" width="132" height="40" rx="7"/><text class="t-fail" x="626" y="170" text-anchor="middle" font-size="12" font-weight="600">no entry</text><text class="t-fail" x="626" y="185" text-anchor="middle" font-size="10.5">nothing required one</text>
 </svg>`;
 
 const FIG_DIRECTIONS=`<svg viewBox="0 0 720 170" role="img" aria-label="A producer uses the profile as a specification when generating the CBOM. A consumer uses the same profile as a checklist when validating it.">
  <rect class="s-soft" x="16" y="52" width="190" height="66" rx="12"/><text class="t-ink" x="111" y="78" text-anchor="middle" font-weight="600" font-size="14">Producer</text><text class="t-muted" x="111" y="97" text-anchor="middle" font-size="11.5">build or scanner → CBOM</text>
  <path class="l-pass" d="M206 85H276"/><path class="f-pass" d="M282 85l-11-5v10z"/><text class="t-pass" x="243" y="72" text-anchor="middle" font-size="12" font-weight="600">specification</text>
- <rect class="s-key" x="282" y="40" width="156" height="90" rx="12"/><text class="t-ink" x="360" y="70" text-anchor="middle" font-weight="700" font-size="15">Profile</text><text class="t-muted" x="360" y="90" text-anchor="middle" font-size="11.5">13 rules, one decision</text><text class="t-acc t-mono" x="360" y="110" text-anchor="middle" font-size="11">P1–P4 · I1–I9</text>
+ <rect class="s-key" x="282" y="40" width="156" height="90" rx="12"/><text class="t-ink" x="360" y="70" text-anchor="middle" font-weight="700" font-size="15">Profile</text><text class="t-muted" x="360" y="90" text-anchor="middle" font-size="11.5">23 rules, one decision</text><text class="t-acc t-mono" x="360" y="110" text-anchor="middle" font-size="11">P1–P6 · I1–I11 · R1–R6</text>
  <path class="l-warn" d="M438 85H508"/><path class="f-warn" d="M514 85l-11-5v10z"/><text class="t-warn" x="475" y="72" text-anchor="middle" font-size="12" font-weight="600">checklist</text>
  <rect class="s-soft" x="514" y="52" width="190" height="66" rx="12"/><text class="t-ink" x="609" y="78" text-anchor="middle" font-weight="600" font-size="14">Consumer</text><text class="t-muted" x="609" y="97" text-anchor="middle" font-size="11.5">validator or CI gate checks the CBOM</text>
 </svg>`;
@@ -448,6 +449,8 @@ const RULES={
  P2:{g:'p',t:'Declare at least one management interface, or state that there is none',lvl:'MUST',c:'minInterfacesOfType: {management, 1}, orDeclaredAbsent',why:'Document A fails this rule. A hardware token with no configuration surface hides nothing by not having one, so a statement that there is none satisfies the rule. Saying nothing does not.'},
  P3:{g:'p',t:'Identify the subject the document describes',lvl:'MUST',c:'subjectIdentified: {startsWith: pkg:}',why:'An unidentified record cannot be matched to a deployment, or compared with the same product\'s record from last quarter.'},
  P4:{g:'p',t:'State how complete the list of interfaces is',lvl:'MUST',c:'coverage: all | all-external | partial',why:'Without this, a missing interface could mean that it does not exist, or that the producer chose not to list it. The reader cannot tell which.'},
+ P5:{g:'p',t:'Declare the subject type',lvl:'MUST',c:'subjectType: product | deployment',why:'A vendor writes a product record. An operator writes a deployment record. P3 depends on the answer: a product is identified by a package URL, and a deployment by a tag URI (RFC 4151).'},
+ P6:{g:'p',t:'Declare one lifecycle stage for the whole document',lvl:'MUST',c:'metadata.lifecycles: build | operations | discovery',why:'A value means something different at each stage. At implemented it is the default as shipped, at configured the set the deployment permits, and at observed the set seen in the observation window. So one document carries one stage.'},
  I1:{g:'i',t:'protocol',lvl:'MUST',why:'Names the protocol: TLS, SSH, IPsec and similar.'},
  I2:{g:'i',t:'protocolVersion',lvl:'MUST',why:'Names the version. An advisory usually names one.'},
  I3:{g:'i',t:'keyExchange',lvl:'MUST',why:'Says how the session key is agreed.'},
@@ -455,59 +458,75 @@ const RULES={
  I5:{g:'i',t:'authentication',lvl:'MUST',why:'Says how each end proves who it is.'},
  I6:{g:'i',t:'endpointRoles',lvl:'MUST',why:'Says who is at each end, so the reader can place the interface in a topology.'},
  I7:{g:'i',t:'interfaceType',lvl:'MUST',why:'One of five values, including service, management and interconnect. Product rule P2 is checked against this attribute.'},
- I8:{g:'i',t:'lifecycleStage',lvl:'MUST',why:'Says whether the value was intended, implemented, configured or observed. This tells the reader how much weight to give it.'},
- I9:{g:'i',t:'implementationPurl',lvl:'MUST',wh:true,why:'Names the library that implements the interface, so an advisory against that library can be matched. This is the only rule in the profile that a producer may answer by withholding the value.'}
+ I8:{g:'i',t:'lifecycleStage',lvl:'MUST',why:'Says whether the values were implemented, configured or observed. This tells the reader how much weight to give them. It must agree with the stage the document declares under P6. The baseline does not accept intended.'},
+ I9:{g:'i',t:'implementationPurl',lvl:'MUST',wh:true,why:'Names the library that implements the interface, so an advisory against that library can be matched. This is the only rule in the profile that a producer may answer by withholding the value.'},
+ I10:{g:'i',t:'keyWrapping',lvl:'MUST',why:'On a storage interface: how stored keys are protected. Keycloak stores its realm keys in the database in plaintext.'},
+ I11:{g:'i',t:'defaultState',lvl:'SHOULD',why:'At implemented: whether the interface is enabled or disabled as shipped. Keycloak\'s plaintext HTTP listener is disabled by default.'},
+ R1:{g:'r',t:'Point to the SBOM',lvl:'MUST',why:'Product records only. The SBOM lists the components, so the CBOM does not repeat them.'},
+ R2:{g:'r',t:'Point to the vendor\'s vulnerability statements, or state that none are published',lvl:'MUST',why:'Product records only. Upstream Keycloak publishes no VEX statements, so its record says not-published.'},
+ R3:{g:'r',t:'Point to an advisory source and its access protocol',lvl:'SHOULD',why:'For Keycloak, the OSV API. The reader queries it with the library package URLs from I9.'},
+ R4:{g:'r',t:'Point to a security contact',lvl:'SHOULD',why:'The reader needs to know where to report a problem.'},
+ R5:{g:'r',t:'Point to configuration guidance wherever a value is deployment-defined',lvl:'MUST',why:'If the operator chooses the value, such as the server certificate, the operator needs to know where to set it.'},
+ R6:{g:'r',t:'Point to a design document',lvl:'MAY',why:'Design intent is context. It is not a stage of the record.'}
 };
 const DOCS={
- A:{label:'Document A',sub:'nginx · HTTPS only',
-  listing:`<span class="k">subject    </span> nginx 1.27.0
-<span class="k">purl       </span> pkg:generic/nginx@1.27.0
+ A:{label:'Document A',sub:'Keycloak · management left out',
+  listing:`<span class="k">subject    </span> Keycloak 26.7.3 (container image)
+<span class="k">purl       </span> pkg:oci/keycloak?repository_url=quay.io/keycloak/keycloak&amp;tag=26.7.3
+<span class="k">type, stage</span> product · implemented
 <span class="k">coverage   </span> all-external
-<span class="k">interfaces </span> 1 declared
+<span class="k">interfaces </span> 11 declared
 
-<span class="s">[1] HTTPS   service · TLS 1.3</span>
-    kex X25519 · enc AES-256-GCM
-    auth RSA-2048 · roles client/server
-    stage configured
-    impl pkg:generic/openssl@3.4.0
+<span class="s">[1] TLS main listener   service · TLS 1.3</span>
+    kex X25519 first · enc AES-256-GCM
+    auth deployment-defined (operator's certificate)
+    impl pkg:rpm/redhat/java-21-openjdk-headless
+<span class="s">[2] OIDC tokens         service · OIDC 1.0</span>
+    kex none · enc none · auth RS256
+    impl pkg:maven/org.keycloak/keycloak-services@26.7.3
+    ... 9 more: SAML, plaintext HTTP, database, directory,
+    identity providers, mail, cluster, key storage
 
-<span class="x">— no management interface
-— no statement that there is none</span>`,
-  res:[['P1','pass','1 interface declared'],['P2','fail','no management interface and no statement of absence'],['P3','pass','subject has a package URL'],['P4','pass','coverage: all-external'],['I1–I8','pass','all present on 1 interface'],['I9','pass','value on HTTPS']],
-  ok:false,note:'Document A contains no false statement, and every attribute it carries is correct. It fails because it leaves out the one thing its reader needs. No check based on the format alone can find this.'},
- B:{label:'Document B',sub:'nginx · HTTPS and SSH',
-  listing:`<span class="k">subject    </span> nginx 1.27.0
-<span class="k">purl       </span> pkg:generic/nginx@1.27.0
+<span class="x">— no Admin REST API, no management listener
+— no statement that there are none</span>`,
+  res:[['P1','pass','11 interfaces declared'],['P2','fail','no management interface and no statement of absence'],['P3','pass','subject has a package URL'],['P4','pass','coverage: all-external'],['P5–P6','pass','product · one stage: implemented'],['I1–I11','pass','all present on 11 interfaces'],['R1–R5','pass','SBOM, advisories, contact and configuration guides pointed to; no VEX published, and it says so']],
+  ok:false,note:'Document A contains no false statement, and every attribute it carries is correct. It fails because it leaves out the one thing its reader needs. No check based on the format alone can find this. The record is published as cbom-keycloak-product-fail-P2.cdx.json.'},
+ B:{label:'Document B',sub:'Keycloak · all 13 interfaces',
+  listing:`<span class="k">subject    </span> Keycloak 26.7.3 (container image)
+<span class="k">purl       </span> pkg:oci/keycloak?repository_url=quay.io/keycloak/keycloak&amp;tag=26.7.3
+<span class="k">type, stage</span> product · implemented
 <span class="k">coverage   </span> all-external
-<span class="k">interfaces </span> 2 declared
+<span class="k">interfaces </span> 13 declared
 
-<span class="s">[1] HTTPS   service · TLS 1.3</span>
-    kex X25519 · enc AES-256-GCM
-    auth RSA-2048 · roles client/server
-    stage configured
-    impl pkg:generic/openssl@3.4.0
+<span class="s">[1] TLS main listener   service · TLS 1.3</span>
+    kex X25519 first · enc AES-256-GCM
+    auth deployment-defined (operator's certificate)
+    impl pkg:rpm/redhat/java-21-openjdk-headless
+<span class="s">[2] OIDC tokens         service · OIDC 1.0</span>
+    kex none · enc none · auth RS256
+    impl <span class="w">withheld</span>
+    ... 9 more, as in Document A
 
-<span class="m">[2] SSH     management · SSH 2.0</span>
-    kex curve25519 · enc ChaCha20-Poly1305
-    auth Ed25519 · roles admin/host
-    stage configured
-    impl <span class="w">withheld</span>`,
-  res:[['P1','pass','2 interfaces declared'],['P2','pass','SSH is a management interface'],['P3','pass','subject has a package URL'],['P4','pass','coverage: all-external'],['I1–I8','pass','all present on 2 interfaces'],['I9','warn','value on HTTPS · withheld on SSH, and I9 is withholdable']],
-  ok:true,note:'The SSH interface marks its implementing library as withheld. I9 is the one withholdable rule, so the document conforms. The buyer now knows the supplier took a position, and can challenge it in negotiation.'},
- C:{label:'Document C',sub:'TLS library · nothing to configure',
-  listing:`<span class="k">subject    </span> libexample 2.1.0 (library)
-<span class="k">purl       </span> pkg:generic/libexample@2.1.0
-<span class="k">coverage   </span> all
-<span class="k">management </span> absent: no-configuration-surface
-<span class="k">interfaces </span> 1 declared
+<span class="m">[12] Admin REST API     management · bearer tokens</span>
+    auth RS256 (master realm signing key)
+<span class="m">[13] Management listener management · port 9000</span>
+    off by default · inherits the main listener's TLS`,
+  res:[['P1','pass','13 interfaces declared'],['P2','pass','the Admin REST API and the management listener are management interfaces'],['P3','pass','subject has a package URL'],['P4','pass','coverage: all-external'],['P5–P6','pass','product · one stage: implemented'],['I1–I8, I10–I11','pass','all present on 13 interfaces'],['I9','pass','value on 12 interfaces · withheld on OIDC, which I9 permits because it is withholdable'],['R1–R5','pass','required pointers present']],
+  ok:true,note:'The OIDC interface marks its implementing library as withheld. I9 is the one withholdable rule, so the document conforms. The buyer now knows the supplier took a position, and can challenge it in negotiation. The published product record names every library; the example cbom-keycloak-product-disclosure-states.cdx.json shows the withheld case.'},
+ C:{label:'Document C',sub:'Keycloak deployment · seen from outside',
+  listing:`<span class="k">subject    </span> sso.example.org identity service (production)
+<span class="k">identifier </span> tag:example.org,2026:deployment/sso-prod
+<span class="k">type, stage</span> deployment · observed
+<span class="k">coverage   </span> partial
+<span class="k">management </span> absent: not-reached
+<span class="k">interfaces </span> 8 declared
 
-<span class="s">[1] TLS     client · TLS 1.3</span>
-    kex X25519 · enc AES-256-GCM
-    auth ECDSA P-256 · roles client/server
-    stage implemented
-    impl pkg:generic/openssl@3.4.0`,
-  res:[['P1','pass','1 interface declared'],['P2','pass','absence stated, with a reason from the profile\'s vocabulary'],['P3','pass','subject has a package URL'],['P4','pass','coverage: all'],['I1–I8','pass','all present on 1 interface'],['I9','pass','value on TLS client']],
-  ok:true,note:'A library has nothing to configure, so it has no management interface. It satisfies P2 by stating why. If it had said nothing, it would fail P2 exactly as Document A does.'}
+<span class="s">[1] Ingress TLS   service · TLS 1.3</span>
+    observed by an outside assessor
+    impl <span class="x">nothing stated: the library is not visible</span>
+    ... 7 more`,
+  res:[['P1','pass','8 interfaces declared'],['P2','pass','absence stated as not-reached, with coverage partial'],['P3','pass','subject has a tag URI'],['P4','pass','coverage: partial'],['P5–P6','pass','deployment · one stage: observed'],['I1–I8','pass','all present on 8 interfaces'],['I9','fail','ingress: no library and no marker']],
+  ok:false,note:'An outside assessor could not reach the management interfaces. It says so, with coverage partial, and P2 accepts that. If it had said nothing, it would fail P2 exactly as Document A does. It still fails I9, because nobody outside can see which library ends TLS at the ingress. The record conforms to the entry profile, interface enumeration. It is published as cbom-keycloak-deployment-observed-outside.cdx.json.'}
 };
 const OUTCOMES=[
  {n:'value',cls:'c-pass',tag:'act on it',front:'The value is in the document.',says:'It knows the value and has published it.',must:'Yes.'},
@@ -516,9 +535,9 @@ const OUTCOMES=[
  {n:'undeclared',cls:'c-fail',tag:'guess',front:'Nothing is said at all.',says:'Nothing. The reader cannot tell which of the other three applies.',must:'No.'}
 ];
 const QUIZ_F2=[
- {q:'Document A describes the HTTPS interface accurately and in full, but leaves out the SSH management interface. Against the Interface Disclosure Baseline it:',o:['Conforms, because every statement in it is true','Fails P2, because conformance is measured against what the decision needs','Fails I1 to I9, because the interface rules are incomplete'],a:1,e:'Accuracy is not the test. The profile asks whether the document carries what its reader needs to decide.'},
+ {q:'Document A describes eleven Keycloak interfaces accurately and in full, but leaves out the Admin REST API and the management listener. Against the Interface Disclosure Baseline it:',o:['Conforms, because every statement in it is true','Fails P2, because conformance is measured against what the decision needs','Fails I1 to I11, because the interface rules are incomplete'],a:1,e:'Accuracy is not the test. The profile asks whether the document carries what its reader needs to decide.'},
  {q:'Why does "send us everything" fail as a request?',o:['CBOM formats cannot encode every operation','A complete list buries the few facts the decision depends on, and no supplier will produce it','Large documents cannot be signed'],a:1,e:'Completeness is relative to a purpose. A profile sets the minimum a decision needs and then stops.'},
- {q:'The SSH interface in Document B marks its implementing library as withheld. What happens under the baseline?',o:['It fails I9','It passes, because I9 is marked withholdable','It is treated as undeclared'],a:1,e:'Withheld is a declared position. It satisfies a MUST rule only where the profile marks that rule withholdable, and I9 is the one such rule.'},
+ {q:'The OIDC interface in Document B marks its implementing library as withheld. What happens under the baseline?',o:['It fails I9','It passes, because I9 is marked withholdable','It is treated as undeclared'],a:1,e:'Withheld is a declared position. It satisfies a MUST rule only where the profile marks that rule withholdable, and I9 is the one such rule.'},
  {q:'Which of these is a use case that a profile can be written for?',o:['The telecom sector','The CycloneDX cryptoProperties field','A migration lead choosing which interfaces to upgrade first, from a stated set of actions'],a:2,e:'A use case needs a named consumer, a decision between actions, and the questions behind it. A sector or a format field is only a setting.'},
  {q:'A supplier produces baseline-conforming CBOMs. A buyer now asks for conformance to a PQC migration profile. What is needed?',o:['Nothing; the buyer re-evaluates the same documents','New facts: what each interface could support, what blocks it, and what changing it costs','The buyer derives capability from the algorithms listed'],a:1,e:'A migration profile adds facts the baseline never collected. More baseline documents do not answer it.'}
 ];
@@ -585,6 +604,7 @@ F1.push({min:1.5,render:()=>`${head('standards','Standards and who is asking','F
   <div class="tbl wide"><table><thead><tr><th>Item</th><th>What it provides</th><th>Status</th></tr></thead><tbody>
    <tr><td><b>CycloneDX 1.6</b></td><td>First version with cryptographic assets: algorithms, certificates, protocols, keys and related material</td><td><span class="chip c-pass">Published 2024</span></td></tr>
    <tr><td><b>CycloneDX 1.7 / ECMA-424 2nd edition</b></td><td>Adds the Cryptography Registry for consistent algorithm names</td><td><span class="chip c-pass">Published</span></td></tr>
+   <tr><td><b>CycloneDX 2.0</b></td><td>The carrier the methodology targets. Native fields for module validation, product certification and key rotation. 1.6 and 1.7 documents are still read, as legacy</td><td><span class="chip c-mute">Pinned to 2.0-dev; Ecma ratification expected Dec 2026</span></td></tr>
    <tr><td><b>SPDX 3.x</b></td><td>Cryptographic object model</td><td><span class="chip c-mute">In development</span></td></tr>
    <tr><td><b>2026 SBOM minimum elements</b><br><span class="note">CISA, NSA, FBI and 15+ international agencies</span></td><td>Baseline for any BOM: author signature, generation context, tool, version, unknown versus withheld</td><td><span class="chip c-pass">Published 29 Jul 2026</span></td></tr>
    <tr><td><b>CBOM profiles methodology</b><br><span class="note">PKI Consortium working group</span></td><td>How to state which facts a CBOM must carry for a purpose, in CycloneDX or SPDX</td><td><span class="chip c-mute">Draft</span></td></tr>
@@ -617,7 +637,7 @@ F1.push({min:1.5,render:()=>`${head('rules','Profiles: a CBOM fit for a decision
   <p>A <b>profile</b> is a short list of rules stating which facts a CBOM must carry for one stated reader making one stated decision. It is a minimum reporting requirement, not a new format, and a validator can check a document against it.</p>
   <div class="two">
    <div class="box"><h3>What a profile sets</h3>${dash(['<b>A floor:</b> the facts the decision needs, so nothing essential is left out.','<b>A scope:</b> the decision stops the list growing, so the producer is not asked for everything.','<b>An orientation:</b> inventory (current state) or migration (capability and readiness).','<b>For each rule:</b> whether the value may be withheld.'])}</div>
-   <div class="box"><h3>Migration profiles add</h3>${dash(['<b>Capability status</b> per interface and purpose.','<b>Blocker:</b> <span class="mono">standard</span>, <span class="mono">dependency</span> or <span class="mono">implementation</span>.','<b>Roadmap reference:</b> where the supplier\'s commitment, and any date, is published.'])}<p style="margin-top:12px;font-size:15px">The blocker tells a planner how to respond: wait for the standard, chase a third party, or hold the supplier to its own work.</p></div>
+   <div class="box"><h3>Migration profiles add</h3>${dash(['<b>Capability status</b> per interface and purpose.','<b>Blocker:</b> for example <span class="mono">standard</span>, <span class="mono">provider</span> or <span class="mono">product</span>.','<b>Roadmap reference:</b> where the supplier\'s commitment, and any date, is published.'])}<p style="margin-top:12px;font-size:15px">The blocker tells a planner how to respond: wait for the standard, chase a third party, or hold the supplier to its own work.</p></div>
   </div>`});
 F1.push({min:0.5,render:()=>`${head('todo','What to do now','')}
   <div class="two">
@@ -640,7 +660,7 @@ F1.push({min:0,next:null,render:()=>`${head('doc','Cryptographic bills of materi
   <h3 style="margin-top:22px">Follow these practices</h3>
   ${dash(['Declare every interface, including management.','Record facts. Leave verdicts to versioned policy.','Join CBOMs to SBOMs, HBOMs and VEX. Do not merge them.','Mark values as withheld or unknown instead of leaving gaps.','State capability status and blocker, not dates.','Ask for CBOMs against a stated profile.'])}
   <div class="nextup"><button class="btn" data-goto="F2">Next module: F2 Why a buyer names a profile →</button></div>
-  <p class="src">Sources: CycloneDX 1.6 and 1.7 (ECMA-424); 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026); PKI Consortium CBOM Profiles methodology (draft) and PQC Maturity Model v1.0.1; BMDS/BMI/BSI guidance §4.6 (12 Oct 2026); EO 14412; India Quantum-Safe Ecosystem roadmap (May 2026).</p>`});
+  <p class="src">Sources: CycloneDX 1.6 and 1.7 (ECMA-424) and CycloneDX 2.0 (2.0-dev, commit 76f185c); 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026); PKI Consortium CBOM Profiles methodology (draft) and PQC Maturity Model v1.0.1; BMDS/BMI/BSI guidance §4.6 (12 Oct 2026); EO 14412; India Quantum-Safe Ecosystem roadmap (May 2026).</p>`});
 
 /* ---------- F2 screens ---------- */
 const F2=[];
@@ -649,11 +669,11 @@ F2.push(titleScreen(MODULES[1],{sub:'One product, one CBOM and one buyer\'s ques
  req:['Review the eight sections.','Pass the knowledge check with a score of 80% or higher.'],pre:'F1 CBOM essentials, or equivalent familiarity with what a CBOM records.',aud:'Buyers, operators, product owners and profile authors',level:'Foundation'}));
 
 F2.push({min:1.5,render:()=>`${head('iface','The problem, in one example','An accurate document that cannot answer the question')}
-  <p>A vendor supplies an nginx web server with a CBOM. The CBOM says the product uses AES-256-GCM, X25519 and RSA-2048. It names a server certificate for example.com, and says OpenSSL 3.4.0 implements the cryptography. Every statement is true.</p>
-  ${fig(FIG_TWO_IFACES,'<b>Figure 1.</b> The product has two cryptographic interfaces. Document A describes one of them.')}
+  <p>A vendor supplies Keycloak 26.7.3, an open-source identity server, as a container image with a CBOM. The CBOM says the main listener runs TLS 1.3 with the key exchange of the JDK 21 in the image (X25519 first). Tokens are signed with RS256 by default, and the operator supplies the server certificate. Every statement is true.</p>
+  ${fig(FIG_TWO_IFACES,'<b>Figure 1.</b> The product has service interfaces and management interfaces. Document A describes the first kind only.')}
   <ol class="steps">
-   <li><span class="n">1</span><div><b>Three months later</b>A weakness is published against a key exchange that SSH uses. You have to say whether the product is affected, and if it is, which of your several hundred instances.</div></li>
-   <li><span class="n">2</span><div><b>Document A cannot answer</b>It describes the web interface in full. It says nothing about the SSH interface that administrators log in to.</div></li>
+   <li><span class="n">1</span><div><b>Three months later</b>A weakness is published that affects the interfaces administrators use to manage the server. You have to say whether the product is affected, and if it is, which of your several hundred instances.</div></li>
+   <li><span class="n">2</span><div><b>Document A cannot answer</b>It describes eleven interfaces in full. It says nothing about the Admin REST API or the management listener that administrators connect to.</div></li>
    <li><span class="n">3</span><div><b>The vendor was not careless</b>Nothing required it to declare the management interface. Document A is the ordinary result of asking for a CBOM without saying what it is for.</div></li>
   </ol>
   ${concept('A CBOM format defines what a document <i>may</i> record. It does not define what a document <i>must</i> record. Document A complies with the format and leaves the buyer no better off.')}`});
@@ -665,7 +685,7 @@ F2.push({min:1,render:()=>`${head('warn','Why asking for everything does not wor
     <p class="quote">"Send us your CBOM."</p><p class="note">The supplier decides what to include. You receive Document A.</p>
     <p class="quote">"Send us everything."</p><p class="note">A large product performs thousands of cryptographic operations. A list of all of them buries the two or three facts your decision depends on. No supplier will produce it.</p></div>
    <div class="do"><h3>${I.ok} A request that works</h3>
-    <p class="quote">"Send a CBOM that conforms to the Interface Disclosure Baseline v0.7."</p>
+    <p class="quote">"Send a CBOM that conforms to the Interface Disclosure Baseline v0.9."</p>
     ${dash(['It names the reader and the decision.','It lists the facts that must be present, and stops there.','A validator can check the document before anyone relies on it.'])}</div>
   </div>
   ${concept('"Does this document contain everything?" has no answer. "Does it contain what this decision needs?" has one, once the decision is written down in a form that a machine can check.')}`});
@@ -677,7 +697,7 @@ F2.push({min:1.5,render:()=>`${head('decision','Start from the use case','A cons
    <li><span class="n">2</span><div><b>The actions to choose between</b>A decision with only one possible outcome is not a decision. A profile written for it has no point at which to stop adding rules.</div></li>
    <li><span class="n">3</span><div><b>The questions the consumer must answer</b>Each question becomes a fact the CBOM must carry.</div></li>
   </ol>
-  <div class="tbl"><table><thead><tr><th style="width:130px">Interface Disclosure Baseline v0.7</th><th></th></tr></thead><tbody>
+  <div class="tbl"><table><thead><tr><th style="width:130px">Interface Disclosure Baseline v0.9</th><th></th></tr></thead><tbody>
    <tr><td><b>Reader</b></td><td>An operator or buyer holding a product it did not build and cannot inspect, and keeping a cryptographic inventory across an estate.</td></tr>
    <tr><td><b>Decision</b></td><td>When a weakness is published against an algorithm, a protocol version or a library, which deployed interfaces are affected. And, compared with last quarter's record, what has changed.</td></tr>
    <tr><td><b>Actions</b></td><td>${dash(['Record the interfaces and take no further action.','Reconfigure, upgrade or isolate an affected interface.','Ask the producer for a fuller disclosure.','Reject the submission as insufficient for the inventory.'])}</td></tr>
@@ -691,27 +711,28 @@ F2.push({min:1.5,render:()=>`${head('rules','What a profile is','A minimum repor
   <p>A <b>profile</b> is a short list of rules stating which attributes a CBOM must carry to support one stated decision, for one stated reader. The same rules serve both parties.</p>
   ${fig(FIG_DIRECTIONS,'<b>Figure 2.</b> The producer uses the profile as a specification when it generates the CBOM. The consumer uses it as a checklist when it validates the CBOM.')}
   <div class="dd">
-   <div class="do"><h3>${I.ok} A profile is</h3>${dash(['A short list of rules, tied to one reader and one decision.','Two kinds of rule: rules about the set of interfaces, and rules applied to each interface.','Checkable by a validator.','Usable in CycloneDX or SPDX, given a mapping.'])}</div>
+   <div class="do"><h3>${I.ok} A profile is</h3>${dash(['A short list of rules, tied to one reader and one decision.','Three kinds of rule: rules about the document and its set of interfaces, rules applied to each interface, and rules about the pointers to context the document does not carry.','Checkable by a validator.','Usable in CycloneDX or SPDX, given a mapping.'])}</div>
    <div class="dont"><h3>${I.x} A profile is not</h3>${dash(['A schema or a new format.','A list of everything a product does.','A judgement on whether the cryptography is good.'])}</div>
   </div>
   ${concept('No rule asks whether the cryptography is any good. Post-quantum readiness is a judgement made against criteria that change. It lives in versioned policy outside the CBOM. The CBOM carries the facts, and the policy reaches a dated verdict.')}`});
 
-F2.push({min:2,render:()=>`${head('rules','The thirteen rules','Interface Disclosure Baseline v0.7')}
+F2.push({min:2,render:()=>`${head('rules','The twenty-three rules','Interface Disclosure Baseline v0.9')}
   ${cue('Select a rule to see what it requires and why')}
   <div class="rules">
    <div>
-    <div class="rgroup"><div class="eyebrow">Product rules · the set of interfaces</div><div class="rgrid">${['P1','P2','P3','P4'].map(k=>`<button class="rbtn p" data-rule="${k}" aria-pressed="false">${k}</button>`).join('')}</div></div>
-    <div class="rgroup"><div class="eyebrow">Interface rules · every declared interface</div><div class="rgrid">${['I1','I2','I3','I4','I5','I6','I7','I8','I9'].map(k=>`<button class="rbtn i" data-rule="${k}" aria-pressed="false">${k}</button>`).join('')}</div></div>
-    <p class="note" id="rcount">0 of 13 rules viewed</p>
+    <div class="rgroup"><div class="eyebrow">Product rules · the document and its set of interfaces</div><div class="rgrid">${['P1','P2','P3','P4','P5','P6'].map(k=>`<button class="rbtn p" data-rule="${k}" aria-pressed="false">${k}</button>`).join('')}</div></div>
+    <div class="rgroup"><div class="eyebrow">Interface rules · every declared interface</div><div class="rgrid">${['I1','I2','I3','I4','I5','I6','I7','I8','I9','I10','I11'].map(k=>`<button class="rbtn i" data-rule="${k}" aria-pressed="false">${k}</button>`).join('')}</div></div>
+    <div class="rgroup"><div class="eyebrow">Reference rules · pointers to context</div><div class="rgrid">${['R1','R2','R3','R4','R5','R6'].map(k=>`<button class="rbtn r" data-rule="${k}" aria-pressed="false">${k}</button>`).join('')}</div></div>
+    <p class="note" id="rcount">0 of 23 rules viewed</p>
    </div>
    <div class="rdetail" id="rdetail" aria-live="polite"></div>
   </div>
   ${concept('Product rules catch omissions, which no rule about a single attribute can do. A document can describe its service interface perfectly, pass every interface rule, and still fail P2.')}`,
   init(){const seen=new Set();const sel=k=>{const r=RULES[k];seen.add(k);
     document.querySelectorAll('[data-rule]').forEach(b=>{const on=b.dataset.rule===k;b.setAttribute('aria-pressed',on);if(seen.has(b.dataset.rule))b.classList.add('seen')});
-    document.getElementById('rcount').textContent=`${seen.size} of 13 rules viewed`;
-    document.getElementById('rdetail').innerHTML=`<div class="rid">${k} · ${r.g==='p'?'product rule':'interface rule'}</div><h3>${r.g==='i'?`<span class="mono" style="font-size:.9em">${r.t}</span>`:r.t}</h3><p style="margin:0">${r.why}</p>
-     <dl><dt>Level</dt><dd><span class="chip c-info">${r.lvl}</span>${r.wh?'<span class="chip c-warn">withholdable</span>':''}</dd>${r.c?`<dt>Constraint</dt><dd class="mono">${r.c}</dd>`:''}<dt>Applies to</dt><dd>${r.g==='p'?'The document as a whole.':'Each interface the document declares, however many there are.'}</dd></dl>`};
+    document.getElementById('rcount').textContent=`${seen.size} of 23 rules viewed`;
+    document.getElementById('rdetail').innerHTML=`<div class="rid">${k} · ${r.g==='p'?'product rule':r.g==='r'?'reference rule':'interface rule'}</div><h3>${r.g==='i'?`<span class="mono" style="font-size:.9em">${r.t}</span>`:r.t}</h3><p style="margin:0">${r.why}</p>
+     <dl><dt>Level</dt><dd><span class="chip c-info">${r.lvl}</span>${r.wh?'<span class="chip c-warn">withholdable</span>':''}</dd>${r.c?`<dt>Constraint</dt><dd class="mono">${r.c}</dd>`:''}<dt>Applies to</dt><dd>${r.g==='p'?'The document as a whole.':r.g==='r'?'The pointers the document carries. The validator checks the pointer, never the target.':'Each interface the document declares, however many there are.'}</dd></dl>`};
     document.querySelectorAll('[data-rule]').forEach(b=>b.onclick=()=>sel(b.dataset.rule));sel('P2');}});
 
 F2.push({min:2,render:()=>`${head('verdict','Evaluate three documents','Conformance is measured against what the decision needs')}
@@ -720,7 +741,7 @@ F2.push({min:2,render:()=>`${head('verdict','Evaluate three documents','Conforma
   <div class="evalgrid">
    <div><p class="doc-title" id="evtitle"></p><pre class="doc" id="evdoc"></pre></div>
    <div><div class="tbl" style="margin-top:0"><table class="evtable"><thead><tr><th>Rule</th><th>Finding</th><th>Result</th></tr></thead><tbody id="evrows"></tbody></table></div>
-    <div class="runrow"><button class="btn" id="evrun">Run evaluation</button><span class="note" id="evhint">Against Interface Disclosure Baseline v0.7</span></div>
+    <div class="runrow"><button class="btn" id="evrun">Run evaluation</button><span class="note" id="evhint">Against Interface Disclosure Baseline v0.9</span></div>
     <div class="verdict wait" id="evverdict">Not yet evaluated</div></div>
   </div>
   <p id="evnote" class="note" style="margin-top:16px" hidden></p>`,
@@ -758,8 +779,8 @@ F2.push({min:0,next:null,render:()=>`${head('decision','Name the profile, then c
   <h3 style="margin-top:22px">Follow these practices</h3>
   ${dash(['Write down the reader, the decision and the actions before you ask for a CBOM.','Ask for conformance to a named profile and version. Never ask for "your CBOM" or for "everything".','Check conformance with a validator before you rely on a document.','Treat <span class="mono">withheld</span> as a position to negotiate and <span class="mono">undeclared</span> as a defect to fix.','Keep verdicts such as post-quantum readiness in versioned policy, outside the CBOM.','Ask for a deeper profile when your decision needs facts the baseline never collected.'])}
   <div class="nextup"><button class="btn" data-goto="F3">Next module: F3 Why CBOM data is hard to use today →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
-  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Introduction, Use Cases, Profile and Demo; Interface Disclosure Baseline v0.7 and its example CBOMs (nginx 1.27.0, libexample 2.1.0) in CycloneDX 1.7.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. Field names follow CycloneDX 1.7 / ECMA-424 2nd edition.</p>`});
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Introduction, Use Cases, Profile and Demo; Interface Disclosure Baseline v0.9 and its Keycloak 26.7.3 example CBOMs in CycloneDX 2.0.</p>
+  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. Field names follow CycloneDX 2.0 (2.0-dev, commit 76f185c, pinned until Ecma ratifies the release); CycloneDX 1.6 and 1.7 documents are read as legacy.</p>`});
 
 /* ================= F3 Why CBOM data is hard to use today ================= */
 const FIG_SEQ=`<svg viewBox="0 0 720 230" role="img" aria-label="Two sequences over three years. In the first, the minimum is met every year and nothing says what comes next. In the second, each deferred subject carries a status, which moves from planned to in progress to a deeper profile being met.">
@@ -778,9 +799,9 @@ const FIG_SEQ=`<svg viewBox="0 0 720 230" role="img" aria-label="Two sequences o
  <text class="t-pass" x="470" y="208" text-anchor="middle" font-size="12">the consumer can see progress and has a basis to ask for more</text>
 </svg>`;
 
-const FIG_EDGE=`<svg viewBox="0 0 720 210" role="img" aria-label="A TLS session between a web client and an nginx server is the relationship. Current formats have no object for it. The assets used in it, TLS 1.3, X25519, AES-256-GCM and an RSA certificate, are modelled as objects, and the relationship's classifiers end up attached to the protocol asset.">
+const FIG_EDGE=`<svg viewBox="0 0 720 210" role="img" aria-label="A TLS session between a web client and a Keycloak server is the relationship. Current formats have no object for it. The assets used in it, TLS 1.3, X25519, AES-256-GCM and an RSA certificate, are modelled as objects, and the relationship's classifiers end up attached to the protocol asset.">
  <rect class="s-soft" x="16" y="34" width="140" height="56" rx="10"/><text class="t-ink" x="86" y="58" text-anchor="middle" font-weight="600" font-size="13.5">Endpoint A</text><text class="t-muted" x="86" y="76" text-anchor="middle" font-size="11.5">web client</text>
- <rect class="s-soft" x="564" y="34" width="140" height="56" rx="10"/><text class="t-ink" x="634" y="58" text-anchor="middle" font-weight="600" font-size="13.5">Endpoint B</text><text class="t-muted" x="634" y="76" text-anchor="middle" font-size="11.5">nginx server</text>
+ <rect class="s-soft" x="564" y="34" width="140" height="56" rx="10"/><text class="t-ink" x="634" y="58" text-anchor="middle" font-weight="600" font-size="13.5">Endpoint B</text><text class="t-muted" x="634" y="76" text-anchor="middle" font-size="11.5">Keycloak server</text>
  <path class="l-fail" d="M156 62H564"/>
  <text class="t-fail" x="360" y="44" text-anchor="middle" font-size="12.5" font-weight="600">the relationship (edge): no first-class object</text>
  <text class="t-muted" x="360" y="80" text-anchor="middle" font-size="11.5">its classifiers: endpoint roles, interface type</text>
@@ -816,7 +837,7 @@ const LESSONS={
  norm:{t:'Normalization',prob:'Different producers wrote the same value in different ways, which blocked automated processing.',impl:'Agree identifiers (syntactic normalization) and attribute meanings (semantic normalization), so that CBOMs from different producers can be compared.'}
 };
 const GAPS={
- life:{t:'Lifecycle state',icon:'lifecycle',html:`<p>"The product uses AES-256-GCM" can mean four things. The algorithm may be <b>intended</b> in the design, <b>implemented</b> in the binary, <b>configured</b> in a deployment, or <b>observed</b> on the wire.</p>${dash(['A vendor build CBOM and an operator runtime scan can both be correct and still differ.','Without an explicit stage, a consumer cannot tell capability from use. Module F5 covers this in depth.'])}`},
+ life:{t:'Lifecycle state',icon:'lifecycle',html:`<p>"The product uses AES-256-GCM" can mean four things. The algorithm may be <b>intended</b> in the design, <b>implemented</b> in the binary, <b>configured</b> in a deployment, or <b>observed</b> on the wire.</p>${dash(['A vendor build CBOM and an operator runtime scan can both be correct and still differ.','Without an explicit stage, a consumer cannot tell capability from use. Module F5 covers this in depth.','The baseline asks for one stage per document and does not accept <span class="mono">intended</span>. A vendor states an intention as a capability status instead.'])}`},
  depth:{t:'Depth of disclosure',icon:'ladder',html:`<p><b>Too much detail</b> hides what matters and can expose intellectual property. <b>Too little</b> hides risk. A profile sets a minimum, and its scope limits how much the producer is asked to disclose.</p>${dash(['<b>Time is the third factor.</b> Few suppliers can answer a mature profile at the start. A profile pitched at what suppliers produce today will still be pitched there in three years.','So a profile that defers a subject still asks the producer to say where that subject stands.'])}`},
  four:{t:'Missing values',icon:'withheld',html:`<p>Most tooling treats an attribute as present or missing. That merges four situations: <span class="mono">value</span>, <span class="mono">withheld</span>, <span class="mono">unknown</span> and <span class="mono">undeclared</span>.</p>${dash(['<b>Unknown</b> points to a limit of the producing process. It may justify better tooling, or less weight on the result.','<b>Withheld</b> is a policy decision. The information exists and could be released on other terms, such as under an NDA.','A vendor whose scanner cannot see hardware cryptography is not in the same position as one that chose not to publish a library version. An empty field treats them the same.','Neither CycloneDX nor SPDX has a native field for these markers, so the mapping defines a convention.'])}`},
  tool:{t:'Tooling confidence',icon:'advisory',html:`<p>Automated tools can miss cryptography that is <b>loaded dynamically</b>, <b>driven by configuration</b> or <b>provided by hardware</b>.</p>${dash(['A CBOM is no more reliable than the process that produced it.','Provenance matters, and so does signing where it is feasible.','Confidence also depends on the lifecycle stage at which the CBOM was captured.'])}`}
@@ -899,8 +920,8 @@ F3.push({min:1.5,render:()=>`${head('chain','The environment, and the passage of
    <div class="box"><h3>Linking cryptography to its environment</h3>${dash(['The <b>library version</b> decides whether modes such as hybrid key exchange are available.','<b>Where it runs</b> matters: software, an HSM or a TEE. Cryptography in a TEE may need a hardware replacement rather than a software update.','So CBOMs are read with SBOMs, and sometimes HBOMs. The links between these artifacts are not yet mature.'])}</div>
    <div class="box"><h3>Three ways a CBOM can be "older"</h3>
     <div class="tbl" style="margin:4px 0 8px"><table><tbody>
-     <tr><td><b>Standard</b></td><td>CycloneDX 1.6 versus 1.7</td></tr>
-     <tr><td><b>Profile</b></td><td>Baseline v0.6 versus v0.7</td></tr>
+     <tr><td><b>Standard</b></td><td>CycloneDX 1.7 versus 2.0</td></tr>
+     <tr><td><b>Profile</b></td><td>Baseline v0.8 versus v0.9</td></tr>
      <tr><td><b>Content</b></td><td>The product's CBOM regenerated for a new release</td></tr>
     </tbody></table></div>
     <p class="note" style="margin:0">Treating "older" as one idea produces wrong verdicts. Each axis is handled on its own. Module A3 covers versioning.</p></div>
@@ -1205,9 +1226,9 @@ F5.push(titleScreen(MODULES.find(m=>m.id==='F5'),{sub:'Who knows what about a pr
  req:['Review the seven sections.','Pass the knowledge check with a score of 80% or higher.'],pre:'F4 CBOMs and the cryptographic inventory.',aud:'Migration leads, operators, product security teams and auditors',level:'Foundation'}));
 
 F5.push({min:1.5,render:()=>`${head('lifecycle','Four lifecycle stages','The same statement means four different things')}
-  <p>"The product uses AES-256-GCM" depends on when, and by whom, the fact was captured. The <span class="mono">lifecycleStage</span> attribute records that. Version 1 of the model has four values, one per interface, each tied to a phase with its own producer and data source.</p>
+  <p>"The product uses AES-256-GCM" depends on when, and by whom, the fact was captured. The <span class="mono">lifecycleStage</span> attribute records that. The model has four values, each tied to a phase with its own producer and data source. A document carries one stage for all its facts. The baseline accepts three of them: <span class="mono">implemented</span>, <span class="mono">configured</span> and <span class="mono">observed</span>. Only the entry profile still accepts <span class="mono">intended</span>.</p>
   ${fig(FIG_STAGES,'<b>Figure 1.</b> From left to right, the producer changes from architects at design to operators at runtime. Each stage answers a different question from a different source.')}
-  ${concept('A profile can require the stage to be declared, as the baseline does with rule I8. It can also require a specific stage: a runtime-assurance profile might require <span class="mono">observed</span>, while a procurement profile might accept <span class="mono">implemented</span> from a vendor build.')}`});
+  ${concept('A profile can require the stage to be declared, as the baseline does with rules P6 and I8. It can also require a specific stage: a runtime-assurance profile might require <span class="mono">observed</span>, while the procurement profile accepts only <span class="mono">implemented</span>, from a vendor build.')}`});
 
 F5.push({min:2,render:()=>`${head('rules','What each stage can tell you','And where each one is wrong')}
   ${cue('Select a stage')}
@@ -1231,12 +1252,12 @@ F5.push({min:1,render:()=>`${head('standards','Lifecycle stage and SBOM generati
 F5.push({min:1.5,render:()=>`${head('warn','The readiness gap','Capable software does not mean post-quantum cryptography is running')}
   <p>PQC-capable software and hardware do not guarantee that post-quantum cryptography is configured and active, or that it stays active after configuration changes. In large migrations, interoperability and performance problems regularly appear as a system moves from one stage to the next.</p>
   ${fig(FIG_GAP,'<b>Figure 2.</b> A vendor\'s implemented record and an operator\'s observed scan can both be correct and still differ. Record each fact with its stage, so the difference is visible.')}
-  ${concept('Record a fact with its lifecycle stage, never as a bare fact. A CBOM that holds both views makes the readiness gap explicit.')}`});
+  ${concept('Record a fact with its lifecycle stage, never as a bare fact. Each record carries one stage. The readiness gap appears when the vendor\'s product record is joined to the operator\'s deployment records, interface by interface. It is computed from the join and never stored in a record.')}`});
 
 F5.push({min:2,render:()=>`${head('doc','Product CBOM and service CBOM','Migration planning needs both')}
   <div class="two">
    <div class="box"><h3>Product CBOM</h3>${dash(['Describes what a product contains or can use.','Produced by the vendor at build time, shipped with a release.','Stage: <span class="mono">implemented</span>.','Tends to over-report capability and under-report runtime and hardware cryptography.'])}</div>
-   <div class="box"><h3>Service CBOM</h3>${dash(['Describes what a running service actually uses.','Produced by the operator from configuration and the wire.','Stages: <span class="mono">configured</span> and <span class="mono">observed</span>.','Under-reports paths not exercised while it was captured. Relationships exist at this level.'])}</div>
+   <div class="box"><h3>Service CBOM</h3>${dash(['Describes what a running service actually uses. The methodology calls it a deployment record.','Produced by the operator from configuration and the wire, one record per stage. Each record cites the product record by hash.','Stages: <span class="mono">configured</span> and <span class="mono">observed</span>.','Under-reports paths not exercised while it was captured. Relationships exist at this level.'])}</div>
   </div>
   ${cue('Compare the two for one interface: select a cell')}
   <div class="matrix">
@@ -1254,14 +1275,14 @@ F5.push({min:1.5,render:()=>`${head('relation','Where the hand-offs fail','Stage
   ${concept('A profile can require the lifecycle stage to be declared. That makes these gaps visible. It cannot close them: closing them needs some party to produce data it does not produce today.')}`});
 
 F5.push({min:1,render:()=>`${head('ladder','Tracking progress over time','Successive revisions form an audit trail')}
-  <p>Each CBOM revision is a fixed record. As an interface moves from <span class="mono">implemented</span> to <span class="mono">configured</span> to <span class="mono">observed</span> with post-quantum cryptography enabled, the series of revisions gives internal governance and regulators a verifiable record of the migration.</p>
+  <p>Each CBOM revision is a fixed record, and each carries one stage. As an interface moves from <span class="mono">implemented</span> to <span class="mono">configured</span> to <span class="mono">observed</span> with post-quantum cryptography enabled, the vendor's product records and the operator's deployment records, joined interface by interface, give internal governance and regulators a verifiable record of the migration.</p>
   ${fig(FIG_TRACK,'<b>Figure 4.</b> One interface across four revisions. The inventory can only follow it if it can tell that each record describes the same interface, which is why F4 stresses a stable interface key.')}`});
 
 F5.push(quizScreen('F5',QUIZ_F5));
 F5.push({min:0,next:null,render:()=>`${head('lifecycle','Cryptographic data across the lifecycle','Summary')}
   <p style="font-size:18px">A cryptographic fact means little without its stage. Capability comes from the vendor, use comes from the operator, and migration planning reads the two side by side, one interface at a time.</p>
   <h3 style="margin-top:22px">Follow these practices</h3>
-  ${dash(['Record every fact with its lifecycle stage.','Require the stage you need in the profile you cite: observed for runtime assurance, implemented may do for procurement.','Read product CBOMs and service CBOMs together, interface by interface.','Treat a difference between implemented and observed as a finding, not an error.','When only coarse generation context is available, record the limitation instead of guessing.','Keep revisions as the audit trail of your migration.'])}
+  ${dash(['Record every fact with its lifecycle stage.','Require the stage you need in the profile you cite: observed for runtime assurance, implemented for procurement.','Read product CBOMs and service CBOMs together, interface by interface.','Treat a difference between implemented and observed as a finding, not an error.','When only coarse generation context is available, record the limitation instead of guessing.','Keep revisions as the audit trail of your migration.'])}
   <div class="concept" style="margin-top:22px"><small>FOUNDATION TRACK COMPLETE</small>You have finished the Foundation modules. The Concepts track starts with C1 Relationships, endpoints and assets.</div>
   <div class="nextup"><button class="btn" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Lifecycle Data, Inventory and Versioning; 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026), SBOM Generation Context.</p>

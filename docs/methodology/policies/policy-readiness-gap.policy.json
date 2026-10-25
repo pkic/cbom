@@ -1,0 +1,214 @@
+{
+  "policyFormat": "pkic.cbom.policy",
+  "policyFormatVersion": "0.1",
+  "policyId": "pkic.example.policy.readiness-gap",
+  "version": "0.1",
+  "title": "Post-quantum readiness gap, one interface at a time",
+  "status": "illustrative",
+  "$comment": "An example policy. It joins a product record (implemented), a deployment record (configured) and an observation (observed) along correspondsTo, and places each interface and purpose in one of the gaps the Lifecycle Data section describes. What counts as the target is data in this file. The evaluation method is implemented by evaluate_policy.py. The result points to every record it used by digest.",
+  "method": "readiness-gap",
+  "inputs": {
+    "profiles": [
+      "pkic.example.pqc-migration",
+      "pkic.example.deployment-disclosure"
+    ],
+    "stages": [
+      "implemented",
+      "configured",
+      "observed"
+    ]
+  },
+  "classification": [
+    {
+      "names": [
+        "RSA-1024"
+      ],
+      "family": "RSA",
+      "securityStrength": 80,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "RSA-2048",
+        "RS256",
+        "RS384",
+        "RS512",
+        "PS256",
+        "PS384",
+        "PS512",
+        "RSA-SHA256",
+        "RSA-OAEP",
+        "RSA-OAEP-256",
+        "rsa_pkcs1_sha256",
+        "rsa_pss_rsae_sha256",
+        "rsa_pss_rsae_sha384",
+        "rsa_pss_rsae_sha512",
+        "rsa_pss_pss_sha256",
+        "RSA-SHA384",
+        "RSA-SHA512"
+      ],
+      "family": "RSA",
+      "securityStrength": 112,
+      "quantumVulnerable": true,
+      "note": "JOSE and TLS names do not carry the RSA key size. They are classified at 112 bits, the strength of the RSA-2048 keys Keycloak generates by default; a record that states a larger key in its key material is classified by that key."
+    },
+    {
+      "names": [
+        "RSA-3072"
+      ],
+      "family": "RSA",
+      "securityStrength": 128,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "ffdhe2048"
+      ],
+      "family": "FFDH",
+      "securityStrength": 112,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "ffdhe3072"
+      ],
+      "family": "FFDH",
+      "securityStrength": 128,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "X25519",
+        "secp256r1",
+        "P-256",
+        "ECDH-ES",
+        "ES256",
+        "ECDSA-P256-SHA256",
+        "ecdsa_secp256r1_sha256",
+        "Ed25519",
+        "EdDSA",
+        "ed25519",
+        "ECDSA-SHA256"
+      ],
+      "family": "EC",
+      "securityStrength": 128,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "secp384r1",
+        "P-384",
+        "ES384",
+        "ecdsa_secp384r1_sha384",
+        "ECDSA-SHA384"
+      ],
+      "family": "EC",
+      "securityStrength": 192,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "X448",
+        "Ed448",
+        "ed448"
+      ],
+      "family": "EC",
+      "securityStrength": 224,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "secp521r1",
+        "P-521",
+        "ES512",
+        "ecdsa_secp521r1_sha512",
+        "ECDSA-SHA512"
+      ],
+      "family": "EC",
+      "securityStrength": 256,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "X25519MLKEM768",
+        "SecP256r1MLKEM768",
+        "SecP384r1MLKEM1024",
+        "ML-KEM-768",
+        "ML-KEM-1024",
+        "ML-KEM-512"
+      ],
+      "family": "ML-KEM",
+      "quantumVulnerable": false,
+      "note": "Hybrid groups are classified by their post-quantum component."
+    },
+    {
+      "names": [
+        "ML-DSA-44",
+        "ML-DSA-65",
+        "ML-DSA-87",
+        "mldsa44",
+        "mldsa65",
+        "mldsa87",
+        "SLH-DSA-SHA2-128s",
+        "SLH-DSA-SHAKE-128s"
+      ],
+      "family": "ML-DSA/SLH-DSA",
+      "quantumVulnerable": false
+    },
+    {
+      "names": [
+        "AES-128",
+        "AES-128-GCM",
+        "AES-256-GCM",
+        "ChaCha20-Poly1305",
+        "HMAC-SHA512",
+        "HS256",
+        "HS384",
+        "HS512"
+      ],
+      "family": "symmetric",
+      "quantumVulnerable": false,
+      "note": "Symmetric algorithms are outside the IR 8547 public-key transition."
+    }
+  ],
+  "purposes": {
+    "key-establishment": {
+      "attribute": "keyExchange",
+      "capabilityAttribute": "keyExchangeSupported",
+      "target": {
+        "quantumVulnerable": false,
+        "familyIn": [
+          "ML-KEM"
+        ]
+      }
+    },
+    "entity-authentication": {
+      "attribute": "authentication",
+      "capabilityAttribute": "authenticationSupported",
+      "target": {
+        "quantumVulnerable": false,
+        "familyIn": [
+          "ML-DSA/SLH-DSA"
+        ]
+      }
+    }
+  },
+  "classes": {
+    "target-met": "Every value observed (or, without an observation, configured) meets the target.",
+    "enabled-not-negotiated": "The deployment permits a target value, and at least one session was seen to negotiate a value that does not meet it. The limit is the other endpoint or a fallback path.",
+    "capable-not-enabled": "The product can do it, and the deployment does not permit it. The operator acts, by configuration.",
+    "not-capable": "The product cannot do it. The supplier acts, or the product is upgraded or replaced; the product record says what blocks it.",
+    "not-applicable": "No algorithm is applied for this purpose at this interface.",
+    "unknown": "A stage needed to decide is missing or declares the value unknown.",
+    "capable": "The product can do it. No deployment record was supplied, so whether it is enabled is not evidenced.",
+    "unprotected": "The interface applies no cryptography at all at the latest stage supplied. Its traffic is exposed whatever the product can do.",
+    "not-deployed": "The product has the interface and the deployment records do not: it is not configured in this deployment."
+  },
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-10-25",
+      "summary": "Initial example."
+    }
+  ]
+}

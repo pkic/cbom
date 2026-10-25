@@ -154,7 +154,7 @@ nav: governance
   </figure>
 
   <h3>A · Unified document</h3>
-  <p>One bill of materials contains both the software components and the cryptographic assets, with dependencies expressed between them. CycloneDX supports this directly, since cryptographic assets are components like any other. The worked example on this site is of this kind: the OpenSSH and OpenSSL library components sit in the same document as the interfaces and algorithms that use them.</p>
+  <p>One bill of materials contains both the software components and the cryptographic assets, with dependencies expressed between them. CycloneDX supports this directly, since cryptographic assets are components like any other.</p>
   <p>The advantage is that there is no reference to resolve and no second document to keep in step. A single signature covers the whole claim, one author is accountable, and a consumer holding the document has everything it needs. The disadvantage appears when the two kinds of data have different lifetimes or different owners. A vendor's software inventory changes on release. A deployment's cryptographic configuration can change without any software changing at all. Binding them into one artifact forces the slower-moving part to be republished whenever the faster-moving part changes. It also means that a consumer entitled to the software inventory necessarily receives the cryptographic detail as well.</p>
 
   <h3>B · Standalone CBOM</h3>
@@ -163,6 +163,7 @@ nav: governance
 
   <h3>C · CBOM referencing an external SBOM</h3>
   <p>The CBOM is the entry point and carries a reference to the SBOM for the same subject. A consumer starts from the cryptography and resolves outward to component detail when it needs it.</p>
+  <p>The Keycloak product record is of this kind. It names the libraries that implement its interfaces, such as the OpenJDK 21 runtime in the image, so that rule I9 can be answered from the record itself. For the full component list it points to the companion SBOM of the same image, by BOM-Link and SHA-256 hash. Baseline rule R1 requires this pointer on every product record. See <a href="context.html">Context Pointers</a>.</p>
   <p>This suits consumers whose question is cryptographic: migration planners, and anyone assessing an interface rather than a release. The two documents keep independent lifecycles, so a configuration change can produce a new CBOM revision without reissuing the SBOM. The cost is that the reference between the two documents has to be kept correct. A reference that names a document without pinning its revision will eventually point at something that has moved on, and a consumer that cannot resolve the reference is left with an incomplete picture and no indication that anything is missing.</p>
 
   <h3>D · SBOM referencing an external CBOM</h3>
@@ -189,9 +190,9 @@ nav: governance
   <h3>Requirements that apply whichever is chosen</h3>
   <p>Where two documents are used, the reference between them needs governance. Without it, the reference becomes inaccurate over time.</p>
   <ul>
-    <li><strong>Pin the revision.</strong> A reference should identify a specific revision of the target, not merely the target. CycloneDX provides a link form that identifies a BOM by serial number and version, which is the mechanism to prefer over a bare URL. Confirm the exact syntax against the current schema before relying on it.</li>
+    <li><strong>Pin the revision.</strong> A reference should identify a specific revision of the target, not merely the target. CycloneDX provides a link form, the BOM-Link <code>urn:cdx:&lt;serial&gt;/&lt;version&gt;</code>, that identifies a BOM by serial number and version. Prefer it over a bare URL, and add a SHA-256 hash of the target. The Keycloak deployment records cite the records they build on in this way (decision 0025). When a consumer holds the cited record, the validator checks its serial number, version and hash. A cited record that has changed since it was cited fails the deployment profile's rule P1.</li>
     <li><strong>Give the pair a shared subject identifier.</strong> Both documents should name the same subject in the same way, so that a consumer holding one can find the other without following a link that may have rotted.</li>
-    <li><strong>State whether resolution is required for conformance.</strong> A profile should say whether an unresolvable reference is a failure or a warning. If the profile does not say, two consumers will reach different verdicts on the same document.</li>
+    <li><strong>State whether resolution is required for conformance.</strong> A profile should say whether an unresolvable reference is a failure or a warning. If the profile does not say, two consumers will reach different verdicts on the same document. The published profiles check the pointer and never the target. Where a value is inherited from a cited record that the consumer does not supply, the validator reports the value as open (unresolved) and does not fail it.</li>
     <li><strong>Sign both, and record the relationship.</strong> Two signatures do not by themselves attest that the two documents belong together. The reference should be inside the signed content of at least one of them.</li>
     <li><strong>Retain both documents for the same period.</strong> A retained CBOM whose SBOM has been deleted is an audit record that can no longer be interpreted.</li>
   </ul>

@@ -75,19 +75,88 @@ nav: policyeval
     <thead><tr><th>Evaluation</th><th>Derived from (facts)</th><th>Against (criteria, external)</th></tr></thead>
     <tbody>
       <tr><td>Post-quantum posture</td><td>the key-exchange and authentication algorithms an interface uses, and whether they are classical, hybrid, or post-quantum</td><td>current guidance on which algorithms and combinations are considered quantum-safe, which is revised over time</td></tr>
+      <tr><td>Algorithm transition</td><td>every algorithm a CBOM discloses, with its family and security strength</td><td>a dated transition schedule, such as the one in the NIST IR 8547 initial public draft</td></tr>
+      <tr><td>Readiness gap</td><td>what the product record says the product can do, what the configured record permits, and what the observed record saw, joined one interface at a time</td><td>a target, such as ML-KEM for key establishment and ML-DSA or SLH-DSA for entity authentication</td></tr>
       <tr><td>Cryptographic maturity</td><td>algorithm strength, key sizes, deprecation status, library currency, and cryptographic agility</td><td>a maturity rubric that is revised as recommendations and deprecations change</td></tr>
     </tbody>
   </table>
-  <p>Both evaluations draw on the same kind of primary data, and the same point applies to both. Their criteria are not fixed. The evaluation must therefore be applied externally and dated, rather than frozen into the CBOM.</p>
-  <p>Vulnerability status is a third case. It is the case where the pressure to store a verdict in the CBOM is strongest, because the format offers a field for it. Vulnerability status also differs from post-quantum posture and cryptographic maturity. Its criteria can be revised, and in addition they are held by someone other than the producer: whether an interface is affected depends on an advisory that a third party publishes. The same reasoning applies. <a href="vulnerabilities.html">Vulnerabilities</a> works through the consequences. That page also sets out what a profile must require so that a CBOM can be matched against an advisory at all.</p>
+  <p>All of these evaluations draw on the same kind of primary data, and the same point applies to each. Their criteria are not fixed. The evaluation must therefore be applied externally and dated, rather than frozen into the CBOM. The working group has written the algorithm-transition and readiness-gap evaluations as concrete example policies. No example policy exists yet for cryptographic maturity.</p>
+  <p>Vulnerability status is another case. It is the case where the pressure to store a verdict in the CBOM is strongest, because the format offers a field for it. Vulnerability status also differs from the evaluations in the table. Its criteria can be revised, and in addition someone other than the producer holds them: whether an interface is affected depends on an advisory that a third party publishes. The same reasoning applies. <a href="vulnerabilities.html">Vulnerabilities</a> works through the consequences. It also sets out what a profile must require so that a consumer can match a CBOM against an advisory at all.</p>
 
-  <h2>Consequence for this profile</h2>
-  <p>For this reason, <code>pqcPosture</code> has been removed from the profile's attributes. The attribute was carried in an early working draft, before v0.1, and no document was ever authored against that draft. The changelog records only changes between published versions. The removal therefore appears in the profile specification's revision rationale rather than in its changelog. The removal is recorded as decision 0002. The profile requires disclosure of the facts from which posture is derived. These facts are the protocol, the key exchange, encryption and authentication algorithms, and the implementing library. The posture itself is computed by an external policy at evaluation time. The same applies to any cryptographic maturity assessment.</p>
+  <h2>Consequence for the profiles</h2>
+  <p>For this reason, the working group removed <code>pqcPosture</code> from the baseline's attributes. The attribute was carried in an early working draft, before v0.1, and nobody ever authored a document against that draft. The changelog records only changes between published versions. The removal therefore appears in the profile specification's revision rationale rather than in its changelog. Decision 0002 records the removal. The profile requires disclosure of the facts from which posture is derived. These facts are the protocol, the key exchange, encryption and authentication algorithms, and the implementing library. An external policy computes the posture itself at evaluation time. The same applies to any cryptographic maturity assessment. The baseline lists derived judgements among its exclusions for the same reason.</p>
+
+  <h2 id="policy-artefacts">Policies are artefacts</h2>
+  <p>Decision 0002 is now concrete. A policy is a file in the repository. It holds <strong>versioned data plus a named evaluation method</strong>. The data says what the criteria are. The method says how an evaluator applies them. Policies sit outside CBOMs and outside profiles, because the criteria change while the facts do not.</p>
+  <table>
+    <thead><tr><th>Artefact</th><th>File (in <code>docs/methodology/</code>)</th><th>What it is</th></tr></thead>
+    <tbody>
+      <tr><td>Policy format</td><td><code>policy.schema.json</code></td><td>The structure of a policy: identifier, version, status, source, method, a classification of algorithm names, and either a dated schedule or a set of targets per purpose.</td></tr>
+      <tr><td>Readiness-gap policy</td><td><code>policies/policy-readiness-gap.policy.json</code></td><td>Example policy <code>pkic.example.policy.readiness-gap</code>, version 0.1, method <code>readiness-gap</code>.</td></tr>
+      <tr><td>Algorithm-transition policy</td><td><code>policies/policy-algorithm-transition.policy.json</code></td><td>Example policy <code>pkic.example.policy.algorithm-transition</code>, version 0.1, method <code>algorithm-transition</code>.</td></tr>
+      <tr><td>Evaluator</td><td><code>evaluate_policy.py</code></td><td>Implements both methods. Usage: <code>evaluate_policy.py &lt;policy&gt; &lt;cbom...&gt; --date YYYY-MM-DD</code>.</td></tr>
+      <tr><td>Result format</td><td><code>policy-result.schema.json</code></td><td>The structure of a result.</td></tr>
+      <tr><td>Results</td><td><code>examples/results/</code></td><td>The results for the Keycloak records, all evaluated on 2026-10-25.</td></tr>
+    </tbody>
+  </table>
+  <p>Both example policies carry the status <code>illustrative</code>. They show the mechanism. They are not advice.</p>
+
+  <h3>What a result records</h3>
+  <p>A result is the judgement, written down. It records five things:</p>
+  <ul>
+    <li>the policy it applied, by identifier, version and SHA-256 digest of the policy file;</li>
+    <li>the evaluation date;</li>
+    <li><strong>every CBOM it read</strong>, each by file name, serial number, version, subject and SHA-256 digest;</li>
+    <li>the findings, and a summary count per class or status;</li>
+    <li>what the result does <strong>not</strong> assert.</li>
+  </ul>
+  <p>The last item matters as much as the findings. Every example result states that it does not assert that the disclosed values are true, because the evaluator applied the policy to what the CBOMs state. It asserts nothing about interfaces or algorithms the CBOMs do not disclose. It does not assert that the policy is right. It asserts nothing after the evaluation date, because the same facts give a different result under a later date or a later policy version.</p>
+  <p>The direction of reference follows time. A CBOM exists before anyone evaluates it, so the result points to the CBOM by digest. A CBOM never points to a result. <a href="context.html">Context Pointers</a> applies the same rule to conformance claims.</p>
+  <p>The evaluation date is fixed in the examples, at 2026-10-25. The test suite runs each evaluation again at that date and checks that the output is identical to the published result. An evaluator that used the current date would produce a different result each day. A real evaluation states its own date for the same reason: so that anyone can reproduce it.</p>
+
+  <h2 id="methods">Two evaluation methods</h2>
+  <h3 id="algorithm-transition">Algorithm transition</h3>
+  <p>The <code>algorithm-transition</code> method reads every algorithm a CBOM discloses at an interface: key exchange, encryption and authentication, and, where present, the supported sets. It looks each name up in the policy's classification, which gives its family, its security strength in bits, and whether a quantum computer could break it. It then applies the policy's schedule at the evaluation date. Each finding states the status on that date and, where there is one, the next transition and its date.</p>
+  <p>The example schedule follows the <strong>NIST IR 8547 initial public draft</strong> (November 2024). NIST had not published a final version as of October 2026. Under that draft, a quantum-vulnerable algorithm at 112-bit strength is deprecated after 2030 and disallowed after 2035. A quantum-vulnerable algorithm at 128 bits or more is disallowed after 2035. The policy repeats this schedule as data, and its source block names the draft. Check the schedule against the NIST publication before relying on it.</p>
+  <p>The method does not classify a literal. It reports <code>none</code> as <code>not-applicable</code>, <code>deployment-defined</code> as <code>not-fixed-by-product</code>, and <code>peer-defined</code> as <code>decided-by-peer</code>.</p>
+
+  <h3 id="readiness-gap">Readiness gap</h3>
+  <p>The <code>readiness-gap</code> method joins a product record (<code>implemented</code>), a configured record and an observed record along <code>correspondsTo</code>. <a href="lifecycle.html#product-service">Lifecycle Data</a> describes that join. For each interface, the method looks at two purposes: key establishment and entity authentication. The policy names the target for each purpose: ML-KEM for key establishment, and ML-DSA or SLH-DSA for entity authentication. The method then places each interface and purpose in one class.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Class</th><th>Meaning</th><th>Who acts</th></tr></thead>
+    <tbody>
+      <tr><td><code>target-met</code></td><td>Every value observed (or, without an observation, every value configured) meets the target.</td><td>Nobody.</td></tr>
+      <tr><td><code>enabled-not-negotiated</code></td><td>The deployment permits a target value, and at least one session still negotiated a classical value.</td><td>The other endpoint or a fallback path is the limit.</td></tr>
+      <tr><td><code>capable-not-enabled</code></td><td>The product can do it, and the deployment does not permit it.</td><td>The operator, by configuration.</td></tr>
+      <tr><td><code>capable</code></td><td>The product can do it. No deployment record was supplied.</td><td>Not evidenced: without a deployment record, nobody knows whether it is enabled.</td></tr>
+      <tr><td><code>not-capable</code></td><td>The product cannot do it. The product record says what blocks it.</td><td>The supplier, or the operator by upgrading or replacing the product.</td></tr>
+      <tr><td><code>unprotected</code></td><td>The interface applies no cryptography at all at the latest stage supplied.</td><td>Not fixed by the class. The traffic is exposed whatever the product can do.</td></tr>
+      <tr><td><code>not-deployed</code></td><td>The product has the interface, and the deployment records do not.</td><td>Nobody, in this deployment.</td></tr>
+      <tr><td><code>not-applicable</code></td><td>No algorithm does this job at this interface.</td><td>Nobody.</td></tr>
+      <tr><td><code>unknown</code></td><td>A stage needed to decide is missing, or declares the value unknown.</td><td>Whoever can supply the missing record.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The readiness gap is computed from the join each time. No CBOM stores it.</p>
+
+  <h2 id="keycloak-results">The Keycloak results</h2>
+  <p>The working group evaluated the Keycloak records with both example policies on 2026-10-25. The operator, Example Org, is illustrative.</p>
+  <table>
+    <thead><tr><th>Result (in <code>examples/results/</code>)</th><th>Records read</th><th>Summary</th></tr></thead>
+    <tbody>
+      <tr><td><code>result-readiness-gap-sso-prod.json</code></td><td>product, configured and observed records</td><td>28 findings: 14 <code>not-capable</code>, 4 <code>unprotected</code>, 4 <code>not-deployed</code>, 4 <code>not-applicable</code>, 1 <code>enabled-not-negotiated</code>, 1 <code>unknown</code>.</td></tr>
+      <tr><td><code>result-algorithm-transition-keycloak-product.json</code></td><td>product record</td><td>156 findings. 126 algorithms are acceptable on the evaluation date. Of these, 53 are quantum-vulnerable at 112 bits and become deprecated after 2030, and 67 are quantum-vulnerable at 128 bits or more and become disallowed after 2035. 13 values are <code>decided-by-peer</code>, 2 are <code>not-fixed-by-product</code>, and 15 are <code>not-applicable</code>.</td></tr>
+      <tr><td><code>result-algorithm-transition-sso-prod-observed.json</code></td><td>observed record</td><td>31 findings. 18 algorithms are acceptable on the evaluation date. 6 of them (RSA-2048, RS256 and RSA-SHA256) become deprecated after 2030, and 6 become disallowed after 2035. 13 values are <code>not-applicable</code>.</td></tr>
+    </tbody>
+  </table>
+  <p>The readiness-gap result says who acts. Key establishment at the ingress is <code>enabled-not-negotiated</code>: the configured record permits X25519MLKEM768, and 29% of sessions still negotiate X25519 alone. The plaintext hop from the ingress to Keycloak and the management port are <code>unprotected</code>, so Example Org acts. Token signing is <code>not-capable</code>: ML-DSA signing is committed upstream (issue #43690) and blocked by the JOSE standard. Keycloak's own TLS is <code>not-capable</code>: post-quantum key exchange is planned and blocked by the Java runtime (JEP 527). The product's HTTPS listener is <code>not-deployed</code>, because TLS ends at the ingress. <a href="lifecycle.html#keycloak-gap">Lifecycle Data</a> shows the findings as a table.</p>
+  <p>The algorithm-transition results show why the date belongs in the result. On 2026-10-25 every classified algorithm is acceptable. Evaluated on 2031-01-01 with the same policy, the six 112-bit values in the observed record (RSA-2048, RS256 and RSA-SHA256) are deprecated. The facts in the CBOM are the same.</p>
 
   <h2>Relationship to profiles and governance</h2>
-  <p>An evaluation policy is versioned, dated, and governed in the same manner as a profile (see <a href="versioning.html">Versioning</a> and <a href="governance.html">Governance</a>). A conformance claim (a producer's statement that a CBOM conforms to a profile) references the profile version. In the same way, a posture or maturity determination references the policy version and the date on which the policy was applied. Anyone can then reproduce the determination and audit the basis on which it was made.</p>
+  <p>An evaluation policy is versioned, dated, and governed in the same manner as a profile (see <a href="versioning.html">Versioning</a> and <a href="governance.html">Governance</a>). A conformance claim (a producer's statement that a CBOM conforms to a profile) references the profile version. In the same way, a policy result references the policy identifier, version and digest, and the date on which the evaluator applied the policy. Anyone can then reproduce the result and audit the basis on which it was made.</p>
 
-  <div class="banner">In summary: the CBOM holds facts; an external, versioned policy derives judgements such as post-quantum posture and cryptographic maturity from those facts. Separating the two allows the facts to remain stable while the criteria evolve, and allows any CBOM to be re-evaluated under current criteria at any time.</div>
+  <div class="banner">In summary: the CBOM holds facts. An external, versioned policy derives judgements such as post-quantum readiness, algorithm transition status and cryptographic maturity from those facts. The example policies are files with a named evaluation method. A result names the policy, the date and every CBOM it read by digest, and states what it does not assert. Separating facts from judgements allows the facts to remain stable while the criteria evolve, and allows anyone to re-evaluate any CBOM under current criteria at any time.</div>
 
   <div class="pagenav">
     <a href="confidentiality.html">← Confidentiality</a>

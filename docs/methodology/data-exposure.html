@@ -25,7 +25,7 @@ nav: dataexp
   <div class="crumb">DESIGN NOTE</div>
   <h1>Data exposure and the harvest-now-decrypt-later threat</h1>
   <p class="lead">An adversary who records encrypted traffic today can decrypt it once a cryptographically relevant quantum computer exists. This is the harvest-now-decrypt-later threat. The exposure it creates is not visible in the cryptography a CBOM currently discloses. It also depends on how long the data must remain confidential, and on whether the traffic can be captured at all. Assessing the exposure needs further facts, and those facts belong partly to the supplier and partly to the operator.</p>
-  <div class="banner warn">Illustrative. The attributes proposed here are a draft for working group discussion. They are not part of the example profiles. They depend on a decision about scope: which kind of CBOM the attributes belong in. That decision is recorded as an open question.</div>
+  <div class="banner warn">Illustrative. The attributes proposed here are a draft for working group discussion. No example profile requires them. The Deployment Disclosure profile takes a different route for now: a deployment record points to the operator's data register and does not carry the facts. Where the boundary falls between the vendor's facts and the operator's facts is still an open question (Q36).</div>
 
   <h2>What makes this threat different</h2>
   <p>Most cryptographic risk is prospective: it affects traffic sent in the future. A weakness discovered in an algorithm affects the traffic protected by that algorithm from that point forward. The remedy is to stop using the algorithm. The harvest-now-decrypt-later threat is retrospective: it affects traffic already sent. Traffic captured and stored today is decrypted years later, when the capability arrives. Here the capability means a cryptographically relevant quantum computer. No action taken at that point can restore the confidentiality of data that has already been recorded.</p>
@@ -84,7 +84,7 @@ nav: dataexp
     </tbody>
   </table>
   <p>Suppose the confidentiality lifetime plus the migration time is greater than the time to capability. Then data being transmitted now will be readable before it stops being sensitive. The organization is already exposed, and the exposure grows with every day the interface continues to operate.</p>
-  <p>The methodology supplies the migration time through the migration profile. That profile records what is needed to reach a quantum-safe capability and what is blocking it. The methodology supplies nothing for the confidentiality lifetime. The proposals on this page are intended to fill that gap.</p>
+  <p>The methodology supplies the migration time through the migration profile. That profile records what is needed to reach a quantum-safe capability and what is blocking it. The methodology does not carry the confidentiality lifetime in any record. A deployment record points to the place where the operator records it, under the <code>data-register</code> context (see <a href="#data-register">The data-register pointer</a>). The attributes proposed later are one way to carry the lifetime in the record itself.</p>
 
   <h2>Two kinds of data, with different owners</h2>
   <p>Which party can state these facts depends on the kind of data an interface carries. Different interfaces carry different kinds of data, so the answer differs from one interface to another.</p>
@@ -109,11 +109,15 @@ nav: dataexp
   <p>Ordinary business information loses sensitivity as it ages, which is what makes short confidentiality lifetimes tolerable. Credentials and key material do not lose sensitivity in this way, and may still be live when the recording is read. A model that accepts only facts stated by the operator leaves out intrinsic data. Intrinsic data is the half of the problem where the consequences are most serious.</p>
 
   <h2>Where each fact belongs</h2>
-  <p><a href="lifecycle.html">Lifecycle Data</a> separates a <strong>product CBOM</strong>, describing what a vendor ships, from a <strong>service or deployment CBOM</strong>, describing what an operator runs in a particular configuration. The proposal is that intrinsic data is declared in the product CBOM and conveyed payload in the service or deployment CBOM. Each fact is then stated by the party that is able to state it. The methodology applies this same test everywhere: a fact is recorded by the party that knows it.</p>
-  <div class="banner warn">This point is open and is recorded as Q36. An earlier draft of this page placed all facts about data at deployment scope, meaning in the deployment CBOM, on the grounds that a vendor cannot know them. That is right for payload and wrong for intrinsic data. The working group needs to decide where the boundary between the two kinds of data falls. Some interfaces are close to that boundary. For example, a database connection carries payload in general, but carries credentials when the session is established. The options are set out in <code>design-note-data-and-hndl.md</code>.</div>
+  <p><a href="lifecycle.html#product-service">Lifecycle Data</a> separates the <strong>product record</strong>, which the vendor writes about what it ships, from <strong>deployment records</strong>, which the operator writes about what it runs in a particular configuration. The proposal is that the vendor declares intrinsic data in the product record and the operator declares conveyed payload in the deployment records. Each fact is then stated by the party that is able to state it. The methodology applies this same test everywhere: a fact is recorded by the party that knows it.</p>
+  <div class="banner warn">This point is open and is recorded as Q36. An earlier draft of the design note placed all facts about data at deployment scope, meaning in the deployment CBOM, on the grounds that a vendor cannot know them. That is right for payload and wrong for intrinsic data. The baseline still excludes properties of the conveyed payload, and its exclusion names Q36 as the open limit. The working group needs to decide where the boundary between the two kinds of data falls. Some interfaces are close to that boundary. For example, a database connection carries payload in general, but carries credentials when the session is established. The options are set out in <code>design-note-data-and-hndl.md</code>.</div>
+
+  <h2 id="data-register">The data-register pointer</h2>
+  <p>The Deployment Disclosure profile (v0.1) gives the operator's facts a place without carrying them. Its reference rule R3 asks a deployment record to point to the <strong>data register</strong>: the place where the operator records what data each interface carries, how it is classified, and how long it must stay confidential. The rule is a SHOULD, and the operator may withhold the pointer. The pointer is an entry in <code>externalReferences</code>, of type <code>risk-assessment</code> or <code>other</code>, with the property <code>pkic:profile:context</code> set to <code>data-register</code>. Conformance checks that the pointer is present and well formed. It never reads the register.</p>
+  <p>In the Keycloak example, Example Org's configured and observed records both point to <code>https://grc.example.org/registers/data/sso-prod</code>. The record does not reproduce the register. A consumer who assesses harvest-now-decrypt-later exposure joins the record to the register, one interface at a time. The open questions Q36, Q37 and Q45 still apply: where the vendor's facts end, which lifetime bands an operator reports against, and how the operator's half is linked to the supplier's document. <a href="context.html">Context Pointers</a> describes the construct and the other kinds of context.</p>
 
   <h2>Proposed attributes</h2>
-  <p>The attributes in the table are candidates for a deployment-scope profile, that is, a profile that applies to the deployment CBOM. Their names follow the conventions in <a href="method.html">Method</a>. Each attribute records a fact that the operator can state. None of them records a judgement about the result of the assessment.</p>
+  <p>The attributes in the table remain candidates for a deployment-scope profile, that is, a profile that applies to deployment records. The Deployment Disclosure profile v0.1 does not require them. Their names follow the conventions in <a href="method.html">Method</a>. Each attribute records a fact that the operator can state. None of them records a judgement about the result of the assessment.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Attribute</th><th>What it records</th><th>Notes</th></tr></thead>
@@ -152,22 +156,23 @@ nav: dataexp
   <table>
     <thead><tr><th>Held in</th><th>What it carries</th></tr></thead>
     <tbody>
-      <tr><td>Deployment CBOM</td><td>Algorithms in use and supported, confidentiality lifetime, exposure, retention</td></tr>
+      <tr><td>Deployment records</td><td>Algorithms permitted or observed, and a pointer to the data register</td></tr>
+      <tr><td>Data register (the operator's)</td><td>Confidentiality lifetime, classification, exposure, retention</td></tr>
       <tr><td>External policy</td><td>The estimated arrival of the capability, and the thresholds that define urgency</td></tr>
       <tr><td>The evaluation</td><td>An urgency ranking across interfaces, dated, citing the policy version</td></tr>
     </tbody>
   </table>
 
   <h2>Storage as well as transit</h2>
-  <p>Discussion of this threat usually assumes that traffic is captured on the network, and that case is easier to see. Stored ciphertext is exposed in the same way, and an adversary can reach it more easily. An adversary that obtains a backup already has the recording, without needing to intercept anything. The model already covers storage interfaces. The <code>storage</code> value in the interface type vocabulary exists for them. A deployment profile addressing this threat should require them to be declared, and the <code>retentionAtRest</code> attribute is where the duration is recorded.</p>
+  <p>Discussion of this threat usually assumes that traffic is captured on the network, and that case is easier to see. Stored ciphertext is exposed in the same way, and an adversary can reach it more easily. An adversary that obtains a backup already has the recording, without needing to intercept anything. The model already covers storage interfaces. The <code>storage</code> value in the interface type vocabulary exists for them, and the procurement profile requires a product record to declare one or to state its absence (procurement rule P5). The Keycloak product record declares realm key persistence as a storage interface. Keycloak stores realm key material in the database in plaintext (issue #39933), so anyone who obtains a database backup holds the realm keys. A deployment profile addressing this threat should require storage interfaces to be declared, and the <code>retentionAtRest</code> attribute is where the duration would be recorded.</p>
 
   <h2>Open points</h2>
   <ul>
-    <li>Where the boundary falls between intrinsic data, declared in the product CBOM, and conveyed payload, declared at deployment scope (Q36). The other proposals on this page depend on this decision.</li>
+    <li>Where the boundary falls between intrinsic data, declared in the product CBOM, and conveyed payload, declared at deployment scope (Q36). The other proposals depend on this decision.</li>
     <li>Where the band boundaries fall. The values above follow the periods that appear in published migration guidance, and the group may prefer others.</li>
     <li>Whether <code>dataClassification</code> should be included. Its values cannot be combined across organizations, and the classification schemes it draws on are not public.</li>
     <li>Whether storage interfaces need attributes of their own beyond retention.</li>
-    <li>Whether a deployment-scope profile should be written as an extension of the interface disclosure baseline or as an independent profile. The composition rules in <a href="profile.html">Profile</a> permit either.</li>
+    <li>Whether the facts should stay behind the data-register pointer, or move into deployment records as attributes. The Deployment Disclosure profile, which extends the interface disclosure baseline, currently uses the pointer.</li>
   </ul>
 
   <div class="banner">The cryptography an interface uses is not sufficient to assess this threat. The missing information is a property of the data. Which party can state it depends on the kind of data. The vendor knows what an interface must carry in order to function. Only the operator knows what is sent across it. Each fact should be recorded at the scope where it is known, and the threat estimate should be left to external policy. Every fact in the document can then be verified by the party that stated it.</div>

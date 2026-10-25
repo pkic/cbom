@@ -27,26 +27,32 @@ nav: introduction
   <p class="lead">No prior knowledge of bills of materials is assumed. A buyer asks a question about one product. The product's CBOM cannot answer it. A profile changes that, by stating which facts the CBOM must contain. Every other section expands on a step in this example.</p>
 
   <h2>The problem, in one example</h2>
-  <p>A vendor supplies an nginx web server and, with it, a CBOM. From that document you learn that the product uses AES-256-GCM, X25519 and RSA-2048, that it holds a server certificate for <code>example.com</code>, and that OpenSSL 3.4.0 implements the cryptography. Every statement in it is true.</p>
+  <p>A vendor supplies Keycloak, an open-source identity server, as a container image, and with it a CBOM. Keycloak 26.7.3 is the example used throughout the methodology. From the CBOM you learn that the main HTTPS listener runs TLS 1.3 with the key exchange of the JDK 21 in the image (X25519 first), that tokens are signed with RS256 by default, and that the operator supplies the server certificate. Every statement in it is true.</p>
 
   <pre><code>Document A, as supplied
 ────────────────────────────────────────────────────────────
-subject       nginx 1.27.0
-interfaces    1 declared
+subject       Keycloak 26.7.3 (container image)
+stage         implemented (the vendor's build record)
+interfaces    11 declared
 
-  [1]  HTTPS service interface
+  [1]  TLS on the main listener (port 8443)     service
        protocol          TLS 1.3
-       key exchange      X25519
+       key exchange      X25519 first (JDK 21 defaults)
        encryption        AES-256-GCM
-       authentication    RSA-2048
-       certificate       example.com
-       implemented by    OpenSSL 3.4.0
+       authentication    deployment-defined (the operator
+                         supplies the server certificate)
+  [2]  OIDC token issuance                      service
+       authentication    RS256
+  ...  nine more: SAML, the plaintext HTTP listener,
+       the connections to the database, directory, mail
+       server and identity providers, the cluster
+       transport and the realm key storage
 
-not declared  the interface an administrator logs in to
-              (on this product, SSH via OpenSSH)</code></pre>
+not declared  the Admin REST API and Admin Console
+              the management listener (port 9000)</code></pre>
 
-  <p>Three months later a weakness is published against a key exchange that SSH uses. The question that lands on your desk is whether this product is affected, and if it is, which of the several hundred instances you operate.</p>
-  <p>Document A cannot answer. It describes the interface that serves web traffic and says nothing about the interface an administrator connects to. The vendor was not careless. It described the HTTPS service interface accurately and in full. Nothing required it to declare the management interface as well.</p>
+  <p>Three months later a weakness is published that affects the interfaces an administrator uses to manage the server. The question that lands on your desk is whether this product is affected, and if it is, which of the several hundred instances you operate.</p>
+  <p>Document A cannot answer. It describes the interfaces that serve users and connect to other systems. It says nothing about the interfaces an administrator connects to. The vendor was not careless. It described eleven interfaces accurately and in full. Nothing required it to declare the management interfaces as well.</p>
   <p>A CBOM format defines what a document <em>may</em> record. It does not define what a document <em>must</em> record. A vendor that answers a request for a CBOM with Document A has complied with the format and left the buyer no better off.</p>
   <p>Document A is not an unusual document. It is the ordinary result of asking a supplier for a CBOM without saying what the CBOM is for.</p>
 
@@ -61,7 +67,7 @@ not declared  the interface an administrator logs in to
   <p>Every profile begins by naming who reads the document and what they are deciding. Without a named reader and a named decision, there is no principled point at which to stop adding rules.</p>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th></th><th>The Interface Disclosure Baseline, v0.7</th></tr></thead>
+    <thead><tr><th></th><th>The Interface Disclosure Baseline, v0.9</th></tr></thead>
     <tbody>
       <tr><td><strong>Reader</strong></td><td>An operator or purchaser holding a product it did not build and cannot inspect, keeping a cryptographic inventory across an estate.</td></tr>
       <tr><td><strong>Decision</strong></td><td>When a weakness is published against an algorithm, a protocol version or a library, which of the deployed interfaces are affected. And, set beside the record from last quarter, what has changed.</td></tr>
@@ -70,7 +76,7 @@ not declared  the interface an administrator logs in to
   </table>
   </div>
   <p>Naming the four actions is what allows the rest of the profile to be justified or challenged. A reader with only one available action is not making a decision. A profile written for such a reader has no test for whether it asks for the right things.</p>
-  <p>The baseline has thirteen rules, of two kinds.</p>
+  <p>The baseline has twenty-three rules, of three kinds. Product rules constrain the document as a whole. Interface rules constrain each interface. Reference rules constrain the pointers the document carries to context it does not contain.</p>
 
   <h3>Product rules: constraints on the set of interfaces</h3>
   <table>
@@ -80,9 +86,11 @@ not declared  the interface an administrator logs in to
       <tr><td>P2</td><td>declare at least one management interface, or state that there is none</td><td><span class="must">MUST</span></td><td>This is the rule Document A fails. A hardware token with no configuration surface hides nothing by not having one. A statement that there is no management interface therefore satisfies the rule. Saying nothing does not.</td></tr>
       <tr><td>P3</td><td>identify the subject it describes</td><td><span class="must">MUST</span></td><td>An unidentified record cannot be matched to a deployment, or compared with the same product's record from last quarter.</td></tr>
       <tr><td>P4</td><td>state how complete its list of interfaces is</td><td><span class="must">MUST</span></td><td>Otherwise a missing interface is uninterpretable. It could mean the interface does not exist, or that the producer chose not to list it.</td></tr>
+      <tr><td>P5</td><td>declare its subject type, <code>product</code> or <code>deployment</code></td><td><span class="must">MUST</span></td><td>A vendor writes a product record. An operator writes a deployment record. The reader needs to know which one it holds. P3 depends on the answer: a product is identified by a package URL, and a deployment by a tag URI (RFC 4151), such as <code>tag:example.org,2026:deployment/sso-prod</code>.</td></tr>
+      <tr><td>P6</td><td>declare one lifecycle stage for the whole document</td><td><span class="must">MUST</span></td><td>A value means something different at each stage. At <code>implemented</code> it is the product's default as shipped. At <code>configured</code> it is the set the deployment permits. At <code>observed</code> it is the set seen during the observation window. One document therefore carries one stage.</td></tr>
     </tbody>
   </table>
-  <p>These four rules catch omissions, which no rule about a single attribute can do. A document can describe its service interface impeccably, pass every attribute rule, and still fail P2.</p>
+  <p>P1 and P2 catch omissions, which no rule about a single attribute can do. A document can describe its service interface impeccably, pass every attribute rule, and still fail P2.</p>
 
   <h3>Interface rules: constraints on each one</h3>
   <p>These apply uniformly to every interface the document declares, however many that is.</p>
@@ -97,18 +105,37 @@ not declared  the interface an administrator logs in to
       <tr><td>I5</td><td><code>authentication</code></td><td><span class="must">MUST</span></td><td>How each end proves who it is</td></tr>
       <tr><td>I6</td><td><code>endpointRoles</code></td><td><span class="must">MUST</span></td><td>Who is at each end, so the interface can be located in a topology</td></tr>
       <tr><td>I7</td><td><code>interfaceType</code></td><td><span class="must">MUST</span></td><td>One of five values, among them service, management and interconnect. P2 is checked against this</td></tr>
-      <tr><td>I8</td><td><code>lifecycleStage</code></td><td><span class="must">MUST</span></td><td>Whether the value was intended, implemented, configured or observed, which is how much weight the reader should give it</td></tr>
+      <tr><td>I8</td><td><code>lifecycleStage</code></td><td><span class="must">MUST</span></td><td>Whether the value was implemented, configured or observed, which is how much weight the reader should give it. It must agree with the stage the document declares under P6. The baseline does not accept <code>intended</code></td></tr>
       <tr><td>I9</td><td><code>implementationPurl</code></td><td><span class="must">MUST</span></td><td>Which library implements it, so an advisory against that library can be matched. This is the only rule in the profile that a producer may answer by withholding the value</td></tr>
+      <tr><td>I10</td><td><code>keyWrapping</code></td><td><span class="must">MUST</span></td><td>On a storage interface: how stored keys are protected. Keycloak stores its realm key material in the database in plaintext</td></tr>
+      <tr><td>I11</td><td><code>defaultState</code></td><td><span class="should">SHOULD</span></td><td>At <code>implemented</code>: whether the interface is enabled or disabled as shipped. Keycloak's plaintext HTTP listener is disabled by default</td></tr>
     </tbody>
   </table>
   </div>
-  <p>Thirteen rules is the entire profile. It is short on purpose. It names the minimum needed to support one decision and then stops. Because the profile is short, a vendor can satisfy it and a buyer can insist on it.</p>
+  <p>Some products do not fix a value themselves. Keycloak does not choose its server certificate; the operator does. For this reason I3 to I5 accept a literal value in place of an algorithm. <code>none</code> means that no algorithm does this job, and it is accepted at any stage. <code>deployment-defined</code> means that the operator chooses. <code>peer-defined</code> means that the other endpoint decides, or that the value is negotiated with it, as on the connection Keycloak opens to its database. These two literals are accepted only at <code>implemented</code>, because a deployment record knows the answer. The reason is set out in decision 0012: a rule that no honest subject can satisfy is wrong, not strict.</p>
+
+  <h3>Reference rules: pointers to context</h3>
+  <p>A CBOM does not carry everything a reader needs. It points to some things instead: the software bill of materials, the vendor's vulnerability statements, the advisory feed. The reference rules require those pointers. The validator checks the pointer and never the target. See <a href="context.html">Context Pointers</a>.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>#</th><th>The document points to</th><th>Level</th><th>Because</th></tr></thead>
+    <tbody>
+      <tr><td>R1</td><td>its software bill of materials (SBOM)</td><td><span class="must">MUST</span></td><td>Product records only. The SBOM lists the components; the CBOM does not repeat it.</td></tr>
+      <tr><td>R2</td><td>the vendor's vulnerability statements, or a statement that none are published</td><td><span class="must">MUST</span></td><td>Product records only. Upstream Keycloak publishes no VEX statements, so its record says <code>not-published</code>.</td></tr>
+      <tr><td>R3</td><td>an advisory source and its access protocol</td><td><span class="should">SHOULD</span></td><td>For Keycloak, the OSV API. The reader queries it with the library package URLs from I9.</td></tr>
+      <tr><td>R4</td><td>a security contact</td><td><span class="should">SHOULD</span></td><td>The reader needs to know where to report a problem.</td></tr>
+      <tr><td>R5</td><td>configuration guidance, on any interface where I3 to I5 is <code>deployment-defined</code></td><td><span class="must">MUST</span></td><td>If the operator chooses the value, the operator needs to know where to set it.</td></tr>
+      <tr><td>R6</td><td>a design document</td><td><span class="may">MAY</span></td><td>Design intent is context, not a stage of the record.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Twenty-three rules is the entire profile. It is short on purpose. It names the minimum needed to support one decision and then stops. Because the profile is short, a vendor can satisfy it and a buyer can insist on it.</p>
 
   <h3>What the profile does not say</h3>
   <p>No rule asks whether the cryptography is any good. Whether a product is post-quantum ready is not a fact about the product. It is a judgement made against criteria that change over time, and it is kept outside the document, in versioned <a href="policy-evaluation.html">policy</a>. The CBOM carries the facts. The policy reaches the verdict. The verdict is dated so that a reader can tell which criteria produced it.</p>
 
   <h2>Evaluating two documents against the profile</h2>
-  <p>Document A is the one above. Document B is the same product described by a supplier who declared both interfaces, the HTTPS service interface and the SSH management interface.</p>
+  <p>Document A is the one above, published as <a href="examples/cbom-keycloak-product-fail-P2.cdx.json"><code>cbom-keycloak-product-fail-P2.cdx.json</code></a>. Document B is the vendor's full build record, <a href="examples/cbom-keycloak-product.cdx.json"><code>cbom-keycloak-product.cdx.json</code></a>. It declares all thirteen interfaces, including the Admin REST API and the management listener.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Rule</th><th>Document A</th><th>Document B</th></tr></thead>
@@ -117,16 +144,18 @@ not declared  the interface an administrator logs in to
       <tr><td>P2 &nbsp;a management interface, or a statement that there is none</td><td><span class="fail">FAILS</span></td><td><span class="pass">passes</span></td></tr>
       <tr><td>P3 &nbsp;the subject is identified</td><td><span class="pass">passes</span></td><td><span class="pass">passes</span></td></tr>
       <tr><td>P4 &nbsp;the interface list states its completeness</td><td><span class="pass">passes</span></td><td><span class="pass">passes</span></td></tr>
-      <tr><td>I1 to I9 &nbsp;on every declared interface</td><td><span class="pass">passes</span> (1 interface)</td><td><span class="pass">passes</span> (2 interfaces)</td></tr>
+      <tr><td>P5, P6 &nbsp;subject type and one lifecycle stage</td><td><span class="pass">passes</span></td><td><span class="pass">passes</span></td></tr>
+      <tr><td>I1 to I11 &nbsp;on every declared interface</td><td><span class="pass">passes</span> (11 interfaces)</td><td><span class="pass">passes</span> (13 interfaces)</td></tr>
+      <tr><td>R1 to R6 &nbsp;pointers to context</td><td><span class="pass">passes</span></td><td><span class="pass">passes</span></td></tr>
       <tr><td><strong>Verdict</strong></td><td><strong>does not conform</strong></td><td><strong>conforms</strong></td></tr>
     </tbody>
   </table>
   </div>
   <div class="banner">Document A contains no false statement, and every attribute it does carry is correct. It fails because conformance is measured against what a decision needs, not against whether the statements are true. A profile exists to catch exactly this failure: an accurate document that omits the one thing its reader needs. No check based on the format alone can find it.</div>
-  <p>The <a href="demo.html">Demo</a> runs both of these in the browser, along with a third: a library with no administrative surface at all, which satisfies P2 by saying so.</p>
+  <p>The <a href="demo.html">Demo</a> shows the reports the reference validator produced for both records, and for the other Keycloak records: the four disclosure outcomes, a design record, the deployment records and the CycloneDX 1.7 legacy form.</p>
 
   <h2>The four disclosure outcomes</h2>
-  <p>One refinement recurs throughout the methodology. In Document B the management interface does not name its implementing library. It carries a marker saying the value is withheld, and rule I9 accepts that, because I9 is the one rule in this profile marked withholdable.</p>
+  <p>One refinement recurs throughout the methodology. Suppose the vendor does not want to name the library behind the OIDC interface. The record then carries a marker saying the value is withheld, and rule I9 accepts that, because I9 is the one rule in this profile marked withholdable. The example <a href="examples/cbom-keycloak-product-disclosure-states.cdx.json"><code>cbom-keycloak-product-disclosure-states.cdx.json</code></a> does this.</p>
   <p>The marker matters to the reader of the document. A withheld value is a position the producer has taken, and the reader can challenge it in a negotiation. An absent value could mean anything. For this reason the methodology distinguishes four outcomes for any attribute. The CBOM formats distinguish only two: present and absent.</p>
   <div style="overflow:auto">
   <table>
@@ -139,19 +168,19 @@ not declared  the interface an administrator logs in to
     </tbody>
   </table>
   </div>
-  <p>The first three can be acted on. The fourth can only be guessed at. A buyer who cannot tell a deliberate omission from an oversight has no basis for asking the supplier to fix it.</p>
+  <p>In the same example the cluster transport declares its authentication unknown, and the SAML interface leaves its encryption undeclared. The record therefore fails I5 and I4, and the report names each outcome. The first three outcomes can be acted on. The fourth can only be guessed at. A buyer who cannot tell a deliberate omission from an oversight has no basis for asking the supplier to fix it.</p>
 
   <h2>Where to go next</h2>
   <p>Everything above can be understood without the rest of the documentation. The other sections expand on it.</p>
   <div class="cards">
-    <a class="card" href="demo.html"><div class="num">interactive</div><h3>Demo</h3><p>Run three documents against the profile and watch each rule resolve, including the four disclosure outcomes.</p></a>
-    <a class="card" href="index.html"><div class="num">map</div><h3>Overview</h3><p>What each section covers, and two suggested routes through the material depending on why you are here.</p></a>
+    <a class="card" href="demo.html"><div class="num">interactive</div><h3>Demo</h3><p>Read the validator's reports for the Keycloak records, rule by rule, including the four disclosure outcomes and the deployment joins.</p></a>
+    <a class="card" href="index.html"><div class="num">map</div><h3>Overview</h3><p>What each section covers, and two suggested routes through the material, depending on why you are reading.</p></a>
     <a class="card" href="challenges.html"><div class="num">background</div><h3>Challenges</h3><p>Why CBOMs behave the way Document A did, and what SBOM adoption already established about it.</p></a>
     <a class="card" href="method.html"><div class="num">procedure</div><h3>Method</h3><p>The twelve steps for defining a profile, if you are here to write one rather than to read one.</p></a>
   </div>
   <p><a href="terms.html">Terms</a> is a glossary and sits in the Reference group. Use it to look up an unfamiliar word. It is not intended to be read first.</p>
 
-  <p style="font-size:13px;color:var(--muted)">This documentation works a single example, an nginx web server expressed in CycloneDX 1.7, all the way through. The material is illustrative and demonstrates the methodology; it is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>
+  <p style="font-size:13px;color:var(--muted)">The methodology works a single example all the way through: Keycloak 26.7.3, expressed in CycloneDX 2.0, with a CycloneDX 1.7 legacy form. The material is illustrative and demonstrates the methodology; it is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>
 
   <div class="pagenav">
     <span></span>

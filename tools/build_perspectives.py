@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""Generate a CycloneDX 2.0 perspective for each PKIC CBOM profile.
+
+A perspective lists JSONPath expressions into a CycloneDX 2.0 document, each
+marked required, recommended or optional. Generic 2.0 tools can use it to filter
+a document and check that the fields a profile needs are present. It cannot
+express conditions, enumerations, groups, withholding or extension, so it is an
+informative companion: the rules file stays normative.
+
+Usage: python3 tools/build_perspectives.py
+"""
+import json
+import os
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+M = os.path.join(ROOT, "docs", "methodology")
+OUT = os.path.join(M, "perspectives")
+sys.path.insert(0, M)
+import validate_cbom as V  # noqa: E402
+
+PROFILES = ["interface-enumeration", "interface-disclosure", "deployment-disclosure",
+            "pqc-migration", "pqc-migration-extended", "procurement"]
+RELEVANCE = {"MUST": "required", "SHOULD": "recommended", "MAY": "optional"}
+C = "$.inventories[*].components[*]"
+PROTO = "$.inventories[*].components[?(@.cryptoProperties.assetType=='protocol')].cryptoProperties.protocolProperties"
+NATIVE = {
+    "protocol": PROTO + ".type",
+    "protocolVersion": PROTO + ".version",
+    "keyExchange": PROTO + ".relatedCryptographicAssets",
+    "encryption": PROTO + ".relatedCryptographicAssets",
+    "authentication": PROTO + ".relatedCryptographicAssets",
+    "keyExchangeSupported": PROTO + ".cipherSuites[*].tlsGroups",
+    "authenticationSupported": PROTO + ".cipherSuites[*].tlsSignatureSchemes",
+    "implementationPurl": "$.dependencies[*].provides",
+    "lifecycleStage": "$.metadata.lifecycles",
+    "moduleValidationScheme": "$.inventories[*].components[?(@.type=='library')].certifications",
+    "moduleValidationRef": "$.inventories[*].components[?(@.type=='library')].certifications[*].url",
+    "keyWrapping": "$.inventories[*].components[?(@.cryptoProperties.assetType=='related-crypto-material')]"
+                   ".cryptoProperties.relatedCryptoMaterialProperties.securedBy",
+}
+PRODUCT_NATIVE = {
+    "subjectIdentified": "$.inventories[0].subject.identifiers",
+    "singleStage": "$.metadata.lifecycles",
+    "citesDocuments": "$.externalReferences[?(@.type=='bom')]",
+    "productAttribute:coverage": "$.compositions",
+}
+
+
+def prop_path(attr, where=C):
+    return "%s.properties[?(@.name=='pkic:profile:%s')]" % (where, attr)
+
+
+def mappings(profile):
+    out = []
+    for r in profile.get("productRules", []):
+        c = r["constraint"]
+        key = next(iter(c))
+        if key == "productAttribute":
+            key = "productAttribute:" + c["productAttribute"]
+        expr = PRODUCT_NATIVE.get(key) or (
+            prop_path(c["productAttribute"], "$.inventories[0].subject") if "productAttribute" in c else
+            prop_path("subjectType", "$.inventories[0].subject") if key == "subjectDeclared" else
+            "$.inventories[*].components[*]")
+        out.append({"expression": expr, "nativeName": r["_qid"], "relevance": RELEVANCE[r["level"]],
+                    "rationale": r.get("description", "")})
+    for r in profile.get("interfaceRules", []):
+        attr = r["attribute"]
+        expr = NATIVE.get(attr, prop_path(attr))
+        out.append({"expression": expr, "nativeName": "%s %s" % (r["_qid"], attr),
+                    "relevance": RELEVANCE[r["level"]],
+                    "rationale": ("Required when %s %s." % (r["requiredWhen"]["attribute"],
+                                  "is " + str(r["requiredWhen"].get("equals")) if "equals" in r["requiredWhen"]
+                                  else "is not " + str(r["requiredWhen"].get("notEquals"))))
+                    if r.get("requiredWhen") else "Every declared interface."})
+    for g in profile.get("groupRules", []):
+        for m in g.get("members", []):
+            out.append({"expression": "%s.properties[?(@.name=~'pkic:profile:%s:.*:%s')]"
+                                      % (C, g["group"], m["attribute"]),
+                        "nativeName": "%s %s" % (m["_qid"], m["attribute"]),
+                        "relevance": RELEVANCE[m["level"]], "rationale": g.get("description", "")})
+    for r in profile.get("referenceRules", []):
+        where = "$" if r["at"] == "document" else C
+        out.append({"expression": "%s.externalReferences[?(@.properties[?(@.name=='pkic:profile:context' "
+                                  "&& @.value=='%s')])]" % (where, r["context"]),
+                    "nativeName": "%s %s" % (r["_qid"], r["context"]),
+                    "relevance": RELEVANCE[r["level"]], "rationale": r.get("note", "")[:300]})
+    return out
+
+
+def main():
+    os.makedirs(OUT, exist_ok=True)
+    for tag in PROFILES:
+        profile, _o, _n = V.load_profile(os.path.join(M, "profile-%s.rules.json" % tag))
+        doc = {
+            "specFormat": "CycloneDX", "specVersion": "2.0",
+            "$comment": "Generated by tools/build_perspectives.py from profile-%s.rules.json v%s. "
+                        "Informative companion: the rules file is normative." % (tag, profile["version"]),
+            "metadata": {"timestamp": "2026-10-25T00:00:00Z"},
+            "perspectives": [{
+                "bom-ref": "perspective:%s" % tag,
+                "name": "PKIC CBOM profile: %s v%s" % (profile.get("title", tag), profile["version"]),
+                "description": profile["objective"]["decision"],
+                "domains": ["cryptographic-security"],
+                "mappings": mappings(profile),
+                "externalReferences": [{"type": "documentation",
+                                        "url": "https://pkic.github.io/cbom/methodology/profile.html"}]}]}
+        with open(os.path.join(OUT, "perspective-%s.cdx.json" % tag), "w", encoding="utf-8") as fh:
+            fh.write(json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
+    print("written to", OUT)
+
+
+if __name__ == "__main__":
+    main()

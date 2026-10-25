@@ -1,0 +1,870 @@
+{
+  "resultFormat": "pkic.cbom.policy-result",
+  "resultFormatVersion": "0.1",
+  "policy": {
+    "policyId": "pkic.example.policy.readiness-gap",
+    "version": "0.1",
+    "file": "policy-readiness-gap.policy.json",
+    "digest": {
+      "alg": "SHA-256",
+      "value": "649c21770410ff3a28766383916f582db3a8d86264db675a72978840a0e3f66c"
+    }
+  },
+  "evaluationDate": "2026-10-25",
+  "documents": [
+    {
+      "file": "cbom-keycloak-product.cdx.json",
+      "serialNumber": "urn:uuid:6b3c1d2e-7a41-4c1e-9f0a-26730000c001",
+      "version": 1,
+      "subject": "pkg:oci/keycloak?repository_url=quay.io/keycloak/keycloak&tag=26.7.3",
+      "subjectType": "product",
+      "stage": "implemented",
+      "digest": {
+        "alg": "SHA-256",
+        "value": "80b10b11705bc6425a371e307b5792f3d87e12bd4fca5349cb11bb4fae8b0929"
+      }
+    },
+    {
+      "file": "cbom-keycloak-deployment-configured.cdx.json",
+      "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01",
+      "version": 1,
+      "subject": "tag:example.org,2026:deployment/sso-prod",
+      "subjectType": "deployment",
+      "stage": "configured",
+      "digest": {
+        "alg": "SHA-256",
+        "value": "c9c39b69bb70e53d5f70dffe13833ab5c6f724656c66b499c467ac34aec64df3"
+      }
+    },
+    {
+      "file": "cbom-keycloak-deployment-observed.cdx.json",
+      "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-7263740b5e01",
+      "version": 1,
+      "subject": "tag:example.org,2026:deployment/sso-prod",
+      "subjectType": "deployment",
+      "stage": "observed",
+      "digest": {
+        "alg": "SHA-256",
+        "value": "7bea1c798a40a01464f58952a3ba344b80559953d6938ee8c3c3259c1211e0f5"
+      }
+    }
+  ],
+  "summary": {
+    "enabled-not-negotiated": 1,
+    "unknown": 1,
+    "not-capable": 14,
+    "unprotected": 4,
+    "not-applicable": 4,
+    "not-deployed": 4
+  },
+  "findings": [
+    {
+      "interface": {
+        "implemented": null,
+        "configured": "crypto:protocol:ing-tls",
+        "observed": "crypto:protocol:ing-tls"
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": null,
+        "capability": null,
+        "configured": [
+          "X25519MLKEM768",
+          "X25519"
+        ],
+        "observed": [
+          "X25519MLKEM768",
+          "X25519"
+        ]
+      },
+      "class": "enabled-not-negotiated"
+    },
+    {
+      "interface": {
+        "implemented": null,
+        "configured": "crypto:protocol:ing-tls",
+        "observed": "crypto:protocol:ing-tls"
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": null,
+        "capability": null,
+        "configured": [
+          "ECDSA-P256-SHA256"
+        ],
+        "observed": [
+          "ECDSA-P256-SHA256"
+        ]
+      },
+      "note": "no product record to say what the product can do",
+      "class": "unknown"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:int-db",
+        "configured": "crypto:protocol:int-db",
+        "observed": "crypto:protocol:int-db"
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "peer-defined"
+        ],
+        "capability": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "peer-defined"
+        ],
+        "configured": [
+          "X25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "X448",
+          "ffdhe2048"
+        ],
+        "observed": [
+          "X25519"
+        ]
+      },
+      "productCapability": {
+        "capabilityStatus": "planned",
+        "blockedBy": "provider",
+        "roadmapRef": "https://openjdk.org/jeps/527"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:int-db",
+        "configured": "crypto:protocol:int-db",
+        "observed": "crypto:protocol:int-db"
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "peer-defined"
+        ],
+        "capability": [
+          "rsa_pss_rsae_sha256",
+          "rsa_pkcs1_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ed25519",
+          "peer-defined"
+        ],
+        "configured": [
+          "RSA-2048"
+        ],
+        "observed": [
+          "RSA-2048"
+        ]
+      },
+      "productCapability": {
+        "capabilityStatus": "under-evaluation",
+        "blockedBy": "standard"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:int-ldap",
+        "configured": "crypto:protocol:int-ldap",
+        "observed": "crypto:protocol:int-ldap"
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "peer-defined"
+        ],
+        "capability": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "peer-defined"
+        ],
+        "configured": [
+          "X25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "X448",
+          "ffdhe2048"
+        ],
+        "observed": [
+          "secp384r1"
+        ]
+      },
+      "productCapability": {
+        "capabilityStatus": "planned",
+        "blockedBy": "provider",
+        "roadmapRef": "https://openjdk.org/jeps/527"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:int-ldap",
+        "configured": "crypto:protocol:int-ldap",
+        "observed": "crypto:protocol:int-ldap"
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "peer-defined"
+        ],
+        "capability": [
+          "rsa_pss_rsae_sha256",
+          "rsa_pkcs1_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ed25519",
+          "peer-defined"
+        ],
+        "configured": [
+          "RSA-2048"
+        ],
+        "observed": [
+          "RSA-2048"
+        ]
+      },
+      "productCapability": {
+        "capabilityStatus": "under-evaluation",
+        "blockedBy": "standard"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:int-cache",
+        "configured": "crypto:protocol:int-cache",
+        "observed": "crypto:protocol:int-cache"
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "X25519"
+        ],
+        "capability": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "X25519"
+        ],
+        "configured": [
+          "X25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "X448",
+          "ffdhe2048"
+        ],
+        "observed": [
+          "X25519"
+        ]
+      },
+      "productCapability": {
+        "capabilityStatus": "planned",
+        "blockedBy": "provider",
+        "roadmapRef": "https://openjdk.org/jeps/527"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:int-cache",
+        "configured": "crypto:protocol:int-cache",
+        "observed": "crypto:protocol:int-cache"
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "RSA-2048"
+        ],
+        "capability": [
+          "rsa_pss_rsae_sha256",
+          "rsa_pkcs1_sha256",
+          "RSA-2048"
+        ],
+        "configured": [
+          "RSA-2048"
+        ],
+        "observed": [
+          "RSA-2048"
+        ]
+      },
+      "productCapability": {
+        "capabilityStatus": "under-evaluation",
+        "blockedBy": "product"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "service:svc-http",
+        "configured": "service:svc-http",
+        "observed": "service:svc-http"
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "none"
+        ],
+        "capability": [
+          "none",
+          "none"
+        ],
+        "configured": [
+          "none"
+        ],
+        "observed": [
+          "none"
+        ]
+      },
+      "class": "unprotected"
+    },
+    {
+      "interface": {
+        "implemented": "service:svc-http",
+        "configured": "service:svc-http",
+        "observed": "service:svc-http"
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "none"
+        ],
+        "capability": [
+          "none",
+          "none"
+        ],
+        "configured": [
+          "none"
+        ],
+        "observed": [
+          "none"
+        ]
+      },
+      "class": "unprotected"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:tls-mgmt",
+        "configured": "service:mgmt-health",
+        "observed": "service:mgmt-health"
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "X25519"
+        ],
+        "capability": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "X25519"
+        ],
+        "configured": [
+          "none"
+        ],
+        "observed": [
+          "none"
+        ]
+      },
+      "class": "unprotected"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:tls-mgmt",
+        "configured": "service:mgmt-health",
+        "observed": "service:mgmt-health"
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "deployment-defined"
+        ],
+        "capability": [
+          "rsa_pss_rsae_sha256",
+          "rsa_pkcs1_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ed25519",
+          "deployment-defined"
+        ],
+        "configured": [
+          "none"
+        ],
+        "observed": [
+          "none"
+        ]
+      },
+      "class": "unprotected"
+    },
+    {
+      "interface": {
+        "implemented": "service:svc-oidc",
+        "configured": "service:svc-oidc",
+        "observed": "service:svc-oidc"
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "none"
+        ],
+        "capability": [
+          "RSA-OAEP",
+          "RSA-OAEP-256",
+          "ECDH-ES",
+          "none"
+        ],
+        "configured": [
+          "none"
+        ],
+        "observed": [
+          "none"
+        ]
+      },
+      "class": "not-applicable"
+    },
+    {
+      "interface": {
+        "implemented": "service:svc-oidc",
+        "configured": "service:svc-oidc",
+        "observed": "service:svc-oidc"
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "RS256"
+        ],
+        "capability": [
+          "RS256",
+          "RS384",
+          "RS512",
+          "PS256",
+          "PS384",
+          "PS512",
+          "ES256",
+          "ES384",
+          "ES512",
+          "EdDSA",
+          "HS256",
+          "HS384",
+          "HS512",
+          "RS256"
+        ],
+        "configured": [
+          "ES256"
+        ],
+        "observed": [
+          "ES256",
+          "RS256"
+        ]
+      },
+      "productCapability": {
+        "capabilityStatus": "committed",
+        "blockedBy": "standard",
+        "roadmapRef": "https://github.com/keycloak/keycloak/issues/43690"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "service:svc-saml",
+        "configured": "service:svc-saml",
+        "observed": "service:svc-saml"
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "none"
+        ],
+        "capability": [
+          "RSA-OAEP",
+          "none"
+        ],
+        "configured": [
+          "none"
+        ],
+        "observed": [
+          "none"
+        ]
+      },
+      "class": "not-applicable"
+    },
+    {
+      "interface": {
+        "implemented": "service:svc-saml",
+        "configured": "service:svc-saml",
+        "observed": "service:svc-saml"
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "RSA-SHA256"
+        ],
+        "capability": [
+          "RSA-SHA256",
+          "RSA-SHA512",
+          "ECDSA-SHA256",
+          "RSA-SHA256"
+        ],
+        "configured": [
+          "RSA-SHA256"
+        ],
+        "observed": [
+          "RSA-SHA256"
+        ]
+      },
+      "productCapability": {
+        "capabilityStatus": "under-evaluation",
+        "blockedBy": "standard"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "service:mgmt-admin",
+        "configured": "service:mgmt-admin",
+        "observed": "service:mgmt-admin"
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "none"
+        ],
+        "capability": [
+          "none",
+          "none"
+        ],
+        "configured": [
+          "none"
+        ],
+        "observed": [
+          "none"
+        ]
+      },
+      "class": "not-applicable"
+    },
+    {
+      "interface": {
+        "implemented": "service:mgmt-admin",
+        "configured": "service:mgmt-admin",
+        "observed": "service:mgmt-admin"
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "RS256"
+        ],
+        "capability": [
+          "RS256",
+          "ES256",
+          "PS256",
+          "EdDSA",
+          "RS256"
+        ],
+        "configured": [
+          "RS256"
+        ],
+        "observed": [
+          "RS256"
+        ]
+      },
+      "productCapability": {
+        "capabilityStatus": "committed",
+        "blockedBy": "standard",
+        "roadmapRef": "https://github.com/keycloak/keycloak/issues/43690"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "service:sto-realm-keys",
+        "configured": "service:sto-realm-keys",
+        "observed": "service:sto-realm-keys"
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": null,
+        "capability": null,
+        "configured": null,
+        "observed": null
+      },
+      "productCapability": {
+        "capabilityStatus": "not-planned",
+        "blockedBy": "product"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "service:sto-realm-keys",
+        "configured": "service:sto-realm-keys",
+        "observed": "service:sto-realm-keys"
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": null,
+        "capability": null,
+        "configured": null,
+        "observed": null
+      },
+      "productCapability": {
+        "capabilityStatus": "not-planned",
+        "blockedBy": "product"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:int-broker",
+        "configured": "crypto:protocol:int-broker",
+        "observed": null
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "peer-defined"
+        ],
+        "capability": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "peer-defined"
+        ],
+        "configured": [
+          "X25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "X448",
+          "ffdhe2048"
+        ],
+        "observed": null
+      },
+      "productCapability": {
+        "capabilityStatus": "planned",
+        "blockedBy": "provider",
+        "roadmapRef": "https://openjdk.org/jeps/527"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:int-broker",
+        "configured": "crypto:protocol:int-broker",
+        "observed": null
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "peer-defined"
+        ],
+        "capability": [
+          "rsa_pss_rsae_sha256",
+          "rsa_pkcs1_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ed25519",
+          "peer-defined"
+        ],
+        "configured": [
+          "RSA-2048"
+        ],
+        "observed": null
+      },
+      "productCapability": {
+        "capabilityStatus": "under-evaluation",
+        "blockedBy": "standard"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "service:svc-broker-tokens",
+        "configured": "service:svc-broker-tokens",
+        "observed": null
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "none"
+        ],
+        "capability": [
+          "RSA-OAEP",
+          "ECDH-ES",
+          "none"
+        ],
+        "configured": [
+          "none"
+        ],
+        "observed": null
+      },
+      "class": "not-applicable"
+    },
+    {
+      "interface": {
+        "implemented": "service:svc-broker-tokens",
+        "configured": "service:svc-broker-tokens",
+        "observed": null
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "peer-defined"
+        ],
+        "capability": [
+          "RS256",
+          "PS256",
+          "ES256",
+          "EdDSA",
+          "peer-defined"
+        ],
+        "configured": [
+          "RS256"
+        ],
+        "observed": null
+      },
+      "productCapability": {
+        "capabilityStatus": "committed",
+        "blockedBy": "standard",
+        "roadmapRef": "https://github.com/keycloak/keycloak/issues/43690"
+      },
+      "class": "not-capable"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:tls-https",
+        "configured": null,
+        "observed": null
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "X25519"
+        ],
+        "capability": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "X25519"
+        ],
+        "configured": null,
+        "observed": null
+      },
+      "class": "not-deployed"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:tls-https",
+        "configured": null,
+        "observed": null
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "deployment-defined"
+        ],
+        "capability": [
+          "rsa_pss_rsae_sha256",
+          "rsa_pkcs1_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ed25519",
+          "deployment-defined"
+        ],
+        "configured": null,
+        "observed": null
+      },
+      "class": "not-deployed"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:int-smtp",
+        "configured": null,
+        "observed": null
+      },
+      "purpose": "key-establishment",
+      "evidence": {
+        "implemented": [
+          "peer-defined"
+        ],
+        "capability": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "peer-defined"
+        ],
+        "configured": null,
+        "observed": null
+      },
+      "class": "not-deployed"
+    },
+    {
+      "interface": {
+        "implemented": "crypto:protocol:int-smtp",
+        "configured": null,
+        "observed": null
+      },
+      "purpose": "entity-authentication",
+      "evidence": {
+        "implemented": [
+          "peer-defined"
+        ],
+        "capability": [
+          "rsa_pss_rsae_sha256",
+          "rsa_pkcs1_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ed25519",
+          "peer-defined"
+        ],
+        "configured": null,
+        "observed": null
+      },
+      "class": "not-deployed"
+    }
+  ],
+  "notAsserted": [
+    "that the disclosed values are true; the policy was applied to what the CBOMs state",
+    "anything about interfaces or algorithms the CBOMs do not disclose",
+    "that the policy is right; it is an example, and its source should be checked",
+    "anything after the evaluation date; the same facts give a different result under a later date or policy version"
+  ]
+}

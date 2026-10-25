@@ -53,16 +53,16 @@ nav: confidentiality
   <table>
     <thead><tr><th>Term</th><th>Already means</th></tr></thead>
     <tbody>
-      <tr><td>confidentiality lifetime</td><td>How long the data crossing an interface must stay secret. It is a property of the <em>traffic</em>, proposed as <code>confidentialityLifetime</code> in <a href="data-exposure.html">Data Exposure</a>. It determines how urgent the harvest-now-decrypt-later threat is.</td></tr>
+      <tr><td>confidentiality lifetime</td><td>How long the data crossing an interface must stay secret. It is a property of the <em>traffic</em>, and the operator records it in a data register outside the CBOM. A deployment record points to that register as the <code>data-register</code> context (Deployment Disclosure rule R3, withholdable). See <a href="context.html">Context Pointers</a> and <a href="data-exposure.html">Data Exposure</a>. It determines how urgent the harvest-now-decrypt-later threat is.</td></tr>
       <tr><td>disclosure</td><td>What a producer tells a consumer about the product: the four <a href="profile.html#disclosure">disclosure states</a>, and the Interface Disclosure Baseline named after them.</td></tr>
       <tr><td>confidentiality, here</td><td>The protection of the CBOM <em>document</em>: who may hold it, and what it therefore may contain.</td></tr>
     </tbody>
   </table>
   </div>
-  <p>The normative terms on this page are <strong>variant</strong>, for one of the documents, and <strong>audience</strong>, for the parties who may hold it. The title "Confidentiality" is kept because that is the word readers look for.</p>
+  <p>The normative terms for confidentiality are <strong>variant</strong>, for one of the documents, and <strong>audience</strong>, for the parties who may hold it. The title "Confidentiality" is kept because that is the word readers look for.</p>
 
   <h2>Redaction is declared, never performed silently</h2>
-  <p>This principle is settled, and everything else on this page depends on it. Decision 0003 established that an attribute with no value carries a marker saying <em>why</em> it has none. <a href="profile.html#disclosure">Profile</a> sets out the four possible outcomes. For a pair of variants, the principle has one important consequence: <strong>a public variant is not a smaller document. It is the same document with values replaced by markers.</strong></p>
+  <p>This principle is settled, and the rest of the confidentiality model depends on it. Decision 0003 established that an attribute with no value carries a marker saying <em>why</em> it has none. <a href="profile.html#disclosure">Profile</a> sets out the four possible outcomes. For a pair of variants, the principle has one important consequence: <strong>a public variant is not a smaller document. It is the same document with values replaced by markers.</strong></p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Two ways to redact</th><th>What the recipient sees</th></tr></thead>
@@ -89,6 +89,7 @@ nav: confidentiality
     <li>a profile whose sensitive rules are <code>withholdable</code> is one that a lawfully redacted <strong>public</strong> variant can satisfy;</li>
     <li>a profile that permits no withholding on those rules is one that only a <strong>restricted</strong> variant can satisfy.</li>
   </ul>
+  <p>Reference rules carry the same setting. A reference rule requires a pointer to context the document does not carry (see <a href="context.html">Context Pointers</a>). The Deployment Disclosure profile lets the operator withhold two pointers: the one to observation evidence (R2), because evidence often carries internal addresses, and the one to the data register (R3).</p>
   <p>Removing withholdability from a rule is a tightening, and the validator already treats it as one. The validator refuses an override that makes a non-withholdable attribute withholdable, because that would relax the rule. It accepts and records the reverse. <strong>The restricted profile is therefore a derived profile of the public one</strong>, and the pair needs no new machinery at all. Conformance to the restricted profile carries conformance to the public one. A consumer gains two things from this. A supplier's restricted disclosure is never <em>less</em> acceptable than its public one. A consumer holding a conformance claim against the restricted profile also does not have to re-evaluate the document against the public profile to know where it stands.</p>
   <p>The migration profile already uses this pattern. It tightens the baseline profile's <code>implementationPurl</code> rule in exactly this way:</p>
   <pre><code>{
@@ -103,7 +104,7 @@ nav: confidentiality
            and is unchanged from the base."
 }</code></pre>
   <p>That is the block as it stands in <code>profile-pqc-migration.rules.json</code>, with the note wrapped to fit.</p>
-  <p>The migration profile removes withholdability for a migration reason, not because of who will receive the document. The mechanism does not distinguish between the two reasons. That makes it convenient for building a restricted profile.</p>
+  <p>The migration profile removes withholdability for a migration reason, not because of who will receive the document. The procurement profile removes it from the same rule for a buyer's reason: a tender response is made under the tender's confidentiality terms. The mechanism does not distinguish between these reasons. That makes it convenient for building a restricted profile.</p>
 
   <h3>The restricted profile derives from the public one</h3>
   <p>The <em>public</em> profile is the base, and the <em>restricted</em> profile derives from it. Documents get smaller as the audience widens. Profiles get larger as the audience narrows. A reader may expect the confidential profile to be the complete one, with the public profile as a cut-down version of it. That reader has the direction of derivation reversed. Such a reader would write an extension that adds withholdability. Adding withholdability is a relaxation, and the validator refuses it before it evaluates any document.</p>
@@ -126,7 +127,7 @@ nav: confidentiality
   <h2>What a profile cannot yet say</h2>
   <p>Nothing in a rules file records which audience its withholding permissions were set for. Suppose two profiles have an identical rule set, but one was drafted as a public floor and the other as a restricted floor. As artifacts, the two are indistinguishable. Today a public profile and a restricted profile are told apart only by their titles and their descriptive text.</p>
   <p>The obvious fix is to declare the audience in the profile. However, the declaration cannot go in the <code>disclosure</code> block. C7 requires an inherited block to be identical along a chain of derived profiles. The stated reasoning is that <code>disclosure</code> and <code>conformanceKeywords</code> carry no requirement of their own, so any difference between a base and a derived profile can only be a mistake. A test fixture covers this case. A derived restricted profile that declared a different audience in that block would therefore fail C7. The failure would be correct by the letter of the check but wrong by its intent. <code>scope</code> is the more plausible place for the declaration. Scope already narrows along a chain, and C11 already checks it. The audience a profile is written for is also part of the boundary that scope draws.</p>
-  <div class="banner">The mechanisms described in the earlier sections work with the tooling as it stands. The audience declaration discussed in this section does not: no schema, checker or validator has a concept of audience. The distinction is kept sharp deliberately, because the value of the existing mechanism is that tooling already checks it. Recorded as Q54.</div>
+  <div class="banner">The mechanisms described in the earlier sections work with the tooling as it stands. The audience declaration does not: no schema, checker or validator has a concept of audience. The distinction is kept sharp deliberately, because the value of the existing mechanism is that tooling already checks it. Recorded as Q54.</div>
 
   <h2>What the document says about itself</h2>
   <p>A recipient should not have to guess which variant it holds. Today it may have no way to find out. A public variant in which the producer happened to redact nothing looks exactly like a restricted one. Two documents with the same subject and different digests give no explanation of why they differ. Declaring the variant at product level would close this gap. The variant would be a fact about the document, of the same kind as P3's subject identity and P4's completeness statement. It could be expressed with the product-rule machinery that already exists.</p>
@@ -141,7 +142,7 @@ nav: confidentiality
     <tbody>
       <tr><td>An interface may be named but its detail may not</td><td>Declare the interface and withhold the attributes the profile permits withholding. The preferred shape: the count stays honest and the recipient sees what exists.</td></tr>
       <tr><td>An interface may not be named at all, and no product rule requires its kind</td><td>Omit it and state <code>coverage: partial</code>. The document conforms, but the reason for the omission is lost (see "What the document says about itself").</td></tr>
-      <tr><td>An interface may not be named at all, and a product rule requires its kind</td><td>No honest option. P2 is satisfied either by declaring a management interface or by stating an absence from <code>no-configuration-surface</code>, <code>configured-out-of-band</code>, <code>not-applicable-to-subject</code>. None of those means "exists, and is not disclosed". The producer must disclose the interface, state something untrue, or fail the rule.</td></tr>
+      <tr><td>An interface may not be named at all, and a product rule requires its kind</td><td>No honest option. P2 is satisfied either by declaring a management interface or by stating an absence from <code>no-configuration-surface</code>, <code>configured-out-of-band</code>, <code>not-applicable-to-subject</code>, <code>not-reached</code>. The last one is accepted only in an <code>observed</code> record with coverage <code>partial</code>, and it means that the observer could not reach the interface. None of those means "exists, and is not disclosed". The producer must disclose the interface, state something untrue, or fail the rule.</td></tr>
     </tbody>
   </table>
   </div>

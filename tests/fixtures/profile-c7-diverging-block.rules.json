@@ -14,7 +14,7 @@
   },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.7",
+    "version": "0.9",
     "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
   },
   "appliesTo": {
@@ -38,7 +38,6 @@
       "interface"
     ],
     "lifecycleStages": [
-      "intended",
       "implemented",
       "configured",
       "observed"

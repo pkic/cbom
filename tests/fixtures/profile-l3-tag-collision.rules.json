@@ -14,7 +14,7 @@
   },
   "extends": {
     "profileId": "pkic.example.pqc-migration",
-    "version": "0.6",
+    "version": "0.8",
     "file": "../../docs/methodology/profile-pqc-migration.rules.json"
   },
   "appliesTo": {
@@ -30,8 +30,7 @@
       "interface"
     ],
     "lifecycleStages": [
-      "configured",
-      "observed"
+      "implemented"
     ]
   },
   "interfaceRules": []

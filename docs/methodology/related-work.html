@@ -76,7 +76,7 @@ nav: related
       <tr><td><code>enablementMethod</code>, <code>minimumProductVersion</code></td><td>Whether a capability is available in a shipped release, and what a customer must do to reach it</td></tr>
       <tr><td><code>capabilityStatus</code>, <code>blockedBy</code></td><td>Where a capability stands, and what is preventing it</td></tr>
       <tr><td><code>implementationPurl</code></td><td>Which library provides the capability, which bears on agility and on zero-legacy claims</td></tr>
-      <tr><td><code>lifecycleStage</code></td><td>Whether a stated fact was intended, implemented, configured or observed, which determines how far the evidence goes</td></tr>
+      <tr><td><code>lifecycleStage</code></td><td>Whether the facts in a record were implemented in the product, configured in a deployment or observed in operation, which determines how far the evidence goes. A record carries one stage. The baseline does not accept <code>intended</code>; a vendor's intention appears as a <code>capabilityStatus</code> instead</td></tr>
     </tbody>
   </table>
   <p>The mapping above is offered as an observation and has not been agreed with the PQC Working Group. Establishing whether a conforming CBOM could serve as evidence for a PQCMM assessment is work for the two groups together.</p>

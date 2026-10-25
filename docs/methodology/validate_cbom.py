@@ -60,8 +60,14 @@ claim that cannot be re-checked is a press release, so '--verify-claim' re-runs
 the evaluation and reports where the claim and the document disagree. See
 decision 0015.
 
+Carriers: CycloneDX 2.0 is the target (pinned 2.0-dev schema); CycloneDX 1.6 and
+1.7 are read as legacy. A deployment record cites the documents it builds on;
+'--with' supplies them, so citations are checked by hash and implementation facts
+are followed along correspondsTo. Without them, inherited facts are reported as
+unresolved rather than failed.
+
 Usage:
-    python validate_cbom.py <cbom.json> <profile.rules.json> [--json]
+    python validate_cbom.py <cbom.json> <profile.rules.json> [--with <cited.json>]... [--json]
     python validate_cbom.py <cbom.json> <profile.rules.json>... --claim
     python validate_cbom.py <cbom.json> <claim.json> --verify-claim [--profiles-dir DIR]
 
@@ -107,7 +113,7 @@ VERDICT_LABEL = {"conforms": "CONFORMS", "does-not-conform": "DOES NOT CONFORM",
 # Methodology-level vocabularies, fixed here rather than declared per profile so
 # that two profiles cannot mean different things by the same word. Both are used
 # by check_profile.py when it checks C11.
-SUBJECT_TYPES = ("product", "service", "component", "estate-subset")
+SUBJECT_TYPES = ("product", "deployment", "service", "component", "system", "estate-subset")
 LIFECYCLE_STAGES = ("intended", "implemented", "configured", "observed")
 STAGE_ATTRIBUTE = "lifecycleStage"
 
@@ -161,10 +167,11 @@ def ver_tuple(s):
 # failure mode this methodology is least able to tolerate. C13 already rejects
 # it for group keys; C17 rejects it everywhere else. See decision 0013.
 ATTRIBUTE_CONSTRAINTS = ("present", "minCount", "enum", "enumFull", "enumRef",
-                         "startsWith")
+                         "startsWith", "literals", "literalStages", "refersToCited")
 PRODUCT_CONSTRAINTS = ("minInterfaces", "minInterfacesOfType", "minProviders",
                        "subjectIdentified", "productAttribute", "enumRef",
-                       "orDeclaredAbsent", "absenceEnumRef")
+                       "orDeclaredAbsent", "absenceEnumRef", "absenceConditions",
+                       "orCitedDeclares", "subjectDeclared", "singleStage", "citesDocuments")
 # Keys naming a vocabulary the profile must declare. An unresolvable reference
 # is the mirror defect: instead of passing everything it fails everything, and
 # the report says only that the value was not accepted.
@@ -217,6 +224,19 @@ def check_evaluable(profile):
         for member in group.get("members", []):
             check_one(member, "groupRules", member.get("_qid", member.get("id", "?")))
 
+    for rule in profile.get("referenceRules", []):
+        label = rule.get("_qid", rule.get("id", "?"))
+        if rule.get("context") not in (profile.get("contextKinds") or {}):
+            problems.append("%s names the context kind %r, which the profile does not define"
+                            % (label, rule.get("context")))
+        if rule.get("at") not in ("document", "interface"):
+            problems.append("%s sits at %r; a reference rule sits on the document or on an "
+                            "interface" % (label, rule.get("at")))
+        ref = rule.get("orDeclaredAbsent")
+        if ref and not profile.get(ref):
+            problems.append("%s references the vocabulary %r, which the profile does not declare"
+                            % (label, ref))
+
     if problems:
         raise ProfileError("; ".join(problems))
     return profile
@@ -237,7 +257,7 @@ def profile_tag(profile):
 
 def stamp_qids(profile, tag):
     """Attach the qualified id to every rule this profile declares."""
-    for section in ("productRules", "interfaceRules"):
+    for section in ("productRules", "interfaceRules", "referenceRules"):
         for rule in profile.get(section, []):
             rule["_qid"] = "%s#%s" % (tag, rule["id"])
     for group in profile.get("groupRules", []):
@@ -248,7 +268,7 @@ def stamp_qids(profile, tag):
 
 def all_qids(profile):
     out = [r["_qid"] for r in profile.get("productRules", [])
-           + profile.get("interfaceRules", [])]
+           + profile.get("interfaceRules", []) + profile.get("referenceRules", [])]
     for group in profile.get("groupRules", []):
         out.append(group["_qid"])
         out += [m["_qid"] for m in group.get("members", [])]
@@ -320,7 +340,18 @@ def load_profile(path):
     merged = dict(base)
     merged.update({k: v for k, v in prof.items()
                    if k not in ("productRules", "interfaceRules", "groupRules",
-                                "overrides", "extends")})
+                                "referenceRules", "overrides", "extends", "contextKinds")})
+    # Context kinds accumulate along the chain. A derived profile may add a kind
+    # and may not redefine one it inherited, because the reference rules of the
+    # base were written against the inherited definition.
+    kinds = dict(base.get("contextKinds") or {})
+    for name, definition in (prof.get("contextKinds") or {}).items():
+        if name in kinds and kinds[name] != definition:
+            raise ProfileError("context kind %r is redefined by %s; a derived profile may add "
+                               "kinds and may not change one it inherited" % (name, tag))
+        kinds[name] = definition
+    if kinds:
+        merged["contextKinds"] = kinds
     merged["profileId"] = prof["profileId"]
     merged["profileTag"] = tag
     merged["title"] = prof.get("title", base.get("title"))
@@ -333,7 +364,7 @@ def load_profile(path):
     check_range_narrows(base, prof)
     check_scope_narrows(base, prof)
 
-    for section in ("productRules", "interfaceRules"):
+    for section in ("productRules", "interfaceRules", "referenceRules"):
         inherited = [dict(r) for r in base.get(section, [])]
         by_qid = {r["_qid"]: r for r in inherited}
         for ov in prof.get("overrides", []):
@@ -472,20 +503,46 @@ def _equal_only(old, new):
     return (old == new, "%r -> %r" % (old, new))
 
 
+def _literal_stages_tighten(old, new):
+    for lit, stages in (new or {}).items():
+        if lit not in (old or {}):
+            return (False, "restricts %r, which the base accepts at every stage" % lit)
+        if not set(stages) <= set(old[lit]):
+            return (False, "accepts %r at more stages than the base" % lit)
+    return (True, "%s -> %s" % (old, new))
+
+
+def _subject_form_tightens(old, new):
+    o, n = old.get("startsWith"), new.get("startsWith")
+    if isinstance(o, dict) or isinstance(n, dict):
+        if not (isinstance(o, dict) and isinstance(n, dict)):
+            return (False, "changes between one identifier form and one per subject type")
+        ok = all(k in o and str(v).startswith(str(o[k])) for k, v in n.items())
+        return (ok, "%s -> %s" % (o, n))
+    return _prefix_tightens(o or "", n or "")
+
+
 CONSTRAINT_COMPARATORS = {
     "present": _present_tightens,
     "minCount": _num_tightens,
     "minInterfaces": _num_tightens,
     "minProviders": _num_tightens,
     "minInterfacesOfType": _min_of_type_tightens,
-    "subjectIdentified": _subject_tightens,
+    "subjectIdentified": _subject_form_tightens,
+    "literals": _subset_tightens,
+    "literalStages": _literal_stages_tighten,
+    "absenceConditions": _equal_only,
+    "subjectDeclared": _equal_only,
+    "singleStage": _equal_only,
+    "citesDocuments": _equal_only,
+    "refersToCited": _equal_only,
     "enum": _subset_tightens,
     "startsWith": _prefix_tightens,
     "productAttribute": _equal_only,
 }
 # Removing one of these removes an escape hatch, which is a tightening. Adding
 # one where the base had none is a relaxation, and is caught by the general rule.
-RELEASABLE_KEYS = ("orDeclaredAbsent", "absenceEnumRef")
+RELEASABLE_KEYS = ("orDeclaredAbsent", "absenceEnumRef", "orCitedDeclares")
 
 
 def check_constraint_tightens(rid, base_rule, ov, base, derived, notes):
@@ -669,19 +726,31 @@ def check_scope_narrows(base, derived):
                 "derived profile accepts lifecycle stage(s) %s that the base rejects; "
                 "extension is monotonic" % ", ".join(sorted(widened)))
 
-    if b.get("subjectType") and d.get("subjectType") \
-            and b["subjectType"] != d["subjectType"]:
+    bs, ds = subject_types(base), subject_types(derived)
+    if bs and ds and not set(ds) <= set(bs):
         raise ProfileError(
-            "derived profile describes a %r where the base describes a %r; "
-            "a profile with a different subject is an independent profile, "
-            "not an extension" % (d["subjectType"], b["subjectType"]))
+            "derived profile describes %s where the base describes %s; a profile with a "
+            "different subject is an independent profile, not an extension"
+            % (", ".join(sorted(set(ds) - set(bs))), ", ".join(bs)))
+
+
+def subject_types(profile):
+    """The subject types a profile's scope accepts, as a list.
+
+    'subjectTypes' is a set, narrowed by a derived profile like lifecycleStages.
+    The older single 'subjectType' is read as a set of one."""
+    scope = profile.get("scope") or {}
+    value = scope.get("subjectTypes") or scope.get("subjectType")
+    if value is None:
+        return []
+    return list(value) if isinstance(value, (list, tuple)) else [value]
 
 
 # --------------------------------------------------------------------------- #
 # Carrier format / version handling                                           #
 # --------------------------------------------------------------------------- #
 def check_format(bom, profile):
-    fmt = bom.get("bomFormat")
+    fmt = bom.get("bomFormat") or bom.get("specFormat")
     spec = bom.get("specVersion")
     applies = profile.get("appliesTo", {})
 
@@ -709,30 +778,57 @@ def check_format(bom, profile):
 # --------------------------------------------------------------------------- #
 # Format adapter: CycloneDX -> abstract attributes                            #
 # --------------------------------------------------------------------------- #
+# Two carrier generations are read. CycloneDX 2.0 is the target: the subject is
+# inventories[0].subject, services are components of type 'service', package
+# URLs are identifiers asserted by a party, in-use algorithms are
+# relatedCryptographicAssets, and module validation is certifications[].
+# CycloneDX 1.6 and 1.7 are read as legacy: the subject is metadata.component,
+# services are a separate list, and the same facts sit in purl, cryptoRefArray,
+# algorithmRef and a certification-report reference. Both produce the same
+# abstract record, so every rule is written once.
+PHASE_TO_STAGE = {"design": "intended", "pre-build": "implemented", "build": "implemented",
+                  "post-build": "implemented", "operations": "configured",
+                  "discovery": "observed"}
+
+# Attributes that describe the implementation rather than the boundary. An
+# interface inherits them from the library that provides it (decision 0022, K9).
+INHERITABLE = ("moduleValidationScheme", "moduleValidationRef", "providerLocation",
+               "enablementMethod", "minimumProductVersion", "coexistence")
+# The only facts that follow a correspondsTo join from one document to another.
+# Present-state facts never do: each stage reports its own.
+INHERITED_ACROSS_DOCUMENTS = ("implementationPurl",)
+
+VALIDATION_STANDARDS = {"fips 140-3": "fips-140-3", "fips 140-2": "fips-140-2",
+                        "iso/iec 19790": "iso-19790", "cavp": "cavp"}
+# CycloneDX 2.0 certifications[].standard is free text; these names are read
+# as the values of the extended depth's productCertificationVocabulary.
+PRODUCT_CERTIFICATIONS = {"common criteria": "common-criteria",
+                          "common criteria (iso/iec 15408)": "common-criteria",
+                          "iso/iec 15408": "common-criteria", "eucc": "eucc"}
+EXECUTION_TO_LOCATION = {"software-plain-ram": "software", "software-encrypted-ram": "software",
+                         "software-tee": "tee", "hardware": "hsm"}
+
+
 def split_properties(component):
-    """Return (single, multi, markers) from a component's properties.
+    """Return (single, multi, markers, groups, group_markers) from a component's properties.
 
     CycloneDX permits a property name to repeat, which is how list-valued
     attributes are carried. 'single' keeps the last value seen; 'multi' keeps
     every value in order."""
     single, multi, markers = {}, {}, {}
     groups, group_markers = {}, {}
-    for p in component.get("properties", []):
+    for p in component.get("properties", []) or []:
         name, value = p.get("name", ""), p.get("value")
         if not name.startswith(PROP):
             continue
         rest = name[len(PROP):]
-
         # A group entry is written <group>:<key>:<attribute>, following the
-        # endpointRole:<role> convention already in use. Three segments is what
-        # distinguishes it, so the adapter needs no knowledge of which profile
-        # declares which groups.
+        # endpointRole:<role> convention. Three segments is what distinguishes it.
         withheld = rest.startswith("disclosure:")
         if withheld:
             rest = rest[len("disclosure:"):]
         parts = rest.split(":")
-
-        if len(parts) == 3:
+        if len(parts) == 3 and parts[0] != "context":
             group, key, attr = parts
             target = group_markers if withheld else groups
             target.setdefault(group, {}).setdefault(key, {})[attr] = value
@@ -745,84 +841,387 @@ def split_properties(component):
     return single, multi, markers, groups, group_markers
 
 
-def extract_product(bom):
-    comp = bom.get("metadata", {}).get("component", {})
-    single, _multi, markers, _groups, _gm = split_properties(comp)
-    providers = [c for c in bom.get("components", [])
-                 if c.get("type") == "library" and c.get("purl")]
-    return {"attrs": single, "_disclosure": markers, "providerCount": len(providers),
-            # The subject's own identifier. A CBOM that does not say which version
-            # of what it describes cannot be matched to a deployment, compared
-            # with last quarter's, or joined to an SBOM.
-            "identifier": comp.get("purl"),
-            "identifierFallback": "%s@%s" % (comp.get("name"), comp.get("version"))
-                                  if comp.get("name") and comp.get("version") else None}
+def is_v2(bom):
+    return str(bom.get("specVersion", "")).startswith("2.")
 
 
-def extract_interfaces(bom):
-    comps = {c.get("bom-ref"): c for c in bom.get("components", [])}
-    interfaces = []
-    for c in bom.get("components", []):
-        cp = c.get("cryptoProperties", {})
-        if cp.get("assetType") != "protocol":
+def _flatten(items):
+    out = []
+    for c in items or []:
+        if not isinstance(c, dict) or "ref" in c and len(c) <= 2:
             continue
-        single, multi, markers, groups, group_markers = split_properties(c)
-        proto = cp.get("protocolProperties", {})
-        refs = list(proto.get("cryptoRefArray", []))
-        for s in proto.get("cipherSuites", []):
-            refs += s.get("algorithms", [])
-        roles = [k.split(":")[-1] for k in single if k.startswith("endpointRole:")]
-
-        iface = {
-            "_disclosure": markers,
-            "_groups": groups,
-            "_groupMarkers": group_markers,
-            "interfaceId": single.get("interfaceId") or c.get("bom-ref"),
-            "interfaceType": single.get("interfaceType"),
-            "protocol": (proto.get("type") or "").upper() or None,
-            "protocolVersion": proto.get("version"),
-            "keyExchange": algo_name(refs, comps, KEX_PRIMS),
-            "encryption": algo_name(refs, comps, ENC_PRIMS),
-            "authentication": auth(refs, comps),
-            "endpointRoles": roles,
-            "lifecycleStage": single.get("lifecycleStage"),
-            "implementationPurl": single.get("implementationPurl"),
-        }
-        # Attributes added by derived profiles, carried wholly as properties.
-        for key in ("enablementMethod", "minimumProductVersion", "providerLocation",
-                    "coexistence", "negotiationControl", "integrationConstraints",
-                    "capabilityStatus", "blockedBy", "roadmapRef"):
-            iface[key] = single.get(key)
-        for key in ("protocolVersionsSupported", "keyExchangeSupported",
-                    "authenticationSupported"):
-            iface[key] = multi.get(key)
-        interfaces.append(iface)
-    return interfaces
+        out.append(c)
+        out += _flatten(c.get("components"))
+    return out
 
 
-def algo_name(refs, comps, prims):
-    for ref in refs:
-        c = comps.get(ref)
-        if not c:
-            continue
-        cp = c.get("cryptoProperties", {})
-        if cp.get("assetType") != "algorithm":
-            continue
-        if cp.get("algorithmProperties", {}).get("primitive") in prims:
-            return c.get("name")
+def document_parts(bom):
+    """(subject, entries, inventory count) for either carrier generation."""
+    if is_v2(bom):
+        inventories = bom.get("inventories") or []
+        first = inventories[0] if inventories else {}
+        return first.get("subject") or {}, _flatten(first.get("components")), len(inventories)
+    entries = _flatten(bom.get("components"))
+    services = []
+    for s in _flatten(bom.get("services")):
+        s = dict(s)
+        s["type"] = "service"
+        services.append(s)
+    return bom.get("metadata", {}).get("component", {}), entries + services, 1
+
+
+def identities(el):
+    """Every (scheme, value) the element is identified by."""
+    out = []
+    if el.get("purl"):
+        out.append(("purl", el["purl"]))
+    for ident in el.get("identifiers", []) or []:
+        for i in ident.get("identities", []) or []:
+            scheme = i.get("scheme")
+            name = scheme if isinstance(scheme, str) else (scheme or {}).get("name")
+            out.append((name, i.get("value")))
+    return out
+
+
+def purl_of(el):
+    for scheme, value in identities(el):
+        if scheme == "purl":
+            return value
     return None
 
 
-def auth(refs, comps):
-    for ref in refs:
-        c = comps.get(ref)
-        if not c:
+def refs_of(element):
+    return element.get("externalReferences", []) or []
+
+
+def ref_props(ref):
+    return {p.get("name", "")[len(PROP):]: p.get("value") for p in ref.get("properties", []) or []
+            if p.get("name", "").startswith(PROP)}
+
+
+def doc_key(bom):
+    serial = str(bom.get("serialNumber", ""))
+    return "urn:cdx:%s/%s" % (serial.replace("urn:uuid:", ""), bom.get("version", 1))
+
+
+def split_bomlink(url):
+    if not str(url).startswith("urn:cdx:"):
+        return None, None
+    doc, _, ref = str(url).partition("#")
+    return doc, (ref or None)
+
+
+class Registry:
+    """Documents an evaluation has been given, addressable by BOM-Link.
+
+    A deployment record cites the product record it builds on by BOM-Link and
+    hash. When the cited document is supplied (--with), the citation is checked
+    and implementation facts are followed across the join; when it is not, the
+    citation is checked for form only and the report says it was not resolved."""
+
+    def __init__(self):
+        self.docs = {}
+
+    def add(self, path):
+        with open(path, "rb") as fh:
+            data = fh.read()
+        bom = json.loads(data)
+        self.docs[doc_key(bom)] = {"path": path, "bom": bom,
+                                   "sha256": hashlib.sha256(data).hexdigest()}
+        return bom
+
+    def get(self, key):
+        return self.docs.get(key)
+
+
+def _unique(seq):
+    out = []
+    for x in seq:
+        if x and x not in out:
+            out.append(x)
+    return out
+
+
+def _collapse(v):
+    if isinstance(v, list):
+        if not v:
+            return None
+        return v[0] if len(v) == 1 else v
+    return v
+
+
+def _related_refs(props_obj):
+    """Targets of relatedCryptographicAssets (2.0) or cryptoRefArray (1.x)."""
+    refs = list(props_obj.get("cryptoRefArray", []) or [])
+    for r in props_obj.get("relatedCryptographicAssets", []) or []:
+        if isinstance(r, dict) and r.get("ref"):
+            refs.append(r["ref"])
+    return refs
+
+
+def _asset_type(el):
+    return (el or {}).get("cryptoProperties", {}).get("assetType")
+
+
+def _algorithms(refs, comps, prims):
+    names = []
+    for r in refs:
+        c = comps.get(r)
+        if _asset_type(c) == "algorithm" and \
+                c["cryptoProperties"].get("algorithmProperties", {}).get("primitive") in prims:
+            names.append(c.get("name"))
+    return _unique(names)
+
+
+def _signature_algorithms(refs, comps):
+    names = []
+    for r in refs:
+        c = comps.get(r, {})
+        if _asset_type(c) == "certificate":
+            cert = c["cryptoProperties"].get("certificateProperties", {})
+            sigs = [cert.get("signatureAlgorithmRef")] + _related_refs(cert)
+            names += [comps[s].get("name") for s in sigs if s in comps and _asset_type(comps[s]) == "algorithm"]
+    return _unique(names + _algorithms(refs, comps, SIG_PRIMS))
+
+
+def _material(refs, comps):
+    return [comps[r] for r in refs if _asset_type(comps.get(r)) == "related-crypto-material"]
+
+
+def _material_algorithm(m, comps):
+    rm = m["cryptoProperties"].get("relatedCryptoMaterialProperties", {})
+    targets = ([rm["algorithmRef"]] if rm.get("algorithmRef") else []) + _related_refs(rm)
+    for t in targets:
+        if _asset_type(comps.get(t)) == "algorithm":
+            return comps[t].get("name")
+    return None
+
+
+def _key_wrapping(materials, comps):
+    out = []
+    for m in materials:
+        sb = m["cryptoProperties"].get("relatedCryptoMaterialProperties", {}).get("securedBy") or {}
+        if str(sb.get("mechanism", "")).lower() == "none":
+            out.append("none")
             continue
-        if c.get("cryptoProperties", {}).get("assetType") == "certificate":
-            sig = c["cryptoProperties"]["certificateProperties"].get("signatureAlgorithmRef")
-            if sig and sig in comps:
-                return comps[sig].get("name")
-    return algo_name(refs, comps, SIG_PRIMS)
+        refs = sb.get("algorithmRef")
+        for r in ([refs] if isinstance(refs, str) else (refs or [])):
+            if r in comps:
+                out.append(comps[r].get("name"))
+    return _collapse(_unique(out))
+
+
+def _supported_from_suites(pp, comps):
+    """TLS groups and signature schemes a protocol component or its shared configurations offer."""
+    suites = list(pp.get("cipherSuites", []) or [])
+    for r in pp.get("relatedCryptographicAssets", []) or []:
+        target = comps.get(r.get("ref")) if isinstance(r, dict) else None
+        if _asset_type(target) == "protocol" and target is not None:
+            suites += target["cryptoProperties"].get("protocolProperties", {}).get("cipherSuites", []) or []
+    groups, schemes = [], []
+    for s in suites:
+        groups += s.get("tlsGroups", []) or []
+        schemes += s.get("tlsSignatureSchemes", []) or []
+    return _unique(groups), _unique(schemes)
+
+
+def _validation_from_certifications(el):
+    for cert in el.get("certifications", []) or []:
+        std = str(cert.get("standard", "")).strip()
+        scheme = VALIDATION_STANDARDS.get(std.lower(), std)
+        return scheme, cert.get("url") or cert.get("identifier")
+    return None, None
+
+
+def _library_facts(lib):
+    """Implementation facts stated once on a library (K9)."""
+    single, multi, markers, groups, gm = split_properties(lib)
+    facts = {k: single[k] for k in INHERITABLE if k in single}
+    scheme, ref = _validation_from_certifications(lib)
+    if scheme and "moduleValidationScheme" not in facts:
+        facts["moduleValidationScheme"] = scheme
+    if ref and "moduleValidationRef" not in facts:
+        facts["moduleValidationRef"] = ref
+    for r in refs_of(lib):
+        if r.get("type") == "certification-report" and "moduleValidationRef" not in facts:
+            facts["moduleValidationRef"] = r.get("url")
+    return facts, groups, gm
+
+
+def _coverage(bom, subject_attrs):
+    if subject_attrs.get("coverage"):
+        return subject_attrs["coverage"]
+    for comp in bom.get("compositions", []) or []:
+        agg = comp.get("aggregate")
+        if agg == "complete":
+            return "all"
+        if agg and agg.startswith("incomplete"):
+            return "partial"
+    return None
+
+
+def extract_product(bom, registry=None):
+    subject, entries, inventories = document_parts(bom)
+    single, _multi, markers, _g, _gm = split_properties(subject)
+    attrs = dict(single)
+    cov = _coverage(bom, single)
+    if cov:
+        attrs["coverage"] = cov
+    if "productCertificationScheme" not in attrs and subject.get("certifications"):
+        std = str(subject["certifications"][0].get("standard", "")).strip().lower()
+        attrs["productCertificationScheme"] = PRODUCT_CERTIFICATIONS.get(std, std)
+    ident = purl_of(subject)
+    if not ident:
+        for scheme, value in identities(subject):
+            if scheme == "tag-uri":
+                ident = value
+        ident = ident or single.get("subjectIdentifier")
+    phases = [l.get("phase") for l in bom.get("metadata", {}).get("lifecycles", []) or []
+              if isinstance(l, dict) and l.get("phase")]
+    stages = _unique(PHASE_TO_STAGE.get(p) for p in phases)
+    cited = [r for r in refs_of(bom)
+             if r.get("type") == "bom" and ref_props(r).get("context") == "cited-document"]
+    return {"attrs": attrs, "_disclosure": markers,
+            "subjectType": single.get("subjectType"),
+            "providerCount": len([c for c in entries if c.get("type") == "library" and purl_of(c)]),
+            # The subject's own identifier. A CBOM that does not say which version
+            # of what it describes cannot be matched to a deployment, compared
+            # with last quarter's, or joined to an SBOM.
+            "identifier": ident,
+            "identifierFallback": "%s@%s" % (subject.get("name"), subject.get("version"))
+                                  if subject.get("name") and subject.get("version") else None,
+            "phases": phases, "docStage": stages[0] if len(stages) == 1 else None,
+            "cited": cited, "inventories": inventories}
+
+
+def extract_interfaces(bom, registry=None):
+    subject, entries, _n = document_parts(bom)
+    product = extract_product(bom)
+    comps = {c.get("bom-ref"): c for c in entries}
+    deps = {d.get("ref"): d.get("dependsOn", []) or [] for d in bom.get("dependencies", []) or []}
+    provider = {}
+    for d in bom.get("dependencies", []) or []:
+        for p in d.get("provides", []) or []:
+            provider[p] = d.get("ref")
+
+    interfaces = []
+    for el in entries:
+        single, multi, markers, groups, group_markers = split_properties(el)
+        if "interfaceType" not in single:
+            continue
+        ref = el.get("bom-ref")
+        pp = el.get("cryptoProperties", {}).get("protocolProperties") \
+            if _asset_type(el) == "protocol" else None
+        if pp is not None:
+            arefs = _related_refs(pp)
+            protocol = (pp.get("type") or "").upper() or None
+            version = pp.get("version")
+        else:
+            arefs = list(deps.get(ref, []))
+            protocol, version = None, None
+        iface = {k: (_collapse(multi[k]) if len(multi.get(k, [])) > 1 else v) for k, v in single.items()}
+        iface.update({
+            "_element": el, "_disclosure": markers, "_sources": {},
+            "_groups": {}, "_groupMarkers": {},
+            "interfaceId": single.get("interfaceId") or ref,
+            "protocol": single.get("protocol") or protocol,
+            "protocolVersion": single.get("protocolVersion") or version,
+            "endpointRoles": [k.split(":")[-1] for k in single if k.startswith("endpointRole:")],
+            "_stageOwn": single.get("lifecycleStage"),
+            "lifecycleStage": single.get("lifecycleStage") or product["docStage"],
+        })
+        for attr, prims in (("keyExchange", KEX_PRIMS), ("encryption", ENC_PRIMS)):
+            iface[attr] = _collapse(multi[attr]) if attr in multi else _collapse(_algorithms(arefs, comps, prims))
+        iface["authentication"] = _collapse(multi["authentication"]) if "authentication" in multi \
+            else _collapse(_signature_algorithms(arefs, comps))
+        mats = _material(arefs, comps)
+        if "keyWrapping" not in single:
+            iface["keyWrapping"] = _key_wrapping(mats, comps)
+        if "keyTypes" not in multi and mats:
+            iface["keyTypes"] = _unique(_material_algorithm(m, comps) for m in mats) or None
+        if "keyStoreFormats" not in multi and mats:
+            fmts = _unique(str(m["cryptoProperties"].get("relatedCryptoMaterialProperties", {})
+                               .get("format", "")).lower() for m in mats)
+            iface["keyStoreFormats"] = fmts or None
+        if pp is not None:
+            g, s = _supported_from_suites(pp, comps)
+            if "keyExchangeSupported" not in multi and g:
+                iface["keyExchangeSupported"] = g
+                iface["_sources"]["keyExchangeSupported"] = "cipherSuites.tlsGroups"
+            if "authenticationSupported" not in multi and s:
+                iface["authenticationSupported"] = s
+                iface["_sources"]["authenticationSupported"] = "cipherSuites.tlsSignatureSchemes"
+        for k in ("protocolVersionsSupported", "keyExchangeSupported", "authenticationSupported",
+                  "keyOperations", "keyTypesSupported", "keyStoreFormatsSupported", "keyStoreFormats",
+                  "keyTypes", "externalDependencies", "keyWrappingSupported", "observationMethod"):
+            if k in multi:
+                iface[k] = list(multi[k])
+        if "providerLocation" not in single:
+            envs = _unique(EXECUTION_TO_LOCATION.get(comps[r]["cryptoProperties"]
+                                                     .get("algorithmProperties", {}).get("executionEnvironment"))
+                           for r in arefs if _asset_type(comps.get(r)) == "algorithm")
+            if len(envs) == 1:
+                iface["providerLocation"] = envs[0]
+                iface["_sources"]["providerLocation"] = "algorithm executionEnvironment"
+        # K9: inherit implementation facts from the providing library.
+        lib = comps.get(provider.get(ref))
+        lib_groups, lib_gm = {}, {}
+        if lib is not None:
+            if "implementationPurl" not in single and purl_of(lib):
+                iface["implementationPurl"] = purl_of(lib)
+                iface["_sources"]["implementationPurl"] = "provided by %s" % lib.get("bom-ref")
+            facts, lib_groups, lib_gm = _library_facts(lib)
+            for k, v in facts.items():
+                if not present(iface.get(k)) and k not in markers:
+                    iface[k] = v
+                    iface["_sources"][k] = "inherited from %s" % lib.get("bom-ref")
+        for name in set(lib_groups) | set(groups):
+            merged = dict(lib_groups.get(name, {}))
+            merged.update(groups.get(name, {}))
+            iface["_groups"][name] = merged
+            gm = dict(lib_gm.get(name, {}))
+            gm.update(group_markers.get(name, {}))
+            iface["_groupMarkers"][name] = gm
+        interfaces.append(iface)
+
+    for iface in interfaces:
+        iface["_unresolved"] = {}
+        link = iface.get("correspondsTo")
+        doc, ref = split_bomlink(link)
+        if not doc or not ref:
+            continue
+        for attr in INHERITED_ACROSS_DOCUMENTS:
+            if present(iface.get(attr)) or attr in iface["_disclosure"]:
+                continue
+            value, path = follow_correspondence(link, attr, registry, set()) if registry else (None, [])
+            if present(value):
+                iface[attr] = value
+                iface["_sources"][attr] = "inherited via " + " -> ".join(path)
+            elif not registry or not registry.get(doc):
+                # The fact lives in a document this one cites, and the evaluator
+                # was not given it. That is a gap in the evaluator's inputs, not
+                # in the document, so it is reported and does not fail the rule.
+                iface["_unresolved"][attr] = link
+    return interfaces
+
+
+def follow_correspondence(link, attr, registry, seen):
+    """Resolve an implementation fact along a chain of correspondsTo BOM-Links."""
+    doc, ref = split_bomlink(link)
+    if not doc or not ref or link in seen:
+        return None, []
+    seen.add(link)
+    entry = registry.get(doc)
+    if not entry:
+        return None, []
+    here = os.path.basename(entry["path"]) + "#" + ref
+    for i in extract_interfaces(entry["bom"]):
+        if i["interfaceId"] == ref:
+            if present(i.get(attr)):
+                return i[attr], [here]
+            value, path = follow_correspondence(i.get("correspondsTo"), attr, registry, seen)
+            return (value, [here] + path) if present(value) else (None, [])
+    return None, []
 
 
 # --------------------------------------------------------------------------- #
@@ -862,16 +1261,73 @@ def check_attr(value, constraint, profile):
 
 
 def condition_holds(rule, iface):
-    """Evaluate a 'requiredWhen' guard. Absent guard means always applicable."""
+    """Evaluate a 'requiredWhen' guard. Absent guard means always applicable.
+
+    A guard on an attribute the document does not state does not hold. Without
+    this, a rule guarded on another rule's attribute failed alongside it: an
+    omitted moduleValidationScheme failed I10 and also I11, which asks for the
+    reference only when the scheme is not 'none'. One omission is reported once."""
     cond = rule.get("requiredWhen")
     if not cond:
         return True, None
     actual = iface.get(cond["attribute"])
+    if not present(actual):
+        return False, "%s not stated" % cond["attribute"]
     if "equals" in cond:
         return actual == cond["equals"], "%s=%r" % (cond["attribute"], actual)
     if "notEquals" in cond:
         return actual != cond["notEquals"], "%s=%r" % (cond["attribute"], actual)
+    if "in" in cond:
+        return actual in cond["in"], "%s=%r" % (cond["attribute"], actual)
     return True, None
+
+
+def _as_list(v):
+    if v is None:
+        return []
+    return list(v) if isinstance(v, (list, tuple)) else [v]
+
+
+def check_value(iface, value, rule, profile):
+    """Check a supplied value, including literals and joins, against a rule."""
+    constraint = rule["constraint"]
+    lits = constraint.get("literals")
+    if lits is not None:
+        values = _as_list(value)
+        used = [v for v in values if v in lits]
+        if used and len(values) > 1:
+            return False, "the literal %r stands alone and cannot be listed with values" % used[0]
+        if used:
+            allowed = (constraint.get("literalStages") or {}).get(used[0])
+            stage = iface.get("lifecycleStage")
+            if allowed and stage not in allowed:
+                return False, ("= %r, accepted only at %s; at %r the producer holds the answer"
+                               % (used[0], ", ".join(allowed), stage))
+            return True, "= %r" % used[0]
+        constraint = {k: v for k, v in constraint.items() if k not in ("literals", "literalStages")}
+    if "refersToCited" in constraint:
+        spec = constraint["refersToCited"]
+        if value in spec.get("literals", []):
+            return True, "= %r" % value
+        doc, ref = split_bomlink(value)
+        if not doc or not ref:
+            return False, "= %r, not a BOM-Link to an interface" % (value,)
+        ctx = iface.get("_context") or {}
+        cited = [split_bomlink(r.get("url"))[0] for r in ctx.get("cited", [])]
+        if doc not in cited:
+            return False, "points into %s, which the document does not cite" % doc
+        registry = ctx.get("registry")
+        entry = registry.get(doc) if registry else None
+        if not entry:
+            return True, "-> %s (cited document not supplied, so not resolved)" % value
+        if ref not in [i["interfaceId"] for i in extract_interfaces(entry["bom"])]:
+            return False, "-> %s, which is not an interface in %s" % (ref, os.path.basename(entry["path"]))
+        return True, "-> %s#%s" % (os.path.basename(entry["path"]), ref)
+    if rule.get("list") and "enumRef" in constraint:
+        vocab = profile.get(constraint["enumRef"], [])
+        bad = [v for v in _as_list(value) if v not in vocab]
+        return (not bad, ("= %r" % (value,)) if not bad else "%r not in the vocabulary" % bad)
+    return check_attr(value, constraint, profile)
 
 
 def check_rule(iface, rule, profile):
@@ -883,11 +1339,18 @@ def check_rule(iface, rule, profile):
     attr = rule["attribute"]
     value = iface.get(attr)
     if present(value):
-        ok, detail = check_attr(value, rule["constraint"], profile)
-        if rule.get("list"):
+        ok, detail = check_value(iface, value, rule, profile)
+        if rule.get("list") and isinstance(value, (list, tuple)):
             detail = "%s %s" % (detail, list(value)[:3])
+        src = (iface.get("_sources") or {}).get(attr)
+        if src:
+            detail = "%s [%s]" % (detail, src)
         return (ok, "value", detail)
 
+    unresolved = (iface.get("_unresolved") or {}).get(attr)
+    if unresolved:
+        return (True, "unresolved", "inherited from %s, which was not supplied; evaluate with "
+                "--with <cited document> to resolve it" % unresolved)
     marker = iface.get("_disclosure", {}).get(attr)
     if marker == "withheld":
         if rule.get("withholdable"):
@@ -961,7 +1424,7 @@ def check_group_rule(iface, rule, profile):
     return rows
 
 
-KIND_ORDER = {"P": 0, "I": 1, "G": 2}
+KIND_ORDER = {"P": 0, "I": 1, "G": 2, "R": 3}
 
 
 def rule_sort_key(row, chain=()):
@@ -984,15 +1447,55 @@ def rule_sort_key(row, chain=()):
     return (depth, kind, parts or [0], ident)
 
 
+def _cited_interfaces_of_type(product, interface_type):
+    """Interfaces of a type declared in the configured records this one cites, where supplied."""
+    registry = product.get("_registry")
+    found = []
+    for r in product.get("cited", []):
+        doc, _ref = split_bomlink(r.get("url"))
+        entry = registry.get(doc) if (registry and doc) else None
+        if entry and extract_product(entry["bom"]).get("docStage") == "configured":
+            found += ["%s#%s" % (os.path.basename(entry["path"]), i["interfaceId"])
+                      for i in extract_interfaces(entry["bom"]) if i.get("interfaceType") == interface_type]
+    return found
+
+
 def check_product(product, interfaces, constraint, profile):
+    if "subjectDeclared" in constraint:
+        declared, allowed = product.get("subjectType"), subject_types(profile)
+        if not declared:
+            return (False, "the document does not declare the type of subject it describes")
+        if allowed and declared not in allowed:
+            return (False, "= %r, outside the subject types this profile accepts (%s)"
+                    % (declared, ", ".join(allowed)))
+        return (True, "= %r" % declared)
+    if "singleStage" in constraint:
+        phases, stage = product.get("phases") or [], product.get("docStage")
+        if not phases:
+            return (False, "no metadata.lifecycles phase, so the document's stage is undeclared")
+        if not stage:
+            return (False, "metadata.lifecycles names %s, which map to more than one stage" % phases)
+        clash = [i["interfaceId"] for i in interfaces if i.get("_stageOwn") and i["_stageOwn"] != stage]
+        if clash:
+            return (False, "the document's stage is %r, and %d interface(s) report another: %s"
+                    % (stage, len(clash), ", ".join(clash[:4]) + (" ..." if len(clash) > 4 else "")))
+        if product.get("inventories", 1) > 1:
+            return (False, "the document carries %d inventories; one document describes one subject"
+                    % product["inventories"])
+        return (True, "= %r (lifecycle phase %r)" % (stage, phases[0]))
     if "minInterfaces" in constraint:
         n = len(interfaces)
         return (n >= constraint["minInterfaces"], "%d interface(s) declared" % n)
     if "subjectIdentified" in constraint:
         spec = constraint["subjectIdentified"]
+        prefix = spec.get("startsWith")
+        if isinstance(prefix, dict):
+            prefix = prefix.get(product.get("subjectType") or "")
+            if not prefix:
+                return (False, "no identifier form is defined for a subject of type %r"
+                        % product.get("subjectType"))
         value = product.get("identifier")
         if present(value):
-            prefix = spec.get("startsWith")
             if prefix and not str(value).startswith(prefix):
                 return (False, "subject identified as %r, which is not a %s identifier"
                         % (value, prefix))
@@ -1002,6 +1505,34 @@ def check_product(product, interfaces, constraint, profile):
                     "required form; a name and a version are not a stable identifier"
                     % product["identifierFallback"])
         return (False, "the document does not say what it describes")
+    if "citesDocuments" in constraint:
+        spec = constraint["citesDocuments"]
+        cited = product.get("cited", [])
+        if len(cited) < spec.get("min", 1):
+            return (False, "%d cited document(s), at least %d required" % (len(cited), spec.get("min", 1)))
+        registry, notes, ok = product.get("_registry"), [], True
+        for r in cited:
+            url = r.get("url")
+            doc, _ref = split_bomlink(url)
+            hashes = {h.get("alg"): h.get("content") for h in r.get("hashes", []) or []}
+            if not doc:
+                ok = False
+                notes.append("%s is not a BOM-Link" % url)
+                continue
+            if spec.get("hashRequired") and "SHA-256" not in hashes:
+                ok = False
+                notes.append("%s carries no SHA-256" % url)
+                continue
+            entry = registry.get(doc) if registry else None
+            if not entry:
+                notes.append("%s (not supplied, so not resolved)" % url)
+            elif entry["sha256"] != hashes.get("SHA-256"):
+                ok = False
+                notes.append("%s: the hash does not match %s, so the cited revision has changed"
+                             % (url, os.path.basename(entry["path"])))
+            else:
+                notes.append("%s = %s, hash matches" % (url, os.path.basename(entry["path"])))
+        return (ok, "; ".join(notes))
 
     if "minInterfacesOfType" in constraint:
         spec = constraint["minInterfacesOfType"]
@@ -1010,11 +1541,18 @@ def check_product(product, interfaces, constraint, profile):
             return (True, "%d of type '%s' (min %d)"
                     % (n, spec["interfaceType"], spec["min"]))
 
+        # At 'observed', an interface the observer could not reach may still be
+        # declared by the configured record the observation cites. The omission
+        # stays visible through the join, as an interface with no observed
+        # counterpart, so nothing is hidden by accepting it here.
+        if constraint.get("orCitedDeclares") and product.get("docStage") == "observed":
+            found = _cited_interfaces_of_type(product, spec["interfaceType"])
+            if found:
+                return (True, "none observed; declared in a cited record: %s" % ", ".join(found[:3]))
+
         # A structural rule is satisfied by presence or by an explicit statement
-        # of absence; silence is neither. A product with no administrative
-        # surface at all — a library, a token, an embedded component — hides
-        # nothing by having no management interface, and should be able to say
-        # so rather than fail. This is the disclosure model applied to structure.
+        # of absence; silence is neither. This is the disclosure model applied
+        # to structure.
         absent = constraint.get("orDeclaredAbsent")
         if absent:
             reason = product.get("attrs", {}).get(absent)
@@ -1023,6 +1561,15 @@ def check_product(product, interfaces, constraint, profile):
                 if vocab and reason not in vocab:
                     return (False, "declared absent as %r, which is not a permitted reason"
                             % (reason,))
+                cond = (constraint.get("absenceConditions") or {}).get(reason)
+                if cond:
+                    if "documentStage" in cond and product.get("docStage") not in cond["documentStage"]:
+                        return (False, "declared absent as %r, which is accepted only at %s"
+                                % (reason, ", ".join(cond["documentStage"])))
+                    cov = product.get("attrs", {}).get("coverage")
+                    if "coverage" in cond and cov not in cond["coverage"]:
+                        return (False, "declared absent as %r, which is accepted only with coverage %s"
+                                % (reason, " or ".join(cond["coverage"])))
                 return (True, "none declared, stated as %r" % (reason,))
             marker = product.get("_disclosure", {}).get(absent)
             if marker:
@@ -1048,8 +1595,73 @@ def check_product(product, interfaces, constraint, profile):
     raise ProfileError("no evaluable constraint in %r" % (constraint,))
 
 
+def reference_applies(rule, product, iface=None):
+    cond = rule.get("requiredWhen") or {}
+    if "subjectType" in cond and product.get("subjectType") != cond["subjectType"]:
+        return False, "subjectType=%r" % product.get("subjectType")
+    if "documentStage" in cond and product.get("docStage") != cond["documentStage"]:
+        return False, "document stage=%r" % product.get("docStage")
+    if "anyAttributeEquals" in cond:
+        spec = cond["anyAttributeEquals"]
+        if not iface or not [a for a in spec["attributes"] if iface.get(a) == spec["value"]]:
+            return False, "no attribute is %r" % spec["value"]
+    return True, None
+
+
+def check_reference(rule, profile, element_refs, markers, absence, registry=None):
+    """Evaluate a reference rule: a pointer to context the document does not carry.
+
+    Checks that the pointer exists and is well formed: a carrier type the kind
+    allows, a hash where the target is a fixed document, an access protocol
+    where it is an endpoint. Never evaluates what the pointer points to."""
+    kind = profile["contextKinds"][rule["context"]]
+    vocab = profile.get("accessProtocolVocabulary", [])
+    found = [r for r in element_refs if ref_props(r).get("context") == rule["context"]]
+    if not found:
+        marker = markers.get(rule["context"])
+        if marker == "withheld":
+            return (bool(rule.get("withholdable")), "withheld", "withheld by producer (%s)"
+                    % ("permitted" if rule.get("withholdable") else "not permitted here"))
+        reason = absence.get("contextAbsent:" + rule["context"])
+        if reason:
+            allowed = profile.get(rule.get("orDeclaredAbsent") or "", [])
+            if rule.get("orDeclaredAbsent") and reason in allowed:
+                return True, "absent", "stated absent: %r" % reason
+            return False, "absent", "stated absent as %r, which this rule does not accept" % reason
+        return False, "undeclared", "no pointer to %s, and no statement of absence" % rule["context"]
+    problems, details = [], []
+    for r in found:
+        rp = ref_props(r)
+        proto = rp.get("accessProtocol")
+        if r.get("type") not in kind.get("carrier", []):
+            problems.append("type %r is not a carrier for %s (%s)"
+                            % (r.get("type"), rule["context"], ", ".join(kind.get("carrier", []))))
+        endpoint = bool(proto) and proto != "vex-document"
+        if kind.get("form") == "document" and endpoint:
+            problems.append("%s must be a fixed document, not an endpoint" % rule["context"])
+        if endpoint and vocab and proto not in vocab:
+            problems.append("access protocol %r is not in the vocabulary" % proto)
+        need_hash = rule.get("hashRequired") is True or \
+            (rule.get("hashRequired") == "when-document" and not endpoint)
+        if need_hash and not r.get("hashes"):
+            problems.append("%s needs a hash, because it is a fixed document" % r.get("url"))
+        note = ""
+        doc, _ref = split_bomlink(r.get("url"))
+        entry = registry.get(doc) if (registry and doc) else None
+        if entry and r.get("hashes"):
+            want = {h.get("alg"): h.get("content") for h in r["hashes"]}.get("SHA-256")
+            if want and want != entry["sha256"]:
+                problems.append("%s: the hash does not match %s" % (r.get("url"), os.path.basename(entry["path"])))
+            elif want:
+                note = ", hash matches %s" % os.path.basename(entry["path"])
+        details.append("%s%s%s" % (r.get("url"), " (%s)" % proto if proto else "", note))
+    if problems:
+        return False, "value", "; ".join(problems)
+    return True, "value", "; ".join(details)
+
+
 # --------------------------------------------------------------------------- #
-def validate(bom, profile):
+def validate(bom, profile, registry=None):
     """Evaluate a CBOM against a profile.
 
     Returns (verdict, report) where verdict is one of the three the Conformance
@@ -1058,15 +1670,20 @@ def validate(bom, profile):
     Refusal is not a failure and the two must not be merged. A refused document
     may be entirely adequate; the profile is simply unable to express its rules
     against that carrier version, so no assessment is performed and the report
-    carries no rule results to summarise. Returning a bare boolean here is what
-    collapsed the two, because there is no false that means 'not assessed'."""
+    carries no rule results to summarise.
+
+    'registry' holds the documents this one cites, where the caller has them.
+    Without it, citations are checked for form and joins are not followed."""
     fmt = check_format(bom, profile)
-    report = {"format": fmt, "product": [], "interfaces": []}
+    report = {"format": fmt, "product": [], "references": [], "interfaces": []}
     if not fmt["ok"]:
         return "refused", report
 
     product = extract_product(bom)
-    interfaces = extract_interfaces(bom)
+    product["_registry"] = registry
+    interfaces = extract_interfaces(bom, registry)
+    for iface in interfaces:
+        iface["_context"] = {"cited": product.get("cited", []), "registry": registry}
 
     chain = profile.get("_chain", [])
 
@@ -1075,6 +1692,20 @@ def validate(bom, profile):
         row = dict(rule, id=rule.get("_qid", rule["id"]), ok=ok, detail=detail)
         row.pop("_qid", None)
         report["product"].append(row)
+
+    absence = product.get("attrs", {})
+    for rule in profile.get("referenceRules", []):
+        if rule.get("at") != "document":
+            continue
+        applies, why = reference_applies(rule, product)
+        if not applies:
+            ok, state, detail = True, "n/a", "not applicable (%s)" % why
+        else:
+            ok, state, detail = check_reference(rule, profile, refs_of(bom),
+                                                product.get("_disclosure", {}), absence, registry)
+        report["references"].append({"id": rule["_qid"], "level": rule["level"],
+                                     "attribute": rule["context"], "ok": ok,
+                                     "state": state, "detail": detail})
 
     for iface in interfaces:
         rows = []
@@ -1085,6 +1716,17 @@ def validate(bom, profile):
                          "state": state, "detail": detail})
         for grule in profile.get("groupRules", []):
             rows.extend(check_group_rule(iface, grule, profile))
+        for rule in profile.get("referenceRules", []):
+            if rule.get("at") != "interface":
+                continue
+            applies, why = reference_applies(rule, product, iface)
+            if not applies:
+                ok, state, detail = True, "n/a", "not applicable (%s)" % why
+            else:
+                ok, state, detail = check_reference(rule, profile, refs_of(iface["_element"]),
+                                                    iface.get("_disclosure", {}), {}, registry)
+            rows.append({"id": rule["_qid"], "level": rule["level"], "attribute": rule["context"],
+                         "ok": ok, "state": state, "detail": detail})
         rows.sort(key=lambda r: rule_sort_key(r, chain))
         iface_ok = all(r["ok"] for r in rows if r["level"] == "MUST")
         report["interfaces"].append({
@@ -1093,7 +1735,8 @@ def validate(bom, profile):
             "conforms": iface_ok, "rows": rows,
         })
 
-    product_ok = all(r["ok"] for r in report["product"] if r["level"] == "MUST")
+    product_ok = all(r["ok"] for r in report["product"] + report["references"]
+                     if r["level"] == "MUST")
     ifaces_ok = all(i["conforms"] for i in report["interfaces"])
     return ("conforms" if product_ok and ifaces_ok else "does-not-conform"), report
 
@@ -1112,6 +1755,7 @@ NOT_ASSERTED = [
     "that every relevant interface was declared",
     "that the cryptography is adequate, now or later; that judgement belongs to versioned policy",
     "anything about a withheld value beyond the fact that withholding was permitted here",
+    "anything inherited from a cited document the evaluator was not given; those rules are listed as unresolved",
 ]
 
 
@@ -1163,12 +1807,14 @@ def rule_states(report):
     supplied are materially different answers to the question a consumer asked.
     A claim that reports only the verdict throws that away, so the states travel
     with it."""
-    buckets = {"failed": [], "withheld": [], "unknown": [], "undeclared": []}
+    buckets = {"failed": [], "withheld": [], "unknown": [], "undeclared": [], "unresolved": []}
     total = 0
-    for row in report.get("product", []):
+    for row in report.get("product", []) + report.get("references", []):
         total += 1
         if not row.get("ok") and row.get("level") == "MUST":
             buckets["failed"].append(row["id"])
+        if row.get("state") in ("withheld", "unknown", "undeclared"):
+            buckets[row["state"]].append(row["id"])
     for iface in report.get("interfaces", []):
         for row in iface.get("rows", []):
             total += 1
@@ -1176,7 +1822,7 @@ def rule_states(report):
             if not row.get("ok") and row.get("level") == "MUST":
                 buckets["failed"].append(ref)
             state = row.get("state")
-            if state in ("withheld", "unknown", "undeclared"):
+            if state in ("withheld", "unknown", "undeclared", "unresolved"):
                 buckets[state].append(ref)
     return dict(buckets, assessed=total)
 
@@ -1319,13 +1965,27 @@ def find_profile(search_dirs, profile_id, tag):
 
 def icon_for(row):
     if row["ok"]:
-        return {"withheld": "HELD", "n/a": " -- "}.get(row.get("state"), "PASS")
+        return {"withheld": "HELD", "n/a": " -- ", "unresolved": "OPEN"}.get(row.get("state"), "PASS")
     if row["level"] == "MUST":
         return "UNKN" if row.get("state") == "unknown" else "FAIL"
     return "warn"
 
 
 def main(argv):
+    # '--with <document>' supplies a document this one cites, so the citation's
+    # hash is checked and joins across documents are followed. It may repeat.
+    withs, rest, i = [], [], 1
+    while i < len(argv):
+        if argv[i] == "--with" and i + 1 < len(argv):
+            withs.append(argv[i + 1])
+            i += 2
+            continue
+        if argv[i].startswith("--with="):
+            withs.append(argv[i].split("=", 1)[1])
+        else:
+            rest.append(argv[i])
+        i += 1
+    argv = [argv[0]] + rest
     args = [a for a in argv[1:] if not a.startswith("--")]
     if len(args) < 2:
         print(__doc__)
@@ -1334,7 +1994,10 @@ def main(argv):
     as_claim = "--claim" in argv
     verifying = "--verify-claim" in argv
 
-    bom = json.load(open(args[0], encoding="utf-8"))
+    registry = Registry()
+    for w in withs:
+        registry.add(w)
+    bom = registry.add(args[0])
 
     # --- verify a claim against this document -------------------------------
     if verifying:
@@ -1384,7 +2047,7 @@ def main(argv):
     for path in profile_paths:
         try:
             prof, orig, nts = load_profile(path)
-            vd, rp = validate(bom, prof)
+            vd, rp = validate(bom, prof, registry)
         except ProfileError as err:
             print("PROFILE ERROR: %s" % err, file=sys.stderr)
             return 3
@@ -1451,6 +2114,13 @@ def main(argv):
         print("  [%s] %-*s %-6s %s" % ("PASS" if r["ok"] else "FAIL",
                                        pidw, r["id"], r["level"], r["description"]))
         print("         -> %s   [%s]" % (r["detail"], origin.get(r["id"], "?")))
+    if report.get("references"):
+        print("-" * 70)
+        print("REFERENCE RULES (context the document points to and does not carry)")
+        ridw = max([len(r["id"]) for r in report["references"]] + [4])
+        for r in report["references"]:
+            print("  [%s] %-*s %-6s %-24s %s" % (icon_for(r), ridw, r["id"], r["level"],
+                                                 r["attribute"], r["detail"]))
     for iface in report["interfaces"]:
         print("-" * 70)
         print("INTERFACE  %s  (type=%s)  ==>  %s"
@@ -1466,7 +2136,8 @@ def main(argv):
             print("  [%s] %-*s %-6s %-*s %s" % (icon_for(r), idw, r["id"], r["level"],
                                                 attrw, r["attribute"], r["detail"]))
     print("=" * 70)
-    fails = [r["id"] for r in report["product"] if not r["ok"] and r["level"] == "MUST"]
+    fails = [r["id"] for r in report["product"] + report.get("references", [])
+             if not r["ok"] and r["level"] == "MUST"]
     for i in report["interfaces"]:
         for r in i["rows"]:
             if not r["ok"] and r["level"] == "MUST":

@@ -1,0 +1,1001 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "NON-CONFORMING EXAMPLE. The configured record, except that the database connection still says 'peer-defined', as the product record does. At 'configured' the operator holds the answer. Fails interface-disclosure#I3, I4 and I5 on that interface.",
+  "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-7263740c0ff5",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-24T16:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "operations"
+      }
+    ],
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "Example Org configuration export",
+          "version": "1.0",
+          "description": "Reads keycloak.conf, realm exports, java.security and the ingress manifest"
+        }
+      ]
+    },
+    "supplier": {
+      "name": "Example Org (illustrative operator)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "deployment:sso-prod",
+        "name": "sso.example.org identity service (production)",
+        "description": "Keycloak 26.7.3 on Kubernetes, two replicas, behind a TLS-terminating ingress.",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "deployment"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": {
+                  "name": "tag-uri",
+                  "description": "A tag URI (RFC 4151)."
+                },
+                "value": "tag:example.org,2026:deployment/sso-prod"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Org (illustrative operator)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:openssl",
+          "name": "OpenSSL (ingress controller)",
+          "version": "3.5.4",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/openssl@3.5.4"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:x25519mlkem768",
+          "name": "X25519MLKEM768",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "kem"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:x25519",
+          "name": "X25519",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:secp256r1",
+          "name": "secp256r1",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:secp384r1",
+          "name": "secp384r1",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:secp521r1",
+          "name": "secp521r1",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:x448",
+          "name": "X448",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:ffdhe2048",
+          "name": "ffdhe2048",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:aes-256-gcm",
+          "name": "AES-256-GCM",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "ae"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:aes-128-gcm",
+          "name": "AES-128-GCM",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "ae"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:chacha20-poly1305",
+          "name": "ChaCha20-Poly1305",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "ae"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:ecdsa-p256",
+          "name": "ECDSA-P256-SHA256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:rsa-2048",
+          "name": "RSA-2048",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:es256",
+          "name": "ES256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:rs256",
+          "name": "RS256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:rsa-sha256",
+          "name": "RSA-SHA256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:key:realm-keys",
+          "name": "Realm keys (ES256 active, RSA-2048 retained, HMAC, AES)",
+          "cryptoProperties": {
+            "assetType": "related-crypto-material",
+            "relatedCryptoMaterialProperties": {
+              "type": "private-key",
+              "state": "active",
+              "securedBy": {
+                "mechanism": "none"
+              },
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:es256"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:protocol:ing-tls",
+          "name": "TLS at the ingress (sso.example.org:443)",
+          "cryptoProperties": {
+            "assetType": "protocol",
+            "protocolProperties": {
+              "type": "tls",
+              "version": "1.3",
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519mlkem768"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-256-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-128-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:chacha20-poly1305"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:ecdsa-p256"
+                }
+              ]
+            }
+          },
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:browser-or-relying-party"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:ingress"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "ssl_ecdh_curve X25519MLKEM768:X25519; certificate ECDSA P-256 from the internal CA"
+            }
+          ]
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:protocol:int-db",
+          "name": "TLS to PostgreSQL (sslmode=verify-full)",
+          "cryptoProperties": {
+            "assetType": "protocol",
+            "protocolProperties": {
+              "type": "tls",
+              "version": "1.3"
+            }
+          },
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:database"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-db"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Groups and suites are the JVM defaults (jdk.tls.namedGroups not set). Server certificate RSA-2048 from the internal CA."
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "peer-defined"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "peer-defined"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "peer-defined"
+            }
+          ]
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:protocol:int-ldap",
+          "name": "LDAPS to the corporate directory",
+          "cryptoProperties": {
+            "assetType": "protocol",
+            "protocolProperties": {
+              "type": "tls",
+              "version": "1.2",
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:secp256r1"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:secp384r1"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:secp521r1"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x448"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:ffdhe2048"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-256-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-128-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:rsa-2048"
+                }
+              ]
+            }
+          },
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:directory"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-ldap"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The directory accepts TLS 1.2 only."
+            }
+          ]
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:protocol:int-broker",
+          "name": "TLS to the corporate external identity provider",
+          "cryptoProperties": {
+            "assetType": "protocol",
+            "protocolProperties": {
+              "type": "tls",
+              "version": "1.3",
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:secp256r1"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:secp384r1"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:secp521r1"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x448"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:ffdhe2048"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-256-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-128-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:chacha20-poly1305"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:rsa-2048"
+                }
+              ]
+            }
+          },
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:external-identity-provider"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-broker"
+            }
+          ]
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:protocol:int-cache",
+          "name": "Mutual TLS between the two Keycloak replicas",
+          "cryptoProperties": {
+            "assetType": "protocol",
+            "protocolProperties": {
+              "type": "tls",
+              "version": "1.3",
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:secp256r1"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:secp384r1"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:secp521r1"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x448"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:ffdhe2048"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-256-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-128-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:chacha20-poly1305"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:rsa-2048"
+                }
+              ]
+            }
+          },
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "peer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:keycloak-node"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:keycloak-node"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-cache"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Product-generated RSA-2048 key, rotated every 30 days (cannot be changed by configuration)."
+            }
+          ]
+        },
+        {
+          "bom-ref": "service:svc-http",
+          "name": "HTTP from the ingress to Keycloak (port 8080)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "HTTP"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.1"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:ingress"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:svc-http"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "http-enabled=true. Carries tokens and credentials in clear inside the cluster."
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:mgmt-health",
+          "name": "Health and metrics (port 9000, plain HTTP)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "HTTP"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.1"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:monitoring"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:tls-mgmt"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "health-enabled=true. The management interface inherits the main server's scheme, which is HTTP here."
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:svc-oidc",
+          "name": "OIDC token issuance, realm 'corp'",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "OIDC"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:issuer",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:relying-party",
+              "value": "endpoint:client-application"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:svc-oidc"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Realm defaultSignatureAlgorithm=ES256. Client 'legacy-portal' overrides it to RS256."
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:svc-saml",
+          "name": "SAML 2.0 assertions, realm 'corp'",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SAML"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:identity-provider",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:service-provider",
+              "value": "endpoint:client-application"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:svc-saml"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:mgmt-admin",
+          "name": "Admin REST API (master realm tokens)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "Admin REST (OAuth 2.0 bearer)"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:administrator",
+              "value": "endpoint:admin-client"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:mgmt-admin"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:svc-broker-tokens",
+          "name": "Brokered token verification (corporate identity provider)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "OIDC"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:relying-party",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:issuer",
+              "value": "endpoint:external-identity-provider"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:svc-broker-tokens"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:sto-realm-keys",
+          "name": "Realm key persistence (PostgreSQL)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:sto-realm-keys"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            }
+          ],
+          "type": "service"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "deployment:sso-prod",
+      "dependsOn": [
+        "crypto:protocol:ing-tls",
+        "crypto:protocol:int-db",
+        "crypto:protocol:int-ldap",
+        "crypto:protocol:int-broker",
+        "crypto:protocol:int-cache",
+        "service:svc-http",
+        "service:mgmt-health",
+        "service:svc-oidc",
+        "service:svc-saml",
+        "service:mgmt-admin",
+        "service:svc-broker-tokens",
+        "service:sto-realm-keys"
+      ]
+    },
+    {
+      "ref": "service:svc-oidc",
+      "dependsOn": [
+        "crypto:algo:es256",
+        "crypto:key:realm-keys"
+      ]
+    },
+    {
+      "ref": "service:svc-saml",
+      "dependsOn": [
+        "crypto:algo:rsa-sha256"
+      ]
+    },
+    {
+      "ref": "service:mgmt-admin",
+      "dependsOn": [
+        "crypto:algo:rs256"
+      ]
+    },
+    {
+      "ref": "service:svc-broker-tokens",
+      "dependsOn": [
+        "crypto:algo:rs256"
+      ]
+    },
+    {
+      "ref": "service:sto-realm-keys",
+      "dependsOn": [
+        "crypto:key:realm-keys"
+      ]
+    },
+    {
+      "ref": "lib:openssl",
+      "provides": [
+        "crypto:protocol:ing-tls"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1",
+      "comment": "The product CBOM of the image this deployment runs.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "80b10b11705bc6425a371e307b5792f3d87e12bd4fca5349cb11bb4fae8b0929"
+        }
+      ]
+    },
+    {
+      "type": "vcs",
+      "url": "https://git.example.org/platform/sso-config/-/commit/4f2a9c1e7b",
+      "comment": "Revision of the configuration repository this record was read from.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "configuration-source"
+        }
+      ]
+    },
+    {
+      "type": "risk-assessment",
+      "url": "https://grc.example.org/registers/data/sso-prod",
+      "comment": "Data classification and confidentiality lifetime per interface. Not reproduced here.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "data-register"
+        }
+      ]
+    },
+    {
+      "type": "documentation",
+      "url": "https://pki.example.org/cps",
+      "comment": "Certification practice statement of the internal CA that issues the ingress, database and directory certificates.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "issuer-policy"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    }
+  ]
+}

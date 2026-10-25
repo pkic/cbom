@@ -579,7 +579,7 @@ nav: uc-substation
 </ul>
 <h2>7. Expressing it in CycloneDX</h2>
 <ul>
-<li><strong>Components are modelled as in the Keycloak use case (K7).</strong> TLS is a protocol component. GOOSE, SV, MMS, IEC 60870-5-104 and GDOI are services, because the CycloneDX protocol types do not include them. Each service has a dependency on the component that carries it.</li>
+<li><strong>Components are modelled as in the Keycloak use case (K7).</strong> TLS is a protocol component. GOOSE, SV, MMS, IEC 60870-5-104 and GDOI are services (in CycloneDX 2.0, components of <code>type: "service"</code>), because the CycloneDX protocol types do not include them. Each service has a dependency on the component that carries it.</li>
 <li><strong>The group-key relationship is a dependency.</strong> <code>svc-goose</code> depends on the key material, and the key material on <code>int-gdoi</code>. <code>keyStoreRef</code> points to <code>int-gdoi</code>.</li>
 <li><strong>The system document is a separate BOM.</strong> It references component BOMs through BOM-Link with a hash. <code>usage</code> and <code>conduitRef</code> are <code>pkic:profile:</code> properties.</li>
 <li><strong>CycloneDX 1.7 has no native way to express zones.</strong> In CycloneDX 2.0, the blueprint model (zones, boundaries and flows) is the candidate for expressing them. This case is the first worked use of the blueprint model, and a concrete input to the CycloneDX feedback on the edge gap.</li>

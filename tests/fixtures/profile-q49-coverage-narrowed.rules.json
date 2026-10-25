@@ -1,5 +1,5 @@
 {
-  "$comment": "TEST FIXTURE \u2014 deliberately invalid. Narrows the inherited capability group's coverage from the whole purpose vocabulary to the purposes in scope, so a supplier would conform while saying nothing at all about the purposes the profile defers. That is precisely the floor decision 0010 exists to prevent, arriving by a different route. Not a real profile; do not copy.",
+  "$comment": "TEST FIXTURE — deliberately invalid. Narrows the inherited capability group's coverage from the whole purpose vocabulary to the purposes in scope, so a supplier would conform while saying nothing at all about the purposes the profile defers. That is precisely the floor decision 0010 exists to prevent, arriving by a different route. Not a real profile; do not copy.",
   "profileId": "pkic.test.q49-coverage-narrowed",
   "profileTag": "q49-coverage-narrowed",
   "title": "Narrowing an inherited group's coverage (test fixture)",
@@ -14,7 +14,7 @@
   },
   "extends": {
     "profileId": "pkic.example.pqc-migration",
-    "version": "0.6",
+    "version": "0.8",
     "file": "../../docs/methodology/profile-pqc-migration.rules.json"
   },
   "appliesTo": {
@@ -30,8 +30,7 @@
       "interface"
     ],
     "lifecycleStages": [
-      "configured",
-      "observed"
+      "implemented"
     ]
   },
   "overrides": [

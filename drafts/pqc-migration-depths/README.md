@@ -1,5 +1,11 @@
 # Draft: PQC migration family depths
 
+> **Promoted, 25 October 2026.** The profiles, examples and decision record from this draft are
+> published with the consolidated baseline (decision 0025). See `docs/methodology/` for the
+> profiles and `docs/methodology/examples/` for the Keycloak records. The working notes that remain
+> here are kept for their reasoning. File paths in them refer to the draft as it was.
+
+
 Working drafts for decision 0022. Nothing here is published by the site.
 
 | File | Status |

@@ -29,17 +29,17 @@ nav: model
   <h2>Why this section exists</h2>
   <p>The questions that CBOMs are asked to answer are mostly questions about <em>use</em>, not about <em>inventory</em>. "Which algorithms does this product implement?" is an inventory question, and it is the easier one. "Which of our connections would still be readable if an adversary recorded them today?" is a question about where cryptography is applied, between whom, and under what negotiated terms. Migration planning, procurement conformance, and incident response all depend more on the second kind of question than on the first.</p>
   <p>Current CBOM standards answer the first question well. They provide objects for algorithms, keys, certificates, and protocols, with fields for their parameters. They provide no object for the use of those assets between two parties. As a result, facts that belong to a connection have to be attached to the nearest asset. This works while a product has one obvious connection. It becomes unreliable as soon as a product has more than one.</p>
-  <p>This has a direct effect on profiles. The example profile requires a product to declare its cryptographic interfaces and to include a management interface among them. That requirement means nothing unless "interface" has an agreed definition, unless it is clear that an interface is not the same thing as an algorithm, and unless a producer and a consumer will count the same set of interfaces when they read the same document. Product rule P2 is a statement about relationships, and it is checkable only because the terms below are fixed.</p>
-  <p>The terms are fixed in four steps. First, the three terms are defined. Second, the boundary between them is drawn by showing what is <em>not</em> a relationship. Third, worked examples test the assumptions that a simple TLS session makes easy to hold. Fourth, one case that the current model does not cover is recorded.</p>
+  <p>This has a direct effect on profiles. The example profile requires a product to declare its cryptographic interfaces and to include a management interface among them. That requirement means nothing unless "interface" has an agreed definition, unless it is clear that an interface is not the same thing as an algorithm or a port, and unless a producer and a consumer will count the same set of interfaces when they read the same document. Product rule P2 is a statement about relationships, and it is checkable only because the terms below are fixed.</p>
+  <p>The terms are fixed in five steps. First, the three terms are defined, together with what counts as one interface. Second, the boundary between them is drawn by showing what is <em>not</em> a relationship. Third, worked examples test the assumptions that a simple TLS session makes easy to hold. Fourth, the product record and the deployment record are set apart, and the join between them is defined. Fifth, one case that the current model does not cover is recorded.</p>
 
   <figure>
-    <svg viewBox="0 0 720 250" role="img" aria-label="Two endpoint boxes, a client browser and a server running nginx, joined by an edge labelled cryptographic relationship that branches down to key exchange, encryption and certificate assets" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="13">
+    <svg viewBox="0 0 720 250" role="img" aria-label="Two endpoint boxes, a client browser and a Keycloak server, joined by an edge labelled cryptographic relationship that branches down to key exchange, encryption and certificate assets" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="13">
       <rect x="24" y="70" width="170" height="70" rx="12" fill="#eef2f8" stroke="#c9d3e0"/>
       <text x="109" y="98" fill="#0284c7" font-size="11" font-weight="700" text-anchor="middle" font-family="monospace">ENDPOINT · client</text>
       <text x="109" y="120" fill="#1a2230" font-weight="600" text-anchor="middle">Browser</text>
       <rect x="526" y="70" width="170" height="70" rx="12" fill="#eef2f8" stroke="#c9d3e0"/>
       <text x="611" y="98" fill="#7c3aed" font-size="11" font-weight="700" text-anchor="middle" font-family="monospace">ENDPOINT · server</text>
-      <text x="611" y="120" fill="#1a2230" font-weight="600" text-anchor="middle">nginx</text>
+      <text x="611" y="120" fill="#1a2230" font-weight="600" text-anchor="middle">Keycloak</text>
       <line x1="194" y1="105" x2="526" y2="105" stroke="#2563eb" stroke-width="2"/>
       <polygon points="526,105 514,100 514,110" fill="#2563eb"/>
       <polygon points="194,105 206,100 206,110" fill="#2563eb"/>
@@ -61,21 +61,34 @@ nav: model
       </g>
       <text x="360" y="232" fill="#5b6472" text-anchor="middle" font-size="12">assets (nodes) are referenced by the relationship — they are not the relationship</text>
     </svg>
-    <figcaption>The security indicator presented by a browser (for example, TLS 1.3, X25519, AES-256-GCM, RSA) describes the relationship; the browser and nginx are the endpoints; each named algorithm is an asset.</figcaption>
+    <figcaption>The connection details a browser shows for Keycloak's HTTPS listener (for example, TLS 1.3, X25519, AES-256-GCM) describe the relationship. The browser and Keycloak are the endpoints. Each named algorithm, and the server certificate, is an asset.</figcaption>
   </figure>
 
   <h2>The three terms</h2>
   <table>
     <thead><tr><th>Term</th><th>Definition</th><th>In the example</th></tr></thead>
     <tbody>
-      <tr><td><strong>Cryptographic relationship</strong> (edge / interface)</td><td>The location at which cryptography is applied between parties. It is not itself a cryptographic asset.</td><td>The TLS 1.3 session; the SSH session.</td></tr>
-      <tr><td><strong>Endpoint</strong> (node)</td><td>A party to a relationship.</td><td><code>client</code> (browser or admin) and <code>server</code> (nginx or host).</td></tr>
-      <tr><td><strong>Cryptographic asset</strong></td><td>An algorithm, protocol, certificate, or key used by the relationship.</td><td>X25519, AES-256-GCM, the RSA certificate, OpenSSL.</td></tr>
+      <tr><td><strong>Cryptographic relationship</strong> (edge / interface)</td><td>The location at which cryptography is applied between parties. It is not itself a cryptographic asset.</td><td>The TLS 1.3 session on Keycloak's HTTPS listener; the OIDC token signature carried inside it.</td></tr>
+      <tr><td><strong>Endpoint</strong> (node)</td><td>A party to a relationship.</td><td><code>client</code> (browser) and <code>server</code> (Keycloak) for TLS; <code>issuer</code> (Keycloak) and <code>relying-party</code> (client application) for the token.</td></tr>
+      <tr><td><strong>Cryptographic asset</strong></td><td>An algorithm, protocol, certificate, or key used by the relationship.</td><td>X25519, AES-256-GCM, RS256, the server certificate, and OpenJDK 21, which implements the TLS layer.</td></tr>
     </tbody>
   </table>
 
   <h3>Why the term is "relationship"</h3>
   <p>Two other terms were considered and set aside. <em>Interface</em> reads naturally for a network connection between two systems. However, it is too narrow. It suggests two parties communicating at the same moment over a link, and several of the cases below do not fit that description. The profile keeps the word in the attribute names <code>interfaceType</code> and <code>interfaceId</code>. Those attributes apply only to the relationships that are interfaces. The word is not used as the general term. <em>Cryptographic context</em> conflicts with established usage, where a context is the runtime state held by a cipher implementation. <em>Cryptographic relationship</em> has no prior technical meaning in this field, and it describes what the thing is. For these reasons it is the settled term.</p>
+  <p>Where the methodology does say interface, it means a <strong>cryptographic interface</strong>. CycloneDX 2.0 has its own blueprint "interface", with types such as <code>rest</code> and <code>cli</code>, which describes a deployed system for threat analysis. That is a different concept. Where the two could be confused, the methodology writes "cryptographic interface".</p>
+
+  <h2>An interface is a logical boundary, not a port</h2>
+  <p>A cryptographic interface is a logical boundary at which cryptography is applied. It is not a port, a listener or a socket. Two layers of cryptography can protect traffic on one port, and each layer is then its own interface. The producer describes each layer in its own terms.</p>
+  <p>Keycloak shows the usual case. Its HTTPS listener on port 8443 carries signed OIDC tokens and SAML assertions:</p>
+  <ul>
+    <li>The TLS layer is one interface, with protocol <code>TLS</code>. Its key exchange comes from the JDK 21 in the container image, with X25519 first.</li>
+    <li>The OIDC token layer is another interface, with protocol <code>OIDC</code>. Its <code>authentication</code> is the token signature, RS256 by default. Its <code>keyExchange</code> is how a token encryption key would reach the recipient. Token encryption is off by default, so the value is <code>none</code>.</li>
+    <li>The SAML layer is a third interface, with protocol <code>SAML</code> and RSA-SHA256 signatures.</li>
+  </ul>
+  <p>The layers migrate on different timetables and depend on different standards. Keycloak's own TLS waits on the Java runtime (JEP 527). ML-DSA token signing is committed upstream (issue #43690), and it waits on the JOSE <code>AKP</code> key type, which is still an Internet-Draft. One entry for "port 8443" could not state both.</p>
+  <p>An application-layer interface counts as an interface when it applies cryptography of its own, or when anyone can reach it without transport protection. Keycloak's plaintext HTTP listener is reachable without protection, so it counts, and it declares <code>none</code> for every algorithm. Keycloak's health and metrics endpoints apply no cryptography of their own and ride the management listener, so the management listener's interface covers them. Without this rule, interface counts and the coverage statement would vary with how many services a producer chose to list. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0022-pqc-migration-family-depths.md">decision 0022</a> (K2 and K7).</p>
+  <p>In CycloneDX 2.0, an application-layer interface such as OIDC, SAML, an administrative API or plain HTTP is a component of <code>type: "service"</code>. CycloneDX's protocol types cover security protocols only, such as TLS, SSH and IPsec. The <a href="mapping-cyclonedx-spdx.md">mapping</a> records how a service is linked to the transport that carries it.</p>
 
   <h2>A fourth thing: what the cryptography is for</h2>
   <p>A relationship says <em>where</em> cryptography is applied and an asset says <em>what</em> is applied. Neither says what job the cryptography is doing. The job determines when the cryptography can change. A <strong>cryptographic purpose</strong> is that job: establishing a key, encrypting, proving identity, protecting a message from modification, signing something that must verify years later, protecting keys, deriving keys.</p>
@@ -91,7 +104,7 @@ nav: model
     <thead><tr><th>Node fact (a property of a thing)</th><th>Edge fact (a property of a use)</th></tr></thead>
     <tbody>
       <tr><td>The product supports AES-256-GCM.</td><td>This connection negotiated AES-256-GCM.</td></tr>
-      <tr><td>OpenSSL 3.4 is installed on the host.</td><td>This interface's key exchange is performed by OpenSSL 3.4.</td></tr>
+      <tr><td>OpenJDK 21 is present in the Keycloak container image.</td><td>OpenJDK 21 performs the key exchange on this interface.</td></tr>
       <tr><td>The certificate is signed with ECDSA P-384.</td><td>This session authenticates the server using that certificate.</td></tr>
       <tr><td>The device holds an ML-KEM implementation.</td><td>This link to the peer falls back to a classical group.</td></tr>
       <tr><td>The archive is encrypted with AES-256.</td><td>The key protecting the archive is wrapped with RSA-2048 and must survive the retention period.</td></tr>
@@ -104,6 +117,7 @@ nav: model
 
   <h3>1 · One apparent connection is several relationships</h3>
   <p>A browser connects to a service through a content delivery network or a load balancer. The user sees one padlock. There are at least two relationships, and the cryptography on each is chosen independently. It is common for the public leg to be modern while the leg behind it uses an older protocol version, or none at all, on the reasoning that the network is private.</p>
+  <p>The Keycloak deployment example has exactly this shape. The illustrative operator, Example Org, ends TLS at an nginx ingress with OpenSSL 3.5 at <code>sso.example.org</code>. The ingress forwards plain HTTP to Keycloak on port 8080, with <code>http-enabled=true</code>. That is the normal configuration behind a TLS-terminating proxy. The operator's configured record declares both legs, and the hop to Keycloak carries tokens and credentials in clear inside the cluster.</p>
   <figure>
     <svg viewBox="0 0 720 190" role="img" aria-label="Browser, CDN or proxy, and origin server in a row, with the first leg labelled TLS 1.3 and the second leg drawn dashed and labelled TLS 1.0 or none" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <rect x="16" y="70" width="150" height="54" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
@@ -186,31 +200,31 @@ nav: model
   </figure>
 
   <h3>4 · Relationships overlap on the same wire</h3>
-  <p>Transport security and message-level security protect different spans of the path. For example, a signed token travels inside a TLS session, and the token and the session do not share endpoints. Where a gateway terminates TLS, there are two transport relationships. One runs from client to gateway and the other from gateway to service. The signature relationship runs from the originator to the final recipient. It passes through the gateway untouched.</p>
-  <p>The overlap matters when a consumer asks what protects a given piece of data end to end. The answer differs for each layer. A model that records one relationship per connection cannot express that answer.</p>
+  <p>Transport security and message-level security protect different spans of the path. For example, a signed token travels inside a TLS session, and the token and the session do not share endpoints. In the Keycloak deployment example, Keycloak signs an OIDC token. The token crosses the plain HTTP hop to the ingress, and then a TLS session from the ingress to the client application. The signature relationship runs from Keycloak, the issuer, to the relying party that verifies the token. It passes through the ingress untouched.</p>
+  <p>The overlap matters when a consumer asks what protects a given piece of data end to end. The answer differs for each layer. On the hop to Keycloak, the token signature still protects the token's integrity, but nothing protects its confidentiality, because token encryption is off. A model that records one relationship per connection cannot express that answer.</p>
   <figure>
-    <svg viewBox="0 0 720 205" role="img" aria-label="Originator, gateway and service in a row, with a separate TLS relationship on each hop and a signature relationship bracketing the whole path from originator to service" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
+    <svg viewBox="0 0 720 205" role="img" aria-label="Keycloak, the ingress and the relying party in a row. The first hop is plain HTTP with no protection, the second hop is a TLS relationship, and a signature relationship brackets the whole path from Keycloak to the relying party" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <rect x="16" y="76" width="150" height="50" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
-      <text x="91" y="97" fill="#1a2230" text-anchor="middle" font-weight="600">Originator</text>
-      <text x="91" y="113" fill="#5b6472" text-anchor="middle" font-size="10.5">signs the token</text>
+      <text x="91" y="97" fill="#1a2230" text-anchor="middle" font-weight="600">Keycloak</text>
+      <text x="91" y="113" fill="#5b6472" text-anchor="middle" font-size="10.5">signs the token (issuer)</text>
       <rect x="285" y="76" width="150" height="50" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
-      <text x="360" y="97" fill="#1a2230" text-anchor="middle" font-weight="600">Gateway</text>
+      <text x="360" y="97" fill="#1a2230" text-anchor="middle" font-weight="600">Ingress</text>
       <text x="360" y="113" fill="#5b6472" text-anchor="middle" font-size="10.5">terminates TLS</text>
       <rect x="554" y="76" width="150" height="50" rx="10" fill="#eef2f8" stroke="#c9d3e0"/>
-      <text x="629" y="97" fill="#1a2230" text-anchor="middle" font-weight="600">Service</text>
+      <text x="629" y="97" fill="#1a2230" text-anchor="middle" font-weight="600">Relying party</text>
       <text x="629" y="113" fill="#5b6472" text-anchor="middle" font-size="10.5">verifies the token</text>
-      <line x1="166" y1="101" x2="285" y2="101" stroke="#0284c7" stroke-width="2"/>
+      <line x1="166" y1="101" x2="285" y2="101" stroke="#dc2626" stroke-width="2" stroke-dasharray="5 4"/>
       <line x1="435" y1="101" x2="554" y2="101" stroke="#0284c7" stroke-width="2"/>
-      <rect x="176" y="40" width="100" height="24" rx="12" fill="#e8f4fd" stroke="#0284c7"/>
-      <text x="226" y="56" fill="#0284c7" text-anchor="middle" font-size="10.5">TLS relationship</text>
+      <rect x="171" y="40" width="110" height="24" rx="12" fill="#fdeeee" stroke="#dc2626"/>
+      <text x="226" y="56" fill="#dc2626" text-anchor="middle" font-size="10.5">plain HTTP, no TLS</text>
       <rect x="444" y="40" width="100" height="24" rx="12" fill="#e8f4fd" stroke="#0284c7"/>
       <text x="494" y="56" fill="#0284c7" text-anchor="middle" font-size="10.5">TLS relationship</text>
       <path d="M91 140 L91 158 L629 158 L629 140" fill="none" stroke="#7c3aed" stroke-width="2"/>
-      <rect x="250" y="146" width="220" height="26" rx="13" fill="#f5eeff" stroke="#7c3aed"/>
-      <text x="360" y="163" fill="#7c3aed" text-anchor="middle" font-size="11">signature relationship, originator to service</text>
-      <text x="360" y="192" fill="#5b6472" text-anchor="middle" font-size="11">three relationships, two layers, different endpoint pairs</text>
+      <rect x="235" y="146" width="250" height="26" rx="13" fill="#f5eeff" stroke="#7c3aed"/>
+      <text x="360" y="163" fill="#7c3aed" text-anchor="middle" font-size="11">signature relationship, Keycloak to relying party</text>
+      <text x="360" y="192" fill="#5b6472" text-anchor="middle" font-size="11">two layers with different endpoint pairs; one hop has no transport protection</text>
     </svg>
-    <figcaption>Relationships are not a partition of the network path. They overlap, and each has its own endpoints and its own properties.</figcaption>
+    <figcaption>Relationships are not a partition of the network path. They overlap, and each has its own endpoints and its own properties. The deployment record declares the plain HTTP hop as an interface of its own, with <code>none</code> for every algorithm.</figcaption>
   </figure>
 
   <h3>5 · One asset, many relationships</h3>
@@ -249,6 +263,7 @@ nav: model
   <h3>6 · Capability is not the negotiated outcome</h3>
   <p>Two systems both implement a post-quantum key exchange. The session between them uses a classical group, because of a configuration setting, an intermediary that rejects the larger handshake, or a policy on one side. Both node records are accurate. The connection is nevertheless not quantum-safe.</p>
   <p>There is no node on which this fact can be stored. It belongs to the relationship, and it cannot be derived from either endpoint's inventory entry. This example gives the clearest reason to treat the relationship (the edge) as an object in its own right, rather than as an annotation on an asset.</p>
+  <p>The Keycloak deployment example records this case at its ingress. The configured record permits X25519MLKEM768 and X25519. The observed record, taken from 18 to 25 October 2026, shows that 29% of sessions still negotiated X25519 only. The readiness-gap policy classes this interface <code>enabled-not-negotiated</code>: the deployment permits the target, and the other endpoint or a fallback is the limit.</p>
   <figure>
     <svg viewBox="0 0 720 195" role="img" aria-label="Two endpoint boxes, each listing support for ML-KEM-768 and X25519, joined by a link labelled negotiated X25519 only and marked classical" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <rect x="16" y="56" width="180" height="76" rx="12" fill="#eefaf1" stroke="#15803d"/>
@@ -272,6 +287,7 @@ nav: model
   <h3>7 · The weaker party sets the upper limit</h3>
   <p>A modern gateway communicates with a controller installed twenty years ago. The gateway supports current algorithms. The controller supports what it shipped with and cannot be changed. The cryptography the relationship can use is fixed by the less capable end. No upgrade to the gateway changes it.</p>
   <p>Planning that works from a product inventory will schedule an upgrade that cannot deliver the intended result. Planning that works from relationships identifies the controller as the item requiring replacement, which is a different and usually more expensive piece of work.</p>
+  <p>The same limit appears in the Keycloak deployment example on a smaller scale. Keycloak's connection to the corporate directory is LDAPS, and the directory accepts TLS 1.2 only. Whatever Keycloak supports, the directory fixes the protocol version on that interface. The product record anticipates this: it declares the directory connection's algorithms <code>peer-defined</code>.</p>
   <figure>
     <svg viewBox="0 0 720 180" role="img" aria-label="A modern gateway supporting ML-KEM and AES-256-GCM linked to a legacy controller with a fixed algorithm set and no firmware path, the link labelled posture set by the weaker end" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="12">
       <rect x="16" y="58" width="190" height="74" rx="12" fill="#eefaf1" stroke="#15803d"/>
@@ -314,6 +330,45 @@ nav: model
     </svg>
     <figcaption>Not every relationship transfers protected data between two hosts. Some describe where key material is held and who may ask it to act.</figcaption>
   </figure>
+
+  <h2>Product records, deployment records and joins</h2>
+  <p>Several examples above turn on the difference between what a product can do and what a deployment does. The methodology keeps those two facts in different documents, written by different parties.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Record</th><th>Written by</th><th>Subject type</th><th>Stage</th><th>What a present-state value means</th><th>Subject identifier</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Product record</strong></td><td>the vendor</td><td><code>product</code></td><td><code>implemented</code></td><td>the product's default as shipped</td><td>a Package URL</td></tr>
+      <tr><td><strong>Configured deployment record</strong></td><td>the operator</td><td><code>deployment</code></td><td><code>configured</code></td><td>the set the deployment permits</td><td>a tag URI (RFC 4151)</td></tr>
+      <tr><td><strong>Observed deployment record</strong></td><td>the operator, or an assessor</td><td><code>deployment</code></td><td><code>observed</code></td><td>the set seen in the observation window</td><td>the same tag URI</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>One document has one subject and one stage. The records are <strong>joined, not merged</strong>. <a href="https://github.com/pkic/cbom/blob/main/decisions/0020-cbom-joined-to-vulnerability-statements.md">Decision 0020</a> first applied that principle to vulnerability statements, and <a href="https://github.com/pkic/cbom/blob/main/decisions/0025-baseline-consolidation.md">decision 0025</a> generalises it to records at different stages.</p>
+  <ul>
+    <li><strong>A deployment record cites the records it builds on.</strong> Each citation is an external reference of type <code>bom</code> with the property <code>pkic:profile:context = cited-document</code>, a BOM-Link (<code>urn:cdx:&lt;serial&gt;/&lt;version&gt;</code>) and a SHA-256 hash. The hash fixes which revision the operator cited.</li>
+    <li><strong>Each deployment interface names the interface it realises.</strong> The property <code>pkic:profile:correspondsTo</code> holds a BOM-Link to one interface in a cited record: <code>urn:cdx:&lt;serial&gt;/&lt;version&gt;#&lt;bom-ref&gt;</code>. Where the supplier of that part publishes no CBOM, the value is the literal <code>no-product-document</code>.</li>
+    <li><strong>Only implementation facts follow the join.</strong> A deployment interface inherits the implementing library (<code>implementationPurl</code>) from the interface it realises, when it does not state one itself. Present-state facts never follow the join, because each belongs to one stage.</li>
+    <li><strong>A missing cited record leaves a value open.</strong> If the evaluator is not given a cited record, it reports an inherited value as unresolved, not as failed.</li>
+  </ul>
+  <p>The Keycloak example follows the library through two joins. The observed record's database interface names the configured record's database interface, and that interface names the product record's database interface, which states the OpenJDK library. The configured record's ingress interface states <code>no-product-document</code>, because the ingress is not part of the Keycloak product.</p>
+  <p><strong>The readiness gap is computed from the join, never stored.</strong> The readiness-gap policy reads the three records, follows <code>correspondsTo</code>, and classes each interface and purpose (key establishment and entity authentication):</p>
+  <div style="overflow:auto">
+  <table>
+    <thead><tr><th>Class</th><th>Meaning</th><th>Who acts</th></tr></thead>
+    <tbody>
+      <tr><td><code>target-met</code></td><td>Every value observed (or, without an observation, configured) meets the target.</td><td>–</td></tr>
+      <tr><td><code>enabled-not-negotiated</code></td><td>The deployment permits the target, and at least one session still negotiated a classical value.</td><td>the other endpoint, or whoever controls the fallback path</td></tr>
+      <tr><td><code>capable-not-enabled</code></td><td>The product can reach the target, and the deployment does not permit it.</td><td>the operator, by configuration</td></tr>
+      <tr><td><code>capable</code></td><td>The product can reach the target. No deployment record was supplied, so nothing shows whether the target is enabled.</td><td>–</td></tr>
+      <tr><td><code>not-capable</code></td><td>The product cannot reach the target. The product record says what blocks it.</td><td>the supplier, or the operator by upgrading or replacing the product</td></tr>
+      <tr><td><code>unprotected</code></td><td>The interface applies no cryptography at all at the latest stage supplied. Its traffic is exposed whatever the product can do.</td><td>the operator</td></tr>
+      <tr><td><code>not-deployed</code></td><td>The product has the interface, and the deployment records do not.</td><td>–</td></tr>
+      <tr><td><code>not-applicable</code></td><td>No algorithm is applied for this purpose at this interface.</td><td>–</td></tr>
+      <tr><td><code>unknown</code></td><td>A stage needed to decide is missing, or declares the value unknown.</td><td>–</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>For the illustrative Keycloak deployment, evaluated on 25 October 2026, the ingress key establishment is <code>enabled-not-negotiated</code>. The plaintext proxy hop and the management port are <code>unprotected</code>. Token signing is <code>not-capable</code>: it is committed upstream and blocked by the JOSE standard (issue #43690). Keycloak's own TLS is <code>not-capable</code>: it is planned and blocked by the Java runtime (JEP 527). The product's HTTPS listener is <code>not-deployed</code>, because TLS ends at the ingress. The result names the policy version and digest, the evaluation date, and every record it read by SHA-256 digest. See <a href="policy-evaluation.html">Policy Evaluation</a>.</p>
 
   <h2>A known limitation: one-to-many relationships</h2>
   <p>Every example above is pairwise. Some cryptography is not. A broadcast or multicast group, a mobile air interface serving many receivers, and a group messaging session all apply cryptography among more than two parties at once, and the natural representation is a relationship with n endpoints rather than two.</p>
@@ -365,7 +420,7 @@ nav: model
   </table>
   </div>
   <p>The dimensions also indicate where a profile written for one sector will need rules that another does not. A profile concerned with data at rest has to address the retention period, which does not arise for a session. A profile concerned with signing has to address the population of verifiers, which has no counterpart in a transport profile. The same table appears in the profile specification at <a href="profile-interface-disclosure.md">profile-interface-disclosure.md</a>, where it defines the scope a profile applies to.</p>
-  <div class="banner">Neither CycloneDX nor SPDX currently provides an object that represents this relationship with its cryptographic meaning attached. The two formats fall short in different ways, and the difference affects how the model maps onto each. CycloneDX has cryptographic assets but no edge between endpoints. SPDX has a first-class <code>Relationship</code> element that can be addressed and annotated, but it has no cryptographic model to attach to that element. Both formats approximate the relationship by attaching relationship attributes to a protocol asset. This works for a single pairwise interface. It becomes increasingly awkward for the cases above. Providing such an object is the objective of the working group's first-class attributed-edge model. See <a href="challenges.html">Challenges</a> and <a href="formats.html">Formats</a>.</div>
+  <div class="banner">Neither CycloneDX nor SPDX currently provides an object that represents this relationship with its cryptographic meaning attached. The two formats fall short in different ways, and the difference affects how the model maps onto each. CycloneDX has cryptographic assets but no edge between endpoints. CycloneDX 2.0 adds a blueprint model with zones, boundaries and flows, but that model describes a deployed system for threat analysis. Its protocols are free text and its encryption is a boolean, so it does not represent a cryptographic interface. SPDX has a first-class <code>Relationship</code> element that can be addressed and annotated, but it has no cryptographic model to attach to that element. Both formats approximate the relationship by attaching relationship attributes to a protocol asset. This works for a single pairwise interface. It becomes increasingly awkward for the cases above. Providing such an object is the objective of the working group's first-class attributed-edge model. See <a href="challenges.html">Challenges</a> and <a href="formats.html">Formats</a>.</div>
 
   <div class="pagenav">
     <a href="lifecycle.html">← Lifecycle Data</a>

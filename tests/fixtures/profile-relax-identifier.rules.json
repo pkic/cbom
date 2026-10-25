@@ -1,5 +1,5 @@
 {
-  "$comment": "TEST FIXTURE \u2014 deliberately invalid. Replaces the inherited requirement that implementationPurl be a pkg: Package URL with a bare presence check, so free text would satisfy it. This is the relaxation that matters most in practice, because identifier form is what makes a record correlatable across suppliers. Not a real profile; do not copy.",
+  "$comment": "TEST FIXTURE — deliberately invalid. Replaces the inherited requirement that implementationPurl be a pkg: Package URL with a bare presence check, so free text would satisfy it. This is the relaxation that matters most in practice, because identifier form is what makes a record correlatable across suppliers. Not a real profile; do not copy.",
   "profileId": "pkic.test.relax-identifier",
   "profileTag": "relax-identifier",
   "title": "Relaxing an identifier form (test fixture)",
@@ -14,7 +14,7 @@
   },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.7",
+    "version": "0.9",
     "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
   },
   "appliesTo": {
@@ -30,7 +30,6 @@
       "interface"
     ],
     "lifecycleStages": [
-      "intended",
       "implemented",
       "configured",
       "observed"

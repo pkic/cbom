@@ -2,7 +2,7 @@
 """
 Profile well-formedness checker.
 
-Checks a machine-readable profile against requirements C1 to C17 of the
+Checks a machine-readable profile against requirements C1 to C18 of the
 Conformance section, which state what makes a profile well-formed under this
 methodology. This is the second of the three conformance targets: a CBOM
 document is checked against a profile by validate_cbom.py, and a profile is
@@ -25,6 +25,7 @@ C14 MUST    identifier schemes are declared and match what the rules reference
 C15 MUST    carries a profile tag, unique along its inheritance chain
 C16 MUST    rule ids are local and carry the kind letter of the section they sit in
 C17 MUST    every rule can actually pass and fail a document
+C18 MUST    every reference rule names a defined context kind carried by real reference types
 
 Rules are checked as DECLARED in the file under test. A derived profile is not
 re-checked against its base's rules, because the base is checkable on its own;
@@ -67,7 +68,7 @@ CAMEL = re.compile(r"^[a-z][A-Za-z0-9]*$")
 TAG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 RULE_ID = re.compile(r"^[A-Z][0-9]+$")
 MEMBER_ID = re.compile(r"^[A-Z][0-9]+\.[0-9]+$")
-KIND_LETTER = {"productRules": "P", "interfaceRules": "I", "groupRules": "G"}
+KIND_LETTER = {"productRules": "P", "interfaceRules": "I", "groupRules": "G", "referenceRules": "R"}
 
 # C6. Substrings that indicate a name is asserting a conclusion rather than
 # disclosing a fact. The criteria behind each of these change over time, so the
@@ -180,7 +181,10 @@ def c3_no_instances(prof, vocab_source, f):
     them. Checking a derived profile against its own declarations alone would
     reject a sector profile that requires an interface type the base defines."""
     problems = []
-    vocab = vocabularies(vocab_source)
+    # Methodology-level vocabularies count as declared: a guard such as
+    # "required when the stage is observed" names a value the methodology
+    # defines for every profile, not one a profile declares for itself.
+    vocab = set(vocabularies(vocab_source)) | set(LIFECYCLE_STAGES) | set(SUBJECT_TYPES)
     iface_types = set(vocab_source.get("interfaceTypeVocabulary", []))
 
     for r in declared_rules(prof):
@@ -368,12 +372,20 @@ def c11_scope(prof, scope_source, evidence_reliable, f):
 
     problems = []
 
-    subject = scope.get("subjectType")
-    if not subject:
-        problems.append("no subjectType")
-    elif subject not in SUBJECT_TYPES:
-        problems.append("subjectType %r is not one of %s"
-                        % (subject, "/".join(SUBJECT_TYPES)))
+    # 'subjectTypes' is a set, narrowed by a derived profile like
+    # lifecycleStages; the older single 'subjectType' is read as a set of one.
+    subjects = scope.get("subjectTypes", scope.get("subjectType"))
+    if isinstance(subjects, str):
+        subjects = [subjects]
+    if not subjects:
+        problems.append("no subjectTypes")
+        subject = "?"
+    else:
+        wrong = [x for x in subjects if x not in SUBJECT_TYPES]
+        if wrong:
+            problems.append("subjectTypes contains %s, not in %s"
+                            % (", ".join(repr(x) for x in wrong), "/".join(SUBJECT_TYPES)))
+        subject = "/".join(subjects)
 
     orientation = scope.get("orientation")
     if not orientation:
@@ -847,7 +859,68 @@ def check(path):
     c15_profile_tag(path, prof, f)
     c16_rule_ids(prof, f)
     c17_evaluable(prof, vocab_source if resolved else None, f)
+    c18_reference_rules(prof, vocab_source, f)
     return prof, f
+
+
+# The external reference types of CycloneDX 2.0 (pinned schema). A context kind
+# names which of these may carry it; a name outside the list could never be
+# satisfied by a valid document.
+CYCLONEDX_REFERENCE_TYPES = (
+    "vcs", "issue-tracker", "website", "advisories", "bom", "mailing-list", "social", "chat",
+    "documentation", "support", "source-distribution", "distribution", "distribution-intake",
+    "license", "build-meta", "build-system", "release-notes", "security-contact", "model-card",
+    "log", "configuration", "evidence", "formulation", "attestation", "threat-model",
+    "adversary-model", "risk-assessment", "hazard-analysis", "safety-case",
+    "vulnerability-assertion", "exploitability-statement", "pentest-report",
+    "static-analysis-report", "dynamic-analysis-report", "runtime-analysis-report",
+    "test-report", "incident-report", "component-analysis-report", "maturity-report",
+    "certification-report", "codified-infrastructure", "quality-metrics", "poam", "perspective",
+    "electronic-signature", "digital-signature", "rfc-9116", "patent", "patent-family",
+    "patent-assertion", "citation", "swid-tag", "gs1-digital-link", "other")
+REFERENCE_FORMS = ("document", "endpoint", "document-or-endpoint")
+
+
+def c18_reference_rules(prof, resolved, f):
+    """C18. A reference rule points at a defined kind of context, carried by real types.
+
+    A reference rule requires a pointer to an artefact the document does not
+    carry. The kind is defined once, in contextKinds, with the carrier types that
+    can express it and whether the target is a fixed document or an endpoint.
+    A kind whose carrier list names no real reference type could never be
+    satisfied by a valid document, which is a rule that can only fail."""
+    rules = prof.get("referenceRules", [])
+    kinds = (resolved or prof).get("contextKinds") or {}
+    if not rules and not prof.get("contextKinds"):
+        f.add("C18", "MUST", True, "no reference rules declared")
+        return
+    problems = []
+    for name, kind in (prof.get("contextKinds") or {}).items():
+        carriers = kind.get("carrier") or []
+        if not carriers:
+            problems.append("context kind %r names no carrier type" % name)
+        bad = [c for c in carriers if c not in CYCLONEDX_REFERENCE_TYPES]
+        if bad:
+            problems.append("context kind %r names %s, not CycloneDX reference types"
+                            % (name, ", ".join(bad)))
+        if kind.get("form") not in REFERENCE_FORMS:
+            problems.append("context kind %r has form %r, not one of %s"
+                            % (name, kind.get("form"), "/".join(REFERENCE_FORMS)))
+    for r in rules:
+        rid = r.get("id", "?")
+        if r.get("context") not in kinds:
+            problems.append("%s names the context kind %r, which is not defined" % (rid, r.get("context")))
+        if r.get("at") not in ("document", "interface"):
+            problems.append("%s sits at %r, not on the document or an interface" % (rid, r.get("at")))
+        if r.get("level") not in ("MUST", "SHOULD", "MAY"):
+            problems.append("%s has no BCP 14 level" % rid)
+        if "withholdable" not in r:
+            problems.append("%s does not say whether it is withholdable" % rid)
+    if problems:
+        f.add("C18", "MUST", False, "; ".join(problems))
+    else:
+        f.add("C18", "MUST", True, "%d reference rule(s), %d context kind(s) defined here"
+              % (len(rules), len(prof.get("contextKinds") or {})))
 
 
 def main(argv):

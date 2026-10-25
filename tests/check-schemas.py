@@ -39,8 +39,12 @@ def main():
     failures = 0
     profile_schema = load(os.path.join(M, "profile.schema.json"))
     claim_schema = load(os.path.join(M, "claim.schema.json"))
+    policy_schema = load(os.path.join(M, "policy.schema.json"))
+    result_schema = load(os.path.join(M, "policy-result.schema.json"))
     for name, schema in (("profile.schema.json", profile_schema),
-                         ("claim.schema.json", claim_schema)):
+                         ("claim.schema.json", claim_schema),
+                         ("policy.schema.json", policy_schema),
+                         ("policy-result.schema.json", result_schema)):
         try:
             jsonschema.Draft7Validator.check_schema(schema)
             print("  ok   %s is a valid schema" % name)
@@ -62,10 +66,13 @@ def main():
                 print("     %s %s" % (list(e.path), e.message[:160]))
 
     # The published profiles and the third-level fixture must validate.
-    for f in ("profile-interface-enumeration.rules.json",
-              "profile-interface-disclosure.rules.json",
-              "profile-pqc-migration.rules.json"):
-        check(os.path.join(M, f), profile_schema, "%s validates" % f)
+    import glob
+    for path in sorted(glob.glob(os.path.join(M, "profile-*.rules.json"))):
+        check(path, profile_schema, "%s validates" % os.path.basename(path))
+    for path in sorted(glob.glob(os.path.join(M, "policies", "*.policy.json"))):
+        check(path, policy_schema, "%s validates" % os.path.basename(path))
+    for path in sorted(glob.glob(os.path.join(M, "examples", "results", "*.json"))):
+        check(path, result_schema, "%s validates" % os.path.basename(path))
     check(os.path.join(FIX, "profile-l3-settlement.rules.json"), profile_schema,
           "a third-level profile validates")
 

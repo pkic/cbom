@@ -1,0 +1,359 @@
+{
+  "resultFormat": "pkic.cbom.policy-result",
+  "resultFormatVersion": "0.1",
+  "policy": {
+    "policyId": "pkic.example.policy.algorithm-transition",
+    "version": "0.1",
+    "file": "policy-algorithm-transition.policy.json",
+    "digest": {
+      "alg": "SHA-256",
+      "value": "445ca075159a93dec36496a9ffc98061f25b3a88433a216c1b14cdadea84afdc"
+    }
+  },
+  "evaluationDate": "2026-10-25",
+  "documents": [
+    {
+      "file": "cbom-keycloak-deployment-observed.cdx.json",
+      "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-7263740b5e01",
+      "version": 1,
+      "subject": "tag:example.org,2026:deployment/sso-prod",
+      "subjectType": "deployment",
+      "stage": "observed",
+      "digest": {
+        "alg": "SHA-256",
+        "value": "7bea1c798a40a01464f58952a3ba344b80559953d6938ee8c3c3259c1211e0f5"
+      }
+    }
+  ],
+  "summary": {
+    "acceptable": 18,
+    "not-applicable": 13
+  },
+  "findings": [
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:ing-tls",
+      "attribute": "keyExchange",
+      "value": "X25519MLKEM768",
+      "family": "ML-KEM",
+      "securityStrength": null,
+      "quantumVulnerable": false,
+      "status": "acceptable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:ing-tls",
+      "attribute": "keyExchange",
+      "value": "X25519",
+      "family": "EC",
+      "securityStrength": 128,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "disallowed",
+        "after": "2035-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:ing-tls",
+      "attribute": "authentication",
+      "value": "ECDSA-P256-SHA256",
+      "family": "EC",
+      "securityStrength": 128,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "disallowed",
+        "after": "2035-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:ing-tls",
+      "attribute": "encryption",
+      "value": "AES-256-GCM",
+      "family": "symmetric",
+      "securityStrength": null,
+      "quantumVulnerable": false,
+      "status": "acceptable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:ing-tls",
+      "attribute": "encryption",
+      "value": "AES-128-GCM",
+      "family": "symmetric",
+      "securityStrength": null,
+      "quantumVulnerable": false,
+      "status": "acceptable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:int-db",
+      "attribute": "keyExchange",
+      "value": "X25519",
+      "family": "EC",
+      "securityStrength": 128,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "disallowed",
+        "after": "2035-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:int-db",
+      "attribute": "authentication",
+      "value": "RSA-2048",
+      "family": "RSA",
+      "securityStrength": 112,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "deprecated",
+        "after": "2030-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:int-db",
+      "attribute": "encryption",
+      "value": "AES-256-GCM",
+      "family": "symmetric",
+      "securityStrength": null,
+      "quantumVulnerable": false,
+      "status": "acceptable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:int-ldap",
+      "attribute": "keyExchange",
+      "value": "secp384r1",
+      "family": "EC",
+      "securityStrength": 192,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "disallowed",
+        "after": "2035-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:int-ldap",
+      "attribute": "authentication",
+      "value": "RSA-2048",
+      "family": "RSA",
+      "securityStrength": 112,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "deprecated",
+        "after": "2030-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:int-ldap",
+      "attribute": "encryption",
+      "value": "AES-256-GCM",
+      "family": "symmetric",
+      "securityStrength": null,
+      "quantumVulnerable": false,
+      "status": "acceptable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:int-cache",
+      "attribute": "keyExchange",
+      "value": "X25519",
+      "family": "EC",
+      "securityStrength": 128,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "disallowed",
+        "after": "2035-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:int-cache",
+      "attribute": "authentication",
+      "value": "RSA-2048",
+      "family": "RSA",
+      "securityStrength": 112,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "deprecated",
+        "after": "2030-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "crypto:protocol:int-cache",
+      "attribute": "encryption",
+      "value": "AES-256-GCM",
+      "family": "symmetric",
+      "securityStrength": null,
+      "quantumVulnerable": false,
+      "status": "acceptable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:svc-http",
+      "attribute": "keyExchange",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:svc-http",
+      "attribute": "authentication",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:svc-http",
+      "attribute": "encryption",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:mgmt-health",
+      "attribute": "keyExchange",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:mgmt-health",
+      "attribute": "authentication",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:mgmt-health",
+      "attribute": "encryption",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:svc-oidc",
+      "attribute": "keyExchange",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:svc-oidc",
+      "attribute": "authentication",
+      "value": "ES256",
+      "family": "EC",
+      "securityStrength": 128,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "disallowed",
+        "after": "2035-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:svc-oidc",
+      "attribute": "authentication",
+      "value": "RS256",
+      "family": "RSA",
+      "securityStrength": 112,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "deprecated",
+        "after": "2030-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:svc-oidc",
+      "attribute": "encryption",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:svc-saml",
+      "attribute": "keyExchange",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:svc-saml",
+      "attribute": "authentication",
+      "value": "RSA-SHA256",
+      "family": "RSA",
+      "securityStrength": 112,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "deprecated",
+        "after": "2030-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:svc-saml",
+      "attribute": "encryption",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:mgmt-admin",
+      "attribute": "keyExchange",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:mgmt-admin",
+      "attribute": "authentication",
+      "value": "RS256",
+      "family": "RSA",
+      "securityStrength": 112,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "deprecated",
+        "after": "2030-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:mgmt-admin",
+      "attribute": "encryption",
+      "value": "none",
+      "status": "not-applicable"
+    },
+    {
+      "document": "cbom-keycloak-deployment-observed.cdx.json",
+      "interface": "service:sto-realm-keys",
+      "attribute": "encryption",
+      "value": "none",
+      "status": "not-applicable"
+    }
+  ],
+  "notAsserted": [
+    "that the disclosed values are true; the policy was applied to what the CBOMs state",
+    "anything about interfaces or algorithms the CBOMs do not disclose",
+    "that the policy is right; it is an example, and its source should be checked",
+    "anything after the evaluation date; the same facts give a different result under a later date or policy version"
+  ]
+}

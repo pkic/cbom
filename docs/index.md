@@ -66,9 +66,11 @@ title: Overview
     <div class="lead-columns">
       <p>
         The <a href="{{ '/methodology/' | relative_url }}">methodology documentation</a> sets out the
-        approach in full and applies it to an ordinary example: an <strong>nginx</strong> web server,
-        its CBOM expressed in CycloneDX 1.7, checked against a small product-independent profile.
-        One CBOM conforms and one does not, and you can run the check yourself.
+        approach in full and applies it to one real product: the <strong>Keycloak 26.7.3</strong>
+        identity server. The vendor's product record and an illustrative operator's deployment
+        records are expressed in CycloneDX 2.0 and checked against a family of small,
+        product-independent profiles. Some records conform and some do not, and you can run the
+        check yourself.
       </p>
       <p>
         It covers the vocabulary the methodology rests on, how a profile is written and validated,
@@ -94,15 +96,16 @@ title: Overview
       <span class="card-kicker">Working draft</span>
       <h3>Methodology</h3>
       <p>The deliverable itself — profiles, the relationship model, format mappings and
-         governance — with a worked nginx example and a conformance check you can run.</p>
+         governance — with a worked Keycloak example and a conformance check you can run.</p>
       <span class="card-cta">Read the methodology &#8594;</span>
     </a>
     <a class="feature-card" href="{{ '/use-cases/' | relative_url }}">
-      <span class="card-kicker">1 developed · 3 drafted</span>
+      <span class="card-kicker">3 worked · 2 drafted</span>
       <h3>Use cases</h3>
       <p>Every purpose a profile has been proposed for, in four groups: disclosure, change
-         planning, operation and assurance. PQC migration on Keycloak is developed in full; procurement, IoT device estates
-         and substation automation are drafted; the rest are described or held as placeholders.</p>
+         planning, operation and assurance. PQC migration, procurement and deployment disclosure are worked
+         on Keycloak with published profiles; IoT device estates and substation automation are drafted;
+         the rest are described or held as placeholders.</p>
       <span class="card-cta">See the use cases &#8594;</span>
     </a>
     <a class="feature-card" href="{{ '/training/' | relative_url }}">

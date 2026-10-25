@@ -24,21 +24,21 @@ nav: uc-index
 <main>
   <div class="crumb">USE CASES</div>
   <h1>Use cases</h1>
-  <p class="lead">A CBOM profile is written for someone who has a decision to make. A use case names that person and that decision: a buyer comparing tenders, a responder tracing an advisory, a grid operator planning a migration. This section collects the use cases the working group has identified. The most developed ones are taken further: each is turned into a profile, the profile is applied to a real product, and the resulting documents can be checked against it.</p>
+  <p class="lead">A CBOM profile is written for someone who has a decision to make. A use case names that person and that decision: a buyer comparing tenders, a responder tracing an advisory, a grid operator planning a migration. The use cases the working group has identified are collected here. The most developed ones are taken further: each is turned into a profile, the profile is applied to a real product, and the resulting documents can be checked against it.</p>
 
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Kind of page</th><th>What it gives you</th></tr></thead>
     <tbody>
-      <tr><td><strong>Group pages</strong></td><td>What the use cases in a group have in common, and a description of each: <a href="disclosure.html">Disclosure</a>, <a href="change-planning.html">Change planning</a></td></tr>
-      <tr><td><strong>Worked examples</strong></td><td>One use case taken through to a profile, applied to a real product, with a document that conforms and one that does not. The only complete one is <a href="pqc-migration.html">PQC migration</a>, applied to Keycloak</td></tr>
+      <tr><td><strong>Group pages</strong></td><td>What the use cases in a group have in common, and a description of each: <a href="disclosure.html">Disclosure</a>, <a href="change-planning.html">Change planning</a>, <a href="operation.html">Operation</a>, <a href="assurance.html">Assurance</a></td></tr>
+      <tr><td><strong>Worked examples</strong></td><td>One use case taken through to a profile, applied to a real product, with a document that conforms and one that does not. Three are complete, and all three are applied to Keycloak 26.7.3: <a href="pqc-migration.html">PQC migration</a>, <a href="procurement.html">Procurement</a> and the deployment disclosure profile in <a href="operation.html">Operation</a></td></tr>
       <tr><td><strong>Writing a use case</strong></td><td><a href="proposing.html">How to propose a use case</a>, and the <a href="template.html">template</a> a worked example follows</td></tr>
     </tbody>
   </table>
   </div>
 
   <h2>Use case groups</h2>
-  <p>Use cases are split into groups. A group clusters use cases that share a common goal and need similar information in the CBOM. There are currently two groups. In <a href="disclosure.html">Disclosure</a>, the goal is to know what cryptography a product uses. In <a href="change-planning.html">Change planning</a>, the goal is to decide how to change it. The table below compares the two groups. Two further groups, <a href="operation.html">Operation</a> and <a href="assurance.html">Assurance</a>, are proposed but not yet settled.</p>
+  <p>Use cases are split into groups. A group clusters use cases that share a common goal and need similar information in the CBOM. There are currently two groups. In <a href="disclosure.html">Disclosure</a>, the goal is to know what cryptography a product uses. In <a href="change-planning.html">Change planning</a>, the goal is to decide how to change it. The table below compares the two groups. Two further groups, <a href="operation.html">Operation</a> and <a href="assurance.html">Assurance</a>, are proposed but not yet settled. The Operation group already has its first profile, deployment disclosure v0.1.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th style="width:50%"><a href="disclosure.html">Disclosure</a>: know what a product uses</th><th style="width:50%"><a href="change-planning.html">Change planning</a>: decide how to change it</th></tr></thead>
@@ -65,13 +65,14 @@ nav: uc-index
   <table>
     <thead><tr><th>Use case</th><th>Who decides, and what</th><th>Group</th><th>Status</th><th>Worked example</th></tr></thead>
     <tbody>
-      <tr><td><a href="disclosure.html#procurement">Procurement and tender conformance</a></td><td>A buyer: whether a tender's cryptographic disclosure is complete enough to compare and hold the supplier to</td><td>Disclosure</td><td>Draft worked example</td><td><a href="procurement.html">Read</a></td></tr>
+      <tr><td><a href="disclosure.html#procurement">Procurement and tender conformance</a></td><td>A buyer: whether a tender's cryptographic disclosure is complete enough to compare and hold the supplier to</td><td>Disclosure</td><td>Worked example</td><td><a href="procurement.html">Read</a></td></tr>
       <tr><td><a href="disclosure.html#supply-chain">Supply-chain transparency</a></td><td>A supplier: how to disclose once to every customer</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
       <tr><td><a href="disclosure.html#vulnerability">Vulnerability management and incident response</a></td><td>A responder: which services a published advisory reaches</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
       <tr><td><a href="disclosure.html#compliance">Regulatory and compliance reporting</a></td><td>An auditor or regulator: whether a position meets a framework</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
       <tr><td><a href="disclosure.html#due-diligence">Mergers and third-party due diligence</a></td><td>An acquirer: where the cryptographic risk sits in an estate it cannot inspect</td><td>Disclosure</td><td>Described</td><td>—</td></tr>
       <tr><td><a href="disclosure.html#managed-service">Managed and cloud service disclosure</a></td><td>A customer: whether to rely on a service it does not run</td><td>Disclosure</td><td>Proposed</td><td>—</td></tr>
       <tr><td><a href="disclosure.html#service-assurance">Service assurance</a></td><td>An assurance team: which customer services a weakness or a change reaches</td><td>Disclosure</td><td>Proposed</td><td>—</td></tr>
+      <tr><td><a href="operation.html">Deployment disclosure</a></td><td>An operator: which published weakness affects each interface of a deployment, and where the deployment falls short of what its products can do</td><td>Operation</td><td>Worked example</td><td><a href="operation.html">Read</a></td></tr>
       <tr><td><a href="change-planning.html#pqc-readiness">PQC migration</a></td><td>A migration lead: which interfaces to migrate, in what order, at what cost</td><td>Change planning</td><td>Worked example</td><td><a href="pqc-migration.html">Read</a></td></tr>
       <tr><td><a href="change-planning.html#iot">IoT device estate</a></td><td>A fleet operator: for each device model, update, replace, shield or accept</td><td>Change planning</td><td>Draft worked example</td><td><a href="iot.html">Read</a></td></tr>
       <tr><td><a href="change-planning.html#substation">Substation automation (OT)</a></td><td>A grid operator: for each communication path, migrate, shield or replace</td><td>Change planning</td><td>Draft worked example</td><td><a href="substation.html">Read</a></td></tr>
@@ -88,13 +89,13 @@ nav: uc-index
   <h2 id="not-use-cases">What is not a use case</h2>
   <p>Two things are often suggested as use cases. Both are ways of applying a profile instead.</p>
   <ul>
-    <li id="ci-gate"><strong>Continuous integration quality gate.</strong> A pipeline fails a build when a CBOM does not conform. Any profile can be applied this way. What the gate needs is a validator that returns a usable exit status and report. This is covered in <a href="../methodology/conformance.html">Conformance</a> and the <a href="../methodology/demo.html">Demo</a>.</li>
+    <li id="ci-gate"><strong>Continuous integration quality gate.</strong> A pipeline fails a build when a CBOM does not conform. Any profile can be applied this way. What the gate needs is a validator that returns a usable exit status and report. The reference validator, <code>validate_cbom.py</code>, exits with 0 when a document conforms and 1 when it does not conform. A gate must not treat every non-zero code as a failure: exit code 4 means the document was refused on its carrier version and never assessed. This is covered in <a href="../methodology/conformance.html">Conformance</a> and the <a href="../methodology/demo.html">Demo</a>.</li>
     <li><strong>Change impact between versions.</strong> Comparing two CBOMs of the same product to see what changed. This is a comparison between two documents. It is covered in <a href="../methodology/versioning.html">Versioning</a>.</li>
   </ul>
 
   <h2>How this section relates to the methodology</h2>
-  <p>The <a href="../methodology/">methodology</a> is the working group's deliverable. It says how to define a profile, and <a href="../methodology/use-cases.html">Starting from a use case</a> explains why every profile begins with a consumer and a decision. The methodology illustrates its concepts with a small nginx example. It does not list any use cases. Everything about particular use cases, including the worked examples, is in this section.</p>
-  <div class="banner warn">The worked examples use the draft profiles of decision 0022 (interface disclosure baseline v0.8, PQC migration v0.7 and its extended depth, a more detailed level of the same profile). The methodology still describes the published versions (v0.7 and v0.6). The methodology and the worked examples will match once the drafts are adopted.</div>
+  <p>The <a href="../methodology/">methodology</a> is the working group's deliverable. It says how to define a profile, and <a href="../methodology/use-cases.html">Starting from a use case</a> explains why every profile begins with a consumer and a decision. The methodology illustrates its concepts with the Keycloak 26.7.3 example. It does not list any use cases. Everything about particular use cases, including the worked examples, is in the Use Cases section.</p>
+  <div class="banner">The methodology and the worked examples use the same published profiles: interface enumeration v0.3, the interface disclosure baseline v0.9, deployment disclosure v0.1, PQC migration v0.8, its extended depth v0.1 (a more detailed level of the same profile) and procurement v0.1. Decision 0022 set the depths of the PQC migration family. Decision 0025 lists every choice the consolidated baseline made provisionally. The rules files and the Keycloak examples are under <a href="../methodology/files.html">Files</a>.</div>
 
   <div class="pagenav">
     <span></span>
