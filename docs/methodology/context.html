@@ -90,11 +90,11 @@ nav: context
   <table>
     <thead><tr><th>Kind</th><th>Rule</th><th>Requirement</th><th>Form</th><th>Carrier types</th><th>Keycloak value</th></tr></thead>
     <tbody>
-      <tr><td><code>sbom</code></td><td><code>interface-disclosure#R1</code></td><td>MUST, product</td><td>document, hash required</td><td><code>bom</code></td><td>Product record: the companion SBOM of the same image, <code>urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1</code> with a SHA-256 hash</td></tr>
-      <tr><td><code>vulnerability-statements</code></td><td><code>interface-disclosure#R2</code></td><td>MUST, product; or a stated absence</td><td>document (with hash) or endpoint (with access protocol)</td><td><code>vulnerability-assertion</code>, <code>exploitability-statement</code></td><td>Product record: stated absence <code>not-published</code>. Upstream Keycloak publishes no VEX.</td></tr>
+      <tr><td><code>sbom</code></td><td><code>interface-disclosure#R1</code></td><td>MUST, product</td><td>document, hash required</td><td><code>bom</code></td><td>Product record: <code>examples/context/keycloak-26.7.3-sbom.cdx.json</code>, by BOM-Link <code>urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1</code> and SHA-256. Each library also points to its own entry in the SBOM.</td></tr>
+      <tr><td><code>vulnerability-statements</code></td><td><code>interface-disclosure#R2</code></td><td>MUST, product; or a stated absence</td><td>document (with hash) or endpoint (with access protocol)</td><td><code>vulnerability-assertion</code>, <code>exploitability-statement</code></td><td>Product record: <code>examples/context/keycloak-26.7.3-vex.cdx.json</code>, by BOM-Link and SHA-256, access protocol <code>vex-document</code>. Illustrative: upstream Keycloak publishes no VEX, so a real record states <code>not-published</code>, as <code>cbom-keycloak-product-disclosure-states.cdx.json</code> does.</td></tr>
       <tr><td><code>advisories</code></td><td><code>interface-disclosure#R3</code></td><td>SHOULD, product</td><td>endpoint: <code>web-page</code>, <code>csaf-provider</code>, <code>osv-api</code>, <code>ghsa-api</code></td><td><code>advisories</code></td><td>Product record: <code>https://github.com/keycloak/keycloak/security/advisories</code> (<code>web-page</code>) and <code>https://api.osv.dev/v1/query</code> (<code>osv-api</code>)</td></tr>
       <tr><td><code>security-contact</code></td><td><code>interface-disclosure#R4</code></td><td>SHOULD, product</td><td>endpoint</td><td><code>security-contact</code>, <code>rfc-9116</code></td><td>Product record: <code>https://github.com/keycloak/keycloak/security/policy</code> (<code>web-page</code>)</td></tr>
-      <tr><td><code>configuration-guidance</code></td><td><code>interface-disclosure#R5</code></td><td>MUST on an interface whenever I3, I4 or I5 is <code>deployment-defined</code></td><td>endpoint</td><td><code>documentation</code>, <code>configuration</code></td><td>Product record: <code>https://www.keycloak.org/server/enabletls</code> on the HTTPS listener, and <code>https://www.keycloak.org/server/management-interface</code> on the management listener</td></tr>
+      <tr><td><code>configuration-guidance</code></td><td><code>interface-disclosure#R5</code></td><td>MUST on an interface whenever I3, I4 or I5 is <code>deployment-defined</code></td><td>document or endpoint</td><td><code>documentation</code>, <code>configuration</code></td><td>Product record: <code>https://www.keycloak.org/server/enabletls</code> on the HTTPS listener, and <code>https://www.keycloak.org/server/management-interface</code> on the management listener</td></tr>
       <tr><td><code>design-intent</code></td><td><code>interface-disclosure#R6</code></td><td>MAY</td><td>document or endpoint</td><td><code>threat-model</code>, <code>adversary-model</code>, <code>documentation</code></td><td>None. The validator reports a warning.</td></tr>
       <tr><td><code>cited-document</code></td><td><code>deployment-disclosure#P1</code></td><td>MUST, deployment</td><td>document: BOM-Link and SHA-256 hash</td><td><code>bom</code></td><td>Configured record cites the product record. Observed record cites the configured record and the product record.</td></tr>
       <tr><td><code>configuration-source</code></td><td><code>deployment-disclosure#R1</code></td><td>MUST at <code>configured</code></td><td>document or endpoint</td><td><code>configuration</code>, <code>codified-infrastructure</code>, <code>vcs</code></td><td>Configured record: <code>https://git.example.org/platform/sso-config/-/commit/4f2a9c1e7b</code></td></tr>
@@ -102,6 +102,7 @@ nav: context
       <tr><td><code>data-register</code></td><td><code>deployment-disclosure#R3</code></td><td>SHOULD; withholdable</td><td>document or endpoint</td><td><code>risk-assessment</code>, <code>other</code></td><td>Configured and observed records: <code>https://grc.example.org/registers/data/sso-prod</code>. The register holds data classification and confidentiality lifetime per interface, which decide harvest-now-decrypt-later exposure (Q36, Q37, Q45). See <a href="data-exposure.html#data-register">Data Exposure</a>.</td></tr>
       <tr><td><code>issuer-policy</code></td><td><code>deployment-disclosure#R4</code></td><td>MAY</td><td>endpoint</td><td><code>documentation</code></td><td>Configured record: <code>https://pki.example.org/cps</code>, the practice statement of the internal CA that issues the ingress, database and directory certificates</td></tr>
       <tr><td><code>support-lifecycle</code></td><td><code>pqc-migration#R1</code></td><td>SHOULD; or a stated absence</td><td>endpoint</td><td><code>support</code>, <code>release-notes</code>, <code>documentation</code></td><td>Product record: stated absence <code>not-published</code></td></tr>
+      <tr><td><code>roadmap</code></td><td><code>pqc-migration#R2</code></td><td>SHOULD; or a stated absence</td><td>document (with hash) or endpoint</td><td><code>documentation</code>, <code>release-notes</code>, <code>other</code></td><td>Product record: <code>examples/context/keycloak-pqc-roadmap.json</code>, with SHA-256</td></tr>
     </tbody>
   </table>
   </div>
@@ -116,6 +117,19 @@ nav: context
     </tbody>
   </table>
   <p><a href="lifecycle.html#failure-modes">Lifecycle Data</a> describes the failure modes.</p>
+
+  <h2 id="keycloak-set">The Keycloak context set</h2>
+  <p>The Keycloak product record points to four documents that are committed with the examples, so a reader can follow every pointer and the test suite can check every hash. Each is an example of what a supplier would publish beside its record. None is carried in the record.</p>
+  <table>
+    <thead><tr><th>Document</th><th>Pointed to by</th><th>What it shows</th></tr></thead>
+    <tbody>
+      <tr><td><a href="examples/context/keycloak-26.7.3-sbom.cdx.json"><code>keycloak-26.7.3-sbom.cdx.json</code></a></td><td>R1, by BOM-Link and SHA-256; and each library, by a BOM-Link to its own entry</td><td>The companion SBOM of the image, in CycloneDX 2.0. It lists an illustrative subset of components and declares its composition incomplete. Its library entries carry the package URLs the record names under I9.</td></tr>
+      <tr><td><a href="examples/context/keycloak-26.7.3-vex.cdx.json"><code>keycloak-26.7.3-vex.cdx.json</code></a></td><td>R2, by BOM-Link and SHA-256, access protocol <code>vex-document</code></td><td>Three vulnerability statements in CycloneDX 2.0: one resolved before 26.7.3, one not affected because it needs a configuration the image does not have, one in triage. Each names the affected component by a BOM-Link into the SBOM. The identifiers are illustrative, not CVEs.</td></tr>
+      <tr><td><a href="examples/context/keycloak-configuration-guidance.json"><code>keycloak-configuration-guidance.json</code></a></td><td>R5 on each interface whose certificate is <code>deployment-defined</code>, beside the Keycloak guide; and the record as a whole</td><td>For each value the product leaves open, who decides it (operator, peer or product), the Keycloak setting that decides it, and the documentation page. It names each interface by a BOM-Link into the product record.</td></tr>
+      <tr><td><a href="examples/context/keycloak-pqc-roadmap.json"><code>keycloak-pqc-roadmap.json</code></a></td><td>pqc-migration#R2, with SHA-256</td><td>Planned post-quantum availability per purpose: ML-DSA token signing committed for 27.0 and blocked by the JOSE standard; hybrid TLS key exchange planned and blocked by the Java runtime; SAML signing under evaluation; realm key encryption not planned. The record states the same statuses and blockers and no dates (decision 0007); the roadmap is where a target release may appear.</td></tr>
+    </tbody>
+  </table>
+  <p>The join runs through these documents. The record's I9 names a library's package URL. The SBOM entry for that library carries the same package URL. A VEX statement names the SBOM entry. A consumer can therefore go from an interface to the statements that concern its library without the CBOM carrying any vulnerability data. <code>tests/check-context.py</code> checks that each hash matches, that each VEX statement and each library link resolves, that every <code>deployment-defined</code> value has guidance, and that the roadmap agrees with the record's capability statuses.</p>
 
   <h2>How a pointer is carried in CycloneDX</h2>
   <p>A pointer is an entry in <code>externalReferences</code>. A document-level pointer sits on the subject. An interface-level pointer, such as configuration guidance or observation evidence, sits on the interface's component. Each entry carries four things:</p>
@@ -142,7 +156,7 @@ nav: context
     ]
   }
 ]</code></pre>
-  <p>A stated absence is a property on the subject, named after the kind. The Keycloak product record carries <code>pkic:profile:contextAbsent:vulnerability-statements</code> with the value <code>not-published</code>, and the same for <code>support-lifecycle</code>.</p>
+  <p>A stated absence is a property on the subject, named after the kind. The Keycloak product record carries <code>pkic:profile:contextAbsent:support-lifecycle</code> with the value <code>not-published</code>. The record exercising the disclosure states carries the same for <code>vulnerability-statements</code>.</p>
 
   <h2>What is deliberately not pointed to</h2>
   <ul>

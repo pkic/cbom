@@ -511,6 +511,10 @@
         {
           "kind": "editorial",
           "summary": "The carrier target is CycloneDX 2.0. Module validation is read from certifications[] in 2.0."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added reference rule R2 (roadmap) at SHOULD."
         }
       ]
     }
@@ -523,6 +527,14 @@
         "documentation"
       ],
       "form": "endpoint"
+    },
+    "roadmap": {
+      "carrier": [
+        "documentation",
+        "release-notes",
+        "other"
+      ],
+      "form": "document-or-endpoint"
     }
   },
   "referenceRules": [
@@ -535,6 +547,16 @@
       "withholdable": false,
       "orDeclaredAbsent": "contextAbsenceVocabulary",
       "note": "Where the supplier states how long this version is supported. A migration plan depends on whether the version deployed today will receive the release that enables post-quantum cryptography, or has to be replaced first. A supplier that publishes no support lifecycle says so."
+    },
+    {
+      "id": "R2",
+      "context": "roadmap",
+      "at": "document",
+      "level": "SHOULD",
+      "hashRequired": "when-document",
+      "withholdable": false,
+      "orDeclaredAbsent": "contextAbsenceVocabulary",
+      "note": "The supplier's own roadmap for post-quantum capability. The record states each purpose's capability as a status and a blocker, never a date (decision 0007). A roadmap is where a supplier may name target releases and dependencies; the record points to it and does not evaluate it. A per-purpose roadmapRef may point into the same document or to the tracking item."
     }
   ]
 }

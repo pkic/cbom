@@ -125,7 +125,7 @@ echo "=================="
 # --------------------------------------------------------------- artifacts ---
 echo
 echo "Artifacts parse"
-for f in "$M"/*.json "$EX"/*.json "$EX"/legacy/*.json "$EX"/results/*.json "$M"/policies/*.json "$M"/perspectives/*.json "$FIX"/*.json; do
+for f in "$M"/*.json "$EX"/context/*.json "$EX"/*.json "$EX"/legacy/*.json "$EX"/results/*.json "$M"/policies/*.json "$M"/perspectives/*.json "$FIX"/*.json; do
   if "$PY" -c "import json,sys; json.load(open(sys.argv[1]))" "$f" 2>/dev/null; then
     ok "valid JSON: $(basename "$f")"
   else
@@ -866,7 +866,13 @@ expect_output "because the configured record it cites declares one" "declared in
 echo
 echo "Reference rules"
 expect_output "the companion SBOM is pointed to" "interface-disclosure#R1" "$PROD" "$BASE"
-expect_output "a stated absence of VEX satisfies R2" "stated absent: 'not-published'" "$PROD" "$BASE"
+expect_output "a stated absence of VEX satisfies R2" "stated absent: 'not-published'" "$STATES" "$BASE"
+expect_output "a VEX document is pointed to by BOM-Link and hash" "(vex-document)" "$PROD" "$BASE"
+expect_output "and the hash is checked when the VEX is supplied" "hash matches keycloak-26.7.3-vex.cdx.json" \
+              "$PROD" "$BASE" --with "$EX/context/keycloak-26.7.3-vex.cdx.json"
+expect_output "so is the companion SBOM's" "hash matches keycloak-26.7.3-sbom.cdx.json" \
+              "$PROD" "$BASE" --with "$EX/context/keycloak-26.7.3-sbom.cdx.json"
+expect_output "the roadmap is pointed to under pqc-migration#R2" "keycloak-pqc-roadmap.json" "$PROD" "$PQC"
 expect_output "an advisory API names its protocol" "(osv-api)" "$PROD" "$BASE"
 expect_exit   "deployment-defined without a pointer to the guide fails" 1 \
               "$EX/cbom-keycloak-product-fail-R5.cdx.json" "$BASE"
@@ -883,8 +889,14 @@ printf '%s\n' "$OUT" | tail -3 | sed 's/^/  /'
 if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else printf '%s\n' "$OUT" | grep FAIL -A2; failed=$((failed + 1)); fi
 
 echo
+echo "Context documents the product record points to"
+OUT="$("$PY" "$ROOT/tests/check-context.py" 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else failed=$((failed + 1)); fi
+
+echo
 echo "CycloneDX schema validity"
-OUT="$("$PY" "$ROOT/tests/check-cyclonedx.py" "$EX"/*.cdx.json "$EX"/legacy/*.cdx.json "$M"/perspectives/*.cdx.json 2>&1)"; RC=$?
+OUT="$("$PY" "$ROOT/tests/check-cyclonedx.py" "$EX"/*.cdx.json "$EX"/legacy/*.cdx.json "$EX"/context/*.cdx.json "$M"/perspectives/*.cdx.json 2>&1)"; RC=$?
 printf '%s\n' "$OUT" | tail -1 | sed 's/^/  /'
 if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else printf '%s\n' "$OUT" | grep FAIL -A3; failed=$((failed + 1)); fi
 

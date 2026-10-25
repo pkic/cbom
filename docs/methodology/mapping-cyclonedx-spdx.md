@@ -363,11 +363,16 @@ PKIC CBOM profile defines `contextKinds`. For each kind it names the CycloneDX
 | deployment-disclosure#R3 (SHOULD, withholdable) | `data-register` | `risk-assessment`, `other` | document or endpoint |
 | deployment-disclosure#R4 (MAY) | `issuer-policy` | `documentation` | endpoint |
 | pqc-migration#R1 (SHOULD) | `support-lifecycle` | `support`, `release-notes`, `documentation` | endpoint; or a stated absence |
+| pqc-migration#R2 (SHOULD) | `roadmap` | `documentation`, `release-notes`, `other` | document (with hash) or endpoint; or a stated absence |
 
 The Keycloak product record points to its companion SBOM by BOM-Link and hash. It points to two
 advisory sources: the GitHub advisories page (`web-page`) and the OSV API (`osv-api`). It points
-to the security policy as its security contact. Upstream Keycloak publishes no VEX, so the record
-states `contextAbsent:vulnerability-statements = not-published`.
+to the security policy as its security contact. It points to an illustrative VEX document by
+BOM-Link and hash, with access protocol `vex-document`; upstream Keycloak publishes no VEX, and the
+record exercising the disclosure states shows the stated absence
+`contextAbsent:vulnerability-statements = not-published`. Each library points to its own SBOM
+entry with `externalReferences[type=bom]` and a BOM-Link to the element. The configuration
+guidance and the roadmap are fixed documents, pointed to by URL and SHA-256.
 
 **Conformance checks the pointer, never the target.** The validator checks that the pointer
 exists, that its type is a carrier for the kind, that a document has a hash and that an endpoint

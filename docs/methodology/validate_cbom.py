@@ -1608,7 +1608,7 @@ def reference_applies(rule, product, iface=None):
     return True, None
 
 
-def check_reference(rule, profile, element_refs, markers, absence):
+def check_reference(rule, profile, element_refs, markers, absence, registry=None):
     """Evaluate a reference rule: a pointer to context the document does not carry.
 
     Checks that the pointer exists and is well formed: a carrier type the kind
@@ -1645,7 +1645,16 @@ def check_reference(rule, profile, element_refs, markers, absence):
             (rule.get("hashRequired") == "when-document" and not endpoint)
         if need_hash and not r.get("hashes"):
             problems.append("%s needs a hash, because it is a fixed document" % r.get("url"))
-        details.append("%s%s" % (r.get("url"), " (%s)" % proto if proto else ""))
+        note = ""
+        doc, _ref = split_bomlink(r.get("url"))
+        entry = registry.get(doc) if (registry and doc) else None
+        if entry and r.get("hashes"):
+            want = {h.get("alg"): h.get("content") for h in r["hashes"]}.get("SHA-256")
+            if want and want != entry["sha256"]:
+                problems.append("%s: the hash does not match %s" % (r.get("url"), os.path.basename(entry["path"])))
+            elif want:
+                note = ", hash matches %s" % os.path.basename(entry["path"])
+        details.append("%s%s%s" % (r.get("url"), " (%s)" % proto if proto else "", note))
     if problems:
         return False, "value", "; ".join(problems)
     return True, "value", "; ".join(details)
@@ -1693,7 +1702,7 @@ def validate(bom, profile, registry=None):
             ok, state, detail = True, "n/a", "not applicable (%s)" % why
         else:
             ok, state, detail = check_reference(rule, profile, refs_of(bom),
-                                                product.get("_disclosure", {}), absence)
+                                                product.get("_disclosure", {}), absence, registry)
         report["references"].append({"id": rule["_qid"], "level": rule["level"],
                                      "attribute": rule["context"], "ok": ok,
                                      "state": state, "detail": detail})
@@ -1715,7 +1724,7 @@ def validate(bom, profile, registry=None):
                 ok, state, detail = True, "n/a", "not applicable (%s)" % why
             else:
                 ok, state, detail = check_reference(rule, profile, refs_of(iface["_element"]),
-                                                    iface.get("_disclosure", {}), {})
+                                                    iface.get("_disclosure", {}), {}, registry)
             rows.append({"id": rule["_qid"], "level": rule["level"], "attribute": rule["context"],
                          "ok": ok, "state": state, "detail": detail})
         rows.sort(key=lambda r: rule_sort_key(r, chain))

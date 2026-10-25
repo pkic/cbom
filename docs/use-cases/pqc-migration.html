@@ -228,7 +228,7 @@ nav: uc-pqc
   <table>
     <thead><tr><th>Profile</th><th>Extends</th><th>Adds</th></tr></thead>
     <tbody>
-      <tr><td><strong>Baseline</strong><br><code>pkic.example.pqc-migration</code> v0.8</td><td>Interface disclosure baseline v0.9</td><td>Capability, enablement and blockers per interface and per purpose; module validation; key wrapping on storage; a pointer to the support lifecycle (R1, SHOULD). Accepts product records at the stage <code>implemented</code> only. Makes one inherited rule stricter.</td></tr>
+      <tr><td><strong>Baseline</strong><br><code>pkic.example.pqc-migration</code> v0.8</td><td>Interface disclosure baseline v0.9</td><td>Capability, enablement and blockers per interface and per purpose; module validation; key wrapping on storage; pointers to the support lifecycle (R1) and the supplier's roadmap (R2), both SHOULD. Accepts product records at the stage <code>implemented</code> only. Makes one inherited rule stricter.</td></tr>
       <tr><td><strong>Extended</strong><br><code>pkic.example.pqc-migration-extended</code> v0.1</td><td>The baseline above</td><td>Key management surfaces, key-store references, external dependencies, the obligation to declare storage, product certification. Tightens validated-mode availability to MUST.</td></tr>
     </tbody>
   </table>
@@ -247,6 +247,7 @@ nav: uc-pqc
       <tr><td><code>interface-disclosure#P6</code></td><td>Declare one lifecycle stage for the document</td><td>MUST</td><td>Inherited, and narrowed to <code>implemented</code>. The Keycloak record carries it natively, as the lifecycle phase <code>build</code>.</td></tr>
       <tr><td><code>interface-disclosure#R1</code> to <code>#R6</code></td><td>Point to the SBOM, the vulnerability statements, the advisory sources, the security contact, configuration guidance and design intent</td><td>MUST to MAY</td><td>Inherited. Upstream Keycloak publishes no VEX statements, so the record states <code>not-published</code> under R2.</td></tr>
       <tr><td><code>pqc-migration#R1</code></td><td>Point to the support lifecycle of the product</td><td>SHOULD</td><td>The Keycloak record states that none is published.</td></tr>
+      <tr><td><code>pqc-migration#R2</code></td><td>Point to the supplier's post-quantum roadmap</td><td>SHOULD</td><td>The Keycloak record points to <a href="../methodology/examples/context/keycloak-pqc-roadmap.json">keycloak-pqc-roadmap.json</a>, which names target releases and dependencies that the record itself, stating only status and blocker, does not.</td></tr>
       <tr><td><code>pqc-migration#P1</code></td><td>Identify the cryptographic providers the product uses</td><td>SHOULD</td><td>Lets a consumer reason about update paths shared across interfaces: the JDK serves all seven of Keycloak's TLS interfaces.</td></tr>
     </tbody>
   </table>

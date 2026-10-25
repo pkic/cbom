@@ -1,0 +1,111 @@
+{
+  "guidanceFormat": "pkic.example.configuration-guidance",
+  "version": "0.1",
+  "$comment": "EXAMPLE. Configuration guidance for the Keycloak 26.7.3 image, as a supplier could publish it beside its product record. The record points here under interface-disclosure#R5 from every interface whose certificate is 'deployment-defined', and from the record as a whole. Each entry names the interface by a BOM-Link into the product record, the attribute the operator decides, the setting that decides it, and the supplier's documentation. The option names are Keycloak's; the format is an illustration, not a standard. The CBOM does not carry this content: it changes when the documentation changes, not when the product does.",
+  "subject": "pkg:oci/keycloak?repository_url=quay.io/keycloak/keycloak&tag=26.7.3",
+  "entries": [
+    {
+      "interface": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:tls-https",
+      "attribute": "authentication",
+      "decidedBy": "operator",
+      "settings": [
+        {
+          "kind": "server-option",
+          "name": "https-certificate-file"
+        },
+        {
+          "kind": "server-option",
+          "name": "https-certificate-key-file"
+        }
+      ],
+      "note": "The server certificate and key are operator-supplied files. Their algorithm is the interface's authentication value at 'configured'.",
+      "documentation": "https://www.keycloak.org/server/enabletls"
+    },
+    {
+      "interface": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:tls-https",
+      "attribute": "keyExchange",
+      "decidedBy": "operator",
+      "settings": [
+        {
+          "kind": "jvm-property",
+          "name": "jdk.tls.namedGroups"
+        }
+      ],
+      "note": "The product default is the JDK's group order. A hybrid ML-KEM group can be enabled here only once the JDK in the image supports one.",
+      "documentation": "https://www.keycloak.org/server/enabletls"
+    },
+    {
+      "interface": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:tls-mgmt",
+      "attribute": "authentication",
+      "decidedBy": "operator",
+      "settings": [
+        {
+          "kind": "server-option",
+          "name": "http-management-scheme"
+        }
+      ],
+      "note": "Defaults to 'inherited': the management listener uses the main server's scheme and certificate. With HTTP on the main server it is plain HTTP.",
+      "documentation": "https://www.keycloak.org/server/management-interface"
+    },
+    {
+      "interface": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:svc-http",
+      "attribute": "defaultState",
+      "decidedBy": "operator",
+      "settings": [
+        {
+          "kind": "server-option",
+          "name": "http-enabled"
+        },
+        {
+          "kind": "server-option",
+          "name": "proxy-headers"
+        }
+      ],
+      "note": "Off by default. Enabled behind a TLS-terminating proxy, it carries tokens in clear on the proxy hop.",
+      "documentation": "https://www.keycloak.org/server/reverseproxy"
+    },
+    {
+      "interface": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-db",
+      "attribute": "authentication",
+      "decidedBy": "peer",
+      "settings": [
+        {
+          "kind": "server-option",
+          "name": "db-url"
+        }
+      ],
+      "note": "The database server's certificate decides the value; set sslmode=verify-full in the JDBC URL so the driver verifies it.",
+      "documentation": "https://www.keycloak.org/server/db"
+    },
+    {
+      "interface": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-cache",
+      "attribute": "authentication",
+      "decidedBy": "product",
+      "settings": [
+        {
+          "kind": "server-option",
+          "name": "cache-embedded-mtls-enabled"
+        }
+      ],
+      "note": "The product generates and rotates the RSA-2048 key; the operator can switch mutual TLS off, not change the key type.",
+      "documentation": "https://www.keycloak.org/server/caching"
+    },
+    {
+      "interface": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:svc-oidc",
+      "attribute": "authentication",
+      "decidedBy": "operator",
+      "settings": [
+        {
+          "kind": "realm-attribute",
+          "name": "defaultSignatureAlgorithm"
+        },
+        {
+          "kind": "client-attribute",
+          "name": "access.token.signed.response.alg"
+        }
+      ],
+      "note": "The realm default is RS256. A client can override it.",
+      "documentation": "https://www.keycloak.org/docs/latest/server_admin/#realm_keys"
+    }
+  ]
+}

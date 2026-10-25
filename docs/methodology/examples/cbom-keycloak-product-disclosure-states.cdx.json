@@ -1,7 +1,7 @@
 {
   "specFormat": "CycloneDX",
   "specVersion": "2.0",
-  "$comment": "NON-CONFORMING EXAMPLE. The product record exercising the four disclosure outcomes. Most values are supplied. The OIDC interface withholds its implementing library, which the baseline permits (I9 is withholdable). The cluster transport declares its authentication unknown, and the SAML interface leaves its encryption undeclared; neither satisfies a MUST rule. Fails interface-disclosure#I5 and #I4, and conforms to the entry profile, which asks for neither.",
+  "$comment": "NON-CONFORMING EXAMPLE. The product record exercising the four disclosure outcomes. Most values are supplied. The OIDC interface withholds its implementing library, which the baseline permits (I9 is withholdable). It states that no VEX is published, which satisfies R2 as a stated absence. The cluster transport declares its authentication unknown, and the SAML interface leaves its encryption undeclared; neither satisfies a MUST rule. Fails interface-disclosure#I5 and #I4, and conforms to the entry profile, which asks for neither.",
   "serialNumber": "urn:uuid:6b3c1d2e-7a41-4c1e-9f0a-26730000c0d5",
   "version": 1,
   "metadata": {
@@ -58,11 +58,11 @@
             "value": "product"
           },
           {
-            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "name": "pkic:profile:contextAbsent:support-lifecycle",
             "value": "not-published"
           },
           {
-            "name": "pkic:profile:contextAbsent:support-lifecycle",
+            "name": "pkic:profile:contextAbsent:vulnerability-statements",
             "value": "not-published"
           }
         ],
@@ -218,7 +218,7 @@
             {
               "type": "bom",
               "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1#lib:openjdk",
-              "comment": "The same library in the companion SBOM (illustrative BOM-Link)"
+              "comment": "This library's entry in the companion SBOM."
             }
           ],
           "identifiers": [
@@ -328,7 +328,7 @@
             {
               "type": "bom",
               "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1#lib:keycloak-services",
-              "comment": "The same library in the companion SBOM (illustrative BOM-Link)"
+              "comment": "This library's entry in the companion SBOM."
             }
           ],
           "identifiers": [
@@ -426,7 +426,7 @@
             {
               "type": "bom",
               "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1#lib:keycloak-model-jpa",
-              "comment": "The same library in the companion SBOM (illustrative BOM-Link)"
+              "comment": "This library's entry in the companion SBOM."
             }
           ],
           "identifiers": [
@@ -523,7 +523,7 @@
             {
               "type": "bom",
               "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1#lib:quarkus-vertx-http",
-              "comment": "The same library in the companion SBOM (illustrative BOM-Link)"
+              "comment": "This library's entry in the companion SBOM."
             }
           ],
           "identifiers": [
@@ -624,6 +624,23 @@
                   "value": "web-page"
                 }
               ]
+            },
+            {
+              "type": "configuration",
+              "url": "https://pkic.github.io/cbom/methodology/examples/context/keycloak-configuration-guidance.json",
+              "comment": "The same setting in the supplier's machine-readable guidance.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "configuration-guidance"
+                }
+              ],
+              "hashes": [
+                {
+                  "alg": "SHA-256",
+                  "content": "be12318b4eddcf9e56c97f1755e6936fc52a4dded9d0f05899a32611329de14f"
+                }
+              ]
             }
           ]
         },
@@ -711,6 +728,23 @@
                 {
                   "name": "pkic:profile:accessProtocol",
                   "value": "web-page"
+                }
+              ]
+            },
+            {
+              "type": "configuration",
+              "url": "https://pkic.github.io/cbom/methodology/examples/context/keycloak-configuration-guidance.json",
+              "comment": "The same setting in the supplier's machine-readable guidance.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "configuration-guidance"
+                }
+              ],
+              "hashes": [
+                {
+                  "alg": "SHA-256",
+                  "content": "be12318b4eddcf9e56c97f1755e6936fc52a4dded9d0f05899a32611329de14f"
                 }
               ]
             }
@@ -2355,7 +2389,7 @@
     {
       "type": "bom",
       "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1",
-      "comment": "Companion SBOM of the same image. Illustrative BOM-Link and hash.",
+      "comment": "Companion SBOM of the same image: examples/context/keycloak-26.7.3-sbom.cdx.json.",
       "properties": [
         {
           "name": "pkic:profile:context",
@@ -2365,7 +2399,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "11234911bf74188f1be590e22dc8b4fc4f900f38f06d0a8939efc765947bb1b4"
+          "content": "19fc2b81ce5431527104e788d1ce3ad618ca80bc551590a4307d1843637302bc"
         }
       ]
     },
@@ -2411,6 +2445,40 @@
         {
           "name": "pkic:profile:accessProtocol",
           "value": "web-page"
+        }
+      ]
+    },
+    {
+      "type": "configuration",
+      "url": "https://pkic.github.io/cbom/methodology/examples/context/keycloak-configuration-guidance.json",
+      "comment": "Where the operator sets each value this record leaves open, interface by interface.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "configuration-guidance"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "be12318b4eddcf9e56c97f1755e6936fc52a4dded9d0f05899a32611329de14f"
+        }
+      ]
+    },
+    {
+      "type": "documentation",
+      "url": "https://pkic.github.io/cbom/methodology/examples/context/keycloak-pqc-roadmap.json",
+      "comment": "The supplier's post-quantum roadmap. Target releases live there, not in this record.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "roadmap"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a0e8129ec15c152ed9161b414408356c56c2dbe02d6cc2f4ddcb2e78d0f3f4bb"
         }
       ]
     }

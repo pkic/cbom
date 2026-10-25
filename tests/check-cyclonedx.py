@@ -17,7 +17,8 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCHEMAS = os.path.join(ROOT, "tests", "schemas", "cyclonedx-2.0")
-DEFAULT = sorted(glob.glob(os.path.join(ROOT, "docs", "methodology", "examples", "*.cdx.json")))
+DEFAULT = sorted(glob.glob(os.path.join(ROOT, "docs", "methodology", "examples", "*.cdx.json")) +
+                 glob.glob(os.path.join(ROOT, "docs", "methodology", "examples", "*", "*.cdx.json")))
 
 
 def validator_20():

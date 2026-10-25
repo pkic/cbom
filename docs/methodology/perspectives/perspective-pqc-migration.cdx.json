@@ -259,6 +259,12 @@
           "nativeName": "pqc-migration#R1 support-lifecycle",
           "relevance": "recommended",
           "rationale": "Where the supplier states how long this version is supported. A migration plan depends on whether the version deployed today will receive the release that enables post-quantum cryptography, or has to be replaced first. A supplier that publishes no support lifecycle says so."
+        },
+        {
+          "expression": "$.externalReferences[?(@.properties[?(@.name=='pkic:profile:context' && @.value=='roadmap')])]",
+          "nativeName": "pqc-migration#R2 roadmap",
+          "relevance": "recommended",
+          "rationale": "The supplier's own roadmap for post-quantum capability. The record states each purpose's capability as a status and a blocker, never a date (decision 0007). A roadmap is where a supplier may name target releases and dependencies; the record points to it and does not evaluate it. A per-purpose roadma"
         }
       ],
       "externalReferences": [

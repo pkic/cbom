@@ -489,6 +489,10 @@
         {
           "kind": "editorial",
           "summary": "The conforming example is the Keycloak 26.7.3 product record, replacing the nginx pair."
+        },
+        {
+          "kind": "editorial",
+          "summary": "The configuration-guidance context kind accepts a fixed document as well as a web page, so a supplier can publish machine-readable guidance and bind it by hash."
         }
       ]
     }
@@ -551,7 +555,7 @@
         "documentation",
         "configuration"
       ],
-      "form": "endpoint"
+      "form": "document-or-endpoint"
     },
     "design-intent": {
       "carrier": [

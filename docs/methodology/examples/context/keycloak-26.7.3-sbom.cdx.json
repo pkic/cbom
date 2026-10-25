@@ -1,0 +1,233 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "EXAMPLE SBOM. The companion SBOM of the Keycloak 26.7.3 container image, referenced by the product record under interface-disclosure#R1 by BOM-Link and SHA-256. It lists an illustrative subset of the image's components, so its composition is declared incomplete. Versions are given only where the product record states them; a real SBOM from the build pipeline lists every component with its exact version. The library components keep the bom-ref they have in the product record, so the record can point at each one's SBOM entry.",
+  "serialNumber": "urn:uuid:6b3c1d2e-7a41-4c1e-9f0a-26730000b000",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-25T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+      "url": [
+        "https://pkic.org"
+      ]
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "container",
+        "bom-ref": "app:keycloak",
+        "name": "Keycloak",
+        "version": "26.7.3",
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:oci/keycloak?repository_url=quay.io/keycloak/keycloak&tag=26.7.3"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://pkic.org"
+                }
+              ]
+            }
+          },
+          {
+            "bom-ref": "party:app:keycloak:supplier",
+            "roles": [
+              {
+                "role": "supplier"
+              }
+            ],
+            "organization": {
+              "name": "Keycloak project",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://www.keycloak.org"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:keycloak-services",
+          "name": "Keycloak services",
+          "version": "26.7.3",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:maven/org.keycloak/keycloak-services@26.7.3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:keycloak-model-jpa",
+          "name": "Keycloak JPA model",
+          "version": "26.7.3",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:maven/org.keycloak/keycloak-model-jpa@26.7.3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:quarkus-vertx-http",
+          "name": "Quarkus HTTP (Vert.x)",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:maven/io.quarkus/quarkus-vertx-http"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:openjdk",
+          "name": "OpenJDK 21 (java-21-openjdk-headless, UBI 9)",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:rpm/redhat/java-21-openjdk-headless?arch=x86_64&distro=rhel-9"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:postgresql-jdbc",
+          "name": "PostgreSQL JDBC driver",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:maven/org.postgresql/postgresql"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:infinispan-core",
+          "name": "Infinispan core (distributed caches)",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:maven/org.infinispan/infinispan-core"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:jgroups",
+          "name": "JGroups (cluster transport)",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:maven/org.jgroups/jgroups"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app:keycloak",
+      "dependsOn": [
+        "lib:keycloak-services",
+        "lib:keycloak-model-jpa",
+        "lib:quarkus-vertx-http",
+        "lib:openjdk"
+      ]
+    },
+    {
+      "ref": "lib:keycloak-model-jpa",
+      "dependsOn": [
+        "lib:postgresql-jdbc"
+      ]
+    },
+    {
+      "ref": "lib:keycloak-services",
+      "dependsOn": [
+        "lib:infinispan-core"
+      ]
+    },
+    {
+      "ref": "lib:infinispan-core",
+      "dependsOn": [
+        "lib:jgroups"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "incomplete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ]
+}

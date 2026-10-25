@@ -37,7 +37,11 @@ SERIAL = {
     "intended": "6b3c1d2e-7a41-4c1e-9f0a-27000000d001",
     "sbom": "6b3c1d2e-7a41-4c1e-9f0a-26730000b000",
     "legacy": "6b3c1d2e-7a41-4c1e-9f0a-26730000c017",
+    "vex": "6b3c1d2e-7a41-4c1e-9f0a-26730000e001",
 }
+SITE = "https://pkic.github.io/cbom/methodology/examples/"
+CONTEXT = os.path.join(OUT, "context")
+PRODUCT_PURL = "pkg:oci/keycloak?repository_url=quay.io/keycloak/keycloak&tag=26.7.3"
 DEPLOYMENT_ID = "tag:example.org,2026:deployment/sso-prod"
 
 
@@ -100,9 +104,238 @@ def set_props(el, updates, drop=()):
 
 
 # --------------------------------------------------------------------------- #
+# Context the product record points to and does not carry                     #
+# --------------------------------------------------------------------------- #
+def write_context(name, doc, convert=False):
+    os.makedirs(CONTEXT, exist_ok=True)
+    if convert:
+        doc = cdx17_to_20.convert(doc)
+    data = (json.dumps(doc, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    with open(os.path.join(CONTEXT, name), "wb") as fh:
+        fh.write(data)
+    return hashlib.sha256(data).hexdigest()
+
+
+def sbom():
+    """The companion SBOM of the image: an illustrative subset of its components.
+
+    The library components carry the same bom-ref as in the product record, so
+    the record can point at each library's SBOM entry by BOM-Link."""
+    lib = lambda ref, name, purl, version=None: dict(
+        {"type": "library", "bom-ref": ref, "name": name, "purl": purl},
+        **({"version": version} if version else {}))
+    return {
+        "bomFormat": "CycloneDX", "specVersion": "1.7",
+        "serialNumber": "urn:uuid:" + SERIAL["sbom"], "version": 1,
+        "metadata": {
+            "timestamp": "2026-10-25T09:00:00Z", "lifecycles": [{"phase": "build"}],
+            "supplier": {"name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+                         "url": ["https://pkic.org"]},
+            "component": {"type": "container", "bom-ref": "app:keycloak", "name": "Keycloak",
+                          "version": "26.7.3", "purl": PRODUCT_PURL,
+                          "supplier": {"name": "Keycloak project", "url": ["https://www.keycloak.org"]}},
+            "properties": [{"name": "pkic:example:comment", "value":
+                "EXAMPLE SBOM. The companion SBOM of the Keycloak 26.7.3 container image, referenced by the "
+                "product record under interface-disclosure#R1 by BOM-Link and SHA-256. It lists an "
+                "illustrative subset of the image's components, so its composition is declared "
+                "incomplete. Versions are given only where the product record states them; a real SBOM "
+                "from the build pipeline lists every component with its exact version. The library "
+                "components keep the bom-ref they have in the product record, so the record can point at "
+                "each one's SBOM entry."}]},
+        "components": [
+            lib("lib:keycloak-services", "Keycloak services", "pkg:maven/org.keycloak/keycloak-services@26.7.3", "26.7.3"),
+            lib("lib:keycloak-model-jpa", "Keycloak JPA model", "pkg:maven/org.keycloak/keycloak-model-jpa@26.7.3", "26.7.3"),
+            lib("lib:quarkus-vertx-http", "Quarkus HTTP (Vert.x)", "pkg:maven/io.quarkus/quarkus-vertx-http"),
+            lib("lib:openjdk", "OpenJDK 21 (java-21-openjdk-headless, UBI 9)",
+                "pkg:rpm/redhat/java-21-openjdk-headless?arch=x86_64&distro=rhel-9"),
+            lib("lib:postgresql-jdbc", "PostgreSQL JDBC driver", "pkg:maven/org.postgresql/postgresql"),
+            lib("lib:infinispan-core", "Infinispan core (distributed caches)", "pkg:maven/org.infinispan/infinispan-core"),
+            lib("lib:jgroups", "JGroups (cluster transport)", "pkg:maven/org.jgroups/jgroups"),
+        ],
+        "dependencies": [
+            {"ref": "app:keycloak", "dependsOn": ["lib:keycloak-services", "lib:keycloak-model-jpa",
+                                                  "lib:quarkus-vertx-http", "lib:openjdk"]},
+            {"ref": "lib:keycloak-model-jpa", "dependsOn": ["lib:postgresql-jdbc"]},
+            {"ref": "lib:keycloak-services", "dependsOn": ["lib:infinispan-core"]},
+            {"ref": "lib:infinispan-core", "dependsOn": ["lib:jgroups"]},
+        ],
+        "compositions": [{"aggregate": "incomplete", "assemblies": []}],
+    }
+
+
+def vex():
+    """A supplier's vulnerability statements about the image, in CycloneDX 2.0.
+
+    The identifiers are illustrative. They are not CVEs and describe no real
+    vulnerability: the document shows the form a statement takes and how it
+    joins to the SBOM, not the security state of Keycloak."""
+    sbom_ref = lambda r: link("sbom", r)
+    src = {"name": "PKIC CBOM Profiles WG worked example (illustrative identifiers)",
+           "url": "https://pkic.github.io/cbom/methodology/vulnerabilities.html"}
+    return {
+        "specFormat": "CycloneDX", "specVersion": "2.0",
+        "serialNumber": "urn:uuid:" + SERIAL["vex"], "version": 1,
+        "$comment": ("EXAMPLE VEX, CycloneDX 2.0. Vulnerability statements about the Keycloak 26.7.3 image, "
+                     "in the form a supplier publishes them. The product record points here under "
+                     "interface-disclosure#R2 by BOM-Link and SHA-256. ILLUSTRATIVE: the identifiers are not "
+                     "CVEs and describe no real vulnerability, and the upstream Keycloak project publishes no "
+                     "VEX. Each statement names the affected component by a BOM-Link into the companion SBOM, "
+                     "and the SBOM entry carries the package URL that the product record's I9 also names. "
+                     "That shared identifier is the join. The VEX is revised when knowledge changes; the "
+                     "CBOM is revised when the product changes (decision 0020)."),
+        "metadata": {"timestamp": "2026-10-25T09:00:00Z",
+                     "supplier": {"name": "PKI Consortium CBOM Profiles Working Group (worked example)"}},
+        "vulnerabilities": [
+            {"bom-ref": "vex:example-0001", "id": "PKIC-EXAMPLE-2026-0001", "source": src,
+             "description": "Illustrative: a token signature verification flaw in the server's JOSE handling.",
+             "analysis": {"state": "resolved",
+                          "detail": "Fixed before 26.7.3. Listed so that a consumer holding an older record "
+                                    "can see the version boundary."},
+             "affects": [{"ref": sbom_ref("lib:keycloak-services"),
+                          "versions": [{"version": "26.7.3", "status": "unaffected"},
+                                       {"range": "vers:maven/<26.7.3", "status": "affected"}]}]},
+            {"bom-ref": "vex:example-0002", "id": "PKIC-EXAMPLE-2026-0002", "source": src,
+             "description": "Illustrative: a timing side channel in RSA PKCS#1 v1.5 decryption in the Java runtime.",
+             "analysis": {"state": "not_affected", "justification": "requires_configuration",
+                          "detail": "Exploitation needs RSA key transport cipher suites. The image's TLS "
+                                    "configuration offers TLS 1.3 suites only, which use no RSA key transport "
+                                    "(see the shared TLS configuration in the product record)."},
+             "affects": [{"ref": sbom_ref("lib:openjdk"), "versions": [{"version": "21", "status": "affected"}]}]},
+            {"bom-ref": "vex:example-0003", "id": "PKIC-EXAMPLE-2026-0003", "source": src,
+             "description": "Illustrative: a request smuggling flaw in the HTTP server layer.",
+             "analysis": {"state": "in_triage",
+                          "detail": "Under analysis. The plaintext listener is off by default; deployments "
+                                    "behind a proxy with it enabled are the exposed case."},
+             "affects": [{"ref": sbom_ref("lib:quarkus-vertx-http")}]},
+        ],
+    }
+
+
+def configuration_guidance():
+    """Where an operator sets each value the product leaves open."""
+    p = lambda r: link("product", r)
+    return {
+        "guidanceFormat": "pkic.example.configuration-guidance", "version": "0.1",
+        "$comment": ("EXAMPLE. Configuration guidance for the Keycloak 26.7.3 image, as a supplier could "
+                     "publish it beside its product record. The record points here under "
+                     "interface-disclosure#R5 from every interface whose certificate is 'deployment-defined', "
+                     "and from the record as a whole. Each entry names the interface by a BOM-Link into the "
+                     "product record, the attribute the operator decides, the setting that decides it, and the "
+                     "supplier's documentation. The option names are Keycloak's; the format is an "
+                     "illustration, not a standard. The CBOM does not carry this content: it changes when the "
+                     "documentation changes, not when the product does."),
+        "subject": PRODUCT_PURL,
+        "entries": [
+            {"interface": p("crypto:protocol:tls-https"), "attribute": "authentication",
+             "decidedBy": "operator",
+             "settings": [{"kind": "server-option", "name": "https-certificate-file"},
+                          {"kind": "server-option", "name": "https-certificate-key-file"}],
+             "note": "The server certificate and key are operator-supplied files. Their algorithm is the "
+                     "interface's authentication value at 'configured'.",
+             "documentation": "https://www.keycloak.org/server/enabletls"},
+            {"interface": p("crypto:protocol:tls-https"), "attribute": "keyExchange",
+             "decidedBy": "operator",
+             "settings": [{"kind": "jvm-property", "name": "jdk.tls.namedGroups"}],
+             "note": "The product default is the JDK's group order. A hybrid ML-KEM group can be enabled "
+                     "here only once the JDK in the image supports one.",
+             "documentation": "https://www.keycloak.org/server/enabletls"},
+            {"interface": p("crypto:protocol:tls-mgmt"), "attribute": "authentication",
+             "decidedBy": "operator",
+             "settings": [{"kind": "server-option", "name": "http-management-scheme"}],
+             "note": "Defaults to 'inherited': the management listener uses the main server's scheme and "
+                     "certificate. With HTTP on the main server it is plain HTTP.",
+             "documentation": "https://www.keycloak.org/server/management-interface"},
+            {"interface": p("service:svc-http"), "attribute": "defaultState",
+             "decidedBy": "operator",
+             "settings": [{"kind": "server-option", "name": "http-enabled"},
+                          {"kind": "server-option", "name": "proxy-headers"}],
+             "note": "Off by default. Enabled behind a TLS-terminating proxy, it carries tokens in clear on "
+                     "the proxy hop.",
+             "documentation": "https://www.keycloak.org/server/reverseproxy"},
+            {"interface": p("crypto:protocol:int-db"), "attribute": "authentication",
+             "decidedBy": "peer",
+             "settings": [{"kind": "server-option", "name": "db-url"}],
+             "note": "The database server's certificate decides the value; set sslmode=verify-full in the "
+                     "JDBC URL so the driver verifies it.",
+             "documentation": "https://www.keycloak.org/server/db"},
+            {"interface": p("crypto:protocol:int-cache"), "attribute": "authentication",
+             "decidedBy": "product",
+             "settings": [{"kind": "server-option", "name": "cache-embedded-mtls-enabled"}],
+             "note": "The product generates and rotates the RSA-2048 key; the operator can switch mutual TLS "
+                     "off, not change the key type.",
+             "documentation": "https://www.keycloak.org/server/caching"},
+            {"interface": p("service:svc-oidc"), "attribute": "authentication",
+             "decidedBy": "operator",
+             "settings": [{"kind": "realm-attribute", "name": "defaultSignatureAlgorithm"},
+                          {"kind": "client-attribute", "name": "access.token.signed.response.alg"}],
+             "note": "The realm default is RS256. A client can override it.",
+             "documentation": "https://www.keycloak.org/docs/latest/server_admin/#realm_keys"},
+        ],
+    }
+
+
+def roadmap():
+    """The supplier's own statement of planned post-quantum availability."""
+    p = lambda r: link("product", r)
+    return {
+        "roadmapFormat": "pkic.example.roadmap", "version": "0.1", "asOf": "2026-10-25",
+        "$comment": ("EXAMPLE. A post-quantum roadmap for the Keycloak image, as a supplier could publish "
+                     "it. The product record points here under pqc-migration#R2. The record itself states "
+                     "each purpose's capability as a status and a blocker, never a date (decision 0007); a "
+                     "roadmap is where a supplier may name a target release, and the record points to it "
+                     "without evaluating it. Each item agrees with the record's capabilityByPurpose entries. "
+                     "Target releases and tracking links are those in the public sources; the format is an "
+                     "illustration, not a standard, and the document is not a statement by the Keycloak "
+                     "project."),
+        "subject": PRODUCT_PURL,
+        "items": [
+            {"id": "ml-dsa-token-signing", "purpose": "entity-authentication",
+             "interfaces": [p("service:svc-oidc"), p("service:mgmt-admin"), p("service:svc-broker-tokens")],
+             "algorithms": ["ML-DSA-44", "ML-DSA-65", "ML-DSA-87"],
+             "capabilityStatus": "committed", "blockedBy": "standard", "targetRelease": "27.0",
+             "dependsOn": [{"what": "ML-DSA in JOSE, including the AKP JWK key type",
+                            "status": "Internet-Draft",
+                            "ref": "https://datatracker.ietf.org/doc/draft-ietf-cose-dilithium/"}],
+             "tracking": "https://github.com/keycloak/keycloak/issues/43690",
+             "note": "ML-DSA-65 signed tokens exceed the 4 KB browser cookie limit; relying parties must "
+                     "accept the AKP key type."},
+            {"id": "hybrid-key-exchange-tls", "purpose": "key-establishment",
+             "interfaces": [p("crypto:protocol:tls-https"), p("crypto:protocol:tls-mgmt"),
+                            p("crypto:protocol:int-db"), p("crypto:protocol:int-ldap"),
+                            p("crypto:protocol:int-broker"), p("crypto:protocol:int-smtp"),
+                            p("crypto:protocol:int-cache")],
+             "algorithms": ["X25519MLKEM768"],
+             "capabilityStatus": "planned", "blockedBy": "provider", "targetRelease": None,
+             "dependsOn": [{"what": "A Java runtime with hybrid ML-KEM TLS groups (JEP 527)",
+                            "status": "in JDK 27", "ref": "https://openjdk.org/jeps/527"}],
+             "note": "Available when the image ships a JDK that offers the hybrid groups; no Keycloak release "
+                     "is named."},
+            {"id": "saml-ml-dsa", "purpose": "entity-authentication",
+             "interfaces": [p("service:svc-saml")], "algorithms": [],
+             "capabilityStatus": "under-evaluation", "blockedBy": "standard", "targetRelease": None,
+             "dependsOn": [{"what": "ML-DSA identifiers for XML Signature", "status": "not standardised"}]},
+            {"id": "realm-key-encryption", "purpose": "key-protection",
+             "interfaces": [p("service:sto-realm-keys")], "algorithms": [],
+             "capabilityStatus": "not-planned", "blockedBy": "product", "targetRelease": None,
+             "tracking": "https://github.com/keycloak/keycloak/issues/39933",
+             "note": "Realm key material is stored in the database in plaintext; the request to encrypt it "
+                     "has no milestone."},
+        ],
+    }
+
+
+def context_artifacts():
+    """Write the context documents and return their SHA-256 digests."""
+    return {"sbom": write_context("keycloak-26.7.3-sbom.cdx.json", sbom(), convert=True),
+            "vex": write_context("keycloak-26.7.3-vex.cdx.json", vex()),
+            "guidance": write_context("keycloak-configuration-guidance.json", configuration_guidance()),
+            "roadmap": write_context("keycloak-pqc-roadmap.json", roadmap())}
+
+
+# --------------------------------------------------------------------------- #
 # Stage 2: implemented. The vendor's build record of the image.               #
 # --------------------------------------------------------------------------- #
-def product():
+def product(hashes):
     bom = json.load(open(SRC, encoding="utf-8"))
     bom["serialNumber"] = "urn:uuid:" + SERIAL["product"]
     bom["version"] = 1
@@ -117,8 +350,8 @@ def product():
         "or mail server, the group, the cipher and the server certificate are decided with the peer and "
         "are 'peer-defined'. What Keycloak offers is still stated, in the shared TLS configuration "
         "component and the migration attributes. (3) Context the document points to but does not carry: "
-        "the companion SBOM, the advisory sources, the security contact, and a statement that the "
-        "upstream project publishes no VEX. Conforms to interface-enumeration v0.3, interface-disclosure "
+        "the companion SBOM, an illustrative VEX document, the advisory sources, the security contact, "
+        "configuration guidance and a post-quantum roadmap, each a file under examples/context/. Conforms to interface-enumeration v0.3, interface-disclosure "
         "v0.9, pqc-migration v0.8, pqc-migration-extended v0.1 and procurement v0.1.")
     md = bom["metadata"]
     md["timestamp"] = "2026-10-25T09:00:00Z"
@@ -127,12 +360,15 @@ def product():
     comp["description"] = ("Keycloak 26.7.3 container image at its defaults. Build record: what the image "
                            "does before anyone deploys it.")
     set_props(comp, {"subjectType": "product",
-                     "contextAbsent:vulnerability-statements": "not-published",
                      "contextAbsent:support-lifecycle": "not-published"})
     bom["externalReferences"] = [
         ctx("sbom", link("sbom"), "bom",
-            "Companion SBOM of the same image. Illustrative BOM-Link and hash.",
-            sha256=illustrative_hash("keycloak-26.7.3-sbom")),
+            "Companion SBOM of the same image: examples/context/keycloak-26.7.3-sbom.cdx.json.",
+            sha256=hashes["sbom"]),
+        ctx("vulnerability-statements", link("vex"), "vulnerability-assertion",
+            "The supplier's VEX: examples/context/keycloak-26.7.3-vex.cdx.json. Illustrative: the upstream "
+            "project publishes no VEX, and the identifiers in it are not CVEs.", protocol="vex-document",
+            sha256=hashes["vex"]),
         ctx("advisories", "https://github.com/keycloak/keycloak/security/advisories", "advisories",
             "Keycloak security advisories (GitHub Security Advisories).", protocol="web-page"),
         ctx("advisories", "https://api.osv.dev/v1/query", "advisories",
@@ -141,7 +377,18 @@ def product():
             protocol="osv-api"),
         ctx("security-contact", "https://github.com/keycloak/keycloak/security/policy", "security-contact",
             "Keycloak security policy: how to report a vulnerability.", protocol="web-page"),
+        ctx("configuration-guidance", SITE + "context/keycloak-configuration-guidance.json", "configuration",
+            "Where the operator sets each value this record leaves open, interface by interface.",
+            sha256=hashes["guidance"]),
+        ctx("roadmap", SITE + "context/keycloak-pqc-roadmap.json", "documentation",
+            "The supplier's post-quantum roadmap. Target releases live there, not in this record.",
+            sha256=hashes["roadmap"]),
     ]
+    # Each library points at its entry in the companion SBOM.
+    for c in bom["components"]:
+        if c.get("type") == "library":
+            c["externalReferences"] = [{"type": "bom", "url": link("sbom", c["bom-ref"]),
+                                        "comment": "This library's entry in the companion SBOM."}]
 
     guidance = {
         "crypto:protocol:tls-https": "https://www.keycloak.org/server/enabletls",
@@ -167,9 +414,12 @@ def product():
             pp = el["cryptoProperties"]["protocolProperties"]
             pp["cryptoRefArray"] = [r for r in pp["cryptoRefArray"] if r != "crypto:algo:rsa-2048"]
             set_props(el, {"authentication": "deployment-defined"})
-            el["externalReferences"] = [ctx("configuration-guidance", guidance[ref], "documentation",
-                                            "Where the operator sets the server certificate and key.",
-                                            protocol="web-page")]
+            el["externalReferences"] = [
+                ctx("configuration-guidance", guidance[ref], "documentation",
+                    "Where the operator sets the server certificate and key.", protocol="web-page"),
+                ctx("configuration-guidance", SITE + "context/keycloak-configuration-guidance.json",
+                    "configuration", "The same setting in the supplier's machine-readable guidance.",
+                    sha256=hashes["guidance"])]
         if ref in peer:
             el["cryptoProperties"]["protocolProperties"]["cryptoRefArray"] = []
             set_props(el, {"keyExchange": "peer-defined", "encryption": "peer-defined",
@@ -569,7 +819,8 @@ def scanner_output():
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    prod = product()
+    hashes = context_artifacts()
+    prod = product(hashes)
     sha_p = write("cbom-keycloak-product.cdx.json", prod)
 
     legacy = copy.deepcopy(prod)
@@ -594,7 +845,8 @@ def main():
 
     v = variant(prod, "c0d5", "NON-CONFORMING EXAMPLE. The product record exercising the four disclosure "
                 "outcomes. Most values are supplied. The OIDC interface withholds its implementing library, "
-                "which the baseline permits (I9 is withholdable). The cluster transport declares its "
+                "which the baseline permits (I9 is withholdable). It states that no VEX is published, which "
+                "satisfies R2 as a stated absence. The cluster transport declares its "
                 "authentication unknown, and the SAML interface leaves its encryption undeclared; "
                 "neither satisfies a MUST rule. Fails interface-disclosure#I5 and #I4, and conforms to the "
                 "entry profile, which asks for neither.")
@@ -607,6 +859,11 @@ def main():
         r for r in cache["cryptoProperties"]["protocolProperties"]["cryptoRefArray"] if r != "crypto:algo:rsa-2048"]
     cache["properties"].append(prop("disclosure:authentication", "unknown"))
     drop_props(element(v, "service:svc-saml"), "encryption")
+    # It also states, instead of pointing to a VEX, that none is published: a stated absence
+    # satisfies interface-disclosure#R2, which is the true position of the upstream project.
+    v["externalReferences"] = [r for r in v["externalReferences"]
+                               if not any(p["value"] == "vulnerability-statements" for p in r.get("properties", []))]
+    v["metadata"]["component"]["properties"].append(prop("contextAbsent:vulnerability-statements", "not-published"))
     write("cbom-keycloak-product-disclosure-states.cdx.json", v)
 
     v = variant(prod, "c0e1", "NON-CONFORMING EXAMPLE. The product record with the storage interface's "

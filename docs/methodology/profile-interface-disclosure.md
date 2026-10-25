@@ -396,8 +396,9 @@ Two principles govern every reference rule:
   A judgement made afterwards, such as a conformance claim or a policy result, points to the
   record by digest. A record never points to a judgement about itself.
 
-For Keycloak, the product record points to its SBOM by BOM-Link and hash (R1). It states
-`not-published` for vulnerability statements, because upstream Keycloak publishes none (R2). It
+For Keycloak, the product record points to its SBOM by BOM-Link and hash (R1). It points to an
+illustrative VEX document by BOM-Link and hash (R2); upstream Keycloak publishes none, which the
+disclosure-states example records as `not-published`. It
 names the GitHub advisory page as a `web-page` and the OSV API as an `osv-api` endpoint (R3). It
 points to the Keycloak security policy (R4). The HTTPS listener points to the Keycloak guide for setting the
 server certificate, and the management listener points to the guide for the management interface (R5).

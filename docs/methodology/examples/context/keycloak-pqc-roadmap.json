@@ -1,0 +1,92 @@
+{
+  "roadmapFormat": "pkic.example.roadmap",
+  "version": "0.1",
+  "asOf": "2026-10-25",
+  "$comment": "EXAMPLE. A post-quantum roadmap for the Keycloak image, as a supplier could publish it. The product record points here under pqc-migration#R2. The record itself states each purpose's capability as a status and a blocker, never a date (decision 0007); a roadmap is where a supplier may name a target release, and the record points to it without evaluating it. Each item agrees with the record's capabilityByPurpose entries. Target releases and tracking links are those in the public sources; the format is an illustration, not a standard, and the document is not a statement by the Keycloak project.",
+  "subject": "pkg:oci/keycloak?repository_url=quay.io/keycloak/keycloak&tag=26.7.3",
+  "items": [
+    {
+      "id": "ml-dsa-token-signing",
+      "purpose": "entity-authentication",
+      "interfaces": [
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:svc-oidc",
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:mgmt-admin",
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:svc-broker-tokens"
+      ],
+      "algorithms": [
+        "ML-DSA-44",
+        "ML-DSA-65",
+        "ML-DSA-87"
+      ],
+      "capabilityStatus": "committed",
+      "blockedBy": "standard",
+      "targetRelease": "27.0",
+      "dependsOn": [
+        {
+          "what": "ML-DSA in JOSE, including the AKP JWK key type",
+          "status": "Internet-Draft",
+          "ref": "https://datatracker.ietf.org/doc/draft-ietf-cose-dilithium/"
+        }
+      ],
+      "tracking": "https://github.com/keycloak/keycloak/issues/43690",
+      "note": "ML-DSA-65 signed tokens exceed the 4 KB browser cookie limit; relying parties must accept the AKP key type."
+    },
+    {
+      "id": "hybrid-key-exchange-tls",
+      "purpose": "key-establishment",
+      "interfaces": [
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:tls-https",
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:tls-mgmt",
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-db",
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-ldap",
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-broker",
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-smtp",
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-cache"
+      ],
+      "algorithms": [
+        "X25519MLKEM768"
+      ],
+      "capabilityStatus": "planned",
+      "blockedBy": "provider",
+      "targetRelease": null,
+      "dependsOn": [
+        {
+          "what": "A Java runtime with hybrid ML-KEM TLS groups (JEP 527)",
+          "status": "in JDK 27",
+          "ref": "https://openjdk.org/jeps/527"
+        }
+      ],
+      "note": "Available when the image ships a JDK that offers the hybrid groups; no Keycloak release is named."
+    },
+    {
+      "id": "saml-ml-dsa",
+      "purpose": "entity-authentication",
+      "interfaces": [
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:svc-saml"
+      ],
+      "algorithms": [],
+      "capabilityStatus": "under-evaluation",
+      "blockedBy": "standard",
+      "targetRelease": null,
+      "dependsOn": [
+        {
+          "what": "ML-DSA identifiers for XML Signature",
+          "status": "not standardised"
+        }
+      ]
+    },
+    {
+      "id": "realm-key-encryption",
+      "purpose": "key-protection",
+      "interfaces": [
+        "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#service:sto-realm-keys"
+      ],
+      "algorithms": [],
+      "capabilityStatus": "not-planned",
+      "blockedBy": "product",
+      "targetRelease": null,
+      "tracking": "https://github.com/keycloak/keycloak/issues/39933",
+      "note": "Realm key material is stored in the database in plaintext; the request to encrypt it has no milestone."
+    }
+  ]
+}

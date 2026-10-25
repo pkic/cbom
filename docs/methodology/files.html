@@ -33,7 +33,7 @@ nav: files
       <tr><td><a href="profile-interface-enumeration.rules.json">profile-interface-enumeration.rules.json</a></td><td>Entry depth, v0.3. The shallowest set of rules that still produces a usable inventory record. Accepts products and deployments at every stage, including <code>intended</code>. See <a href="maturity.html">Maturity</a></td></tr>
       <tr><td><a href="profile-interface-disclosure.rules.json">profile-interface-disclosure.rules.json</a></td><td>The baseline, v0.9. Document-level rules P1 to P6, per-interface rules I1 to I11 and reference rules R1 to R6. Accepts products and deployments at <code>implemented</code>, <code>configured</code> and <code>observed</code></td></tr>
       <tr><td><a href="profile-deployment-disclosure.rules.json">profile-deployment-disclosure.rules.json</a></td><td>Deployment records, v0.1, extending the baseline. Cited documents by BOM-Link and SHA-256, <code>correspondsTo</code>, observation method and window, and four context pointers</td></tr>
-      <tr><td><a href="profile-pqc-migration.rules.json">profile-pqc-migration.rules.json</a></td><td>PQC migration, v0.8, extending the baseline. Capability attributes I1 to I12, capability per purpose (G1) and the support-lifecycle pointer. Products at <code>implemented</code></td></tr>
+      <tr><td><a href="profile-pqc-migration.rules.json">profile-pqc-migration.rules.json</a></td><td>PQC migration, v0.8, extending the baseline. Capability attributes I1 to I12, capability per purpose (G1), and the support-lifecycle (R1) and roadmap (R2) pointers. Products at <code>implemented</code></td></tr>
       <tr><td><a href="profile-pqc-migration-extended.rules.json">profile-pqc-migration-extended.rules.json</a></td><td>PQC migration, extended depth, v0.1, extending pqc-migration. Key management and storage (decision 0022)</td></tr>
       <tr><td><a href="profile-procurement.rules.json">profile-procurement.rules.json</a></td><td>Procurement, v0.1, extending the baseline. A storage interface or a stated reason for none, coverage <code>all</code> or <code>all-external</code>, and an implementing library that may not be withheld</td></tr>
     </tbody>
@@ -76,6 +76,21 @@ nav: files
     </tbody>
   </table>
   </div>
+
+  <h2 id="context">Context documents</h2>
+  <p>The Keycloak product record points to four documents it does not carry. They are committed under <code>examples/context/</code>, so every pointer can be followed and every hash checked. They are examples of what a supplier publishes beside its record. See <a href="context.html#keycloak-set">Context Pointers</a>.</p>
+  <table>
+    <thead><tr><th>File</th><th>Pointed to by</th><th>What it is</th></tr></thead>
+    <tbody>
+      <tr><td><a href="examples/context/keycloak-26.7.3-sbom.cdx.json">keycloak-26.7.3-sbom.cdx.json</a></td><td><code>interface-disclosure#R1</code>, and each library's BOM-Link</td><td>Companion SBOM of the image, CycloneDX 2.0. An illustrative subset of components, declared incomplete.</td></tr>
+      <tr><td><a href="examples/context/keycloak-26.7.3-vex.cdx.json">keycloak-26.7.3-vex.cdx.json</a></td><td><code>interface-disclosure#R2</code></td><td>Vulnerability statements, CycloneDX 2.0: resolved, not affected, in triage. Illustrative identifiers, not CVEs; upstream Keycloak publishes no VEX.</td></tr>
+      <tr><td><a href="examples/context/keycloak-configuration-guidance.json">keycloak-configuration-guidance.json</a></td><td><code>interface-disclosure#R5</code></td><td>Who decides each value the product leaves open, and the Keycloak setting that decides it.</td></tr>
+      <tr><td><a href="examples/context/keycloak-pqc-roadmap.json">keycloak-pqc-roadmap.json</a></td><td><code>pqc-migration#R2</code></td><td>Planned post-quantum availability per purpose, with blockers, dependencies and target releases.</td></tr>
+    </tbody>
+  </table>
+  <p>To check the hashes while validating, supply the CycloneDX documents:</p>
+  <pre><code>python3 validate_cbom.py examples/cbom-keycloak-product.cdx.json profile-interface-disclosure.rules.json \
+    --with examples/context/keycloak-26.7.3-sbom.cdx.json --with examples/context/keycloak-26.7.3-vex.cdx.json</code></pre>
 
   <h2>Policies and results</h2>
   <table>
