@@ -35,7 +35,7 @@
 # names its meeting with `meeting: <number>`, and both pages link to each other.
 
 meta:
-  updated: 2026-09-30
+  updated: 2026-10-27
   timezone: Europe/Zurich
   # Shown above the list so a newcomer knows when to turn up. Free text.
   cadence: >-
@@ -51,7 +51,6 @@ meetings:
     timezone: Europe/Zurich
     duration: 60
     title: Working group meeting
-    join: https://pkic.org/wg/cbom/
     agenda:
       - Welcome, apologies, and approval of the previous minutes
 
@@ -84,7 +83,6 @@ meetings:
     timezone: Europe/Zurich
     duration: 60
     title: Working group meeting
-    join: https://pkic.org/wg/cbom/
     agenda:
       - "09:00 Welcome, apologies, and approval of the minutes of meeting 12 (Chair)"
       - "09:05 Intermediate publication: agree scope, owner and target date (Chair)"
@@ -99,7 +97,6 @@ meetings:
     timezone: Europe/Zurich
     duration: 60
     title: Working group meeting
-    join: https://pkic.org/wg/cbom/
     agenda:
       - "18:00 Welcome, apologies, and approval of the minutes of meeting 13 (Chair)"
       - "18:05 Additions over the past two weeks: the use-case section separated from the methodology and regrouped, the PQC migration depth drafts and decision 0022, the substation automation diagrams, and the plain-English pass — brief members and assign review requests (Chair)"
@@ -113,7 +110,6 @@ meetings:
     timezone: Europe/Zurich
     duration: 60
     title: Working group meeting
-    join: https://pkic.org/wg/cbom/
 
   - number: 16
     date: 2026-10-28
@@ -122,6 +118,12 @@ meetings:
     duration: 60
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
+    agenda:
+      - "18:00 Welcome, apologies, and approval of the minutes of meetings 14 and 15 (Chair)"
+      - "18:05 Updates since meeting 14: the consolidated baseline on Keycloak and CycloneDX 2.0, with the profile family, sixteen example CBOMs, example policies and their results, and a validator that reads both 2.0 and 1.x documents; the new Context Pointers page; the Foundation training track (F1 to F5); failure modes across the lifecycle; and the revised PQC migration use case. Brief members and assign review requests (Chair)"
+      - "18:20 Review of decision 0025: every pending choice in the baseline is provisional. Agree how members review them, and which choices go to the first polls (Vice-chair)"
+      - "18:30 The first document release on CBOM profiles, and the December workshop: agree what the release covers, who writes and reviews each part, and a target date before the workshop. Then agree how the workshop uses it, including the live version of the tabletop exercise that participants join from their phones, a rehearsal date, and who facilitates (Chair)"
+      - "18:55 Any other business, actions and next meeting (Chair)"
 
   - number: 17
     date: 2026-11-04
