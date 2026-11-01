@@ -922,7 +922,7 @@ F3.push({min:1.5,render:()=>`${head('ladder','Sequencing: when the minimum becom
 F3.push({min:1.5,render:()=>`${head('relation','The edge gap','The standards describe what a component contains, not where it is used')}
   <p>Current CBOM standards model cryptographic assets as nodes: algorithms, keys, certificates and protocols. They have no object for the <b>relationship</b>, the point at which cryptography is applied between two parties. A TLS connection is an example. It is where assets are used, not an asset in itself.</p>
   ${fig(FIG_EDGE,'<b>Figure 2.</b> Some classifiers belong to the connection, such as the endpoint roles in a session. With no object for the connection, they are attached to the protocol asset. The edge is represented as though it were a node.')}
-  ${dash(['<b>Why it matters:</b> the questions buyers ask are about connections. Which interfaces negotiate a classical key exchange? Who is at the far end?','<b>How the methodology responds:</b> it models interfaces explicitly and states, in the mapping, where each relationship attribute is written. Module C1 covers the relationship model.'])}`});
+  ${dash(['<b>Why it matters:</b> the questions buyers ask are about connections. Which interfaces negotiate a classical key exchange? Who is at the far end?','<b>How the methodology responds:</b> it models interfaces explicitly and states, in the mapping, where each relationship attribute is written. A connection between two parties is the join of its two ends: a deployment record can name the far end, and an evaluation reads both records together (decision 0026). Module C1 covers the relationship model.'])}`});
 
 F3.push({min:1.5,render:()=>`${head('mapping','Naming, encoding and format coverage','Three reasons two correct CBOMs cannot be compared')}
   ${fig(FIG_NORM,'<b>Figure 3.</b> Naming normalization fixes the value. Encoding normalization fixes where the value sits. A consumer needs both to read CBOMs from different producers with one parser.')}
@@ -1781,7 +1781,7 @@ const A3_LOCS=[
    ref: crypto:protocol:cfg-jdk21-tls-defaults}`,a:0,e:'Supported. The reference leads to a shared TLS configuration. The validator follows it to find the supported set and does not count it as in use.'},
  {q:`<span class="k">cryptoRefArray:</span>
 - crypto:algo:aes-256-gcm
-- crypto:algo:x25519`,a:1,e:'In use. This is the CycloneDX 1.7 legacy location. In 2.0 the same facts sit in relatedCryptographicAssets.'}
+- crypto:algo:x25519`,a:1,e:'In use. This is the 1.x location. 2.0 puts the same facts in relatedCryptographicAssets, which 1.7 already allows on protocols, certificates and key material.'}
 ];
 
 const A3_TABS={
@@ -1803,7 +1803,7 @@ const A3_TABS={
             "ref": "crypto:protocol:cfg-jdk21-tls-defaults" } ] } },
     "properties": [
       { "name": "pkic:profile:interfaceType", "value": "service" } ] }] }]`},
- cdx17:{t:'CycloneDX 1.7 (legacy)',note:'The same facts in their 1.x places. The subject is metadata.component with a plain purl. Algorithms in use are listed in cryptoRefArray. The validator reads this file, places it in the legacy band and gives the same verdicts.',code:`<span class="k">"bomFormat":</span> "CycloneDX", <span class="k">"specVersion":</span> "1.7",
+ cdx17:{t:'CycloneDX 1.7 (legacy)',note:'The same facts in their 1.x places. The subject is metadata.component with a plain purl. Algorithms in use are listed in cryptoRefArray. CycloneDX 1.7 also offers relatedCryptographicAssets, and this record uses it for the shared TLS configuration. The validator reads this file, places it in the legacy band and gives the same verdicts.',code:`<span class="k">"bomFormat":</span> "CycloneDX", <span class="k">"specVersion":</span> "1.7",
 <span class="k">"metadata":</span> {
   <span class="k">"component":</span> { "name": "Keycloak", "version": "26.7.3",
     <span class="k">"purl":</span> "pkg:oci/keycloak?...&amp;tag=26.7.3" } },
@@ -2027,7 +2027,7 @@ const A4_ROLES={
 const A4_ARR={
  A:{t:'A · Unified document',d:'One bill of materials holds the software components and the cryptographic assets, with dependencies between them. CycloneDX supports this directly.',plus:'Nothing to resolve and no second document to keep in step. One signature covers the whole claim and one author is accountable.',minus:'The two kinds of data change at different rates. A deployment\'s cryptographic configuration can change with no software change, and the whole document must be republished. Anyone entitled to the software inventory also receives the cryptographic detail.',fit:'A product CBOM generated at build time, where the software and cryptographic views share an author and a release cadence.'},
  B:{t:'B · Standalone CBOM',d:'One document describes cryptography with no reference to any software inventory.',plus:'Simple to produce and distribute. It discloses no software composition the producer would rather keep private.',minus:'It cannot answer the next question: which library implements the algorithm, and can it be updated? The profile asks for implementationPurl (I9) to reduce this gap.',fit:'An operator describing cryptography observed on a service it did not build, or an estate survey from network discovery.'},
- C:{t:'C · CBOM referencing an SBOM',d:'The CBOM is the entry point and points to the SBOM for the same subject. The consumer starts from the cryptography and resolves outward when it needs component detail.',plus:'The two documents keep their own lifecycles, so a configuration change produces a new CBOM revision without reissuing the SBOM. It suits migration planners and anyone assessing an interface.',minus:'The reference has to stay correct. A reference that does not pin a revision will drift, and a consumer that cannot resolve it sees an incomplete picture with no warning.',fit:'The Keycloak product record. It names the libraries behind its interfaces, so I9 is answered in the record, and baseline rule R1 points to the companion SBOM by BOM-Link and SHA-256.'},
+ C:{t:'C · CBOM referencing an SBOM',d:'The CBOM is the entry point and points to the SBOM for the same subject. The consumer starts from the cryptography and resolves outward when it needs component detail.',plus:'The two documents keep their own lifecycles, so a configuration change produces a new CBOM revision without reissuing the SBOM. It suits migration planners and anyone assessing an interface.',minus:'The reference has to stay correct. A reference that does not pin a revision will drift, and a consumer that cannot resolve it sees an incomplete picture with no warning.',fit:'The Keycloak product record. It names the libraries behind its interfaces, so I9 is answered in the record, and baseline rule R1 points to the companion SBOM by BOM-Link and SHA-256. The SBOM already exists as its own document. A producer starting from nothing would still choose A for a product record generated at build time.'},
  D:{t:'D · SBOM referencing a CBOM',d:'The SBOM is the entry point and links the CBOM as an external artifact.',plus:'Existing supply-chain processes already request, store and verify SBOMs, and the CBOM inherits them. Access can be split, so software composition can be published more widely than cryptographic configuration.',minus:'Cryptography becomes a secondary artifact. A consumer whose tooling ignores unfamiliar references never sees the CBOM, and nothing in the SBOM signals that anything is missing.',fit:'Where the consumer requires SPDX. SPDX 3.0.1 has no cryptographic model, so an SPDX SBOM with a linked CycloneDX CBOM is the practical option today.'}
 };
 const A4_CHANGES=[
@@ -2130,7 +2130,7 @@ A4.push({min:0,next:null,render:()=>`${head('signed','Governance: signing, prove
   ${dash(['Bind every conformance claim to the document digest and the exact profile version.','Sign each revision, and choose the signature algorithm by the same rules as the cryptography it describes.','Record the tool, its version, the inputs, the lifecycle stage and any conversion.','Pick the CBOM and SBOM arrangement deliberately: unified for a build-time product record, a referenced pair when cryptography changes on its own schedule.','Cite other documents by BOM-Link and SHA-256, inside signed content.','Correct by issuing a new revision. Keep every published revision and every published profile version.'])}
   <div class="concept" style="margin-top:22px"><small>APPLYING IT TRACK COMPLETE</small>You have finished the Applying it modules. The Electives cover the use-case groups, sector examples and data exposure.</div>
   <div class="nextup"><button class="btn" data-goto="hub">All modules</button></div>
-  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Governance, Versioning and Context Pointers; Deployment Disclosure profile v0.1 (rule P1 and correspondsTo); Keycloak 26.7.3 product and deployment records in CycloneDX 2.0; 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026).</p>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Governance, Versioning and Context Pointers; Deployment Disclosure profile v0.2 (rule P1 and correspondsTo); Keycloak 26.7.3 product and deployment records in CycloneDX 2.0; 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026).</p>
   <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
 
 /* ================= C1 Relationships, endpoints and assets ================= */
@@ -2302,7 +2302,7 @@ C1.push({min:1.5,render:()=>`${head('chain','Product records, deployment records
    <tr><td>Token signing; Keycloak's own TLS</td><td><span class="chip c-fail">not-capable</span></td><td>The supplier: blocked by JOSE, and by the Java runtime</td></tr>
    <tr><td>Product HTTPS listener</td><td><span class="chip c-mute">not-deployed</span></td><td>Nobody: TLS ends at the ingress</td></tr>
   </tbody></table></div>
-  ${concept('The readiness gap is computed from the join and never stored. The readiness-gap policy reads the three records, follows correspondsTo, and classes each interface and purpose. Module C6 covers policy evaluation.')}`});
+  ${concept('The readiness gap is computed from the join and never stored. The readiness-gap policy reads the three records, follows correspondsTo, and classes each interface and purpose. A second join, peerInterface, links the two ends of one connection when two operators record them, and the edge-posture evaluation names the end that limits it (decision 0026). Module C6 covers policy evaluation.')}`});
 
 C1.push({min:1,render:()=>`${head('doc','The objects around a CBOM','Who writes each one, and how each is identified')}
   ${fig(C1_FIG_OBJECTS,'<b>Figure 5.</b> A profile constrains a revision. A claim binds to it by digest. A policy reads it and produces a dated result. A vulnerability statement cites it by the same digest. A record points out to context; a judgement made later points back to the record.')}
@@ -2342,7 +2342,7 @@ const C2_FIG_KINDS=`<svg viewBox="0 0 720 170" role="img" aria-label="Four kinds
  </g>
 </svg>`;
 
-const C2_FIG_FAMILY=`<svg viewBox="0 0 720 260" role="img" aria-label="Composition. Left: one CBOM evaluated independently against three profiles, each with its own verdict. Right: an extension chain. The interface disclosure baseline v0.9 is extended by PQC migration v0.8, procurement v0.1 and deployment disclosure v0.1. PQC migration extended v0.1 extends PQC migration.">
+const C2_FIG_FAMILY=`<svg viewBox="0 0 720 260" role="img" aria-label="Composition. Left: one CBOM evaluated independently against three profiles, each with its own verdict. Right: an extension chain. The interface disclosure baseline v0.9 is extended by PQC migration v0.8, procurement v0.1 and deployment disclosure v0.2. PQC migration extended v0.1 extends PQC migration.">
  <text class="t-ink" x="160" y="22" text-anchor="middle" font-weight="700" font-size="13">Independent evaluation</text>
  <rect class="s-key" x="20" y="100" width="110" height="56" rx="10"/><text class="t-ink" x="75" y="124" text-anchor="middle" font-weight="600" font-size="12.5">One CBOM</text><text class="t-muted" x="75" y="142" text-anchor="middle" font-size="10.5">published once</text>
  <rect class="s-panel" x="180" y="44" width="140" height="40" rx="8"/><text class="t-ink" x="250" y="69" text-anchor="middle" font-size="11.5">procurement profile</text>
@@ -2416,7 +2416,9 @@ const C2_OPS=[
  {t:'Add a requiredWhen guard so the rule applies less often',a:1},
  {t:'Remove a requiredWhen guard so the rule always applies',a:0},
  {t:'Narrow accepted subject types to product only',a:0},
- {t:'Redefine what an inherited attribute means',a:1}
+ {t:'Redefine what an inherited attribute means',a:1},
+ {t:'Add a new cryptographic purpose to the vocabulary that keys G1',a:0,e:'It adds coverage. Only the derived profile has rules for the new purpose. The base never asks for an entry under it, so a document that passes the derived profile still passes the base (decision 0025).'},
+ {t:'Add a new value to the interfaceType vocabulary',a:1,e:'It relaxes the base. interfaceType values are checked against the vocabulary, so the derived profile would accept an interface type the base rejects.'}
 ];
 const QUIZ_C2=[
  {q:'A draft profile requires interfaceId to equal "keycloak-https". What is wrong with it?',o:['Nothing, as long as Keycloak is the subject','A profile must not bind a rule to a specific product or interface instance; rules constrain the set of interfaces and their attributes','interfaceId must be a Package URL'],a:1,e:'Rules are structural, so the same profile applies to any product and any deployment of it.'},
@@ -2500,7 +2502,7 @@ C2.push({min:2,render:()=>`${head('verdict','Extension must be monotonic','A der
   ${concept('A rule keeps the identifier of the profile that introduced it. PQC migration makes I9 non-withholdable, and the rule is still interface-disclosure#I9. Released identifiers are never reused, because an old report may cite them.')}`,
   init(){document.querySelectorAll('[data-c2o]').forEach(b=>b.onclick=()=>{const i=+b.dataset.c2o,c=+b.dataset.c,ok=c===C2_OPS[i].a;
     document.querySelectorAll(`[data-c2o="${i}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));
-    const f=document.getElementById('c2ofb'+i);f.className='fb '+(ok?'ok':'no');f.textContent=(ok?'Correct. ':'Not quite. ')+(C2_OPS[i].a?'It relaxes the base: a document could pass the derived profile and fail the base.':'It tightens: anything that satisfies the derived rule satisfies the base rule.');})}});
+    const f=document.getElementById('c2ofb'+i);f.className='fb '+(ok?'ok':'no');f.textContent=(ok?'Correct. ':'Not quite. ')+(C2_OPS[i].e||(C2_OPS[i].a?'It relaxes the base: a document could pass the derived profile and fail the base.':'It tightens: anything that satisfies the derived rule satisfies the base rule.'));})}});
 
 C2.push({min:1.5,render:()=>`${head('verdict','From rules to a verdict and a claim','What the validator does, and what a claim carries')}
   ${fig(C2_FIG_PIPE,'<b>Figure 4.</b> Content stages run only if the format gate accepts the document. A deployment record\'s cited records are checked by serial, version and SHA-256.')}
@@ -2647,7 +2649,7 @@ C3.push({min:1.5,render:()=>`${head('standards','A well-formed profile and a con
     <div class="tile3"><h4>${I.decision}A stated purpose</h4><p>C1: the consumer, the decision and the options. C8 (SHOULD): what the profile excludes, and why.</p></div>
     <div class="tile3"><h4>${I.iface}No named product</h4><p>C3: no rule refers to a named product, vendor or interface instance.</p></div>
     <div class="tile3"><h4>${I.verdict}No judgements</h4><p>C6: no rule asks for a derived judgement whose criteria live outside the document and change over time.</p></div>
-    <div class="tile3"><h4>${I.ladder}Extension never relaxes</h4><p>C7: a derived profile pins its base by identifier and version, and no override relaxes an inherited rule.</p></div>
+    <div class="tile3"><h4>${I.ladder}Extension never relaxes</h4><p>C7: a derived profile pins its base by identifier and version, no override relaxes an inherited rule, and it adds values only to a vocabulary that keys a group.</p></div>
     <div class="tile3"><h4>${I.rules}Rules that can fail</h4><p>C4, C13 and C17: every rule has an id, a level and a constraint the evaluator implements. A rule that cannot fail is worse than no rule.</p></div>
     <div class="tile3"><h4>${I.lifecycle}A declared scope</h4><p>C11 and C12: subject types, orientation, relationship types and accepted stages, consistent with the rules.</p></div>
    </div>
@@ -2726,11 +2728,11 @@ const C4_FIG_FAMILY=`<svg viewBox="0 0 720 250" role="img" aria-label="The examp
 
 const C4_PROF={
  enum:{t:'Interface Enumeration v0.3',rel:'Entry depth',chip:'c-info',ask:'What the subject is, and whether it is a product or a deployment. Which interfaces it exposes, what each one speaks and at which version, which stage the report describes, and whether the list is the whole list.',rules:'P1, P3, P4, P5, P6, I1, I2, I7, I8',orient:'inventory',stages:'All four, including intended. A first inventory takes whatever a producer can report.'},
- base:{t:'Interface Disclosure Baseline v0.9',rel:'One depth deeper',chip:'c-info',ask:'Everything the entry profile asks, plus the algorithms for each cryptographic job, the endpoint roles, the implementing library, key wrapping on storage, the default state, a management interface or a stated reason there is none, and pointers to context the document does not carry.',rules:'Shares nine rules unchanged and adds P2, I3, I4, I5, I6, I9, I10, I11, plus reference rules R1 to R6',orient:'inventory',stages:'implemented, configured and observed. A design intention answers nothing about deployed interfaces.'},
+ base:{t:'Interface Disclosure Baseline v0.9',rel:'One depth deeper',chip:'c-info',ask:'Everything the entry profile asks, plus the algorithms for each cryptographic job, the endpoint roles, the implementing library, key wrapping on storage, the default state, a management interface or a stated reason there is none, and pointers to context the document does not carry.',rules:'Shares nine rules unchanged and adds P2, I3, I4, I5, I6, I9, I10, I11 (at SHOULD), plus reference rules R1 to R6',orient:'inventory',stages:'implemented, configured and observed. A design intention answers nothing about deployed interfaces.'},
  pqc:{t:'PQC Migration v0.8',rel:'Branch from the baseline',chip:'c-mgmt',ask:'For a product as built: capability per interface and cryptographic purpose, what enabling it requires, what blocks it, module validation, and key-wrapping capability on storage.',rules:'Extends the baseline. Adds I1 to I12, the group rule G1, R1 (support lifecycle) and R2 (roadmap). Makes I9 non-withholdable.',orient:'both',stages:'implemented only, for a product'},
  ext:{t:'PQC Migration Extended v0.1',rel:'Depth within the migration branch',chip:'c-info',ask:'Everything PQC Migration asks, plus key management and storage: the key types the management interfaces can generate, where keys are stored, external dependencies, and storage interfaces or a stated absence.',rules:'Extends PQC Migration. Adds P1, P2, I1 to I10, and tightens pqc-migration#G1.4.',orient:'both',stages:'Inherited from PQC Migration. A derived profile cannot widen them.'},
  proc:{t:'Procurement v0.1',rel:'Branch from the baseline',chip:'c-mgmt',ask:'For a product offered in a tender: a storage interface or a stated absence, coverage of all interfaces or all external ones, and the implementing library with no withholding.',rules:'Extends the baseline. Adds P5 and P6. Makes I9 non-withholdable.',orient:'inventory',stages:'implemented only, for a product'},
- dep:{t:'Deployment Disclosure v0.1',rel:'Branch from the baseline',chip:'c-mgmt',ask:'For a deployment: the records it cites by BOM-Link and hash, the product interface each of its interfaces realises, and how and when each observed value was obtained.',rules:'Extends the baseline. Adds P1, I1 to I3 and R1 to R4.',orient:'inventory',stages:'configured and observed, for a deployment'}
+ dep:{t:'Deployment Disclosure v0.2',rel:'Branch from the baseline',chip:'c-mgmt',ask:'For a deployment: the records it cites by BOM-Link and hash, the product interface each of its interfaces realises, and how and when each observed value was obtained. It may also name the interface at the far end of each connection.',rules:'Extends the baseline. Adds P1, I1 to I4 (I4 at MAY) and R1 to R4.',orient:'inventory',stages:'configured and observed, for a deployment'}
 };
 
 const C4_PAIRS=[
@@ -3158,7 +3160,7 @@ C6.push({min:0,next:null,render:()=>`${head('advisory','Facts, judgements and vu
   <h3 style="margin-top:22px">Follow these practices</h3>
   ${dash(['Keep verdicts out of the CBOM. Evaluate with a named policy version and record the date.','Bind every result to the policy and to each CBOM it read by SHA-256.','Use the readiness-gap classes to decide who acts on each interface.','Match implementation defects through I9 and the advisory endpoint, and read vendor statements through R2.','Remove withholdability from I9 in any profile that has to support incident response or migration.','Treat a passing verdict as a statement about disclosure, never about safety.'])}
   <div class="nextup"><button class="btn" data-goto="C7">Next module: C7 Context pointers →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
-  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Policy Evaluation, Vulnerabilities and Lifecycle Data; policy.schema.json, policy-result.schema.json and the two example policies with their Keycloak results (evaluated 2026-10-25); decisions 0002 and 0020; NIST IR 8547 initial public draft.</p>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Policy Evaluation, Vulnerabilities and Lifecycle Data; policy.schema.json, policy-result.schema.json and the readiness-gap and algorithm-transition example policies with their Keycloak results (evaluated 2026-10-25); decisions 0002 and 0020; NIST IR 8547 initial public draft.</p>
   <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. The example policies are illustrative and are not advice.</p>`});
 
 /* ================= C7 Context pointers ================= */
