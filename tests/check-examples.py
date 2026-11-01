@@ -72,6 +72,10 @@ CASES = [
     ("cbom-keycloak-deployment-observed-outside.cdx.json", DEPL, [PRODUCT],
      ["crypto:protocol:ing-tls/%s#I9" % BASE]),
     ("cbom-keycloak-deployment-observed-outside.cdx.json", ENUM, [PRODUCT], []),
+    # The far end of the database connection, recorded by the team that runs it. Its
+    # peerInterface (I4) resolves into the Keycloak configured record when that is supplied.
+    ("cbom-postgres-deployment-configured.cdx.json", DEPL, [CONF], []),
+    ("cbom-postgres-deployment-configured.cdx.json", DEPL, [], []),
     # A product profile refuses to treat a deployment record as a product record.
     (CONF, PQC, [PRODUCT], None),
     (PRODUCT, DEPL, [], None),

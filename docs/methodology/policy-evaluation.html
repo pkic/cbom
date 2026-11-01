@@ -94,7 +94,8 @@ nav: policyeval
       <tr><td>Policy format</td><td><code>policy.schema.json</code></td><td>The structure of a policy: identifier, version, status, source, method, a classification of algorithm names, and either a dated schedule or a set of targets per purpose.</td></tr>
       <tr><td>Readiness-gap policy</td><td><code>policies/policy-readiness-gap.policy.json</code></td><td>Example policy <code>pkic.example.policy.readiness-gap</code>, version 0.1, method <code>readiness-gap</code>.</td></tr>
       <tr><td>Algorithm-transition policy</td><td><code>policies/policy-algorithm-transition.policy.json</code></td><td>Example policy <code>pkic.example.policy.algorithm-transition</code>, version 0.1, method <code>algorithm-transition</code>.</td></tr>
-      <tr><td>Evaluator</td><td><code>evaluate_policy.py</code></td><td>Implements both methods. Usage: <code>evaluate_policy.py &lt;policy&gt; &lt;cbom...&gt; --date YYYY-MM-DD</code>.</td></tr>
+      <tr><td>Edge-posture policy</td><td><code>policies/policy-edge-posture.policy.json</code></td><td>Example policy <code>pkic.example.policy.edge-posture</code>, version 0.1, method <code>edge-posture</code>.</td></tr>
+      <tr><td>Evaluator</td><td><code>evaluate_policy.py</code></td><td>Implements the three methods. Usage: <code>evaluate_policy.py &lt;policy&gt; &lt;cbom...&gt; --date YYYY-MM-DD</code>.</td></tr>
       <tr><td>Result format</td><td><code>policy-result.schema.json</code></td><td>The structure of a result.</td></tr>
       <tr><td>Results</td><td><code>examples/results/</code></td><td>The results for the Keycloak records, all evaluated on 2026-10-25.</td></tr>
     </tbody>
@@ -140,6 +141,21 @@ nav: policyeval
   </div>
   <p>The readiness gap is computed from the join each time. No CBOM stores it.</p>
 
+  <h3 id="edge-posture">Edge posture</h3>
+  <p>The <code>edge-posture</code> method joins the two ends of a connection along <code>peerInterface</code> (deployment disclosure I4, decision 0026). Each end is an interface in its own operator's records. The configured record says what the end permits. The observed record, where one is supplied, says what was negotiated. For each purpose the method places the connection in one class, and names the end that limits it where there is one.</p>
+  <table>
+    <thead><tr><th>Class</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td><code>target-met</code></td><td>Every value negotiated meets the target. Without an observation, both ends permit a common value that meets it.</td></tr>
+      <tr><td><code>limited-by-end</code></td><td>One end permits a target value and the other does not. The evaluation names the end that does not, with what its product record says blocks it.</td></tr>
+      <tr><td><code>neither-end-permits</code></td><td>Neither end permits a target value. Both have to change.</td></tr>
+      <tr><td><code>fallback-or-intermediary</code></td><td>Both ends permit a target value, and a session negotiated one that does not meet it. The limit is a fallback path or something between the ends.</td></tr>
+      <tr><td><code>no-common-target</code></td><td>Both ends permit a target value, but not the same one.</td></tr>
+      <tr><td><code>limit-unknown</code></td><td>An end has no configured record, so the limit cannot be placed.</td></tr>
+    </tbody>
+  </table>
+  <p>The readiness gap compares one interface across stages. The edge posture compares the two ends of one connection. Where the readiness gap says the limit is the other endpoint, the edge posture says which endpoint that is.</p>
+
   <h2 id="keycloak-results">The Keycloak results</h2>
   <p>The working group evaluated the Keycloak records with both example policies on 2026-10-25. The operator, Example Org, is illustrative.</p>
   <table>
@@ -148,6 +164,7 @@ nav: policyeval
       <tr><td><code>result-readiness-gap-sso-prod.json</code></td><td>product, configured and observed records</td><td>28 findings: 14 <code>not-capable</code>, 4 <code>unprotected</code>, 4 <code>not-deployed</code>, 4 <code>not-applicable</code>, 1 <code>enabled-not-negotiated</code>, 1 <code>unknown</code>.</td></tr>
       <tr><td><code>result-algorithm-transition-keycloak-product.json</code></td><td>product record</td><td>156 findings. 126 algorithms are acceptable on the evaluation date. Of these, 53 are quantum-vulnerable at 112 bits and become deprecated after 2030, and 67 are quantum-vulnerable at 128 bits or more and become disallowed after 2035. 13 values are <code>decided-by-peer</code>, 2 are <code>not-fixed-by-product</code>, and 15 are <code>not-applicable</code>.</td></tr>
       <tr><td><code>result-algorithm-transition-sso-prod-observed.json</code></td><td>observed record</td><td>31 findings. 18 algorithms are acceptable on the evaluation date. 6 of them (RSA-2048, RS256 and RSA-SHA256) become deprecated after 2030, and 6 become disallowed after 2035. 13 values are <code>not-applicable</code>.</td></tr>
+      <tr><td><code>result-edge-posture-sso-db.json</code></td><td>the Keycloak product, configured and observed records, and the database team's configured record</td><td>2 findings for the connection from Keycloak to PostgreSQL. Key establishment is <code>limited-by-end</code>: the database permits X25519MLKEM768, and Keycloak's <code>int-db</code> does not, because its Java provider is blocked (planned, JEP 527). Entity authentication is <code>neither-end-permits</code>.</td></tr>
     </tbody>
   </table>
   <p>The readiness-gap result says who acts. Key establishment at the ingress is <code>enabled-not-negotiated</code>: the configured record permits X25519MLKEM768, and 29% of sessions still negotiate X25519 alone. The plaintext hop from the ingress to Keycloak and the management port are <code>unprotected</code>, so Example Org acts. Token signing is <code>not-capable</code>: ML-DSA signing is committed upstream (issue #43690) and blocked by the JOSE standard. Keycloak's own TLS is <code>not-capable</code>: post-quantum key exchange is planned and blocked by the Java runtime (JEP 527). The product's HTTPS listener is <code>not-deployed</code>, because TLS ends at the ingress. <a href="lifecycle.html#keycloak-gap">Lifecycle Data</a> shows the findings as a table.</p>

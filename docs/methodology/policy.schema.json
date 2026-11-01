@@ -41,7 +41,8 @@
     "method": {
       "enum": [
         "algorithm-transition",
-        "readiness-gap"
+        "readiness-gap",
+        "edge-posture"
       ]
     },
     "inputs": {

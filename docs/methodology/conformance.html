@@ -126,18 +126,18 @@ nav: conformance
       <tr><td>C4</td><td>Every rule carries a stable identifier, an obligation level, and a statement of whether withholding satisfies it.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C5</td><td>Attribute names follow the methodology's naming conventions, and any attribute already defined elsewhere in the methodology is used with its established meaning.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C6</td><td>No rule requires a derived judgement whose criteria are external to the document and subject to change. See <a href="policy-evaluation.html">Policy Evaluation</a>.</td><td><strong>MUST</strong></td></tr>
-      <tr><td>C7</td><td>Where the profile extends another, it pins the base by identifier and version, and no override relaxes an inherited rule.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C7</td><td>Where the profile extends another, it pins the base by identifier and version, and no override relaxes an inherited rule. It adds values only to an inherited vocabulary that keys a group.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C8</td><td>The profile states what it deliberately excludes, and why.</td><td>SHOULD</td></tr>
       <tr><td>C9</td><td>The profile is accompanied by a mapping to at least one carrier format, and by at least one document that conforms and one that does not.</td><td>SHOULD</td></tr>
       <tr><td>C10</td><td>The profile carries a changelog classifying each change as tightening, relaxing, or editorial.</td><td>SHOULD</td></tr>
       <tr><td>C11</td><td>The profile declares its scope: the subject types it accepts, its orientation, the relationship types its rules constrain, and the lifecycle stages of reported data it accepts.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C12</td><td>The rules the profile imposes are consistent with the orientation it declares.</td><td><strong>MUST</strong></td></tr>
+      <tr><td>C13</td><td>Every group rule is keyed to a declared vocabulary, and a profile that declares a subset of that vocabulary in scope still requires an answer for the rest.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C14</td><td>Identifier schemes are declared for every asset class the rules constrain, and no scheme is declared that no rule applies.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C15</td><td>The profile carries a tag, and no profile it inherits from already uses that tag.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C16</td><td>Rule identifiers are local to the profile, and each carries the letter of the section it sits in.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C17</td><td>Every rule can pass a document and can fail one: it has a constraint, the constraint is one the evaluator implements, and any vocabulary it names is declared.</td><td><strong>MUST</strong></td></tr>
       <tr><td>C18</td><td>Every reference rule names a context kind that the profile or its base defines, and that kind is carried by real CycloneDX reference types.</td><td><strong>MUST</strong></td></tr>
-      <tr><td>C13</td><td>Every group rule is keyed to a declared vocabulary, and a profile that declares a subset of that vocabulary in scope still requires an answer for the rest.</td><td><strong>MUST</strong></td></tr>
     </tbody>
   </table>
   </div>
@@ -209,7 +209,7 @@ nav: conformance
   <p>A reference rule names a context kind, such as <code>sbom</code> or <code>configuration-guidance</code>. The profile defines each kind once, in <code>contextKinds</code>, with the CycloneDX reference types that can carry it and its form: a fixed document bound by a hash, or an endpoint that names its access protocol. C18 requires every reference rule to name a defined kind, and every kind to list real CycloneDX reference types. A kind whose carrier list names no real type could never be satisfied by a valid document, so the rule could only fail.</p>
 
   <p>C1 to C7 and C11 to C18 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports on each requirement in turn. C8 to C10 are checked where the profile declares the material, and are reported as warnings that do not affect the result unless <code>--strict</code> is given.</p>
-  <p>All six example profiles pass: Interface Enumeration v0.3, the Interface Disclosure Baseline v0.9, Deployment Disclosure v0.1, PQC Migration v0.8, PQC Migration Extended v0.1 and Procurement v0.1. The test suite also carries deliberately defective profiles for the MUST requirements, so that the checks themselves are tested.</p>
+  <p>All six example profiles pass: Interface Enumeration v0.3, the Interface Disclosure Baseline v0.9, Deployment Disclosure v0.2, PQC Migration v0.8, PQC Migration Extended v0.1 and Procurement v0.1. The test suite also carries deliberately defective profiles for the MUST requirements, so that the checks themselves are tested.</p>
   <p>The tool does not replace review. C3 in particular is enforced through indirect structural checks. A rule that names a specific instance in a way the checker does not model would therefore still pass.</p>
 
   <h2>3. An evaluation tool conforming to this methodology</h2>

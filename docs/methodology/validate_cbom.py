@@ -1307,27 +1307,38 @@ def check_value(iface, value, rule, profile):
         constraint = {k: v for k, v in constraint.items() if k not in ("literals", "literalStages")}
     if "refersToCited" in constraint:
         spec = constraint["refersToCited"]
-        if value in spec.get("literals", []):
-            return True, "= %r" % value
-        doc, ref = split_bomlink(value)
-        if not doc or not ref:
-            return False, "= %r, not a BOM-Link to an interface" % (value,)
-        ctx = iface.get("_context") or {}
-        cited = [split_bomlink(r.get("url"))[0] for r in ctx.get("cited", [])]
-        if doc not in cited:
-            return False, "points into %s, which the document does not cite" % doc
-        registry = ctx.get("registry")
-        entry = registry.get(doc) if registry else None
-        if not entry:
-            return True, "-> %s (cited document not supplied, so not resolved)" % value
-        if ref not in [i["interfaceId"] for i in extract_interfaces(entry["bom"])]:
-            return False, "-> %s, which is not an interface in %s" % (ref, os.path.basename(entry["path"]))
-        return True, "-> %s#%s" % (os.path.basename(entry["path"]), ref)
+        if isinstance(value, list):
+            # A list of pointers, such as the several clients of one server
+            # interface (deployment-disclosure I4). Each must resolve.
+            results = [_refers_to_cited(v, spec, iface) for v in value]
+            bad = [d for ok, d in results if not ok]
+            return (not bad, "; ".join(bad) if bad else "; ".join(d for _, d in results))
+        return _refers_to_cited(value, spec, iface)
     if rule.get("list") and "enumRef" in constraint:
         vocab = profile.get(constraint["enumRef"], [])
         bad = [v for v in _as_list(value) if v not in vocab]
         return (not bad, ("= %r" % (value,)) if not bad else "%r not in the vocabulary" % bad)
     return check_attr(value, constraint, profile)
+
+
+def _refers_to_cited(value, spec, iface):
+    """One BOM-Link into a document the record cites, or one of the rule's literals."""
+    if value in spec.get("literals", []):
+        return True, "= %r" % value
+    doc, ref = split_bomlink(value)
+    if not doc or not ref:
+        return False, "= %r, not a BOM-Link to an interface" % (value,)
+    ctx = iface.get("_context") or {}
+    cited = [split_bomlink(r.get("url"))[0] for r in ctx.get("cited", [])]
+    if doc not in cited:
+        return False, "points into %s, which the document does not cite" % doc
+    registry = ctx.get("registry")
+    entry = registry.get(doc) if registry else None
+    if not entry:
+        return True, "-> %s (cited document not supplied, so not resolved)" % value
+    if ref not in [i["interfaceId"] for i in extract_interfaces(entry["bom"])]:
+        return False, "-> %s, which is not an interface in %s" % (ref, os.path.basename(entry["path"]))
+    return True, "-> %s#%s" % (os.path.basename(entry["path"]), ref)
 
 
 def check_rule(iface, rule, profile):

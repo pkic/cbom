@@ -324,6 +324,14 @@ def c7_extension(path, prof, f):
         for key in ("disclosure", "conformanceKeywords"):
             if key in prof and prof[key] != base.get(key):
                 diverged.append(key)
+    widened, keyed_added = vocabulary_widening(base, prof) if base else ([], [])
+    if widened:
+        f.add("C7", "MUST", False,
+              "widens inherited vocabulary that constrains attribute values: %s. Only a "
+              "vocabulary that keys a group may gain values (decision 0025, item 23); "
+              "widening any other would accept a value the base rejects"
+              % "; ".join(widened))
+        return
     if diverged:
         f.add("C7", "MUST", False,
               "restates inherited block(s) with a different value: %s. "
@@ -332,8 +340,52 @@ def c7_extension(path, prof, f):
         return
 
     f.add("C7", "MUST", True,
-          "pins %s v%s; base resolves, no override relaxes it, no inherited block diverges"
-          % (ext["profileId"], ext["version"]))
+          "pins %s v%s; base resolves, no override relaxes it, no inherited block diverges%s"
+          % (ext["profileId"], ext["version"],
+             "; adds keyed vocabulary values: %s" % "; ".join(keyed_added) if keyed_added else ""))
+
+
+def _refs_by(prof, ref_keys):
+    """Names of vocabularies referenced anywhere in a profile under the given keys."""
+    found = set()
+
+    def walk(o):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if k in ref_keys and isinstance(v, str):
+                    found.add(v)
+                else:
+                    walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+    walk(prof)
+    return found
+
+
+def vocabulary_widening(base, prof):
+    """Split a derived profile's added vocabulary values into permitted and refused.
+
+    Decision 0025, item 23. A vocabulary that keys a group (keyVocabularyRef) may
+    gain values. The added keys carry the derived profile's rules, and an
+    evaluator holding only the base never asks for an entry under them, so a
+    document that conforms to the derived profile still conforms to the base.
+    Every other vocabulary constrains an attribute value, either through an
+    enumRef or by name in the evaluator. Adding a value there would let the
+    derived profile accept a document the base rejects, so it may only narrow."""
+    keyed = _refs_by(base, ("keyVocabularyRef",)) | _refs_by(prof, ("keyVocabularyRef",))
+    valued = _refs_by(base, ("enumRef", "absenceEnumRef")) | _refs_by(prof, ("enumRef", "absenceEnumRef"))
+    refused, permitted = [], []
+    for key, val in prof.items():
+        if not (key.endswith("Vocabulary") and isinstance(val, list)
+                and isinstance(base.get(key), list)):
+            continue
+        added = [v for v in val if v not in base[key]]
+        if not added:
+            continue
+        item = "%s (+%s)" % (key, ", ".join(map(str, added)))
+        (permitted if key in keyed and key not in valued else refused).append(item)
+    return refused, permitted
 
 
 def evidenced_relationship_types(prof):

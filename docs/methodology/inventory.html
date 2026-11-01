@@ -190,10 +190,10 @@ nav: inventory
   </figure>
 
   <h3>What linking requires</h3>
-  <p>Three things are needed. The methodology defines part of the first and none of the other two.</p>
+  <p>Three things are needed. The methodology defines part of the first and a pairwise form of the second. The third stays with the inventory.</p>
   <ul>
     <li><strong>Stable identity for the things being linked.</strong> A link is expressed between identified endpoints, and the interface identifier carries no meaning outside its own document. Rule P3 gives each subject an identifier: a package URL for a product, and a tag URI (RFC 4151) for a deployment, such as <code>tag:example.org,2026:deployment/sso-prod</code>. The <code>correspondsTo</code> property links a deployment interface to a product interface. Nothing yet identifies an interface across deployments. This is the correlation problem described above, and it is the first obstacle.</li>
-    <li><strong>A topology record.</strong> Something has to state that this product's interface connects to that product's interface. Only the operator knows that, and it changes when the deployment changes rather than when any product changes.</li>
+    <li><strong>A topology record.</strong> Something has to state that this product's interface connects to that product's interface. Only the operator knows that, and it changes when the deployment changes rather than when any product changes. A deployment record can state it one connection at a time: <code>peerInterface</code> (deployment disclosure I4, decision 0026) names the interface at the far end, in a record the deployment record cites by hash.</li>
     <li><strong>A rule for composing posture along a path.</strong> The posture of the whole path has to be derived from the hops and their cryptography.</li>
   </ul>
 
@@ -202,7 +202,7 @@ nav: inventory
 
   <h3>Where this leaves the methodology</h3>
   <p>End-to-end posture is therefore something the inventory produces. CBOMs supply the facts about each boundary. The inventory supplies the topology. The inventory then computes the posture of the path and records the date of the computation, in the same way as any other derived judgement described in <a href="policy-evaluation.html">Policy Evaluation</a>. A deployment record can legitimately include links to other components, because it describes deployed instances rather than a product. In the Keycloak example, Example Org's configured record declares the ingress that terminates TLS in front of Keycloak, and the plaintext hop from the ingress to Keycloak. <a href="lifecycle.html#product-service">Lifecycle Data</a> distinguishes the product record from deployment records. That distinction allows deployment records to carry links while product records stay independent of any deployment.</p>
-  <div class="banner warn">It has not been decided whether the methodology should define a topology record itself, or state that topology is out of scope and leave it to inventory tooling. Defining a topology record would extend the methodology beyond describing documents. Leaving it undefined means every organization builds its own, and comparison across an estate remains impracticable.</div>
+  <div class="banner">Decision 0026 settles the pairwise case provisionally. A deployment record can name the far end of each connection, and the <a href="policy-evaluation.html#edge-posture">edge-posture</a> evaluation joins the two ends and says which one limits the connection. Composing posture along a whole path stays with the inventory. Relationships that are not pairwise, such as a key shared by a cluster, are not covered.</div>
 
   <h2>Context data that is not itself cryptographic</h2>
   <p>A cryptographic inventory that records only cryptography is difficult to act on. Knowing that a service negotiates X25519 says nothing about whether that matters. Deciding whether it matters, and how urgently, depends on data that is not cryptographic at all and usually already exists elsewhere in the organization.</p>

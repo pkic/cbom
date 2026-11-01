@@ -69,6 +69,8 @@ DOCUMENTS = ["examples/legacy/cbom-keycloak-scanner-output.cdx.json",
              "examples/cbom-keycloak-product-disclosure-states.cdx.json",
              "examples/cbom-keycloak-product-intended.cdx.json",
              "examples/cbom-keycloak-deployment-observed-fail-unknown.cdx.json",
+             "examples/cbom-keycloak-deployment-configured-fail-literal.cdx.json",
+             "examples/cbom-keycloak-deployment-observed-outside.cdx.json",
              "examples/cbom-keycloak-product.cdx.json",
              "examples/cbom-keycloak-deployment-configured.cdx.json"]
 

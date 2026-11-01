@@ -1,0 +1,174 @@
+{
+  "resultFormat": "pkic.cbom.policy-result",
+  "resultFormatVersion": "0.1",
+  "policy": {
+    "policyId": "pkic.example.policy.edge-posture",
+    "version": "0.1",
+    "file": "policy-edge-posture.policy.json",
+    "digest": {
+      "alg": "SHA-256",
+      "value": "ce2cd1fce6d4732ce552b8e79c24cc35e4aa23f7e517c31854b06e6383b86728"
+    }
+  },
+  "evaluationDate": "2026-10-25",
+  "documents": [
+    {
+      "file": "cbom-keycloak-product.cdx.json",
+      "serialNumber": "urn:uuid:6b3c1d2e-7a41-4c1e-9f0a-26730000c001",
+      "version": 1,
+      "subject": "pkg:oci/keycloak?repository_url=quay.io/keycloak/keycloak&tag=26.7.3",
+      "subjectType": "product",
+      "stage": "implemented",
+      "digest": {
+        "alg": "SHA-256",
+        "value": "80b10b11705bc6425a371e307b5792f3d87e12bd4fca5349cb11bb4fae8b0929"
+      }
+    },
+    {
+      "file": "cbom-keycloak-deployment-configured.cdx.json",
+      "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01",
+      "version": 1,
+      "subject": "tag:example.org,2026:deployment/sso-prod",
+      "subjectType": "deployment",
+      "stage": "configured",
+      "digest": {
+        "alg": "SHA-256",
+        "value": "c9c39b69bb70e53d5f70dffe13833ab5c6f724656c66b499c467ac34aec64df3"
+      }
+    },
+    {
+      "file": "cbom-keycloak-deployment-observed.cdx.json",
+      "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-7263740b5e01",
+      "version": 1,
+      "subject": "tag:example.org,2026:deployment/sso-prod",
+      "subjectType": "deployment",
+      "stage": "observed",
+      "digest": {
+        "alg": "SHA-256",
+        "value": "7bea1c798a40a01464f58952a3ba344b80559953d6938ee8c3c3259c1211e0f5"
+      }
+    },
+    {
+      "file": "cbom-postgres-deployment-configured.cdx.json",
+      "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-72637400db01",
+      "version": 1,
+      "subject": "tag:example.org,2026:deployment/db-prod",
+      "subjectType": "deployment",
+      "stage": "configured",
+      "digest": {
+        "alg": "SHA-256",
+        "value": "a4829433d8caaa50c46f013dc690bc925b023d6fdbc3bd80ce2f31ccaeea404e"
+      }
+    }
+  ],
+  "summary": {
+    "limited-by-end": 1,
+    "neither-end-permits": 1
+  },
+  "findings": [
+    {
+      "edge": {
+        "ends": [
+          "tag:example.org,2026:deployment/db-prod#crypto:protocol:pg-tls",
+          "tag:example.org,2026:deployment/sso-prod#crypto:protocol:int-db"
+        ],
+        "statedIn": [
+          "cbom-postgres-deployment-configured.cdx.json"
+        ]
+      },
+      "purpose": "key-establishment",
+      "ends": [
+        {
+          "end": "tag:example.org,2026:deployment/db-prod#crypto:protocol:pg-tls",
+          "records": [
+            "configured"
+          ],
+          "permits": [
+            "X25519MLKEM768",
+            "X25519"
+          ],
+          "observed": null,
+          "permitsTarget": true
+        },
+        {
+          "end": "tag:example.org,2026:deployment/sso-prod#crypto:protocol:int-db",
+          "records": [
+            "configured",
+            "observed"
+          ],
+          "permits": [
+            "X25519",
+            "secp256r1",
+            "secp384r1",
+            "secp521r1",
+            "X448",
+            "ffdhe2048"
+          ],
+          "observed": [
+            "X25519"
+          ],
+          "permitsTarget": false
+        }
+      ],
+      "negotiated": [
+        "X25519"
+      ],
+      "limitedBy": "tag:example.org,2026:deployment/sso-prod#crypto:protocol:int-db",
+      "productCapability": {
+        "capabilityStatus": "planned",
+        "blockedBy": "provider",
+        "roadmapRef": "https://openjdk.org/jeps/527"
+      },
+      "class": "limited-by-end"
+    },
+    {
+      "edge": {
+        "ends": [
+          "tag:example.org,2026:deployment/db-prod#crypto:protocol:pg-tls",
+          "tag:example.org,2026:deployment/sso-prod#crypto:protocol:int-db"
+        ],
+        "statedIn": [
+          "cbom-postgres-deployment-configured.cdx.json"
+        ]
+      },
+      "purpose": "entity-authentication",
+      "ends": [
+        {
+          "end": "tag:example.org,2026:deployment/db-prod#crypto:protocol:pg-tls",
+          "records": [
+            "configured"
+          ],
+          "permits": [
+            "RSA-2048"
+          ],
+          "observed": null,
+          "permitsTarget": false
+        },
+        {
+          "end": "tag:example.org,2026:deployment/sso-prod#crypto:protocol:int-db",
+          "records": [
+            "configured",
+            "observed"
+          ],
+          "permits": [
+            "RSA-2048"
+          ],
+          "observed": [
+            "RSA-2048"
+          ],
+          "permitsTarget": false
+        }
+      ],
+      "negotiated": [
+        "RSA-2048"
+      ],
+      "class": "neither-end-permits"
+    }
+  ],
+  "notAsserted": [
+    "that the disclosed values are true; the policy was applied to what the CBOMs state",
+    "anything about interfaces or algorithms the CBOMs do not disclose",
+    "that the policy is right; it is an example, and its source should be checked",
+    "anything after the evaluation date; the same facts give a different result under a later date or policy version"
+  ]
+}
