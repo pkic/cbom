@@ -109,11 +109,11 @@ title: Overview
       <span class="card-cta">See the use cases &#8594;</span>
     </a>
     <a class="feature-card" href="{{ '/training/' | relative_url }}">
-      <span class="card-kicker">Foundation track ready</span>
+      <span class="card-kicker">16 modules ready</span>
       <h3>Training</h3>
       <p>Short interactive modules that follow the methodology, 10 to 15 minutes each, with a
-         knowledge check at the end. Five Foundation modules are ready; the Concepts, Applying it
-         and Elective tracks follow.</p>
+         knowledge check at the end. The Foundation, Concepts and Applying it tracks are ready.
+         Electives on use cases and sector examples follow.</p>
       <span class="card-cta">Start the training &#8594;</span>
     </a>
     <a class="feature-card" href="{{ '/issues/' | relative_url }}">
