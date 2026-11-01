@@ -3,7 +3,7 @@
   "profileId": "pkic.example.deployment-disclosure",
   "profileTag": "deployment-disclosure",
   "title": "Deployment Disclosure (Example)",
-  "version": "0.1",
+  "version": "0.2",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
@@ -100,6 +100,21 @@
         "equals": "observed"
       },
       "note": "The time or ISO 8601 interval of the observation. An observation goes out of date with the next configuration change, and a consumer can only judge that with the date."
+    },
+    {
+      "id": "I4",
+      "attribute": "peerInterface",
+      "level": "MAY",
+      "constraint": {
+        "refersToCited": {
+          "literals": [
+            "peer-not-recorded"
+          ]
+        }
+      },
+      "withholdable": true,
+      "list": true,
+      "note": "The interface at the far end of this connection, as a BOM-Link into a cited document (decision 0026). Either end may state it; an evaluator treats the pointer as joining two ends, whichever side wrote it. A list, because a server interface usually has several clients. This is what lets an evaluation say which end limits a connection: the far end's record states what that end permits. 'peer-not-recorded' is a fact: the far end belongs to parties whose records this operator does not hold, such as browsers. Withholdable, because it reveals internal topology."
     }
   ],
   "observationMethodVocabulary": [
@@ -201,6 +216,17 @@
       "date": "2026-10-25",
       "summary": "Initial draft, built on the Keycloak lifecycle example.",
       "changes": []
+    },
+    {
+      "version": "0.2",
+      "date": "2026-11-01",
+      "summary": "Adds the peer pointer, I4 (decision 0026).",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Added I4, peerInterface, at MAY: a pointer from an interface to the interface at the far end of the connection, as a BOM-Link into a cited document. No verdict changes. A document that omits it is unaffected, and a pointer that does not resolve is reported as a warning, so every v0.1 document conforms to v0.2 with the same result. The rule is normative in what it means, not in what it requires; it is classified as editorial because C10 classifies changes by their effect on verdicts."
+        }
+      ]
     }
   ],
   "artifacts": {

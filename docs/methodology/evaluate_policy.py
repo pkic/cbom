@@ -8,13 +8,17 @@ transition date, is computed here at evaluation time from a versioned policy
 policy was applied, and every CBOM it read, each by SHA-256 digest. The result
 points to the CBOMs; a CBOM never points to a result.
 
-Two evaluation methods are implemented, selected by the policy's 'method':
+Three evaluation methods are implemented, selected by the policy's 'method':
 
   algorithm-transition  classify each disclosed algorithm against a dated
                         schedule (example: NIST IR 8547 initial public draft)
   readiness-gap         join a product record, a configured record and an
                         observation along correspondsTo, and place each
                         interface and purpose in one gap class
+  edge-posture          join the two ends of a connection along peerInterface
+                        (decision 0026), and say for each purpose whether the
+                        connection meets the target and, if not, which end
+                        limits it
 
 Usage:
     python3 evaluate_policy.py <policy.json> <cbom.json> [<cbom.json> ...]
@@ -236,7 +240,132 @@ def readiness_gap(policy, docs, date, registry):
     return findings, summary
 
 
-METHODS = {"algorithm-transition": algorithm_transition, "readiness-gap": readiness_gap}
+UNDECIDED = ("peer-defined", "deployment-defined", "unknown")
+
+
+def edge_posture(policy, docs, date, registry):
+    """Join the two ends of each connection and find which end limits it.
+
+    A connection has no record of its own. Each end is described by its own
+    operator's records, and a peerInterface pointer (deployment-disclosure I4)
+    on either end joins them. An end is a subject and an interface id; its
+    configured record says what it permits and its observed record, if
+    supplied, says what was negotiated. The finding is computed here and dated
+    with the evaluation. No CBOM stores it (decisions 0002 and 0026)."""
+    classify = classifier(policy)
+    index, products = {}, {}
+    for path, bom in docs:
+        prod = V.extract_product(bom)
+        ifaces = {i["interfaceId"]: i for i in V.extract_interfaces(bom, registry)}
+        index[(prod.get("identifier"), prod.get("docStage"))] = ifaces
+
+    def product_entry(rec):
+        doc, ref = V.split_bomlink((rec or {}).get("correspondsTo"))
+        entry = registry.get(doc) if doc else None
+        if not entry or V.extract_product(entry["bom"]).get("docStage") != "implemented":
+            return None
+        for i in V.extract_interfaces(entry["bom"], registry):
+            if i["interfaceId"] == ref:
+                return i
+        return None
+
+    edges, unresolved = {}, []
+    for path, bom in docs:
+        subject = V.extract_product(bom).get("identifier")
+        for i in V.extract_interfaces(bom, registry):
+            for v in as_list(i.get("peerInterface")):
+                if v == "peer-not-recorded":
+                    continue
+                doc, ref = V.split_bomlink(v)
+                entry = registry.get(doc) if doc else None
+                if not entry:
+                    unresolved.append({"statedIn": os.path.basename(path), "interface": i["interfaceId"],
+                                       "peerInterface": v})
+                    continue
+                if ref not in [x["interfaceId"] for x in V.extract_interfaces(entry["bom"], registry)]:
+                    unresolved.append({"statedIn": os.path.basename(path), "interface": i["interfaceId"],
+                                       "peerInterface": v, "missing": True})
+                    continue
+                peer_subject = V.extract_product(entry["bom"]).get("identifier")
+                key = tuple(sorted([(subject, i["interfaceId"]), (peer_subject, ref)]))
+                edges.setdefault(key, set()).add(os.path.basename(path))
+
+    findings = []
+    for key, stated_in in sorted(edges.items()):
+        ends = []
+        for subject, iid in key:
+            conf = index.get((subject, "configured"), {}).get(iid)
+            obs = index.get((subject, "observed"), {}).get(iid)
+            ends.append({"subject": subject, "interface": iid, "configured": conf, "observed": obs,
+                         "product": product_entry(conf) or product_entry(obs)})
+        for purpose, spec in policy["purposes"].items():
+            attr, target = spec["attribute"], spec["target"]
+            meets_t = lambda v: meets(target, v, classify)
+            rows, negotiated = [], []
+            for e in ends:
+                permits = as_list(e["configured"].get(attr)) if e["configured"] else None
+                if permits and any(p in UNDECIDED for p in permits):
+                    permits = None
+                seen = as_list(e["observed"].get(attr)) if e["observed"] else []
+                negotiated += [s for s in seen if s not in negotiated]
+                rows.append({"end": "%s#%s" % (e["subject"], e["interface"]),
+                             "records": [s for s in ("configured", "observed") if e[s]],
+                             "permits": permits, "observed": seen or None,
+                             "permitsTarget": None if permits is None else any(meets_t(p) for p in permits)})
+            finding = {"edge": {"ends": [r["end"] for r in rows], "statedIn": sorted(stated_in)},
+                       "purpose": purpose, "ends": rows, "negotiated": negotiated or None}
+            latest = [e["observed"] or e["configured"] for e in ends]
+            known = [r["permitsTarget"] for r in rows]
+            if any(l is not None and all(as_list(l.get(a)) == ["none"]
+                                         for a in ("keyExchange", "encryption", "authentication"))
+                   for l in latest):
+                cls = "unprotected"
+            elif all(r["permits"] == ["none"] for r in rows):
+                cls = "not-applicable"
+            elif negotiated and all(meets_t(v) for v in negotiated):
+                cls = "target-met"
+            elif all(k is True for k in known):
+                if negotiated:
+                    cls = "fallback-or-intermediary"
+                else:
+                    common = [p for p in rows[0]["permits"] if meets_t(p) and
+                              norm(p) in {norm(q) for q in rows[1]["permits"]}]
+                    cls = "target-met" if common else "no-common-target"
+                    if common:
+                        finding["note"] = "configured at both ends, not observed"
+            elif known.count(True) == 1 and known.count(False) == 1:
+                cls = "limited-by-end"
+                lim = ends[known.index(False)]
+                finding["limitedBy"] = "%s#%s" % (lim["subject"], lim["interface"])
+                entry = ((lim["product"] or {}).get("_groups") or {}).get("capabilityByPurpose", {}).get(purpose, {})
+                if entry:
+                    finding["productCapability"] = {k: entry[k] for k in
+                                                    ("capabilityStatus", "blockedBy", "roadmapRef") if k in entry}
+            elif all(k is False for k in known):
+                cls = "neither-end-permits"
+            else:
+                cls = "limit-unknown"
+                finding["note"] = "no configured record states what %s permits" % " and ".join(
+                    r["end"] for r in rows if r["permitsTarget"] is None)
+            finding["class"] = cls
+            findings.append(finding)
+    for u in unresolved:
+        if u.get("missing"):
+            findings.append({"edge": {"ends": None, "statedIn": [u["statedIn"]]}, "class": "peer-not-found",
+                             "note": "%s names %s, which is not an interface in that document"
+                                     % (u["interface"], u["peerInterface"])})
+        else:
+            findings.append({"edge": {"ends": None, "statedIn": [u["statedIn"]]}, "class": "peer-not-supplied",
+                             "note": "%s names %s, and that document was not supplied"
+                                     % (u["interface"], u["peerInterface"])})
+    summary = {}
+    for f in findings:
+        summary[f["class"]] = summary.get(f["class"], 0) + 1
+    return findings, summary
+
+
+METHODS = {"algorithm-transition": algorithm_transition, "readiness-gap": readiness_gap,
+           "edge-posture": edge_posture}
 
 
 def evaluate(policy_path, cbom_paths, date):

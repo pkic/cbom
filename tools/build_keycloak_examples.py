@@ -38,11 +38,13 @@ SERIAL = {
     "sbom": "6b3c1d2e-7a41-4c1e-9f0a-26730000b000",
     "legacy": "6b3c1d2e-7a41-4c1e-9f0a-26730000c017",
     "vex": "6b3c1d2e-7a41-4c1e-9f0a-26730000e001",
+    "db-configured": "8b1f0c2a-3d4e-4f50-8a61-72637400db01",
 }
 SITE = "https://pkic.github.io/cbom/methodology/examples/"
 CONTEXT = os.path.join(OUT, "context")
 PRODUCT_PURL = "pkg:oci/keycloak?repository_url=quay.io/keycloak/keycloak&tag=26.7.3"
 DEPLOYMENT_ID = "tag:example.org,2026:deployment/sso-prod"
+DB_DEPLOYMENT_ID = "tag:example.org,2026:deployment/db-prod"
 
 
 def link(kind, ref=None, version=1):
@@ -633,6 +635,73 @@ def configured(product_sha):
 
 
 # --------------------------------------------------------------------------- #
+# The far end of one connection: the database team's own configured record.   #
+# --------------------------------------------------------------------------- #
+def db_configured(configured_sha):
+    """The PostgreSQL deployment Keycloak connects to, recorded by the team that runs it.
+
+    Its TLS interface points to Keycloak's int-db interface with peerInterface
+    (deployment-disclosure I4, decision 0026), citing Keycloak's configured record
+    by hash. The pointer sits on this side so that none of the Keycloak records
+    changes: either end may state it. With both records, an evaluation can say
+    which end of the connection limits the key exchange."""
+    bom = {
+        "bomFormat": "CycloneDX", "specVersion": "1.7", "serialNumber": "urn:uuid:" + SERIAL["db-configured"],
+        "version": 1,
+        "$comment": "EXAMPLE CBOM, lifecycle stage 'configured'. Example Org's production PostgreSQL cluster, "
+                    "the database Keycloak's int-db interface connects to, recorded by the database team from "
+                    "its own configuration repository. Illustrative values. The server permits the hybrid group "
+                    "X25519MLKEM768 (PostgreSQL 18 ssl_groups, OpenSSL 3.5). The TLS interface names the client "
+                    "end of the connection with peerInterface: Keycloak's int-db interface in the sso-prod "
+                    "configured record, which this record cites by hash. Administration runs through the "
+                    "platform's automation, so there is no administrative listener. PostgreSQL publishes no "
+                    "CBOM, so the interface states 'no-product-document' and names its library here. Conforms "
+                    "to deployment-disclosure v0.2.",
+        "metadata": {
+            "timestamp": "2026-10-24T17:00:00Z", "lifecycles": [{"phase": "operations"}],
+            "tools": {"components": [{"type": "application", "name": "Example Org configuration export",
+                                      "version": "1.0",
+                                      "description": "Reads postgresql.conf, pg_hba.conf and the cluster manifest"}]},
+            "supplier": {"name": "Example Org (illustrative operator), database team"},
+            "component": {
+                "type": "application", "bom-ref": "deployment:db-prod",
+                "name": "PostgreSQL cluster for sso.example.org (production)",
+                "description": "PostgreSQL 18 with OpenSSL 3.5, operated by Example Org's database team.",
+                "properties": [prop("subjectType", "deployment"), prop("subjectIdentifier", DB_DEPLOYMENT_ID),
+                               prop("coverage", "all"),
+                               prop("managementInterfaceAbsence", "configured-out-of-band")]}},
+        "externalReferences": [
+            cite("configured", configured_sha,
+                 "The configured record of the sso-prod deployment, which holds the client end of the "
+                 "connection this record's TLS interface names with peerInterface."),
+            ctx("configuration-source", "https://git.example.org/platform/db-config/-/commit/9c1d27e4a0",
+                "vcs", "Revision of the database configuration repository this record was read from."),
+            ctx("data-register", "https://grc.example.org/registers/data/db-prod", "risk-assessment",
+                "Data classification and confidentiality lifetime for the cluster. Not reproduced here."),
+            ctx("issuer-policy", "https://pki.example.org/cps", "documentation",
+                "Certification practice statement of the internal CA that issues the database certificate.",
+                protocol="web-page"),
+        ],
+        "components": [{"type": "library", "bom-ref": "lib:openssl", "name": "OpenSSL (PostgreSQL server)",
+                        "version": "3.5.4", "purl": "pkg:generic/openssl@3.5.4"}]
+                      + algo_components(["x25519mlkem768", "x25519"] + TLS13_SUITES + ["rsa-2048"]),
+        "services": [], "dependencies": [],
+    }
+    iface = tls("crypto:protocol:pg-tls", "TLS on the PostgreSQL listener (port 5432)", "interconnect", "1.3",
+                ["x25519mlkem768", "x25519"] + TLS13_SUITES + ["rsa-2048"],
+                {"client": "endpoint:keycloak", "server": "endpoint:database"}, "no-product-document",
+                {"integrationConstraints": "ssl_groups = 'X25519MLKEM768:X25519'; ssl_min_protocol_version = "
+                                           "'TLSv1.3'; hostssl only in pg_hba.conf. Server certificate RSA-2048 "
+                                           "from the internal CA.",
+                 "peerInterface": link("configured", "crypto:protocol:int-db")})
+    bom["components"].append(iface)
+    bom["dependencies"] = [{"ref": "deployment:db-prod", "dependsOn": ["crypto:protocol:pg-tls"]},
+                           {"ref": "lib:openssl", "provides": ["crypto:protocol:pg-tls"]}]
+    bom["compositions"] = [{"aggregate": "complete", "assemblies": ["crypto:protocol:pg-tls"]}]
+    return bom
+
+
+# --------------------------------------------------------------------------- #
 # Stage 4: observed. What the deployment was seen to do.                      #
 # --------------------------------------------------------------------------- #
 def observed(product_sha, configured_sha, configured_hash_override=None):
@@ -903,6 +972,8 @@ def main():
     obs = observed(sha_p, sha_c)
     write("cbom-keycloak-deployment-observed.cdx.json", obs)
 
+    write("cbom-postgres-deployment-configured.cdx.json", db_configured(sha_c))
+
     v = variant(obs, "5ef5", "NON-CONFORMING EXAMPLE. The observed record, except that the database "
                 "connection was observed through pg_stat_ssl alone, which does not report the group. "
                 "keyExchange is declared unknown. Fails interface-disclosure#I3 on that interface, and "
@@ -967,6 +1038,10 @@ def results():
         "result-algorithm-transition-sso-prod-observed.json": (
             "policy-algorithm-transition.policy.json",
             ["cbom-keycloak-deployment-observed.cdx.json"]),
+        "result-edge-posture-sso-db.json": (
+            "policy-edge-posture.policy.json",
+            ["cbom-keycloak-product.cdx.json", "cbom-keycloak-deployment-configured.cdx.json",
+             "cbom-keycloak-deployment-observed.cdx.json", "cbom-postgres-deployment-configured.cdx.json"]),
     }
     for name, (policy, docs) in runs.items():
         result = evaluate_policy.evaluate(os.path.join(pol, policy), [ex(d) for d in docs], EVALUATION_DATE)

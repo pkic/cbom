@@ -278,7 +278,7 @@ nav: uc-pqc
   </table>
   </div>
   <h4>Group rule G1: capability, one entry per cryptographic purpose</h4>
-  <p>Group rule <code>G1</code> is keyed to the cryptographic purpose vocabulary. The vocabulary has seven values: <code>key-establishment</code>, <code>encryption</code>, <code>entity-authentication</code>, <code>data-integrity</code>, <code>non-repudiation</code>, <code>key-protection</code> and <code>key-derivation</code>. Its key coverage is <code>all-purposes</code>, so every interface carries an entry for all seven, not only for the three purposes the profile's scope takes in depth (C13). Each entry has the four members <code>G1.1</code> to <code>G1.4</code> listed above. Group members are evaluated inside each entry, so a conditional guard such as the one on <code>blockedBy</code> refers to that entry's own <code>capabilityStatus</code>. A guard may be removed (tightening) but never added or narrowed.</p>
+  <p>Group rule <code>G1</code> is keyed to the cryptographic purpose vocabulary. The vocabulary has seven values: <code>key-establishment</code>, <code>encryption</code>, <code>entity-authentication</code>, <code>data-integrity</code>, <code>non-repudiation</code>, <code>key-protection</code> and <code>key-derivation</code>. Its key coverage is <code>all-purposes</code>, so every interface carries an entry for all seven, not only for the three purposes the profile's scope takes in depth (C13). The extended profile takes a fourth, <code>key-protection</code>, in depth. Each entry has the four members <code>G1.1</code> to <code>G1.4</code> listed above. Group members are evaluated inside each entry, so a conditional guard such as the one on <code>blockedBy</code> refers to that entry's own <code>capabilityStatus</code>. A guard may be removed (tightening) but never added or narrowed.</p>
 
    <h3>Extended: rules added at the second depth</h3>
   <div style="overflow:auto">
@@ -373,8 +373,8 @@ nav: uc-pqc
   <table>
     <thead><tr><th>Interfaces</th><th><code>key-establishment</code> entry</th><th><code>entity-authentication</code> entry</th></tr></thead>
     <tbody>
-      <tr><td>The six JDK TLS interfaces</td><td><code>planned</code>, blocked by <code>provider</code>, roadmap: JEP 527</td><td><code>under-evaluation</code>, blocked by <code>standard</code></td></tr>
-      <tr><td><code>int-cache</code></td><td><code>planned</code>, blocked by <code>provider</code></td><td><code>under-evaluation</code>, blocked by <code>product</code>: the key type is fixed</td></tr>
+      <tr><td>Six of the seven JDK TLS interfaces</td><td><code>planned</code>, blocked by <code>provider</code>, roadmap: JEP 527</td><td><code>under-evaluation</code>, blocked by <code>standard</code></td></tr>
+      <tr><td><code>int-cache</code>, the seventh, shown apart because its entity authentication differs</td><td><code>planned</code>, blocked by <code>provider</code></td><td><code>under-evaluation</code>, blocked by <code>product</code>: the key type is fixed</td></tr>
       <tr><td><code>svc-oidc</code>, <code>mgmt-admin</code></td><td><code>under-evaluation</code>, blocked by <code>standard</code></td><td><code>committed</code>, blocked by <code>standard</code>, roadmap: Keycloak issue 43690</td></tr>
       <tr><td><code>svc-saml</code></td><td><code>under-evaluation</code>, blocked by <code>standard</code></td><td><code>under-evaluation</code>, blocked by <code>standard</code></td></tr>
       <tr><td><code>svc-http</code>, <code>sto-realm-keys</code></td><td><code>not-planned</code>, blocked by <code>product</code></td><td><code>not-planned</code>, blocked by <code>product</code></td></tr>

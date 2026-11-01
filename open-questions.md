@@ -1585,7 +1585,7 @@ references, and whether a profile can require a particular arrangement.
 
 ## Q40 — Should the methodology define a topology record?
 
-**Status** open
+**Status** settled provisionally for pairwise connections (decision 0026)
 
 **The question.** Showing the posture of a whole transaction path requires knowing which
 interface connects to which. That is deployment knowledge and no CBOM can carry it. Does the
@@ -1609,8 +1609,11 @@ recorded so the question is not reopened repeatedly.
 composes along a path, including that a signature spanning the path does not compose like
 per-hop protection, and leave the representation to implementers.
 
-**Where it stands.** Option C in substance. The Inventory section now describes what linking
-requires and how posture composes, and defines no record.
+**Where it stands.** Option C in substance for paths, and Option A for single connections.
+Decision 0026 lets a deployment record name the far end of each connection with `peerInterface`
+(deployment disclosure I4), and the `edge-posture` evaluation joins the two ends and names the
+one that limits the connection. Composing posture along a whole path stays with the inventory,
+and the Inventory section still defines no record for a path.
 
 **What would have to change.** The Inventory section, possibly the Model section, and any
 deployment-scope profile.
@@ -1774,7 +1777,7 @@ anything, so the base could not grow. Recorded as decision 0011.
 
 ## Q35 — May a profile narrow an inherited list of permitted values?
 
-**Status** open
+**Status** open for narrowing; the widening mirror case is settled provisionally (decision 0025, item 23)
 
 **The question.** When a profile builds on another it inherits shared settings. Restating one of
 those settings quietly overrides the parent, so a later change to the parent never reaches the
@@ -1806,7 +1809,9 @@ entirely.
 parent did not have.
 
 **Where it stands.** Option A, by exemption, recorded as a drafting judgement rather than a
-decision.
+decision. The mirror case is settled provisionally by decision 0025, item 23: a derived profile may
+add values to a vocabulary that keys a group, and to no other. `check_profile.py` enforces this
+under C7.
 
 **What would have to change.** One check in the profile checker, the rule format, and Q25.
 

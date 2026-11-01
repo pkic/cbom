@@ -499,6 +499,10 @@ expect_check_exit   "C7 diverging inherited block is rejected" 1 "$FIX/profile-c
 expect_check_output "C7 names the diverging block" "disclosure" "$FIX/profile-c7-diverging-block.rules.json"
 expect_check_exit   "C7 widened lifecycle stages are rejected" 1 "$FIX/profile-c7-widening-stages.rules.json"
 expect_check_output "C7 explains the widening" "monotonic" "$FIX/profile-c7-widening-stages.rules.json"
+expect_check_exit   "C7 accepts a value added to a keyed vocabulary" 0 "$FIX/profile-c7-widening-keyed-vocabulary.rules.json"
+expect_check_output "C7 records the added keyed value" "adds keyed vocabulary values" "$FIX/profile-c7-widening-keyed-vocabulary.rules.json"
+expect_check_exit   "C7 rejects a value added to a value vocabulary" 1 "$FIX/profile-c7-widening-value-vocabulary.rules.json"
+expect_check_output "C7 names the widened value vocabulary" "interfaceTypeVocabulary" "$FIX/profile-c7-widening-value-vocabulary.rules.json"
 expect_check_exit   "C1 an unactionable decision is rejected" 1 "$FIX/profile-c1-no-decision-options.rules.json"
 expect_check_output "C1 is the failing requirement" "[FAIL] C1" "$FIX/profile-c1-no-decision-options.rules.json"
 expect_check_output "C1 asks for the actions" "decisionOptions" "$FIX/profile-c1-no-decision-options.rules.json"
@@ -905,7 +909,8 @@ echo
 echo "Policies"
 for spec in "result-readiness-gap-sso-prod.json:policy-readiness-gap.policy.json:cbom-keycloak-product.cdx.json cbom-keycloak-deployment-configured.cdx.json cbom-keycloak-deployment-observed.cdx.json" \
             "result-algorithm-transition-keycloak-product.json:policy-algorithm-transition.policy.json:cbom-keycloak-product.cdx.json" \
-            "result-algorithm-transition-sso-prod-observed.json:policy-algorithm-transition.policy.json:cbom-keycloak-deployment-observed.cdx.json"; do
+            "result-algorithm-transition-sso-prod-observed.json:policy-algorithm-transition.policy.json:cbom-keycloak-deployment-observed.cdx.json" \
+            "result-edge-posture-sso-db.json:policy-edge-posture.policy.json:cbom-keycloak-product.cdx.json cbom-keycloak-deployment-configured.cdx.json cbom-keycloak-deployment-observed.cdx.json cbom-postgres-deployment-configured.cdx.json"; do
   result=${spec%%:*}; rest=${spec#*:}; policy=${rest%%:*}; docs=${rest#*:}
   args=""
   for d in $docs; do args="$args $EX/$d"; done
@@ -928,6 +933,18 @@ sys.exit(0 if all(c.get(k)==v for k,v in want.items()) else 1)" "$EX/results/res
   ok "the readiness gap places the ingress, the plaintext hop, token signing and the unused listener"
 else
   bad "the readiness gap places the ingress, the plaintext hop, token signing and the unused listener" "unexpected classes"
+fi
+if "$PY" -c "
+import json,sys
+r=json.load(open(sys.argv[1]))
+c={f['purpose']:f for f in r['findings']}
+ke,ea=c.get('key-establishment',{}),c.get('entity-authentication',{})
+sys.exit(0 if ke.get('class')=='limited-by-end' and ke.get('limitedBy','').endswith('#crypto:protocol:int-db')
+         and ke.get('productCapability',{}).get('blockedBy')=='provider'
+         and ea.get('class')=='neither-end-permits' else 1)" "$EX/results/result-edge-posture-sso-db.json"; then
+  ok "the edge posture joins the database and Keycloak ends and names Keycloak's end as the limit"
+else
+  bad "the edge posture joins the database and Keycloak ends and names Keycloak's end as the limit" "unexpected classes"
 fi
 if "$PY" -c "
 import json,sys

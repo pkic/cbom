@@ -1,0 +1,56 @@
+{
+  "$comment": "Fixture. Should pass C7. It extends PQC migration and adds 'attestation' to the cryptographic purpose vocabulary, which keys group G1. The added key carries this profile's rules only. An evaluator holding the base never asks for an entry under it, so a document that conforms to this profile still conforms to the base (decision 0025, item 23). Not a real profile; do not copy.",
+  "profileId": "pkic.test.widening-keyed-vocabulary",
+  "profileTag": "widening-keyed-vocabulary",
+  "title": "Fixture - C7 adds a value to a keyed vocabulary",
+  "version": "0.1",
+  "objective": {
+    "consumer": "A fixture, standing in for a consumer.",
+    "decision": "Whether the checker applies the vocabulary widening rule of decision 0025, item 23.",
+    "decisionOptions": [
+      "accept the fixture",
+      "reject the fixture"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.pqc-migration",
+    "version": "0.8",
+    "file": "../../docs/methodology/profile-pqc-migration.rules.json"
+  },
+  "appliesTo": {
+    "$comment": "Carrier acceptance. The target is CycloneDX 2.0, pinned to CycloneDX/specification 2.0-dev commit 76f185c (23 October 2026) until Ecma ratifies the release; the pinned schema is in tests/schemas/cyclonedx-2.0. 'min' is the oldest version the adapter reads: CycloneDX 1.6 and 1.7 documents are evaluated and flagged legacy, because the tools that produce CBOMs today emit 1.x. Below 'min', evaluation is refused. A derived profile may narrow this range and may not widen it.",
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "interfaceRules": [],
+  "scope": {
+    "$comment": "C11. Narrows the base to products as built: subject type 'product', stage 'implemented'. A supplier's migration record describes what the shipped product can do. What a deployment has enabled and negotiated is the operator's record, under the deployment profile, and the readiness gap is read by joining the two (decision 0025). Where a producer can only report an intention, the fact belongs to the capability group G1, not to a lifecycle stage. 'cryptographicPurposes' declares which purposes this profile requires in depth; every purpose in the vocabulary still owes a status under G1. See decisions 0010 and 0022.",
+    "subjectTypes": [
+      "product"
+    ],
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented"
+    ],
+    "cryptographicPurposes": [
+      "key-establishment",
+      "encryption",
+      "entity-authentication"
+    ]
+  },
+  "cryptographicPurposeVocabulary": [
+    "key-establishment",
+    "encryption",
+    "entity-authentication",
+    "data-integrity",
+    "non-repudiation",
+    "key-protection",
+    "key-derivation",
+    "attestation"
+  ]
+}

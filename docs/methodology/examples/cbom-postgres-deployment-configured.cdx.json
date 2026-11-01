@@ -1,0 +1,308 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "EXAMPLE CBOM, lifecycle stage 'configured'. Example Org's production PostgreSQL cluster, the database Keycloak's int-db interface connects to, recorded by the database team from its own configuration repository. Illustrative values. The server permits the hybrid group X25519MLKEM768 (PostgreSQL 18 ssl_groups, OpenSSL 3.5). The TLS interface names the client end of the connection with peerInterface: Keycloak's int-db interface in the sso-prod configured record, which this record cites by hash. Administration runs through the platform's automation, so there is no administrative listener. PostgreSQL publishes no CBOM, so the interface states 'no-product-document' and names its library here. Conforms to deployment-disclosure v0.2.",
+  "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-72637400db01",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-24T17:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "operations"
+      }
+    ],
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "Example Org configuration export",
+          "version": "1.0",
+          "description": "Reads postgresql.conf, pg_hba.conf and the cluster manifest"
+        }
+      ]
+    },
+    "supplier": {
+      "name": "Example Org (illustrative operator), database team"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "deployment:db-prod",
+        "name": "PostgreSQL cluster for sso.example.org (production)",
+        "description": "PostgreSQL 18 with OpenSSL 3.5, operated by Example Org's database team.",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "deployment"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          },
+          {
+            "name": "pkic:profile:managementInterfaceAbsence",
+            "value": "configured-out-of-band"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": {
+                  "name": "tag-uri",
+                  "description": "A tag URI (RFC 4151)."
+                },
+                "value": "tag:example.org,2026:deployment/db-prod"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Org (illustrative operator), database team"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:openssl",
+          "name": "OpenSSL (PostgreSQL server)",
+          "version": "3.5.4",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/openssl@3.5.4"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:x25519mlkem768",
+          "name": "X25519MLKEM768",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "kem"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:x25519",
+          "name": "X25519",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:aes-256-gcm",
+          "name": "AES-256-GCM",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "ae"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:aes-128-gcm",
+          "name": "AES-128-GCM",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "ae"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:chacha20-poly1305",
+          "name": "ChaCha20-Poly1305",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "ae"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:rsa-2048",
+          "name": "RSA-2048",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:protocol:pg-tls",
+          "name": "TLS on the PostgreSQL listener (port 5432)",
+          "cryptoProperties": {
+            "assetType": "protocol",
+            "protocolProperties": {
+              "type": "tls",
+              "version": "1.3",
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519mlkem768"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-256-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-128-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:chacha20-poly1305"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:rsa-2048"
+                }
+              ]
+            }
+          },
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:database"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "ssl_groups = 'X25519MLKEM768:X25519'; ssl_min_protocol_version = 'TLSv1.3'; hostssl only in pg_hba.conf. Server certificate RSA-2048 from the internal CA."
+            },
+            {
+              "name": "pkic:profile:peerInterface",
+              "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#crypto:protocol:int-db"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "deployment:db-prod",
+      "dependsOn": [
+        "crypto:protocol:pg-tls"
+      ]
+    },
+    {
+      "ref": "lib:openssl",
+      "provides": [
+        "crypto:protocol:pg-tls"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1",
+      "comment": "The configured record of the sso-prod deployment, which holds the client end of the connection this record's TLS interface names with peerInterface.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c9c39b69bb70e53d5f70dffe13833ab5c6f724656c66b499c467ac34aec64df3"
+        }
+      ]
+    },
+    {
+      "type": "vcs",
+      "url": "https://git.example.org/platform/db-config/-/commit/9c1d27e4a0",
+      "comment": "Revision of the database configuration repository this record was read from.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "configuration-source"
+        }
+      ]
+    },
+    {
+      "type": "risk-assessment",
+      "url": "https://grc.example.org/registers/data/db-prod",
+      "comment": "Data classification and confidentiality lifetime for the cluster. Not reproduced here.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "data-register"
+        }
+      ]
+    },
+    {
+      "type": "documentation",
+      "url": "https://pki.example.org/cps",
+      "comment": "Certification practice statement of the internal CA that issues the database certificate.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "issuer-policy"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    }
+  ]
+}

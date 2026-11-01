@@ -433,7 +433,7 @@ nav: uc-substation
     </svg>
     <figcaption>Two kinds of document. Each supplier describes one product, which it can see in full. The integrator describes how the products are put together, and cites the supplier documents rather than repeating them. It is still an open question what the system verdict says about a component that conforms to no profile (Q68).</figcaption>
   </figure>
-<p><strong>The edge model stays parked.</strong> The edge model would treat a path between devices as an object with its own facts. It was parked, to be revived only when a fact belongs to a path and not to any device. In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so the condition for reviving the edge model is not met. A fact that belongs to the path itself would meet it, such as an end-to-end GOOSE transfer time. That fact is an operator requirement, so it stays out of the profiles.</p>
+<p><strong>No edge object.</strong> An edge object would treat a path between devices as an object with its own facts. The methodology does not define one. Decision 0026 represents a connection as the join of its two ends, through a <code>peerInterface</code> pointer in a deployment record, and leaves facts about a whole path to the inventory. In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so this use case needs no more than that join. A fact that belongs to the path itself, such as an end-to-end GOOSE transfer time, would need more. That fact is an operator requirement, so it stays out of the profiles.</p>
 <h2>5. The worked example</h2>
 <p>The worked example is a reference SAS. It uses generic components, and its values are taken from the profiles in the published standards. Every value is marked illustrative until a supplier volunteers a real product.</p>
 <p><strong>Components:</strong></p>
@@ -592,7 +592,7 @@ nav: uc-substation
 <li><strong>O2.</strong> Two profiles: a component profile extending the change core, and a system overlay.</li>
 <li><strong>O3.</strong> The data plane and the key plane are separate interfaces, linked by <code>keyStoreRef</code>, which is MUST for group-keyed interfaces.</li>
 <li><strong>O4.</strong> Real-time limits are integration constraints, not a new attribute.</li>
-<li><strong>O5.</strong> A conduit is an interface of the device that implements it. The edge model stays parked.</li>
+<li><strong>O5.</strong> A conduit is an interface of the device that implements it. Connections are joined through deployment records (decision 0026); there is no edge object.</li>
 <li><strong>O6.</strong> Values are illustrative until a supplier volunteers a product.</li>
 </ul>
 <p><strong>Open questions:</strong></p>
