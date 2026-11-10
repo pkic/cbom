@@ -123,6 +123,7 @@ nav: uc-iot
 
   <h3>The party who can update may be neither the vendor nor the operator</h3>
   <p>Firmware often reaches a device through a third party: a connectivity provider, a platform operator, an installer with physical access. The operator making the decision may have no relationship with that party. A profile that records only whether an update exists, and not who can cause it to happen, leaves the operator unable to tell an action it can actually take from one that exists only in theory.</p>
+  <p>Who can install firmware is recorded as a property of the update mechanism: the parties it accepts updates from. The CBOM does not record the commercial arrangement behind it, such as a support contract or a service level. That boundary is described in <a href="../methodology/model.html">Model</a>.</p>
 
   <h3>Field life outlasts the support commitment, and sometimes the vendor</h3>
   <p>A device installed today may still be running in fifteen years. The commitment to ship firmware for it will not last that long, and neither, in some cases, will the company that made it. This is the same problem as the long-term stewardship question that the working group already tracks. In this use case the problem appears on the device side rather than on the profile side.</p>
@@ -137,7 +138,7 @@ nav: uc-iot
       <tr><td>What is it doing now, and what else could it do?</td><td><code>keyExchange</code>, <code>authentication</code>, and their <code>Supported</code> counterparts</td><td>Baseline and migration profile.</td></tr>
       <tr><td>Could any firmware carry the new algorithms, given what the hardware is?</td><td><code>resourceBound</code></td><td class="na">New. The hard limits that bound what this model could ever negotiate: usable flash and RAM headroom, and the maximum frame or message size the link imposes.</td></tr>
       <tr><td>Is there a way to get new firmware onto it?</td><td><code>updateMechanism</code></td><td class="na">New. <code>none</code> · <code>physical-access</code> · <code>local-network</code> · <code>remote-managed</code>.</td></tr>
-      <tr><td>Who can trigger that?</td><td><code>updateAuthority</code></td><td class="na">New. <code>operator</code> · <code>vendor</code> · <code>platform</code> · <code>installer</code>. This attribute separates an available action from a theoretical one.</td></tr>
+      <tr><td>Who can trigger that?</td><td><code>updateAuthority</code></td><td class="na">New. <code>operator</code> · <code>vendor</code> · <code>platform</code> · <code>installer</code>, as a set. This attribute separates an available action from a theoretical one. Q65 settles it provisionally as an attribute of the update mechanism, with <code>updateAuthoritySupported</code> for the parties the product can be configured to accept. See <a href="../methodology/terms.html">Terms</a>.</td></tr>
       <tr><td>Will firmware still be offered?</td><td><code>updateSupportStatus</code></td><td class="na">New. A commitment class rather than a date, following decision 0007: <code>supported</code> · <code>limited</code> · <code>ended</code> · <code>never-offered</code>.</td></tr>
       <tr><td>Can the keys be replaced?</td><td><code>keyProvisioning</code>, <code>keyReplaceable</code></td><td class="na">New. Where key material came from, and whether anything short of replacing the device can change it. Factory-injected material that cannot be rotated is the case that turns an update decision into a replacement decision.</td></tr>
       <tr><td>Where do key operations execute?</td><td><code>providerLocation</code></td><td>Migration profile, but the value set is wrong here: <code>software</code>, <code>hsm</code>, <code>tee</code> and <code>unspecified</code> do not cover a secure element, an MCU's internal flash, or one-time-programmable fuses.</td></tr>
@@ -212,7 +213,7 @@ nav: uc-iot
   </div>
 
   <h2>8 · Recorded decisions and open questions</h2>
-  <p>No decision records yet. Four questions are carried in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a>. These four questions have to be answered before the rules can be written.</p>
+  <p>No decision records yet. Four questions are carried in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a>. Q65 is settled provisionally. The other three have to be answered before the rules can be written.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>#</th><th>Question</th><th>Topic</th></tr></thead>
@@ -220,7 +221,7 @@ nav: uc-iot
       <tr><td>Q62</td><td>Is the subject of a CBOM a device model or a deployed device, and does the methodology need to say which?</td><td>3.3</td></tr>
       <tr><td>Q63</td><td>Does the methodology need a way to say that a limit is permanent rather than a current state?</td><td>3.3</td></tr>
       <tr><td>Q64</td><td>Is an IoT profile a branch from the baseline or a depth of the migration family?</td><td>3.9</td></tr>
-      <tr><td>Q65</td><td>May a profile require a fact about a process, such as who can push firmware, rather than about a product?</td><td>3.4</td></tr>
+      <tr><td>Q65</td><td>May a profile require a fact about a process, such as who can push firmware, rather than about a product? <em>Settled provisionally: who can push firmware is the attribute <code>updateAuthority</code> of the update mechanism.</em></td><td>3.4</td></tr>
     </tbody>
   </table>
   </div>

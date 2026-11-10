@@ -71,7 +71,7 @@ states a commitment class rather than contract terms, following decision 0007.
 
 ## Still to do
 
-- Add the definition and its values to the Terms section.
+- Done: the definition and its values are in the Terms section, and the boundary is in the Model section.
 - Write the rule in the IoT profile, and decide whether it may be withheld there.
 - Map it to CycloneDX 2.0 and SPDX (Publication 3).
 - Add one conforming and one failing example to the IoT worked example.

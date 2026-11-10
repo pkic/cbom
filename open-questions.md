@@ -163,12 +163,15 @@ a silence, and a validator can check that the statement was made. The completene
 decision 0012 adds whether the declared set of interfaces is the whole set. A false "none" is a
 misstatement that a buyer can take up under the contract.
 
-This replaces the earlier working position, Option B. It also gives rule P2 a clean form: a subject
-with no management interface, such as a library or a hardware token, states "none" and passes
+This replaces the earlier working position, Option B. Rule P2 has followed this pattern since v0.6
+(decision 0012): a document declares a management interface or states why there is none, so a
+library or a hardware token with no management interface states that it has none and passes
 honestly.
 
-**What would have to change.** The rule format, the rule itself, both example documents, and one
-row of the table in the Conformance section listing what a pass does not prove.
+**What changed.** No rule, validator or example had to change. The Profile section now states that
+product rules require disclosure and never a particular design. The Conformance section's table of
+what a verdict does not assert now describes the statement of absence and the coverage statement.
+The matching training question was updated.
 
 ## Q67 — Is an estate a subject type, or an aggregation of product documents?
 
@@ -1004,7 +1007,10 @@ on the stage, and may be withheld. The methodology adds one boundary: an attribu
 use a technical capability of the product, but it may not record commercial terms such as support
 periods, service levels or prices. The draft definition is in `drafts/update-authority/README.md`.
 
-**What would have to change.** The Model section, on what a CBOM is about, and the attribute list.
+**What changed.** The Terms section defines `updateAuthority` and `updateAuthoritySupported` and
+lists their values. The Model section states the boundary between technical capability and
+commercial terms. The IoT use case and the change-planning group page no longer show the use case as
+blocked on Q65.
 
 # 3.5 Checking conformance
 
