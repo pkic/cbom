@@ -125,14 +125,6 @@ meetings:
       - "18:30 The first document release on CBOM profiles, and the December workshop: agree what the release covers, who writes and reviews each part, and a target date before the workshop. Then agree how the workshop uses it, including the live version of the tabletop exercise that participants join from their phones, a rehearsal date, and who facilitates (Chair)"
       - "18:55 Any other business, actions and next meeting (Chair)"
 
-  - number: 17
-    date: 2026-11-04
-    time: "09:00"
-    timezone: Europe/Zurich
-    duration: 60
-    title: Working group meeting
-    join: https://pkic.org/wg/cbom/
-
   - number: 18
     date: 2026-11-11
     time: "18:00"
@@ -141,7 +133,7 @@ meetings:
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
     agenda:
-      - "Welcome, apologies, and approval of the minutes of meeting 17 (Chair)"
+      - "Welcome, apologies, and approval of the minutes of meeting 16 (Chair)"
       - "Presentation: FIPS and Chips (Jim Goodman)"
       - "Training update: progress on the training courses on CBOMs and the PKIC CBOM work, the topics planned next, and volunteers to review drafts before they are published on the site (Chair)"
       - "PKI Consortium conference in December: the workshop is no longer going ahead, and the working group now has a 40-minute presentation in the Large Red Hall (Chair)"
