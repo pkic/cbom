@@ -130,7 +130,7 @@ namespace, covered by Q03. Q05, Q06 and Q27 would become blocking. The August re
 
 ## Q02 — Can a profile require a product to be built a certain way, or only require disclosure?
 
-**Status** open
+**Status** settled provisionally, chair's call on 10 November 2026: Option A, disclosure only
 
 **The question.** The example profile says a product must declare an administrative interface.
 That reads as a requirement about the product itself, not about the document describing it.
@@ -153,8 +153,19 @@ catch an incomplete disclosure, and incompleteness is what buyers worry about mo
 a supplier could describe one interface perfectly, omit five, and pass. The appearance of a
 product requirement is an acceptable side effect.
 
-**Where it stands.** Option B. The Conformance section is explicit that passing does not prove
-every relevant interface was declared.
+**Where it stands.** Settled provisionally on 10 November 2026: Option A. A profile states only what
+a document must disclose. It does not require a product to be built in a particular way.
+
+Completeness is handled by disclosure, not by product rules. For each kind of interface the profile
+cares about, such as administrative, management or update, the document must state whether one
+exists. If one exists, the document must declare it. "None" is then a value the supplier states, not
+a silence, and a validator can check that the statement was made. The completeness statement in
+decision 0012 adds whether the declared set of interfaces is the whole set. A false "none" is a
+misstatement that a buyer can take up under the contract.
+
+This replaces the earlier working position, Option B. It also gives rule P2 a clean form: a subject
+with no management interface, such as a library or a hardware token, states "none" and passes
+honestly.
 
 **What would have to change.** The rule format, the rule itself, both example documents, and one
 row of the table in the Conformance section listing what a pass does not prove.
@@ -315,7 +326,7 @@ become multi-valued, which engages the plural naming convention.
 
 ## Q07 — Should the list of attributes be published as a document in its own right?
 
-**Status** open
+**Status** closed for now, chair's call on 10 November 2026
 
 **The question.** The attribute definitions currently live inside the methodology, alongside the
 procedure and the worked examples. Should they be separated out?
@@ -336,8 +347,9 @@ them gives a stable reference with its own version.
 the naming conventions. Separating them invites citation without the context that makes them
 precise, and one document with one version is easier to govern.
 
-**Where it stands.** The definitions are spread across three sections, with the Terms section as
-the collected reference. No separate document exists.
+**Where it stands.** Closed for now on 10 November 2026. The attribute definitions stay in the
+methodology, with the Terms section as the collected reference. The question can be reopened if a
+regulator or sector body needs a separately versioned definitions document.
 
 **What would have to change.** Whether the Terms section becomes a versioned document, and how
 the rule files point at definitions.
@@ -958,7 +970,8 @@ Option B, either the baseline's disclosure convention or the attribute list.
 
 ## Q65 — May a rule require a fact about a process rather than about a product?
 
-**Status** open. Added 15 September 2026, from the IoT use case draft.
+**Status** settled provisionally, chair's call on 10 November 2026: framed as an attribute. Added 15
+September 2026, from the IoT use case draft.
 
 **The question.** The IoT use case needs to know who can install firmware on a device: the
 operator, the manufacturer, a connectivity platform, or an installer with physical access. That is
@@ -982,7 +995,14 @@ the manual work the profile exists to remove).
 (trade-off: keeps the CBOM clean at the cost of an object the methodology does not have and would
 have to govern).
 
-**Where it stands. Nothing.**
+**Where it stands.** Settled provisionally on 10 November 2026. Who can install software on a device
+is an attribute of the product's update mechanism, `updateAuthority`, as the IoT use case proposes.
+It is not a separate kind of fact about a process, and no new document kind is needed.
+
+The attribute names who the mechanism accepts updates from. It has a fixed list of values, depends
+on the stage, and may be withheld. The methodology adds one boundary: an attribute may name who can
+use a technical capability of the product, but it may not record commercial terms such as support
+periods, service levels or prices. The draft definition is in `drafts/update-authority/README.md`.
 
 **What would have to change.** The Model section, on what a CBOM is about, and the attribute list.
 
@@ -1365,7 +1385,7 @@ Tracked as issue #3.
 
 ## Q19 — Does the new reference category stay?
 
-**Status** open
+**Status** settled provisionally, chair's call on 10 November 2026: Option A, keep the category
 
 **The question.** The reference register had three categories. A fourth was added during drafting
 to hold the protocol and algorithm specifications the worked example cites. Eight references use
@@ -1381,7 +1401,8 @@ uncited normative reference is a defect in a standards document.
 
 **Option B: remove it and recategorise the eight entries.**
 
-**Where it stands.** The category exists and eight references use it.
+**Where it stands.** Settled provisionally on 10 November 2026: Option A. The fourth reference
+category stays, and the eight references keep using it. Nothing has to change.
 
 **What would have to change.** One configuration file, eight register entries, and the filters on
 the references page.
