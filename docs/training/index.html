@@ -2580,7 +2580,7 @@ const C3_TF=[
  {s:'The document discloses at least what the profile requires at MUST level.',a:0,e:'This is exactly what "conforms" means.'},
  {s:'The carrier version of the document fell within the range the profile accepts.',a:0,e:'A document outside the range is refused before any rule is evaluated.'},
  {s:'The disclosed values are accurate.',a:1,e:'Accuracy is a property of the producing process. Signing and the lifecycle stage speak to it. The profile does not check it.'},
- {s:'Every relevant interface was declared.',a:1,e:'Product rules constrain the declared set by kind and count. An interface that no product rule requires stays invisible.'},
+ {s:'Every relevant interface was declared.',a:1,e:'A product rule makes the document account for each kind of interface it names: declare one, or state there is none. An interface of a kind no rule names stays invisible.'},
  {s:'The cryptography is adequate for the purpose.',a:1,e:'Adequacy is a judgement by external, versioned policy. The CBOM carries facts only.'},
  {s:'The SBOM the document points to is correct and reachable.',a:1,e:'A reference rule checks the pointer, never the target. With the target in hand, the validator checks its hash and nothing more.'}
 ];

@@ -112,7 +112,7 @@ nav: terms
   </table>
 
   <h2>Attributes</h2>
-  <p>Attributes shared across profiles, followed by those introduced by the PQC migration profile.</p>
+  <p>Attributes shared across profiles, followed by those introduced by the PQC migration profile and by the drafted use cases.</p>
   <table>
     <thead><tr><th>Attribute</th><th>Definition</th><th>Introduced in</th></tr></thead>
     <tbody>
@@ -141,6 +141,7 @@ nav: terms
       <tr><td><code>coexistence</code></td><td>Whether the interface can serve classical and post-quantum peers at the same time. Determines whether migration requires a coordinated cutover.</td><td><a href="../use-cases/pqc-migration.html">PQC Migration</a></td></tr>
       <tr><td><code>negotiationControl</code></td><td>Whether the interface can be configured to require post-quantum key exchange and refuse a classical fallback.</td><td><a href="../use-cases/pqc-migration.html">PQC Migration</a></td></tr>
       <tr><td><code>integrationConstraints</code></td><td>Known effects of enabling a capability, such as handshake size limits or intermediary incompatibilities.</td><td><a href="../use-cases/pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>updateAuthority</code> / <code>updateAuthoritySupported</code></td><td>The parties from which the product's update mechanism accepts new software or firmware now, and the set it can be configured to accept. In a product record, <code>updateAuthority</code> is the default as shipped. In a deployment record, it is the value as configured. Not required when <code>updateMechanism</code> is <code>none</code>. It may be withheld.</td><td><a href="../use-cases/iot.html">IoT Device Estate</a> (draft)</td></tr>
     </tbody>
   </table>
 
@@ -165,6 +166,7 @@ nav: terms
       <tr><td><code>enablementMethod</code></td><td><code>already-enabled</code> · <code>configuration</code> · <code>software-update</code> · <code>hardware-change</code> · <code>licence</code> · <code>not-available</code></td></tr>
       <tr><td><code>providerLocation</code></td><td><code>software</code> · <code>hsm</code> · <code>tee</code> · <code>unspecified</code></td></tr>
       <tr><td><code>coexistence</code></td><td><code>simultaneous</code> · <code>exclusive</code> · <code>unknown</code></td></tr>
+      <tr><td><code>updateAuthority</code></td><td><code>operator</code> · <code>vendor</code> · <code>platform</code> · <code>installer</code><br><span class="na">a set: more than one value may apply</span></td></tr>
     </tbody>
   </table>
 
