@@ -35,7 +35,7 @@
 # names its meeting with `meeting: <number>`, and both pages link to each other.
 
 meta:
-  updated: 2026-10-27
+  updated: 2026-11-10
   timezone: Europe/Zurich
   # Shown above the list so a newcomer knows when to turn up. Free text.
   cadence: >-
@@ -140,6 +140,12 @@ meetings:
     duration: 60
     title: Working group meeting
     join: https://pkic.org/wg/cbom/
+    agenda:
+      - "18:00 Welcome, apologies, and approval of the minutes of meeting 17 (Chair)"
+      - "18:05 Training update: progress on the training courses on CBOMs and the PKIC CBOM work, the topics planned next, and volunteers to review drafts before they are published on the site (Chair)"
+      - "18:20 PKI Consortium conference in December: the workshop is no longer going ahead, and the working group now has a 40-minute presentation in the Large Red Hall (Chair)"
+      - "18:35 Update from IdenTrust on its profile tool: a demonstration and its current status, how it fits the CBOM profile methodology and CycloneDX, and possible next steps (IdenTrust)"
+      - "18:55 Any other business, actions and next meeting (Chair)"
 
   - number: 19
     date: 2026-11-18
