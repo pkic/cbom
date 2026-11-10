@@ -922,7 +922,7 @@ F3.push({min:1.5,render:()=>`${head('ladder','Sequencing: when the minimum becom
 F3.push({min:1.5,render:()=>`${head('relation','The edge gap','The standards describe what a component contains, not where it is used')}
   <p>Current CBOM standards model cryptographic assets as nodes: algorithms, keys, certificates and protocols. They have no object for the <b>relationship</b>, the point at which cryptography is applied between two parties. A TLS connection is an example. It is where assets are used, not an asset in itself.</p>
   ${fig(FIG_EDGE,'<b>Figure 2.</b> Some classifiers belong to the connection, such as the endpoint roles in a session. With no object for the connection, they are attached to the protocol asset. The edge is represented as though it were a node.')}
-  ${dash(['<b>Why it matters:</b> the questions buyers ask are about connections. Which interfaces negotiate a classical key exchange? Who is at the far end?','<b>How the methodology responds:</b> it models interfaces explicitly and states, in the mapping, where each relationship attribute is written. A connection between two parties is the join of its two ends: a deployment record can name the far end, and an evaluation reads both records together (decision 0026). Module C1 covers the relationship model.'])}`});
+  ${dash(['<b>Why it matters:</b> the questions buyers ask are about connections. Which interfaces negotiate a classical key exchange? Who is at the far end?','<b>How the methodology responds:</b> it models interfaces explicitly and states, in the mapping, where each relationship attribute is written. A connection between two parties is the join of its two ends: a deployment record can name the far end, and an evaluation reads both records together. Module C1 covers the relationship model.'])}`});
 
 F3.push({min:1.5,render:()=>`${head('mapping','Naming, encoding and format coverage','Three reasons two correct CBOMs cannot be compared')}
   ${fig(FIG_NORM,'<b>Figure 3.</b> Naming normalization fixes the value. Encoding normalization fixes where the value sits. A consumer needs both to read CBOMs from different producers with one parser.')}
@@ -1130,7 +1130,7 @@ F4.push({min:2.5,render:()=>`${head('chain','Posture across a whole path','A CBO
   ${fig(FIG_PATH,'<b>Figure 4.</b> For protection in transit, the weakest hop governs. A signature spans every hop at once, so its strength does not depend on any single hop and is composed on its own.')}
   <div class="pathres" aria-live="polite"><div id="pr-transit"></div><div id="pr-sig"></div></div>
   <h3 style="margin-top:22px">What linking needs</h3>
-  ${dash(['<b>Stable identity</b> for the interfaces being linked. Module F3 explains why this is the first obstacle.','<b>A topology record:</b> this interface connects to that one. Only the operator knows this, and it changes with the deployment, not with any product. A deployment record can state it one connection at a time with <span class="mono">peerInterface</span> (decision 0026).','<b>A rule for composing posture</b> along the path, applied separately for each relationship and dated like any other derived judgement.'])}`,
+  ${dash(['<b>Stable identity</b> for the interfaces being linked. Module F3 explains why this is the first obstacle.','<b>A topology record:</b> this interface connects to that one. Only the operator knows this, and it changes with the deployment, not with any product. A deployment record can state it one connection at a time with <span class="mono">peerInterface</span>.','<b>A rule for composing posture</b> along the path, applied separately for each relationship and dated like any other derived judgement.'])}`,
   init(){const st={hops:['hybrid','classical','hybrid'],sig:'ECDSA'};
    const draw=()=>{st.hops.forEach((v,i)=>{const p=document.getElementById('hop'+i),t=document.getElementById('hopt'+i);p.setAttribute('class',v==='hybrid'?'hop-pass':'hop-fail');t.setAttribute('class',v==='hybrid'?'t-pass':'t-fail');t.textContent=v==='hybrid'?'hybrid ML-KEM':'classical';t.setAttribute('font-weight',v==='hybrid'?'400':'700')});
     document.getElementById('sigt').textContent=`originator signature (${st.sig}), verified by the service: spans every hop`;
@@ -1485,7 +1485,7 @@ A1.push({min:1.5,render:()=>`${head('rules','Stage 3: rules','Levels, absence, s
   </div>`});
 
 A1.push({min:1.5,render:()=>`${head('verdict','Stages 4 and 5: realisation and proof','A profile has not been tested until its rules have run')}
-  <p>Stage 4 makes the profile usable in a real format. The mapping fixes one place for each attribute in each format. The acceptance range says which format versions the profile takes. Decision records keep the reasoning, with the condition that should reopen each one.</p>
+  <p>Stage 4 makes the profile usable in a real format. The mapping fixes one place for each attribute in each format. The acceptance range says which format versions the profile takes.</p>
   <p>Stage 5 runs the profile. Build one conforming document and at least one that fails for a stated reason. Check the rules file with <span class="mono">check_profile.py</span>, then run the validator. The PQC migration profiles were proved this way.</p>
   <div class="tbl wide"><table><thead><tr><th>Example document</th><th>Validator verdict</th></tr></thead><tbody>
    <tr><td class="mono">cbom-keycloak-product.cdx.json</td><td><span class="chip c-pass">Conforms</span> to both migration depths and the profiles beneath them</td></tr>
@@ -2111,7 +2111,7 @@ A4.push({min:2,render:()=>`${head('relation','Keeping a reference correct','Wher
 
 A4.push({min:2,render:()=>`${head('ladder','Change, stewardship and retention','Profiles change. Old claims must still be checkable.')}
   <div class="two">
-   <div class="box"><h3>Change control</h3><p style="margin:0">Profiles, vocabulary and the methodology change through explicit versions, recorded decisions in <span class="mono">decisions/</span>, and lazy consensus in the working group: a proposal is accepted unless someone objects. A tightened rule takes effect after a dated grace window, during which the validator warns before it fails. Vocabulary values are deprecated, never removed.</p></div>
+   <div class="box"><h3>Change control</h3><p style="margin:0">Profiles, vocabulary and the methodology change through explicit versions and lazy consensus in the working group: a proposal is accepted unless someone objects. A tightened rule takes effect after a dated grace window, during which the validator warns before it fails. Vocabulary values are deprecated, never removed.</p></div>
    <div class="box"><h3>Retention and immutability</h3><p style="margin:0">Published CBOM revisions do not change. A correction is a new revision that supersedes the old one, and the old one is kept for audit. Profiles follow the same rule: every published version is retained and served by its version identifier, because a claim made years ago can be reproduced only against the text it cited.</p></div>
   </div>
   <p>Each profile carries a changelog that classifies every change as tightening, relaxing or editorial. A producer reads the class to know whether a new version means more work.</p>
@@ -2302,7 +2302,7 @@ C1.push({min:1.5,render:()=>`${head('chain','Product records, deployment records
    <tr><td>Token signing; Keycloak's own TLS</td><td><span class="chip c-fail">not-capable</span></td><td>The supplier: blocked by JOSE, and by the Java runtime</td></tr>
    <tr><td>Product HTTPS listener</td><td><span class="chip c-mute">not-deployed</span></td><td>Nobody: TLS ends at the ingress</td></tr>
   </tbody></table></div>
-  ${concept('The readiness gap is computed from the join and never stored. The readiness-gap policy reads the three records, follows correspondsTo, and classes each interface and purpose. A second join, peerInterface, links the two ends of one connection when two operators record them, and the edge-posture evaluation names the end that limits it (decision 0026). Module C6 covers policy evaluation.')}`});
+  ${concept('The readiness gap is computed from the join and never stored. The readiness-gap policy reads the three records, follows correspondsTo, and classes each interface and purpose. A second join, peerInterface, links the two ends of one connection when two operators record them, and the edge-posture evaluation names the end that limits it. Module C6 covers policy evaluation.')}`});
 
 C1.push({min:1,render:()=>`${head('doc','The objects around a CBOM','Who writes each one, and how each is identified')}
   ${fig(C1_FIG_OBJECTS,'<b>Figure 5.</b> A profile constrains a revision. A claim binds to it by digest. A policy reads it and produces a dated result. A vulnerability statement cites it by the same digest. A record points out to context; a judgement made later points back to the record.')}
@@ -2417,7 +2417,7 @@ const C2_OPS=[
  {t:'Remove a requiredWhen guard so the rule always applies',a:0},
  {t:'Narrow accepted subject types to product only',a:0},
  {t:'Redefine what an inherited attribute means',a:1},
- {t:'Add a new cryptographic purpose to the vocabulary that keys G1',a:0,e:'It adds coverage. Only the derived profile has rules for the new purpose. The base never asks for an entry under it, so a document that passes the derived profile still passes the base (decision 0025).'},
+ {t:'Add a new cryptographic purpose to the vocabulary that keys G1',a:0,e:'It adds coverage. Only the derived profile has rules for the new purpose. The base never asks for an entry under it, so a document that passes the derived profile still passes the base.'},
  {t:'Add a new value to the interfaceType vocabulary',a:1,e:'It relaxes the base. interfaceType values are checked against the vocabulary, so the derived profile would accept an interface type the base rejects.'}
 ];
 const QUIZ_C2=[
@@ -2921,7 +2921,7 @@ C5.push({min:1.5,render:()=>`${head('doc','Two documents, one product','Variants
   ${concept('A public variant made by editing the restricted one by hand is a third document. Nothing in the inventory backs it, and nobody has checked it against the restricted one.')}`});
 
 C5.push({min:2,render:()=>`${head('withheld','Redaction is declared, never silent','A public variant is the same document with values replaced by markers')}
-  <p>Decision 0003 settled this: an attribute with no value carries a marker saying why. For a pair of variants that has one consequence. The public variant is not a smaller document. It has the same entries, and some of its values are markers.</p>
+  <p>An attribute with no value carries a marker saying why. For a pair of variants that has one consequence. The public variant is not a smaller document. It has the same entries, and some of its values are markers.</p>
   ${fig(C5_FIG_REDACT,'<b>Figure 2.</b> One Keycloak token-signing interface, three ways. Only the marker lets a redacted document conform, and only where the profile marks the rule withholdable, as the baseline does for I9.')}
   ${cue('You hold the public variant. What can you tell from each line?')}
   <div class="pairs">${C5_READ.map((r,i)=>`<div class="pair"><div class="rec">${r.line}</div>
@@ -2941,7 +2941,7 @@ C5.push({min:1.5,render:()=>`${head('rules','A profile sets a floor and cannot s
   ${concept('Confidentiality is controlled where the document is produced, in the select, filter and redact step. The profile is the acceptance test when the document is released. A profile can still state its side of the bargain. It cannot say "this must not be disclosed". It can say "this rule may be satisfied by a marker".')}`});
 
 C5.push({min:2,render:()=>`${head('ladder','The restricted profile derives from the public one','Withholdability is where the negotiation is settled')}
-  <p>Each rule has a <span class="mono">withholdable</span> setting. When it is true, the rule accepts a <span class="mono">withheld</span> marker in place of a value. Decision 0003 calls deciding this, rule by rule, a substantive negotiation between producers and consumers. Reference rules carry the same setting.</p>
+  <p>Each rule has a <span class="mono">withholdable</span> setting. When it is true, the rule accepts a <span class="mono">withheld</span> marker in place of a value. Deciding this, rule by rule, is a substantive negotiation between producers and consumers. Reference rules carry the same setting.</p>
   ${fig(C5_FIG_DERIVE,'<b>Figure 3.</b> Removing withholdability is a tightening, so the restricted profile is a derived profile of the public one. The validator accepts and records that override. It refuses the reverse before it evaluates any document.')}
   <div class="two">
    <div><p class="doc-title">profile-pqc-migration.rules.json</p><pre class="doc">{
@@ -2993,7 +2993,7 @@ C5.push({min:0,next:null,render:()=>`${head('withheld','Public and restricted CB
   <h3 style="margin-top:22px">Follow these practices</h3>
   ${dash(['Produce both variants from the inventory in one extraction, at two redaction settings.','Replace a value with a withheld marker. Never delete it.','Derive the restricted profile from the public one by removing withholdability from the rules that matter.','Publish an audience step as a pair at one depth, and name the terms of receipt separately from the profile.','Give both variants the same subject and revision, and sign both.','Read the withheld list in a conformance claim, not only the verdict.'])}
   <div class="nextup"><button class="btn" data-goto="C6">Next module: C6 Facts, judgements and vulnerabilities →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
-  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Confidentiality, Profile, Maturity and Inventory; decision 0003; profile-pqc-migration.rules.json.</p>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Confidentiality, Profile, Maturity and Inventory; profile-pqc-migration.rules.json.</p>
   <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
 
 /* ================= C6 Facts, judgements and vulnerabilities ================= */
@@ -3044,7 +3044,7 @@ const C6_VALS=[
 const C6_status=(x,d)=>{const y=+d.slice(0,4);if(!x.qv)return['acceptable','c-pass'];if(x.bits<128){if(y>=2036)return['disallowed','c-fail'];if(y>=2031)return['deprecated','c-warn'];return['acceptable','c-pass']}if(y>=2036)return['disallowed','c-fail'];return['acceptable','c-pass']};
 
 const C6_GAP={
- ing:{t:'Ingress key establishment',cls:'enabled-not-negotiated',chip:'c-warn',d:'The configured record permits X25519MLKEM768. The observed record shows 29% of sessions still negotiating X25519 alone.',who:'The other endpoint, or a fallback path, is the limit. Here the far ends are browsers, which have no records of their own. Where the far end has a record, an edge-posture evaluation names the end that limits the connection (decision 0026).'},
+ ing:{t:'Ingress key establishment',cls:'enabled-not-negotiated',chip:'c-warn',d:'The configured record permits X25519MLKEM768. The observed record shows 29% of sessions still negotiating X25519 alone.',who:'The other endpoint, or a fallback path, is the limit. Here the far ends are browsers, which have no records of their own. Where the far end has a record, an edge-posture evaluation names the end that limits the connection.'},
  plain:{t:'Ingress to Keycloak hop, and the management port',cls:'unprotected',chip:'c-fail',d:'The hop runs plain HTTP, and so does the management port. No cryptography applies at the latest stage supplied.',who:'Example Org, the operator.'},
  tok:{t:'Token signing',cls:'not-capable',chip:'c-mute',d:'ML-DSA token signing is committed upstream (issue #43690) and blocked by the JOSE standard.',who:'The supplier, or the operator by upgrading later.'},
  tls:{t:'Keycloak\'s own TLS',cls:'not-capable',chip:'c-mute',d:'Post-quantum key exchange is planned and blocked by the Java runtime (JEP 527).',who:'The supplier and its runtime.'},
@@ -3057,7 +3057,7 @@ const C6_MATCH=[
 ];
 
 const QUIZ_C6=[
- {q:'Why was the pqcPosture attribute removed from the baseline?',o:['CycloneDX had no field for it','It is a judgement against criteria that change. Stored in the CBOM it goes stale, and producers would evaluate inconsistently','Buyers did not want it'],a:1,e:'Decision 0002. The profile requires the facts posture is derived from, and an external policy derives it at evaluation time.'},
+ {q:'Why was the pqcPosture attribute removed from the baseline?',o:['CycloneDX had no field for it','It is a judgement against criteria that change. Stored in the CBOM it goes stale, and producers would evaluate inconsistently','Buyers did not want it'],a:1,e:'The profile requires the facts posture is derived from, and an external policy derives it at evaluation time.'},
  {q:'Which of these must a policy result record?',o:['Only the verdict','The policy by identifier, version and digest; the evaluation date; every CBOM read, by digest; the findings; and what it does not assert','A copy of every CBOM it read'],a:1,e:'With those, anyone can reproduce the result. The date matters because the same facts give a different result later.'},
  {q:'The observed record shows RSA-2048 on the cluster connection. The algorithm-transition policy is applied on 2031-01-01. What changes from the 2026 result?',o:['Nothing, the CBOM is the same','The status moves from acceptable to deprecated, because the schedule deprecates 112-bit quantum-vulnerable algorithms after 2030','The CBOM must be reissued'],a:1,e:'The facts stay put. The date in the result is what makes the change visible and reproducible.'},
  {q:'Guidance deprecates an algorithm that a product uses. Where does a responder find which interfaces are affected?',o:['In the CVE feed','In the CBOM, read against a versioned policy. No advisory or identifier is issued for this kind of weakness','In the VEX statement'],a:1,e:'For algorithm weakness the CBOM is the only evidence there is. Implementation defects are the case with feeds and identifiers.'},
@@ -3074,7 +3074,7 @@ C6.push({min:1.5,render:()=>`${head('verdict','Facts and judgements','The facts 
   ${fig(C6_FIG_POLICY,'<b>Figure 1.</b> One fact from Example Org\'s observed Keycloak record, evaluated by the same example policy on two dates.')}
   <div class="dd">
    <div class="dont"><h3>${I.x} Store the verdict in the CBOM</h3>${dash(['It goes stale when an algorithm is reclassified, and the document still presents it as current.','Each producer applies its own criteria, so equivalent facts carry different verdicts.','A record of facts turns into a time-dependent opinion.'])}</div>
-   <div class="do"><h3>${I.ok} Evaluate outside it</h3>${dash(['One versioned policy evaluates every CBOM the same way.','Anyone can re-evaluate the same facts under the criteria in force on any date.','The working group removed <span class="mono">pqcPosture</span> from the baseline for this reason (decision 0002).'])}</div>
+   <div class="do"><h3>${I.ok} Evaluate outside it</h3>${dash(['One versioned policy evaluates every CBOM the same way.','Anyone can re-evaluate the same facts under the criteria in force on any date.','The working group removed <span class="mono">pqcPosture</span> from the baseline for this reason.'])}</div>
   </div>`});
 
 C6.push({min:2,render:()=>`${head('rules','Policies and results are files','Versioned data plus a named method')}
@@ -3123,7 +3123,7 @@ C6.push({min:1.5,render:()=>`${head('advisory','Three statements, three authors'
   ${cue('Who wrote each statement? The statements are illustrative.')}
   <div class="pairs">${C6_MATCH.map((m,i)=>`<div class="pair"><p style="margin:0 0 10px">${m.s}</p>
    <div class="choices" role="group" aria-label="Statement ${i+1}">${['CBOM','Advisory','VEX statement'].map((c,j)=>`<button data-c6m="${i}" data-c="${j}" aria-pressed="false">${c}</button>`).join('')}</div><div class="fb" id="c6fb${i}" aria-live="polite"></div></div>`).join('')}</div>
-  <p class="note" style="margin-top:14px">A signed, dated CBOM that says a product is unaffected is worse than one that says nothing, because people will believe it. A profile neither requires nor permits a vulnerability verdict as an attribute (decision 0020).</p>`,
+  <p class="note" style="margin-top:14px">A signed, dated CBOM that says a product is unaffected is worse than one that says nothing, because people will believe it. A profile neither requires nor permits a vulnerability verdict as an attribute.</p>`,
   init(){document.querySelectorAll('[data-c6m]').forEach(b=>b.onclick=()=>{const i=+b.dataset.c6m,c=+b.dataset.c,m=C6_MATCH[i];
    document.querySelectorAll(`[data-c6m="${i}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));
    const f=document.getElementById('c6fb'+i);const ok=c===m.a;f.className='fb '+(ok?'ok':'no');f.textContent=(ok?'Correct. ':'Not quite. ')+m.e;})}});
@@ -3160,7 +3160,7 @@ C6.push({min:0,next:null,render:()=>`${head('advisory','Facts, judgements and vu
   <h3 style="margin-top:22px">Follow these practices</h3>
   ${dash(['Keep verdicts out of the CBOM. Evaluate with a named policy version and record the date.','Bind every result to the policy and to each CBOM it read by SHA-256.','Use the readiness-gap classes to decide who acts on each interface.','Match implementation defects through I9 and the advisory endpoint, and read vendor statements through R2.','Remove withholdability from I9 in any profile that has to support incident response or migration.','Treat a passing verdict as a statement about disclosure, never about safety.'])}
   <div class="nextup"><button class="btn" data-goto="C7">Next module: C7 Context pointers →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
-  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Policy Evaluation, Vulnerabilities and Lifecycle Data; policy.schema.json, policy-result.schema.json and the readiness-gap and algorithm-transition example policies with their Keycloak results (evaluated 2026-10-25); decisions 0002 and 0020; NIST IR 8547 initial public draft.</p>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Policy Evaluation, Vulnerabilities and Lifecycle Data; policy.schema.json, policy-result.schema.json and the readiness-gap and algorithm-transition example policies with their Keycloak results (evaluated 2026-10-25); NIST IR 8547 initial public draft.</p>
   <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. The example policies are illustrative and are not advice.</p>`});
 
 /* ================= C7 Context pointers ================= */
@@ -3230,7 +3230,7 @@ C7.push(titleScreen(MODULES.find(m=>m.id==='C7'),{sub:'A CBOM records cryptograp
 C7.push({min:1.5,render:()=>`${head('chain','Point to it, do not carry it','Joined, not merged')}
   <p>A consumer usually needs more than the cryptographic facts: the SBOM of the same product, the vendor's vulnerability statements, the configuration a deployment record was read from, the evidence behind an observation. Each changes on its own schedule, or another party holds it. So the CBOM points to it.</p>
   ${fig(C7_FIG_POINT,'<b>Figure 1.</b> The pointers in the Keycloak 26.7.3 product record. None of the targets is carried in the record.')}
-  ${concept('Decision 0025 extends decision 0020 from vulnerability data to all context. A CBOM records facts that change when the product or the deployment changes. Anything that changes on another trigger, or that someone else holds, is joined and not merged.')}`});
+  ${concept('Vulnerability data is joined to a CBOM, not merged into it, and the same holds for all context. A CBOM records facts that change when the product or the deployment changes. Anything that changes on another trigger, or that someone else holds, is joined and not merged.')}`});
 
 C7.push({min:1.5,render:()=>`${head('mapping','Three kinds of reference','Only the third is a context pointer')}
   <div class="tbl wide"><table><thead><tr><th>Kind</th><th>Points to</th><th>Form</th><th>Examples</th></tr></thead><tbody>
@@ -3323,7 +3323,7 @@ C7.push({min:0,next:null,render:()=>`${head('chain','Context pointers','Summary'
   ${dash(['Point to the SBOM, VEX, configuration and evidence. Do not copy them into the CBOM.','Bind every document target by SHA-256, and name the access protocol of every endpoint.','State an absence such as not-published instead of leaving a required pointer out.','Pass targets with --with when you validate, so their hashes are checked.','Read and judge a target yourself before you rely on it.','Let claims and results point to the record by digest, never the other way round.'])}
   <div class="concept" style="margin-top:22px"><small>CONCEPTS TRACK COMPLETE</small>You have finished the Concepts modules. The Applying it track starts with A1 Writing a profile.</div>
   <div class="nextup"><button class="btn" data-goto="A1">Next module: A1 Writing a profile →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
-  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Context Pointers, Vulnerabilities and Policy Evaluation; profile-interface-disclosure.rules.json, profile-deployment-disclosure.rules.json and profile-pqc-migration.rules.json; the Keycloak context examples under examples/context/; decisions 0020 and 0025.</p>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Context Pointers, Vulnerabilities and Policy Evaluation; profile-interface-disclosure.rules.json, profile-deployment-disclosure.rules.json and profile-pqc-migration.rules.json; the Keycloak context examples under examples/context/.</p>
   <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. The Keycloak hashes and operator URLs are illustrative.</p>`});
 
 const COURSES={F1,F2,F3,F4,F5,A1,A2,A3,A4,C1,C2,C3,C4,C5,C6,C7};
