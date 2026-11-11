@@ -141,8 +141,9 @@ nav: terms
       <tr><td><code>providerLocation</code></td><td>Where key operations execute. This determines whether a new algorithm can be adopted through software at all.</td><td><a href="../use-cases/pqc-migration.html">PQC Migration</a></td></tr>
       <tr><td><code>coexistence</code></td><td>Whether the interface can serve classical and post-quantum peers at the same time. Determines whether migration requires a coordinated cutover.</td><td><a href="../use-cases/pqc-migration.html">PQC Migration</a></td></tr>
       <tr><td><code>negotiationControl</code></td><td>Whether the interface can be configured to require post-quantum key exchange and refuse a classical fallback.</td><td><a href="../use-cases/pqc-migration.html">PQC Migration</a></td></tr>
-      <tr><td><code>integrationConstraints</code></td><td>Known effects of enabling a capability, such as handshake size limits or intermediary incompatibilities.</td><td><a href="../use-cases/pqc-migration.html">PQC Migration</a></td></tr>
+      <tr><td><code>integrationConstraints</code></td><td>Known effects of enabling a capability, such as handshake size limits or intermediary incompatibilities. Each entry has a category and a short description, so that entries can be counted across suppliers. The categories are listed under controlled vocabularies.</td><td><a href="../use-cases/pqc-migration.html">PQC Migration</a></td></tr>
       <tr><td><code>updateAuthority</code> / <code>updateAuthoritySupported</code></td><td>The parties from which the product's update mechanism accepts new software or firmware now, and the set it can be configured to accept. In a product record, <code>updateAuthority</code> is the default as shipped. In a deployment record, it is the value as configured. Not required when <code>updateMechanism</code> is <code>none</code>. It may be withheld.</td><td><a href="../use-cases/iot.html">IoT Device Estate</a> (draft)</td></tr>
+      <tr><td><code>resourceBound</code></td><td>The hard limits that decide what a device could ever support: usable flash and RAM, and the maximum frame or message size its link imposes, in bytes. It records the limit, not a conclusion. The consumer decides whether the limit rules out a new algorithm for good.</td><td><a href="../use-cases/iot.html">IoT Device Estate</a> (draft)</td></tr>
       <tr><td><code>verifierPopulation</code> / <code>verifierPopulationRef</code></td><td>On an interface that signs: who must be able to verify the signature. The optional pointer names the rules that set what those verifiers must support, such as a scheme rulebook. The weakest verifier sets the upper limit on what the signer can use. The relationship stays between two parties. It may be withheld.</td><td><a href="model.html">Model</a> (draft)</td></tr>
       <tr><td><code>trustDomain</code> / <code>trustAnchorRef</code></td><td>On an interface: the kind of trust anchor under which it accepts the other party's credentials, and optionally the anchor itself. It is an attribute of the interface, not the endpoint, because one server can accept different anchors on different interfaces. <code>trustAnchorRef</code> may be withheld.</td><td><a href="model.html">Model</a> (draft)</td></tr>
     </tbody>
@@ -172,8 +173,32 @@ nav: terms
       <tr><td><code>updateAuthority</code></td><td><code>operator</code> · <code>vendor</code> · <code>platform</code> · <code>installer</code><br><span class="na">a set: more than one value may apply</span></td></tr>
       <tr><td><code>verifierPopulation</code></td><td><code>counterparty</code> · <code>scheme-members</code> · <code>public</code></td></tr>
       <tr><td><code>trustDomain</code></td><td><code>public</code> · <code>private</code> · <code>scheme-administered</code></td></tr>
+      <tr><td><code>integrationConstraints</code> category</td><td><code>handshake-size</code> · <code>interoperability</code> · <code>performance</code> · <code>certification</code> · <code>hardware</code> · <code>other</code></td></tr>
     </tbody>
   </table>
+
+  <h3 id="protocols">Protocol names</h3>
+  <p>The value of <code>protocol</code> comes from this list, so that the same protocol has the same name in every CBOM. The version is written as the protocol's own specification writes it, for example <code>1.3</code> for TLS, not <code>TLSv1.3</code> or <code>0x0304</code>. A protocol that is not on the list is recorded as <code>other</code>, with a pointer to its specification, and can be proposed for the list. No rule checks the list yet. The Keycloak examples still use two labels that are not on it, for the cluster transport and the admin API, and will be aligned.</p>
+  <table>
+    <thead><tr><th>Name</th><th>Specification</th></tr></thead>
+    <tbody>
+      <tr><td><code>TLS</code></td><td>IETF RFC 8446 (version 1.3) and RFC 5246 (version 1.2)</td></tr>
+      <tr><td><code>DTLS</code></td><td>IETF RFC 9147 (version 1.3)</td></tr>
+      <tr><td><code>QUIC</code></td><td>IETF RFC 9000</td></tr>
+      <tr><td><code>SSH</code></td><td>IETF RFC 4251 to RFC 4254 (version 2.0)</td></tr>
+      <tr><td><code>IPsec</code></td><td>IETF RFC 4301</td></tr>
+      <tr><td><code>IKEv2</code></td><td>IETF RFC 7296</td></tr>
+      <tr><td><code>MACsec</code></td><td>IEEE 802.1AE</td></tr>
+      <tr><td><code>OIDC</code></td><td>OpenID Connect Core 1.0</td></tr>
+      <tr><td><code>SAML</code></td><td>OASIS SAML 2.0</td></tr>
+      <tr><td><code>OAuth 2.0</code></td><td>IETF RFC 6749</td></tr>
+      <tr><td><code>HTTP</code></td><td>IETF RFC 9110</td></tr>
+      <tr><td><code>LDAP</code></td><td>IETF RFC 4511</td></tr>
+      <tr><td><code>SMTP</code></td><td>IETF RFC 5321</td></tr>
+      <tr><td><code>PostgreSQL</code></td><td>PostgreSQL frontend/backend protocol, version 3</td></tr>
+    </tbody>
+  </table>
+  <p>Keys are identified in a similar fixed way. An asymmetric key is identified by the fingerprint of its public key. A symmetric key has no public part, so it is identified by its role and the place where it is stored.</p>
 
   <h2>Lifecycle and provenance</h2>
   <table>
@@ -287,7 +312,7 @@ nav: terms
     <a href="governance.html">← Governance</a>
     <a class="next" href="related-work.html">Next: Related Work →</a>
   </div>
-  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>
 </div>
 </body>

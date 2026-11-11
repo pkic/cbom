@@ -183,7 +183,7 @@ nav: conformance
 
   <h3>Identifier schemes</h3>
   <p>When an inventory is built from CBOMs supplied by several suppliers, the consumer has to work out which records describe the same thing. Identity cannot be settled in general, because some classes of asset have no agreed identifier at all. It can be settled one profile at a time, and that is the means this methodology has available. A profile names the identifier form it requires for each class of asset that its rules constrain. A consumer then knows which naming scheme the document uses.</p>
-  <p>C14 does not check that a value really belongs to a registry. The checker does not hold a copy of the registry, so any such check would be a guess. Instead, C14 checks that the declaration and the rules agree in both directions. Every scheme a rule references must be declared, and every declared scheme must be referenced by some rule. A declared scheme that no rule applies can drift away from what the profile actually does, while still reading as authoritative. Which registry algorithm names should come from is open question <a href="../issues/">Q20</a>, and it is not settled. This methodology does settle that a profile has to state which registry it means.</p>
+  <p>C14 does not check that a value really belongs to a registry. The checker does not hold a copy of the registry, so any such check would be a guess. Instead, C14 checks that the declaration and the rules agree in both directions. Every scheme a rule references must be declared, and every declared scheme must be referenced by some rule. A declared scheme that no rule applies can drift away from what the profile actually does, while still reading as authoritative. A profile has to state which registry it means. For algorithm names, the methodology uses the file format's registry, which for CycloneDX is the Cryptography Registry, where an entry exists. Where none exists, the producer uses the name from the protocol's own registry.</p>
 
   <h3>C15 and C16: identifiers that can be cited</h3>
   <p>A rule identifier is local to the profile that declares it. A rule is therefore cited as <code>&lt;profileTag&gt;#&lt;ruleId&gt;</code>, and three profiles in one family may each declare their own <code>I1</code>. This approach moves the uniqueness requirement off the rule identifiers and onto the tag. No author can coordinate rule identifiers across a whole family, but an author picks a tag only once. C15 checks that the tag is unique. Without C15, a citation could resolve to two different rules, and a stored conformance claim would no longer identify which rule it refers to. With C15, a base profile can add a rule without first checking which identifiers its derived profiles already use.</p>
@@ -260,7 +260,7 @@ Tool: validate_cbom.py</code></pre>
 
   <h3>Validity over time</h3>
   <p>A claim is fixed to the revision it assessed and does not roll forward. A new content revision needs a new evaluation. So does a new profile version, and where that version tightened a rule, a document that conformed before may no longer conform. The changelog is what tells a producer whether re-evaluation is likely to be needed, and that is why the methodology asks for every change to be classified.</p>
-  <div class="banner warn">Open point. Whether a tightening obliges a grace window before a consumer may reject documents produced against the previous version, and whether that window belongs to the profile or to the agreement between the parties, is not settled. Recorded as Q15.</div>
+  <div class="banner">A tightening takes effect after a grace period. The profile states a recommended period and the date it ends, and a contract may set a different one. Until that date the validator reports the tightened rule as a warning, not a failure, so a document produced against the previous version is not rejected without notice.</div>
 
   <h2 id="not-asserted">What a conformance verdict does not assert</h2>
   <p>The verdict is a statement about disclosure only. It does not make the following claims, although it is often mistaken for them.</p>
@@ -288,7 +288,7 @@ Tool: validate_cbom.py</code></pre>
     <a href="profile.html">← Profile</a>
     <a class="next" href="maturity.html">Next: Maturity →</a>
   </div>
-  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>
 </div>
 </body>

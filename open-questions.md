@@ -101,7 +101,7 @@ Tracked as issue #4.
 
 ## Q01 — Is the PQC migration profile a real specification or a worked illustration?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, a draft specification.
 
 **The question.** The group has produced a second profile covering post-quantum migration. Is it
 something a supplier can be held to, or an example showing how a profile is built?
@@ -121,8 +121,14 @@ for this information have nothing else to point at, and the need is immediate.
 Q05, Q06 and Q27. Publishing it as binding freezes those before they have been discussed, and
 fixing them afterwards would make a stricter profile that existing documents fail.
 
-**Where it stands.** The draft calls it illustrative while shipping it as a complete working
-artifact. The two signals conflict, and readers will follow the artifact.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A,
+labelled as a draft specification with a 0.x version. Buyers can point to it now. A tightening takes
+effect only after a grace period (Q15), and every published version stays in the archive (Q41), so
+adopting it early is safe. Of the three attributes this question named, Q27 is settled by decision
+0010, and Q05 and Q06 are settled provisionally alongside this question.
+
+Before this, the register recorded: The draft calls it illustrative while shipping it as a complete
+working artifact. The two signals conflict, and readers will follow the artifact.
 
 **What would have to change.** A specification would need an identifier outside the `example`
 namespace, covered by Q03. Q05, Q06 and Q27 would become blocking. The August release scope
@@ -208,7 +214,7 @@ Tracked as issue #5.
 
 ## Q03 — Who may publish a profile under a PKI Consortium name?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, both a register and the author's own name space.
 
 **The question.** The two examples are named `pkic.example.interface-disclosure` and
 `pkic.example.pqc-migration`. The `pkic` part suggests consortium authority. Nothing says who is
@@ -230,7 +236,12 @@ profile from one written in an afternoon, so the burden of judging falls on the 
 **Option C: both.** Anyone may publish under their own name, and the consortium maintains a
 published list of profiles it has reviewed.
 
-**Where it stands.** No rule exists. The examples use `pkic.example` by habit.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C. The
+consortium keeps a register for profile names under `pkic.`. Anyone else names a profile in a name
+space they already control, such as their own domain written in reverse. The prefix `pkic.example`
+stays reserved for examples.
+
+Before this, the register recorded: No rule exists. The examples use `pkic.example` by habit.
 
 **What would have to change.** The names in both rule files, one requirement in the Conformance
 section, possibly a check in the profile checker, and Q01, since a profile intended as a
@@ -238,7 +249,7 @@ specification would need a name outside `example`.
 
 ## Q04 — Does a profile need a new version when a new file format release appears?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, no new version for a format release alone.
 
 **The question.** A profile records which versions of the carrier file format it was tested
 against. When a new release of that format appears and the profile is checked against it, no
@@ -262,8 +273,15 @@ reproducible.
 **Option C: a third number.** Record maintenance in a separate component of the version, leaving
 the main numbers for requirement changes.
 
-**Where it stands.** The draft records this kind of change as editorial, implying Option A,
-without stating a rule.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A.
+Checking a profile against a new release of the file format does not need a new profile version, and
+the changelog records it as editorial. A new version is needed only when the profile changes the
+format versions it accepts or changes its mapping, because either change can move a document from
+one band to another. A claim stays reproducible, because it cites the profile version and the format
+version.
+
+Before this, the register recorded: The draft records this kind of change as editorial, implying
+Option A, without stating a rule.
 
 **What would have to change.** The changelog convention in both profiles, the Versioning section,
 and the reproducibility statement in the Conformance section.
@@ -276,7 +294,7 @@ Tracked as issue #1.
 
 ## Q05 — Can switching on a capability require more than one kind of change?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, one answer.
 
 **The question.** The migration profile asks a supplier how a buyer turns a capability on. The
 answer is one of: already on, a configuration change, a software update, a hardware change, a
@@ -298,14 +316,18 @@ have to be renamed.
 
 **Option C: one governing answer plus an optional ordered list of steps.**
 
-**Where it stands.** Option A.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A.
+`enablementMethod` takes one value, the change that governs. A list of several steps (Option C) can
+be added if a worked example needs it.
+
+Before this, the register recorded: Option A.
 
 **What would have to change.** The field name under the plural convention, the dependent rule,
 the part of the validator that evaluates conditions, and both migration examples.
 
 ## Q06 — Should "what might break" be free text or a set of categories?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, a category plus a description.
 
 **The question.** The migration profile asks what is likely to break when a capability is turned
 on. Today the answer is a sentence in free text.
@@ -327,7 +349,15 @@ Free text can sit alongside for detail.
 **Option C: a category plus a description**, repeated as often as needed, so aggregation works
 where the category fits and nothing is lost where it does not.
 
-**Where it stands.** Option A, at SHOULD level, and a supplier may decline to answer.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C. Each
+entry in `integrationConstraints` carries a category and a short description. The categories are
+`handshake-size`, `interoperability`, `performance`, `certification`, `hardware` and `other`. The
+category lets a consumer count entries across suppliers, and the description says what actually
+happens. The rule stays at SHOULD, and a supplier may still decline to answer.
+
+The category list is still to be added to the migration profile and its examples.
+
+Before this, the register recorded: Option A, at SHOULD level, and a supplier may decline to answer.
 
 **What would have to change.** One rule, possibly a new list of categories, and the field would
 become multi-valued, which engages the plural naming convention.
@@ -714,7 +744,7 @@ Before this, the register recorded: The five bands above are a drafting proposal
 
 ## Q62 — Is the subject of a CBOM a device model or a deployed device?
 
-**Status** open. Added 15 September 2026, from the IoT use case draft.
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, already in place through rule P5. Added 15 September 2026, from the IoT use case draft.
 
 **The question.** A manufacturer writes one document about a model it ships in millions. An
 operator makes its decisions about particular deployed units, whose configuration, location and
@@ -739,8 +769,13 @@ forces a sector profile to choose; needs a new conformance requirement).
 **Option C: leave it.** The methodology has managed without it because every worked example so far
 has a subject that is both (trade-off: it stops being true the moment a device profile exists).
 
-**Where it stands. Nothing.** The question was noticed while drafting the IoT use case, where the
-gap between the two is unusually wide.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B, which
+the methodology already does. Rule P5 makes every document declare its subject type, and a profile's
+scope lists the types it accepts (decision 0008). A device model is a `product`. A deployed unit is
+a `deployment`. A document about the wrong kind of subject does not conform.
+
+Before this, the register recorded: Nothing. The question was noticed while drafting the IoT use
+case, where the gap between the two is unusually wide.
 
 **What would have to change.** The Model and Objects sections, the baseline's P3, and probably a
 conformance requirement.
@@ -749,7 +784,7 @@ conformance requirement.
 
 ## Q63 — Can a profile say that a limit is permanent rather than current?
 
-**Status** open. Added 15 September 2026, from the IoT use case draft.
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, a separate attribute for the limit itself. Added 15 September 2026, from the IoT use case draft.
 
 **The question.** Every capability attribute in the methodology reports a current state. A device
 that cannot carry a post-quantum handshake because of its available flash or a frame size fixed by
@@ -773,7 +808,11 @@ and is more work for the producer).
 **Option C: treat it as out of scope.** A CBOM says what cryptography is present, not what the
 hardware forbids (trade-off: defensible, and leaves the IoT use case unserved).
 
-**Where it stands. Nothing.**
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B. The
+attribute `resourceBound`, proposed in the IoT use case, records the hard limits themselves: usable
+flash and RAM, and the maximum frame or message size the link imposes. Sizes are given in bytes. The
+consumer draws its own conclusion about whether a limit is permanent, which keeps a judgement out of
+the document (decision 0002).
 
 **What would have to change.** The attribute list, and decision 0007 if Option A is taken, since
 that decision fixed how availability is expressed.
@@ -1002,7 +1041,7 @@ structural rule.
 
 ## Q57 — Must a vulnerability-response profile forbid withholding the implementing library?
 
-**Status** open. Added 12 September 2026 with the Vulnerabilities section.
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, a restricted-audience profile, with VEX as the public route. Added 12 September 2026 with the Vulnerabilities section.
 
 **The question.** `I9`, the implementing library as a Package URL, is a MUST that the disclosure
 baseline marks withholdable: a document supplying the marker instead of a value conforms. Incident
@@ -1034,8 +1073,15 @@ matching itself and publishes affectedness rather than the input. Confidentialit
 consumer loses the ability to check the conclusion, and a product whose producer has gone quiet
 yields nothing at all.
 
-**Where it stands.** `I9` remains withholdable in the baseline and no vulnerability-response profile
-exists. The use case is listed as undeveloped in the Use Cases section and blocked on this question.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, with
+Option C as the route for public readers. A vulnerability-response profile says plainly that it is
+for a restricted audience, and it removes the permission to withhold I9. A public CBOM cannot fully
+support incident response, and the methodology says so. A public reader gets its answer through the
+producer's VEX statements, which baseline rule R2 already points to.
+
+Before this, the register recorded: `I9` remains withholdable in the baseline and no
+vulnerability-response profile exists. The use case is listed as undeveloped in the Use Cases
+section and blocked on this question.
 
 **What would have to change.** A new profile and its documents; the Use Cases table; and, under
 Option B, either the baseline's disclosure convention or the attribute list.
@@ -1152,7 +1198,7 @@ the Governance section's treatment of signing.
 
 ## Q15 — When a profile gets stricter, how long do suppliers have to catch up?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, the profile recommends a period and a contract may vary it.
 
 **The question.** The baseline recently became stricter. A document that passed under the old
 version fails under the new one. Nothing says how long a supplier has before a buyer may start
@@ -1177,8 +1223,13 @@ every pair of parties negotiates separately, which is the overhead profiles exis
 
 **Option C: the profile recommends a period and a contract may vary it.**
 
-**Where it stands.** Neither. The recommendation exists as good practice, the example does not
-use one, and the recent tightening was published without a transition period.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C. A
+profile that tightens a rule states a recommended grace period and the date it ends. A contract may
+set a different period. Until that date the validator reports the tightened rule as a warning, not a
+failure. This turns the grace window that Governance already describes into a stated rule.
+
+Before this, the register recorded: Neither. The recommendation exists as good practice, the example
+does not use one, and the recent tightening was published without a transition period.
 
 **What would have to change.** The rule format, the validator's result logic, the changelog
 convention, and the Conformance section's statement on how long a claim stays valid.
@@ -1256,7 +1307,7 @@ Tracked as issue #2.
 
 ## Q16 — The SPDX side of the work is untested
 
-**Status** blocked
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, state the limitation and proceed.
 
 **The question.** The methodology claims profiles work with any file format. Every working
 example uses CycloneDX. The SPDX half of the mapping has never been tried against a real
@@ -1276,7 +1327,12 @@ anything built against the current specification may be obsolete before the meth
 published. Two sections already mark the position as an observation about today rather than a
 permanent property.
 
-**Where it stands.** Option B.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B. The
+methodology states plainly that only the CycloneDX side has been tried against real documents. The
+question stays open for a member with SPDX knowledge to take up, and a minimal SPDX example (Option
+A) remains welcome.
+
+Before this, the register recorded: Option B.
 
 **What would have to change.** Whether a member with SPDX knowledge can be found, the mapping
 document, and the credibility of the format-independence claim.
@@ -1375,7 +1431,7 @@ can now sharpen the capability group rather than restate it and lose the base's 
 
 ## Q17 — Should the group ask the format bodies to add a field for withheld information?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, keep it as a mapping convention.
 
 **The question.** Recording that information is withheld, rather than simply absent, is central
 to the methodology. Neither file format has a field for it, so the methodology carries it in a
@@ -1393,14 +1449,19 @@ is a stronger submission than most proposals arrive with.
 not depend on any format, and the mapping absorbs whatever a format lacks. Pursuing format
 changes is slow and creates a dependency the group does not control.
 
-**Where it stands.** Option B, documented in the mapping and in each profile.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B. The
+withheld marker stays a mapping convention, documented in the mapping and in each profile. The
+working group may still send the design to the format bodies as feedback, without making the
+methodology depend on the outcome.
+
+Before this, the register recorded: Option B, documented in the mapping and in each profile.
 
 **What would have to change.** Whether the group makes a submission. Q09 is the same question
 about a different gap.
 
 ## Q18 — Who watches the file formats, and how are outdated criticisms retired?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, each limitation names the format version it describes.
 
 **The question.** The methodology lists limitations in the current file formats. Both formats are
 being actively developed and several of those limitations will stop being true. Nobody is
@@ -1420,8 +1481,14 @@ it creates a standing obligation.
 **Option C: write each limitation as a statement about a named version**, so it never becomes
 false, only historical.
 
-**Where it stands.** The prose is careful to describe current observations, and a warning notice
-says so, but there is no process and no version recorded against each claim.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C. Every
+statement about a limitation of a file format names the version it describes, for example "CycloneDX
+2.0 has no object for a cryptographic relationship". Such a statement stays true of that version, so
+it never goes out of date. When a new version appears, the statement is checked against it and
+either repeated for the new version or left as history. No maintainer is needed.
+
+Before this, the register recorded: The prose is careful to describe current observations, and a
+warning notice says so, but there is no process and no version recorded against each claim.
 
 **What would have to change.** Two sections, the mapping, and the supported format ranges in both
 profiles if a release changes what the mapping can rely on.
@@ -1497,7 +1564,7 @@ the references page.
 
 ## Q20 — Whose names for algorithms should a CBOM use?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, the file format's registry.
 
 **The question.** The same algorithm has different names depending on who is naming it. One
 common key exchange method appears as `x25519` in the CycloneDX registry, `X25519` in the
@@ -1518,15 +1585,20 @@ protocol names. Translating loses that correspondence.
 
 **Option C: the file format's name is canonical, with the protocol name recorded alongside.**
 
-**Where it stands.** Option A. Producers are directed to prefer CycloneDX registry identifiers
-where they exist.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A. A
+CBOM uses the algorithm names in the file format's registry, which for CycloneDX is the cryptography
+registry, where an entry exists. Where no entry exists, the producer uses the name from the
+protocol's own registry.
+
+Before this, the register recorded: Option A. Producers are directed to prefer CycloneDX registry
+identifiers where they exist.
 
 **What would have to change.** The mapping, the discussion of normalisation in two sections, and
 whether the group needs to publish a name translation table.
 
 ## Q21 — There is no agreed list of protocol names
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: a short list maintained by the group, each name tied to its specification.
 
 **The question.** Every interface must state its protocol. The examples use `TLS`, `SSH` and
 `IPsec`. Any text satisfies the rule.
@@ -1546,8 +1618,19 @@ CycloneDX list is short.
 **Option C: require the name and version used by the protocol's own specification**, cited in the
 reference register.
 
-**Where it stands.** Nothing. The rule requires only that something be present, so any text
-passes, and the examples follow a convention that is not written down anywhere.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Options A and C
+combined. The working group keeps a short list of protocol names in the Terms section, such as TLS,
+DTLS, SSH, IPsec, IKEv2, QUIC, OIDC and SAML. Each entry points to the protocol's own specification,
+and the version is written as that specification writes it, for example "1.3" for TLS. A protocol
+that is not on the list is recorded as `other`, with a pointer to its specification, and can be
+proposed for the list.
+
+Before this, the register recorded: Nothing. The rule requires only that something be present, so
+any text passes, and the examples follow a convention that is not written down anywhere.
+
+The list is in the Terms section, under Protocol names. No rule checks it yet. The Keycloak examples
+still use two labels that are not on it, `JGroups TCP` for the cluster transport and `Admin REST
+(OAuth 2.0 bearer)` for the admin API, and they are still to be aligned.
 
 **What would have to change.** One rule, possibly a new list of protocol names, and the
 comparison use cases, which assume suppliers can be compared.
@@ -1590,7 +1673,7 @@ algorithm names should come from is still Q20. Recorded as decision 0012.
 
 ## Q39 — How are keys identified across tools?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A for asymmetric keys, Option B for symmetric keys.
 
 **The question.** Software components have Package URL and certificates have fingerprints. Keys
 have no agreed identifier.
@@ -1610,7 +1693,13 @@ what it does and where it lives. Stable and it makes the same material in two pl
 
 **Option C: state that keys are out of scope for cross-tool correlation** and record why.
 
-**Where it stands.** Nothing. The problem is now described in Challenges and not addressed.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A for
+asymmetric keys and Option B for symmetric keys. An asymmetric key is identified by the fingerprint
+of its public key, which every tool can compute in the same way. A symmetric key has no public part,
+so it is identified by its role and the place where it is stored.
+
+Before this, the register recorded: Nothing. The problem is now described in Challenges and not
+addressed.
 
 **What would have to change.** The Model and Terms sections, and any profile requiring keys to be
 declared.
@@ -1659,7 +1748,7 @@ Tracked as issue #8.
 
 ## Q22 — Should the group recommend how a CBOM and an SBOM are linked?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, one recommendation per lifecycle stage.
 
 **The question.** Cryptography lives inside software, so a CBOM is of limited use without a route
 to the software it describes. There are four ways to arrange this: one combined document, a
@@ -1684,12 +1773,20 @@ qualification would mislead.
 **Option C: recommend one per stage of the product lifecycle**, which is what the current text
 does without calling itself a recommendation.
 
-**Where it stands.** Structurally Option B, in substance Option C. A notice labelled "a
-defensible default" states one, and nothing adopts it. *Update 27 September 2026:* the draft
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C. The
+methodology recommends an arrangement for each stage. A product CBOM generated at build time is
+combined with the SBOM in one document where the same team produces both on the same release cycle.
+Otherwise, and for every deployment record, the CBOM points to its companion SBOM. In CycloneDX the
+pointer is an external reference of type `bom` carrying a hash, and each library points to its own
+SBOM entry by BOM-Link, as draft decision 0022 (K10) proposes. A profile may require a particular
+arrangement.
+
+Before this, the register recorded: Structurally Option B, in substance Option C. A notice labelled
+"a defensible default" states one, and nothing adopts it. *Update 27 September 2026:* the draft
 decision 0022 (K10, in `drafts/pqc-migration-depths/`) proposes a concrete arrangement for
-CycloneDX. The CBOM references its companion SBOM with `externalReferences[type="bom"]`,
-carrying a hash, and each library references its own SBOM entry by BOM-Link. Nothing is
-restated. It is proposed for the worked example and not yet as a methodology rule.
+CycloneDX. The CBOM references its companion SBOM with `externalReferences[type="bom"]`, carrying a
+hash, and each library references its own SBOM entry by BOM-Link. Nothing is restated. It is
+proposed for the worked example and not yet as a methodology rule.
 
 **What would have to change.** The Governance section, the mapping's treatment of external
 references, and whether a profile can require a particular arrangement.
@@ -1813,7 +1910,7 @@ separate matter that nobody has raised yet.
 
 ## Q25 — How would a sector profile fit alongside these?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, sector profiles build on the baseline.
 
 **The question.** A telecommunications or finance body writing its own profile would most likely
 require particular interface types and restrict which algorithms are acceptable, while keeping
@@ -1835,7 +1932,12 @@ restating them.
 **Option C: sector profiles stand alone and are checked alongside.** Avoids the combining
 question and loses the guarantee that makes building on another profile worthwhile.
 
-**Where it stands.** Nothing. No sector profile exists.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A. A
+sector profile builds on the baseline, or on the change core (Q64) when it plans a change. The
+attributes `trustDomain` (Q47) and `verifierPopulation` (Q46) give a finance profile the facts it
+needs, so it does not have to invent a sector attribute.
+
+Before this, the register recorded: Nothing. No sector profile exists.
 
 **What would have to change.** Whether combining is allowed (Q23), and whether permitted value
 lists can be narrowed (Q35). The numbering half is settled: decision 0011 makes a rule citable as
@@ -2089,7 +2191,7 @@ naming rules.
 
 ## Q64 — Is an IoT profile a branch from the baseline or a depth of the migration family?
 
-**Status** open. Added 15 September 2026, from the IoT use case draft.
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, a shared change core, as draft decision 0023 proposes. Added 15 September 2026, from the IoT use case draft.
 
 **The question.** The IoT use case needs most of the migration profile's capability attributes and
 several it does not have, while having no use for others the migration profile requires at MUST.
@@ -2112,21 +2214,28 @@ unsatisfiable for the devices the use case exists for).
 shared profile that each extends (trade-off: the right answer structurally, and it revises a
 profile that has already been reviewed).
 
-**Where it stands. Nothing.** It blocks writing any rule for the IoT use case, since what a profile
-may tighten depends on what it extends. *Update 4 October 2026:* draft decision 0023 (in
-`drafts/use-case-grouping/`) proposes Option C without revising the reviewed profile. A change
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C, in
+the form draft decision 0023 proposes. A change core holds the attributes that the migration, IoT
+and substation drafts share. It is published beside `pqc-migration`, and the IoT profile extends the
+core, not the migration profile. The IoT profile therefore does not inherit the migration profile's
+MUSTs that a constrained device cannot meet. Whether `pqc-migration` is later moved onto the core is
+left with Q51.
+
+Before this, the register recorded: Nothing. It blocks writing any rule for the IoT use case, since
+what a profile may tighten depends on what it extends. *Update 4 October 2026:* draft decision 0023
+(in `drafts/use-case-grouping/`) proposes Option C without revising the reviewed profile. A change
 core holding the attributes the migration, IoT and substation drafts share is published beside
 pqc-migration as a sibling, declaring each shared rule under the id pqc-migration already uses, as
-the entry profile did with the baseline. The update-path facts IoT and substation share go into
-the core as conditional rules on update interfaces, because a profile has a single base.
-Re-parenting pqc-migration onto the core is left to the same choice as Q51.
+the entry profile did with the baseline. The update-path facts IoT and substation share go into the
+core as conditional rules on update interfaces, because a profile has a single base. Re-parenting
+pqc-migration onto the core is left to the same choice as Q51.
 
 **What would have to change.** The IoT profile, and under Option C the migration profile and its
 documents.
 
 ## Q66 — Is the change core target-neutral?
 
-**Status** open. Added 4 October 2026, from the use-case grouping draft.
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, the target belongs to policy. Added 4 October 2026, from the use-case grouping draft.
 
 **The question.** The change core's vocabularies are neutral: `capabilityStatus` says available,
 committed, planned, and so on, without saying capability for what. The pqc-migration objective is
@@ -2146,14 +2255,17 @@ more thing a producer states and a consumer has to check).
 **Option C: the target belongs to policy** (trade-off: consistent with decision 0002; a document
 then says what is possible per purpose, and policy says whether that is the target).
 
-**Where it stands. Nothing.**
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C. The
+change core says what each interface can do for each cryptographic purpose. A policy says whether
+that meets the target. The same core can then serve the next algorithm transition as well as this
+one. This follows decision 0002.
 
 **What would have to change.** The core's objective, the pqc-migration objective, and the
 crypto-agility catalogue entry.
 
 ## Q68 — How does an overlay's obligation relate to the documents it cites?
 
-**Status** open. Added 4 October 2026, from the use-case grouping draft.
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, cited verdicts reported beside the overlay's own. Added 4 October 2026, from the use-case grouping draft.
 
 **The question.** An overlay is a profile for a document that references other documents: an
 integrator's system document citing component CBOMs by digest. Its rules can require that every
@@ -2174,7 +2286,13 @@ integrator inherits every supplier's gaps).
 **Option C: report component verdicts beside the overlay's own** (trade-off: no blocking, and
 nothing hidden; one more thing a claim has to carry).
 
-**Where it stands. Nothing.** Related to the derived-CBOM overlay in the EU report.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C. An
+overlay's verdict covers the integrator's own statements. The verdict on each cited document is
+reported beside it, under the profile that document names. One weak supplier does not block the
+integrator, and nothing is hidden. This matches how the deployment profile already treats a value
+inherited from a cited record: as unresolved, not failed.
+
+Before this, the register recorded: Nothing. Related to the derived-CBOM overlay in the EU report.
 
 **What would have to change.** Conformance, the claim schema, and Maturity, which names the
 overlay as a fourth relation.
@@ -2303,7 +2421,7 @@ Tracked as issue #11.
 
 ## Q29 — Should published profiles be signed?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, both a fingerprint and a signature.
 
 **The question.** The methodology treats signing of CBOMs at length. It says nothing about
 signing the profiles themselves.
@@ -2324,15 +2442,20 @@ who published the profile, only that two parties used the same file.
 
 **Option C: both.** A signature for authenticity, a fingerprint in the claim for reproducibility.
 
-**Where it stands.** Neither. Profiles are plain files, a parent profile is located by filename,
-and a claim records only a name and version.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C. A
+conformance claim records the hash of the profile text, so it names exactly one version of one file.
+The publisher also signs the profile, which shows who published it. The hash is what lets an old
+claim be checked again later.
+
+Before this, the register recorded: Neither. Profiles are plain files, a parent profile is located
+by filename, and a claim records only a name and version.
 
 **What would have to change.** The claim format, possibly the rule format, how parent profiles
 are resolved, and the Governance section.
 
 ## Q41 — Is there an obligation to archive published profile versions?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, the publisher archives.
 
 **The question.** A conformance claim cites a profile version so the result can be reproduced.
 Does whoever publishes a profile have to keep every published version available indefinitely?
@@ -2355,15 +2478,19 @@ means there is no single authoritative copy.
 **Option C: both.** The publisher archives, and a claim records a fingerprint so that the archived
 copy can be shown to be the one used.
 
-**Where it stands.** Nothing states it. The Governance section now describes the obligation and
-flags that it is currently assumed.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A. The
+publisher keeps every published version available, through the register (Q50). The party making a
+claim records only the profile's hash, so anyone can check the archived copy against it.
+
+Before this, the register recorded: Nothing states it. The Governance section now describes the
+obligation and flags that it is currently assumed.
 
 **What would have to change.** The Governance section, the claim format, and whoever ends up
 holding the archive, which is bound up with Q03.
 
 ## Q42 — Who owns a profile after publication, and what happens if they stop?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, tiered ownership, with a fallback.
 
 **The question.** A profile is published by a working group or a sector body. Who maintains it
 afterwards, and what happens when that body closes or loses interest?
@@ -2384,8 +2511,13 @@ maintainer is marked dormant after a stated period, warning adopters without wit
 **Option C: transfer on abandonment.** An unmaintained profile reverts to the consortium, which
 may continue or retire it.
 
-**Where it stands.** Nothing. The Governance section now names the areas to be assigned without
-assigning them.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+tiered arrangement that Governance already describes. The working group owns the baseline. A sector
+body owns the profiles it derives. The consortium runs the register and the archive. If an owner
+stops maintaining a profile for a stated period, ownership passes to the consortium.
+
+Before this, the register recorded: Nothing. The Governance section now names the areas to be
+assigned without assigning them.
 
 **What would have to change.** The Governance section, and any register the consortium maintains.
 
@@ -2393,7 +2525,7 @@ assigning them.
 
 ## Q60 — When a CBOM revision is superseded, what happens to statements bound to it?
 
-**Status** open. Added 12 September 2026 with the Vulnerabilities section.
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, nothing happens, and the methodology says so. Added 12 September 2026 with the Vulnerabilities section.
 
 **The question.** A conformance claim binds a document by digest, and a VEX statement can be bound
 the same way, which is what makes either re-checkable. When the product is patched and a new CBOM
@@ -2419,15 +2551,21 @@ revisions, and re-checkability is lost, which was the point of binding by digest
 carries the date it was made and a consumer applies its own staleness threshold. No obligation on the
 producer, and the consumer can tell old from current.
 
-**Where it stands.** Undefined. Claims bind by digest and nothing says what a superseded binding
-means.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A. A
+claim stays true about the exact revision it names, and nothing happens to it when a newer revision
+appears. Whether that revision is still current is a judgement, so it belongs in policy (decision
+0002), not in the document. A consumer's policy can set its own limit, for example to accept only
+claims about a revision issued in the last twelve months.
+
+Before this, the register recorded: Undefined. Claims bind by digest and nothing says what a
+superseded binding means.
 
 **What would have to change.** The Governance section, the freshness policy in Versioning, and
 possibly the claim schema.
 
 ## Q61 — When a profile is tightened, does anyone have to be told?
 
-**Status** open. Added 15 September 2026, from the Governance rework.
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, publication is notification. Added 15 September 2026, from the Governance rework.
 
 **The question.** Revising a published profile changes whether already-published CBOMs conform to
 it. Q15 asks how long a supplier has to catch up. Nothing asks whether the supplier finds out, or
@@ -2452,8 +2590,13 @@ which nothing currently keeps, and which has its own confidentiality problems).
 a tightened profile must give notice before rejecting on that basis (trade-off: puts the duty where
 the commercial power is, and gives the same supplier a different date from every buyer).
 
-**Where it stands.** Nothing. The power is now named in Governance under revision states; the
-obligation that should accompany it is not.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A.
+Publishing a new version in the register, with its changelog, counts as notice. The register may
+also offer a feed that people can subscribe to, as a convenience. The working group does not take on
+a duty to notify individual users, because it could not meet one.
+
+Before this, the register recorded: Nothing. The power is now named in Governance under revision
+states; the obligation that should accompany it is not.
 
 **What would have to change.** The Governance section, and Q15, which cannot be answered
 independently of this one.
@@ -2464,7 +2607,7 @@ Tracked as issue #12.
 
 ## Q43 — Should a profile define what CBOM support means for PQCMM Level 4?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, describe the relationship and offer nothing yet.
 
 **The question.** The PKI Consortium PQC Maturity Model requires CBOM support at Level 4 and does
 not define what a CBOM must contain. Should this working group offer a profile as that
@@ -2491,8 +2634,12 @@ and the opportunity passes.
 
 **Option C: offer the baseline as a floor**, leaving level-specific requirements to the PQCMM.
 
-**Where it stands.** The relationship is now described in the Related Work section. No approach
-has been made.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B. The
+Related Work section describes the relationship with the PQC Maturity Model. The working group
+offers no profile for Level 4 unless the model's maintainers ask for one.
+
+Before this, the register recorded: The relationship is now described in the Related Work section.
+No approach has been made.
 
 **What would have to change.** Depends on the answer. Offering a profile would likely require a
 stable identifier outside the example namespace (Q03) and a decision on whether the migration
@@ -2500,7 +2647,7 @@ profile is normative (Q01).
 
 ## Q44 — Should a conforming CBOM be proposed as evidence in a PQCMM assessment?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, as an informal offer to the PQC Maturity Model's maintainers.
 
 **The question.** A PQCMM assessment rests on vendor evidence, reviewed by the vendor itself or
 by an accredited assessor. Should a CBOM conforming to a named profile be proposed as an accepted
@@ -2519,8 +2666,13 @@ used as certification evidence may need a party other than the producer to have 
 nothing about whether the disclosure is true. Offering it as certification evidence may imply an
 assurance the methodology explicitly disclaims.
 
-**Where it stands.** The correspondence between attributes and level requirements is noted in the
-Related Work section as an observation, not agreed with anyone.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, made
+as an informal offer and not a binding proposal. The working group tells the PQC Maturity Model's
+maintainers that a conforming CBOM could serve as evidence in an assessment, and the decision stays
+with them.
+
+Before this, the register recorded: The correspondence between attributes and level requirements is
+noted in the Related Work section as an observation, not agreed with anyone.
 
 **What would have to change.** Possibly the Conformance section's statement on what a verdict
 does not assert, since certification evidence carries expectations that statement is written to
@@ -2603,7 +2755,7 @@ numbering is cited by anyone outside it.
 
 ## N01 — Is the drafted procedure accepted as the methodology's method?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: the steps are guidance, and the required outputs stay binding.
 
 **The question.** The deliverable is a methodology for defining profiles. Until recently no
 section described the procedure. One has now been written: twelve steps in five stages, with a
@@ -2620,6 +2772,12 @@ Without acceptance the methodology describes one example instead of setting out 
 **Option B: accept it as guidance.** Presenting twelve steps as the way to build a profile may be
 more prescriptive than the evidence supports, since it has been used on two profiles for one
 subject.
+
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: a middle option
+between A and B, following the same split as N02. The twelve steps are informative guidance on how
+to build a profile. What a finished profile must contain stays binding, through requirements C1 to
+C18 in the Conformance section. The requirements say what a profile must contain, and the method
+shows one way to get there. The steps can be improved without a new version of the requirements.
 
 **What would have to change.** The Method section, ten requirements, and whether the topic list
 gains an entry for the method itself.
@@ -2686,7 +2844,7 @@ whether the migration profile is in scope, which depends on Q01.
 
 ## N04 — A second worked example from a different sector
 
-**Status** deferred
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, defer.
 
 **The question.** The methodology claims profiles work for any product and demonstrates it on
 one: a web server. A short second example from a different sector, using the same profile
@@ -2701,9 +2859,13 @@ reviewer to discount it.
 **Option B: defer.** It is expensive, and more convincing once the method and composition
 questions have settled. A second example built on unsettled foundations would need reworking.
 
-**Where it stands.** Partly answered, and not in the way this item expected. The IoT use case
-drafted on 15 September is a second sector, but it does not use the same profile unchanged: it
-needs attributes no existing profile has, and it raises Q62 to Q65 in the process. That is
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B. The
+IoT and substation drafts already show that the method carries to other sectors. A full second
+worked example can follow the release of the use-case publication.
+
+Before this, the register recorded: Partly answered, and not in the way this item expected. The IoT
+use case drafted on 15 September is a second sector, but it does not use the same profile unchanged:
+it needs attributes no existing profile has, and it raises Q62 to Q65 in the process. That is
 evidence of a different kind. It shows the method carries to another sector, which is the useful
 claim, rather than showing that one profile does, which was probably never true.
 

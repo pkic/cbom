@@ -122,7 +122,7 @@ nav: uc-iot
   <p>Elsewhere in this methodology, a statement that an interface cannot do something describes what has been built. A different implementation could change the answer. On a constrained device, the same statement is often about available flash, available RAM, or a frame size fixed by a radio standard. No firmware release changes those. This is the only use case here in which a capability answer of "no" can be permanent. If a profile cannot distinguish a permanent "no" from a temporary one, it effectively tells an operator to wait for an update that will never come.</p>
 
   <h3>The party who can update may be neither the vendor nor the operator</h3>
-  <p>Firmware often reaches a device through a third party: a connectivity provider, a platform operator, an installer with physical access. The operator making the decision may have no relationship with that party. A profile that records only whether an update exists, and not who can cause it to happen, leaves the operator unable to tell an action it can actually take from one that exists only in theory.</p>
+  <p>Firmware often reaches a device through a third party: a connectivity provider, a platform operator, an installer with physical access. The operator making the decision may have no relationship with that party. A profile that records only whether an update exists, and not who can make it happen, leaves the operator in the dark. It cannot tell an action it can actually take from one that exists only on paper.</p>
   <p>Who can install firmware is recorded as a property of the update mechanism: the parties it accepts updates from. The CBOM does not record the commercial arrangement behind it, such as a support contract or a service level. That boundary is described in <a href="../methodology/model.html">Model</a>.</p>
 
   <h3>Field life outlasts the support commitment, and sometimes the vendor</h3>
@@ -150,7 +150,13 @@ nav: uc-iot
   </div>
 
   <h3>Interface types a device has that a server does not</h3>
-  <p>The baseline's product rule P2 requires a management interface or a statement of why there is none. That rule was written for products that are administered. Many devices are not administered at all. The escape clause in P2 (stating why there is no management interface) covers them. A profile for this use case should still say so explicitly, so that each producer does not have to work it out alone. Four kinds of interface recur on devices and have no obvious place in the current value set for <code>interfaceType</code>: a provisioning or onboarding interface used once and never again, a firmware update channel, a radio link with cryptography fixed by its own standard, and a telemetry uplink that is one-way.</p>
+  <p>The baseline's product rule P2 requires a management interface or a statement of why there is none. That rule was written for products that are administered. Many devices are not administered at all. The escape clause in P2 (stating why there is no management interface) covers them. A profile for this use case should still say so explicitly, so that each producer does not have to work it out alone. Four kinds of interface appear again and again on devices, and none fits the current values of <code>interfaceType</code> well:</p>
+  <ul>
+    <li>a provisioning or onboarding interface, used once and never again;</li>
+    <li>a firmware update channel;</li>
+    <li>a radio link whose cryptography is fixed by its own standard;</li>
+    <li>a telemetry uplink that only sends.</li>
+  </ul>
 
   <h3>Questions that may not survive</h3>
   <p>Two of the five questions from section one may not be answerable by a document at all. That result is a finding about what a CBOM can carry, not a gap to be filled.</p>
@@ -158,10 +164,10 @@ nav: uc-iot
   <p><strong>Whether a gateway can carry the cryptography instead</strong> is a fact about a deployment. <code>cryptoTerminationPoint</code> is an attempt to get at the part of it that is a product fact: whether the device's design permits termination elsewhere. Whether it has been deployed that way is not something the document can say.</p>
 
   <h2>4 · The profile definition</h2>
-  <p>One structural question has to be answered before any rule can be written: which profile does this one extend? This profile is not a deeper version of PQC migration. It supports a different decision, with a different set of actions. It adds attributes that the migration profile has no use for. It also ignores several attributes that the migration profile requires. In the terms used under composition in <a href="../methodology/profile.html">Profile</a>, it is a branch rather than a depth. A branch extends the interface disclosure baseline directly. A depth would extend the migration profile. The question is carried as <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">Q64</a> because the alternative also has a fair case. The same person often plans both an estate of gateways and an estate of sensors, and two unrelated profiles make that work harder. Draft decision 0023 proposes an answer. Under it, this profile and the migration profile would both extend a shared change core, a common base for change-planning profiles. This profile would remain a branch, but the two profiles would no longer be unrelated.</p>
+  <p>One structural question has to be answered before any rule can be written: which profile does this one extend? This profile is not a deeper version of PQC migration. It supports a different decision, with a different set of actions. It adds attributes that the migration profile has no use for. It also ignores several attributes that the migration profile requires. In the terms used under composition in <a href="../methodology/profile.html">Profile</a>, it is a branch rather than a depth. A branch extends the interface disclosure baseline directly. A depth would extend the migration profile. The alternative also has a fair case. The same person often plans both an estate of gateways and an estate of sensors, and two unrelated profiles make that work harder. The answer, settled provisionally, is the one draft decision 0023 proposes. This profile and the migration profile both extend a shared change core, a common base for change-planning profiles. This profile stays a branch, but the two profiles are no longer unrelated, and this profile does not inherit migration rules that a small device cannot meet.</p>
   <div class="fill">
     <span class="fill-label">to fill in</span>
-    <p><strong>The relationship to the base</strong>, once Q64 is settled: one table with three rows for inherited, tightened and added.</p>
+    <p><strong>The relationship to the base</strong>, the change core: one table with three rows for inherited, tightened and added.</p>
     <p><strong>Product-level rules.</strong> At least one is needed that the baseline does not have. A device with no update path at all is the most consequential fact in this use case. A rule that is checked only per interface would let it go unstated, because the lack of an update path is a fact about the whole product.</p>
     <p><strong>Per-interface rules</strong> for the attributes in section three, each with a conformance level and a note saying what a consumer does with it.</p>
     <p><strong>Tightenings</strong>, with a justification each. One candidate is already visible: if <code>resourceBound</code> is required at MUST then <code>integrationConstraints</code>, which the migration profile leaves at SHOULD, is arguably the attribute that explains the resource bound, and should be raised to MUST with it.</p>
@@ -213,14 +219,14 @@ nav: uc-iot
   </div>
 
   <h2>8 · Recorded decisions and open questions</h2>
-  <p>No decision records yet. Four questions are carried in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a>. Q65 is settled provisionally. The other three have to be answered before the rules can be written.</p>
+  <p>No decision records yet. Four questions are carried in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a>. All four are settled provisionally, so the rules can now be written.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>#</th><th>Question</th><th>Topic</th></tr></thead>
     <tbody>
-      <tr><td>Q62</td><td>Is the subject of a CBOM a device model or a deployed device, and does the methodology need to say which?</td><td>3.3</td></tr>
-      <tr><td>Q63</td><td>Does the methodology need a way to say that a limit is permanent rather than a current state?</td><td>3.3</td></tr>
-      <tr><td>Q64</td><td>Is an IoT profile a branch from the baseline or a depth of the migration family?</td><td>3.9</td></tr>
+      <tr><td>Q62</td><td>Is the subject of a CBOM a device model or a deployed device, and does the methodology need to say which? <em>Settled provisionally: rule P5 already makes a document declare it. A device model is a <code>product</code>, and a deployed unit is a <code>deployment</code>.</em></td><td>3.3</td></tr>
+      <tr><td>Q63</td><td>Does the methodology need a way to say that a limit is permanent rather than a current state? <em>Settled provisionally: <code>resourceBound</code> records the hard limit itself, in bytes, and the consumer draws the conclusion.</em></td><td>3.3</td></tr>
+      <tr><td>Q64</td><td>Is an IoT profile a branch from the baseline or a depth of the migration family? <em>Settled provisionally: it extends a shared change core, as draft decision 0023 proposes.</em></td><td>3.9</td></tr>
       <tr><td>Q65</td><td>May a profile require a fact about a process, such as who can push firmware, rather than about a product? <em>Settled provisionally: who can push firmware is the attribute <code>updateAuthority</code> of the update mechanism.</em></td><td>3.4</td></tr>
     </tbody>
   </table>
@@ -230,9 +236,7 @@ nav: uc-iot
   <p>These are in order, because each step depends on the one before it.</p>
   <ol>
     <li>Confirm the consumer and the decision, or pick one of the two alternatives instead.</li>
-    <li>Settle Q64, which decides what the profile extends and therefore what it may tighten.</li>
-    <li>Settle Q62, which decides what the subject is and therefore what the product rules can say.</li>
-    <li>Write the rule tables in section four and the rules file together, then run <code>check_profile.py</code> against it for C1 to C18.</li>
+        <li>Write the rule tables in section four and the rules file together, then run <code>check_profile.py</code> against it for C1 to C18.</li>
     <li>Fill in section five with two interfaces, one that can be updated and one that cannot.</li>
     <li>Add a conforming and a non-conforming document, and a test in <code>tests/run-profile-tests.sh</code> that asserts both.</li>
   </ol>
@@ -244,7 +248,7 @@ nav: uc-iot
     <a href="pqc-migration.html">← PQC Migration</a>
     <a class="next" href="substation.html">Next: Substation Automation (OT) →</a>
   </div>
-  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>
 </div>
 </body>

@@ -36,6 +36,7 @@ nav: versioning
     </tbody>
   </table>
   <p>The carrier format is the document format in which a CBOM is written. The three axes vary independently. For example, a newly generated CBOM (a new content revision) may still be serialized in CycloneDX 1.7 (an older carrier) and evaluated against the baseline v0.9 (newer rules). A common error is to treat the three axes as one.</p>
+  <p><strong>When a profile needs a new version.</strong> A profile gets a new version when its requirements change. It also gets one when it changes the format versions it accepts, or changes its mapping, because either change can move a document from one band to another. Checking a profile against a new release of the format, with no other change, does not need a new version. The changelog records that check as editorial. A claim stays reproducible because it cites both the profile version and the format version.</p>
   <p>The values for two of these axes are now recorded as data in the bill of materials, rather than left to local convention. The 2026 minimum elements guidance adds the elements SBOM Data Format Name and SBOM Data Format Version, which record the carrier version. It also adds SBOM Version, which records the content revision. Its Frequency element expects a new bill of materials for each build or release. Content revisions are therefore produced as a matter of course rather than on request. A producer that meets the minimum elements guidance supplies the two values a validator needs to place a document on both axes. See <a href="../references/">References</a>.</p>
 
   <h2>Carrier version bands</h2>
@@ -118,7 +119,7 @@ nav: versioning
     <li><strong>Upgrade rather than reject.</strong> Convert a legacy but supported CBOM mechanically rather than rejecting it. <code>cdx17_to_20.py</code> converts 1.6 and 1.7 to 2.0. The conversion re-encodes existing facts and adds no new ones. This is consistent with the expectation in the minimum elements guidance that organizations accommodate updates to bill-of-materials data, including corrections.</li>
     <li><strong>Pin the profile version</strong> in every conformance claim. When a rule is tightened, enforce the tightening only after a dated grace window. During that window the validator emits a warning, so that the warning comes before the result changes to a failure.</li>
     <li><strong>Deprecate, rather than delete, vocabulary.</strong> If <code>interfaceType</code> values change, retain recognition of the former values (mapped to their replacements) for at least one profile major version.</li>
-    <li><strong>Track freshness and supersedence</strong> (whether a newer revision has replaced a CBOM), so that an older content revision is not treated as incorrect without cause.</li>
+    <li><strong>Treat freshness as a policy question.</strong> A claim stays true about the revision it names, even after a newer revision replaces it. A consumer's policy decides how old a revision may be, so that an older revision is not treated as wrong without cause.</li>
   </ul>
 
   <div class="banner">The full treatment is provided in <a href="versioning-and-legacy-cboms.md">versioning-and-legacy-cboms.md</a>, and the acceptance range is enforced by the format gate in <code>validate_cbom.py</code>; see <a href="files.html">Files</a>.</div>
@@ -127,7 +128,7 @@ nav: versioning
     <a href="data-exposure.html">← Data Exposure</a>
     <a class="next" href="governance.html">Next: Governance →</a>
   </div>
-  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>
 </div>
 </body>

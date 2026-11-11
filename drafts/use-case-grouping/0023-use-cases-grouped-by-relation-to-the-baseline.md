@@ -1,6 +1,9 @@
 # 0023. Use cases are grouped by their relation to the baseline, and change planning shares a core
 
 - **Status:** Proposed (draft; promotes to `decisions/` with the change-core rules file)
+- **Relied on provisionally:** Q25, Q64 and Q66 were settled provisionally on 11 November 2026
+  on the basis of this draft. It still promotes to `decisions/` when the change-core rules file is
+  published.
 - **Date:** 2026-10-04
 - **Aspect:** 3.9 — Building one profile on another (with consequences for 3.1 and 3.13)
 - **Topic / issue:** #9

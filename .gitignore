@@ -14,3 +14,6 @@ vendor/
 # it is build output and does not belong in the repository.
 __pycache__/
 *.pyc
+
+# Working files from Claude sessions; not part of the site or the methodology
+Claude outputs/

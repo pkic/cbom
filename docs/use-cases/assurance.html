@@ -30,7 +30,7 @@ nav: uc-assurance
 
   <h2>What the group shares</h2>
   <p>In this group, provenance and freshness matter most. Provenance is who produced the document and from what. Freshness is whether it is still current. A reported position only means something to an external reader if it says when it was produced and from what. That makes the lifecycle stage and the date of each statement as important as the statement itself. An assurance reader also needs to know that the document it holds is the one that was evaluated, and that nothing has replaced it.</p>
-  <p>The methodology already provides part of this. A conformance claim is bound to one document by the document's digest, and it lists each profile separately (decision 0015). A claim can also be re-checked. What it does not yet say is how the digest is computed so that two producers agree, whether profiles themselves are signed, who may declare conformance, and what a claim means once the document it binds is superseded.</p>
+  <p>The methodology already provides part of this. A conformance claim is bound to one document by the document's digest, and it lists each profile separately (decision 0015). A claim can also be re-checked. Three of the open points are now settled provisionally. The publisher signs a profile, and a claim records its hash. Each profile decides whether a supplier may declare its own conformance. And a claim stays true about the revision it names after a newer one appears. One point is still open: how a digest is computed, so that two producers get the same value.</p>
   <p>The consolidated baseline (decision 0025) adds two pieces. First, judgements made after a record is written point to the record by digest, and a record never points to them. A conformance claim and a policy result both work this way. Second, the baseline names four kinds of context that assurance profiles are expected to require: <code>code-analysis</code>, <code>protocol-testing</code> (the CycloneDX 2.0 <code>test-report</code> reference type), <code>build-provenance</code> (an SLSA or Sigstore attestation) and <code>platform-assessment</code>. No published profile requires them yet. See <a href="../methodology/context.html">Context Pointers</a>.</p>
   <p>One document can serve both the disclosure and the assurance use cases. This is because an assurance profile adds no new cryptographic facts. It adds requirements on the document's provenance and on its conformance claim.</p>
 
@@ -39,10 +39,10 @@ nav: uc-assurance
   <table>
     <thead><tr><th>Question</th><th>Why it belongs to this group</th></tr></thead>
     <tbody>
-      <tr><td>Q14</td><td>Whether a supplier may declare its own conformance, or someone else has to check it</td></tr>
-      <tr><td>Q29</td><td>Whether published profiles are signed, or identified by fingerprint</td></tr>
-      <tr><td>Q60</td><td>What happens to a claim when the document it is bound to is superseded</td></tr>
-      <tr><td>Q44</td><td>Whether a conforming CBOM is proposed as evidence in readiness assessments</td></tr>
+      <tr><td>Q14</td><td>Whether a supplier may declare its own conformance, or someone else has to check it. <em>Settled provisionally: each profile decides, and a self-declared claim says so.</em></td></tr>
+      <tr><td>Q29</td><td>Whether published profiles are signed, or identified by fingerprint. <em>Settled provisionally: both. The publisher signs, and a claim records the hash.</em></td></tr>
+      <tr><td>Q60</td><td>What happens to a claim when the document it is bound to is superseded. <em>Settled provisionally: nothing. Freshness is a policy decision.</em></td></tr>
+      <tr><td>Q44</td><td>Whether a conforming CBOM is proposed as evidence in readiness assessments. <em>Settled provisionally: yes, as an informal offer to the maintainers of such models.</em></td></tr>
       <tr><td>Discussions #18 and #37</td><td>How a digest is computed so that two producers agree, and whether an informative annex should describe transparency services for shared CBOMs</td></tr>
     </tbody>
   </table>
@@ -62,14 +62,14 @@ nav: uc-assurance
   <p><strong>Proposed.</strong></p>
 
   <h3 id="readiness-evidence">Readiness assessment evidence</h3>
-  <p>An assessor scores an organization against a readiness or maturity model, or against a national migration roadmap, and decides what level or status to record. A conforming CBOM could serve as evidence for some of the criteria, provided the assessor can tell when and from what it was produced. Whether to propose CBOMs as evidence to the owners of such models is Q44, and is an outreach decision as much as a methodology one.</p>
+  <p>An assessor scores an organization against a readiness or maturity model, or against a national migration roadmap, and decides what level or status to record. A conforming CBOM could serve as evidence for some of the criteria, provided the assessor can tell when and from what it was produced. The working group will offer this to the owners of such models informally. The decision to accept it is theirs.</p>
   <p><strong>Proposed.</strong></p>
 
   <div class="pagenav">
     <a href="operation.html">← Operation</a>
     <a class="next" href="proposing.html">Next: Proposing a Use Case →</a>
   </div>
-  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>
 </div>
 </body>

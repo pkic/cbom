@@ -109,8 +109,8 @@ nav: challenges
     <tbody>
       <tr><td><strong>Software components</strong></td><td>Package URL, and formerly CPE</td><td>Workable. Baseline rule I9 already requires the <code>pkg:</code> form for the implementing library.</td></tr>
       <tr><td><strong>Certificates</strong></td><td>SHA-256 fingerprint of the DER encoding, or issuer and serial number</td><td>Workable, though tools disagree on which of the two to use, so a consumer may hold two records of one certificate.</td></tr>
-      <tr><td><strong>Keys</strong></td><td>No agreed identifier</td><td>The hard case. A public key can be thumbprinted. A private key held in a hardware module has only a local label or handle. When the same key material is present in a module and in a backup, the two records are genuinely ambiguous.</td></tr>
-      <tr><td><strong>Algorithms</strong></td><td>Registry identifiers, of which several compete</td><td>An open question, and the subject of item 3 above.</td></tr>
+      <tr><td><strong>Keys</strong></td><td>No agreed identifier</td><td>The hard case. A private key held in a hardware module has only a local label or handle, and the same key material in a module and in a backup gives two records that look different. The methodology identifies an asymmetric key by the fingerprint of its public key, which every tool can compute in the same way. A symmetric key has no public part, so it is identified by its role and the place where it is stored.</td></tr>
+      <tr><td><strong>Algorithms</strong></td><td>Registry identifiers, of which several compete</td><td>The subject of item 3 above. The methodology uses the file format's registry where an entry exists, and the protocol's own registry otherwise.</td></tr>
       <tr><td><strong>Interfaces</strong></td><td><code>interfaceId</code>, chosen by the producer and unconstrained by design</td><td>Undefined across products. Within one product's records, a deployment record joins each interface to the product interface it realises, by a BOM-Link to that interface (decision 0025).</td></tr>
     </tbody>
   </table>
@@ -124,7 +124,7 @@ nav: challenges
     <a href="demo.html">← Demo</a>
     <a class="next" href="inventory.html">Next: Inventory →</a>
   </div>
-  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>
 </div>
 </body>

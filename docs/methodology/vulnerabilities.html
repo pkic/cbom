@@ -116,7 +116,7 @@ nav: vulns
   <p>For incident response, the same trade-off defeats the purpose. A withheld <code>I9</code> leaves the responder with an interface that cannot be matched against any feed, and no other disclosure makes up for it. This has two consequences, and both are difficult to accept.</p>
   <ul>
     <li>A profile written for vulnerability response has to remove the permission to withhold <code>I9</code>. Removing it makes the rule stricter. A profile that extends the baseline is allowed to do this, and the validator already enforces it. The <a href="../use-cases/pqc-migration.html">PQC migration</a> profile does exactly this to <code>I9</code>, for a migration reason rather than an incident one. The procurement profile does the same, so that a buyer can match every interface to advisories for the life of the contract.</li>
-    <li>Once that permission is removed, only a restricted variant of a document can conform to the profile, in the sense of "restricted" that <a href="confidentiality.html">Confidentiality</a> uses. As a result, the consumer under the most time pressure is the one a public document serves least well. Worse, the responder who most needs the data is often the one with no agreement in place at all: a downstream operator reading a vendor's published CBOM in the middle of an incident. This is recorded as Q57.</li>
+    <li>Once that permission is removed, only a restricted variant of a document can conform to the profile, in the sense of "restricted" that <a href="confidentiality.html">Confidentiality</a> uses. As a result, the consumer under the most time pressure is the one a public document serves least well. Worse, the responder who most needs the data is often the one with no agreement in place at all: a downstream operator reading a vendor's published CBOM in the middle of an incident. The methodology's answer, settled provisionally, is to be honest about this. A vulnerability-response profile is for a restricted audience, and it does not allow I9 to be withheld. A public reader gets its answer through the producer's VEX statements, which baseline rule R2 points to.</li>
   </ul>
 
   <h2>Carrying both in one document</h2>
@@ -128,7 +128,7 @@ nav: vulns
     <li>CycloneDX 2.0 also defines a <code>risks</code> element, a risk register. Conformance ignores it in the same way. A supplier's product record should not carry one.</li>
     <li>A consumer must not read an empty vulnerability array, or a missing one, as a statement that there are no vulnerabilities. A missing vulnerability statement means only that no statement was made. This is the same principle the <a href="terms.html">disclosure states</a> apply at attribute level, where <code>undeclared</code> does not mean <code>none</code>.</li>
   </ul>
-  <p>The formats also differ here, in the same way that decision 0016 dealt with for conformance claims. CycloneDX can carry both in one file. SPDX 3.0.1 expresses vulnerability assessment through its own security relationships, and a CBOM referenced from an SPDX SBOM sits in a separate document altogether. A statement such as "the CBOM and the VEX are in one artifact" is therefore true in one format and false in the other. A profile must not be written in a way that depends on which format is used. This is recorded as Q58.</p>
+  <p>The formats also differ here, in the same way that decision 0016 dealt with for conformance claims. CycloneDX can carry both in one file. SPDX 3.0.1 expresses vulnerability assessment through its own security relationships, and a CBOM referenced from an SPDX SBOM sits in a separate document altogether. A statement such as "the CBOM and the VEX are in one artifact" is therefore true in one format and false in the other. A profile must not be written in a way that depends on which format is used.</p>
 
   <h2>Algorithm weakness has no identifier</h2>
   <p>A responder dealing with an implementation defect can cite CVE-XXXX-NNNNN in a ticket. They can suppress it with a justification, track it to closure, and show later what was decided and why. None of that is available for "this interface signs with SHA-1". There is no identifier to cite, so the finding cannot be suppressed with a reason, cannot be deduplicated across reports, and cannot be compared between tools. Two scanners will report the same problem in two ways that do not line up.</p>
@@ -156,12 +156,13 @@ nav: vulns
   <p>The <a href="conformance.html">Conformance</a> section covers this in general terms. Vulnerabilities need separate treatment, because reading a passing result as a statement about vulnerabilities is the most common way a conformance verdict is misread.</p>
   <p>A document that conforms to a profile does not assert that the cryptography it describes is safe, current, unaffected by any advisory, or adequate for any purpose. It asserts that the required facts were disclosed in the required form, and nothing more. A profile sets a minimum standard for reporting. Whether the disclosed facts are good news is a judgement. Someone else makes that judgement, separately, against criteria that will probably have changed by the time anyone asks again.</p>
 
-  <h2>What is not settled</h2>
+  <h2>Positions taken</h2>
+  <p>Four questions about vulnerabilities are settled provisionally:</p>
   <ul>
-    <li><strong>Q57.</strong> Must a vulnerability-response profile remove the permission to withhold <code>I9</code>? If it must, is the consequence acceptable: that the most urgent consumer can only be served by a restricted variant, and that a public CBOM cannot support incident response at all?</li>
-    <li><strong>Q58.</strong> May a conforming document carry vulnerability assertions in the same file, and does a verdict say anything about them? The draft answers yes to the first and no to the second. The difference between CycloneDX and SPDX 3.0.1 means the answer cannot be written as a constraint on the file.</li>
-    <li><strong>Q59.</strong> Is an identifier scheme needed for algorithm-class weakness, so that a finding derived from a CBOM can be cited, tracked and suppressed the way a CVE can?</li>
-    <li><strong>Q60.</strong> When a product is patched and a new CBOM revision is published, does anyone have to re-issue the VEX statements bound to the previous revision's digest, and whose job is that?</li>
+    <li><strong>Q57.</strong> A vulnerability-response profile is for a restricted audience, and it does not allow <code>I9</code> to be withheld. A public reader relies on the producer's VEX statements.</li>
+    <li><strong>Q58.</strong> A conforming document may carry vulnerability assertions in the same file. A profile says nothing about them, and a verdict does not cover them.</li>
+    <li><strong>Q59.</strong> A weakness found from a CBOM does not get an identifier of its own for now.</li>
+    <li><strong>Q60.</strong> When a new CBOM revision is published, nothing happens to the statements bound to the previous revision. They stay true about that revision. Whether a consumer still relies on them is a decision for the consumer's policy.</li>
   </ul>
 
   <div class="banner">In short. A CBOM states cryptographic facts. An advisory states a weakness in a component. A VEX statement says whether this product is affected by it. The producer writes the first and the third, and they must stay separate, because one changes when the product changes and the other when knowledge changes. A profile requires the facts that make the join possible: a library identifier in a scheme the feeds use, a lifecycle stage saying what was described, and a digest the statement can be bound to. It requires no verdict, which is decision 0002 applied to a second kind of judgement. For implementation defects the CBOM makes existing machinery more precise. For algorithm weakness there is no machinery, no identifier and no patch, and the CBOM is the only evidence there is.</div>
@@ -170,7 +171,7 @@ nav: vulns
     <a href="policy-evaluation.html">← Policy Evaluation</a>
     <a class="next" href="context.html">Next: Context Pointers →</a>
   </div>
-  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>
 </div>
 </body>
