@@ -37,9 +37,9 @@ nav: uc-operation
   <table>
     <thead><tr><th>Question</th><th>Why it belongs to this group</th></tr></thead>
     <tbody>
-      <tr><td>Q36, Q45</td><td>Where vendor-stated data facts end and operator-stated ones begin, and how the operator's half is linked to the supplier's document</td></tr>
-      <tr><td>Q37</td><td>The confidentiality-lifetime bands an operator would report against</td></tr>
-      <tr><td>Q67</td><td>Whether an estate is a subject a profile can declare, with its own completeness statement</td></tr>
+      <tr><td>Q36, Q45</td><td>Where vendor-stated data facts end and operator-stated ones begin, and how the operator's half is linked to the supplier's document. <em>Settled provisionally: the vendor states intrinsic data, and the operator states the payload in its data register, linked by rule R3.</em></td></tr>
+      <tr><td>Q37</td><td>The confidentiality-lifetime bands an operator would report against. <em>Settled provisionally: the five bands proposed in Data Exposure.</em></td></tr>
+      <tr><td>Q67</td><td>Whether an estate is a subject a profile can declare, with its own completeness statement. <em>Settled provisionally: no. An estate is read as a set of product and deployment documents.</em></td></tr>
       <tr><td>Q68</td><td>What an overlay's verdict says about the supplier documents it cites</td></tr>
     </tbody>
   </table>
@@ -90,7 +90,7 @@ nav: uc-operation
 
   <h3 id="hndl-exposure">Harvest-now-decrypt-later exposure</h3>
   <p>A security function decides which of its systems are exposed to traffic recorded today and decrypted later, and which to migrate first on that ground. Exposure depends on two facts a supplier cannot state: what data crosses an interface, and how long that data has to stay confidential. Combined with the key establishment the interface uses today, these two facts give the window during which recorded traffic remains worth decrypting.</p>
-  <p>Some of these facts are known to the supplier, however. Credentials on a management interface and key material on a key-management interface follow from the interface's design, and they often have the longest lifetimes. Q36 asks where the supplier's facts end and the operator's begin. The deployment profile already gives the operator's half a place: rule R3 points to the operator's data register. <strong>Proposed.</strong> Depends on Q36, Q37 and Q45.</p>
+  <p>Some of these facts are known to the supplier, however. Credentials on a management interface and key material on a key-management interface follow from the interface's design, and they often have the longest lifetimes. Q36 asks where the supplier's facts end and the operator's begin. The deployment profile already gives the operator's half a place: rule R3 points to the operator's data register. <strong>Proposed.</strong> Q36, Q37 and Q45 are settled provisionally. The attribute for the supplier's intrinsic data is still to be defined.</p>
 
   <h3 id="migration-progress">Migration progress over time</h3>
   <p>A migration programme lead, or a regulator receiving its reports, decides whether a migration is on track: how much has moved since the last report, how much remains, and why the numbers changed. The facts needed are two operator documents about the same estate at different dates, and the reason for each difference between them: an interface migrated, a product replaced, an instance retired, or an earlier finding that turned out to be a false positive.</p>

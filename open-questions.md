@@ -175,7 +175,7 @@ The matching training question was updated.
 
 ## Q67 — Is an estate a subject type, or an aggregation of product documents?
 
-**Status** open. Added 4 October 2026, from the use-case grouping draft.
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, an aggregation outside profiles, for now. Added 4 October 2026, from the use-case grouping draft.
 
 **The question.** `scope.subjectType` names a product today, and the drafts add a device model and
 a system. Due diligence and compliance reporting reach for an estate: everything an organization
@@ -191,7 +191,12 @@ due-diligence entry is most exposed to.
 **Option B: an aggregation outside profiles** (trade-off: no new machinery; completeness is left to
 the consumer).
 
-**Where it stands. Nothing.**
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B. No
+producer can honestly state that an estate is complete, so an estate is not a subject type. An
+estate is read as a set of product and deployment documents, each carrying its own coverage
+statement, as the federated arrangement in the Inventory section describes.
+
+Revival trigger: a regulator or a due-diligence profile that needs a claim about a whole estate.
 
 **What would have to change.** The scope object, and the due-diligence and compliance entries.
 
@@ -359,7 +364,7 @@ the rule files point at definitions.
 
 ## Q08 — How should the model describe cryptography under a key shared among many parties?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, leave it out of scope
 
 **The question.** The methodology describes cryptography as something applied between two
 parties. Some systems apply it among many at once, under a shared key, with members joining and
@@ -396,8 +401,9 @@ once profiles and file mappings assume two parties.
 **Option C: add a separate kind** for group cryptography, with its own attributes covering
 membership and rekeying.
 
-**Where it stands.** Option A, stated openly. The Model section describes the limitation and one
-rule requires at least two parties.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Option A, stated
+openly. The Model section describes the limitation and one rule requires at least two parties.
 
 **What would have to change.** The definitions in the Model and Terms sections, one rule, the
 file mapping, and any claim that the methodology suits sectors where group cryptography is
@@ -410,7 +416,7 @@ recorded under Q47.
 
 ## Q09 — Should the file formats gain a proper object for a cryptographic connection?
 
-**Status** deferred
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, keep the workaround
 
 **The question.** Neither CycloneDX nor SPDX has a way to describe a connection where
 cryptography is applied. Both describe components. The methodology works around this by
@@ -430,15 +436,17 @@ independent of any format.
 it however it can. This makes the model correct on its own terms and gives the group a concrete
 proposal to put to the format bodies.
 
-**Where it stands.** Option A. The model describes connections; the mapping represents them as
-components. The mismatch is acknowledged in two sections.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Option A. The model
+describes connections; the mapping represents them as components. The mismatch is acknowledged in
+two sections.
 
 **What would have to change.** The Model section, the mapping, and whether the group makes a
 submission to CycloneDX or SPDX. Q17 asks the same question about a different gap.
 
 ## Q46 — How should a signature verified by a population, rather than by one counterparty, be described?
 
-**Status** open. Added 21 August 2026 from member feedback on financial-sector systems.
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, a verifier-population attribute. Added 21 August 2026 from member feedback on financial-sector systems.
 
 **The question.** A signed message may be verified by many parties rather than one. A settlement
 instruction signed by a participant and verified by every member of a scheme is the case that
@@ -467,8 +475,16 @@ stays pairwise in the model; what is added is a fact about the ceiling.
 
 **Option C: generalise the relationship**, which is Q08's Option B, and treat this as an instance.
 
-**Where it stands.** Nothing. The taxonomy row is missing and the Model's known-limitation
-paragraph mentions only the shared-key case.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B. The
+relationship stays between two parties, so the binding definitions (N02) do not change. A new
+attribute, `verifierPopulation`, names who must be able to verify a signature: `counterparty`,
+`scheme-members` or `public`. An optional pointer, `verifierPopulationRef`, names the rules that set
+the verifiers' minimum, such as a scheme rulebook. The attribute applies to signing purposes only.
+The extended PQC migration profile asks for it as a SHOULD, and the baseline does not ask for it.
+
+The draft definition is in `drafts/verifier-population/README.md`. The Model section now describes
+the case in its taxonomy and in its known-limitations text, and the Terms section defines the
+attribute. The rule in the extended migration profile is still to be added.
 
 **What would have to change.** The taxonomy table in the Model section, one new attribute in the
 attribute model, its format mapping, and the Terms section. Not the definition of a relationship,
@@ -476,7 +492,7 @@ which is what makes this cheaper than Q08.
 
 ## Q47 — Should a profile be able to state that an interface trusts an administered, closed membership?
 
-**Status** open. Added 21 August 2026 from member feedback on financial-sector systems.
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, a trust-domain attribute on the interface. Added 21 August 2026 from member feedback on financial-sector systems.
 
 **The question.** The baseline records the signature algorithm an interface uses for
 authentication. It does not record whose trust anchor the interface accepts, or whether the set of
@@ -504,9 +520,22 @@ alike.
 **Option C: treat it as a property of the endpoint** rather than of the relationship, on the
 grounds that it describes who a party will accept rather than what passes between them.
 
-**Where it stands.** Nothing. Raised in `design-note-multiparty-trust.md`, which also records the
-factual question that would settle Q08's boundary: whether any of these systems use a key shared
-among more than two participants at once, as against per-participant keys under a common anchor.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B. A new
+attribute, `trustDomain`, records whose credentials an interface accepts: `public` (a publicly
+trusted certificate authority), `private` (the organisation's own certificate authority) or
+`scheme-administered` (members admitted by a scheme operator). An optional pointer,
+`trustAnchorRef`, names the anchor and may be withheld. The attribute sits on the interface, not the
+endpoint (Option C), because one server often accepts different anchors on different interfaces.
+
+The attribute is optional in the baseline, and a sector profile may require it. It pairs with
+`verifierPopulation` (Q46), and it gives a finance profile (Q25) a place for this fact without a
+sector attribute. The draft definition is in `drafts/trust-domain/README.md`, and the Terms section
+defines it. The baseline rule is still to be added.
+
+Before this, the register recorded: Nothing. Raised in `design-note-multiparty-trust.md`, which also
+records the factual question that would settle Q08's boundary: whether any of these systems use a
+key shared among more than two participants at once, as against per-participant keys under a common
+anchor.
 
 **What would have to change.** The attribute model, its format mapping, the Terms section, and
 the baseline profile if the attribute is required rather than optional. Possibly the endpoint
@@ -549,7 +578,7 @@ recorded as decision 0011.
 
 ## Q36 — Where does the boundary fall between vendor-stated and operator-stated data facts?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, each fact from the party competent to state it.
 
 **The question.** To assess the harvest-now-decrypt-later threat, someone has to record how long
 the data crossing an interface must stay confidential. Which party states it, and does the answer
@@ -576,9 +605,19 @@ vendor from stating something it knows and no operator can derive.
 authoring party. It requires every operator to derive the same facts independently from the same
 documentation, which is the duplicated effort the methodology exists to remove.
 
-**Where it stands.** The Data Exposure section now describes both kinds and proposes Option A
-without asserting it. The baseline's exclusion has been narrowed to conveyed payload and records
-the limit explicitly. The options are worked through in `design-note-data-and-hndl.md`.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, which
+the Data Exposure section already proposes. The vendor states the data an interface exists to carry
+for the product's own operation, such as credentials, keys, tokens and configuration. The operator
+states the payload its users send through the interface. On a mixed interface, such as a database
+connection, the vendor covers the session credentials and the operator covers the payload.
+
+The Data Exposure section now states this boundary and asserts Option A. No profile yet has an
+attribute for the vendor's intrinsic data, and adding one is the next step. The operator half is
+linked as Q45 describes.
+
+Before this, the register recorded: The Data Exposure section now describes both kinds and proposes
+Option A without asserting it. The baseline's exclusion has been narrowed to conveyed payload and
+records the limit explicitly. The options are worked through in `design-note-data-and-hndl.md`.
 
 **What would have to change.** The baseline's exclusions, the Data Exposure section, and the scope
 of any deployment profile. If Option A is taken, a further question follows on how the operator
@@ -586,7 +625,7 @@ half is represented and linked, which is Q45.
 
 ## Q45 — How is the operator's half of the data record represented and linked?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: the operator's data register, linked by a context pointer.
 
 **The question.** Assuming intrinsic data sits in the product CBOM, where do the operator's facts
 about conveyed payload live, and how are they connected to the interfaces they describe?
@@ -620,7 +659,18 @@ independence unless SPDX offers an equivalent.
 the supply-chain case, so a vendor cannot state and a buyer cannot request the information in a
 comparable form.
 
-**Where it stands.** Nothing decided. Option A is what the draft attributes imply.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call. The operator's
+facts about conveyed payload live in the operator's own data register. The deployment CBOM links to
+it with the existing context pointer `data-register` (deployment-disclosure#R3). This follows the
+rule that context is joined to a CBOM, not merged into it.
+
+It avoids the three defects of Option A. A change of classification does not force a CBOM revision.
+One interface can carry several flows with different lifetimes. The operator never amends a document
+the vendor signed. No new artifact class has to be governed, because the methodology specifies the
+pointer and not the register's format. The conformance model does not change, because a reference
+rule checks the pointer and not its target.
+
+Before this, the register recorded: Nothing decided. Option A is what the draft attributes imply.
 
 **What would have to change.** Depends on the answer. Two subsidiary questions would settle much
 of it: whether SPDX offers an equivalent to the service and data-flow model, and whether the group
@@ -628,7 +678,7 @@ is willing to extend the conformance model to requirements that span documents.
 
 ## Q37 — Where do the confidentiality lifetime bands fall?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, the five bands as proposed.
 
 **The question.** Confidentiality lifetime is proposed in bands: under 1 year, 1 to 5, 5 to 15,
 over 15, indefinite. Are those the right boundaries?
@@ -647,7 +697,16 @@ that matter.
 **Option C: align to a published retention schedule** from a regulator, so the boundaries are
 already familiar in the sectors that care most.
 
-**Where it stands.** The five bands above are a drafting proposal.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A. The
+bands stay at under 1 year, 1 to 5, 5 to 15, over 15, and indefinite. A consumer can always merge
+fine bands but can never split coarse ones, so fewer bands would lose information that cannot be
+recovered. The boundaries line up with published migration timelines, such as NIST IR 8547, and with
+common retention periods.
+
+Revival trigger: evidence that most interfaces fall in one band. The change would touch one
+vocabulary in one profile.
+
+Before this, the register recorded: The five bands above are a drafting proposal.
 
 **What would have to change.** One vocabulary in any deployment profile.
 
@@ -727,7 +786,7 @@ Tracked as issue #6.
 
 ## Q10 — Should suppliers be required to name the software library behind an interface?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, keep the requirement
 
 **The question.** The baseline requires the implementing library to be identified, and allows a
 supplier to say openly that it is withholding the answer. The migration profile removes that
@@ -750,7 +809,8 @@ buyer gets nothing. Note that the rules on building one profile on another do no
 be relaxed within the migration profile. It would have to become a separate profile, checked on
 its own, with no implied conformance to the baseline.
 
-**Where it stands.** Option A.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Option A.
 
 **What would have to change.** The override in the migration profile, the failing example, a test
 that depends on the same document passing one profile and failing the other, and the explanation
@@ -758,7 +818,7 @@ in two sections.
 
 ## Q11 — Should "we do not know" show up more prominently when a rule is only advisory?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, reporting is enough
 
 **The question.** An attribute can be missing for three reasons: the supplier will not say, the
 supplier does not know, or the supplier never addressed it. Against a binding rule these are
@@ -776,15 +836,16 @@ second mechanism duplicates what the binding levels already express.
 threshold above which a document is flagged as materially incomplete even though it passes. The
 buyer gets a signal without changing what conformance means.
 
-**Where it stands.** Option A. Advisory rules are evaluated and reported and never change the
-result.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Option A. Advisory
+rules are evaluated and reported and never change the result.
 
 **What would have to change.** The result line in the validator, one tool requirement, and one
 table in the Conformance section.
 
 ## Q12 — When a supplier withholds an answer, should it have to say why?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, the marker alone
 
 **The question.** A supplier can mark an answer as withheld. Nothing records the reason.
 
@@ -803,14 +864,15 @@ can be given in the commercial exchange where it belongs.
 profile would require it; a public disclosure baseline would not. The cost is one list and one
 setting per rule.
 
-**Where it stands.** Option A.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Option A.
 
 **What would have to change.** The disclosure settings in the rule format, the file mapping, part
 of the validator, and one table in the Conformance section.
 
 ## Q54 — Should a profile declare the audience its withholding permissions assume?
 
-**Status** open. Added 12 September 2026 with the Confidentiality section.
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, leave it to the title and the objective
 
 **The question.** A profile decides, rule by rule, whether an answer may be withheld. That decision
 is taken with an audience in mind: a floor a supplier can clear in a document it publishes to the
@@ -842,15 +904,17 @@ fact where a family is recorded (Q50).
 several is public by construction. Cheap, and wrong at the edges: a public profile may permit no
 withholding on rules nobody contests, and a restricted profile may still permit some.
 
-**Where it stands.** Option B, as the state that exists. The Confidentiality section states plainly
-that nothing in the tooling knows what an audience is.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B, the
+position the methodology pages already take. Before this, the register recorded: Option B, as the
+state that exists. The Confidentiality section states plainly that nothing in the tooling knows what
+an audience is.
 
 **What would have to change.** The scope object, the published profile schema, C11, and the scope
 table in the Conformance section.
 
 ## Q55 — Should a document say which variant it is, and should `partial` separate ignorance from policy?
 
-**Status** open. Added 12 September 2026 with the Confidentiality section.
+**Status** settled provisionally, chair's call on 11 November 2026: Option D, neither
 
 **The question.** Two related gaps in what a document says about itself. A recipient cannot always
 tell whether it holds a public or a restricted variant — a public one whose producer happened to
@@ -879,8 +943,11 @@ pattern in most real cases.
 
 **Option D: neither.** Both are matters for the exchange in which the document is handed over.
 
-**Where it stands.** Option D, by omission. No profile requires a variant statement and the
-completeness vocabulary is as published.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option D, the
+position the methodology pages already take. No profile requires a variant statement for now, and
+the completeness vocabulary stays as published. A profile that needs one can reopen the question.
+Before this, the register recorded: Option D, by omission. No profile requires a variant statement
+and the completeness vocabulary is as published.
 
 **What would have to change.** The coverage vocabulary and P4's note in the baseline, its version, a
 new product rule if a variant is required, the Terms and Conformance tables, and the example
@@ -888,7 +955,7 @@ documents.
 
 ## Q56 — May a structural rule be satisfied by a declared withholding?
 
-**Status** open. Added 12 September 2026 with the Confidentiality section.
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, leave it
 
 **The question.** The disclosure states apply to attributes. A whole interface withheld for
 confidentiality has no attribute on which to carry a marker. Product rule P2 requires a management
@@ -921,8 +988,10 @@ conceal.
 the *declared* set rather than on the product, which is a weaker statement than they make today,
 and a producer could satisfy a structural rule without declaring anything.
 
-**Where it stands.** Option B, as the state that exists. Option C is available to any producer now
-and is what the Confidentiality section recommends where the profile permits it.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B, the
+position the methodology pages already take. Before this, the register recorded: Option B, as the
+state that exists. Option C is available to any producer now and is what the Confidentiality section
+recommends where the profile permits it.
 
 **What would have to change.** The `orDeclaredAbsent` handling in the validator, the absence
 vocabularies, P2's note, the baseline's version, and the disclosure-state tables in Profile,
@@ -1018,7 +1087,7 @@ Tracked as issue #7.
 
 ## Q13 — Is the drafted conformance section accepted?
 
-**Status** drafted
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, accept as written
 
 **The question.** The methodology issued pass and fail judgements throughout without ever
 defining what conformance meant. A section has now been written. Does the group accept it?
@@ -1040,14 +1109,16 @@ may not want to be in the business of judging tools.
 discussed, including how documents written to older file formats are treated, and the position
 that a product never conforms to a profile, only a document describing it does.
 
-**Where it stands.** Written, cross-referenced from three other sections, and marked as a draft.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Written,
+cross-referenced from three other sections, and marked as a draft.
 
 **What would have to change.** The section itself, seventeen numbered requirements, and the
 checking tool that implements ten of them. See also Q31 and Q32.
 
 ## Q14 — Can a supplier certify its own conformance, or must someone else check it?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, let each profile decide
 
 **The question.** A conformance claim says who did the checking. When that is the supplier
 itself, the claim is self-declared. When it is another party, it is attested.
@@ -1070,8 +1141,11 @@ way to detect an accurate-looking but false document.
 **Option C: let each profile decide.** A public disclosure baseline accepts self-declaration; a
 procurement profile requires attestation.
 
-**Where it stands.** Self-declaration is permitted provided the claim says so, with stronger
-requirements left to individual profiles. That is close to Option C without saying so.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C, the
+position the methodology pages already take. Each profile states whether it accepts a self-declared
+claim, and a self-declared claim says so. Before this, the register recorded: Self-declaration is
+permitted provided the claim says so, with stronger requirements left to individual profiles. That
+is close to Option C without saying so.
 
 **What would have to change.** The claim format, possibly a new setting in the rule format, and
 the Governance section's treatment of signing.
@@ -1111,7 +1185,7 @@ convention, and the Conformance section's statement on how long a claim stays va
 
 ## Q31 — Are the requirements on profiles and on checking tools accepted?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, accept as written
 
 **The question.** The Conformance section lists ten requirements a profile must meet to be
 well-formed, and seven a checking tool must meet. Does the group accept them?
@@ -1133,15 +1207,19 @@ deter a sector body publishing something small.
 **Option C: soften the rule against judgement attributes.** It is enforced by looking for
 suspicious words in field names, which is crude and could catch a legitimate field.
 
-**Where it stands.** All seventeen are written. Both example profiles satisfy them, so the group
-is ratifying something already shown to be workable rather than deciding in the abstract.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. The Conformance section now has eighteen requirements
+on profiles (C1 to C18) and nine on checking tools (T1 to T9), not the ten and seven the question
+names. Accepting them as written covers all twenty-seven. Before this, the register recorded: All
+seventeen are written. Both example profiles satisfy them, so the group is ratifying something
+already shown to be workable rather than deciding in the abstract.
 
 **What would have to change.** The Conformance section, the checking tool, seven test fixtures,
 and both example profiles, which were amended to meet five of the requirements.
 
 ## Q32 — The rule against naming specific products cannot be fully checked
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, keep it binding
 
 **The question.** A profile may not name a specific product, supplier or interface. A tool cannot
 reliably detect that, because it cannot tell a product name from any other text. Three indirect
@@ -1163,7 +1241,9 @@ cannot fully check is misleading.
 rule to come from a declared list. That would make naming a product structurally impossible, at
 the cost of forbidding one-off lists.
 
-**Where it stands.** Option A, with the limitation stated openly in the Conformance section.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Option A, with the
+limitation stated openly in the Conformance section.
 
 **What would have to change.** The rule's status, one function in the checking tool, and one test
 fixture.
@@ -1350,7 +1430,7 @@ profiles if a release changes what the mapping can rely on.
 
 ## Q58 — May a conforming document also carry vulnerability assertions, and does a verdict cover them?
 
-**Status** open. Added 12 September 2026 with the Vulnerabilities section.
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, silence
 
 **The question.** CycloneDX permits a BOM to carry a `vulnerabilities` array, so one file can hold a
 cryptographic inventory and a set of VEX assertions at once. May a document evaluated against a
@@ -1379,8 +1459,10 @@ misread.
 **Option C: require a profile to declare a position.** Rejected on the floor-and-ceiling argument
 above, and recorded so that the argument is not re-run.
 
-**Where it stands.** Option A. The Vulnerabilities section states the three consequences in prose,
-and nothing mechanical enforces or records them.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Option A. The
+Vulnerabilities section states the three consequences in prose, and nothing mechanical enforces or
+records them.
 
 **What would have to change.** Under Option B: the claim schema, the claim example, and the list of
 what a verdict does not assert in the Conformance section.
@@ -1537,7 +1619,7 @@ declared.
 
 ## Q59 — Does a weakness found from a CBOM need an identifier of its own?
 
-**Status** open. Added 12 September 2026 with the Vulnerabilities section.
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, none
 
 **The question.** An implementation defect has a CVE, so a finding against it can be cited in a
 ticket, suppressed with a reason, deduplicated between tools, and proved later to have been decided.
@@ -1563,8 +1645,10 @@ stable enough across CBOM revisions to carry this is unproven.
 the consortium the operator of an identifier space. It is not a CNA and the cost of becoming
 something like one should be stated before anyone proposes it.
 
-**Where it stands.** Option A, by default rather than by decision. No policy evaluation output format
-exists in the repository, so there is nothing for an identifier to go in yet.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Option A, by
+default rather than by decision. No policy evaluation output format exists in the repository, so
+there is nothing for an identifier to go in yet.
 
 **What would have to change.** The Policy Evaluation and Vulnerabilities sections, and an output
 schema for an evaluation report, which would be a new artifact.
@@ -1653,7 +1737,7 @@ Tracked as issue #9.
 
 ## Q23 — May a profile build on more than one other profile?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, keep it to one
 
 **The question.** A profile may currently build on one other, adding requirements and making
 existing ones stricter. Building on two is undefined.
@@ -1678,7 +1762,10 @@ share a tag, and nothing today registers tags across families.
 named others**, each producing its own result. This is already possible; the option is to make it
 explicit.
 
-**Where it stands.** Option A, described as "single inheritance only, for now".
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Single inheritance applies for now. A profile that
+needs to build on two others can reopen the question. Before this, the register recorded: Option A,
+described as "single inheritance only, for now".
 
 **What would have to change.** The rule format, the part of the validator that resolves parent
 profiles, the composition section, and Q33 and Q24.
@@ -1804,7 +1891,7 @@ anything, so the base could not grow. Recorded as decision 0011.
 
 ## Q35 — May a profile narrow an inherited list of permitted values?
 
-**Status** open for narrowing; the widening mirror case is settled provisionally (decision 0025, item 23)
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, allow restating and check it.
 
 **The question.** When a profile builds on another it inherits shared settings. Restating one of
 those settings quietly overrides the parent, so a later change to the parent never reaches the
@@ -1835,10 +1922,21 @@ entirely.
 **Option C: allow restating and check it**, rejecting any restatement that adds a value the
 parent did not have.
 
-**Where it stands.** Option A, by exemption, recorded as a drafting judgement rather than a
-decision. The mirror case is settled provisionally by decision 0025, item 23: a derived profile may
-add values to a vocabulary that keys a group, and to no other. `check_profile.py` enforces this
-under C7.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C. A
+derived profile may restate an inherited list of permitted values, and the checker verifies the
+restatement. A restated list may remove values and may not add them. The one exception is the case
+decision 0025 (item 23) already allows: adding values to a vocabulary that keys a group.
+
+The silent-override hazard is handled by version pinning. A derived profile pins the version of the
+profile it extends, so a change to the parent is a new version, and the child is checked again when
+it moves to that version. `check_profile.py` already applies this rule under C7: it rejects a value
+added to an inherited vocabulary, except one that keys a group, and it accepts a narrowed list. A
+test fixture now shows a narrowed vocabulary passing.
+
+Before this, the register recorded: Option A, by exemption, recorded as a drafting judgement rather
+than a decision. The mirror case is settled provisionally by decision 0025, item 23: a derived
+profile may add values to a vocabulary that keys a group, and to no other. `check_profile.py`
+enforces this under C7.
 
 **What would have to change.** One check in the profile checker, the rule format, and Q25.
 
@@ -1846,7 +1944,7 @@ under C7.
 
 ## Q50 — Where is a profile family recorded, if not in its profiles?
 
-**Status** open. Added 12 September 2026 with decision 0019.
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, the register
 
 **The question.** A family of profiles ordered by depth is only useful if a consumer can see that
 the deeper ones exist. A profile points down the family, to the base it extends, and nothing points
@@ -1874,16 +1972,17 @@ invite the comparison this methodology avoids (see Q53).
 **Option C: nothing.** The chain is discoverable by reading the profiles that extend, and a consumer
 who wants the family asks the publisher.
 
-**Where it stands.** Option A by inference, stated in the Maturity section. The register does not
-exist yet, so today the family is recorded in `tests/check-family.py` and in prose, which is honest
-and not sufficient.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Option A by
+inference, stated in the Maturity section. The register does not exist yet, so today the family is
+recorded in `tests/check-family.py` and in prose, which is honest and not sufficient.
 
 **What would have to change.** The register's contents, which Q42 and Q41 also bear on, or the rule
 format if Option B is taken.
 
 ## Q51 — Should the disclosure baseline be re-parented to extend the entry profile?
 
-**Status** open. Added 12 September 2026 with decision 0019.
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, leave them as siblings
 
 **The question.** The entry profile and the Interface Disclosure Baseline are siblings: the baseline
 was published first and declares no `extends`. The ladder between them is therefore an assertion
@@ -1912,15 +2011,17 @@ cost is a test that has to be maintained and a property that holds by assertion.
 different numbers, so the baseline's citations are unaffected. This trades citation churn for two
 numbers for one rule, which decision 0011 exists to avoid.
 
-**Where it stands.** Option B, as the state that exists. The choice is the group's because it is
-about published identifiers, not about drafting.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B, the
+position the methodology pages already take. Before this, the register recorded: Option B, as the
+state that exists. The choice is the group's because it is about published identifiers, not about
+drafting.
 
 **What would have to change.** The baseline's version and rule set, the entry profile's status as a
 base, every citation of the seven ids, and the family check.
 
 ## Q52 — Should a rules file distinguish a deferral from a permanent exclusion?
 
-**Status** open. Added 12 September 2026 with decision 0019.
+**Status** settled provisionally, chair's call on 11 November 2026: Option B, leave it
 
 **The question.** A profile records what it deliberately leaves out in one `exclusions` list. Two
 quite different statements go in it: that something is excluded on principle at every depth of every
@@ -1943,14 +2044,16 @@ reason that says which it is in words.
 **Option C: separate lists**, `exclusions` and `deferrals`, which is clearer to read and changes the
 published schema more than Option A.
 
-**Where it stands.** Option B, with the distinction made in the reasons and in the Maturity section.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B, the
+position the methodology pages already take. Before this, the register recorded: Option B, with the
+distinction made in the reasons and in the Maturity section.
 
 **What would have to change.** The rule format and schema, C8, and the exclusions of all three
 published profiles.
 
 ## Q53 — Are the depths of a family numbered, and may a consortium profile be an entry depth?
 
-**Status** open. Added 12 September 2026 with decision 0019.
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, names, not numbers
 
 **The question.** Two questions that have to be answered together, because the answer to one makes
 the other easier or harder. Are a family's depths given numbers, and may a profile published under a
@@ -1973,9 +2076,11 @@ name mandatory so that a number never appears alone.
 **Option C: no consortium entry profile.** The consortium publishes the full baseline only, and
 sector bodies publish their own shallower profiles.
 
-**Where it stands.** Option A, by default, since profiles are named and versioned and no numbering
-has been introduced. The entry profile is published as an example, like everything else in
-`docs/methodology/`, which defers rather than answers the second half.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Option A, by
+default, since profiles are named and versioned and no numbering has been introduced. The entry
+profile is published as an example, like everything else in `docs/methodology/`, which defers rather
+than answers the second half.
 
 **What would have to change.** Q03, on who may publish under a consortium name, and the register's
 naming rules.
@@ -2082,7 +2187,7 @@ Tracked as issue #10.
 
 ## Q26 — Should a CBOM say anything about what a product will support later?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option C, allow it, and let each profile decide
 
 **The question.** The migration profile asks suppliers what a product will support, what is
 blocking it, and where to find the commitment. A bill of materials has always been a record of
@@ -2107,12 +2212,14 @@ a profile used to assure what is running must not, because a statement about the
 nothing about the present. The methodology already records whether each fact is intended,
 implemented, configured or observed, so the mechanism to distinguish them exists.
 
-**Where it stands.** Option C in effect. The baseline records present state and lists
-forward-looking information among the things it deliberately excludes. The migration profile adds
-it. No general rule is stated. *Update 27 September 2026:* the draft decision 0022 (K9) lets a
-document state capability once, on the library that provides the interfaces, and have them
-inherit it. Future-state statements would then sit on library components as well as on
-interfaces. That widens where this question bites; it does not answer it.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option C, the
+position the methodology pages already take. Before this, the register recorded: Option C in effect.
+The baseline records present state and lists forward-looking information among the things it
+deliberately excludes. The migration profile adds it. No general rule is stated. *Update 27
+September 2026:* the draft decision 0022 (K9) lets a document state capability once, on the library
+that provides the interfaces, and have them inherit it. Future-state statements would then sit on
+library components as well as on interfaces. That widens where this question bites; it does not
+answer it.
 
 **What would have to change.** Three rules in the migration profile, the baseline's exclusions,
 one decision record, and possibly a statement in the Conformance section about what can be
@@ -2162,7 +2269,7 @@ the field naming convention if the jobs become separate fields.
 
 ## Q28 — What may the pointer to a supplier's commitment point at?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: Option A, leave it open
 
 **The question.** Where a capability is not yet available, the profile asks for a reference to
 whatever commitment the supplier is willing to make. What that reference may be is unspecified.
@@ -2182,7 +2289,8 @@ public, customer, or contractual.
 
 **Option C: require the referenced document to carry a date.**
 
-**Where it stands.** Option A.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option A, the
+position the methodology pages already take. Before this, the register recorded: Option A.
 
 **What would have to change.** One rule, and the reasoning in the decision record that moved
 dates off the interface.
@@ -2518,7 +2626,7 @@ gains an entry for the method itself.
 
 ## N02 — Is the underlying model normative or explanatory?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: the definitions are binding, the explanation is informative
 
 **The question.** The methodology describes cryptography in terms of connections between parties,
 the parties themselves, and the algorithms and keys involved. Everything else depends on those
@@ -2535,8 +2643,20 @@ binding they need a version and a conformance statement of their own.
 model explains why they are what they are. Making it binding adds another artifact to govern for
 little practical gain.
 
-**What would have to change.** The status of two sections, whether Q08 and Q09 become blocking,
-and possibly the topic list.
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call, with a middle
+option between A and B. The definitions are normative: the three terms (relationship, endpoint and
+asset), what counts as one interface, and a connection as the join of its two ends. A profile that
+uses these words must use them with these meanings. The rest of the Model section is informative:
+the worked examples, the taxonomy and the known limitations explain the definitions and can change
+without a new version of them.
+
+This keeps profiles compatible without versioning the whole model. The known limitations stay stated
+limitations rather than defects in a normative text, so Q08 and Q09 do not become blocking, and Q46
+and Q47 can be settled on their own.
+
+**What changed.** The Model section now says which parts are binding. The Terms section says that
+the model table and the entry for Join are normative. The Model section's description of the example
+profile was also corrected, to say that P2 asks for disclosure, in line with Q02.
 
 ## N03 — What goes into the first release, and when?
 

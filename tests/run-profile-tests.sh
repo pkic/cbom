@@ -503,6 +503,7 @@ expect_check_exit   "C7 accepts a value added to a keyed vocabulary" 0 "$FIX/pro
 expect_check_output "C7 records the added keyed value" "adds keyed vocabulary values" "$FIX/profile-c7-widening-keyed-vocabulary.rules.json"
 expect_check_exit   "C7 rejects a value added to a value vocabulary" 1 "$FIX/profile-c7-widening-value-vocabulary.rules.json"
 expect_check_output "C7 names the widened value vocabulary" "interfaceTypeVocabulary" "$FIX/profile-c7-widening-value-vocabulary.rules.json"
+expect_check_exit   "C7 accepts a narrowed value vocabulary (Q35)" 0 "$FIX/profile-c7-narrowing-value-vocabulary.rules.json"
 expect_check_exit   "C1 an unactionable decision is rejected" 1 "$FIX/profile-c1-no-decision-options.rules.json"
 expect_check_output "C1 is the failing requirement" "[FAIL] C1" "$FIX/profile-c1-no-decision-options.rules.json"
 expect_check_output "C1 asks for the actions" "decisionOptions" "$FIX/profile-c1-no-decision-options.rules.json"
