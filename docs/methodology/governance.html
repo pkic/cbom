@@ -77,7 +77,7 @@ nav: governance
 
   <h3>A profile authority can change a verdict without anyone touching the document</h3>
   <p>When a profile authority tightens a published profile, existing revisions that conformed to it may stop conforming. The verdict changes even though no producer acted and no document changed. Only the profile authority has this power. No other role in the model can change a verdict in this way.</p>
-  <p>This power has two consequences. First, a profile authority that revises a published profile should state what happens to documents that conformed to the previous version. This is the grace-window question recorded as Q15. Second, the earlier verdict can be checked only if the superseded profile text is kept. That is the purpose of the archive obligation set out under "The archive obligation". Without the superseded text, the old claim cannot be reproduced, and nobody can show that the change was a tightening rather than a rewrite.</p>
+  <p>This power has two consequences. First, a profile authority that revises a published profile should state what happens to documents that conformed to the previous version. The profile does this with a grace period. It states a recommended period and the date it ends, and a contract may set a different one. Until that date the validator reports the tightened rule as a warning, not a failure. Second, the earlier verdict can be checked only if the superseded profile text is kept. That is the purpose of the archive obligation set out under "The archive obligation". Without the superseded text, the old claim cannot be reproduced, and nobody can show that the change was a tightening rather than a rewrite.</p>
 
   <h3>Where public and restricted variants separate</h3>
   <p>A CBOM can exist in two variants: a public variant that anyone may hold, and a restricted variant released only to named recipients. The two variants separate at Create, not at Publish. The markers that make a document public are written into the document itself. A producer therefore creates two documents, signs both, and publishes each to its own audience. The two must also be superseded together. If a new restricted revision is issued without a matching public revision, the public record describes a version that no longer exists.</p>
@@ -110,7 +110,7 @@ nav: governance
   <p>Provenance also has to account for information that is missing. Where an attribute is unavailable, the record should state whether the producer lacks the information or is withholding it, rather than leaving the field empty. See the discussion in <a href="challenges.html">Challenges</a>.</p>
 
   <h2>Relating a CBOM to an SBOM</h2>
-  <p>Cryptography does not exist apart from the software and hardware that implement it, so a CBOM is of limited use without some way to reach the component context. There is more than one way to arrange that, and the choice is a governance decision. It determines what is signed, who is accountable for which document, how often each is regenerated, and what a consumer has to fetch before it can act.</p>
+  <p>Cryptography always lives in software or hardware. A CBOM is therefore of limited use unless the reader can reach the components that implement it. There is more than one way to arrange that, and the choice is a governance decision. It determines what is signed, who is accountable for which document, how often each is regenerated, and what a consumer has to fetch before it can act.</p>
   <p>Four arrangements are in use. Arrangements A and B each produce a single document. Arrangements C and D each produce a pair of documents, with a reference from one to the other.</p>
   <figure>
     <svg viewBox="0 0 720 210" role="img" aria-label="Four arrangements side by side: a unified document holding software components and crypto assets, a standalone CBOM, a CBOM with an arrow to an SBOM, and an SBOM with an arrow to a CBOM" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11.5">
@@ -158,13 +158,13 @@ nav: governance
   <p>The advantage is that there is no reference to resolve and no second document to keep in step. A single signature covers the whole claim, one author is accountable, and a consumer holding the document has everything it needs. The disadvantage appears when the two kinds of data have different lifetimes or different owners. A vendor's software inventory changes on release. A deployment's cryptographic configuration can change without any software changing at all. Binding them into one artifact forces the slower-moving part to be republished whenever the faster-moving part changes. It also means that a consumer entitled to the software inventory necessarily receives the cryptographic detail as well.</p>
 
   <h3>B · Standalone CBOM</h3>
-  <p>The CBOM is a single document that describes cryptography without reference to any software inventory. This is the appropriate arrangement when the subject is not a software artifact, for instance an operator describing the cryptography observed on a service it did not build, or a survey of an estate assembled from network discovery.</p>
+  <p>The CBOM is a single document that describes cryptography without reference to any software inventory. This arrangement fits when the subject is not a piece of software. Examples are an operator describing the cryptography it observed on a service it did not build, or a survey of an estate built from network discovery.</p>
   <p>It is simple to produce and to distribute, and it avoids publishing software composition that the producer may not wish to disclose. However, it cannot answer the question that usually follows. If an algorithm needs replacing, the next question is which library implements it and whether that library can be updated. A standalone CBOM does not carry that information. The profile asks for <code>implementationPurl</code> to reduce this problem. That attribute names the implementing package even when no SBOM is linked.</p>
 
   <h3>C · CBOM referencing an external SBOM</h3>
   <p>The CBOM is the entry point and carries a reference to the SBOM for the same subject. A consumer starts from the cryptography and resolves outward to component detail when it needs it.</p>
   <p>The Keycloak product record is of this kind. It names the libraries that implement its interfaces, such as the OpenJDK 21 runtime in the image, so that rule I9 can be answered from the record itself. For the full component list it points to the companion SBOM of the same image, by BOM-Link and SHA-256 hash. Baseline rule R1 requires this pointer on every product record. See <a href="context.html">Context Pointers</a>.</p>
-  <p>This suits consumers whose question is cryptographic: migration planners, and anyone assessing an interface rather than a release. The two documents keep independent lifecycles, so a configuration change can produce a new CBOM revision without reissuing the SBOM. The cost is that the reference between the two documents has to be kept correct. A reference that names a document without pinning its revision will eventually point at something that has moved on, and a consumer that cannot resolve the reference is left with an incomplete picture and no indication that anything is missing.</p>
+  <p>This suits consumers whose question is cryptographic: migration planners, and anyone assessing an interface rather than a release. The two documents keep independent lifecycles, so a configuration change can produce a new CBOM revision without reissuing the SBOM. The cost is that the reference between the two documents has to be kept correct. A reference that names a document but not its revision will sooner or later point at something that has changed. A consumer that cannot follow the reference is left with an incomplete picture, and nothing tells it that something is missing.</p>
 
   <h3>D · SBOM referencing an external CBOM</h3>
   <p>The SBOM is the entry point and links to the CBOM as an external artifact. This is the arrangement the site describes for SPDX, because SPDX 3.0.1 has no cryptographic object model, so the practical option today is an SPDX SBOM alongside a CycloneDX CBOM.</p>
@@ -197,49 +197,48 @@ nav: governance
     <li><strong>Retain both documents for the same period.</strong> A retained CBOM whose SBOM has been deleted is an audit record that can no longer be interpreted.</li>
   </ul>
 
-  <div class="banner good">A defensible default is to use a unified document for a product CBOM generated at build time. In that case the software and cryptographic views share an author and a release cadence. For an operator or service CBOM, use a referenced pair, because the cryptographic configuration changes independently of any software release. Where the consumer requires SPDX, arrangement D is currently the only option. The reference should then be treated as part of the deliverable rather than as a convenience.</div>
+  <div class="banner good"><strong>Recommendation.</strong> The working group recommends one arrangement for each stage.
+    <ul>
+      <li><strong>A product CBOM generated at build time:</strong> a unified document (A), where the same team produces the software inventory and the CBOM on the same release cycle.</li>
+      <li><strong>Any other product CBOM, and every deployment record:</strong> a CBOM that points to its SBOM (C), because the cryptographic configuration changes without any software changing.</li>
+      <li><strong>Where the consumer requires SPDX:</strong> an SBOM that points to the CBOM (D), because it is the only arrangement available today. Treat the pointer as part of the deliverable, not as a convenience.</li>
+    </ul>
+    In CycloneDX, the pointer from a CBOM to its SBOM is an external reference of type <code>bom</code> that carries a SHA-256 hash, and each library points to its own SBOM entry by BOM-Link. A profile may require a particular arrangement.</div>
   <p>The Keycloak product record uses arrangement C. Its SBOM already exists as a separate document, and the record's reference rules <code>R1</code> and <code>R2</code> are there to exercise the pointers. A producer starting from nothing should still prefer arrangement A for a product CBOM generated at build time.</p>
 
   <h2>Evolution and change control</h2>
-  <p>Profiles, the controlled vocabulary, and the methodology evolve over time. Changes are managed through explicit versioning (see <a href="versioning.html">Versioning</a>), recorded decisions, and, within the working group, lazy consensus (a proposal is accepted unless someone objects). When a requirement is tightened, it takes effect only after a dated grace window. Vocabulary values are deprecated rather than removed. Both practices make changes predictable and auditable.</p>
+  <p>Profiles, the controlled vocabulary, and the methodology evolve over time. Changes are managed through explicit versioning (see <a href="versioning.html">Versioning</a>), recorded decisions, and, within the working group, lazy consensus (a proposal is accepted unless someone objects). When a requirement is tightened, it takes effect only after a dated grace window. Vocabulary values are deprecated rather than removed. Both practices make changes predictable and auditable. Publishing a new version in the register, with its changelog, counts as notice of the change. The register may also offer a feed that people can subscribe to. There is no duty to notify each user individually.</p>
   <p>The working group's own record is kept in the repository. Decisions taken while drafting are written up in <a href="https://github.com/pkic/cbom/tree/main/decisions">decisions/</a>, one file per decision. Each file states the options considered and what reversing the decision would involve. A decision is superseded rather than deleted. Unresolved items are collected in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a>, and each one is mapped to the methodology aspect that tracks it. Profiles follow the same practice. The example baseline profile carries a changelog that classifies each change as tightening, relaxing, or editorial. A producer can then tell from the record whether a new version requires further work from it.</p>
 
   <h2>Stewardship of profiles and mappings</h2>
   <p>Change control describes what happens when a profile is revised. Stewardship describes what happens over the years in which the profile is in use. It is a separate question because a profile outlives the circumstances that produced it. A conformance claim made against a profile can be examined long after the group that wrote the profile has disbanded. The claim is meaningful only if the profile it cites can still be obtained in the form it had at the time.</p>
   <p>Profiles and mappings need different treatment. A profile changes when its author decides to change it. A mapping changes because a carrier format changed. A carrier format is the concrete file format, such as CycloneDX or SPDX, in which a CBOM is written. Carrier formats change on a schedule that nobody in this working group controls. Mapping maintenance is therefore a continuing obligation. Profile maintenance is an occasional decision.</p>
 
-  <h3>Areas to be assigned</h3>
+  <h3>How profiles are looked after</h3>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th>Area</th><th>What has to be settled</th></tr></thead>
+    <thead><tr><th>Area</th><th>How it works</th></tr></thead>
     <tbody>
-      <tr><td><strong>Ownership</strong></td><td>Who maintains a profile after publication. A tiered arrangement is available: the working group owns the baseline, a sector body owns the profiles it derives, and the consortium maintains the register and the archive.</td></tr>
-      <tr><td><strong>Review cadence</strong></td><td>A stated review period, and a trigger on each carrier format release, so that a profile is examined on a schedule instead of when somebody notices a problem.</td></tr>
-      <tr><td><strong>Deprecation and withdrawal</strong></td><td>How a profile is retired, the minimum notice, and what becomes of claims that cite it. A withdrawn profile does not invalidate past claims, which were correct when made.</td></tr>
-      <tr><td><strong>Archive</strong></td><td>Every published version retained and served indefinitely, addressed by version. See below.</td></tr>
-      <tr><td><strong>Mapping maintenance</strong></td><td>Named responsibility for tracking each carrier format, and a method for recording that a stated limitation has been addressed upstream.</td></tr>
-      <tr><td><strong>Succession</strong></td><td>What happens when a working group closes or a sector body withdraws, including whether an unmaintained profile is transferred or marked dormant.</td></tr>
+      <tr><td><strong>Names</strong></td><td>The consortium keeps a register of profile names under <code>pkic.</code>. Anyone else names a profile in a name space they already control, such as their own domain written in reverse. The prefix <code>pkic.example</code> is reserved for examples.</td></tr>
+      <tr><td><strong>Ownership</strong></td><td>Ownership is tiered. The working group owns the baseline. A sector body owns the profiles it derives. The consortium runs the register and the archive.</td></tr>
+      <tr><td><strong>Succession</strong></td><td>If an owner stops maintaining a profile for a stated period, or a working group or sector body closes, ownership passes to the consortium.</td></tr>
+      <tr><td><strong>Signing and identity</strong></td><td>The publisher signs each published profile, which shows who published it. A conformance claim records the hash of the profile text, which names exactly one version of one file.</td></tr>
+      <tr><td><strong>Archive</strong></td><td>The publisher keeps every published version available, through the register, addressed by version. See below.</td></tr>
+      <tr><td><strong>Review cadence</strong></td><td>A stated review period, and a review whenever a carrier format is released, so that a profile is examined on a schedule and not only when somebody notices a problem. Still to be set.</td></tr>
+      <tr><td><strong>Deprecation and withdrawal</strong></td><td>How a profile is retired, the minimum notice, and what becomes of claims that cite it. A withdrawn profile does not invalidate past claims, which were correct when made. Still to be set.</td></tr>
+      <tr><td><strong>Statements about formats</strong></td><td>Every statement about a limitation of a carrier format names the format version it describes. See below.</td></tr>
     </tbody>
   </table>
   </div>
 
   <h3>The archive obligation</h3>
   <p>A conformance claim cites a profile version so that the result can be reproduced. An auditor examining a claim years later needs the text of that version as it stood when the claim was made, because a later version may require different things. If published versions are not retained and served, every claim becomes unverifiable as soon as the profile is revised. The conformance model depends on claims being reproducible.</p>
-  <p>Whoever publishes a profile therefore has an obligation. They must retain every published version indefinitely, addressable by its version identifier, and must not alter a published version in place. A correction is issued as a new version. Superseded CBOM revisions are treated the same way, for the same reason (see "Distribution, retention, and immutability").</p>
+  <p>Whoever publishes a profile therefore has an obligation. They must keep every published version available indefinitely, through the register, addressed by its version, and must never change a published version. A correction is issued as a new version. A claim records the hash of the profile text, so anyone can check the archived copy against it. Superseded CBOM revisions are treated the same way, for the same reason (see "Distribution, retention, and immutability").</p>
   <div class="banner warn">Conformance depends on this obligation. A profile published without a durable, versioned address undermines every claim that cites it, and the failure is not apparent until a claim is checked.</div>
 
   <h3>Mappings track something the group does not control</h3>
-  <p>A mapping states where each attribute sits in a concrete format. When CycloneDX or SPDX publishes a release, the mapping may become incomplete, or a limitation the documentation records may cease to be true. Neither event is triggered by anything the working group does, so neither will be noticed unless somebody is watching. Assigning that responsibility, and deciding how a superseded limitation is recorded, prevents the documentation from stating things about the formats that are no longer accurate.</p>
-
-  <h3>Related open questions</h3>
-  <p>Several questions already recorded in the open questions register belong to stewardship. They are best settled together rather than one at a time:</p>
-  <ul>
-    <li>who may publish under a consortium namespace, and who maintains the register;</li>
-    <li>whether a published profile is signed, and by whom;</li>
-    <li>who tracks the carrier formats;</li>
-    <li>whether raising the tested carrier version requires a profile version increment;</li>
-    <li>how long a producer has to comply when a profile is tightened.</li>
-  </ul>
+  <p>A mapping states where each attribute sits in a concrete format. When CycloneDX or SPDX publishes a release, the mapping may become incomplete, or a limitation the documentation records may stop being true. The working group does not control either event.</p>
+  <p>So every statement about a limitation of a format names the version it describes, for example "CycloneDX 2.0 has no object for a cryptographic relationship". A statement written this way stays true of that version and never goes out of date. When a new release appears, the statement is checked against it, and is either repeated for the new version or left as history. No one has to watch the formats for the documentation to stay accurate.</p>
 
   <h2>Distribution, retention, and immutability</h2>
   <p>Published CBOM revisions should be immutable. A correction or update is issued as a new revision rather than as a change to the existing one. A new revision replaces its predecessor but does not delete it. The registry governs access control and retention. Retention of superseded revisions provides the audit trail on which progress tracking and incident investigation depend.</p>
@@ -247,6 +246,7 @@ nav: governance
 
   <h2>Conformance-claim governance</h2>
   <p>A conformance claim references the profile version, the carrier format version, and the CBOM content revision (see <a href="versioning.html">Versioning</a>). Claims are recorded so that a stated result can be reproduced and audited. A claim that omits any of these three references is not reproducible. The form of a claim, the identification of the party making it, and the distinction between a self-declared and an attested claim are specified in <a href="conformance.html">Conformance</a>.</p>
+  <p>A claim stays true about the exact revision it names. Nothing happens to it when a newer revision is published. Whether that revision is still current is a judgement, so it belongs in policy, not in the document. A consumer's policy can set its own limit, for example to accept only claims about a revision issued in the last twelve months.</p>
 
   <h2>Confidentiality and disclosure</h2>
   <p>Governance also addresses the boundary between disclosure and the protection of intellectual property. A profile sets the minimum that must be disclosed. Governance covers information beyond that minimum, including any redaction policy and the conditions under which more detailed CBOMs are shared. <a href="confidentiality.html">Confidentiality</a> explains how a public and a restricted variant of one document relate to each other and to the profiles they satisfy. It also explains why two risks belong to governance rather than to a profile: the risk from combining many CBOMs (aggregation) and the risk from comparing successive CBOMs (differencing). Both are questions about distribution. See also the discussion of how much detail a CBOM discloses (depth of disclosure) in <a href="challenges.html">Challenges</a>.</p>
@@ -257,7 +257,7 @@ nav: governance
     <a href="versioning.html">← Versioning</a>
     <a class="next" href="terms.html">Next: Terms →</a>
   </div>
-  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>
 </div>
 </body>

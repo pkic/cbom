@@ -150,7 +150,7 @@ nav: formats
   </div>
   <p>Property names in the table omit the <code>pkic:profile:</code> prefix. The full mapping, with every attribute of the family, is in <a href="mapping-cyclonedx-spdx.md">mapping-cyclonedx-spdx.md</a>.</p>
 
-  <div class="banner warn"><strong>The SPDX entries for the document-level rules and the interface classifiers are unresolved: P1 to P6, I6, I7, I8, I11, G1 and interface identity.</strong> I1 to I5 reach their values <em>via a linked CycloneDX CBOM</em>, which means the SPDX document references one external artifact. The SPDX document therefore contains one element for the linked CBOM, not one element per interface. As a result, SPDX has no element to which a per-interface annotation could be attached, and no set of elements that could be counted. Decision 0016 keeps these rows unresolved deliberately, and a conformance claim on an SPDX carrier states that document-level rules were not evaluable. The joins and the context pointers are not mapped to SPDX, because SPDX 3 is not a target carrier. The options, and the contributor expertise needed to choose between them, are set out in the <a href="mapping-cyclonedx-spdx.md">mapping document</a> and recorded as Q48.</div>
+  <div class="banner warn"><strong>Only the CycloneDX side of the mapping has been tried against real documents. The SPDX side is untested, and the working group would welcome a member with SPDX experience to build a first example. The SPDX entries for the document-level rules and the interface classifiers are unresolved: P1 to P6, I6, I7, I8, I11, G1 and interface identity.</strong> I1 to I5 reach their values <em>via a linked CycloneDX CBOM</em>, which means the SPDX document references one external artifact. The SPDX document therefore contains one element for the linked CBOM, not one element per interface. As a result, SPDX has no element to which a per-interface annotation could be attached, and no set of elements that could be counted. Decision 0016 keeps these rows unresolved deliberately, and a conformance claim on an SPDX carrier states that document-level rules were not evaluable. The joins and the context pointers are not mapped to SPDX, because SPDX 3 is not a target carrier. The options, and the contributor expertise needed to choose between them, are set out in the <a href="mapping-cyclonedx-spdx.md">mapping document</a> and recorded as Q48.</div>
 
   <h2>Perspectives: informative companions</h2>
   <p>CycloneDX 2.0 adds perspectives. A perspective names a domain and lists JSONPath expressions into a document, each marked required, recommended or optional. Generic 2.0 tools can use a perspective to filter a document and check that expected fields are present, without the PKIC validator.</p>
@@ -172,7 +172,7 @@ nav: formats
 
   <h3>Why it matters</h3>
   <p>Every automated use of a CBOM depends on matching a value against something, whether a policy, a deprecation list, a vulnerability feed, or the same attribute in another CBOM. Those matches are exact. A value that means the right thing but is written differently will not match, and nothing in the process reports an error. A policy engine looking for AES-256-GCM that encounters <code>AES256</code> finds no match. Depending on how the rule is written, it treats the interface either as compliant or as having no encryption at all. Both results are incorrect, and both look like ordinary output.</p>
-  <p>The problem grows with the size of the estate. A single supplier using an unusual spelling can be handled by hand. The same variance across many suppliers and a large number of interfaces makes estate-wide questions impractical to answer, such as how many interfaces still use a deprecated algorithm, or which services an advisory affects. Inconsistent naming seen in real deployments is the reason the registry was introduced.</p>
+  <p>The problem grows with the size of the estate. A single supplier using an unusual spelling can be handled by hand. Across many suppliers and many interfaces, the same variation makes estate-wide questions impractical to answer. Examples are how many interfaces still use a deprecated algorithm, and which services an advisory affects. Inconsistent naming seen in real deployments is the reason the registry was introduced.</p>
 
   <h3>What the registry solves</h3>
   <p>CycloneDX 1.7 introduced the Cryptography Registry, which assigns stable identifiers to algorithm families and their parameters. Elliptic curve names show the problem clearly. The same curve is commonly written three ways, depending on which standards body or library the producer follows:</p>
@@ -197,13 +197,13 @@ nav: formats
     <li>Aggregation depends on it. Counting how many interfaces across an estate still run a given protocol version is a routine migration question. It cannot be answered by grouping on inconsistent strings.</li>
     <li>Sector vocabularies differ. The same interface may be named by a 3GPP reference point in one document and by its IETF protocol in another. Without a canonical protocol identity these do not reconcile.</li>
   </ul>
-  <p>The mapping therefore specifies the expected form for protocol type and version. An adapter normalizes what it receives before any rule is evaluated. Where a registry provides protocol identifiers, those are preferred for the same reasons they are preferred for algorithms.</p>
+  <p>The working group therefore keeps a short list of protocol names in <a href="terms.html#protocols">Terms</a>. Each name points to the protocol's own specification, and the version is written as that specification writes it, for example <code>1.3</code> for TLS. A protocol that is not on the list is recorded as <code>other</code>, with a pointer to its specification, and can be proposed for the list. An adapter normalizes what it receives before any rule is evaluated. Where a registry provides protocol identifiers, they are preferred, for the same reasons as for algorithms.</p>
 
   <div class="pagenav">
     <a href="method.html">← Method</a>
     <a class="next" href="data-exposure.html">Next: Data Exposure →</a>
   </div>
-  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>
 </div>
 </body>

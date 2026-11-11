@@ -1,7 +1,7 @@
 # CBOM Profile — Interface Disclosure Baseline (Example v0.9)
 
-> **Status:** Illustrative early-concept artifact for the PKIC CBOM Profiles Working Group.
-> Not a normative deliverable. The machine-readable rules are in
+> **Status:** Draft for comment from the PKIC CBOM Profiles Working Group. Positions are
+> settled provisionally and can be reopened. The machine-readable rules are in
 > `profile-interface-disclosure.rules.json`, and that file is normative for the example. The
 > CycloneDX 2.0 perspective in `perspectives/perspective-interface-disclosure.cdx.json` is
 > generated from the rules and is informative only.
@@ -575,7 +575,7 @@ Recorded as decision 0009, which reverses the clause in 0008 that rejected orien
 | Added **P3**: the document identifies the subject it describes, in the form the profile names | tightening | A document that did not carry a subject identifier no longer conforms. A name and a version are not sufficient: two documents about the same product have to agree on the identifier for either to be usable as a record |
 | Added **P4**: the product states how complete its declared interface set is. Moved down from the migration profile | tightening | A document carrying no completeness statement no longer conforms. Settles Q34 |
 | Revised **P2**: satisfied by declaring a management interface **or** by stating why there is none | relaxing, deliberately | A subject with no administrative surface, such as a library, a hardware token or an embedded component, previously failed while hiding nothing. It can now say so. Silence still fails: a stated absence is a fact, and this is the disclosure model applied to structure |
-| Declared `identifierSchemes` and referenced them from I1, I3, I4, I5, I9 and P3 | editorial | None yet. The profile previously constrained the form of the least contested identifier, the implementing library, and left the most contested free, so free text satisfied `protocol` and `keyExchange`. Naming the required scheme is what makes correlation across suppliers possible. Whether the algorithm scheme should be the CycloneDX registry is Q20 and is unsettled |
+| Declared `identifierSchemes` and referenced them from I1, I3, I4, I5, I9 and P3 | editorial | None yet. The profile previously constrained the form of the least contested identifier, the implementing library, and left the most contested free, so free text satisfied `protocol` and `keyExchange`. Naming the required scheme is what makes correlation across suppliers possible. The algorithm scheme is the CycloneDX Cryptography Registry where an entry exists (Q20, settled provisionally) |
 
 The P2 change was the first relaxing change in the baseline's history, and it is worth being
 explicit about why it is not a weakening. The rule exists to catch omission. A document that omits

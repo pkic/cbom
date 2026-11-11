@@ -403,8 +403,8 @@ nav: uc-substation
 </div>
 <p><strong>Dependencies:</strong></p>
 <ul>
-<li>The update-path attributes are now part of the change core, so the IoT profile uses them too. If IoT question Q63 (permanent versus temporary limits) changes them, both profiles change with them.</li>
-<li>Open question Q68 asks how the overlay's verdict relates to the component documents it cites.</li>
+<li>The update-path attributes are now part of the change core, so the IoT profile uses them too. A hard limit, such as a frame size fixed by a radio standard, is recorded with <code>resourceBound</code>, and both profiles use it.</li>
+<li>The overlay's verdict covers the integrator's own statements. The verdict on each component document is reported beside it.</li>
 <li>The scope declaration (decision 0008) must accept a whole system, not only a product, as the subject of a CBOM.</li>
 </ul>
   <figure>
@@ -431,7 +431,7 @@ nav: uc-substation
       <rect x="20" y="288" width="685" height="34" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-dasharray="5 4"/>
       <text x="362" y="309" fill="#5b6472" text-anchor="middle">Operator: how many substations use this design, and its migration register. Outside both profiles</text>
     </svg>
-    <figcaption>Two kinds of document. Each supplier describes one product, which it can see in full. The integrator describes how the products are put together, and cites the supplier documents rather than repeating them. It is still an open question what the system verdict says about a component that conforms to no profile (Q68).</figcaption>
+    <figcaption>Two kinds of document. Each supplier describes one product, which it can see in full. The integrator describes how the products are put together, and cites the supplier documents rather than repeating them. The system verdict covers the integrator's statements, and each component's own verdict is reported beside it, including a component that conforms to no profile.</figcaption>
   </figure>
 <p><strong>No edge object.</strong> An edge object would treat a path between devices as an object with its own facts. The methodology does not define one. Decision 0026 represents a connection as the join of its two ends, through a <code>peerInterface</code> pointer in a deployment record, and leaves facts about a whole path to the inventory. In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so this use case needs no more than that join. A fact that belongs to the path itself, such as an end-to-end GOOSE transfer time, would need more. That fact is an operator requirement, so it stays out of the profiles.</p>
 <h2>5. The worked example</h2>
@@ -619,7 +619,7 @@ nav: uc-substation
     <a href="iot.html">← IoT Device Estate</a>
     <a class="next" href="proposing.html">Next: Proposing a Use Case →</a>
   </div>
-  <div class="foot">PKIC CBOM Profiles Working Group · illustrative documentation.</div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>
 </div>
 </body>

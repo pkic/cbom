@@ -39,7 +39,7 @@
 #   example    (optional) true marks a placeholder entry.
 
 meta:
-  updated: 2026-09-30
+  updated: 2026-11-11
   timezone: Europe/Zurich
   tool: Formbricks
   # Shown with every open single-use poll.
@@ -48,4 +48,35 @@ meta:
     once and needs no account. If yours has not arrived, write to the working group
     mailing list, cbom@lists.pkic.org.
 
-polls: []
+polls:
+
+  # Prepared, not yet sent. Set the dates, create the survey in Formbricks with the same
+  # questions in the same order, send the links, then set published: true.
+  - id: ratify-provisional-positions-2026-11
+    title: Ratify the provisional positions and the decision records
+    opens: 2026-11-18
+    closes: 2026-12-02
+    access: single-use
+    published: false
+    meeting: 19
+    questions:
+      - id: publication-1
+        text: "Accept the provisional positions for Publication 1, Foundations (Q02, Q07, Q19, Q65), as recorded in the open questions register"
+        options: [Agree, Disagree, Abstain]
+        comment: true
+      - id: publication-2
+        text: "Accept the provisional positions for Publication 2, Profiles and conformance (N02 and 28 questions), as recorded in the open questions register"
+        options: [Agree, Disagree, Abstain]
+        comment: true
+      - id: publication-3
+        text: "Accept the provisional positions for Publication 3, Applying the methodology (N01 and 15 questions), as recorded in the open questions register"
+        options: [Agree, Disagree, Abstain]
+        comment: true
+      - id: publication-4
+        text: "Accept the provisional positions for Publication 4, Use cases (13 questions), as recorded in the open questions register"
+        options: [Agree, Disagree, Abstain]
+        comment: true
+      - id: decision-records
+        text: "Accept decision records 0001 to 0022, 0025 and 0026, which are now marked Proposed"
+        options: [Agree, Disagree, Abstain]
+        comment: true

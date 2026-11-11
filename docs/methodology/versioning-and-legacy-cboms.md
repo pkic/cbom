@@ -1,6 +1,6 @@
 # Handling older CBOM files
 
-> **Status:** Illustrative design note for the PKIC CBOM Profiles Working Group.
+> **Status:** Design note for the PKIC CBOM Profiles Working Group, draft for comment.
 > Descriptive; not normative. Uses the Keycloak 26.7.3 worked example and the consolidated
 > baseline of 25 October 2026 (decision 0025).
 

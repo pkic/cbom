@@ -805,7 +805,7 @@ F2.push({min:0,next:null,render:()=>`${head('decision','Name the profile, then c
   ${dash(['Write down the reader, the decision and the actions before you ask for a CBOM.','Ask for conformance to a named profile and version. Never ask for "your CBOM" or for "everything".','Check conformance with a validator before you rely on a document.','Treat <span class="mono">withheld</span> as a position to negotiate and <span class="mono">undeclared</span> as a defect to fix.','Keep verdicts such as post-quantum readiness in versioned policy, outside the CBOM.','Ask for a deeper profile when your decision needs facts the baseline never collected.'])}
   <div class="nextup"><button class="btn" data-goto="F3">Next module: F3 Why CBOM data is hard to use today →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Introduction, Use Cases, Profile and Demo; Interface Disclosure Baseline v0.9 and its Keycloak 26.7.3 example CBOMs in CycloneDX 2.0.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. Field names follow CycloneDX 2.0 (2.0-dev, commit 76f185c, pinned until Ecma ratifies the release); CycloneDX 1.6 and 1.7 documents are read as legacy.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally. Field names follow CycloneDX 2.0 (2.0-dev, commit 76f185c, pinned until Ecma ratifies the release); CycloneDX 1.6 and 1.7 documents are read as legacy.</p>`});
 
 /* ================= F3 Why CBOM data is hard to use today ================= */
 const FIG_SEQ=`<svg viewBox="0 0 720 230" role="img" aria-label="Two sequences over three years. In the first, the minimum is met every year and nothing says what comes next. In the second, each deferred subject carries a status, which moves from planned to in progress to a deeper profile being met.">
@@ -988,7 +988,7 @@ F3.push({min:0,next:null,render:()=>`${head('warn','Why CBOM data is hard to use
   ${dash(['Ask for consistent information through a profile and mapping, not for one format.','When a profile defers a subject, require a status for it.','Normalize names on intake, and read each value from the location the mapping defines.','Require an explicit lifecycle stage and the four disclosure outcomes.','State the identifier form you need for each asset class in the profile you cite.'])}
   <div class="nextup"><button class="btn" data-goto="F4">Next module: F4 CBOMs and the cryptographic inventory →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Challenges; 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026); CycloneDX 1.7 / ECMA-424 2nd edition and the Cryptography Registry; SPDX 3.0.1.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. Positions on the formats reflect the draft and may have moved.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally. Positions on the formats reflect the draft and may have moved.</p>`});
 
 /* ================= F4 CBOMs and the cryptographic inventory ================= */
 const FIG_INV=`<svg viewBox="0 0 720 240" role="img" aria-label="A vendor CBOM, a build CBOM and a runtime or configuration scan feed a normalization step, which forms the cryptographic inventory. The inventory supports risk, compliance, migration and supply-chain requests.">
@@ -1167,7 +1167,7 @@ F4.push({min:0,next:null,render:()=>`${head('inventory','CBOMs and the cryptogra
   ${dash(['Record the join key behind every merge, and build a stable key for interfaces.','Specify the identifier form suppliers must use for each asset class.','Validate CBOMs against the same profile on the way in and on the way out.','Mark redactions as withheld, record provenance, and sign what you release.','Compose path posture in the inventory, separately for each relationship.','Link to business context. Do not copy it into the CBOM.'])}
   <div class="nextup"><button class="btn" data-goto="F5">Next module: F5 Cryptographic data across the lifecycle →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Inventory, Challenges and Governance; 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026).</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally.</p>`});
 
 /* ================= F5 Cryptographic data across the lifecycle ================= */
 const FIG_STAGES=`<svg viewBox="0 0 720 290" role="img" aria-label="A timeline of four lifecycle stages. Design gives intended, produced by architects. Build gives implemented, produced by development. Deploy gives configured, produced by integrators. Runtime gives observed, produced by operations. A bracket from Build to Runtime marks the readiness gap.">
@@ -1311,7 +1311,7 @@ F5.push({min:0,next:null,render:()=>`${head('lifecycle','Cryptographic data acro
   <div class="concept" style="margin-top:22px"><small>FOUNDATION TRACK COMPLETE</small>You have finished the Foundation modules. The Concepts track starts with C1 Relationships, endpoints and assets.</div>
   <div class="nextup"><button class="btn" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Lifecycle Data, Inventory and Versioning; 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026), SBOM Generation Context.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally.</p>`});
 
 /* ================= A1 Writing a profile: the method ================= */
 const A1_FIG_ONE=`<svg viewBox="0 0 720 230" role="img" aria-label="One unchanged Keycloak product record conforms to five profiles: interface enumeration, the interface disclosure baseline, PQC migration, its extended depth, and procurement.">
@@ -1527,7 +1527,7 @@ A1.push({min:0,next:null,render:()=>`${head('method','Writing a profile: the met
   ${dash(['State the decision as a choice and record at least two options.','Set the boundary and the scope before you choose a single attribute.','Derive questions in the consumer\'s words, then turn each one into an attribute that could be wrong.','Move every judgement to a versioned policy, and name attributes after what they disclose.','Put structural rules in the shallowest depth, and ask for a status on anything a depth defers.','Build a conforming and a failing example, and run them before you publish.'])}
   <div class="nextup"><button class="btn" data-goto="A2">Next module: A2 Worked example: PQC migration profiles →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Starting from a Use Case, Method, Profile; the PQC migration rules files and the Keycloak 26.7.3 example documents.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. The method itself is a proposal for the working group to accept, amend or reject.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally. The twelve steps are guidance. Requirements C1 to C18 say what a finished profile must contain.</p>`});
 
 /* ================= A2 Worked example: PQC migration profiles ================= */
 const A2_FIG_IFACES=`<svg viewBox="0 0 720 320" role="img" aria-label="Keycloak 26.7.3 presents thirteen interfaces in five types. Seven are TLS interfaces provided by the Java runtime. Four are application-layer interfaces implemented by Keycloak. Plain HTTP has no protection, and the realm key store is a storage interface.">
@@ -1715,7 +1715,7 @@ A2.push({min:0,next:null,render:()=>`${head('key','Worked example: PQC migration
   ${dash(['Plan migration one interface at a time, and treat a token signature and its TLS carrier as separate interfaces.','Ask for capability per cryptographic purpose, as a status and a blocker.','Keep target releases in a roadmap entry that interfaces reference, never as dates in the CBOM.','Treat a standard blocker as a reason to stop waiting and prepare compensating measures.','Ask for the extended depth when you need to sequence key management, storage and dependent services.','Insist on the implementing library: it decides whether an update path exists.'])}
   <div class="nextup"><button class="btn" data-goto="A3">Next module: A3 Encoding →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Use Cases, PQC Migration; profile-pqc-migration.rules.json v0.8 and profile-pqc-migration-extended.rules.json v0.1; the Keycloak 26.7.3 example documents and roadmap context example.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. Attribute names are proposals made for this example, and the roadmap document is not a statement by the Keycloak project.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally. Attribute names are proposals made for this example, and the roadmap document is not a statement by the Keycloak project.</p>`});
 
 /* ================= A3 Encoding: CycloneDX, SPDX and versions ================= */
 const A3_FIG_CARRIERS=`<svg viewBox="0 0 720 230" role="img" aria-label="One PKIC CBOM profile is written once. A mapping places each attribute in a carrier format. CycloneDX 2.0 is the target carrier. CycloneDX 1.6 and 1.7 are read as legacy. SPDX 3.0.1 has no cryptographic model, so an SPDX SBOM links to a CycloneDX CBOM.">
@@ -1946,7 +1946,7 @@ A3.push({min:0,next:null,render:()=>`${head('mapping','Encoding: CycloneDX, SPDX
   ${dash(['Write each fact in the location the mapping names, even when the format allows another.','Record offered groups in cipher suites and used algorithms in related assets. Never mix the two.','Put <span class="mono">interfaceType</span> on every interface, so the validator can count them.','Normalize algorithm, curve and protocol names at the adapter, before any rule runs.','Convert 1.x files with the converter rather than rejecting them, and expect no new facts from it.','Name the profile version, the carrier version and the content revision in every claim.'])}
   <div class="nextup"><button class="btn" data-goto="A4">Next module: A4 Governance: signing, provenance and the SBOM link →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Formats, Versioning, mapping-cyclonedx-spdx.md and versioning-and-legacy-cboms.md; Keycloak 26.7.3 product record in CycloneDX 2.0 and its 1.7 legacy copy; cdx17_to_20.py; CycloneDX 2.0-dev (commit 76f185c).</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. CycloneDX 2.0 is unreleased; field locations follow the pinned development commit and may move at release.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally. CycloneDX 2.0 is unreleased; field locations follow the pinned development commit and may move at release.</p>`});
 
 function A3_fig(svg,cap){return fig(svg,cap)}
 const A3_FIG_NORM=`<svg viewBox="0 0 720 200" role="img" aria-label="Left: P-256, secp256r1 and prime256v1 all resolve to one curve, written nist/P-256 in CycloneDX 2.0. Right: 1.3, TLS 1.3, TLSv1.3 and 0x0304 all resolve to one protocol version.">
@@ -2131,7 +2131,7 @@ A4.push({min:0,next:null,render:()=>`${head('signed','Governance: signing, prove
   <div class="concept" style="margin-top:22px"><small>APPLYING IT TRACK COMPLETE</small>You have finished the Applying it modules. The Electives cover the use-case groups, sector examples and data exposure.</div>
   <div class="nextup"><button class="btn" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Governance, Versioning and Context Pointers; Deployment Disclosure profile v0.2 (rule P1 and correspondsTo); Keycloak 26.7.3 product and deployment records in CycloneDX 2.0; 2026 Minimum Elements for an SBOM (CISA et al., 29 Jul 2026).</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally.</p>`});
 
 /* ================= C1 Relationships, endpoints and assets ================= */
 const C1_FIG_TERMS=`<svg viewBox="0 0 720 230" role="img" aria-label="A browser and Keycloak are the two endpoints. The TLS 1.3 session on Keycloak's HTTPS listener between them is the relationship. X25519, AES-256-GCM, the server certificate and OpenJDK 21 are assets used by the relationship.">
@@ -2321,7 +2321,7 @@ C1.push({min:0,next:null,render:()=>`${head('relation','Relationships, endpoints
   ${dash(['Declare one interface per layer that applies its own cryptography, whatever the port.','Record facts about use on the interface, not on the nearest asset.','State a purpose per relationship, and let one asset serve several purposes.','Declare every hop, including plaintext ones behind a proxy.','Keep product and deployment records apart, and join them with correspondsTo.','Report readiness per interface and per purpose, never per product.'])}
   <div class="nextup"><button class="btn" data-goto="C2">Next module: C2 Anatomy of a profile →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Model, Objects and Terms; Keycloak 26.7.3 product, configured and observed example records; readiness-gap example policy and result.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally.</p>`});
 
 /* ================= C2 Anatomy of a profile ================= */
 const C2_FIG_RECORDS=`<svg viewBox="0 0 720 210" role="img" aria-label="One baseline profile serves two subject types. The vendor writes a product record at the implemented stage, identified by a Package URL. The operator writes deployment records at the configured and observed stages, identified by a tag URI. The profile is the specification for each producer and the checklist for each consumer.">
@@ -2523,7 +2523,7 @@ C2.push({min:0,next:null,render:()=>`${head('rules','Anatomy of a profile','Summ
   ${dash(['Write rules about kinds of interface, never about one product\'s instances.','Keep one subject and one stage per document, and declare both.','Use deployment-defined and peer-defined only in a build record, and point to configuration guidance.','Mark a value unknown or withheld rather than leaving it out.','Point to context by hash or access protocol; do not copy it in.','When you derive a profile, pin the base version and only tighten what you inherit.'])}
   <div class="nextup"><button class="btn" data-goto="C3">Next module: C3 Conformance →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Profile and Objects; Interface Disclosure Baseline v0.9 rules file; Keycloak 26.7.3 example records and claim-example.json.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally.</p>`});
 
 /* ================= C3 Conformance: what a verdict means ================= */
 const C3_FIG_DEP=`<svg viewBox="0 0 720 236" role="img" aria-label="A verdict comes from evaluating one document revision against one profile version with an evaluation tool. The verdict counts only if the profile is well-formed and the tool conforms.">
@@ -2696,7 +2696,7 @@ C3.push({min:0,next:null,render:()=>`${head('verdict','Conformance: what a verdi
   ${dash(['Name what was assessed: the document revision, the profile version and the carrier version.','Report a refusal apart from a failure, and never merge the two.','Read the disclosure outcome of every rule, not only the verdict.','When you evaluate a deployment record, supply the records it cites, or read the unresolved list.','Write a requirement at MUST level if it should decide the verdict.','Keep the claim with the document, and evaluate again for each new revision or profile version.'])}
   <div class="nextup"><button class="btn" data-goto="C4">Next module: C4 Depth families →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Conformance, Profile and Versioning; claim-example.json; validate_cbom.py and check_profile.py; Keycloak 26.7.3 example records in CycloneDX 2.0.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally.</p>`});
 
 /* ================= C4 Depth families: start shallow, then go deeper ================= */
 const C4_FIG_LADDER=`<svg viewBox="0 0 720 300" role="img" aria-label="Keycloak example documents placed against two depths. Untargeted scanner output sits below the entry profile. Three documents conform to Interface Enumeration but not to the baseline. The full product record conforms to the Interface Disclosure Baseline.">
@@ -2842,7 +2842,7 @@ C4.push({min:0,next:null,render:()=>`${head('ladder','Depth families','Summary')
   ${dash(['Set the entry depth where a producer starting today can reach it.','Order the family so that each depth contains the one below, and check that it does.','Tell depths from branches by comparing the decision and the orientation.','Ask for a named profile and version, with a date for the next depth.','Use the validator report as the work list between two depths.'])}
   <div class="nextup"><button class="btn" data-goto="C5">Next module: C5 Public and restricted CBOMs →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Maturity, Related Work, Profile and Conformance; tests/check-family.py output; Keycloak 26.7.3 example records.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally.</p>`});
 
 /* ================= C5 Public and restricted CBOMs ================= */
 const C5_FIG_EXTRACT=`<svg viewBox="0 0 720 230" role="img" aria-label="One cryptographic inventory feeds one extraction step, run at two redaction settings. One setting produces the public variant, the other the restricted variant. A public variant edited by hand from the restricted one is a third document with no source.">
@@ -2994,7 +2994,7 @@ C5.push({min:0,next:null,render:()=>`${head('withheld','Public and restricted CB
   ${dash(['Produce both variants from the inventory in one extraction, at two redaction settings.','Replace a value with a withheld marker. Never delete it.','Derive the restricted profile from the public one by removing withholdability from the rules that matter.','Publish an audience step as a pair at one depth, and name the terms of receipt separately from the profile.','Give both variants the same subject and revision, and sign both.','Read the withheld list in a conformance claim, not only the verdict.'])}
   <div class="nextup"><button class="btn" data-goto="C6">Next module: C6 Facts, judgements and vulnerabilities →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Confidentiality, Profile, Maturity and Inventory; profile-pqc-migration.rules.json.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally.</p>`});
 
 /* ================= C6 Facts, judgements and vulnerabilities ================= */
 const C6_FIG_POLICY=`<svg viewBox="0 0 720 220" role="img" aria-label="The same CBOM facts are evaluated twice. Under the policy applied on 2026-10-25, RSA-2048 is acceptable. Under the same policy applied on 2031-01-01, it is deprecated. The facts have not changed; the judgement has.">
@@ -3161,7 +3161,7 @@ C6.push({min:0,next:null,render:()=>`${head('advisory','Facts, judgements and vu
   ${dash(['Keep verdicts out of the CBOM. Evaluate with a named policy version and record the date.','Bind every result to the policy and to each CBOM it read by SHA-256.','Use the readiness-gap classes to decide who acts on each interface.','Match implementation defects through I9 and the advisory endpoint, and read vendor statements through R2.','Remove withholdability from I9 in any profile that has to support incident response or migration.','Treat a passing verdict as a statement about disclosure, never about safety.'])}
   <div class="nextup"><button class="btn" data-goto="C7">Next module: C7 Context pointers →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Policy Evaluation, Vulnerabilities and Lifecycle Data; policy.schema.json, policy-result.schema.json and the readiness-gap and algorithm-transition example policies with their Keycloak results (evaluated 2026-10-25); NIST IR 8547 initial public draft.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. The example policies are illustrative and are not advice.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally. The example policies are illustrative and are not advice.</p>`});
 
 /* ================= C7 Context pointers ================= */
 const C7_FIG_POINT=`<svg viewBox="0 0 720 250" role="img" aria-label="The Keycloak product record carries no SBOM, VEX, configuration guidance, roadmap or advisories. It points to each. Documents are bound by a SHA-256 hash; endpoints name their access protocol.">
@@ -3324,7 +3324,7 @@ C7.push({min:0,next:null,render:()=>`${head('chain','Context pointers','Summary'
   <div class="concept" style="margin-top:22px"><small>CONCEPTS TRACK COMPLETE</small>You have finished the Concepts modules. The Applying it track starts with A1 Writing a profile.</div>
   <div class="nextup"><button class="btn" data-goto="A1">Next module: A1 Writing a profile →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
   <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Context Pointers, Vulnerabilities and Policy Evaluation; profile-interface-disclosure.rules.json, profile-deployment-disclosure.rules.json and profile-pqc-migration.rules.json; the Keycloak context examples under examples/context/.</p>
-  <p class="disclaimer">The methodology is illustrative and is not a normative deliverable of the PKIC CBOM Profiles Working Group. The Keycloak hashes and operator URLs are illustrative.</p>`});
+  <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally. The Keycloak hashes and operator URLs are illustrative.</p>`});
 
 const COURSES={F1,F2,F3,F4,F5,A1,A2,A3,A4,C1,C2,C3,C4,C5,C6,C7};
 
@@ -3346,7 +3346,7 @@ function hub(){
    <div class="paths">${Object.entries(PATHS).map(([k,p])=>`<button class="pathbtn" data-path="${k}" aria-pressed="${k===pathSel}">${p.label}</button>`).join('')}</div>
    <div class="pathnote">${PATHS[pathSel].note?PATHS[pathSel].note+' ':''}${ids?ids.length:MODULES.length} modules, about ${Math.round(tot/6)/10} hours.${ids?' Order: '+ids.join(' → '):''}</div>
    ${TRACKS.map(t=>{const ms=MODULES.filter(m=>m.id[0]===t.id);return `<div class="track"><div class="track-head"><h2>${t.name}</h2><span>${t.blurb}</span></div><div class="cards">${ms.map(card).join('')}</div></div>`}).join('')}
-   <p class="disclaimer" style="margin-top:36px">Built from the <a href="../methodology/">CBOM profiles methodology</a>, which is illustrative and not a normative deliverable of the working group. Send comments and corrections through the <a href="https://github.com/pkic/cbom/issues">working group issues</a>.</p>
+   <p class="disclaimer" style="margin-top:36px">Built from the <a href="../methodology/">CBOM profiles methodology</a>, which is a draft for comment from the working group. Send comments and corrections through the <a href="https://github.com/pkic/cbom/issues">working group issues</a>.</p>
   </section>`;
   document.querySelectorAll('[data-path]').forEach(b=>b.onclick=()=>{pathSel=b.dataset.path;store.set('path',pathSel);hub()});
   document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openModule(b.dataset.open));
