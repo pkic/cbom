@@ -62,3 +62,27 @@ worked interface.
 **R2-10 — A transparency-service annex for shared CBOMs.**
 From: the Assurance use case. Settled: a digest is SHA-256 over the published file, byte for byte.
 Left: whether an informative annex describes transparency services.
+
+## Application domains
+
+Items raised by the application domain documents after Release 1. The SaaS and cloud services
+domain document (Working Draft 0.1, 16 November 2026) proposes each of them.
+
+**R2-11 — The subject type `service` in the baseline and the change core.**
+From: the SaaS and cloud services domain document, 8.1. Settled: `service` is already a value in
+`profile.schema.json`. Left: adding it to the accepted subject types of the interface disclosure
+baseline, and later of the change core. A derived profile may narrow its base's subject types but
+never widen them, so no service profile can extend either until they accept `service`. Adding a
+subject type changes no rule for product or deployment records.
+
+**R2-12 — Key custody on storage interfaces.**
+From: the SaaS and cloud services domain document, 8.2 and Annex B. Proposed: `keyCustodySupported`
+on a service record's storage interfaces, as a set from `provider-managed`, `customer-managed` and
+`external`, and `keyCustody` on a tenant record, as one of those values. Left: the attribute list,
+the vocabulary, and the CycloneDX mapping.
+
+**R2-13 — A `change-notice` context kind.**
+From: the SaaS and cloud services domain document, chapter 7. Proposed: a context kind that points
+to where a provider announces changes, so that a customer's policy can judge whether the record it
+holds is current. Left: the context kind in the baseline's `contextKinds`, the CycloneDX reference
+types that can carry it, and a check under requirement C18.
