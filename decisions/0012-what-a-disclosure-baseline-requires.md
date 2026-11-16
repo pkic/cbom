@@ -89,8 +89,9 @@ history.
 subject and for the implementing library, a named registry for algorithms and protocols. **C14**
 checks that the declaration and the rules agree in both directions. It does not check that a value
 belongs to a registry — the checker does not hold the registry and would be guessing — which is
-stated rather than glossed. Q20 remains open; what is settled is that a profile says which naming
-it means.
+stated rather than glossed. Q20 was open when this record was written, and was settled provisionally on
+11 November 2026: a profile uses the file format's registry. What this record settles is that a
+profile says which naming it means.
 
 **Not changed, and deliberately.** I8 stays: it is the rule that tells a consumer how far to trust
 every other value. I6's `minCount: 2` bakes in the two-party assumption, which is Q08 and is

@@ -12,7 +12,7 @@
 # manages the methodology's footer links only — this section has few enough
 # pages that its previous/next links are written by hand.
 #
-# Groups follow draft decision 0023: each group opens with its group page, then
+# Use cases are grouped: each group opens with its group page, then
 # its worked use cases. Adding a worked use case means adding one line to its
 # group, and linking it from the register on index.html and from its group page.
 # The Template has a group of its own: it is the blank the others are copied

@@ -10,10 +10,10 @@ statements, and a buyer who asked for the second learns nothing from the first.
 Monotonic extension gives that implication structurally, and the validator
 enforces it wherever one profile declares `extends` another. The two profiles
 here do not: the Interface Disclosure Baseline was published first and does not
-name the entry profile as its base, because re-parenting it would move seven
+name the entry profile as its base, because re-parenting it would move nine
 rule ids to another profile tag and change every citation of them in the
-documentation, the tests and any report already issued. Whether to pay that is
-the group's call, recorded as Q51.
+documentation, the tests and any report already issued. The working group has
+provisionally decided not to pay that cost, so the two stay siblings.
 
 Until it is paid, the ladder is an assertion about two sibling profiles, and an
 assertion in this repository gets a check. This script requires that:

@@ -28,7 +28,7 @@ nav: maturity
 
   <h2>Depth uses existing mechanisms</h2>
   <p>A family of profiles of increasing depth needs no new mechanism. Everything it needs has already been decided, and is already checked. <a href="profile.html#composition">Profile</a> defines extension, in which one profile is derived from another. It also defines the two kinds of extension, depth and coverage. Extension is monotonic. A derived profile may add rules and tighten the rules it inherits, but it may never relax them. As a result, a document that conforms to the derived profile also conforms to the base profile. A rule id belongs to the profile that declares it, and is cited together with that profile's tag. The same rule therefore keeps its number as a family grows. A derived profile may also sharpen an inherited group of rules in place.</p>
-  <p>A depth is therefore not a new kind of object. <strong>A depth is a profile.</strong> Depth adds no new field, no new artifact type and no new kind of verdict (the conformance result a validator returns). A conformance claim is the statement that a document meets a profile. A claim already names each profile it covers by identity and version, so it already states which depth was met. A conformance report already lists the rules that were assessed to reach that result. The mechanism is therefore complete. Three things are still needed. The family's shallowest profile has to exist. Producers have to be able to reach it. It has to be published as part of a family, and not as a baseline that competes with the existing one.</p>
+  <p>A depth is therefore not a new kind of object. <strong>A depth is a profile.</strong> Depth adds no new field, no new artifact type and no new kind of verdict (the conformance result a validator returns). A conformance claim is the statement that a document meets a profile. A claim already names each profile it covers by identity and version, so it already states which depth was met. A conformance report already lists the rules that were evaluated to reach that result. The mechanism is therefore complete. Three things are still needed. The family's shallowest profile has to exist. Producers have to be able to reach it. It has to be published as part of a family, and not as a baseline that competes with the existing one.</p>
   <div class="banner">What depth adds is a set of working rules. Set the entry depth where a producer starting today can reach it. Order the family so that each depth contains the one below it. Require the consumer to name the depth it is asking for.</div>
 
   <h2>Why these are not called maturity levels</h2>
@@ -73,15 +73,15 @@ nav: maturity
         <td>A <strong>branch</strong>, not a greater depth. See below.</td>
       </tr>
       <tr>
-        <td><a href="profile-pqc-migration-extended.rules.json">PQC Migration Extended</a> v0.1</td>
+        <td><a href="profile-pqc-migration-extended.rules.json">PQC Migration Extended</a> v0.2</td>
         <td>Everything PQC Migration asks, and key management and storage: the key types the management interfaces can generate, where keys are stored, external dependencies, and storage interfaces declared or their absence stated.</td>
         <td>extends PQC Migration: adds P1, P2, I1–I10; tightens <code>pqc-migration#G1.4</code></td>
-        <td>One depth deeper <em>within</em> the migration branch. It serves the same decision with one added option, and the same orientation. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0022-pqc-migration-family-depths.md">decision 0022</a>.</td>
+        <td>One depth deeper <em>within</em> the migration branch. It serves the same decision with one added option, and the same orientation.</td>
       </tr>
       <tr>
-        <td><a href="profile-procurement.rules.json">Procurement</a> v0.1</td>
+        <td><a href="profile-procurement.rules.json">Procurement</a> v0.2</td>
         <td>For a product offered in a tender: a storage interface or a stated absence, coverage of all interfaces or all external ones, and the implementing library with no withholding.</td>
-        <td>extends the baseline: adds P5, P6; makes I9 non-withholdable</td>
+        <td>extends the baseline: adds P1, P2; makes I9 non-withholdable</td>
         <td>A branch. Its decision is whether a tender response is complete enough to compare and to hold the supplier to.</td>
       </tr>
       <tr>
@@ -90,14 +90,27 @@ nav: maturity
         <td>extends the baseline: adds P1, I1–I3 and R1–R4</td>
         <td>A branch. Its consumer is the operator, and its decision includes where a deployment falls short of what its products can do.</td>
       </tr>
+      <tr>
+        <td><a href="profile-change-core.rules.json">Change core</a> v0.1</td>
+        <td>The facts every change-planning profile asks for: capability per purpose and what blocks it, how a capability is enabled, coexistence, integration constraints, and whether new software and new keys can reach the product at all.</td>
+        <td>extends the baseline as a sibling of PQC Migration: shares P1, I1–I5, I7–I9, G1.1–G1.3, R1 and R2 under the same ids; adds P2 and I13–I16</td>
+        <td>A branch, kept in step with PQC Migration by <code>tests/check-core.py</code>.</td>
+      </tr>
+      <tr>
+        <td><a href="profile-pqc-migration-ot.rules.json">PQC Migration for substation components</a> v0.1</td>
+        <td>For a substation automation component: what enabling a capability costs in certification, where each service interface's keys come from, and whether the firmware verifier can change in the field.</td>
+        <td>extends the change core: adds I1–I4</td>
+        <td>A branch of the core. Its decision is the four actions of the substation use case.</td>
+      </tr>
     </tbody>
   </table>
   </div>
   <p>The entry profile declares each shared rule under the same id that the baseline uses for it. The gaps in the entry profile's numbering (no P2, no I3 to I6, no I9 to I11) therefore mark exactly the rules that the next depth adds. Reusing ids in this way is unambiguous because each id is cited together with a profile tag. The same rule appears in a report as <code>interface-enumeration#I1</code> at one depth and <code>interface-disclosure#I1</code> at the other, so a reader can see which profile's requirements were applied.</p>
-  <p>The Keycloak examples show that the entry depth is worth having. <code>cbom-keycloak-product-fail-P2.cdx.json</code> leaves out the management interfaces with no reason, so it fails product rule P2 of the baseline. It does conform to the entry profile. A producer in that position is still producing a usable document, but before the entry profile existed there was no profile for that document to conform to. Five more examples sit between the depths in the same way:</p>
+  <p>The Keycloak examples show that the entry depth is worth having. <code>cbom-keycloak-product-fail-P2.cdx.json</code> leaves out the management interfaces with no reason, so it fails product rule P2 of the baseline. It does conform to the entry profile. A producer in that position is still producing a usable document, but before the entry profile existed there was no profile for that document to conform to. Six more examples sit between the depths in the same way:</p>
   <ul>
     <li><code>cbom-keycloak-product-disclosure-states.cdx.json</code> declares one algorithm <code>unknown</code> and leaves another undeclared.</li>
     <li><code>cbom-keycloak-product-intended.cdx.json</code> is a design record for Keycloak 27.0 at the <code>intended</code> stage, which only the entry profile accepts.</li>
+    <li><code>cbom-keycloak-product-fail-R5.cdx.json</code> states <code>deployment-defined</code> on the HTTPS listener without a pointer to the configuration guide, so it fails baseline R5.</li>
     <li><code>cbom-keycloak-deployment-observed-fail-unknown.cdx.json</code> is an observed record whose database group is <code>unknown</code>. A record with gaps conforms one depth down.</li>
     <li><code>cbom-keycloak-deployment-configured-fail-literal.cdx.json</code> keeps <code>peer-defined</code> on the database connection at <code>configured</code>, which the baseline accepts only at <code>implemented</code>.</li>
     <li><code>cbom-keycloak-deployment-observed-outside.cdx.json</code> is an outside assessor's observation that cannot name the library at the ingress, so it fails baseline I9.</li>
@@ -106,11 +119,11 @@ nav: maturity
 
   <h2>Depth and branch are different relations</h2>
   <p>Depth and branch both use monotonic extension, and the extension mechanism treats them the same way. However, a family is planned and read differently depending on which of the two relations links its profiles.</p>
-  <p><strong>Depth</strong> asks for more information to support the same decision. The entry profile and the baseline serve one consumer with one question: which interfaces does a published weakness reach? The two profiles differ in how much they demand before that question can be answered. Both declare orientation <code>inventory</code>. A producer moves between them by disclosing more about the same interfaces.</p>
+  <p><strong>Depth</strong> asks for more information to support the same decision. The entry profile and the baseline serve the same consumer at two moments. The entry profile says which interfaces exist and what each one speaks. The baseline says which of them a published weakness reaches. Both declare orientation <code>inventory</code>. A producer moves between them by disclosing more about the same interfaces.</p>
   <p><strong>A branch</strong> serves a different decision. The migration profile is derived from the baseline, but its consumer is planning a migration, not maintaining an inventory. The migration profile therefore declares orientation <code>both</code> and asks for statements about a future state. A producer cannot reach it by disclosing more of the same facts, so a supplier at the entry depth is not two steps away from it. Suppose a branch were presented as a rung, meaning one step in the sequence of depths. Producers would then be told to work in the wrong order. Buyers would be told that a single number ranks suppliers who are in fact answering different questions.</p>
   <p>The two other branches follow the same reasoning. Procurement keeps the baseline's orientation, <code>inventory</code>, but serves a buyer deciding whether a tender response is complete enough to compare and to enforce. Deployment Disclosure also keeps <code>inventory</code>, but its consumer is the operator, and its decision adds a comparison the baseline cannot make: whether a deployment does what its products can do. PQC Migration Extended, by contrast, is a depth within the migration branch. It keeps the migration profile's decision, adds one decision option, and keeps the orientation <code>both</code>.</p>
-  <p>To tell a depth from a branch, compare the derived profile with its base. If the derived profile's <code>objective</code> states the same decision and its <code>scope.orientation</code> is the same, it is a depth. If either differs, it is a branch.</p>
-  <p>This test does not identify a third relation. Two profiles can state the same decision and the same orientation and differ only in their intended audience. For example, a profile can have the same rules as another, except that the producer may no longer withhold values for the contested rules, because the recipient is bound by an agreement. <a href="confidentiality.html">Confidentiality</a> explains why such a profile is published as a pair with its counterpart at the same depth, and not as the next depth up. A producer reaches it by signing an agreement, not by learning something new about its own product. Presenting it as a higher rung would place a producer that <em>will not tell you</em> on the same scale as a producer that <em>cannot tell you</em>.</p>
+  <p>To tell a depth from a branch, compare the derived profile with its base. If a producer can meet the derived profile by disclosing more about the same interfaces, and its <code>scope.orientation</code> is the same, it is a depth. Otherwise it is a branch.</p>
+  <p>This test does not identify a third relation. Two profiles can pass this test and differ only in their intended audience. For example, a profile can have the same rules as another, except that the producer may no longer withhold values for the contested rules, because the recipient is bound by an agreement. <a href="confidentiality.html">Confidentiality</a> explains why such a profile is published as a pair with its counterpart at the same depth, and not as the next depth up. A producer reaches it by signing an agreement, not by learning something new about its own product. Presenting it as a higher rung would place a producer that <em>will not tell you</em> on the same scale as a producer that <em>cannot tell you</em>.</p>
   <p>A fourth relation is not a relation between profiles. An <strong>overlay</strong> is a profile for a document that references other documents instead of describing a subject directly. An example is an integrator's system document that cites each supplier's component CBOM by digest. It states which of each supplier's interfaces are used and how the parts connect. An overlay is neither a deeper profile nor a branch, because it does not extend the component profile. It constrains a different document, whose facts are added on top of the facts in the component documents. The substation and service-assurance entries in the <a href="../use-cases/">use cases</a> both need one. An overlay's verdict covers the integrator's own statements. The verdict on each cited document is reported beside it, under the profile that document names. One weak supplier does not block the integrator, and nothing is hidden. This position is settled provisionally.</p>
 
   <h2>What makes a family a ladder</h2>
@@ -144,15 +157,16 @@ nav: maturity
   <p>This line is real output from <code>tests/check-family.py</code>. The check reports the gap in the same way for the other documents between the depths. The document that exercises the disclosure states falls short of the baseline on two rules: <code>interface-disclosure#I5</code> on the cluster interface, where the algorithm is <code>unknown</code>, and <code>interface-disclosure#I4</code> on the SAML interface, where it is undeclared. The observed record with an unknown database group falls short on <code>interface-disclosure#I3</code> alone.</p>
   <p>The same pattern already appears inside a single profile, at the level of cryptographic purposes. The migration profile requires full detail for three cryptographic purposes, and still requires a status for all seven. As a result, a supplier cannot conform while ignoring entity authentication. A buyer also sees the blockers that take longest to resolve in the first document, not the third. A family ordered by depth applies the same idea at the level of whole profiles. The shallow depth is cheap to reach. It states openly what it does not cover, so the subjects it does not cover remain visible.</p>
 
-  <h2>What is not settled</h2>
+  <h2>Decisions on the family model</h2>
+  <p>Settled provisionally by the chair's call on 11 November 2026.</p>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th>Question</th><th>What turns on it</th></tr></thead>
+    <thead><tr><th>Question</th><th>Decision</th></tr></thead>
     <tbody>
-      <tr><td>Where a family is recorded, if not in its profiles</td><td>A consumer holding an entry-profile claim cannot see from the artifact that deeper profiles exist. Recorded as Q50.</td></tr>
-      <tr><td>Whether the baseline is re-parented to extend the entry profile</td><td>Re-parenting would make the validator enforce the ladder through extension, and most of the family test would no longer be needed. It moves nine rule ids to another tag and changes every citation of them. Recorded as Q51.</td></tr>
-      <tr><td>Whether a rules file should distinguish a deferral from a permanent exclusion</td><td>One field currently carries both. Recorded as Q52.</td></tr>
-      <tr><td>Whether depths are numbered, and whether a consortium profile may be published as an entry depth at all</td><td>A number invites a ranking of suppliers, which the depth model is meant to avoid. A name is harder to demand in a contract. Recorded as Q53.</td></tr>
+      <tr><td>Where a family is recorded, if not in its profiles</td><td>In the profile register, not in the rules files. A shallower profile cannot list deeper profiles that do not yet exist.</td></tr>
+      <tr><td>Whether the baseline is re-parented to extend the entry profile</td><td>No. The two stay siblings, because re-parenting would move nine rule ids to another tag and change every citation of them. <code>tests/check-family.py</code> checks the family conditions for the pair instead. The change core and PQC migration stay siblings for the same reason, and <code>tests/check-core.py</code> checks them.</td></tr>
+      <tr><td>Whether a rules file should distinguish a deferral from a permanent exclusion</td><td>One <code>exclusions</code> list carries both. The reason given for each entry says which it is.</td></tr>
+      <tr><td>Whether depths are numbered</td><td>Depths are named, not numbered. A number invites a ranking of suppliers, which the depth model exists to avoid.</td></tr>
     </tbody>
   </table>
   </div>

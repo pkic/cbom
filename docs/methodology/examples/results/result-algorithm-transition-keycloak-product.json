@@ -3,11 +3,11 @@
   "resultFormatVersion": "0.1",
   "policy": {
     "policyId": "pkic.example.policy.algorithm-transition",
-    "version": "0.1",
+    "version": "0.2",
     "file": "policy-algorithm-transition.policy.json",
     "digest": {
       "alg": "SHA-256",
-      "value": "445ca075159a93dec36496a9ffc98061f25b3a88433a216c1b14cdadea84afdc"
+      "value": "2c6b2609de0222a6a45415b21d58796a18a4fdb1615aaf867e3d1c9ba8f518b9"
     }
   },
   "evaluationDate": "2026-10-25",
@@ -21,7 +21,7 @@
       "stage": "implemented",
       "digest": {
         "alg": "SHA-256",
-        "value": "80b10b11705bc6425a371e307b5792f3d87e12bd4fca5349cb11bb4fae8b0929"
+        "value": "ce1163d87b5dd45ea27fadcc3060b715231408bcf635c4261102f973077b64a9"
       }
     }
   ],
@@ -42,8 +42,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -73,8 +73,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -87,8 +87,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -101,8 +101,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -115,8 +115,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -129,8 +129,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -213,8 +213,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -227,8 +227,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -241,8 +241,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -255,8 +255,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -286,8 +286,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -300,8 +300,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -314,8 +314,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -328,8 +328,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -342,8 +342,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -426,8 +426,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -440,8 +440,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -454,8 +454,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -489,8 +489,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -503,8 +503,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -517,8 +517,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -531,8 +531,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -545,8 +545,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -629,8 +629,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -643,8 +643,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -657,8 +657,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -692,8 +692,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -706,8 +706,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -720,8 +720,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -734,8 +734,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -748,8 +748,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -832,8 +832,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -846,8 +846,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -860,8 +860,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -895,8 +895,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -909,8 +909,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -923,8 +923,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -937,8 +937,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -951,8 +951,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1035,8 +1035,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1049,8 +1049,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1063,8 +1063,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1098,8 +1098,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1112,8 +1112,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1126,8 +1126,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1140,8 +1140,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1154,8 +1154,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1238,8 +1238,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1252,8 +1252,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1266,8 +1266,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1280,8 +1280,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1318,8 +1318,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1332,8 +1332,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1346,8 +1346,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1360,8 +1360,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1374,8 +1374,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1486,8 +1486,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1584,8 +1584,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1598,8 +1598,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1612,8 +1612,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1626,8 +1626,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1740,8 +1740,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1838,8 +1838,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1866,8 +1866,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1915,8 +1915,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1957,8 +1957,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1971,8 +1971,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {

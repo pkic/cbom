@@ -25,7 +25,7 @@ nav: uc-disclosure
   <div class="crumb">GROUP</div>
   <h1>Disclosure: one document, many profiles</h1>
   <p class="lead">In these use cases, the profile works only with facts that the interface disclosure baseline already defines. The baseline is the common profile that every profile in this group extends. Each profile chooses which of the baseline's facts are mandatory and makes some of its rules stricter. The orientation is <code>inventory</code>, which means the document reports what the product uses today. One document can answer every profile in this group, provided it meets the baseline and names the implementing library. The supplier does not need to reissue it for each profile.</p>
-  <div class="banner">The grouping is proposed in draft decision 0023 and is not yet settled.</div>
+  <div class="banner">The grouping was settled provisionally on 11 November 2026.</div>
 
   <h2>What the group shares</h2>
   <p>Every profile here extends the <a href="../methodology/profile.html">interface disclosure baseline</a>, or is one of its depths. A depth is a version of the baseline that asks for more or fewer of the same facts. The facts are the baseline's: what the product is, which interfaces it exposes, the protocol and version of each, the algorithms for each cryptographic job, the endpoint roles, the implementing library, the subject type and lifecycle stage of the report, whether the list is complete, and the pointers to context the document does not carry (the SBOM, the vendor's vulnerability statements and the advisory sources). A profile in this group chooses which of them are mandatory, removes the producer's permission to withhold an attribute (to mark it as deliberately not disclosed), or adds a structural rule about which kinds of interface must be present. It does not add new attributes.</p>
@@ -79,7 +79,7 @@ nav: uc-disclosure
 
   <h3 id="compliance">Regulatory and compliance reporting</h3>
   <p>An organization must demonstrate its cryptographic position against a framework such as the EU Cyber Resilience Act, NIS2, the BSI technical guidelines, or a national directive. The consumer is an auditor or regulator who did not generate the data and cannot ask follow-up questions of the system.</p>
-  <p>A profile encodes what a given framework expects, so that conformance can be evidenced by a dated artifact that an auditor can re-check. Because the reader is external, provenance and lifecycle stage carry more weight than usual. A reported position is only meaningful if it says when it was derived and from what. A jurisdiction-specific profile also lets a global vendor satisfy the requirement once and report against it in several places.</p>
+  <p>A profile encodes what a given framework expects, so that conformance can be evidenced by a dated artifact that an auditor can verify. Because the reader is external, provenance and lifecycle stage carry more weight than usual. A reported position is only meaningful if it says when it was derived and from what. A jurisdiction-specific profile also lets a global vendor satisfy the requirement once and report against it in several places.</p>
 
   <h3 id="due-diligence">Mergers and third-party risk due diligence</h3>
   <p>An acquiring organization, or one onboarding a significant partner, needs a view of cryptographic exposure across an estate it does not operate and cannot inspect directly. The work is usually done under time pressure and with limited cooperation.</p>

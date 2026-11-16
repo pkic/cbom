@@ -180,7 +180,8 @@ Implemented. What it took:
   from a conforming document and asserts it stops conforming. That obligation is the ratchet, so
   it is asserted rather than assumed. The suite runs 114 tests and passes.
 
-Two points are **left open for the group rather than decided here**:
+Two points were **left open for the group rather than decided here**. Both were closed on 16
+November 2026; see "Closing the two open points" below.
 
 **Whether `randomness` is a purpose.** It passes tests 1, 3 and 4: a producer can state its DRBG and
 entropy source, an auditor acts on the answer, and it is not an ingredient of another purpose. It
@@ -194,6 +195,34 @@ list of permitted values. A sector adding `attestation`, `tokenization`, `secret
 `password-verification` or `privacy` would *widen* one, which Q35 does not discuss and which is
 arguably a relaxation: a document could then claim a purpose the base profile has no rule for. The
 mirror case has been added to Q35.
+
+## Closing the two open points
+
+**Randomness.** Closed on 16 November 2026, as the chair's call, together with member proposals #9 and #10.
+Randomness is **not** a cryptographic purpose. The purpose vocabulary keeps its seven entries.
+A random bit generator outside the product, such as the operating system's entropy source, a CPU
+generator or an HSM, is recorded as a run-time dependency instead: the value
+`random-bit-generator` is added to `externalDependencyVocabulary` in PQC Migration Extended v0.2,
+so rule I9 can name it (proposal #9 accepted). Proposal #10 is not taken.
+
+The reasons:
+
+- A purpose group uses `all-purposes` coverage, so every interface would owe a randomness entry
+  with a capability status and a blocker. Randomness is not a job done at one interface, and
+  that entry would carry no information.
+- Randomness does not migrate on a timetable of its own, which is test 2.
+- The fact a regulator or an auditor asks for, which generator the cryptography draws on, is still
+  recorded, as a dependency the operator must be able to rely on.
+
+Whether the generator is sound is not a fact a CBOM can show (failure mode 9). A CBOM points to a
+platform assessment for that, as `platform-assessment` context.
+
+**Widening the vocabulary.** Closed on 16 November 2026 by the extension rules already in force. A
+derived profile may add a value to an inherited vocabulary that keys a group, such as a new
+cryptographic purpose, because each entry is a separate obligation and the base's entries are
+unchanged. It may not add a value to a vocabulary that constrains an attribute, such as
+`interfaceType`, because that would accept documents the base rejects. A sector profile can
+therefore add a purpose. The Profile section's table of permitted changes states both halves.
 
 ## Links
 

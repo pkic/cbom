@@ -787,11 +787,11 @@
             },
             {
               "name": "pkic:profile:protocol",
-              "value": "Admin REST (OAuth 2.0 bearer)"
+              "value": "OAuth 2.0"
             },
             {
               "name": "pkic:profile:protocolVersion",
-              "value": "1.0"
+              "value": "2.0"
             },
             {
               "name": "pkic:profile:endpointRole:administrator",
@@ -956,7 +956,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "80b10b11705bc6425a371e307b5792f3d87e12bd4fca5349cb11bb4fae8b0929"
+          "content": "ce1163d87b5dd45ea27fadcc3060b715231408bcf635c4261102f973077b64a9"
         }
       ]
     },

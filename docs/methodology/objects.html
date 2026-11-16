@@ -127,7 +127,7 @@ nav: objects
   </table>
 
   <h2>Two axes that get confused</h2>
-  <p>Capture phase and revision state were described by a single word until <a href="https://github.com/pkic/cbom/blob/main/decisions/0021-one-word-one-meaning.md">decision 0021</a>. They are different things and must be kept apart.</p>
+  <p>Capture phase and revision state were once described by a single word. They are different things and must be kept apart.</p>
   <p><strong>Capture phase</strong> belongs to the facts. <code>lifecycleStage</code> says whether the values were implemented, configured or observed. This tells a reader how much weight the values carry. Under baseline rule P6 a document carries one stage for all its facts, natively in <code>metadata.lifecycles</code>. Where an interface also carries its own <code>lifecycleStage</code>, the two must agree. The baseline does not accept <code>intended</code>; only the entry profile does. See <a href="lifecycle.html">Lifecycle Data</a>.</p>
   <p><strong>Revision state</strong> belongs to a document. A document can be created, signed, published or superseded. Its revision state is the same for every attribute in the document. Governance controls how a document moves from one state to the next. See <a href="governance.html">Governance</a>.</p>
 

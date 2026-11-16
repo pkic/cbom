@@ -57,7 +57,7 @@ Group by aspect readiness rather than by record number.
 
 Any record carrying a point the group has not yet argued should have that point put as a question
 rather than presented as settled. Known examples: whether `randomness` is a cryptographic purpose
-(0010); how a sector profile *widens* an inherited vocabulary, the mirror of Q35 (0010); and the
+(0010, closed on 16 November 2026 as a run-time dependency); how a sector profile *widens* an inherited vocabulary, the mirror of Q35 (0010); and the
 revision to P2 in 0012, which is the only relaxing change in either profile's history and should
 need an express yes rather than silence.
 

@@ -1,7 +1,7 @@
 {
   "specFormat": "CycloneDX",
   "specVersion": "2.0",
-  "$comment": "EXAMPLE CBOM, lifecycle stage 'configured'. Example Org's deployment of the Keycloak 26.7.3 image, read from its configuration repository, realm exports and JVM settings. Illustrative: the operator, hostnames and configuration values are invented. TLS is terminated at the ingress (nginx with OpenSSL 3.5) and Keycloak runs with http-enabled=true and proxy-headers=xforwarded. So the product's TLS listener is not configured, the plaintext listener carries tokens on the hop from the ingress, and the management port inherits plain HTTP. No mail server is configured. Values are permitted sets where the outcome is negotiated. Each interface states the product interface it realises (correspondsTo), which is also how it inherits the implementing library. The ingress has no product CBOM, so its library is stated here. Conforms to deployment-disclosure v0.1.",
+  "$comment": "EXAMPLE CBOM, lifecycle stage 'configured'. Example Org's deployment of the Keycloak 26.7.3 image, read from its configuration repository, realm exports and JVM settings. Illustrative: the operator, hostnames and configuration values are invented. TLS is terminated at the ingress (nginx with OpenSSL 3.5) and Keycloak runs with http-enabled=true and proxy-headers=xforwarded. So the product's TLS listener is not configured, the plaintext listener carries tokens on the hop from the ingress, and the management port inherits plain HTTP. No mail server is configured. Values are permitted sets where the outcome is negotiated. Each interface states the product interface it realises (correspondsTo), which is also how it inherits the implementing library. The ingress has no product CBOM, so its library is stated here. Conforms to deployment-disclosure v0.2.",
   "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01",
   "version": 1,
   "metadata": {
@@ -817,11 +817,11 @@
             },
             {
               "name": "pkic:profile:protocol",
-              "value": "Admin REST (OAuth 2.0 bearer)"
+              "value": "OAuth 2.0"
             },
             {
               "name": "pkic:profile:protocolVersion",
-              "value": "1.0"
+              "value": "2.0"
             },
             {
               "name": "pkic:profile:endpointRole:administrator",
@@ -986,7 +986,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "80b10b11705bc6425a371e307b5792f3d87e12bd4fca5349cb11bb4fae8b0929"
+          "content": "ce1163d87b5dd45ea27fadcc3060b715231408bcf635c4261102f973077b64a9"
         }
       ]
     },

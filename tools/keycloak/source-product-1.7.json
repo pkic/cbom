@@ -501,6 +501,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -566,6 +570,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -631,6 +639,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -700,6 +712,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -769,6 +785,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -834,6 +854,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -1411,7 +1435,7 @@
         },
         {
           "name": "pkic:profile:externalDependencies",
-          "value": "none"
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -1606,11 +1630,11 @@
         },
         {
           "name": "pkic:profile:protocol",
-          "value": "Admin REST (OAuth 2.0 bearer)"
+          "value": "OAuth 2.0"
         },
         {
           "name": "pkic:profile:protocolVersion",
-          "value": "1.0"
+          "value": "2.0"
         },
         {
           "name": "pkic:profile:endpointRole:administrator",
@@ -1994,7 +2018,7 @@
       "properties": [
         {
           "name": "pkic:profile:protocol",
-          "value": "JGroups TCP"
+          "value": "JGroups"
         }
       ]
     }

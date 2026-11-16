@@ -2,15 +2,15 @@
   "policyFormat": "pkic.cbom.policy",
   "policyFormatVersion": "0.1",
   "policyId": "pkic.example.policy.algorithm-transition",
-  "version": "0.1",
-  "title": "Quantum-vulnerable algorithm transition (NIST IR 8547 initial public draft)",
+  "version": "0.2",
+  "title": "Quantum-vulnerable algorithm transition (NIST IR 8547, final)",
   "status": "illustrative",
-  "$comment": "An example policy, not advice. It applies the transition schedule of NIST IR 8547 (initial public draft, November 2024, not final as of October 2026) to the algorithms a CBOM discloses. The schedule is data in this file; the evaluation method is implemented by evaluate_policy.py. The judgement is computed at evaluation time and recorded in a result that points to the CBOM by digest (decision 0002). Check the schedule against the NIST publication before relying on it.",
+  "$comment": "An example policy, not advice. It applies the transition schedule of NIST IR 8547 (final, 27 October 2026) to the algorithms a CBOM discloses. Quantum-vulnerable signature and key-establishment algorithms are deprecated after 2030 and disallowed after 2035, at every approved security strength. The schedule is data in this file; the evaluation method is implemented by evaluate_policy.py. The judgement is computed at evaluation time and recorded in a result that points to the CBOM by digest, never stored in the CBOM. Check the schedule against the NIST publication before relying on it.",
   "source": {
-    "title": "NIST IR 8547 ipd, Transition to Post-Quantum Cryptography Standards",
-    "url": "https://csrc.nist.gov/pubs/ir/8547/ipd",
-    "published": "2024-11-12",
-    "status": "draft"
+    "title": "NIST IR 8547, Transition to Post-Quantum Cryptography Standards",
+    "url": "https://csrc.nist.gov/pubs/ir/8547/final",
+    "published": "2026-10-27",
+    "status": "final"
   },
   "method": "algorithm-transition",
   "inputs": {
@@ -190,17 +190,11 @@
     {
       "when": {
         "quantumVulnerable": true,
-        "securityStrength": 112
+        "securityStrengthAtLeast": 112
       },
       "deprecatedAfter": "2030-12-31",
-      "disallowedAfter": "2035-12-31"
-    },
-    {
-      "when": {
-        "quantumVulnerable": true,
-        "securityStrengthAtLeast": 128
-      },
-      "disallowedAfter": "2035-12-31"
+      "disallowedAfter": "2035-12-31",
+      "note": "The final report deprecates quantum-vulnerable algorithms after 2030 at every approved strength; the 2024 draft deprecated only 112-bit strength."
     },
     {
       "when": {
@@ -210,6 +204,12 @@
     }
   ],
   "changelog": [
+    {
+      "version": "0.2",
+      "date": "2026-11-15",
+      "kind": "tightening",
+      "summary": "Follows the final NIST IR 8547 (27 October 2026): quantum-vulnerable algorithms at 128 bits and above are now deprecated after 2030, as at 112 bits."
+    },
     {
       "version": "0.1",
       "date": "2026-10-25",

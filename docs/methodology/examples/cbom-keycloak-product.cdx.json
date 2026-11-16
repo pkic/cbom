@@ -1,7 +1,7 @@
 {
   "specFormat": "CycloneDX",
   "specVersion": "2.0",
-  "$comment": "EXAMPLE CBOM, lifecycle stage 'implemented'. The build record of the Keycloak 26.7.3 container image at its defaults, as the vendor or a downstream builder would write it. Derived from the pqc-migration worked example, with three changes. (1) One stage for the whole document, carried natively in metadata.lifecycles (phase 'build'); no interface carries its own stage. (2) No deployment facts: the example's assumed RSA-2048 server certificate is gone. The server certificate is 'deployment-defined', and each such interface points to the guide where the operator sets it (R5). On connections Keycloak opens to a database, directory, identity provider or mail server, the group, the cipher and the server certificate are decided with the peer and are 'peer-defined'. What Keycloak offers is still stated, in the shared TLS configuration component and the migration attributes. (3) Context the document points to but does not carry: the companion SBOM, an illustrative VEX document, the advisory sources, the security contact, configuration guidance and a post-quantum roadmap, each a file under examples/context/. Conforms to interface-enumeration v0.3, interface-disclosure v0.9, pqc-migration v0.8, pqc-migration-extended v0.1 and procurement v0.1.",
+  "$comment": "EXAMPLE CBOM, lifecycle stage 'implemented'. The build record of the Keycloak 26.7.3 container image at its defaults, as the vendor or a downstream builder would write it. Derived from the pqc-migration worked example, with three changes. (1) One stage for the whole document, carried natively in metadata.lifecycles (phase 'build'); no interface carries its own stage. (2) No deployment facts: the example's assumed RSA-2048 server certificate is gone. The server certificate is 'deployment-defined', and each such interface points to the guide where the operator sets it (R5). On connections Keycloak opens to a database, directory, identity provider or mail server, the group, the cipher and the server certificate are decided with the peer and are 'peer-defined'. What Keycloak offers is still stated, in the shared TLS configuration component and the migration attributes. (3) Context the document points to but does not carry: the companion SBOM, an illustrative VEX document, the advisory sources, the security contact, configuration guidance and a post-quantum roadmap, each a file under examples/context/. Conforms to interface-enumeration v0.3, interface-disclosure v0.9, pqc-migration v0.8, pqc-migration-extended v0.2 and procurement v0.2.",
   "serialNumber": "urn:uuid:6b3c1d2e-7a41-4c1e-9f0a-26730000c001",
   "version": 1,
   "metadata": {
@@ -597,6 +597,10 @@
               "value": "certificate-authority"
             },
             {
+              "name": "pkic:profile:externalDependencies",
+              "value": "random-bit-generator"
+            },
+            {
               "name": "pkic:profile:defaultState",
               "value": "enabled"
             },
@@ -703,6 +707,10 @@
               "value": "certificate-authority"
             },
             {
+              "name": "pkic:profile:externalDependencies",
+              "value": "random-bit-generator"
+            },
+            {
               "name": "pkic:profile:defaultState",
               "value": "disabled"
             },
@@ -801,6 +809,10 @@
               "value": "certificate-authority"
             },
             {
+              "name": "pkic:profile:externalDependencies",
+              "value": "random-bit-generator"
+            },
+            {
               "name": "pkic:profile:defaultState",
               "value": "enabled"
             },
@@ -875,6 +887,10 @@
             {
               "name": "pkic:profile:externalDependencies",
               "value": "certificate-authority"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "random-bit-generator"
             },
             {
               "name": "pkic:profile:defaultState",
@@ -953,6 +969,10 @@
               "value": "certificate-authority"
             },
             {
+              "name": "pkic:profile:externalDependencies",
+              "value": "random-bit-generator"
+            },
+            {
               "name": "pkic:profile:defaultState",
               "value": "disabled"
             },
@@ -1023,6 +1043,10 @@
             {
               "name": "pkic:profile:externalDependencies",
               "value": "certificate-authority"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "random-bit-generator"
             },
             {
               "name": "pkic:profile:defaultState",
@@ -1616,7 +1640,7 @@
             },
             {
               "name": "pkic:profile:externalDependencies",
-              "value": "none"
+              "value": "random-bit-generator"
             },
             {
               "name": "pkic:profile:defaultState",
@@ -1814,11 +1838,11 @@
             },
             {
               "name": "pkic:profile:protocol",
-              "value": "Admin REST (OAuth 2.0 bearer)"
+              "value": "OAuth 2.0"
             },
             {
               "name": "pkic:profile:protocolVersion",
-              "value": "1.0"
+              "value": "2.0"
             },
             {
               "name": "pkic:profile:endpointRole:administrator",
@@ -2213,7 +2237,7 @@
           "properties": [
             {
               "name": "pkic:profile:protocol",
-              "value": "JGroups TCP"
+              "value": "JGroups"
             }
           ],
           "type": "service"

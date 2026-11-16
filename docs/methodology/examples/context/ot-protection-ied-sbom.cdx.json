@@ -1,0 +1,120 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "EXAMPLE SBOM. The companion SBOM of the illustrative protection IED firmware, referenced by the product record under interface-disclosure#R1 by BOM-Link and SHA-256. It lists only the two libraries the record names, so its composition is declared incomplete.",
+  "serialNumber": "urn:uuid:0d7a5e10-62f3-4b51-9e3a-61850000b000",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-16T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+      "url": [
+        "https://pkic.org"
+      ]
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "device",
+        "bom-ref": "dev:protection-ied",
+        "name": "Protection IED (illustrative)",
+        "version": "4.2.0",
+        "description": "A generic line-protection IED at firmware 4.2.0, as its supplier would describe it. Ten interfaces, described from the outside. Values are illustrative.",
+        "properties": [],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:generic/example-grid/protection-ied@4.2.0"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://pkic.org"
+                }
+              ]
+            }
+          },
+          {
+            "bom-ref": "party:dev:protection-ied:supplier",
+            "roles": [
+              {
+                "role": "supplier"
+              }
+            ],
+            "organization": {
+              "name": "Example Grid Equipment (illustrative)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:ied-firmware",
+          "name": "IED firmware (illustrative)",
+          "version": "4.2.0",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/example-grid/ied-firmware@4.2.0"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:ied-crypto",
+          "name": "Embedded TLS and certificate library (illustrative)",
+          "version": "3.1.0",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/example-grid/ied-crypto-library@3.1.0"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "incomplete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ]
+}

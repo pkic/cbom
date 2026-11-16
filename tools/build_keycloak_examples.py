@@ -354,7 +354,7 @@ def product(hashes):
         "component and the migration attributes. (3) Context the document points to but does not carry: "
         "the companion SBOM, an illustrative VEX document, the advisory sources, the security contact, "
         "configuration guidance and a post-quantum roadmap, each a file under examples/context/. Conforms to interface-enumeration v0.3, interface-disclosure "
-        "v0.9, pqc-migration v0.8, pqc-migration-extended v0.1 and procurement v0.1.")
+        "v0.9, pqc-migration v0.8, pqc-migration-extended v0.2 and procurement v0.2.")
     md = bom["metadata"]
     md["timestamp"] = "2026-10-25T09:00:00Z"
     md["lifecycles"] = [{"phase": "build"}]
@@ -541,7 +541,7 @@ def configured(product_sha):
         "Values are permitted sets where the outcome is negotiated. Each interface states the product "
         "interface it realises (correspondsTo), which is also how it inherits the implementing library. "
         "The ingress has no product CBOM, so its library is stated here. Conforms to "
-        "deployment-disclosure v0.1.",
+        "deployment-disclosure v0.2.",
         "2026-10-24T16:00:00Z",
         [{"type": "application", "name": "Example Org configuration export", "version": "1.0",
           "description": "Reads keycloak.conf, realm exports, java.security and the ingress manifest"}],
@@ -610,7 +610,7 @@ def configured(product_sha):
                 {"identity-provider": "endpoint:keycloak", "service-provider": "endpoint:client-application"},
                 P_("service:svc-saml"), {"keyExchange": "none", "encryption": "none"}),
         service("service:mgmt-admin", "Admin REST API (master realm tokens)", "management",
-                "Admin REST (OAuth 2.0 bearer)", "1.0",
+                "OAuth 2.0", "2.0",
                 {"administrator": "endpoint:admin-client", "server": "endpoint:keycloak"},
                 P_("service:mgmt-admin"), {"keyExchange": "none", "encryption": "none"}),
         service("service:svc-broker-tokens", "Brokered token verification (corporate identity provider)",
@@ -715,7 +715,7 @@ def observed(product_sha, configured_sha, configured_hash_override=None):
         "show: 29% of ingress sessions still negotiate X25519 alone, and tokens for one client are still "
         "signed RS256. The brokering interfaces were not observed (the sensor does not cover egress), so "
         "coverage is partial. Each interface points to the configured interface it was compared with, and "
-        "through it to the product. Conforms to deployment-disclosure v0.1.",
+        "through it to the product. Conforms to deployment-disclosure v0.2.",
         "2026-10-25T08:00:00Z",
         [{"type": "application", "name": "testssl.sh", "version": "3.2"},
          {"type": "application", "name": "Zeek", "version": "7.0"},
@@ -783,7 +783,7 @@ def observed(product_sha, configured_sha, configured_hash_override=None):
                 {"identity-provider": "endpoint:keycloak", "service-provider": "endpoint:client-application"},
                 C_("service:svc-saml"), obs(["endpoint-query"], {"keyExchange": "none", "encryption": "none"})),
         service("service:mgmt-admin", "Admin REST API (master realm tokens)", "management",
-                "Admin REST (OAuth 2.0 bearer)", "1.0",
+                "OAuth 2.0", "2.0",
                 {"administrator": "endpoint:admin-client", "server": "endpoint:keycloak"},
                 C_("service:mgmt-admin"), obs(["endpoint-query"], {"keyExchange": "none", "encryption": "none"})),
         service("service:sto-realm-keys", "Realm key persistence (PostgreSQL)", "storage", None, None,
@@ -948,10 +948,10 @@ def main():
     write("cbom-keycloak-product-fail-ext-I3.cdx.json", v)
 
     v = variant(prod, "c0b5", "NON-CONFORMING EXAMPLE. The product record with the storage interface left "
-                "out and no reason stated. Fails procurement#P5 only: a tender response describes the paths "
+                "out and no reason stated. Fails procurement#P1 only: a tender response describes the paths "
                 "traffic crosses and stays silent about where keys are kept.")
     remove_elements(v, {"service:sto-realm-keys"})
-    write("cbom-keycloak-product-fail-procurement-P5.cdx.json", v)
+    write("cbom-keycloak-product-fail-procurement-P1.cdx.json", v)
 
     write("cbom-keycloak-product-intended.cdx.json", intended(prod))
 

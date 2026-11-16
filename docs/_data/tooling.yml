@@ -31,7 +31,7 @@
 #   tags         (optional) list of free-text tags
 
 meta:
-  updated: 2026-09-13
+  updated: 2026-11-13
 
 tools:
 
@@ -108,14 +108,15 @@ tools:
     license: Apache-2.0
     functions: [generate]
     methods: [keystore, source-code, runtime]
-    formats: [CycloneDX 1.7]
+    formats: [CycloneDX 1.6, CycloneDX 1.7, CycloneDX 2.0 (pre-release)]
     status: active
     summary: >-
       A general BOM generator whose CBOM coverage is Java keystores and certificates and algorithm
-      use in JavaScript and TypeScript source; its tracebom command records cryptographic activity
-      while a command runs.
-    evidence: https://github.com/cdxgen/cdxgen
-    checked: 2026-09-13
+      use in JavaScript and TypeScript source. Its tracebom command records negotiated TLS cipher
+      suites, protocols and cryptographic libraries while a command runs. It writes CycloneDX 1.7
+      by default and can also target 1.6 and 2.0.
+    evidence: https://jsr.io/@cdxgen/cdxgen
+    checked: 2026-11-13
 
   - id: cbom-lens
     name: CBOM-Lens
@@ -550,12 +551,13 @@ tools:
     status: active
     summary: >-
       Scans source code in several languages for quantum-vulnerable cryptography and reports as a
-      CBOM, among other formats. The documentation does not name a CycloneDX version.
+      CBOM, among other formats. The documentation does not name a CycloneDX version. Since
+      October 2026 it is part of the IBM Quantum Safe suite.
     evidence: https://www.ibm.com/docs/en/quantum-safe/quantum-safe-explorer/2.x?topic=quantum-safe-explorer-overview
     checked: 2026-09-13
 
   - id: ibm-guardium-cryptography-manager
-    name: IBM Guardium Cryptography Manager
+    name: IBM Guardium Cryptography Manager (IBM Quantum Safe Cryptography Manager)
     maintainer: IBM
     url: https://www.ibm.com/docs/en/guardium-cm/2.0.x?topic=getting-portfolio-view-code-repositories
     licensing: commercial
@@ -564,7 +566,10 @@ tools:
     verify: true
     summary: >-
       Imports code repository findings from IBM Quantum Safe Explorer, including CBOMs, into a
-      portfolio view. CBOM is mentioned only as an imported data type.
+      portfolio view. CBOM is mentioned only as an imported data type. In October 2026 IBM
+      launched the IBM Quantum Safe suite, which builds on this product as Quantum Safe
+      Cryptography Manager. The name and the CBOM handling in the new release are not yet
+      confirmed against IBM documentation.
     evidence: https://www.ibm.com/docs/en/guardium-cm/2.0.x?topic=getting-portfolio-view-code-repositories
     checked: 2026-09-13
 
@@ -626,3 +631,32 @@ tools:
       deadlines. The site gives no company details beyond a contact address.
     evidence: https://cbomcompliance.com/
     checked: 2026-09-13
+
+  - id: entrust-cryptographic-security-platform
+    name: Entrust Cryptographic Security Platform
+    maintainer: Entrust
+    url: https://www.entrust.com/products/cryptographic-security-platform
+    licensing: commercial
+    functions: [consume, generate, analyse]
+    status: active
+    verify: true
+    summary: >-
+      A cryptographic discovery and management platform, offered as a service or on premises, that
+      added CBOM import and export in September 2026. The announcement does not name a format.
+    evidence: https://www.entrust.com/products/cryptographic-security-platform
+    checked: 2026-11-13
+
+  - id: opswat-metadefender-software-supply-chain
+    name: MetaDefender Software Supply Chain
+    maintainer: OPSWAT
+    url: https://www.opswat.com/blog/meet-cbom-cryptographic-visibility-arrives-in-metadefender-software-supply-chain-4-2-0
+    licensing: commercial
+    functions: [generate, analyse]
+    methods: [source-code, container]
+    status: active
+    summary: >-
+      A supply chain scanning platform that, from release 4.2.0, produces a CBOM for code,
+      containers and artifacts during its existing scans, with a quantum-safety verdict for each.
+      The release post does not name a format.
+    evidence: https://www.opswat.com/blog/meet-cbom-cryptographic-visibility-arrives-in-metadefender-software-supply-chain-4-2-0
+    checked: 2026-11-13

@@ -25,7 +25,7 @@ nav: uc-operation
   <div class="crumb">GROUP</div>
   <h1>Operation: the operator describes what it runs</h1>
   <p class="lead">Use cases in which the CBOM is produced by the operator of a system rather than by the supplier of a product. The subject is a deployed system, a service or an estate, and what is reported is mostly configured or observed. An operator can state facts no supplier knows: what data crosses an interface and how long it must stay confidential, what was actually negotiated, which instances are still running, and what has changed since the last report.</p>
-  <div class="banner">Proposed in October 2026 as an amendment to draft decision 0023, which defined the first two groups. The group is not yet settled. Its first profile, deployment disclosure, is published as part of the consolidated baseline (decision 0025) and is now at v0.2 (decision 0026), with two Keycloak deployment records.</div>
+  <div class="banner">This group was proposed in October 2026 and settled provisionally on 11 November 2026. Its first profile, deployment disclosure, is published as part of the consolidated baseline and is now at v0.2, with two Keycloak deployment records.</div>
 
   <h2>What the group shares</h2>
   <p>The Disclosure and Change planning groups are each defined by the facts their profiles ask for. The Operation group is defined by who produces the document: the operator of the system. The operator can see the whole deployed system. A supplier cannot see how its product is deployed, so supplier profiles only ask for facts that can be known from the product itself. That limit does not apply to an operator, so a profile in this group can ask for more. It can require the deployment facts that the interface disclosure baseline excludes because a vendor cannot know them: the payload an interface carries, its confidentiality lifetime, the number of instances, and the configuration as observed rather than as declared.</p>
@@ -35,12 +35,12 @@ nav: uc-operation
   <h2>Questions this group owns</h2>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th>Question</th><th>Why it belongs to this group</th></tr></thead>
+    <thead><tr><th>Question and provisional position</th></tr></thead>
     <tbody>
-      <tr><td>Q36, Q45</td><td>Where vendor-stated data facts end and operator-stated ones begin, and how the operator's half is linked to the supplier's document. <em>Settled provisionally: the vendor states intrinsic data, and the operator states the payload in its data register, linked by rule R3.</em></td></tr>
-      <tr><td>Q37</td><td>The confidentiality-lifetime bands an operator would report against. <em>Settled provisionally: the five bands proposed in Data Exposure.</em></td></tr>
-      <tr><td>Q67</td><td>Whether an estate is a subject a profile can declare, with its own completeness statement. <em>Settled provisionally: no. An estate is read as a set of product and deployment documents.</em></td></tr>
-      <tr><td>Q68</td><td>What an overlay's verdict says about the supplier documents it cites. <em>Settled provisionally: each cited document's verdict is reported beside the overlay's own.</em></td></tr>
+      <tr><td>Where vendor-stated data facts end and operator-stated ones begin, and how the operator's half is linked to the supplier's document. <em>Provisional position: the vendor states intrinsic data, and the operator states the payload in its data register, linked by rule R3.</em></td></tr>
+      <tr><td>The confidentiality-lifetime bands an operator would report against. <em>Provisional position: the five bands proposed in Data Exposure.</em></td></tr>
+      <tr><td>Whether an estate is a subject a profile can declare, with its own completeness statement. <em>Provisional position: no. An estate is read as a set of product and deployment documents.</em></td></tr>
+      <tr><td>What an overlay's verdict says about the supplier documents it cites. <em>Provisional position: each cited document's verdict is reported beside the overlay's own.</em></td></tr>
     </tbody>
   </table>
   </div>
@@ -56,7 +56,7 @@ nav: uc-operation
       <tr><td><code>I1</code></td><td>MUST</td><td><code>correspondsTo</code>: the interface in a cited document that this interface realises, as a BOM-Link to its <code>bom-ref</code>, or the literal <code>no-product-document</code>. The implementing library is inherited across this join. Present-state facts are never inherited.</td></tr>
       <tr><td><code>I2</code></td><td>MUST at observed</td><td><code>observationMethod</code>: how each observed value was obtained (<code>active-probe</code>, <code>passive-sensor</code>, <code>endpoint-query</code>, <code>platform-query</code>, <code>inspection</code>).</td></tr>
       <tr><td><code>I3</code></td><td>MUST at observed</td><td><code>observedAt</code>: the time or interval of the observation.</td></tr>
-      <tr><td><code>I4</code></td><td>MAY</td><td><code>peerInterface</code>: the interface at the far end of the connection, as a BOM-Link into a cited document, or <code>peer-not-recorded</code>. Either end may state it. With both ends' records, the <a href="../methodology/policy-evaluation.html#edge-posture">edge-posture</a> evaluation says which end limits the connection (decision 0026).</td></tr>
+      <tr><td><code>I4</code></td><td>MAY</td><td><code>peerInterface</code>: the interface at the far end of the connection, as a BOM-Link into a cited document, or <code>peer-not-recorded</code>. Either end may state it. With both ends' records, the <a href="../methodology/policy-evaluation.html#edge-posture">edge-posture</a> evaluation says which end limits the connection.</td></tr>
       <tr><td><code>R1</code></td><td>MUST at configured</td><td>A pointer to the configuration revision the record was read from.</td></tr>
       <tr><td><code>R2</code></td><td>SHOULD at observed</td><td>A pointer to the evidence an observed value was taken from. Withholdable, because evidence often carries internal addresses.</td></tr>
       <tr><td><code>R3</code></td><td>SHOULD</td><td>A pointer to the operator's data register, which records what data each interface carries and how long it must stay confidential. Withholdable. The record points to the register and does not carry it.</td></tr>
@@ -90,14 +90,14 @@ nav: uc-operation
 
   <h3 id="hndl-exposure">Harvest-now-decrypt-later exposure</h3>
   <p>A security function decides which of its systems are exposed to traffic recorded today and decrypted later, and which to migrate first on that ground. Exposure depends on two facts a supplier cannot state: what data crosses an interface, and how long that data has to stay confidential. Combined with the key establishment the interface uses today, these two facts give the window during which recorded traffic remains worth decrypting.</p>
-  <p>Some of these facts are known to the supplier, however. Credentials on a management interface and key material on a key-management interface follow from the interface's design, and they often have the longest lifetimes. Q36 asks where the supplier's facts end and the operator's begin. The deployment profile already gives the operator's half a place: rule R3 points to the operator's data register. <strong>Proposed.</strong> Q36, Q37 and Q45 are settled provisionally. The attribute for the supplier's intrinsic data is still to be defined.</p>
+  <p>Some of these facts are known to the supplier, however. Credentials on a management interface and key material on a key-management interface follow from the interface's design, and they often have the longest lifetimes. The question is where the supplier's facts end and the operator's begin. The deployment profile already gives the operator's half a place: rule R3 points to the operator's data register. <strong>Proposed.</strong> The split between supplier and operator has a provisional answer. The attribute for the supplier's intrinsic data is still to be defined.</p>
 
   <h3 id="migration-progress">Migration progress over time</h3>
   <p>A migration programme lead, or a regulator receiving its reports, decides whether a migration is on track: how much has moved since the last report, how much remains, and why the numbers changed. The facts needed are two operator documents about the same estate at different dates, and the reason for each difference between them: an interface migrated, a product replaced, an instance retired, or an earlier finding that turned out to be a false positive.</p>
   <p>Comparing two documents is covered by <a href="../methodology/versioning.html">Versioning</a>. This use case adds the reason for each change. Without the reason, a reader cannot tell whether a count fell because work was done or because a scanner stopped looking. Raised in member feedback on the Inventory chapter: "How much more do we have to do to be PQC ready?" <strong>Proposed.</strong></p>
 
   <h3 id="migration-register">The operator's migration register</h3>
-  <p>An operator records, for each finding in its estate, the decision it took: the response, who owns it, the target date and the status. These are judgements and plans. Decisions 0002 and 0007 keep them out of a supplier's CBOM, because a supplier document records facts about a product and a date there is a promise the supplier may not control.</p>
+  <p>An operator records, for each finding in its estate, the decision it took: the response, who owns it, the target date and the status. These are judgements and plans. They stay out of a supplier's CBOM, because a supplier document records facts about a product and a date there is a promise the supplier may not control.</p>
   <p>They belong in the operator's own document about its own estate. Documents of that kind are what this group covers. CycloneDX 2.0 gives them a native home in its root <code>risks</code> list, with an owner, a response strategy, a target date and a status for each risk. The validator ignores <code>risks</code> for conformance, and a supplier's product record should not carry them. <strong>Proposed.</strong></p>
 
   <div class="pagenav">

@@ -24,14 +24,14 @@ nav: conformance
 <main>
   <div class="crumb">CORE</div>
   <h1>Conformance</h1>
-  <p class="lead">Conformance is the relation between a document and the rules it is checked against. The <a href="profile.html">Profile</a> section gives the rules of one example profile. Conformance covers what can be assessed, who may claim conformance, how a claim is written down, and what a claim does not cover.</p>
-  <div class="banner warn">Illustrative. This clause is a draft for working group discussion. Several points marked below remain open, and are recorded in the open questions register.</div>
+  <p class="lead">Conformance is the relation between a document and the rules it is checked against. The <a href="profile.html">Profile</a> section gives the rules of one example profile. Conformance covers what can be evaluated, who may claim conformance, how a claim is written down, and what a claim does not cover.</p>
+  <div class="banner warn">Illustrative. The positions in this clause are settled provisionally.</div>
 
   <h2>Requirement keywords</h2>
   <p>The keywords MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in BCP 14 (RFC 2119 and RFC 8174) when, and only when, they appear in capitals. The same keywords in lower case carry their ordinary English meaning and impose no requirement.</p>
 
-  <h2>What can be assessed</h2>
-  <p>Three different things can be assessed, and each is assessed against its own criteria. A claim that does not say which of the three it means is ambiguous. Saying that something "is conformant", without naming what was assessed, is not a conformance claim under this methodology.</p>
+  <h2>What can be evaluated</h2>
+  <p>Three different things can be evaluated, and each is evaluated against its own criteria. A claim that does not say which of the three it means is ambiguous. Saying that something "is conformant", without naming what was evaluated, is not a conformance claim under this methodology.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Target</th><th>Assessed against</th><th>Assessed by</th><th>Result</th></tr></thead>
@@ -57,7 +57,7 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>The three assessments depend on each other, and the dependency runs in one direction only. A verdict is the result of assessing a document against a profile. A verdict is meaningful only if the tool that produced it conforms to this methodology, and only if the profile used is well-formed. A document assessed by a non-conforming tool therefore has no established verdict. A verdict against a profile that is not well-formed establishes nothing either, because the rules used to measure the document were not valid rules.</p>
+  <p>The three assessments depend on each other, and the dependency runs in one direction only. A verdict is the result of evaluating a document against a profile. A verdict is meaningful only if the tool that produced it conforms to this methodology, and only if the profile used is well-formed. A document evaluated by a non-conforming tool therefore has no established verdict. A verdict against a profile that is not well-formed establishes nothing either, because the rules used to measure the document were not valid rules.</p>
 
   <h2>1. A CBOM document conforming to a profile</h2>
   <p>A CBOM document conforms to a profile version when all of the following hold.</p>
@@ -76,8 +76,8 @@ nav: conformance
     <thead><tr><th>Verdict</th><th>Meaning</th><th>What it says about the document</th></tr></thead>
     <tbody>
       <tr><td><strong>Conforms</strong></td><td>Every MUST rule is satisfied, at a carrier version within the acceptance range.</td><td>The document discloses at least what the profile requires.</td></tr>
-      <tr><td><strong>Does not conform</strong></td><td>At least one MUST rule is not satisfied.</td><td>The document was assessed and found short. The report identifies each failing rule.</td></tr>
-      <tr><td><strong>Refused</strong></td><td>The carrier version falls below the profile's declared minimum.</td><td>Nothing. No assessment was performed, because the profile cannot express its rules against that carrier version.</td></tr>
+      <tr><td><strong>Does not conform</strong></td><td>At least one MUST rule is not satisfied.</td><td>The document was evaluated and found short. The report identifies each failing rule.</td></tr>
+      <tr><td><strong>Refused</strong></td><td>The carrier version falls below the profile's declared minimum.</td><td>Nothing. No evaluation was performed, because the profile cannot express its rules against that carrier version.</td></tr>
     </tbody>
   </table>
   </div>
@@ -96,10 +96,10 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>A document can therefore conform while withholding some values. A consumer who reads only the verdict will not know that values were withheld. For this reason a conformance report states the disclosure state of every rule it assessed. A consumer who acts on the verdict alone ignores the part of the result that is most likely to matter commercially. The clearest example is a public variant and a restricted variant of the same document. Both variants conform, but only one of them answers the consumer's question. See <a href="confidentiality.html">Confidentiality</a>.</p>
+  <p>A document can therefore conform while withholding some values. A consumer who reads only the verdict will not know that values were withheld. For this reason a conformance report states the disclosure state of every rule it evaluated. A consumer who acts on the verdict alone ignores the part of the result that is most likely to matter commercially. The clearest example is a public variant and a restricted variant of the same document. Both variants conform, but only one of them answers the consumer's question. See <a href="confidentiality.html">Confidentiality</a>.</p>
 
   <h3>Records that cite other records</h3>
-  <p>The vendor writes the product record, at the <code>implemented</code> stage. The operator writes deployment records, at <code>configured</code> and <code>observed</code>. Each record has one subject and one stage. A deployment record does not restate the vendor's build facts. It <strong>cites</strong> the records it builds on, each by a BOM-Link (<code>urn:cdx:&lt;serial&gt;/&lt;version&gt;</code>) and a SHA-256 hash. Each of its interfaces names the interface it realises with <code>pkic:profile:correspondsTo</code>, or states <code>no-product-document</code> where the supplier publishes no CBOM. See <a href="model.html">Model</a> and <a href="https://github.com/pkic/cbom/blob/main/decisions/0025-baseline-consolidation.md">decision 0025</a>.</p>
+  <p>The vendor writes the product record, at the <code>implemented</code> stage. The operator writes deployment records, at <code>configured</code> and <code>observed</code>. Each record has one subject and one stage. A deployment record does not restate the vendor's build facts. It <strong>cites</strong> the records it builds on, each by a BOM-Link (<code>urn:cdx:&lt;serial&gt;/&lt;version&gt;</code>) and a SHA-256 hash. Each of its interfaces names the interface it realises with <code>pkic:profile:correspondsTo</code>, or states <code>no-product-document</code> where the supplier publishes no CBOM. See <a href="model.html">Model</a>.</p>
   <p>A verdict on a deployment record depends on what the evaluator was given.</p>
   <ul>
     <li>When the caller supplies a cited record (<code>validate_cbom.py ... --with &lt;cited record&gt;</code>), the validator checks its serial number, version and hash. A changed revision fails the deployment profile's P1. <code>cbom-keycloak-deployment-observed-fail-P1.cdx.json</code> shows this case.</li>
@@ -173,7 +173,7 @@ nav: conformance
     </tbody>
   </table>
   </div>
-  <p>C12 is assessed against the resolved profile, which is the profile together with the rules it inherits from its base. A rule inherited from a base can therefore satisfy C12. This is the normal case, not a loophole. The example migration profile declares the three capability attributes itself, and inherits their present-state counterparts from the baseline it extends. A profile that declared <code>both</code> but required only capability attributes would fail C12. That is the case the requirement exists to catch.</p>
+  <p>C12 is evaluated against the resolved profile, which is the profile together with the rules it inherits from its base. A rule inherited from a base can therefore satisfy C12. This is the normal case, not a loophole. The example migration profile declares the three capability attributes itself, and inherits their present-state counterparts from the baseline it extends. A profile that declared <code>both</code> but required only capability attributes would fail C12. That is the case the requirement exists to catch.</p>
 
   <h3>Group rules, and why coverage is checked</h3>
   <p>A rule normally constrains one attribute of one interface. A <strong>group rule</strong> is different. It constrains a repeated group of entries, keyed by a controlled vocabulary, so that an interface gives one answer per key instead of one answer overall. The migration example uses a group rule for capability. An interface states its status separately for each cryptographic purpose, because key agreement and identity proof migrate on different timetables. A single status would have to report the worse of the two.</p>
@@ -187,13 +187,13 @@ nav: conformance
 
   <h3>C15 and C16: identifiers that can be cited</h3>
   <p>A rule identifier is local to the profile that declares it. A rule is therefore cited as <code>&lt;profileTag&gt;#&lt;ruleId&gt;</code>, and three profiles in one family may each declare their own <code>I1</code>. This approach moves the uniqueness requirement off the rule identifiers and onto the tag. No author can coordinate rule identifiers across a whole family, but an author picks a tag only once. C15 checks that the tag is unique. Without C15, a citation could resolve to two different rules, and a stored conformance claim would no longer identify which rule it refers to. With C15, a base profile can add a rule without first checking which identifiers its derived profiles already use.</p>
-  <p>C16 fixes the meaning of the letter in a rule identifier, so that the author does not choose it. <code>P</code> means the rule is evaluated once per document, <code>I</code> once per declared interface, <code>G</code> once per entry in a group, and <code>R</code> once per document or once per interface, as the reference rule states. The tag already says which profile a rule belongs to, so the letter can tell the reader how often the rule is evaluated. C16 does not require the numbers to run without gaps. A released identifier is never reused, so gaps are expected. A checker that demanded a contiguous sequence would forbid exactly what the no-reuse rule exists to allow. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0011-rule-numbering-across-a-family.md">decision 0011</a>.</p>
+  <p>C16 fixes the meaning of the letter in a rule identifier, so that the author does not choose it. <code>P</code> means the rule is evaluated once per document, <code>I</code> once per declared interface, <code>G</code> once per entry in a group, and <code>R</code> once per document or once per interface, as the reference rule states. The tag already says which profile a rule belongs to, so the letter can tell the reader how often the rule is evaluated. C16 does not require the numbers to run without gaps. A released identifier is never reused, so gaps are expected. A checker that demanded a contiguous sequence would forbid exactly what the no-reuse rule exists to allow.</p>
 
   <h3>The claim: the artifact read without the inputs</h3>
   <p>Two of the conformance targets are checked by someone who holds the inputs: a document against a profile, and a profile against the methodology. The <strong>claim</strong> is a separate artifact. It is the only one read by someone who does not hold the inputs. That reader is typically a buyer in a different organisation, reading the claim months later.</p>
   <p>A claim is a machine-readable document. It is bound to one CBOM by digest. It lists every profile that was evaluated, each with its own verdict and its whole pinned chain of base profiles. It also carries the disclosure states and the non-assertions inside itself, rather than pointing to them elsewhere. The non-assertions are the statements of what a verdict does not establish.</p>
   <p>The non-assertions matter most. Every point in the table under <a href="#not-asserted">What a conformance verdict does not assert</a> is repeated inside every claim. The reason is that the person reading a claim will not have read the methodology, and the word &ldquo;conforms&rdquo; invites more inference than it supports.</p>
-  <p>A claim can be re-checked. Running <code>--verify-claim</code> confirms the digest and re-runs each profile the claim names. Re-checking cannot establish that the disclosed values are true, and no future version of the check will be able to. A producer who misstates a protocol version still produces a claim that verifies correctly. See <a href="https://github.com/pkic/cbom/blob/main/decisions/0015-a-conformance-claim-is-checkable.md">decision 0015</a>, and <a href="https://github.com/pkic/cbom/blob/main/decisions/0016-what-an-spdx-only-claim-asserts.md">0016</a> for what an SPDX-only claim may assert.</p>
+  <p>A claim can be re-checked. Running <code>--verify-claim</code> confirms the digest and re-runs each profile the claim names. Verifying a claim cannot establish that the disclosed values are true, and no future version of the check will be able to. A producer who misstates a protocol version still produces a claim that verifies correctly. <a href="formats.html">Formats</a> explains what a claim on an SPDX-only document may assert.</p>
 
   <h3>C17: rules that cannot fail</h3>
   <p>A rule that cannot fail is worse than a missing rule. The report says the rule passed, and a reader cannot tell that it could never have failed. There are three ways to write such a rule, and until recently all three passed review.</p>
@@ -209,7 +209,7 @@ nav: conformance
   <p>A reference rule names a context kind, such as <code>sbom</code> or <code>configuration-guidance</code>. The profile defines each kind once, in <code>contextKinds</code>, with the CycloneDX reference types that can carry it and its form: a fixed document bound by a hash, or an endpoint that names its access protocol. C18 requires every reference rule to name a defined kind, and every kind to list real CycloneDX reference types. A kind whose carrier list names no real type could never be satisfied by a valid document, so the rule could only fail.</p>
 
   <p>C1 to C7 and C11 to C18 are checked mechanically by <code>check_profile.py</code>, which takes a rules file and reports on each requirement in turn. C8 to C10 are checked where the profile declares the material, and are reported as warnings that do not affect the result unless <code>--strict</code> is given.</p>
-  <p>All six example profiles pass: Interface Enumeration v0.3, the Interface Disclosure Baseline v0.9, Deployment Disclosure v0.2, PQC Migration v0.8, PQC Migration Extended v0.1 and Procurement v0.1. The test suite also carries deliberately defective profiles for the MUST requirements, so that the checks themselves are tested.</p>
+  <p>All eight example profiles pass: Interface Enumeration v0.3, the Interface Disclosure Baseline v0.9, Deployment Disclosure v0.2, PQC Migration v0.8, PQC Migration Extended v0.2, Procurement v0.2, the change core v0.1 and the substation component profile v0.1. The test suite also carries deliberately defective profiles for the MUST requirements, so that the checks themselves are tested.</p>
   <p>The tool does not replace review. C3 in particular is enforced through indirect structural checks. A rule that names a specific instance in a way the checker does not model would therefore still pass.</p>
 
   <h2>3. An evaluation tool conforming to this methodology</h2>
@@ -236,13 +236,13 @@ nav: conformance
   <p>The methodology requires only that the distinction between the two results reaches the caller. The particular codes are an implementation choice, and another tool may signal it differently.</p>
 
   <p><code>validate_cbom.py</code> is the reference implementation. The <a href="demo.html">Demo</a> page used to be a second one: a static page cannot run Python, so the evaluation was written again in JavaScript, and <code>tests/check-demo.py</code> compared the two. The demo and the reference tool had diverged once before that check existed. A published page that silently disagrees with the specification is worse than no page at all.</p>
-  <p>The demo no longer evaluates anything. <code>tools/build_demo_reports.py</code> runs the validator over the examples and writes <code>demo-reports.json</code>, and the page renders that file. <code>tests/check-demo.py</code> regenerates the reports and fails if the committed file differs. It also fails if the page holds a copy of any rules file. This changes how <a href="https://github.com/pkic/cbom/blob/main/decisions/0018-the-demonstration-is-checked-against-the-tool.md">decision 0018</a> is met, not what it requires: the page shows what the reference tool says.</p>
+  <p>The demo no longer evaluates anything. <code>tools/build_demo_reports.py</code> runs the validator over the examples and writes <code>demo-reports.json</code>, and the page renders that file. <code>tests/check-demo.py</code> regenerates the reports and fails if the committed file differs. It also fails if the page holds a copy of any rules file. The requirement is unchanged: the page shows what the reference tool says.</p>
 
   <h2>Making and recording a claim</h2>
-  <p>A conformance claim is a statement by an identified party that a named document revision was assessed against a named profile version and produced a stated verdict.</p>
+  <p>A conformance claim is a statement by an identified party that a named document revision was evaluated against a named profile version and produced a stated verdict.</p>
 
   <h3>What a claim cites</h3>
-  <p>A claim names three things: the profile and its version, the carrier format and its version, and the content revision of the document that was assessed. A claim missing any of the three cannot be reproduced, and a claim that cannot be reproduced cannot be audited. Where a derived profile was used, the claim also names the base and the version it pins.</p>
+  <p>A claim names three things: the profile and its version, the carrier format and its version, and the content revision of the document that was evaluated. A claim missing any of the three cannot be reproduced, and a claim that cannot be reproduced cannot be audited. Where a derived profile was used, the claim also names the base and the version it pins.</p>
   <pre><code>Document: cbom-keycloak-product.cdx.json  (Keycloak 26.7.3 product record)
 Conforms to:
   pkic.example.pqc-migration v0.8
@@ -256,11 +256,11 @@ Tool: validate_cbom.py</code></pre>
 
   <h3>Who may claim</h3>
   <p>A claim is made by the party that performed the evaluation, and identifies that party. A producer evaluating its own document makes a self-declared claim, which is permitted and is labelled as such. A claim made by a party other than the producer is an attested claim, and carries whatever additional weight the relying party assigns to the attesting party.</p>
-  <div class="banner warn">Open point. Whether self-declaration is sufficient for a given purpose, or whether some profiles should require attestation by an independent party, is not settled. It may reasonably differ between a procurement profile and an internal reporting profile. Recorded as Q14.</div>
+  <div class="banner">Each profile states whether it accepts self-declared claims, or requires attestation by an independent party. A procurement profile and an internal reporting profile may reasonably differ.</div>
 
   <h3>Validity over time</h3>
-  <p>A claim is fixed to the revision it assessed and does not roll forward. A new content revision needs a new evaluation. So does a new profile version, and where that version tightened a rule, a document that conformed before may no longer conform. The changelog is what tells a producer whether re-evaluation is likely to be needed, and that is why the methodology asks for every change to be classified.</p>
-  <div class="banner">A tightening takes effect after a grace period. The profile states a recommended period and the date it ends, and a contract may set a different one. Until that date the validator reports the tightened rule as a warning, not a failure, so a document produced against the previous version is not rejected without notice.</div>
+  <p>A claim is fixed to the revision it evaluated and does not roll forward. A new content revision needs a new evaluation. So does a new profile version, and where that version tightened a rule, a document that conformed before may no longer conform. The changelog is what tells a producer whether re-evaluation is likely to be needed, and that is why the methodology asks for every change to be classified.</p>
+  <div class="banner">A tightening takes effect after a grace period. The profile states a recommended period and the date it ends, and a contract may set a different one. Until that date an evaluation tool reports the tightened rule as a warning, not a failure, so a document produced against the previous version is not rejected without notice. The rules-file format and the reference validator do not support this yet.</div>
 
   <h2 id="not-asserted">What a conformance verdict does not assert</h2>
   <p>The verdict is a statement about disclosure only. It does not make the following claims, although it is often mistaken for them.</p>

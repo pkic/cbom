@@ -597,6 +597,10 @@
               "value": "certificate-authority"
             },
             {
+              "name": "pkic:profile:externalDependencies",
+              "value": "random-bit-generator"
+            },
+            {
               "name": "pkic:profile:defaultState",
               "value": "enabled"
             },
@@ -695,6 +699,10 @@
               "value": "certificate-authority"
             },
             {
+              "name": "pkic:profile:externalDependencies",
+              "value": "random-bit-generator"
+            },
+            {
               "name": "pkic:profile:defaultState",
               "value": "enabled"
             },
@@ -769,6 +777,10 @@
             {
               "name": "pkic:profile:externalDependencies",
               "value": "certificate-authority"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "random-bit-generator"
             },
             {
               "name": "pkic:profile:defaultState",
@@ -847,6 +859,10 @@
               "value": "certificate-authority"
             },
             {
+              "name": "pkic:profile:externalDependencies",
+              "value": "random-bit-generator"
+            },
+            {
               "name": "pkic:profile:defaultState",
               "value": "disabled"
             },
@@ -917,6 +933,10 @@
             {
               "name": "pkic:profile:externalDependencies",
               "value": "certificate-authority"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "random-bit-generator"
             },
             {
               "name": "pkic:profile:defaultState",
@@ -1506,7 +1526,7 @@
             },
             {
               "name": "pkic:profile:externalDependencies",
-              "value": "none"
+              "value": "random-bit-generator"
             },
             {
               "name": "pkic:profile:defaultState",
@@ -1929,7 +1949,7 @@
           "properties": [
             {
               "name": "pkic:profile:protocol",
-              "value": "JGroups TCP"
+              "value": "JGroups"
             }
           ],
           "type": "service"

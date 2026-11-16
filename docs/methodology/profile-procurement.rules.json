@@ -3,7 +3,7 @@
   "profileId": "pkic.example.procurement",
   "profileTag": "procurement",
   "title": "Procurement and Tender Conformance (Example)",
-  "version": "0.1",
+  "version": "0.2",
   "objective": {
     "$comment": "C1. The consumer is the buyer, not the operator the product will later serve. The decision is about the tender response, and every rule below traces to a reason a buyer would send a response back.",
     "consumer": "A buyer evaluating tender responses for a product it will operate but did not build and cannot inspect.",
@@ -54,7 +54,7 @@
   ],
   "productRules": [
     {
-      "id": "P5",
+      "id": "P1",
       "description": "Product declares at least one storage interface for key material at rest, or states why it has none",
       "level": "MUST",
       "constraint": {
@@ -66,10 +66,10 @@
         "absenceEnumRef": "storageAbsenceVocabulary"
       },
       "withholdable": false,
-      "note": "The structural rule a buyer most needs after P2. Responses describe the interfaces traffic crosses and are silent about where keys are kept. A product that keeps no keys, or keeps them in a hardware module outside the product, satisfies the rule by saying so, the same way P2 treats a product with no management surface."
+      "note": "The structural rule a buyer most needs after the baseline's P2. Responses describe the interfaces traffic crosses and are silent about where keys are kept. A product that keeps no keys, or keeps them in a hardware module outside the product, satisfies the rule by saying so, the same way the baseline's P2 treats a product with no management surface."
     },
     {
-      "id": "P6",
+      "id": "P2",
       "description": "Product states coverage of all interfaces, or of all externally reachable ones",
       "level": "MUST",
       "constraint": {
@@ -77,7 +77,7 @@
         "enumRef": "procurementCoverageVocabulary"
       },
       "withholdable": false,
-      "note": "P4 requires coverage to be stated. A partial disclosure cannot be compared across responses, because a missing interface could be absent or merely unlisted, so a buyer returns it. Stated as a new rule on the same attribute rather than as an override of P4, with its own narrower vocabulary."
+      "note": "interface-disclosure#P4 requires coverage to be stated. A partial disclosure cannot be compared across responses, because a missing interface could be absent or merely unlisted, so a buyer returns it. Stated as a new rule on the same attribute rather than as an override of interface-disclosure#P4, with its own narrower vocabulary."
     }
   ],
   "interfaceRules": [],
@@ -99,7 +99,7 @@
     "$comment": "C9. One rich document serves several consumers: the product record written for migration planning is read unchanged against this profile.",
     "mapping": "mapping-cyclonedx-spdx.md",
     "conformingExample": "examples/cbom-keycloak-product.cdx.json",
-    "nonConformingExample": "examples/cbom-keycloak-product-fail-procurement-P5.cdx.json"
+    "nonConformingExample": "examples/cbom-keycloak-product-fail-procurement-P1.cdx.json"
   },
   "changelog": [
     {
@@ -115,6 +115,16 @@
         {
           "kind": "editorial",
           "summary": "First published, pinned to the Interface Disclosure Baseline v0.9 and scoped to products at 'implemented'."
+        }
+      ]
+    },
+    {
+      "version": "0.2",
+      "date": "2026-11-16",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Renumbered the profile's own product rules from P5 and P6 to P1 and P2, so that numbering starts at 1 in every profile. The rules are unchanged. Citations of procurement#P5 and procurement#P6 now read procurement#P1 and procurement#P2."
         }
       ]
     }

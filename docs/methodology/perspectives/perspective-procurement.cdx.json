@@ -52,13 +52,13 @@
         },
         {
           "expression": "$.inventories[*].components[*]",
-          "nativeName": "procurement#P5",
+          "nativeName": "procurement#P1",
           "relevance": "required",
           "rationale": "Product declares at least one storage interface for key material at rest, or states why it has none"
         },
         {
           "expression": "$.compositions",
-          "nativeName": "procurement#P6",
+          "nativeName": "procurement#P2",
           "relevance": "required",
           "rationale": "Product states coverage of all interfaces, or of all externally reachable ones"
         },

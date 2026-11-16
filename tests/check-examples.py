@@ -21,6 +21,8 @@ import validate_cbom as V  # noqa: E402
 
 ENUM, BASE, DEPL = "interface-enumeration", "interface-disclosure", "deployment-disclosure"
 PQC, EXT, PROC = "pqc-migration", "pqc-migration-extended", "procurement"
+CORE, OT = "change-core", "pqc-migration-ot"
+IED = "cbom-ot-protection-ied-product.cdx.json"
 PRODUCT = "cbom-keycloak-product.cdx.json"
 CONF = "cbom-keycloak-deployment-configured.cdx.json"
 OBS = "cbom-keycloak-deployment-observed.cdx.json"
@@ -55,7 +57,7 @@ CASES = [
     ("cbom-keycloak-product-fail-pqc-I12.cdx.json", BASE, [], []),
     ("cbom-keycloak-product-fail-ext-I3.cdx.json", EXT, [], ["service:mgmt-admin/%s#I3" % EXT]),
     ("cbom-keycloak-product-fail-ext-I3.cdx.json", PQC, [], []),
-    ("cbom-keycloak-product-fail-procurement-P5.cdx.json", PROC, [], ["%s#P5" % PROC]),
+    ("cbom-keycloak-product-fail-procurement-P1.cdx.json", PROC, [], ["%s#P1" % PROC]),
     ("cbom-keycloak-product-intended.cdx.json", BASE, [], INTENDED),
     ("cbom-keycloak-product-intended.cdx.json", ENUM, [], []),
     ("legacy/cbom-keycloak-scanner-output.cdx.json", ENUM, [],
@@ -76,6 +78,16 @@ CASES = [
     # peerInterface (I4) resolves into the Keycloak configured record when that is supplied.
     ("cbom-postgres-deployment-configured.cdx.json", DEPL, [CONF], []),
     ("cbom-postgres-deployment-configured.cdx.json", DEPL, [], []),
+    # The substation automation (OT) worked example: one protection IED, described by its
+    # supplier against the component profile, which extends the change core.
+    (IED, ENUM, [], []),
+    (IED, BASE, [], []),
+    (IED, CORE, [], []),
+    (IED, OT, [], []),
+    ("cbom-ot-protection-ied-product-fail-core-I13.cdx.json", CORE, [], ["mgmt-enrol/%s#I13" % CORE]),
+    ("cbom-ot-protection-ied-product-fail-core-I13.cdx.json", BASE, [], []),
+    ("cbom-ot-protection-ied-product-fail-ot-I4.cdx.json", OT, [], ["upd-fw/%s#I4" % OT]),
+    ("cbom-ot-protection-ied-product-fail-ot-I4.cdx.json", CORE, [], []),
     # A product profile refuses to treat a deployment record as a product record.
     (CONF, PQC, [PRODUCT], None),
     (PRODUCT, DEPL, [], None),

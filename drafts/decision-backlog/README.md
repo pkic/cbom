@@ -97,7 +97,7 @@ progress. Priority 2 blocks a use case. Priority 3 is needed before a release. P
 | **B. PQC migration depths** | Draft 0022 (K1–K10), Q22 | Accept the two-depth family; an interface is a logical boundary (K2); application protocols as services (K7); inheritance from the providing library (K9); the CBOM-to-SBOM link (K10, which answers Q22) |
 | **C. Use-case grouping and change core** | Draft 0023, Q64, Q66, Q50, Q51, Q53, naming | Accept the two groups and the change core as a sibling (answers Q64). Is the core target-neutral (Q66)? Where a family is recorded (Q50), whether siblings are re-parented (Q51, now for the core as well as the baseline), and whether depths are numbered (Q53). Keep "change planning" or rename it "migration planning"? |
 | **T. Tooling** | The deferred validator adapter | Lift the deferral for two adapter features only: services as interfaces (K7) and inheritance through `provides` (K9). Without them no worked example in either group gets a tool verdict |
-| **P. Member proposals** | Issue #9, issue #10 | Add `random-bit-generator` to the run-time dependency list of `pqc-migration-extended#I9` (#9). Add `randomness` as an eighth cryptographic purpose (#10, the open point of 0010) |
+| **P. Member proposals** | Issue #9, issue #10 | Closed on 16 November 2026. #9 accepted: `random-bit-generator` is in the run-time dependency list of `pqc-migration-extended#I9` (v0.2). #10 not taken: randomness is not a cryptographic purpose (decision 0010) |
 
 ### Priority 2: blocks a use case
 

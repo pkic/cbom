@@ -3,7 +3,7 @@
   "profileId": "pkic.example.pqc-migration-extended",
   "profileTag": "pqc-migration-extended",
   "title": "PQC Migration, Extended Depth (Example)",
-  "version": "0.1",
+  "version": "0.2",
   "objective": {
     "$comment": "C1. A derived profile states its own objective. The consumer and the decision are the baseline's, word for word, because a depth serves the same decision and asks for more (decision 0019). Restating a different decision would make this a branch. One option is added, because the facts this depth requires make a new action possible: sequencing another system's migration ahead of this interface.",
     "consumer": "An operator planning a post-quantum migration across an estate of products it did not build.",
@@ -89,7 +89,7 @@
     "os-keyring",
     "external-vault"
   ],
-  "$commentExternalDependency": "Services outside the product that an interface's cryptography depends on at run time. These are the operator's sequencing facts, not the supplier's blockers: blockedBy says what stops the supplier, externalDependencies says what the operator must migrate first. An interface cannot present an ML-DSA chain before its certificate authority issues one, nor rely on revocation before the responder signs with an algorithm its clients verify. 'none' is a complete answer.",
+  "$commentExternalDependency": "Services outside the product that an interface's cryptography depends on at run time. These are the operator's sequencing facts, not the supplier's blockers: blockedBy says what stops the supplier, externalDependencies says what the operator must migrate first. An interface cannot present an ML-DSA chain before its certificate authority issues one, nor rely on revocation before the responder signs with an algorithm its clients verify. 'none' is a complete answer. 'random-bit-generator' names a random bit generator outside the product, such as the operating system's entropy source, a CPU generator or an HSM, that the interface's cryptography draws on. Randomness is a run-time dependency, not a cryptographic purpose: it is not a job done at an interface and does not migrate on a timetable of its own.",
   "externalDependencyVocabulary": [
     "certificate-authority",
     "revocation-responder",
@@ -98,6 +98,7 @@
     "hsm",
     "key-vault",
     "time-source",
+    "random-bit-generator",
     "none"
   ],
   "storageAbsenceVocabulary": [
@@ -276,7 +277,7 @@
       },
       "list": true,
       "withholdable": false,
-      "note": "Services outside the product this interface's cryptography depends on at run time, or 'none'. Source: cprofile 'security_controls[].external_dependencies' and 'revocation_check'."
+      "note": "Services outside the product this interface's cryptography depends on at run time, including a platform random bit generator, or 'none'. Source: cprofile 'security_controls[].external_dependencies' and 'revocation_check'."
     },
     {
       "id": "I10",
@@ -343,6 +344,10 @@
     {
       "item": "Scope purposes in check_scope_narrows",
       "detail": "The check does not read cryptographicPurposes, so adding key-protection here is not verified as a tightening and dropping a purpose would not be caught."
+    },
+    {
+      "item": "verifierPopulation and trustDomain",
+      "detail": "Provisionally decided for this profile at SHOULD, on the entity-authentication and non-repudiation purposes (Publication 2, 7.4). They are group members of the inherited capabilityByPurpose group, and a derived profile cannot yet add members to an inherited group. Until the validator and check_profile.py support that, no rule requires them."
     }
   ],
   "artifacts": {
@@ -364,6 +369,16 @@
         {
           "kind": "editorial",
           "summary": "I8 also accepts 'product-managed' (K6) and 'none' (K3). Settled before release, from the Keycloak example."
+        }
+      ]
+    },
+    {
+      "version": "0.2",
+      "date": "2026-11-16",
+      "changes": [
+        {
+          "kind": "relaxing",
+          "summary": "Added 'random-bit-generator' to externalDependencyVocabulary, so that I9 can name a random bit generator outside the product. A document that used the value before would have failed I9 and now conforms. Randomness is recorded as a run-time dependency, not as a cryptographic purpose; the purpose vocabulary is unchanged."
         }
       ]
     }

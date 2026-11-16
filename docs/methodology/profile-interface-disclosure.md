@@ -17,9 +17,7 @@
 > is the concept the PKIC work uses. Where confusion is possible, the methodology says **PKIC CBOM
 > profile** and **cryptographic interface**.
 >
-> The choices made in v0.9 are recorded in decision 0025
-> (`https://github.com/pkic/cbom/blob/main/decisions/0025-baseline-consolidation.md`). Each is provisional and can be reopened on
-> its own.
+> The choices made in v0.9 are provisional, and each can be reopened on its own.
 
 ## 1. Revision rationale
 
@@ -33,7 +31,7 @@ The same early draft carried a `pqcPosture` attribute. That attribute is a judge
 The criteria behind it change while the product does not, so the same disclosed values would
 yield a different answer next year. The working group removed it before v0.1. The profile records
 the algorithms that the judgement is derived from, and leaves the judgement to external versioned
-policy. Decision 0002 records the choice, and the Policy Evaluation section develops it. Neither
+policy. The Policy Evaluation section develops this choice. Neither
 correction appears in the changelog in §8. No one authored a document against that draft, and a
 changelog records changes between published versions.
 
@@ -92,7 +90,7 @@ model page ([model.html](model.html)) describes each one with a diagram.
 | Modern gateway to legacy controller | 2 | yes | data in transit | single hop | the less capable party fixes the posture |
 | Application to HSM or TEE | 2 | yes | operation requests; key material is confined | local, crosses a hardware boundary | a relationship that transfers no protected data |
 | Broadcast, multicast, or group messaging | n | yes | data in transit | one to many | not represented in v1; see below |
-| Signed message verified by a closed membership | n | no | a signed message is carried | one to many | not represented in v1; the upper limit belongs to the membership rather than to either party. Recorded as Q46 |
+| Signed message verified by a closed membership | n | no | a signed message is carried | one to many | not represented in v1; the upper limit belongs to the membership rather than to either party |
 
 The Keycloak example exercises several rows. The operator's ingress terminates TLS and forwards
 plain HTTP to Keycloak, which is the proxy row. Signed OIDC tokens ride inside TLS, which is the
@@ -123,13 +121,13 @@ encryption carried over TLS, such as signed OIDC tokens or SAML assertions on an
 
 The two layers migrate on different timetables and depend on different standards. For Keycloak,
 the TLS layer waits on the Java runtime, and the token layer waits on a JOSE standard. One entry
-could not state both. Decision 0022 (K2) records this reading.
+could not state both.
 
 An application-layer interface counts as an interface in two cases: when it applies cryptography
 of its own, or when anyone can reach it without transport protection. One that only rides a
 declared transport and applies nothing of its own belongs to that transport's interface, and the
 producer does not count it separately. Without this rule, interface counts and the coverage
-statement would vary with how many services a producer chose to list (decision 0022, K7).
+statement would vary with how many services a producer chose to list.
 Keycloak's health and metrics endpoints are an example: they apply no cryptography of their own,
 so the management TLS listener carries them.
 
@@ -221,7 +219,7 @@ Rule identifiers are local to the profile and are cited against its tag: `P1` be
 `interface-disclosure#P1` in a report or a claim. The letter says how often the evaluator applies
 the rule: `P` once per document, `I` once per declared interface, and `R` once per document or
 once per interface, as the rule's `at` field says. A profile derived from the baseline numbers its
-own rules from `P1`, `I1` and `R1` in its own space. See decision 0011.
+own rules from `P1`, `I1` and `R1` in its own space.
 
 ### 5.1 Product-level rules
 
@@ -279,7 +277,7 @@ A storage interface is data at rest. It has no protocol, peer or handshake, so I
 I6 do not apply to it. I10 stands in for I3, because wrapping keys at rest is a different job from
 establishing keys between parties. I4 and I9 apply to storage unchanged. A network path to remote
 storage, such as a backup over TLS, is a separate service or interconnect interface, and it owes
-the channel rules there (decision 0022).
+the channel rules there.
 
 I11 matters because some interfaces exist in a product and are off by default. Keycloak's
 plaintext HTTP listener is one. Declared without `defaultState`, it reads as an active plaintext
@@ -313,7 +311,7 @@ that the producer declines to say.
 
 `deployment-defined` and `peer-defined` are accepted only at `implemented`. At `configured` or
 `observed`, the producer holds the answer and must give it. Without the two literals, a truthful
-build record of Keycloak failed I5 on 7 of its 13 interfaces. Decision 0012 states the principle:
+build record of Keycloak failed I5 on 7 of its 13 interfaces. The principle is that
 a rule that no legitimate subject can satisfy honestly is wrong, not strict.
 
 A product that declares `deployment-defined` must also tell the operator where to make the choice.
@@ -337,7 +335,7 @@ attribute:
 evaluator still reports it separately from `undeclared`, since the two carry different
 information. The first records a limit of the producing process. The second records that the
 producer never addressed the question. A record with gaps conforms one depth down, at the entry
-profile, instead (decision 0019).
+profile, instead.
 
 In the baseline only I9 (`implementationPurl`) is withholdable. A producer may reasonably decline
 to publish the implementing library and still meet part of the objective. The objective's own
@@ -358,8 +356,8 @@ provides a native field for them. The mapping records the convention.
 
 ### 5.5 Reference rules
 
-A reference rule requires the document to point to an artefact that it does not carry. Decision
-0020 established the principle for vulnerability statements: a CBOM and the context around it are
+A reference rule requires the document to point to an artefact that it does not carry. The
+principle was first set for vulnerability statements: a CBOM and the context around it are
 joined, not merged. A CBOM records facts that change when the product or deployment changes.
 Context that changes on another trigger, or that another party holds, stays outside.
 
@@ -443,7 +441,7 @@ image, identified by an OCI Package URL, because the image fixes the cryptograph
 | OIDC and OAuth 2.0 token issuance (JOSE) | service | OIDC 1.0 | enabled | Realm signing RS256 by default. Token encryption is off by default, so `keyExchange` and `encryption` are `none` |
 | SAML 2.0 assertions (XML Signature) | service | SAML 2.0 | enabled | RSA-SHA256 signatures. `keyExchange` and `encryption` are `none` |
 | HTTP listener (plaintext) | service | HTTP 1.1 | disabled | `none` for every algorithm. Off by default. It is the normal configuration behind a TLS-terminating proxy |
-| Admin REST API and Admin Console (bearer tokens) | management | Admin REST (OAuth 2.0 bearer) | enabled | Carried over the HTTPS listener. Bearer tokens signed by the master realm |
+| Admin REST API and Admin Console (bearer tokens) | management | OAuth 2.0 | enabled | Carried over the HTTPS listener. Bearer tokens signed by the master realm |
 | Brokered token verification (external OIDC and SAML providers) | interconnect | OIDC 1.0 | disabled | `authentication` is `peer-defined`: the external provider chooses the signature algorithm |
 | Realm and cluster key persistence (database) | storage | – | enabled | Key material held in the database in plaintext (Keycloak issue #39933): `encryption` is `none` and `keyWrapping` is `none` |
 
@@ -484,7 +482,7 @@ Four further examples conform to the baseline and fail one rule of a derived pro
   key-wrapping capability is missing.
 - `cbom-keycloak-product-fail-ext-I3.cdx.json` fails `pqc-migration-extended#I3`, because the key
   types the Admin API can generate are missing.
-- `cbom-keycloak-product-fail-procurement-P5.cdx.json` fails `procurement#P5`, because the storage
+- `cbom-keycloak-product-fail-procurement-P1.cdx.json` fails `procurement#P1`, because the storage
   interface is missing.
 - `cbom-keycloak-deployment-observed-fail-P1.cdx.json` fails `deployment-disclosure#P1`, because
   the configured record it cites has changed and the hash no longer matches.
@@ -539,8 +537,8 @@ MUST with withholdability, and that is the only combination in which withholding
 The profile therefore stated the disclosure model without applying it in any rule.
 
 The derived PQC migration profile, now v0.8, pins baseline v0.9. It tightens
-`interface-disclosure#I9` by removing its withholdability, since the level is already MUST. Under
-decision 0004 that tightening is permitted. A later baseline revision that relaxed I9 would put
+`interface-disclosure#I9` by removing its withholdability, since the level is already MUST.
+Monotonic extension permits that tightening. A later baseline revision that relaxed I9 would put
 the derived profile in conflict, which is why the derived profile pins its base by version.
 
 ### v0.4 — 2026-08-21
@@ -553,7 +551,7 @@ the derived profile in conflict, which is why the derived profile pins its base 
 Both changes were editorial here and neither was elsewhere: the migration profile's v0.2 narrowed
 the accepted stages, and that was a tightening. The pattern is worth noting when reading a
 changelog. A field can arrive without effect in one profile and immediately change verdicts in
-another that derives from it. Recorded as decision 0008.
+another that derives from it.
 
 ### v0.5 — 2026-08-21
 
@@ -565,7 +563,6 @@ The value of the field is again in what it permits elsewhere. The migration prof
 `both`, and C12 then obliges it to require the present-state attribute behind every capability
 attribute it asks for. It already did, by inheriting I2, I3 and I5 from the baseline, but nothing
 had required it to. A migration profile written standalone could have reported capability alone.
-Recorded as decision 0009, which reverses the clause in 0008 that rejected orientation.
 
 ### v0.6 — 2026-08-21
 
@@ -573,30 +570,28 @@ Recorded as decision 0009, which reverses the clause in 0008 that rejected orien
 |---|---|---|
 | Rewrote the objective. The previous decision was whether the cryptography was "disclosed in enough detail", which is a decision about the document rather than about the product | editorial | None. No rule changes. The decision is now the consumer's actual job: determining which deployed interfaces a published weakness affects, and what has changed since the last record. Every rule traces to it |
 | Added **P3**: the document identifies the subject it describes, in the form the profile names | tightening | A document that did not carry a subject identifier no longer conforms. A name and a version are not sufficient: two documents about the same product have to agree on the identifier for either to be usable as a record |
-| Added **P4**: the product states how complete its declared interface set is. Moved down from the migration profile | tightening | A document carrying no completeness statement no longer conforms. Settles Q34 |
+| Added **P4**: the product states how complete its declared interface set is. Moved down from the migration profile | tightening | A document carrying no completeness statement no longer conforms |
 | Revised **P2**: satisfied by declaring a management interface **or** by stating why there is none | relaxing, deliberately | A subject with no administrative surface, such as a library, a hardware token or an embedded component, previously failed while hiding nothing. It can now say so. Silence still fails: a stated absence is a fact, and this is the disclosure model applied to structure |
-| Declared `identifierSchemes` and referenced them from I1, I3, I4, I5, I9 and P3 | editorial | None yet. The profile previously constrained the form of the least contested identifier, the implementing library, and left the most contested free, so free text satisfied `protocol` and `keyExchange`. Naming the required scheme is what makes correlation across suppliers possible. The algorithm scheme is the CycloneDX Cryptography Registry where an entry exists (Q20, settled provisionally) |
+| Declared `identifierSchemes` and referenced them from I1, I3, I4, I5, I9 and P3 | editorial | None yet. The profile previously constrained the form of the least contested identifier, the implementing library, and left the most contested free, so free text satisfied `protocol` and `keyExchange`. Naming the required scheme is what makes correlation across suppliers possible. The algorithm scheme is the CycloneDX Cryptography Registry where an entry exists |
 
 The P2 change was the first relaxing change in the baseline's history, and it is worth being
 explicit about why it is not a weakening. The rule exists to catch omission. A document that omits
 its management interface still fails. What changed is that a subject which genuinely has none can
 now say so, instead of being told it does not conform because of a fact about its own design.
-Recorded as decision 0012, alongside 0011 for the rule numbering that the two new product rules
-made necessary.
 
 ### v0.7 — 2026-08-24
 
 | Change | Kind | Effect on an existing document |
 |---|---|---|
-| Added `profileTag`, `interface-disclosure` | editorial | None. No rule id changes. A rule id is local to the profile that declares it, so the citable form of a rule is now `interface-disclosure#I9` rather than `I9`. The baseline is the base of its family and already used the kind letters `P` and `I`. What changes is that a profile deriving from it may number its own rules from `P1` and `I1` without colliding, at any depth. Recorded as decision 0011 |
+| Added `profileTag`, `interface-disclosure` | editorial | None. No rule id changes. A rule id is local to the profile that declares it, so the citable form of a rule is now `interface-disclosure#I9` rather than `I9`. The baseline is the base of its family and already used the kind letters `P` and `I`. What changes is that a profile deriving from it may number its own rules from `P1` and `I1` without colliding, at any depth |
 
 ### v0.8 — 2026-09-26
 
 | Change | Kind | Effect on an existing document |
 |---|---|---|
-| I1, I2, I3, I5 and I6 no longer apply to a storage interface | relaxing | Each rule describes a channel: a protocol, its version, a key exchange, a peer authentication and two endpoint roles. A storage interface has none of these, so a product declaring one could not conform honestly. The defence is the one decision 0012 gave for P2: a rule no legitimate subject can satisfy honestly is wrong, not strict. No verdict on an existing example changed, because none declared a storage interface |
-| Added **I10** `keyWrapping`, MUST on a storage interface | tightening | A document that declares a storage interface now states how its data keys are protected. See decision 0022 |
-| Stated that an interface is a logical boundary, not a port, so two cryptographic layers on one port are two interfaces (K2). Stated that `none` is an accepted value for an algorithm attribute, distinct from the `unknown` and `withheld` markers (K3) | editorial | None. No rule changes: both statements say how existing rules are read. See decision 0022 |
+| I1, I2, I3, I5 and I6 no longer apply to a storage interface | relaxing | Each rule describes a channel: a protocol, its version, a key exchange, a peer authentication and two endpoint roles. A storage interface has none of these, so a product declaring one could not conform honestly. The defence is the one given for P2: a rule no legitimate subject can satisfy honestly is wrong, not strict. No verdict on an existing example changed, because none declared a storage interface |
+| Added **I10** `keyWrapping`, MUST on a storage interface | tightening | A document that declares a storage interface now states how its data keys are protected |
+| Stated that an interface is a logical boundary, not a port, so two cryptographic layers on one port are two interfaces (K2). Stated that `none` is an accepted value for an algorithm attribute, distinct from the `unknown` and `withheld` markers (K3) | editorial | None. No rule changes: both statements say how existing rules are read |
 | Stated when an application-layer interface counts as an interface (K7) | editorial | None. The statement sets how P1 and P4 count, and changes no rule |
 
 ### v0.9 — 2026-10-25
@@ -613,14 +608,13 @@ made necessary.
 | The carrier target is CycloneDX 2.0, pinned to the `2.0-dev` schema of 23 October 2026. CycloneDX 1.6 and 1.7 are read as legacy | editorial | None. 1.6 and 1.7 documents are still evaluated, and the report flags them legacy |
 | The conforming example is the Keycloak 26.7.3 product record, replacing the nginx pair | editorial | None. The old examples are deleted |
 
-Decision 0025 records the reasoning for each v0.9 change. Each change was tested on the Keycloak
-example, and each can be reopened on its own.
+Each v0.9 change was tested on the Keycloak example, and each can be reopened on its own.
 
 ### v0.1 — initial draft
 
 Product-level rules P1 and P2 and per-interface rules I1 to I8. An earlier working draft bound a
 rule to a named interface (`interfaceId MUST equal "nginx-https"`). §1 describes the correction to
-product-independent form, and decision 0001 records it. The working group did not publish that
+product-independent form. The working group did not publish that
 draft, and no one authored a document against it.
 
 ### Not yet decided

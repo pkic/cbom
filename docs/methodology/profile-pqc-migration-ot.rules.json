@@ -1,0 +1,156 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile for the substation automation use case: the component profile. DERIVED from the change core v0.1, so it inherits the capability, enablement and update-path rules and adds four per-interface rules. A supplier of a protection IED, bay controller, gateway or router describes one product at one firmware version against it. The integrator's system document is a separate overlay, sas-system, which is described in the use case and not yet published as a rules file. Rule ids are local: this profile's rules are cited as 'pqc-migration-ot#I1'. Values in the worked example are illustrative.",
+  "profileId": "pkic.example.pqc-migration-ot",
+  "profileTag": "pqc-migration-ot",
+  "title": "PQC Migration for Substation Automation Components (Example)",
+  "version": "0.1",
+  "objective": {
+    "$comment": "C1.",
+    "consumer": "A grid operator's protection and control engineering function, with its system integrator, planning the post-quantum migration of one substation automation system.",
+    "decision": "For each interface of a component: migrate it in place, migrate only its key plane, carry it on a conduit, or replace the device at its next refurbishment, and what each action costs in testing and certification.",
+    "decisionOptions": [
+      "migrate the interface in place, by configuration or firmware",
+      "migrate the key plane only, where the data plane is already symmetric",
+      "carry the path on a conduit while the device waits",
+      "replace the device at its next scheduled refurbishment",
+      "escalate to the supplier or the standards body that holds the blocker"
+    ]
+  },
+  "scope": {
+    "$comment": "C11. Components as built: subject type 'product', stage 'implemented'. The system as integrated is the subject of the sas-system overlay, not of this profile.",
+    "subjectTypes": [
+      "product"
+    ],
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented"
+    ],
+    "cryptographicPurposes": [
+      "key-establishment",
+      "encryption",
+      "entity-authentication"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.change-core",
+    "version": "0.1",
+    "file": "profile-change-core.rules.json"
+  },
+  "appliesTo": {
+    "$comment": "Carrier acceptance. The target is CycloneDX 2.0, pinned to CycloneDX/specification 2.0-dev commit 76f185c (23 October 2026) until Ecma ratifies the release; the pinned schema is in tests/schemas/cyclonedx-2.0. 'min' is the oldest version the adapter reads: CycloneDX 1.6 and 1.7 documents are evaluated and flagged legacy, because the tools that produce CBOMs today emit 1.x. Below 'min', evaluation is refused. A derived profile may narrow this range and may not widen it.",
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "$inherited": "The disclosure model and the requirement keywords are inherited from the base and are deliberately not restated. Restating an inherited block would override the base's value silently, so a later change to the base, such as a new marker prefix, would not reach this profile and every marker would stop being recognised without an error. Only appliesTo is restated, because narrowing the carrier range is a real choice and the validator checks that a restated range does not widen the base's.",
+  "$commentCertification": "IEDs are certified per product version. Changing their cryptography can trigger IEC 61850 conformance re-testing, IEC 62443-4-2 re-certification, or the operator's own type approval. certificationImpact states what enabling the interface's capability would trigger for this product; the operator's own type approval stays in the operator's register.",
+  "certificationImpactVocabulary": [
+    "none",
+    "retest",
+    "recertification",
+    "not-applicable"
+  ],
+  "verifierReplaceableVocabulary": [
+    "yes",
+    "via-bootloader-update",
+    "no"
+  ],
+  "productRules": [],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "certificationImpact",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "certificationImpactVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "peer"
+      },
+      "note": "What enabling the post-quantum capability this interface states would trigger in testing or certification for this product. 'not-applicable' where no capability is planned. A component fact: the supplier knows its certificates. Turns each action into a schedule."
+    },
+    {
+      "id": "I2",
+      "attribute": "certificationScheme",
+      "level": "SHOULD",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "certificationImpact",
+        "in": [
+          "retest",
+          "recertification"
+        ]
+      },
+      "note": "The scheme the re-test or re-certification falls under, such as IEC 61850 conformance testing or IEC 62443-4-2 (ISASecure CSA). In CycloneDX 2.0 it maps to certifications."
+    },
+    {
+      "id": "I3",
+      "attribute": "keyStoreRef",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "service"
+      },
+      "note": "On every service interface: the interface that delivers or holds its keys, by reference within the document. GOOSE and sampled values name the group key interface, which separates the data plane from the key plane (position O3)."
+    },
+    {
+      "id": "I4",
+      "attribute": "verifierReplaceable",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "verifierReplaceableVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "updateMechanism",
+        "notEquals": "none"
+      },
+      "note": "Whether the algorithm the device uses to verify new firmware, with its trust anchor, can change in the field: 'yes', 'via-bootloader-update', or 'no' where it is fixed in boot ROM. Splits a fleet into devices that can be updated and devices that must be replaced."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "Migration priority, risk scores, target dates and compensating controls",
+      "reason": "Operator decisions. They belong in the operator's register, or in CycloneDX 2.0 risks, not in a supplier's component record."
+    },
+    {
+      "item": "Per-path latency budgets and safety analysis",
+      "reason": "The operator's requirements, not supplier facts. Real-time limits a product imposes are integration constraints (inherited change-core#I9, position O4)."
+    },
+    {
+      "item": "Site topology, zones and conduits",
+      "reason": "Facts about the system as integrated. The sas-system overlay carries them for one design."
+    },
+    {
+      "item": "Which interfaces are used in a given system (usage)",
+      "reason": "An integrator fact, stated in the sas-system overlay."
+    }
+  ],
+  "artifacts": {
+    "$comment": "C9.",
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "examples/cbom-ot-protection-ied-product.cdx.json",
+    "nonConformingExample": "examples/cbom-ot-protection-ied-product-fail-ot-I4.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-11-16",
+      "summary": "Initial draft. Extends the change core v0.1. Adds I1 to I4. The product rule the use case drafted as P-OT1 (declare an update path or say why there is none) is change-core#P2, and the real-time rule drafted as I-OT5 is change-core#I9, so neither is restated.",
+      "changes": []
+    }
+  ]
+}
