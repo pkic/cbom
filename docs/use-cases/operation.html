@@ -46,7 +46,7 @@ nav: uc-operation
   </div>
 
   <h2>Worked example: deployment disclosure v0.2</h2>
-  <p>The profile is <a href="../methodology/profile-deployment-disclosure.rules.json"><code>profile-deployment-disclosure.rules.json</code></a>, version 0.2. It extends the interface disclosure baseline v0.9. Its consumer is an operator, or an assessor acting for one, responsible for a deployment built from products it did not build. The decision is, for each interface of the deployment: which published weakness affects it, whether what the deployment permits matches what it was seen to do, and where the deployment falls short of what its products can do.</p>
+  <p>The profile is <a href="../methodology/profile-deployment-disclosure.rules.json"><code>profile-deployment-disclosure.rules.json</code></a>, version 0.2. It extends the interface disclosure baseline v0.10. Its consumer is an operator, or an assessor acting for one, responsible for a deployment built from products it did not build. The decision is, for each interface of the deployment: which published weakness affects it, whether what the deployment permits matches what it was seen to do, and where the deployment falls short of what its products can do.</p>
   <p>The profile accepts one subject type, <code>deployment</code>, and two stages, <code>configured</code> and <code>observed</code>. It excludes <code>implemented</code>, because a deployment record that repeats the vendor's build facts adds nothing. It cites the vendor's record instead. The vendor writes the product record. The operator writes one deployment record per stage. The records are joined, not merged.</p>
   <div style="overflow:auto">
   <table>

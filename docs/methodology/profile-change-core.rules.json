@@ -1,9 +1,9 @@
 {
-  "$comment": "Illustrative machine-readable CBOM profile: the change core. DERIVED from the interface disclosure baseline v0.9, and a SIBLING of pqc-migration (decision 0023). It holds the facts every change-planning profile asks for: capability per purpose and what blocks it, how a capability is enabled, coexistence, integration constraints, and the update-path facts that decide whether new software and new keys can reach a product at all. Each rule it shares with pqc-migration keeps the id pqc-migration uses, so no rule id moves. Its own rules are numbered after pqc-migration's, from I13 and P2. The core is target-neutral: it records what a product can be changed to, not which target is required (Q66).",
+  "$comment": "Illustrative machine-readable CBOM profile: the change core. DERIVED from the interface disclosure baseline v0.10, and a SIBLING of pqc-migration (decision 0023). It holds the facts every change-planning profile asks for: capability per purpose and what blocks it, how a capability is enabled, coexistence, integration constraints, and the update-path facts that decide whether new software and new keys can reach a product at all. Each rule it shares with pqc-migration keeps the id pqc-migration uses, so no rule id moves. Its own rules are numbered after pqc-migration's, from I13 and P2. The core is target-neutral: it records what a product can be changed to, not which target is required (Q66).",
   "profileId": "pkic.example.change-core",
   "profileTag": "change-core",
   "title": "Change Core (Example)",
-  "version": "0.1",
+  "version": "0.2",
   "objective": {
     "$comment": "C1. The core states the decision every change-planning profile shares. A profile that extends it names its own consumer and narrower decision.",
     "consumer": "An operator planning a change to products it did not build: a post-quantum migration, a firmware or software update, or a replacement.",
@@ -17,16 +17,18 @@
     ]
   },
   "scope": {
-    "$comment": "C11. Products as built: subject type 'product', stage 'implemented', as in pqc-migration. 'cryptographicPurposes' names the purposes required in depth; every purpose in the vocabulary still owes a status under G1, so a profile that extends the core cannot behave as though a deferred purpose does not exist.",
+    "$comment": "C11. Products as built, at the stage 'implemented', and managed services as their provider runs them, at the stage 'configured'. A provider states capability, blocker and roadmap per purpose for a service endpoint as a supplier does for a product interface, so the same rules apply. 'cryptographicPurposes' names the purposes required in depth; every purpose in the vocabulary still owes a status under G1, so a profile that extends the core cannot behave as though a deferred purpose does not exist.",
     "subjectTypes": [
-      "product"
+      "product",
+      "service"
     ],
     "orientation": "both",
     "relationshipTypes": [
       "interface"
     ],
     "lifecycleStages": [
-      "implemented"
+      "implemented",
+      "configured"
     ],
     "cryptographicPurposes": [
       "key-establishment",
@@ -36,7 +38,7 @@
   },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.9",
+    "version": "0.10",
     "file": "profile-interface-disclosure.rules.json"
   },
   "appliesTo": {
@@ -89,7 +91,8 @@
     "none",
     "physical-access",
     "local-network",
-    "remote-managed"
+    "remote-managed",
+    "provider-managed"
   ],
   "updateAuthorityVocabulary": [
     "operator",
@@ -411,8 +414,19 @@
     {
       "version": "0.1",
       "date": "2026-11-16",
-      "summary": "Initial draft. Extends the interface disclosure baseline v0.9 as a sibling of pqc-migration v0.8 (decision 0023). Shares P1, I1 to I5, I7 to I9, G1.1 to G1.3, R1 and R2 with pqc-migration under the same ids, and the tightening of interface-disclosure#I9. Adds P2 and I13 to I16 for the update path.",
+      "summary": "Initial draft. Extends the interface disclosure baseline v0.10 as a sibling of pqc-migration v0.8 (decision 0023). Shares P1, I1 to I5, I7 to I9, G1.1 to G1.3, R1 and R2 with pqc-migration under the same ids, and the tightening of interface-disclosure#I9. Adds P2 and I13 to I16 for the update path.",
       "changes": []
+    },
+    {
+      "version": "0.2",
+      "date": "2026-11-18",
+      "summary": "Accepts managed services.",
+      "changes": [
+        {
+          "kind": "relaxing",
+          "summary": "Accepts the subject type 'service' at the stage 'configured', beside products at 'implemented'. Adds 'provider-managed' to the update mechanisms, for a service the provider updates for every tenant. No rule changes for product records."
+        }
+      ]
     }
   ]
 }

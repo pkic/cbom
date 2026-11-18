@@ -1,5 +1,5 @@
 {
-  "$comment": "Illustrative machine-readable CBOM profile for procurement. DERIVED: extends the interface disclosure baseline v0.8 (draft) and adds no per-interface attribute. It selects and tightens, which places it in the disclosure group (draft decision 0023): a document rich enough for the baseline, and with the implementing library stated, answers it without being reissued.",
+  "$comment": "Illustrative machine-readable CBOM profile for procurement. DERIVED: extends the interface disclosure baseline v0.10 (draft) and adds no per-interface attribute. It selects and tightens, which places it in the disclosure group (draft decision 0023): a document rich enough for the baseline, and with the implementing library stated, answers it without being reissued.",
   "profileId": "pkic.example.procurement",
   "profileTag": "procurement",
   "title": "Procurement and Tender Conformance (Example)",
@@ -29,7 +29,7 @@
   },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.9",
+    "version": "0.10",
     "file": "profile-interface-disclosure.rules.json"
   },
   "appliesTo": {

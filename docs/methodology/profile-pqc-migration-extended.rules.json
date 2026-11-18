@@ -3,7 +3,7 @@
   "profileId": "pkic.example.pqc-migration-extended",
   "profileTag": "pqc-migration-extended",
   "title": "PQC Migration, Extended Depth (Example)",
-  "version": "0.2",
+  "version": "0.3",
   "objective": {
     "$comment": "C1. A derived profile states its own objective. The consumer and the decision are the baseline's, word for word, because a depth serves the same decision and asks for more (decision 0019). Restating a different decision would make this a branch. One option is added, because the facts this depth requires make a new action possible: sequencing another system's migration ahead of this interface.",
     "consumer": "An operator planning a post-quantum migration across an estate of products it did not build.",
@@ -113,11 +113,56 @@
     "national-scheme",
     "none"
   ],
+  "verifierPopulationVocabulary": [
+    "counterparty",
+    "scheme-members",
+    "public"
+  ],
+  "trustDomainVocabulary": [
+    "public",
+    "private",
+    "scheme-administered"
+  ],
+  "$commentSignature": "Who must be able to verify a signature the product makes ('counterparty', 'scheme-members' or 'public'), and the kind of trust anchor under which it accepts the other party's credentials ('public', 'private' or 'scheme-administered'). Both decide whether a post-quantum signature can be deployed by one party alone or needs a whole population of verifiers to move first. Asked for the signing purposes only.",
   "overrides": [
     {
       "id": "pqc-migration#G1.4",
       "level": "MUST",
       "note": "Tightened from SHOULD. At this depth the consumer is sequencing actual changes, and a capability usable only outside validated mode is not usable by a regulated operator. Keeps the id of the profile that introduced it."
+    },
+    {
+      "id": "pqc-migration#G1",
+      "addMembers": [
+        {
+          "id": "G1.5",
+          "attribute": "verifierPopulation",
+          "level": "SHOULD",
+          "constraint": {
+            "enumRef": "verifierPopulationVocabulary"
+          },
+          "withholdable": true,
+          "forKeys": [
+            "entity-authentication",
+            "non-repudiation"
+          ],
+          "note": "Who must be able to verify the signature. SHOULD, because no producer reports it yet; the extended depth stays reachable."
+        },
+        {
+          "id": "G1.6",
+          "attribute": "trustDomain",
+          "level": "SHOULD",
+          "constraint": {
+            "enumRef": "trustDomainVocabulary"
+          },
+          "withholdable": true,
+          "forKeys": [
+            "entity-authentication",
+            "non-repudiation"
+          ],
+          "note": "The kind of trust anchor under which the product accepts the other party's credentials."
+        }
+      ],
+      "note": "Adds two members to the inherited capability group, asked for the signing purposes only. Asking for more facts is a tightening; at SHOULD no verdict changes."
     }
   ],
   "productRules": [
@@ -259,14 +304,20 @@
       "attribute": "keyStoreRef",
       "level": "SHOULD",
       "constraint": {
-        "present": true
+        "refersToLocal": {
+          "literals": [
+            "none",
+            "out-of-band",
+            "product-managed"
+          ]
+        }
       },
       "withholdable": true,
       "requiredWhen": {
         "attribute": "interfaceType",
         "notEquals": "management"
       },
-      "note": "For every interface other than a management interface: the management interface that manages its keys, by reference within the document, or one of three literals: 'out-of-band' where keys are provisioned outside the product, for example TLS keys supplied as files; 'product-managed' where the product generates and rotates the key itself with no operator surface, for example a cluster transport certificate (decision 0022, K6); 'none' where the interface uses no keys (K3). 'out-of-band' is a fact about the product and is not a disclosure marker: a 'withheld' marker would claim something is being held back when nothing is (decision 0022, K4). SHOULD, because some products cannot say which surface manages a given key. Intended constraint: 'refersTo', resolving to a declared interface with keyManagementFunction 'keys-and-certificates', or equal to one of the three literals (decision 0022, F5). Written as 'present' until the evaluator implements it; see '$pendingTooling'. Source: cprofile 'key_management_ref'."
+      "note": "For every interface other than a management interface: the management interface that manages its keys, by reference within the document, or one of three literals: 'out-of-band' where keys are provisioned outside the product, for example TLS keys supplied as files; 'product-managed' where the product generates and rotates the key itself with no operator surface, for example a cluster transport certificate (decision 0022, K6); 'none' where the interface uses no keys (K3). 'out-of-band' is a fact about the product and is not a disclosure marker: a 'withheld' marker would claim something is being held back when nothing is (decision 0022, K4). SHOULD, because some products cannot say which surface manages a given key. The value is checked to name an element of the same record, or to be one of the three literals (decision 0022, F5). That the element is a management interface with keyManagementFunction 'keys-and-certificates' is not checked. Source: cprofile 'key_management_ref'."
     },
     {
       "id": "I9",
@@ -336,20 +387,6 @@
       "reason": "Deferred, not excluded. Variance between platform builds is carried by issuing one document per build, distinguished by Package URL qualifiers under interface-disclosure#P3 (decision 0022, F2). Revival trigger: a producer that cannot issue one document per platform build."
     }
   ],
-  "$pendingTooling": [
-    {
-      "item": "refersTo constraint (I8)",
-      "detail": "A constraint resolving an intra-document reference to a declared interface of a stated kind, with named literals accepted in place of a reference ('out-of-band', 'product-managed' and 'none' for I8). Adding it touches profile.schema.json and C17. Until then I8 checks presence only."
-    },
-    {
-      "item": "Scope purposes in check_scope_narrows",
-      "detail": "The check does not read cryptographicPurposes, so adding key-protection here is not verified as a tightening and dropping a purpose would not be caught."
-    },
-    {
-      "item": "verifierPopulation and trustDomain",
-      "detail": "Provisionally decided for this profile at SHOULD, on the entity-authentication and non-repudiation purposes (Publication 2, 7.4). They are group members of the inherited capabilityByPurpose group, and a derived profile cannot yet add members to an inherited group. Until the validator and check_profile.py support that, no rule requires them."
-    }
-  ],
   "artifacts": {
     "$comment": "C9.",
     "mapping": "mapping-cyclonedx-spdx.md",
@@ -379,6 +416,21 @@
         {
           "kind": "relaxing",
           "summary": "Added 'random-bit-generator' to externalDependencyVocabulary, so that I9 can name a random bit generator outside the product. A document that used the value before would have failed I9 and now conforms. Randomness is recorded as a run-time dependency, not as a cryptographic purpose; the purpose vocabulary is unchanged."
+        }
+      ]
+    },
+    {
+      "version": "0.3",
+      "date": "2026-11-18",
+      "summary": "Adds the signature questions and checks I8 as a reference.",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Added verifierPopulation (G1.5) and trustDomain (G1.6) to the inherited capability group at SHOULD, for the entity-authentication and non-repudiation purposes. No verdict changes."
+        },
+        {
+          "kind": "editorial",
+          "summary": "I8 now checks that keyStoreRef names an element of the same record or is one of its three literals, where it checked presence only. It stays at SHOULD, so no verdict changes."
         }
       ]
     }

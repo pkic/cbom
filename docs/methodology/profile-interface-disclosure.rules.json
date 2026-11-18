@@ -3,7 +3,7 @@
   "profileId": "pkic.example.interface-disclosure",
   "profileTag": "interface-disclosure",
   "title": "Interface Disclosure Baseline (Example)",
-  "version": "0.9",
+  "version": "0.10",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
   "objective": {
     "$comment": "C1. Rewritten in v0.6. The previous decision — whether the cryptography is 'disclosed in enough detail to be recorded in an inventory and assessed against policy' — was circular: it was a decision about the document rather than about the product, so no attribute could be derived from it. Method step 3 says derive the questions from the decision, and a decision whose answer is 'whatever this profile requires' generates no questions. The decision below is the consumer's actual job, and every rule in this profile traces to it.",
@@ -30,7 +30,9 @@
     ],
     "subjectTypes": [
       "product",
-      "deployment"
+      "deployment",
+      "service",
+      "system"
     ]
   },
   "appliesTo": {
@@ -55,6 +57,14 @@
     "peer",
     "storage"
   ],
+  "intrinsicDataVocabulary": [
+    "credentials",
+    "keys",
+    "tokens",
+    "configuration",
+    "none"
+  ],
+  "$commentIntrinsicData": "What an interface exists to carry for the product's own operation, as its supplier states it: credentials, keys, tokens or configuration, or 'none'. It is not the payload a deployment conveys over the interface; the operator states that in its own register under the 'data-register' context kind. With 'credentialLifetime', it lets a consumer judge how long a recorded session stays worth decrypting (Publication 2, 11.6).",
   "productRules": [
     {
       "id": "P1",
@@ -97,12 +107,14 @@
         "subjectIdentified": {
           "startsWith": {
             "product": "pkg:",
-            "deployment": "tag:"
+            "deployment": "tag:",
+            "service": "tag:",
+            "system": "tag:"
           }
         }
       },
       "withholdable": false,
-      "note": "Revised in v0.9. The form of the identifier depends on the subject type the document declares (P5). A product is identified by a package URL. A deployment has no package URL. It is identified by a tag URI (RFC 4151), such as 'tag:example.org,2026:deployment/sso-prod'. A tag URI can be minted by anyone who controls a domain name, with no registration, which is the situation of an operator naming its own deployments. A URN would need a registered namespace. Two records of the same deployment must use the same identifier.",
+      "note": "Revised in v0.9. The form of the identifier depends on the subject type the document declares (P5). A product is identified by a package URL. A deployment has no package URL. It is identified by a tag URI (RFC 4151), such as 'tag:example.org,2026:deployment/sso-prod'. A tag URI can be minted by anyone who controls a domain name, with no registration, which is the situation of an operator naming its own deployments. A URN would need a registered namespace. Two records of the same deployment must use the same identifier. Revised in v0.10: a service (a provider's managed service) and a system (one system design as its integrator delivers it) are identified by a tag URI in the same way, for example 'tag:example.org,2026:service/managed-identity-eu' or 'tag:integrator.example,2026:system/sas-110kv-reference'.",
       "schemeRef": "subject"
     },
     {
@@ -325,6 +337,31 @@
         "equals": "implemented"
       },
       "note": "New in v0.9. Whether a product interface is active in the product's default configuration. Keycloak's plaintext listener exists in the product and is off by default. Declared without this attribute it reads as an active plaintext interface; left out, it hides the interface that becomes the plaintext hop behind a TLS-terminating proxy. Applies only at 'implemented': in a deployment record, a declared interface is active, and a product interface with no counterpart is not."
+    },
+    {
+      "id": "I12",
+      "attribute": "intrinsicData",
+      "level": "MAY",
+      "constraint": {
+        "enumRef": "intrinsicDataVocabulary"
+      },
+      "withholdable": true,
+      "list": true,
+      "note": "The data the interface exists to carry for the product's own operation. A list, because one interface may carry credentials and configuration. MAY in the baseline; a profile for data exposure or harvest-now-decrypt-later assessment can raise it."
+    },
+    {
+      "id": "I13",
+      "attribute": "credentialLifetime",
+      "level": "MAY",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": true,
+      "requiredWhen": {
+        "attribute": "intrinsicData",
+        "notEquals": "none"
+      },
+      "note": "How long a credential, key or token carried by the interface stays valid, as an ISO 8601 duration (for example 'PT5M' for an access token, 'P1Y' for a certificate). The longest lifetime is stated where several apply."
     }
   ],
   "exclusions": [
@@ -495,6 +532,20 @@
           "summary": "The configuration-guidance context kind accepts a fixed document as well as a web page, so a supplier can publish machine-readable guidance and bind it by hash."
         }
       ]
+    },
+    {
+      "version": "0.10",
+      "date": "2026-11-17",
+      "changes": [
+        {
+          "kind": "relaxing",
+          "summary": "Accepts the subject types 'service' and 'system', each identified by a tag URI (P3). A service record describes a managed service as its provider runs it; a system record describes one system design as its integrator delivers it, joined to the product records it is built from. No rule changes for product or deployment records."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added I12 'intrinsicData' and I13 'credentialLifetime' at MAY: what an interface exists to carry for the product's own operation, and how long it stays valid. Added the context kind 'change-notice', where a provider announces changes, with no rule. No verdict changes."
+        }
+      ]
     }
   ],
   "$commentIdentifierSchemes": "Q38. Identity cannot be settled in general, because some asset classes have no agreed identifier. It can be settled per profile, and this is the lever the methodology has. The baseline previously constrained the form of the least contested identifier — the implementing library, which had to be a purl — and left the most contested ones free, so 'our secure channel' and 'elliptic curve' were conforming values for protocol and keyExchange. An inventory built from twelve suppliers cannot correlate on free text. Whether the algorithm scheme should be the CycloneDX Cryptography Registry or another is Q20 and is unsettled; what this profile settles is that a scheme is named, so a consumer knows which naming they are reading. The validator cannot verify membership of a registry it does not hold, and does not pretend to: it checks that a scheme is declared for every asset class the rules constrain. Added in v0.8: wherever a rule requires an algorithm, the literal 'none' is an accepted value. It states that the interface applies no algorithm for that job, for example tokens that are signed and not encrypted, or data keys that are not wrapped. It is a claim about the product and is as checkable as any other value. It is not the same as not knowing, which is the 'unknown' disclosure marker, nor as declining to say, which is 'withheld'. See decision 0022 (K3).",
@@ -504,7 +555,9 @@
     "library": "purl",
     "subject": {
       "product": "purl",
-      "deployment": "tag-uri"
+      "deployment": "tag-uri",
+      "service": "tag-uri",
+      "system": "tag-uri"
     }
   },
   "coverageVocabulary": [
@@ -564,6 +617,14 @@
         "documentation"
       ],
       "form": "document-or-endpoint"
+    },
+    "change-notice": {
+      "carrier": [
+        "release-notes",
+        "documentation",
+        "website"
+      ],
+      "form": "endpoint"
     }
   },
   "accessProtocolVocabulary": [

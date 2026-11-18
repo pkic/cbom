@@ -1,0 +1,49 @@
+{
+  "$comment": "Test fixture, invalid. Drops a purpose the base takes in depth, which extension does not permit.",
+  "profileId": "pkic.test.drops-purpose",
+  "profileTag": "drops-purpose",
+  "title": "Fixture: drops a purpose",
+  "version": "0.1",
+  "objective": {
+    "consumer": "Test fixture",
+    "decision": "Test fixture",
+    "decisionOptions": [
+      "pass",
+      "fail"
+    ]
+  },
+  "scope": {
+    "subjectTypes": [
+      "product"
+    ],
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented"
+    ],
+    "cryptographicPurposes": [
+      "key-establishment",
+      "encryption"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.pqc-migration",
+    "version": "0.8",
+    "file": "../../docs/methodology/profile-pqc-migration.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-11-18",
+      "changes": []
+    }
+  ]
+}

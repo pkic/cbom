@@ -1,0 +1,539 @@
+{
+  "product": "IBM watsonx.governance",
+  "version": "2.0.0",
+  "sbom_ref": "urn:cdx:cbom-ibm-watsonx.governance-2.0.0-202611",
+  "cryptographic_libraries": [
+    {
+      "library_id": "lib-openssl-fips-3.0",
+      "name": "OpenSSL FIPS Provider",
+      "version": "3.0.8",
+      "os": "Linux x86_64 (RHCOS / RHEL 9.2)",
+      "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+      "fips_140": {
+        "standard": "FIPS-140-3",
+        "level": 1,
+        "cavp_certificate": "A2470",
+        "notes": "NIST CMVP Validated OpenSSL 3.0 FIPS cryptographic module"
+      },
+      "common_criteria": {
+        "eal": "EAL4",
+        "augmented": true,
+        "protection_profile": "NDPP (Network Device Protection Profile) v2.2e",
+        "notes": "NIAP Common Criteria evaluation record"
+      },
+      "algorithms": [
+        {
+          "type": "encryption",
+          "name": "AES-256-GCM",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38D",
+          "modes": [
+            "GCM",
+            "CTR"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2, key size >= 256",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "encryption",
+          "name": "AES-256-XTS",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38E",
+          "modes": [
+            "XTS"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2, block cipher for data-at-rest storage",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "hash",
+          "name": "SHA-384",
+          "min_key_size": 384,
+          "standard_ref": "FIPS 180-4",
+          "modes": [],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": true,
+            "quantum_safe_basis": "vendor-claim"
+          }
+        },
+        {
+          "type": "key-exchange",
+          "name": "ECDH-P384",
+          "min_key_size": 384,
+          "standard_ref": "NIST SP 800-56A Rev3",
+          "modes": [
+            "secp384r1"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "signature",
+          "name": "RSA-4096",
+          "min_key_size": 4096,
+          "standard_ref": "FIPS 186-4",
+          "modes": [
+            "PSS",
+            "PKCS1v1.5"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2, key size >= 2048",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        }
+      ],
+      "notes": "Cryptographic engine for container ingress, TLS terminations, and microservice communications"
+    },
+    {
+      "library_id": "lib-openjceplus-fips-1",
+      "name": "IBM OpenJCEPlusFIPS Provider",
+      "version": "1.8.0",
+      "os": "Linux x86_64 (IBM Semeru Runtimes / OpenJ9 JVM)",
+      "security_provider": "IBMJSSE2 / OpenJCEPlusFIPS",
+      "fips_140": {
+        "standard": "FIPS-140-2",
+        "level": 1,
+        "cavp_certificate": "C1187",
+        "notes": "IBM Java Cryptographic Extension in FIPS mode"
+      },
+      "common_criteria": {
+        "eal": "EAL4",
+        "augmented": true,
+        "protection_profile": "Application Software Protection Profile (App PP) v1.3",
+        "notes": "NIAP Common Criteria EAL4+ Validated JCE Provider"
+      },
+      "algorithms": [
+        {
+          "type": "encryption",
+          "name": "AES-256-GCM",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38D",
+          "modes": [
+            "GCM"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "mac",
+          "name": "HMAC-SHA384",
+          "min_key_size": 384,
+          "standard_ref": "FIPS 198-1",
+          "modes": [],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": true,
+            "quantum_safe_basis": "vendor-claim"
+          }
+        }
+      ],
+      "notes": "Enterprise Java cryptographic engine for SQL query engines, governance frameworks, and data services"
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "Watson OpenScale Evaluation & Monitoring REST API",
+      "type": "gateway",
+      "data_sensitivity": "confidential",
+      "network_plane": "control-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 443
+        },
+        {
+          "name": "REST",
+          "port": 443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "P-256",
+          "x25519"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384",
+          "ecdsa_secp384r1_sha384"
+        ],
+        "features": [
+          "mutual-auth",
+          "SNI",
+          "ALPN",
+          "session-resumption",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Ingress API for AI model performance, drift, fairness, and RAG evaluation payloads"
+    },
+    {
+      "name": "IBM OpenPages GRC Governance Console",
+      "type": "listener",
+      "data_sensitivity": "restricted",
+      "network_plane": "management-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 8443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "P-256"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha256"
+        ],
+        "features": [
+          "SNI",
+          "ALPN",
+          "session-resumption",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "IBMJSSE2 / OpenJCEPlusFIPS",
+          "cryptographic_library": "OpenJCEPlusFIPS",
+          "cryptographic_library_ref": "lib-openjceplus-fips-1",
+          "fips_140": {
+            "standard": "FIPS-140-2",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Administrative console for managing AI risk frameworks, EU AI Act compliance, and ISO 42001 attestations"
+    },
+    {
+      "name": "AI Factsheet Sync & Lineage Pipeline Gateway",
+      "type": "listener",
+      "data_sensitivity": "confidential",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 443
+        },
+        {
+          "name": "gRPC",
+          "port": 9443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "x25519"
+        ],
+        "signature_algorithms": [
+          "ecdsa_secp384r1_sha384",
+          "rsa_pss_rsae_sha384"
+        ],
+        "features": [
+          "mutual-auth",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Synchronizes provenance and lifecycle metadata from watsonx.ai, third-party platforms, and CI/CD pipelines"
+    },
+    {
+      "name": "Detached Prompt Template & Model Subscription Gateway",
+      "type": "gateway",
+      "data_sensitivity": "confidential",
+      "network_plane": "control-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 443
+        },
+        {
+          "name": "REST",
+          "port": 443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "P-256"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384",
+          "ecdsa_secp384r1_sha384"
+        ],
+        "features": [
+          "SNI",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Governs external foundation models (AWS Bedrock, Azure OpenAI, Google Vertex AI) via detached prompt templates"
+    }
+  ],
+  "key_management_interfaces": [
+    {
+      "name": "OpenPages Cryptographic Keystore & Secret Manager",
+      "interface_type": "API",
+      "store_type": "keystore",
+      "supported_formats": [
+        "PKCS#12",
+        "JKS",
+        "PEM"
+      ],
+      "key_operations": [
+        "generate",
+        "import",
+        "export",
+        "store",
+        "delete",
+        "sign",
+        "verify",
+        "encrypt",
+        "decrypt"
+      ],
+      "key_entry_method": "encrypted-import",
+      "fips_compliant_management": true,
+      "platforms": [
+        "Linux x86_64"
+      ],
+      "notes": "Internal keystore managing digital signatures and encryption keys for compliance records"
+    },
+    {
+      "name": "OpenShift Cert-Manager & Secrets Operator",
+      "interface_type": "CLI",
+      "store_type": "vault",
+      "supported_formats": [
+        "PKCS#12",
+        "PEM"
+      ],
+      "key_operations": [
+        "generate",
+        "import",
+        "store",
+        "delete",
+        "sign",
+        "verify"
+      ],
+      "key_entry_method": "direct",
+      "fips_compliant_management": true,
+      "platforms": [
+        "Linux x86_64"
+      ],
+      "notes": "Manages automated TLS certificate lifecycles for governance API endpoints"
+    }
+  ],
+  "security_controls": [
+    {
+      "name": "AI Factsheet Cryptographic Attestation & Lineage Audit Policy",
+      "control_type": "audit_logging_policy",
+      "governing_parameters": [
+        "IMMUTABLE_AUDIT_LOGGING",
+        "DIGITAL_SIGNATURE_ATTESTATION"
+      ],
+      "external_dependencies": [
+        "OpenPages GRC Engine",
+        "IBM Cloud Pak for Data Audit Log Manager"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64",
+          "status": "enforced",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "enabled",
+          "protocol_used": "TLS 1.3",
+          "hardening_parameters": [
+            "DISABLE_TLS_1.0",
+            "REQUIRE_CLIENT_CERT"
+          ]
+        },
+        "roles": [
+          {
+            "name": "Model Risk Officer",
+            "authentication_method": "multi-factor",
+            "authentication_algorithm": "RSA-4096 SHA-384"
+          },
+          {
+            "name": "Model Validator",
+            "authentication_method": "token",
+            "authentication_algorithm": "ECDSA P-384 SHA-384"
+          }
+        ],
+        "secret_protection": {
+          "status": "enabled",
+          "protection_method": "vault-backed",
+          "hardening_parameters": [
+            "SECRETS_ENCRYPTION_AT_REST"
+          ]
+        },
+        "data_at_rest_protection": {
+          "status": "enabled",
+          "encryption_algorithm": "AES-256-GCM",
+          "key_management_ref": "OpenPages Cryptographic Keystore & Secret Manager",
+          "hardware_acceleration": true,
+          "hardening_parameters": [
+            "NIST_SP800_131A_REV2_COMPLIANT"
+          ]
+        }
+      },
+      "notes": "Cryptographically verifies model fact lineage and tamper-evident audit trails"
+    },
+    {
+      "name": "OpenPages Model Risk Governance (MRG) Role-Based Access Policy",
+      "control_type": "authorization_filter",
+      "governing_parameters": [
+        "ENFORCE_FOUR_EYES_PRINCIPLE",
+        "REGULATORY_APPROVAL_GATES"
+      ],
+      "external_dependencies": [
+        "Enterprise LDAP / OIDC Directory"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64",
+          "status": "enforced"
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "enabled",
+          "protocol_used": "TLS 1.3",
+          "hardening_parameters": [
+            "MUTUAL_AUTH_REQUIRED"
+          ]
+        },
+        "roles": [
+          {
+            "name": "Compliance Reviewer",
+            "authentication_method": "multi-factor",
+            "authentication_algorithm": "RSA-4096 SHA-384"
+          }
+        ],
+        "secret_protection": {
+          "status": "enabled",
+          "protection_method": "vault-backed",
+          "hardening_parameters": [
+            "ENCRYPTED_TOKENS"
+          ]
+        },
+        "data_at_rest_protection": {
+          "status": "not-applicable"
+        }
+      },
+      "notes": "Enforces regulatory approval gates and segregation of duties for AI lifecycle progression"
+    }
+  ],
+  "metadata": {
+    "created": "2026-11-11T07:30:00Z",
+    "last_updated": "2026-11-11T07:30:00Z",
+    "author": "IBM Enterprise Cryptographic Profile Architecture Team",
+    "generation_method": "automated-parser",
+    "information_source": "documentation",
+    "lifecycle_stage": "release",
+    "schema_version": "1.0.0",
+    "cbomgen_version": "1.4.2"
+  }
+}

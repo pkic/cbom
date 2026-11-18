@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 638" width="900" height="638"
+     role="img" aria-label="A hardware security module with a FIPS 140-3 Level 3 validation. The validated boundary encloses the post-quantum algorithms the module offers through its application interface. Five further interfaces cross that boundary to counterparties the buyer never contracts with: firmware update authentication to the vendor's signing service, secure boot to immutable silicon, attestation to an external verifier, administrative authentication to operator cards, and key backup to a peer module. All five are classical, and four of them can only be changed by the vendor." xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo3NDI2NDE3MS05OTdhLTQzNDctYWJiMS05MTQxMzU2NTk2MDUAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaAIIlfrgvttrD3zk6tI4/sYAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDowNTI0YTU5Zi00YzVlLTRkMDMtOTAzOS1lZGFlOTEyMjIwM2FscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoLl02zICCYFUyV5F0t3BW5QAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggxavwl0pBa9WXrR23YJDkOI65OINmZVOotQ8WZ0uTYASkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaIp/6s7n6ifS4TqNvsX9hjMAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIKqpeaTY4fPnZRH/ds8cfmg8D7sp7eec+CggipaAvrtBZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GQMPZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjc0MjY0MTcxLTk5N2EtNDM0Ny1hYmIxLTkxNDEzNTY1OTYwNS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjhkYzIyYTFhLTFmOWEtNDAxNC1iZWMwLWEwYWZhZGZjMzc2NHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCDFq/CXSkFr1ZetHbdgkOQ4jrk4g2ZlU6i1DxZnS5NgBKJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggojEMsAHFv2Egmog1n1KjZrXzm+3FY8/tdxBY6fAUtduiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggJ9ozXvMtbTm3HfR5U6ZOysWDs8jnwqrwxyLKAPkgAlh0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQGfDy+i7DMiFq9wJtogThwrnrVjE/7N5DLz/UceSA066k6xtBF6SxTxXB0rTV3XYidTCz6fp8CAekSc78KqTuPk=</c2pa:manifest></metadata>
+  <defs>
+    <marker id="m-ah" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="7" orient="auto">
+      <polygon points="0,0 10,4 0,8" fill="#6b6b6b"/>
+    </marker>
+    <marker id="m-ab" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="7" orient="auto">
+      <polygon points="0,0 10,4 0,8" fill="#1f5fa9"/>
+    </marker>
+  </defs>
+
+  <g font-family="Cambria, Caladea, Georgia, 'Times New Roman', serif" fill="#1a1a1a">
+
+    <!-- ============ the module ============ -->
+    <rect x="250" y="70" width="210" height="400" rx="6" fill="#f2f2ef" stroke="#1a1a1a" stroke-width="2.6"/>
+    <text x="355" y="104" font-size="18" font-weight="bold" text-anchor="middle">Hardware</text>
+    <text x="355" y="126" font-size="18" font-weight="bold" text-anchor="middle">security module</text>
+
+    <rect x="268" y="152" width="174" height="106" rx="4" fill="#ffffff" stroke="#1f5fa9" stroke-width="1.6" stroke-dasharray="6 3"/>
+    <text x="355" y="176" font-size="14" font-weight="bold" text-anchor="middle" fill="#1f5fa9">validated boundary</text>
+    <text x="355" y="197" font-size="13.5" text-anchor="middle" fill="#1f5fa9">FIPS 140-3 Level 3</text>
+    <text x="355" y="219" font-size="13.5" text-anchor="middle" fill="#1f5fa9">ML-KEM, ML-DSA</text>
+    <text x="355" y="241" font-size="13.5" text-anchor="middle" fill="#1f5fa9">available here</text>
+
+    <text x="355" y="300" font-size="13.5" text-anchor="middle" fill="#5a5a55">The certificate covers the</text>
+    <text x="355" y="318" font-size="13.5" text-anchor="middle" fill="#5a5a55">algorithms inside that box.</text>
+    <text x="355" y="344" font-size="13.5" text-anchor="middle" fill="#5a5a55">It says nothing about the</text>
+    <text x="355" y="362" font-size="13.5" text-anchor="middle" fill="#5a5a55">cryptography protecting</text>
+    <text x="355" y="380" font-size="13.5" text-anchor="middle" fill="#5a5a55">the boundary itself.</text>
+
+    <!-- ============ the one post-quantum interface ============ -->
+    <rect x="20" y="222" width="200" height="72" rx="4" fill="#ffffff" stroke="#1f5fa9" stroke-width="2"/>
+    <text x="120" y="248" font-size="15.5" font-weight="bold" text-anchor="middle" fill="#1f5fa9">Calling application</text>
+    <text x="120" y="268" font-size="13.5" text-anchor="middle" fill="#1f5fa9" font-style="italic">post-quantum</text>
+    <text x="120" y="286" font-size="13.5" text-anchor="middle" fill="#1f5fa9">integrator configures</text>
+    <line x1="224" y1="258" x2="246" y2="258" stroke="#1f5fa9" stroke-width="2" marker-end="url(#m-ab)"/>
+    <text x="120" y="320" font-size="13.5" text-anchor="middle" fill="#1f5fa9">application interface</text>
+
+    <!-- ============ five classical interfaces ============ -->
+    <g stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#m-ah)">
+      <line x1="464" y1="88" x2="612" y2="88"/>
+      <line x1="464" y1="172" x2="612" y2="172"/>
+      <line x1="464" y1="256" x2="612" y2="256"/>
+      <line x1="464" y1="340" x2="612" y2="340"/>
+      <line x1="464" y1="424" x2="612" y2="424"/>
+    </g>
+    <g font-size="13" fill="#5a5a55" text-anchor="middle">
+      <text x="538" y="68">firmware update</text><text x="538" y="82">authentication</text>
+      <text x="538" y="152">secure boot and</text><text x="538" y="166">root of trust</text>
+      <text x="538" y="250">attestation</text>
+      <text x="538" y="320">administrative</text><text x="538" y="334">authentication</text>
+      <text x="538" y="404">key backup</text><text x="538" y="418">and wrapping</text>
+    </g>
+
+    <g>
+      <rect x="616" y="52" width="264" height="72" rx="4" fill="#ffffff" stroke="#6b6b6b" stroke-width="1.4"/>
+      <text x="632" y="76" font-size="15.5" font-weight="bold" fill="#3d3d3d">Vendor signing service</text>
+      <text x="632" y="96" font-size="13.5" fill="#6b6b6b" font-style="italic">classical</text>
+      <text x="632" y="114" font-size="13.5" fill="#5a5a55">only the vendor can change it</text>
+
+      <rect x="616" y="136" width="264" height="72" rx="4" fill="#ffffff" stroke="#6b6b6b" stroke-width="1.4"/>
+      <text x="632" y="160" font-size="15.5" font-weight="bold" fill="#3d3d3d">Immutable silicon</text>
+      <text x="632" y="180" font-size="13.5" fill="#6b6b6b" font-style="italic">classical</text>
+      <text x="632" y="198" font-size="13.5" fill="#5a5a55">vendor, by architecture revision</text>
+
+      <rect x="616" y="220" width="264" height="72" rx="4" fill="#ffffff" stroke="#6b6b6b" stroke-width="1.4"/>
+      <text x="632" y="244" font-size="15.5" font-weight="bold" fill="#3d3d3d">External verifier</text>
+      <text x="632" y="264" font-size="13.5" fill="#6b6b6b" font-style="italic">classical</text>
+      <text x="632" y="282" font-size="13.5" fill="#5a5a55">only the vendor can change it</text>
+
+      <rect x="616" y="304" width="264" height="72" rx="4" fill="#ffffff" stroke="#6b6b6b" stroke-width="1.4"/>
+      <text x="632" y="328" font-size="15.5" font-weight="bold" fill="#3d3d3d">Operator cards, quorum</text>
+      <text x="632" y="348" font-size="13.5" fill="#6b6b6b" font-style="italic">classical</text>
+      <text x="632" y="366" font-size="13.5" fill="#5a5a55">vendor, then the operator</text>
+
+      <rect x="616" y="388" width="264" height="72" rx="4" fill="#ffffff" stroke="#6b6b6b" stroke-width="1.4"/>
+      <text x="632" y="412" font-size="15.5" font-weight="bold" fill="#3d3d3d">Peer module, backup store</text>
+      <text x="632" y="432" font-size="13.5" fill="#6b6b6b" font-style="italic">classical</text>
+      <text x="632" y="450" font-size="13.5" fill="#5a5a55">vendor, then the operator</text>
+    </g>
+
+    <!-- ============ the count ============ -->
+    <text x="20" y="386" font-size="15.5" font-weight="bold" fill="#1f5fa9">One interface of six</text>
+    <text x="20" y="406" font-size="14.5" fill="#1f5fa9">has a post-quantum option.</text>
+    <text x="20" y="430" font-size="14.5" fill="#1f5fa9">Four of the other five cannot</text>
+    <text x="20" y="450" font-size="14.5" fill="#1f5fa9">be changed by the buyer at all.</text>
+
+    <!-- ============ footer ============ -->
+    <line x1="20" y1="522" x2="880" y2="522" stroke="#c9c9c2" stroke-width="1"/>
+    <text x="20" y="548" font-size="15">An adversary with a quantum computer need not attack ML-KEM. Harvested firmware update traffic, a classical</text>
+    <text x="20" y="568" font-size="15">attestation key, or a classical key backup path each defeat the protection the module was bought for.</text>
+    <text x="20" y="596" font-size="14" fill="#3d3d3d">The algorithm choices also differ per row: firmware authentication favours hash-based signatures, general signing favours</text>
+    <text x="20" y="614" font-size="14" fill="#3d3d3d">lattice signatures. No single algorithm list describes the module, and a product-level "PQC supported" flag collapses all</text>
+    <text x="20" y="632" font-size="14" fill="#3d3d3d">six rows into one bit. The bit is true, and it is misleading.</text>
+  </g>
+</svg>

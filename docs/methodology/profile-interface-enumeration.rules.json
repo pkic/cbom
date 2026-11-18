@@ -3,7 +3,7 @@
   "profileId": "pkic.example.interface-enumeration",
   "profileTag": "interface-enumeration",
   "title": "Interface Enumeration (Example entry profile)",
-  "version": "0.3",
+  "version": "0.4",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
   "objective": {
     "$comment": "C1. The consumer here is at an earlier moment than the baseline's: they are not yet matching a published weakness against an algorithm, because they do not yet know what the estate contains. The decision is about where to look and whom to ask, and it is a real decision with real options, which is what keeps this profile from being a content-free first step. A profile whose decision was 'to have started' would fail C1, and would deserve to.",
@@ -31,7 +31,9 @@
     ],
     "subjectTypes": [
       "product",
-      "deployment"
+      "deployment",
+      "service",
+      "system"
     ]
   },
   "appliesTo": {
@@ -65,7 +67,9 @@
     "protocol": "cyclonedx-cryptography-registry",
     "subject": {
       "product": "purl",
-      "deployment": "tag-uri"
+      "deployment": "tag-uri",
+      "service": "tag-uri",
+      "system": "tag-uri"
     }
   },
   "productRules": [
@@ -85,13 +89,15 @@
         "subjectIdentified": {
           "startsWith": {
             "product": "pkg:",
-            "deployment": "tag:"
+            "deployment": "tag:",
+            "service": "tag:",
+            "system": "tag:"
           }
         }
       },
       "withholdable": false,
       "schemeRef": "subject",
-      "note": "Revised in v0.9. The form of the identifier depends on the subject type the document declares (P5). A product is identified by a package URL. A deployment has no package URL. It is identified by a tag URI (RFC 4151), such as 'tag:example.org,2026:deployment/sso-prod'. A tag URI can be minted by anyone who controls a domain name, with no registration, which is the situation of an operator naming its own deployments. A URN would need a registered namespace. Two records of the same deployment must use the same identifier."
+      "note": "Revised in v0.9. The form of the identifier depends on the subject type the document declares (P5). A product is identified by a package URL. A deployment has no package URL. It is identified by a tag URI (RFC 4151), such as 'tag:example.org,2026:deployment/sso-prod'. A tag URI can be minted by anyone who controls a domain name, with no registration, which is the situation of an operator naming its own deployments. A URN would need a registered namespace. Two records of the same deployment must use the same identifier. Revised in v0.10: a service (a provider's managed service) and a system (one system design as its integrator delivers it) are identified by a tag URI in the same way, for example 'tag:example.org,2026:service/managed-identity-eu' or 'tag:integrator.example,2026:system/sas-110kv-reference'."
     },
     {
       "id": "P4",
@@ -244,6 +250,16 @@
         {
           "kind": "editorial",
           "summary": "The carrier target is CycloneDX 2.0. CycloneDX 1.6 and 1.7 are read as legacy."
+        }
+      ]
+    },
+    {
+      "version": "0.4",
+      "date": "2026-11-17",
+      "changes": [
+        {
+          "kind": "relaxing",
+          "summary": "Accepts the subject types 'service' and 'system', as the interface disclosure baseline v0.10 does. P3 stays identical to the baseline's, as a sibling requires."
         }
       ]
     }

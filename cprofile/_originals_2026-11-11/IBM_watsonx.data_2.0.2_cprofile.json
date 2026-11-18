@@ -1,0 +1,539 @@
+{
+  "product": "IBM watsonx.data",
+  "version": "2.0.2",
+  "sbom_ref": "urn:cdx:cbom-ibm-watsonx.data-2.0.2-202611",
+  "cryptographic_libraries": [
+    {
+      "library_id": "lib-openssl-fips-3.0",
+      "name": "OpenSSL FIPS Provider",
+      "version": "3.0.8",
+      "os": "Linux x86_64 (RHCOS / RHEL 9.2)",
+      "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+      "fips_140": {
+        "standard": "FIPS-140-3",
+        "level": 1,
+        "cavp_certificate": "A2470",
+        "notes": "NIST CMVP Validated OpenSSL 3.0 FIPS cryptographic module"
+      },
+      "common_criteria": {
+        "eal": "EAL4",
+        "augmented": true,
+        "protection_profile": "NDPP (Network Device Protection Profile) v2.2e",
+        "notes": "NIAP Common Criteria evaluation record"
+      },
+      "algorithms": [
+        {
+          "type": "encryption",
+          "name": "AES-256-GCM",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38D",
+          "modes": [
+            "GCM",
+            "CTR"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2, key size >= 256",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "encryption",
+          "name": "AES-256-XTS",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38E",
+          "modes": [
+            "XTS"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2, block cipher for data-at-rest storage",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "hash",
+          "name": "SHA-384",
+          "min_key_size": 384,
+          "standard_ref": "FIPS 180-4",
+          "modes": [],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": true,
+            "quantum_safe_basis": "vendor-claim"
+          }
+        },
+        {
+          "type": "key-exchange",
+          "name": "ECDH-P384",
+          "min_key_size": 384,
+          "standard_ref": "NIST SP 800-56A Rev3",
+          "modes": [
+            "secp384r1"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "signature",
+          "name": "RSA-4096",
+          "min_key_size": 4096,
+          "standard_ref": "FIPS 186-4",
+          "modes": [
+            "PSS",
+            "PKCS1v1.5"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2, key size >= 2048",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        }
+      ],
+      "notes": "Cryptographic engine for container ingress, TLS terminations, and microservice communications"
+    },
+    {
+      "library_id": "lib-openjceplus-fips-1",
+      "name": "IBM OpenJCEPlusFIPS Provider",
+      "version": "1.8.0",
+      "os": "Linux x86_64 (IBM Semeru Runtimes / OpenJ9 JVM)",
+      "security_provider": "IBMJSSE2 / OpenJCEPlusFIPS",
+      "fips_140": {
+        "standard": "FIPS-140-2",
+        "level": 1,
+        "cavp_certificate": "C1187",
+        "notes": "IBM Java Cryptographic Extension in FIPS mode"
+      },
+      "common_criteria": {
+        "eal": "EAL4",
+        "augmented": true,
+        "protection_profile": "Application Software Protection Profile (App PP) v1.3",
+        "notes": "NIAP Common Criteria EAL4+ Validated JCE Provider"
+      },
+      "algorithms": [
+        {
+          "type": "encryption",
+          "name": "AES-256-GCM",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38D",
+          "modes": [
+            "GCM"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "mac",
+          "name": "HMAC-SHA384",
+          "min_key_size": 384,
+          "standard_ref": "FIPS 198-1",
+          "modes": [],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": true,
+            "quantum_safe_basis": "vendor-claim"
+          }
+        }
+      ],
+      "notes": "Enterprise Java cryptographic engine for SQL query engines, governance frameworks, and data services"
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "Presto SQL & REST Query Coordinator",
+      "type": "listener",
+      "data_sensitivity": "confidential",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "Presto-SQL",
+          "port": 8443
+        },
+        {
+          "name": "HTTPS",
+          "port": 8443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "P-256",
+          "x25519"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384",
+          "ecdsa_secp384r1_sha384",
+          "rsa_pss_rsae_sha256"
+        ],
+        "features": [
+          "mutual-auth",
+          "SNI",
+          "ALPN",
+          "session-resumption",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled",
+          "compression-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "IBMJSSE2 / OpenJCEPlusFIPS",
+          "cryptographic_library": "OpenJCEPlusFIPS",
+          "cryptographic_library_ref": "lib-openjceplus-fips-1",
+          "fips_140": {
+            "standard": "FIPS-140-2",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Secure distributed SQL query execution interface for lakehouse analytics"
+    },
+    {
+      "name": "Milvus Vector Database gRPC Service",
+      "type": "listener",
+      "data_sensitivity": "confidential",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "gRPC",
+          "port": 19530
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_CHACHA20_POLY1305_SHA256"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "x25519"
+        ],
+        "signature_algorithms": [
+          "ecdsa_secp384r1_sha384",
+          "rsa_pss_rsae_sha384"
+        ],
+        "features": [
+          "mutual-auth",
+          "ALPN",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Vector similarity search and embedding storage service interface for RAG"
+    },
+    {
+      "name": "IBM Storage Scale S3 Protocol Gateway",
+      "type": "gateway",
+      "data_sensitivity": "confidential",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "S3",
+          "port": 6443
+        },
+        {
+          "name": "HTTPS",
+          "port": 6443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "P-256"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha256"
+        ],
+        "features": [
+          "SNI",
+          "session-resumption",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64)",
+          "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "High-performance object access protocol communicating with Storage Scale CES nodes"
+    },
+    {
+      "name": "Apache Hive Metastore (HMS) Thrift Endpoint",
+      "type": "internal",
+      "data_sensitivity": "internal",
+      "network_plane": "control-plane",
+      "application_protocols": [
+        {
+          "name": "Thrift",
+          "port": 9083
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "key_exchange_groups": [
+          "P-384"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384"
+        ],
+        "features": [
+          "mutual-auth",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "IBMJSSE2 / OpenJCEPlusFIPS",
+          "cryptographic_library": "OpenJCEPlusFIPS",
+          "cryptographic_library_ref": "lib-openjceplus-fips-1",
+          "fips_140": {
+            "standard": "FIPS-140-2",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Internal metadata management endpoint for Apache Iceberg and Hive table catalogs"
+    }
+  ],
+  "key_management_interfaces": [
+    {
+      "name": "IBM Security Key Lifecycle Manager (SKLM) / GKLM Client Agent",
+      "interface_type": "CLI",
+      "store_type": "hsm",
+      "supported_formats": [
+        "PKCS#12",
+        "PKCS#11",
+        "PEM"
+      ],
+      "key_operations": [
+        "generate",
+        "import",
+        "export",
+        "wrap",
+        "unwrap",
+        "derive",
+        "store",
+        "delete",
+        "zeroize",
+        "encrypt",
+        "decrypt"
+      ],
+      "key_entry_method": "encrypted-import",
+      "fips_compliant_management": true,
+      "platforms": [
+        "Linux x86_64"
+      ],
+      "notes": "Enterprise key manager client for IBM Storage Scale fileset encryption keys"
+    },
+    {
+      "name": "OpenShift Ingress Certificate & Secret Manager",
+      "interface_type": "API",
+      "store_type": "vault",
+      "supported_formats": [
+        "PKCS#12",
+        "PEM"
+      ],
+      "key_operations": [
+        "generate",
+        "import",
+        "store",
+        "delete",
+        "sign",
+        "verify"
+      ],
+      "key_entry_method": "direct",
+      "fips_compliant_management": true,
+      "platforms": [
+        "Linux x86_64"
+      ],
+      "notes": "Kubernetes and Red Hat OpenShift secret operator managing TLS certificates"
+    }
+  ],
+  "security_controls": [
+    {
+      "name": "Storage Scale Fileset & Bucket Encryption Policy",
+      "control_type": "payload_protection",
+      "governing_parameters": [
+        "SET ENCRYPTION E1",
+        "ALGO DEFAULTNISTSP800131A",
+        "KEYS KEY-e030d65:crypto1_devG1"
+      ],
+      "external_dependencies": [
+        "IBM Security Key Lifecycle Manager (SKLM)"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64",
+          "status": "enforced",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "enabled",
+          "protocol_used": "TLS 1.3",
+          "hardening_parameters": [
+            "DISABLE_TLS_1.0",
+            "DISABLE_TLS_1.1"
+          ]
+        },
+        "roles": [
+          {
+            "name": "Storage Administrator",
+            "authentication_method": "certificate",
+            "authentication_algorithm": "RSA-4096 SHA-384"
+          },
+          {
+            "name": "Lakehouse User",
+            "authentication_method": "token",
+            "authentication_algorithm": "ECDSA P-384 SHA-384"
+          }
+        ],
+        "secret_protection": {
+          "status": "enabled",
+          "protection_method": "hsm-backed",
+          "hardening_parameters": [
+            "KEY_WRAP_AES_256",
+            "KMIP_2_1"
+          ]
+        },
+        "data_at_rest_protection": {
+          "status": "enabled",
+          "encryption_algorithm": "AES-256-XTS",
+          "key_management_ref": "IBM Security Key Lifecycle Manager (SKLM) / GKLM Client Agent",
+          "hardware_acceleration": true,
+          "hardening_parameters": [
+            "NIST_SP800_131A_REV2_COMPLIANT"
+          ]
+        }
+      },
+      "notes": "Cryptographic protection of data files and Iceberg tables at rest"
+    },
+    {
+      "name": "Apache Ranger & IKC Policy-Based Access Control",
+      "control_type": "authorization_filter",
+      "governing_parameters": [
+        "MASK_COLUMN",
+        "FILTER_ROW",
+        "DENY_ACCESS"
+      ],
+      "external_dependencies": [
+        "IBM Knowledge Catalog (IKC)",
+        "OpenShift OIDC Provider"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64",
+          "status": "enforced"
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "enabled",
+          "protocol_used": "TLS 1.3",
+          "hardening_parameters": [
+            "MUTUAL_AUTH_REQUIRED"
+          ]
+        },
+        "roles": [
+          {
+            "name": "Data Steward",
+            "authentication_method": "multi-factor",
+            "authentication_algorithm": "RSA-4096 SHA-384"
+          }
+        ],
+        "secret_protection": {
+          "status": "enabled",
+          "protection_method": "vault-backed",
+          "hardening_parameters": [
+            "SECRETS_ENCRYPTION_AT_REST"
+          ]
+        },
+        "data_at_rest_protection": {
+          "status": "not-applicable"
+        }
+      },
+      "notes": "Granular data masking and role-based access filtering across lakehouse tables"
+    }
+  ],
+  "metadata": {
+    "created": "2026-11-11T07:30:00Z",
+    "last_updated": "2026-11-11T07:30:00Z",
+    "author": "IBM Enterprise Cryptographic Profile Architecture Team",
+    "generation_method": "automated-parser",
+    "information_source": "documentation",
+    "lifecycle_stage": "release",
+    "schema_version": "1.0.0",
+    "cbomgen_version": "1.4.2"
+  }
+}

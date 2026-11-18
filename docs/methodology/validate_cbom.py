@@ -44,7 +44,7 @@ non-conformance be reported distinctly (T1, and "MUST NOT be merged"). They are
 distinct here in the verdict, in the exit code, and in the JSON report:
 
   conforms          every MUST rule is satisfied at an accepted carrier version
-  does not conform  the document was assessed and at least one MUST rule failed
+  does not conform  the document was evaluated and at least one MUST rule failed
   refused           the carrier version is below the profile's declared minimum,
                     so no assessment was performed. This says nothing about the
                     document, which may be entirely adequate. Treating it as a
@@ -55,7 +55,7 @@ Conformance claims. A claim is the artifact that crosses an organisational
 boundary: a producer hands it to a consumer, who was not present when the
 evaluation ran. It names every profile evaluated with its whole chain and
 version, binds itself to one document by digest, records the disclosure state of
-what was assessed, and carries the list of what a verdict does not assert. A
+what was evaluated, and carries the list of what a verdict does not assert. A
 claim that cannot be re-checked is a press release, so '--verify-claim' re-runs
 the evaluation and reports where the claim and the document disagree. See
 decision 0015.
@@ -68,7 +68,13 @@ unresolved rather than failed.
 
 Usage:
     python validate_cbom.py <cbom.json> <profile.rules.json> [--with <cited.json>]... [--json]
+                            [--as-of YYYY-MM-DD] [--cited-profile <rules.json>]
     python validate_cbom.py <cbom.json> <profile.rules.json>... --claim
+
+'--as-of' sets the date a rule's grace period is judged against; a failure of a
+tightened rule before its 'graceUntil' date is reported, not counted. Without it
+the date is today. '--cited-profile' evaluates each supplied cited document
+against that profile and prints its verdict beside this one's.
     python validate_cbom.py <cbom.json> <claim.json> --verify-claim [--profiles-dir DIR]
 
 Exit codes:
@@ -76,7 +82,7 @@ Exit codes:
     1  does not conform
     2  usage error
     3  profile error, such as an override that relaxes an inherited rule
-    4  refused: not assessed, as distinct from assessed and found short
+    4  refused: not evaluated, as distinct from evaluated and found short
     5  a claim does not match the document or the profiles it names
 """
 import datetime
@@ -167,11 +173,13 @@ def ver_tuple(s):
 # failure mode this methodology is least able to tolerate. C13 already rejects
 # it for group keys; C17 rejects it everywhere else. See decision 0013.
 ATTRIBUTE_CONSTRAINTS = ("present", "minCount", "enum", "enumFull", "enumRef",
-                         "startsWith", "literals", "literalStages", "refersToCited")
+                         "startsWith", "literals", "literalStages", "refersToCited",
+                         "refersToLocal", "inSubjectList")
 PRODUCT_CONSTRAINTS = ("minInterfaces", "minInterfacesOfType", "minProviders",
                        "subjectIdentified", "productAttribute", "enumRef",
                        "orDeclaredAbsent", "absenceEnumRef", "absenceConditions",
-                       "orCitedDeclares", "subjectDeclared", "singleStage", "citesDocuments")
+                       "orCitedDeclares", "subjectDeclared", "singleStage", "citesDocuments",
+                       "coversCitedInterfaces")
 # Keys naming a vocabulary the profile must declare. An unresolvable reference
 # is the mirror defect: instead of passing everything it fails everything, and
 # the report says only that the value was not accepted.
@@ -410,7 +418,19 @@ def load_profile(path):
         if oid in group_by_qid:
             check_key_coverage_tightens(oid, group_by_qid[oid], ov, notes)
             group_by_qid[oid].update({k: v for k, v in ov.items()
-                                      if k not in ("note", "id", "members")})
+                                      if k not in ("note", "id", "members", "addMembers")})
+            # A derived profile may add members to a group it inherited. Asking for
+            # one more fact per key asks more of a document, so it is a tightening,
+            # and the new members carry the derived profile's tag.
+            for m in ov.get("addMembers", []):
+                m = dict(m)
+                m["_qid"] = "%s#%s" % (tag, m["id"])
+                if m["_qid"] in member_by_qid:
+                    raise ProfileError("group member %s is declared twice" % m["_qid"])
+                group_by_qid[oid].setdefault("members", []).append(m)
+                member_by_qid[m["_qid"]] = (group_by_qid[oid], m)
+                merged["_introducedBy"][m["_qid"]] = prof["profileId"]
+                notes.append("%s adds member %s" % (oid, m["_qid"]))
             merged["_tightenedBy"].setdefault(oid, []).append(tag)
         elif oid in member_by_qid:
             _group, target = member_by_qid[oid]
@@ -725,6 +745,17 @@ def check_scope_narrows(base, derived):
             raise ProfileError(
                 "derived profile accepts lifecycle stage(s) %s that the base rejects; "
                 "extension is monotonic" % ", ".join(sorted(widened)))
+
+    # Purposes taken in depth may be added and not dropped: a purpose the base
+    # requires in depth is a set of rules a document must meet, and dropping it
+    # would let a document conform to the derived profile while failing the base.
+    b_purposes, d_purposes = b.get("cryptographicPurposes"), d.get("cryptographicPurposes")
+    if b_purposes and d_purposes is not None:
+        dropped = [p for p in b_purposes if p not in d_purposes]
+        if dropped:
+            raise ProfileError(
+                "derived profile drops purpose(s) %s that the base takes in depth; "
+                "extension is monotonic" % ", ".join(sorted(dropped)))
 
     bs, ds = subject_types(base), subject_types(derived)
     if bs and ds and not set(ds) <= set(bs):
@@ -1314,6 +1345,28 @@ def check_value(iface, value, rule, profile):
             bad = [d for ok, d in results if not ok]
             return (not bad, "; ".join(bad) if bad else "; ".join(d for _, d in results))
         return _refers_to_cited(value, spec, iface)
+    if "refersToLocal" in constraint:
+        # A pointer to another element of the same record: a key store, a conduit,
+        # the component that provides keys. Checked by bom-ref, so a typo is a
+        # failure rather than a join that silently leads nowhere.
+        spec = constraint["refersToLocal"] or {}
+        local = (iface.get("_context") or {}).get("localRefs") or set()
+        bad = [v for v in _as_list(value)
+               if v not in spec.get("literals", []) and v not in local]
+        if bad:
+            return False, "%r names no element of this record" % (bad if len(bad) > 1 else bad[0])
+        return True, "-> %s" % ", ".join(str(v) for v in _as_list(value))
+    if "inSubjectList" in constraint:
+        # A value drawn from a list the record declares on its subject, such as a
+        # zone from the system's zones or a service from its services. The list
+        # belongs to the record, not to the profile, so it cannot be an enumRef.
+        name = constraint["inSubjectList"]
+        declared = ((iface.get("_context") or {}).get("subjectLists") or {}).get(name) or []
+        bad = [v for v in _as_list(value) if v not in declared]
+        if bad:
+            return False, "%r not among the subject's %s %s" % (
+                bad if len(bad) > 1 else bad[0], name, declared)
+        return True, "= %r (declared in %s)" % (value, name)
     if rule.get("list") and "enumRef" in constraint:
         vocab = profile.get(constraint["enumRef"], [])
         bad = [v for v in _as_list(value) if v not in vocab]
@@ -1427,6 +1480,10 @@ def check_group_rule(iface, rule, profile):
             # where the status is not already available, a blocker. The optional
             # members are the depth that scope buys.
             if scoped and key not in scoped and member.get("level") == "MAY":
+                continue
+            # A member may apply to some keys only: who must verify a signature is
+            # a question for the signing purposes, not for encryption.
+            if member.get("forKeys") and key not in member["forKeys"]:
                 continue
             ok, state, detail = check_rule(entry, member, profile)
             rows.append({"id": "%s[%s]" % (member["_qid"], key), "level": member["level"],
@@ -1593,6 +1650,35 @@ def check_product(product, interfaces, constraint, profile):
         n = product.get("providerCount", 0)
         return (n >= constraint["minProviders"],
                 "%d provider component(s) with a purl" % n)
+    if "coversCitedInterfaces" in constraint:
+        # Every interface of every cited record that the evaluator was given must
+        # be the target of some correspondsTo, so that an interface the design
+        # leaves enabled and unused cannot simply be left out. A cited record that
+        # was not supplied cannot be checked, and the detail says so.
+        registry = product.get("_registry")
+        targets = set()
+        for i in interfaces:
+            for link in _as_list(i.get("correspondsTo")):
+                doc, ref = split_bomlink(link)
+                if doc and ref:
+                    targets.add((doc, ref))
+        missing, checked, unsupplied = [], 0, 0
+        for r in product.get("cited", []):
+            doc, _ref = split_bomlink(r.get("url"))
+            entry = registry.get(doc) if (registry and doc) else None
+            if not entry:
+                unsupplied += 1
+                continue
+            checked += 1
+            for ci in extract_interfaces(entry["bom"]):
+                if (doc, ci["interfaceId"]) not in targets:
+                    missing.append("%s#%s" % (os.path.basename(entry["path"]), ci["interfaceId"]))
+        if missing:
+            return (False, "not listed: %s" % ", ".join(missing))
+        if not checked:
+            return (True, "not evaluated: no cited record was supplied (--with)")
+        return (True, "every interface of %d cited record(s) is listed%s"
+                % (checked, ("; %d not supplied" % unsupplied) if unsupplied else ""))
     if "productAttribute" in constraint:
         value = product.get("attrs", {}).get(constraint["productAttribute"])
         if not present(value):
@@ -1672,7 +1758,57 @@ def check_reference(rule, profile, element_refs, markers, absence, registry=None
 
 
 # --------------------------------------------------------------------------- #
-def validate(bom, profile, registry=None):
+def _local_refs(node, found=None):
+    found = set() if found is None else found
+    if isinstance(node, dict):
+        if isinstance(node.get("bom-ref"), str):
+            found.add(node["bom-ref"])
+        for v in node.values():
+            _local_refs(v, found)
+    elif isinstance(node, list):
+        for v in node:
+            _local_refs(v, found)
+    return found
+
+
+def _subject_lists(bom):
+    subject, _entries, _inv = document_parts(bom)
+    single, multi, _m, _g, _gm = split_properties(subject)
+    lists = {k: _as_list(v) for k, v in single.items()}
+    for k, v in multi.items():
+        lists[k] = _unique(list(lists.get(k, [])) + list(v))
+    return lists
+
+
+def grace_map(profile):
+    """Rule id -> the date until which a failure of that rule is reported, not counted.
+
+    A tightened rule takes effect after a grace period the profile recommends,
+    so that documents written against the previous version are not failed the
+    day the new version appears. A contract may set a different period; the
+    evaluator takes the profile's."""
+    out = {}
+    for section in ("productRules", "interfaceRules", "referenceRules"):
+        for r in profile.get(section, []):
+            if r.get("graceUntil"):
+                out[r.get("_qid", r.get("id"))] = str(r["graceUntil"])
+    for g in profile.get("groupRules", []):
+        for m in g.get("members", []):
+            if m.get("graceUntil"):
+                out[m.get("_qid", m.get("id"))] = str(m["graceUntil"])
+    return out
+
+
+def apply_grace(rows, graces, as_of):
+    for r in rows:
+        until = graces.get(str(r.get("id", "")).split("[")[0])
+        if until and not r["ok"] and as_of < until:
+            r["ok"] = True
+            r["state"] = "grace"
+            r["detail"] = "fails, counted from %s (grace period): %s" % (until, r["detail"])
+
+
+def validate(bom, profile, registry=None, as_of=None):
     """Evaluate a CBOM against a profile.
 
     Returns (verdict, report) where verdict is one of the three the Conformance
@@ -1693,8 +1829,11 @@ def validate(bom, profile, registry=None):
     product = extract_product(bom)
     product["_registry"] = registry
     interfaces = extract_interfaces(bom, registry)
+    local_refs = _local_refs(bom)
+    subject_lists = _subject_lists(bom)
     for iface in interfaces:
-        iface["_context"] = {"cited": product.get("cited", []), "registry": registry}
+        iface["_context"] = {"cited": product.get("cited", []), "registry": registry,
+                             "localRefs": local_refs, "subjectLists": subject_lists}
 
     chain = profile.get("_chain", [])
 
@@ -1746,6 +1885,14 @@ def validate(bom, profile, registry=None):
             "conforms": iface_ok, "rows": rows,
         })
 
+    graces = grace_map(profile)
+    if graces:
+        as_of = as_of or datetime.date.today().isoformat()
+        apply_grace(report["product"] + report["references"], graces, as_of)
+        for i in report["interfaces"]:
+            apply_grace(i["rows"], graces, as_of)
+            i["conforms"] = all(r["ok"] for r in i["rows"] if r["level"] == "MUST")
+
     product_ok = all(r["ok"] for r in report["product"] + report["references"]
                      if r["level"] == "MUST")
     ifaces_ok = all(i["conforms"] for i in report["interfaces"])
@@ -1753,7 +1900,7 @@ def validate(bom, profile, registry=None):
 
 
 CLAIM_FORMAT = "pkic.cbom.conformance-claim"
-CLAIM_FORMAT_VERSION = "0.1"
+CLAIM_FORMAT_VERSION = "0.2"
 
 # What a verdict does not assert. The Conformance section carries this list, and
 # a consumer reading a claim months later will not have read the Conformance
@@ -1812,19 +1959,20 @@ def chain_of(profile):
 
 
 def rule_states(report):
-    """Summarise what was assessed, by disclosure state rather than by count alone.
+    """Summarise what was evaluated, by disclosure state rather than by count alone.
 
     'Conforms' with the implementing library withheld and 'conforms' with it
     supplied are materially different answers to the question a consumer asked.
     A claim that reports only the verdict throws that away, so the states travel
     with it."""
-    buckets = {"failed": [], "withheld": [], "unknown": [], "undeclared": [], "unresolved": []}
+    buckets = {"failed": [], "withheld": [], "unknown": [], "undeclared": [], "unresolved": [],
+               "grace": []}
     total = 0
     for row in report.get("product", []) + report.get("references", []):
         total += 1
         if not row.get("ok") and row.get("level") == "MUST":
             buckets["failed"].append(row["id"])
-        if row.get("state") in ("withheld", "unknown", "undeclared"):
+        if row.get("state") in ("withheld", "unknown", "undeclared", "grace"):
             buckets[row["state"]].append(row["id"])
     for iface in report.get("interfaces", []):
         for row in iface.get("rows", []):
@@ -1833,9 +1981,9 @@ def rule_states(report):
             if not row.get("ok") and row.get("level") == "MUST":
                 buckets["failed"].append(ref)
             state = row.get("state")
-            if state in ("withheld", "unknown", "undeclared", "unresolved"):
+            if state in ("withheld", "unknown", "undeclared", "unresolved", "grace"):
                 buckets[state].append(ref)
-    return dict(buckets, assessed=total)
+    return dict(buckets, evaluated=total)
 
 
 def build_claim(bom_path, bom, evaluations, issued=None):
@@ -1852,7 +2000,7 @@ def build_claim(bom_path, bom, evaluations, issued=None):
         if not evaluable:
             not_asserted.append(
                 "anything a %s constrains; this carrier does not carry the structure to "
-                "evaluate them, so they were not assessed" % kind)
+                "evaluate them, so they were not evaluated" % kind)
     entries = []
     for profile, verdict, report in evaluations:
         entry = {
@@ -1860,12 +2008,12 @@ def build_claim(bom_path, bom, evaluations, issued=None):
             "profileTag": profile_tag(profile),
             "version": str(profile.get("version")),
             "chain": chain_of(profile),
-            "assessed": verdict != "refused",
+            "evaluated": verdict != "refused",
             "verdict": verdict,
             "carrierBand": report["format"]["status"],
         }
         # A refused evaluation carries no rule results to summarise, and saying
-        # "0 failed" about a document nobody assessed is the merge of refusal
+        # "0 failed" about a document nobody evaluated is the merge of refusal
         # and failure the Conformance section forbids.
         if verdict != "refused":
             entry["rules"] = rule_states(report)
@@ -1976,7 +2124,8 @@ def find_profile(search_dirs, profile_id, tag):
 
 def icon_for(row):
     if row["ok"]:
-        return {"withheld": "HELD", "n/a": " -- ", "unresolved": "OPEN"}.get(row.get("state"), "PASS")
+        return {"withheld": "HELD", "n/a": " -- ", "unresolved": "OPEN",
+                "grace": "GRCE"}.get(row.get("state"), "PASS")
     if row["level"] == "MUST":
         return "UNKN" if row.get("state") == "unknown" else "FAIL"
     return "warn"
@@ -1985,10 +2134,22 @@ def icon_for(row):
 def main(argv):
     # '--with <document>' supplies a document this one cites, so the citation's
     # hash is checked and joins across documents are followed. It may repeat.
+    # '--as-of <date>' sets the date grace periods are judged against (default:
+    # today). '--cited-profile <rules>' evaluates each supplied cited document
+    # against that profile and reports its verdict beside this one's.
     withs, rest, i = [], [], 1
+    as_of, cited_profile = None, None
     while i < len(argv):
         if argv[i] == "--with" and i + 1 < len(argv):
             withs.append(argv[i + 1])
+            i += 2
+            continue
+        if argv[i] == "--as-of" and i + 1 < len(argv):
+            as_of = argv[i + 1]
+            i += 2
+            continue
+        if argv[i] == "--cited-profile" and i + 1 < len(argv):
+            cited_profile = argv[i + 1]
             i += 2
             continue
         if argv[i].startswith("--with="):
@@ -2058,7 +2219,7 @@ def main(argv):
     for path in profile_paths:
         try:
             prof, orig, nts = load_profile(path)
-            vd, rp = validate(bom, prof, registry)
+            vd, rp = validate(bom, prof, registry, as_of)
         except ProfileError as err:
             print("PROFILE ERROR: %s" % err, file=sys.stderr)
             return 3
@@ -2087,7 +2248,7 @@ def main(argv):
     if as_json:
         print(json.dumps({"verdict": verdict,
                           "conforms": verdict == "conforms",
-                          "assessed": verdict != "refused",
+                          "evaluated": verdict != "refused",
                           "profile": profile.get("profileId"),
                           "profileTag": profile_tag(profile),
                           "chain": profile.get("_chain", []),
@@ -2156,6 +2317,27 @@ def main(argv):
     tail = ("  (failed MUST: %s)" % ", ".join(fails)) if fails else ""
     print("VERDICT : %s%s  [carrier: %s]"
           % (VERDICT_LABEL[verdict], tail, report["format"]["status"]))
+    if cited_profile:
+        # A system or deployment record's verdict covers its producer's own
+        # statements. Each cited record is evaluated separately and reported
+        # beside it, including one that conforms to nothing, so that a consumer
+        # sees both answers and not one merged answer.
+        try:
+            cprof, _o, _n = load_profile(cited_profile)
+        except ProfileError as err:
+            print("PROFILE ERROR: %s" % err, file=sys.stderr)
+            return 3
+        product = extract_product(bom)
+        for r in product.get("cited", []):
+            doc, _ref = split_bomlink(r.get("url"))
+            entry = registry.get(doc) if doc else None
+            if not entry:
+                print("CITED   : %s  not supplied, not evaluated" % r.get("url"))
+                continue
+            cv, _cr = validate(entry["bom"], cprof, registry, as_of)
+            print("CITED   : %s  %s against %s v%s"
+                  % (os.path.basename(entry["path"]), VERDICT_LABEL[cv],
+                     profile_tag(cprof), cprof.get("version")))
     return EXIT_FOR[verdict]
 
 

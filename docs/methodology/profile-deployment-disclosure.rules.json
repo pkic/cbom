@@ -7,7 +7,7 @@
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.9",
+    "version": "0.10",
     "file": "profile-interface-disclosure.rules.json"
   },
   "objective": {

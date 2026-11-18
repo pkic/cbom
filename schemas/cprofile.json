@@ -1,0 +1,621 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ibm.github.io/cbomgen/schemas/cprofile.json",
+  "title": "Enterprise Interface and Cryptographic Profile",
+  "description": "Describes logical service interfaces, key management utilities, administrative security policies, and cryptographic protection mechanisms. Generated independently of any SBOM and merged downstream.",
+  "type": "object",
+  "required": [
+    "product",
+    "version",
+    "interfaces",
+    "key_management_interfaces",
+    "security_controls",
+    "metadata"
+  ],
+  "$defs": {
+
+    "fips_140_compliance": {
+      "type": "object",
+      "required": ["standard", "level"],
+      "description": "FIPS 140 validation record (NIST CMVP)",
+      "properties": {
+        "standard": {
+          "type": "string",
+          "enum": ["FIPS-140-1", "FIPS-140-2", "FIPS-140-3", "FIPS-140-4"],
+          "description": "FIPS 140 standard version under which the module was validated"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4,
+          "description": "FIPS 140 security level achieved (1–4)"
+        },
+        "cavp_certificate": {
+          "type": "string",
+          "description": "CAVP or ACVP algorithm certificate reference (e.g., #A2470, C1187)"
+        },
+        "cmvp_certificate_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the NIST CMVP module certificate entry"
+        },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "cc_compliance": {
+      "type": "object",
+      "required": ["eal"],
+      "description": "Common Criteria evaluation record (NIAP/CCRA)",
+      "properties": {
+        "eal": {
+          "type": "string",
+          "enum": ["EAL1", "EAL2", "EAL3", "EAL4", "EAL5", "EAL6", "EAL7"],
+          "description": "Common Criteria Evaluation Assurance Level"
+        },
+        "augmented": {
+          "type": "boolean",
+          "description": "Whether the EAL is augmented (e.g., EAL4+)"
+        },
+        "protection_profile": {
+          "type": "string",
+          "description": "Protection Profile the evaluation is against (e.g., NDPP, App PP)"
+        },
+        "niap_certificate_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the NIAP or CCRA certificate entry"
+        },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "algorithm": {
+      "type": "object",
+      "required": ["type", "name"],
+      "description": "A single cryptographic algorithm provided by a library",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "key-exchange", "encryption", "signature",
+            "hash", "mac", "kdf", "prng", "pke", "drbg"
+          ],
+          "description": "Cryptographic primitive category"
+        },
+        "name": {
+          "type": "string",
+          "description": "Algorithm name (e.g., AES-256-GCM, RSA-4096, ECDH-P384, ML-KEM-768, SHA-384)"
+        },
+        "min_key_size": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Minimum key or security parameter size in bits"
+        },
+        "standard_ref": {
+          "type": "string",
+          "description": "Governing standard (e.g., FIPS 197, SP 800-38A, FIPS 186-4, SP 800-90A)"
+        },
+        "modes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Validated modes of operation (e.g., CBC, GCM, KW, PSS, CMAC)"
+        },
+        "compliance": {
+          "type": "object",
+          "description": "Editorial compliance and quantum-safety assessments — interpretations, not physical facts",
+          "properties": {
+            "fips_approved": {
+              "type": "boolean",
+              "description": "Whether this algorithm is approved for use in FIPS mode"
+            },
+            "fips_approved_context": {
+              "type": "string",
+              "description": "Scope of the FIPS approval (e.g., SP 800-131A Rev2, FIPS 197, key size ≥ 2048)"
+            },
+            "quantum_safe": {
+              "type": "boolean",
+              "description": "Whether this algorithm is considered quantum-safe under current guidance"
+            },
+            "quantum_safe_basis": {
+              "type": "string",
+              "enum": [
+                "NIST-FIPS-203", "NIST-FIPS-204", "NIST-FIPS-205",
+                "NIST-PQC-Round4", "vendor-claim", "none"
+              ],
+              "description": "The standard or authority on which the quantum-safety assessment is based"
+            }
+          }
+        }
+      }
+    }
+
+  },
+
+  "properties": {
+    "product": {
+      "type": "string",
+      "description": "Product name"
+    },
+    "version": {
+      "type": "string",
+      "description": "Product release version"
+    },
+    "sbom_ref": {
+      "type": "string",
+      "description": "Optional reference to a companion SBOM merged downstream (urn, serialNumber, or bom-ref)"
+    },
+
+    "cryptographic_libraries": {
+      "type": "array",
+      "description": "Cryptographic library implementations and the algorithms they provide. Libraries are the correct owner of algorithm lists; interfaces reference a library by library_id.",
+      "items": {
+        "type": "object",
+        "required": ["library_id", "name", "os"],
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "description": "Stable identifier referenced by interfaces[].platforms[].cryptographic_library_ref"
+          },
+          "name": {
+            "type": "string",
+            "description": "Library name (e.g., ICC, OpenJCEPlusFIPS, OpenSSL, SCHANNEL, GSKit)"
+          },
+          "version": {
+            "type": "string",
+            "description": "Library or module version string"
+          },
+          "os": {
+            "type": "string",
+            "description": "Operating system and environment this entry applies to (e.g., Linux x86_64, z/OS 3.1)"
+          },
+          "security_provider": {
+            "type": "string",
+            "description": "Security engine that wraps this library (e.g., GSKit v9, JSSE, SslStream, System SSL)"
+          },
+          "fips_140": { "$ref": "#/$defs/fips_140_compliance" },
+          "common_criteria": { "$ref": "#/$defs/cc_compliance" },
+          "algorithms": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/algorithm" },
+            "description": "Algorithms supported by this library on this platform"
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+
+    "interfaces": {
+      "type": "array",
+      "description": "The active messaging, transport, client-binding, and administrative network listeners.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "type",
+          "application_protocols",
+          "transport_security",
+          "platforms"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the service interface"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["listener", "client", "peer", "internal", "gateway", "proxy", "broker"],
+            "description": "Network role of the interface"
+          },
+          "data_sensitivity": {
+            "type": "string",
+            "enum": ["public", "internal", "confidential", "restricted", "secret"],
+            "description": "Sensitivity classification of the data payloads carried by this interface"
+          },
+          "network_plane": {
+            "type": "string",
+            "enum": ["data-plane", "control-plane", "management-plane", "out-of-band"],
+            "description": "Network tier on which this interface operates"
+          },
+          "application_protocols": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "port"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Application layer protocol name (e.g., MQI, JMS, REST, AMQP, MQTT)"
+                },
+                "port": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 65535,
+                  "description": "Bind port number or 0 if client-originated dynamic socket"
+                }
+              }
+            }
+          },
+          "transport_security": {
+            "type": "object",
+            "required": ["protocol", "supported_versions"],
+            "properties": {
+              "protocol": {
+                "type": "string",
+                "enum": [
+                  "TLS", "SSL", "DTLS", "WTLS",
+                  "SSH", "SFTP", "SCP",
+                  "QUIC", "IPsec", "WireGuard", "MACsec",
+                  "SRTP", "ZRTP",
+                  "Kerberos", "GSSAPI",
+                  "none", "other"
+                ],
+                "description": "Transport-level security protocol"
+              },
+              "supported_versions": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Supported protocol versions (e.g., TLS 1.2, TLS 1.3, SSH-2)"
+              },
+              "cipher_suites": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "AEAD cipher suites (e.g., TLS_AES_256_GCM_SHA384, TLS_CHACHA20_POLY1305_SHA256). For TLS 1.2 these encode key exchange + cipher + MAC; for TLS 1.3 they encode cipher + hash only."
+              },
+              "key_exchange_groups": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "TLS supported_groups / named curves negotiated for key exchange (e.g., x25519, P-256, P-384, ML-KEM-768, X25519Kyber768Draft00). Required to fully describe TLS 1.3 key exchange."
+              },
+              "signature_algorithms": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "TLS signature_algorithms extension values for authentication (e.g., ecdsa_secp256r1_sha256, rsa_pss_rsae_sha256, ed25519)"
+              },
+              "features": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "mutual-auth", "SNI", "ALPN", "session-resumption",
+                    "0-RTT", "certificate-pinning", "EKU-checks",
+                    "OCSP-stapling", "CRL-checking",
+                    "quantum-safe-ML-KEM", "quantum-safe-ML-DSA",
+                    "quantum-safe-SLH-DSA", "hybrid-classical-pqc",
+                    "perfect-forward-secrecy", "renegotiation-disabled",
+                    "compression-disabled"
+                  ]
+                },
+                "description": "Security enhancements and hardening features supported by this interface"
+              }
+            }
+          },
+          "platforms": {
+            "type": "array",
+            "description": "Per-OS deployment variants referencing a cryptographic_libraries entry",
+            "items": {
+              "type": "object",
+              "required": ["os", "security_provider", "cryptographic_library"],
+              "properties": {
+                "os": {
+                  "type": "string",
+                  "description": "Operating system and environment (e.g., Linux x86_64, Windows Server 2022, IBM i 7.5, z/OS 3.1)"
+                },
+                "security_provider": {
+                  "type": "string",
+                  "description": "The security engine provider (e.g., GSKit v9, JSSE, SslStream, System SSL)"
+                },
+                "cryptographic_library": {
+                  "type": "string",
+                  "description": "Binary engine providing cryptographic services (e.g., ICC, OpenJCEPlusFIPS, SCHANNEL, OpenSSL)"
+                },
+                "cryptographic_library_ref": {
+                  "type": "string",
+                  "description": "References a cryptographic_libraries[].library_id entry for algorithm and compliance details"
+                },
+                "fips_140": { "$ref": "#/$defs/fips_140_compliance" },
+                "common_criteria": { "$ref": "#/$defs/cc_compliance" }
+              }
+            }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+
+    "key_management_interfaces": {
+      "type": "array",
+      "description": "Administrative utilities used to create, rotate, and manage key/certificate stores.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "interface_type",
+          "store_type",
+          "supported_formats",
+          "platforms"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Utility or binary name (e.g., runmqakm, runmqktool, mqiptKeytool, keytool, certutil)"
+          },
+          "interface_type": {
+            "type": "string",
+            "enum": ["CLI", "GUI", "API", "OS-Native", "web-console"],
+            "description": "Interaction mode of the key management tool"
+          },
+          "store_type": {
+            "type": "string",
+            "enum": ["keystore", "truststore", "pki", "hsm", "tpm", "vault", "os-keyring"],
+            "description": "Type of cryptographic store managed by this utility"
+          },
+          "supported_formats": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "PKCS#12", "PKCS#11", "PKCS#8", "CMS", "JKS", "JCEKS",
+                "PEM", "DER", "PFX", "KDB", "BKS", "BCFKS",
+                "P7B", "P7C", "CRL", "PKCS#7"
+              ]
+            },
+            "description": "Supported keystore or certificate formats"
+          },
+          "key_operations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "generate", "import", "export", "wrap", "unwrap",
+                "derive", "store", "delete", "zeroize",
+                "sign", "verify", "encrypt", "decrypt",
+                "split", "reconstruct"
+              ]
+            },
+            "description": "Key lifecycle operations supported by this interface"
+          },
+          "key_entry_method": {
+            "type": "string",
+            "enum": [
+              "direct", "split-knowledge", "key-ceremony",
+              "hsm-generated", "encrypted-import", "none"
+            ],
+            "description": "Method used for key entry into the module or store"
+          },
+          "fips_compliant_management": {
+            "type": "boolean",
+            "description": "Whether the tool supports FIPS-certified key operations"
+          },
+          "platforms": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Platforms on which this key management tool is available"
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+
+    "security_controls": {
+      "type": "array",
+      "description": "Policy-based access, credential authentication, message-level protection, and revocation systems.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "control_type",
+          "governing_parameters",
+          "platforms",
+          "protection_mechanism"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the security control/policy (e.g., CONNAUTH, CHLAUTH, AMS)"
+          },
+          "control_type": {
+            "type": "string",
+            "enum": [
+              "authentication_policy",
+              "authorization_filter",
+              "payload_protection",
+              "revocation_check",
+              "programmatic_exit",
+              "fips_policy",
+              "tls_policy",
+              "api_security_policy",
+              "transport_security_policy",
+              "key_rotation_policy",
+              "key_entry_policy",
+              "certificate_management_policy",
+              "audit_logging_policy",
+              "intrusion_detection_policy",
+              "quantum_safe_migration_policy",
+              "self_test_policy"
+            ],
+            "description": "Functional category of the security control"
+          },
+          "governing_parameters": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Configuration attributes governing this control (e.g., ADOPTCTX, SSLPEERMAP, CERTLABL)"
+          },
+          "external_dependencies": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "External resources required at runtime (e.g., LDAP directory, OIDC Provider, OCSP Responder, HSM, Vault)"
+          },
+          "platforms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["os", "status"],
+              "properties": {
+                "os": { "type": "string" },
+                "status": {
+                  "type": "string",
+                  "enum": ["enabled", "disabled", "optional", "enforced", "deprecated", "not-supported"],
+                  "description": "Operational status of this control on the given platform"
+                },
+                "fips_140": { "$ref": "#/$defs/fips_140_compliance" },
+                "common_criteria": { "$ref": "#/$defs/cc_compliance" }
+              }
+            }
+          },
+          "protection_mechanism": {
+            "type": "object",
+            "required": ["transport_protection", "secret_protection"],
+            "properties": {
+              "transport_protection": {
+                "type": "object",
+                "required": ["status", "protocol_used"],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["enabled", "disabled", "supported-not-enabled", "required", "not-applicable"],
+                    "description": "Whether transport protection is enabled, merely supported, or disabled"
+                  },
+                  "protocol_used": {
+                    "type": "string",
+                    "description": "Transport security protocol in use (e.g., TLS 1.3, IPsec, SSH-2)"
+                  },
+                  "hardening_parameters": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Additional hardening configuration applied (e.g., DISABLE_TLS_1.0, REQUIRE_CLIENT_CERT)"
+                  }
+                }
+              },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "authentication_method"],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Role name (e.g., Crypto Officer, User, Administrator)"
+                    },
+                    "authentication_method": {
+                      "type": "string",
+                      "enum": [
+                        "identity-based", "role-based", "password",
+                        "pin", "token", "certificate", "multi-factor", "none"
+                      ],
+                      "description": "Authentication mechanism for this role"
+                    },
+                    "authentication_algorithm": {
+                      "type": "string",
+                      "description": "Algorithm used for authentication (e.g., ECDSA P-521 SHA-512, RSA-2048 SHA-256)"
+                    }
+                  }
+                },
+                "description": "Roles and their authentication requirements governing this control"
+              },
+              "secret_protection": {
+                "type": "object",
+                "required": ["status", "protection_method"],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["enabled", "disabled", "supported-not-enabled", "required", "not-applicable"],
+                    "description": "Whether secret protection is enabled, merely supported, or disabled"
+                  },
+                  "protection_method": {
+                    "type": "string",
+                    "enum": [
+                      "stash-file", "obfuscated", "encrypted-at-rest",
+                      "hsm-backed", "vault-backed", "os-keyring",
+                      "environment-variable", "plaintext", "none"
+                    ],
+                    "description": "Mechanism used to protect secret material (passwords, keys) at rest"
+                  },
+                  "hardening_parameters": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              },
+              "data_at_rest_protection": {
+                "type": "object",
+                "required": ["status"],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["enabled", "disabled", "supported-not-enabled", "required", "not-applicable"],
+                    "description": "Whether data-at-rest encryption is enabled, merely supported, or disabled"
+                  },
+                  "encryption_algorithm": {
+                    "type": "string",
+                    "description": "Algorithm used for data-at-rest encryption (e.g., AES-256-GCM, AES-256-XTS)"
+                  },
+                  "key_management_ref": {
+                    "type": "string",
+                    "description": "Reference to the key_management_interfaces entry responsible for this key"
+                  },
+                  "hardware_acceleration": {
+                    "type": "boolean",
+                    "description": "Whether hardware acceleration (e.g., AES-NI, CPACF) is used"
+                  },
+                  "hardening_parameters": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+
+    "metadata": {
+      "type": "object",
+      "required": ["created", "author", "generation_method"],
+      "properties": {
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when this profile was generated"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of the most recent modification"
+        },
+        "author": {
+          "type": "string",
+          "description": "Individual or team responsible for this profile"
+        },
+        "generation_method": {
+          "type": "string",
+          "enum": ["manual", "automated-scanner", "automated-parser", "vendor-supplied"],
+          "description": "How this profile was produced"
+        },
+        "information_source": {
+          "type": "string",
+          "enum": [
+            "documentation", "source-code", "configuration",
+            "binary-analysis", "vendor-disclosure", "security-policy"
+          ],
+          "description": "The primary artefact from which cryptographic information was extracted"
+        },
+        "lifecycle_stage": {
+          "type": "string",
+          "enum": ["development", "build", "release", "deployment", "decommission"],
+          "description": "Product lifecycle stage this profile represents"
+        },
+        "schema_version": {
+          "type": "string",
+          "description": "Version of the cprofile schema used (e.g., 1.0.0)"
+        },
+        "cbomgen_version": {
+          "type": "string",
+          "description": "Version of the CBOMgen tool that generated this profile"
+        }
+      }
+    }
+  }
+}

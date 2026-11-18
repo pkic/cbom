@@ -1,0 +1,129 @@
+{
+  "$comment": "DRAFT. The telecom service-assurance overlay. Extends the generic system overlay system-disclosure, which supplies the citations, the join to product interfaces, usage and the key provider. Adds the component-to-service dependency mapping the telecom CBOM document asks for (3.2.4), and the operator boundary.",
+  "profileId": "pkic.example.telecom-service-assurance",
+  "profileTag": "telecom-service-assurance",
+  "title": "Telecom Service Assurance Overlay (draft)",
+  "version": "0.1-draft",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+  "extends": {
+    "profileId": "pkic.example.system-disclosure",
+    "version": "0.1",
+    "file": "../../docs/methodology/profile-system-disclosure.rules.json"
+  },
+  "objective": {
+    "$comment": "C1. The consumer is the operator's service assurance team, or a customer of a critical service such as a public safety authority. The decision is the one the telecom document names: how a weakness or a change at one component affects the services built on it.",
+    "consumer": "An operator's service assurance team, or a customer of a critical communications service acting through the operator.",
+    "decision": "For each interface the system uses: which services depend on it and whether it crosses the operator boundary, so that a weakness or a migration at that interface can be traced to the services, and the partners, it affects.",
+    "decisionOptions": [
+      "record the dependencies and take no further action",
+      "raise the priority of a migration that affects a critical service",
+      "agree a change with the roaming partner or interconnect provider first"
+    ]
+  },
+  "scope": {
+    "$comment": "As the generic overlay: one system design, as the operator's architects deliver it.",
+    "subjectTypes": [
+      "system"
+    ],
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured"
+    ]
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "boundaryVocabulary": [
+    "intra-operator",
+    "inter-operator"
+  ],
+  "$commentBoundary": "'inter-operator': the connection leaves the operator's network, to a roaming partner, an interconnect provider (IPX) or another network, the boundary 3GPP TS 33.210 draws between security domains.",
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "System names the services it delivers",
+      "level": "MUST",
+      "constraint": {
+        "productAttribute": "services"
+      },
+      "withholdable": false,
+      "note": "The services, as the operator's service model names them. Each interface in use names the ones it carries (I1). Commitments, availability targets and customers stay in the service model: the record holds the names it joins on."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "carriesService",
+      "level": "MUST",
+      "constraint": {
+        "inSubjectList": "services",
+        "literals": [
+          "none"
+        ]
+      },
+      "withholdable": true,
+      "list": true,
+      "requiredWhen": {
+        "attribute": "usage",
+        "equals": "in-use"
+      },
+      "note": "The services that depend on this interface, by the names the system gives them (P1). A list, because an interconnect usually carries several. 'none' for an interface no service depends on directly, such as management. This is the component-to-service dependency mapping. Withholdable, because a public record may not show which services depend on what."
+    },
+    {
+      "id": "I2",
+      "attribute": "boundary",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "boundaryVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "usage",
+        "equals": "in-use"
+      },
+      "note": "Whether the connection stays in the operator's network or crosses to another. A change on an inter-operator interface needs the other party to change too."
+    },
+    {
+      "id": "I3",
+      "attribute": "boundaryProxy",
+      "level": "MUST",
+      "constraint": {
+        "refersToLocal": {}
+      },
+      "withholdable": true,
+      "requiredWhen": {
+        "attribute": "boundary",
+        "equals": "inter-operator"
+      },
+      "note": "The component that terminates the boundary, by its bom-ref: the SEPP for N32, a security gateway for Za, or the interconnect provider where it relays the traffic."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "Service levels, availability targets and the customers of each service",
+      "reason": "They belong in the operator's service model, which the record joins by service name."
+    },
+    {
+      "item": "A criticality rating for each service",
+      "reason": "A judgement the operator's policy makes from the service model, not a fact of the design."
+    }
+  ],
+  "changelog": [
+    {
+      "version": "0.1-draft",
+      "date": "2026-11-17",
+      "summary": "First draft, built on a roaming interconnect.",
+      "changes": []
+    }
+  ],
+  "artifacts": {
+    "conformingExample": "examples/cbom-roaming-interconnect-system.cdx.json",
+    "nonConformingExample": "examples/cbom-roaming-interconnect-fail-service.cdx.json"
+  }
+}

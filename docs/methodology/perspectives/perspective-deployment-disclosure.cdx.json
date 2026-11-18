@@ -123,6 +123,18 @@
           "rationale": "Required when lifecycleStage is implemented."
         },
         {
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:intrinsicData')]",
+          "nativeName": "interface-disclosure#I12 intrinsicData",
+          "relevance": "optional",
+          "rationale": "Every declared interface."
+        },
+        {
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:credentialLifetime')]",
+          "nativeName": "interface-disclosure#I13 credentialLifetime",
+          "relevance": "optional",
+          "rationale": "Required when intrinsicData is not none."
+        },
+        {
           "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:correspondsTo')]",
           "nativeName": "deployment-disclosure#I1 correspondsTo",
           "relevance": "required",

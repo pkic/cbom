@@ -1,0 +1,471 @@
+{
+  "product": "IBM watsonx.ai",
+  "version": "2.2.0",
+  "sbom_ref": "urn:cdx:cbom-ibm-watsonx.ai-2.2.0-202611",
+  "cryptographic_libraries": [
+    {
+      "library_id": "lib-openssl-fips-3.0",
+      "name": "Red Hat Enterprise Linux 9 - OpenSSL FIPS Provider",
+      "version": "3.0.7 (RHEL 9.2 build; exact package release from the image manifest, VERIFY)",
+      "os": "Linux x86_64 (RHCOS / RHEL 9.2)",
+      "security_provider": "OpenSSL 3.0 FIPS provider (Red Hat build)",
+      "fips_140": {
+        "standard": "FIPS-140-3",
+        "level": 1,
+        "cmvp_certificate_url": "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4857",
+        "notes": "Certificate #4857 covers software version 3.0.7-395c1a240fbfffd8 and is now Historical, replaced by #5573 (Active, initial validation 9 November 2026, sunset 28 October 2029). VERIFY that the deployed package release is covered by #5573 before citing it. Checked 11 November 2026. Replaces the earlier entry 'OpenSSL FIPS Provider 3.0.8, FIPS-140-3, CAVP A2470': 3.0.8 is the upstream FIPS 140-2 module (#4282, Historical since 21 September 2026), RHEL 9 ships its own validated build, and A2470 was an unconfirmed algorithm (CAVP) number, not a module certificate."
+      },
+      "common_criteria": null,
+      "algorithms": [
+        {
+          "type": "encryption",
+          "name": "AES-256-GCM",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38D",
+          "modes": [
+            "GCM"
+          ]
+        },
+        {
+          "type": "encryption",
+          "name": "AES-256-XTS",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38E",
+          "modes": [
+            "XTS"
+          ]
+        },
+        {
+          "type": "hash",
+          "name": "SHA-384",
+          "min_key_size": null,
+          "standard_ref": "FIPS 180-4",
+          "modes": []
+        },
+        {
+          "type": "key-exchange",
+          "name": "ECDH-P384",
+          "min_key_size": 384,
+          "standard_ref": "NIST SP 800-56A Rev3",
+          "modes": [
+            "secp384r1"
+          ]
+        },
+        {
+          "type": "signature",
+          "name": "RSA-4096",
+          "min_key_size": 4096,
+          "standard_ref": "FIPS 186-5",
+          "modes": [
+            "PSS",
+            "PKCS1v1.5"
+          ]
+        }
+      ],
+      "notes": "Cryptographic engine for container ingress, TLS terminations, and microservice communications"
+    },
+    {
+      "library_id": "lib-openjceplus-fips-1",
+      "name": "IBM OpenJCEPlusFIPS Provider",
+      "version": "VERIFY: OpenJCEPlusFIPS ships inside IBM Semeru Runtimes; record the Semeru version (FIPS 140-3 needs 11.0.24, 17.0.12 or 21.0.4 and later). The earlier value 1.8.0 could not be matched to any release.",
+      "os": "Linux x86_64 (IBM Semeru Runtimes / OpenJ9 JVM)",
+      "security_provider": "OpenJCEPlusFIPS (IBM Semeru Runtimes) over IBM Crypto for C (ICC)",
+      "fips_140": {
+        "standard": "FIPS-140-3",
+        "level": 1,
+        "cmvp_certificate_url": "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5486",
+        "notes": "The validated module is IBM Crypto for C (ICC) 8.8.1.0, certificate #5486 (FIPS 140-3, Active, sunset 8 August 2029); it replaced #4755. VERIFY that the Semeru build bundles ICC 8.8.1.0. Checked 11 November 2026. Replaces 'FIPS-140-2, CAVP C1187': OpenJCEPlusFIPS is the FIPS 140-3 provider, and C1187 was an unconfirmed algorithm (CAVP) number."
+      },
+      "common_criteria": null,
+      "algorithms": [
+        {
+          "type": "encryption",
+          "name": "AES-256-GCM",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38D",
+          "modes": [
+            "GCM"
+          ]
+        },
+        {
+          "type": "mac",
+          "name": "HMAC-SHA384",
+          "min_key_size": 384,
+          "standard_ref": "FIPS 198-1",
+          "modes": []
+        }
+      ],
+      "notes": "Enterprise Java cryptographic engine for SQL query engines, governance frameworks, and data services"
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "Foundation Model Serving Ingress (vLLM / TGIS)",
+      "type": "listener",
+      "data_sensitivity": "confidential",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 443
+        },
+        {
+          "name": "gRPC",
+          "port": 8033
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "P-256"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384",
+          "ecdsa_secp384r1_sha384"
+        ],
+        "features": [
+          "mutual-auth",
+          "SNI",
+          "ALPN",
+          "session-resumption",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) with NVIDIA GPU Accelerators",
+          "security_provider": "OpenSSL 3.0 FIPS provider (Red Hat build)",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "High-throughput, low-latency foundation model inference gateway serving Granite and open-source models x25519 removed: not an approved key agreement in the FIPS modules this interface claims. TLS 1.2 is listed but no TLS 1.2 cipher suite is recorded: VERIFY whether TLS 1.2 is enabled and which suites it offers. ECDSA signature scheme listed but no ECDSA algorithm is recorded in the referenced library: VERIFY."
+    },
+    {
+      "name": "Prompt Lab & Tuning Studio Web Ingress",
+      "type": "gateway",
+      "data_sensitivity": "confidential",
+      "network_plane": "management-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "P-256"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha256"
+        ],
+        "features": [
+          "SNI",
+          "ALPN",
+          "session-resumption",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "OpenSSL 3.0 FIPS provider (Red Hat build)",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Interactive studio interface for prompt experimentation, parameter tuning (LoRA), and model evaluation"
+    },
+    {
+      "name": "Managed Jupyter Notebooks & Python SDK Endpoint",
+      "type": "listener",
+      "data_sensitivity": "confidential",
+      "network_plane": "control-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 8888
+        },
+        {
+          "name": "REST",
+          "port": 443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256"
+        ],
+        "key_exchange_groups": [
+          "P-384"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384",
+          "ecdsa_secp384r1_sha384"
+        ],
+        "features": [
+          "mutual-auth",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "OpenSSL 3.0 FIPS provider (Red Hat build)",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Interactive Python environment for model fine-tuning, RAG pipeline building, and programmatic inference x25519 removed: not an approved key agreement in the FIPS modules this interface claims. TLS 1.2 is listed but no TLS 1.2 cipher suite is recorded: VERIFY whether TLS 1.2 is enabled and which suites it offers. ECDSA signature scheme listed but no ECDSA algorithm is recorded in the referenced library: VERIFY."
+    },
+    {
+      "name": "Docling Document Conversion Worker Pipeline",
+      "type": "internal",
+      "data_sensitivity": "confidential",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "gRPC",
+          "port": 50051
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "key_exchange_groups": [
+          "P-384"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384"
+        ],
+        "features": [
+          "mutual-auth",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "OpenSSL 3.0 FIPS provider (Red Hat build)",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Converts enterprise documents (PDF, DOCX, PPTX) into structured Markdown for contextual RAG pipelines TLS 1.2 is listed but no TLS 1.2 cipher suite is recorded: VERIFY whether TLS 1.2 is enabled and which suites it offers."
+    }
+  ],
+  "key_management_interfaces": [
+    {
+      "name": "Cloud Pak for Data Vault & Secret Storage Manager",
+      "interface_type": "API",
+      "store_type": "vault",
+      "supported_formats": [
+        "PKCS#12",
+        "PEM"
+      ],
+      "key_operations": [
+        "generate",
+        "import",
+        "export",
+        "store",
+        "delete",
+        "encrypt",
+        "decrypt"
+      ],
+      "key_entry_method": "encrypted-import",
+      "fips_compliant_management": true,
+      "platforms": [
+        "Linux x86_64"
+      ],
+      "notes": "Manages API entitlement keys, container pull secrets, and service credentials fips_compliant_management is not sourced: VERIFY."
+    },
+    {
+      "name": "IBM Container Registry (ICR) Entitlement & Signature Verifier",
+      "interface_type": "CLI",
+      "store_type": "pki",
+      "supported_formats": [
+        "PEM",
+        "DER"
+      ],
+      "key_operations": [
+        "verify",
+        "import",
+        "store"
+      ],
+      "key_entry_method": "direct",
+      "fips_compliant_management": true,
+      "platforms": [
+        "Linux x86_64"
+      ],
+      "notes": "Validates container image signatures and entitlement keys for model downloads fips_compliant_management is not sourced: VERIFY."
+    }
+  ],
+  "security_controls": [
+    {
+      "name": "Foundation Model Serving API Token Authentication Policy",
+      "control_type": "api_security_policy",
+      "governing_parameters": [
+        "BEARER_TOKEN_AUTHENTICATION",
+        "RATE_LIMITING",
+        "USAGE_QUOTAS"
+      ],
+      "external_dependencies": [
+        "Cloud Pak for Data IAM Service"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64",
+          "status": "enforced",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "enabled",
+          "protocol_used": "TLS 1.3",
+          "hardening_parameters": [
+            "DISABLE_TLS_1.0",
+            "DISABLE_TLS_1.1"
+          ]
+        },
+        "roles": [
+          {
+            "name": "AI Engineer",
+            "authentication_method": "token",
+            "authentication_algorithm": "unknown (VERIFY; earlier value 'RSA-4096 SHA-384' was not sourced)"
+          },
+          {
+            "name": "Application Service Account",
+            "authentication_method": "token",
+            "authentication_algorithm": "unknown (VERIFY; earlier value 'ECDSA P-384 SHA-384' was not sourced)"
+          }
+        ],
+        "secret_protection": {
+          "status": "enabled",
+          "protection_method": "vault-backed",
+          "hardening_parameters": [
+            "SECRETS_ENCRYPTION_AT_REST"
+          ]
+        },
+        "data_at_rest_protection": {
+          "status": "enabled",
+          "encryption_algorithm": "AES-256-GCM",
+          "key_management_ref": "Cloud Pak for Data Vault & Secret Storage Manager",
+          "hardening_parameters": [
+            "NIST_SP800_131A_REV2_COMPLIANT"
+          ]
+        }
+      },
+      "notes": "Secures model inference requests, tokens, and prompt templates against unauthorized access Role authentication algorithms and the data-at-rest algorithm are unsourced: VERIFY against product documentation."
+    },
+    {
+      "name": "Model Guardrails & Content Moderation Policy",
+      "control_type": "payload_protection",
+      "governing_parameters": [
+        "HAP_DETECTION",
+        "PII_REDACTION",
+        "INPUT_OUTPUT_FILTERING"
+      ],
+      "external_dependencies": [
+        "IBM Granite Guardian Microservices"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64",
+          "status": "enforced"
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "enabled",
+          "protocol_used": "TLS 1.3",
+          "hardening_parameters": [
+            "MUTUAL_AUTH_REQUIRED"
+          ]
+        },
+        "roles": [
+          {
+            "name": "Platform Administrator",
+            "authentication_method": "multi-factor",
+            "authentication_algorithm": "unknown (VERIFY; earlier value 'RSA-4096 SHA-384' was not sourced)"
+          }
+        ],
+        "secret_protection": {
+          "status": "enabled",
+          "protection_method": "vault-backed",
+          "hardening_parameters": [
+            "AUTO_ROTATION"
+          ]
+        },
+        "data_at_rest_protection": {
+          "status": "not-applicable"
+        }
+      },
+      "notes": "Screens prompts and completions for toxic content, profanity, and sensitive enterprise data Role authentication algorithms and the data-at-rest algorithm are unsourced: VERIFY against product documentation."
+    }
+  ],
+  "metadata": {
+    "created": "2026-11-11T07:30:00Z",
+    "last_updated": "2026-11-11T23:30:00Z",
+    "author": "IBM Enterprise Cryptographic Profile Architecture Team; corrected 11 November 2026 (FIPS, Common Criteria and algorithm data)",
+    "generation_method": "manual",
+    "information_source": "documentation",
+    "lifecycle_stage": "release",
+    "schema_version": "1.0.0",
+    "cbomgen_version": "1.4.2"
+  }
+}

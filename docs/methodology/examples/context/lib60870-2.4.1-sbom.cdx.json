@@ -1,0 +1,110 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "EXAMPLE SBOM for lib60870 v2.4.1 built with Mbed TLS 3.6. Lists only the two libraries the CBOM names, so its composition is incomplete.",
+  "serialNumber": "urn:uuid:60870a1e-0b6c-4f2e-9d1a-1608700000b0",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-17T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+      "url": [
+        "https://pkic.org"
+      ]
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "library",
+        "bom-ref": "lib:lib60870",
+        "name": "lib60870",
+        "version": "2.4.1",
+        "licenses": [
+          {
+            "license": {
+              "id": "GPL-3.0-only"
+            }
+          }
+        ],
+        "description": "Open-source IEC 60870-5-101 and IEC 60870-5-104 library (lib60870-C), with TLS after IEC 62351-3, built with Mbed TLS 3.6. Described from its public source by the working group, not by its maintainers.",
+        "properties": [],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:github/mz-automation/lib60870@v2.4.1"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://pkic.org"
+                }
+              ]
+            }
+          },
+          {
+            "bom-ref": "party:maintainer",
+            "roles": [
+              {
+                "role": "supplier"
+              }
+            ],
+            "organization": {
+              "name": "MZ Automation GmbH"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:mbedtls",
+          "name": "Mbed TLS",
+          "version": "3.6.8",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:github/mbed-tls/mbedtls@mbedtls-3.6.8"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "incomplete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ]
+}

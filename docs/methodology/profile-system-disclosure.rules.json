@@ -1,0 +1,141 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile for a system: one system design as the integrator or architect who designed it delivers it. It extends the Interface Disclosure Baseline, narrowed to the subject type 'system' and the stage 'configured'. A system record cites the product records the system is built from, joins each interface to the product interface it realises, states whether the design uses each interface, and names the component that provides the keys or trust each interface in use depends on. Sector overlays extend it with what their sector adds, such as zones and conduits in operational technology or the services each interface carries in telecommunications. The worked example is a reference substation.",
+  "profileId": "pkic.example.system-disclosure",
+  "profileTag": "system-disclosure",
+  "title": "System Disclosure (Example)",
+  "version": "0.1",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.10",
+    "file": "profile-interface-disclosure.rules.json"
+  },
+  "objective": {
+    "$comment": "C1. The consumer receives a system from the party that designed it. The product records answer what each component can do; this record answers what the design uses and which component each interface depends on for its keys.",
+    "consumer": "The owner of a system, or an assessor acting for one, receiving it from the integrator or architect who designed it.",
+    "decision": "For each interface the design uses: which product interface it realises, and which system component its keys or trust depend on, so that a change to one component can be traced to the others it affects.",
+    "decisionOptions": [
+      "accept the system as delivered",
+      "accept it and record the dependencies in the owner's register",
+      "require the designer to change the design before acceptance"
+    ]
+  },
+  "scope": {
+    "$comment": "One system design as delivered. Not a site or a running instance: the owner's register holds what each site runs, and a deployment record describes one of them.",
+    "subjectTypes": [
+      "system"
+    ],
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured"
+    ]
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "usageVocabulary": [
+    "in-use",
+    "disabled",
+    "not-connected"
+  ],
+  "$commentUsage": "'in-use': the design uses the interface. 'disabled': the product offers it and the design turns it off. 'not-connected': it is enabled but nothing in the design connects to it, such as an unused port.",
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Document cites every product record it is built from, each by BOM-Link and digest",
+      "level": "MUST",
+      "constraint": {
+        "citesDocuments": {
+          "min": 1,
+          "hashRequired": true
+        }
+      },
+      "withholdable": false,
+      "note": "The system record states what the design configures and joins to the rest. Capability, certification and update facts stay in the product records. The digest fixes which revision was cited. The evaluator checks the citations it is given; it cannot know a product record the designer left out."
+    },
+    {
+      "id": "P2",
+      "description": "Document lists every interface of every cited product record it was given",
+      "level": "MUST",
+      "constraint": {
+        "coversCitedInterfaces": true
+      },
+      "withholdable": false,
+      "note": "An interface the design does not use is still listed, with its usage (I2), because an unused interface left enabled is an exposure. Checked against each cited record the evaluator is given; a cited record it is not given cannot be checked, and the report says so."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "correspondsTo",
+      "level": "MUST",
+      "constraint": {
+        "refersToCited": {
+          "literals": [
+            "no-product-document"
+          ]
+        }
+      },
+      "withholdable": false,
+      "note": "The product interface this interface realises, as a BOM-Link into a cited product record. Implementation facts, including the implementing library, are inherited through it. 'no-product-document' says that the supplier of the component has published no record."
+    },
+    {
+      "id": "I2",
+      "attribute": "usage",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "usageVocabulary"
+      },
+      "withholdable": false,
+      "note": "Whether the design uses the interface. A product interface the design does not use is still listed, as 'disabled' or 'not-connected': an unused interface left enabled is an exposure, and an interface the design turns off needs no migration. The evaluator checks the value on each interface listed; it does not yet check that every interface of every cited product is listed."
+    },
+    {
+      "id": "I3",
+      "attribute": "keyProvider",
+      "level": "MUST",
+      "constraint": {
+        "refersToLocal": {
+          "literals": [
+            "product",
+            "none"
+          ]
+        }
+      },
+      "withholdable": true,
+      "requiredWhen": {
+        "attribute": "usage",
+        "equals": "in-use"
+      },
+      "note": "The system component that provides the keys or the trust this interface depends on, by its bom-ref in the same record: a group key server, a certificate authority, a key management service or a hardware security module outside the product. 'product' means the keys and trust are held in the product alone; 'none' means the interface uses no keys. This rule shows which component's migration another component waits for."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "Capability, certification and update facts",
+      "reason": "Stated in the product records, cited under P1 and joined under I1."
+    },
+    {
+      "item": "Priorities, target dates and compensating controls",
+      "reason": "They belong in the owner's register, which describes sites and decisions, not the design."
+    }
+  ],
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-11-18",
+      "summary": "Initial version, built on the reference substation. The rules were first written for the substation overlay.",
+      "changes": []
+    }
+  ],
+  "artifacts": {
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "examples/cbom-ot-sas-system-configured.cdx.json",
+    "nonConformingExample": "examples/cbom-ot-sas-system-fail-keyprovider.cdx.json"
+  }
+}

@@ -37,7 +37,7 @@ nav: uc-disclosure
   <table>
     <thead><tr><th>Page</th><th>What it shows</th><th>State</th></tr></thead>
     <tbody>
-      <tr><td><strong><a href="procurement.html">Procurement</a></strong></td><td>The procurement profile v0.1 applied, unchanged, to the Keycloak product record. The same record conforms to the baseline, the PQC migration profile and its extended depth: one document read by several profiles</td><td>Published. The validator's verdicts are checked by the test suite</td></tr>
+      <tr><td><strong><a href="procurement.html">Procurement</a></strong></td><td>The procurement profile v0.2 applied, unchanged, to the Keycloak product record. The same record conforms to the baseline, the PQC migration profile and its extended depth: one document read by several profiles</td><td>Published. The validator's verdicts are checked by the test suite</td></tr>
     </tbody>
   </table>
   </div>
@@ -58,7 +58,7 @@ nav: uc-disclosure
   </table>
   </div>
   <p style="font-size:13px;color:var(--muted)">● emphasised by a profile for this use case · ○ relevant but not the focus. Placeholders have no row until they are drafted.</p>
-  <p style="font-size:13px;color:var(--muted)">Supply-chain transparency does <em>not</em> emphasise <code>implementationPurl</code>, the identifier of the implementing library. That use case limits how much a profile may ask of a supplier. The library is the attribute a supplier is most likely to withhold. For that reason the baseline marks it as withholdable. Procurement does emphasise it, because the procurement profile v0.1 removes that permission: its rule I9 cannot be withheld. The migration profile removes it too.</p>
+  <p style="font-size:13px;color:var(--muted)">Supply-chain transparency does <em>not</em> emphasise <code>implementationPurl</code>, the identifier of the implementing library. That use case limits how much a profile may ask of a supplier. The library is the attribute a supplier is most likely to withhold. For that reason the baseline marks it as withholdable. Procurement does emphasise it, because the procurement profile v0.2 removes that permission: its rule I9 cannot be withheld. The PQC migration profile and the change core remove it too.</p>
 
   <h2>The use cases in this group</h2>
 
@@ -69,7 +69,7 @@ nav: uc-disclosure
   <h3 id="procurement">Procurement and tender conformance</h3>
   <p>An operator states cryptographic requirements in a tender and needs to check what comes back without reading it by hand. Today this is done with security questionnaires, whose answers are prose and cannot be compared between vendors. A profile expresses the requirement in a form a machine can evaluate, and the vendor's CBOM is the response to it.</p>
   <p>Some of the requirements concern the structure of the document, not only its attributes. In addition to a description of each interface, a procurement profile usually requires certain kinds of interface to be present. This is how it catches a vendor that describes its service interface and says nothing about how the product is administered.</p>
-  <p>Worked example on the <a href="procurement.html">Procurement</a> page, with the published profile <a href="../methodology/profile-procurement.rules.json"><code>profile-procurement.rules.json</code></a> v0.1.</p>
+  <p>Worked example on the <a href="procurement.html">Procurement</a> page, with the published profile <a href="../methodology/profile-procurement.rules.json"><code>profile-procurement.rules.json</code></a> v0.2.</p>
 
   <h3 id="vulnerability">Vulnerability management and incident response</h3>
   <p>An advisory is published against a cryptographic library. The question is which services are affected, and it has to be answered in hours rather than weeks. This use case has the least tolerance for manual work.</p>
@@ -78,11 +78,10 @@ nav: uc-disclosure
   <p>It is also the only use case in this list that the baseline hinders. The baseline allows a producer to withhold the library identifier, which is the attribute this use case depends on. <a href="../methodology/vulnerabilities.html">Vulnerabilities</a> sets out what a CBOM contributes when an advisory lands, which kinds of weakness it is the only evidence for, and why no profile for this purpose has been written yet.</p>
 
   <h3 id="compliance">Regulatory and compliance reporting</h3>
-  <p>An organization must demonstrate its cryptographic position against a framework such as the EU Cyber Resilience Act, NIS2, the BSI technical guidelines, or a national directive. The consumer is an auditor or regulator who did not generate the data and cannot ask follow-up questions of the system.</p>
-  <p>A profile encodes what a given framework expects, so that conformance can be evidenced by a dated artifact that an auditor can verify. Because the reader is external, provenance and lifecycle stage carry more weight than usual. A reported position is only meaningful if it says when it was derived and from what. A jurisdiction-specific profile also lets a global vendor satisfy the requirement once and report against it in several places.</p>
+  <p>The reader relies on the document as evidence, so this use case belongs to the Assurance group. Its description is on the <a href="assurance.html#compliance">Assurance</a> page. Described.</p>
 
   <h3 id="due-diligence">Mergers and third-party risk due diligence</h3>
-  <p>An acquiring organization, or one onboarding a significant partner, needs a view of cryptographic exposure across an estate it does not operate and cannot inspect directly. The work is usually done under time pressure and with limited cooperation.</p>
+  <p>An acquiring organisation, or one onboarding a significant partner, needs a view of cryptographic exposure across an estate it does not operate and cannot inspect directly. The work is usually done under time pressure and with limited cooperation.</p>
   <p>Covering the whole estate matters more than detail on each product. A broad disclosure across the estate, with the absence of data recorded explicitly rather than left blank, tells the assessor where the risk concentrates: deprecated algorithms still in use, and cryptography bound to hardware that will not be upgraded.</p>
 
   <h3 id="managed-service">Managed and cloud service disclosure</h3>

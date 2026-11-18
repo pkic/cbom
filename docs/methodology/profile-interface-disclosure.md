@@ -1,4 +1,4 @@
-# CBOM Profile — Interface Disclosure Baseline (Example v0.9)
+# CBOM Profile — Interface Disclosure Baseline (Example v0.10)
 
 > **Status:** Draft for comment from the PKIC CBOM Profiles Working Group. Positions are
 > settled provisionally and can be reopened. The machine-readable rules are in
@@ -17,7 +17,7 @@
 > is the concept the PKIC work uses. Where confusion is possible, the methodology says **PKIC CBOM
 > profile** and **cryptographic interface**.
 >
-> The choices made in v0.9 are provisional, and each can be reopened on its own.
+> The choices made in v0.9 and v0.10 are provisional, and each can be reopened on its own.
 
 ## 1. Revision rationale
 
@@ -413,7 +413,7 @@ members form one boundary, and the author decides them together.
 | Member | Baseline value | Why |
 |---|---|---|
 | `orientation` | `inventory` | The baseline reports what interfaces do, not what they could do. Under C12 it may not require any forward-looking attribute. This keeps a present-state name and a capability name from being read as interchangeable across profiles that share a vocabulary. |
-| `subjectTypes` | `product`, `deployment` | A set, which replaced the single `subjectType` in v0.9. A derived profile narrows it to a subset, as it narrows the stages. The PQC migration and procurement profiles accept `product` only. The deployment profile accepts `deployment` only. |
+| `subjectTypes` | `product`, `deployment`, `service`, `system` | A set, which replaced the single `subjectType` in v0.9; `service` and `system` were added in v0.10. A derived profile narrows it to a subset, as it narrows the stages. The PQC migration and procurement profiles accept `product` only. The deployment profile accepts `deployment` only. |
 | `relationshipTypes` | `interface` | Every rule constrains a cryptographic interface. The checker compares the declaration with the rules instead of trusting it, because a scope statement maintained by hand drifts from what the rules say. |
 | `lifecycleStages` | `implemented`, `configured`, `observed` | An acceptance constraint, in the same sense as `appliesTo` for carrier versions. An interface that reports a stage outside the set fails I8. |
 
@@ -536,7 +536,7 @@ The first change exists for the reason §5.4 describes. No rule in either exampl
 MUST with withholdability, and that is the only combination in which withholding alters a verdict.
 The profile therefore stated the disclosure model without applying it in any rule.
 
-The derived PQC migration profile, now v0.8, pins baseline v0.9. It tightens
+The derived PQC migration profile, now v0.8, pins baseline v0.10. It tightens
 `interface-disclosure#I9` by removing its withholdability, since the level is already MUST.
 Monotonic extension permits that tightening. A later baseline revision that relaxed I9 would put
 the derived profile in conflict, which is why the derived profile pins its base by version.
@@ -593,6 +593,12 @@ now say so, instead of being told it does not conform because of a fact about it
 | Added **I10** `keyWrapping`, MUST on a storage interface | tightening | A document that declares a storage interface now states how its data keys are protected |
 | Stated that an interface is a logical boundary, not a port, so two cryptographic layers on one port are two interfaces (K2). Stated that `none` is an accepted value for an algorithm attribute, distinct from the `unknown` and `withheld` markers (K3) | editorial | None. No rule changes: both statements say how existing rules are read |
 | Stated when an application-layer interface counts as an interface (K7) | editorial | None. The statement sets how P1 and P4 count, and changes no rule |
+
+### v0.10 — 2026-11-17
+
+| Change | Kind | Effect on an existing document |
+|---|---|---|
+| Accepts the subject types `service` and `system`, each identified by a tag URI (P3). A service record describes a managed service as its provider runs it; a system record describes one system design as its integrator delivers it, joined to the product records it is built from | relaxing | None. No rule changes for product or deployment records |
 
 ### v0.9 — 2026-10-25
 

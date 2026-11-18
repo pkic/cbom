@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://pkic.org/cbom/schema/claim.schema.json",
   "title": "CBOM conformance claim",
-  "$comment": "A claim is the artifact that crosses an organisational boundary: a producer hands it to a consumer who was not present when the evaluation ran. It is bound to one document by digest, names every profile evaluated with its whole chain, records the disclosure state of what was assessed, and carries what a verdict does not assert. See decision 0015.",
+  "$comment": "A claim is the artifact that crosses an organisational boundary: a producer hands it to a consumer who was not present when the evaluation ran. It is bound to one document by digest, names every profile evaluated with its whole chain, records the disclosure state of what was evaluated, and carries what a verdict does not assert. See decision 0015.",
   "type": "object",
   "required": ["claimFormat", "claimFormatVersion", "subject", "document", "profiles", "notAsserted"],
   "properties": {
@@ -40,7 +40,7 @@
       "$comment": "Several profiles are listed rather than combined. A document can conform to one and not another, and a single overall answer would have to choose which question it was answering. This is what Q24 asked.",
       "items": {
         "type": "object",
-        "required": ["profileId", "version", "chain", "assessed", "verdict", "carrierBand"],
+        "required": ["profileId", "version", "chain", "evaluated", "verdict", "carrierBand"],
         "properties": {
           "profileId": {"type": "string"},
           "profileTag": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
@@ -59,20 +59,22 @@
               }
             }
           },
-          "assessed": {"type": "boolean"},
+          "evaluated": {"type": "boolean"},
           "verdict": {"enum": ["conforms", "does-not-conform", "refused"]},
           "carrierBand": {"enum": ["target", "legacy", "newer", "unsupported"]},
           "refusedBecause": {"type": "string"},
           "rules": {
             "type": "object",
-            "$comment": "Present only where the document was assessed. A refused evaluation has no rule results, and reporting '0 failed' about a document nobody assessed is the merge of refusal and failure the Conformance section forbids.",
-            "required": ["assessed", "failed", "withheld", "unknown", "undeclared"],
+            "$comment": "Present only where the document was evaluated. A refused evaluation has no rule results, and reporting '0 failed' about a document nobody evaluated is the merge of refusal and failure the Conformance section forbids.",
+            "required": ["evaluated", "failed", "withheld", "unknown", "undeclared"],
             "properties": {
-              "assessed": {"type": "integer", "minimum": 0},
+              "evaluated": {"type": "integer", "minimum": 0},
               "failed": {"type": "array", "items": {"type": "string"}},
               "withheld": {"type": "array", "items": {"type": "string"}},
               "unknown": {"type": "array", "items": {"type": "string"}},
-              "undeclared": {"type": "array", "items": {"type": "string"}}
+              "undeclared": {"type": "array", "items": {"type": "string"}},
+              "unresolved": {"type": "array", "items": {"type": "string"}},
+              "grace": {"type": "array", "items": {"type": "string"}, "$comment": "Rules that failed while a tightened rule was in its grace period: reported, not counted as failures."}
             }
           }
         },
@@ -80,9 +82,9 @@
           {
             "if": {"properties": {"verdict": {"const": "refused"}}, "required": ["verdict"]},
             "then": {
-              "properties": {"assessed": {"const": false}},
+              "properties": {"evaluated": {"const": false}},
               "not": {"required": ["rules"]},
-              "$comment": "T1. Refusal and non-conformance must not be merged. A refused entry carries no rule results and asserts assessed:false."
+              "$comment": "T1. Refusal and non-conformance must not be merged. A refused entry carries no rule results and asserts evaluated:false."
             }
           },
           {

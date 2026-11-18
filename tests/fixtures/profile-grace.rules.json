@@ -1,0 +1,58 @@
+{
+  "$comment": "Test fixture. A rule with a grace period (graceUntil): a failure before the date is reported, not counted.",
+  "profileId": "pkic.test.grace",
+  "profileTag": "grace",
+  "title": "Fixture: grace period",
+  "version": "0.1",
+  "objective": {
+    "consumer": "Test fixture",
+    "decision": "Test fixture",
+    "decisionOptions": [
+      "pass",
+      "fail"
+    ]
+  },
+  "scope": {
+    "subjectTypes": [
+      "product"
+    ],
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.10",
+    "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "intrinsicData",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "intrinsicDataVocabulary"
+      },
+      "list": true,
+      "withholdable": false,
+      "graceUntil": "2027-06-01"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-11-18",
+      "changes": []
+    }
+  ]
+}

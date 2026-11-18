@@ -79,7 +79,7 @@ def main():
             bad("a hashed pointer matches its file", "%s: hash does not match %s" % (url, os.path.relpath(path, ROOT)))
     ok("%d hashed pointer(s) resolve to committed files with matching SHA-256" % checked) if not failures else None
 
-    sbom = next(e["bom"] for e in reg.docs.values() if e["path"].endswith("sbom.cdx.json"))
+    sbom = next(e["bom"] for e in reg.docs.values() if e["path"].endswith("keycloak-26.7.3-sbom.cdx.json"))
     _s, sbom_entries, _n = V.document_parts(sbom)
     sbom_refs = {e.get("bom-ref"): e for e in sbom_entries}
 
