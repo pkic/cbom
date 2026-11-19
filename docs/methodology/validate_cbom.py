@@ -1351,10 +1351,24 @@ def check_value(iface, value, rule, profile):
         # failure rather than a join that silently leads nowhere.
         spec = constraint["refersToLocal"] or {}
         local = (iface.get("_context") or {}).get("localRefs") or set()
-        bad = [v for v in _as_list(value)
-               if v not in spec.get("literals", []) and v not in local]
+        bad, cited_notes = [], []
+        for v in _as_list(value):
+            if v in spec.get("literals", []) or v in local:
+                continue
+            # R2-27: with orCited, the pointer may instead be a BOM-Link into a
+            # record the document cites, such as an HSM's own record. It is
+            # checked as refersToCited checks it, so an uncited target fails.
+            if spec.get("orCited") and isinstance(v, str) and v.startswith("urn:cdx:"):
+                ok, detail = _refers_to_cited(v, {}, iface)
+                if ok:
+                    cited_notes.append(detail)
+                    continue
+                return False, detail
+            bad.append(v)
         if bad:
             return False, "%r names no element of this record" % (bad if len(bad) > 1 else bad[0])
+        if cited_notes:
+            return True, "; ".join(cited_notes)
         return True, "-> %s" % ", ".join(str(v) for v in _as_list(value))
     if "inSubjectList" in constraint:
         # A value drawn from a list the record declares on its subject, such as a

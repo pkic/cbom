@@ -1,6 +1,6 @@
-# Draft: the telecom service-assurance overlay, `telecom-service-assurance`
+# Draft: the telecom service-assurance profile, `telecom-service-assurance`
 
-The second sector overlay, after `ot-system`. Service assurance asks which services depend on
+The second sector system profile, after `ot-system`. Service assurance asks which services depend on
 which interfaces, so that a weakness or a migration at one interface can be traced to the services
 and commitments it affects (telecom CBOM document, 3.2.4: "component-to-service dependency
 mapping"). Draft only: none of these files is part of Release 1.
@@ -11,7 +11,7 @@ Run `python3 build.py` in this folder to regenerate every file.
 
 | File | What it is |
 | --- | --- |
-| `profile-telecom-service-assurance.rules.json` | The overlay, v0.1-draft. Extends the generic overlay `system-disclosure` |
+| `profile-telecom-service-assurance.rules.json` | The profile, v0.1-draft. Extends System Disclosure v0.1, published in Release 1 |
 | `examples/cbom-sepp-product.cdx.json` | An illustrative SEPP 5.1.0, stage `implemented`, five interfaces. Not a real product |
 | `examples/sepp-5.1.0-sbom.cdx.json` | Its companion SBOM |
 | `examples/cbom-roaming-interconnect-system.cdx.json` | An operator's roaming interconnect, stage `configured`, joined to the SEPP record |
@@ -20,8 +20,8 @@ Run `python3 build.py` in this folder to regenerate every file.
 
 ## Rules
 
-The generic overlay supplies the citations, the join to product interfaces, `usage` and `keyProvider`.
-This overlay adds:
+System Disclosure supplies the citations, the join to product interfaces, `usage` and `keyProvider`.
+This profile adds:
 
 | Rule | Attribute | Level |
 | --- | --- | --- |
@@ -60,9 +60,9 @@ From `docs/methodology/`, with `--with ../../drafts/telecom-service-assurance/ex
 | fail-proxy | conforms | conforms | fails I3 on `sepp:n32c` |
 
 The SEPP record fails the change core, as the OT records do: it states no capability per purpose or
-update mechanism. The overlay is well formed under `check_profile.py`, with one SHOULD warning: it
+update mechanism. The profile is well formed under `check_profile.py`, with one SHOULD warning: it
 has no CycloneDX and SPDX mapping yet (C9). All five documents are valid CycloneDX 2.0. The published
-test suite passes: 337 passed, 0 failed.
+test suite passes: 362 passed, 0 failed.
 
 ## What the example showed
 
@@ -72,14 +72,14 @@ test suite passes: 337 passed, 0 failed.
   the SEPP leaves it out because the 3GPP profile for N32-c does not name it, and enabling it needs
   the roaming partner too. That is a configuration change agreed with each partner, not a software
   release.
-- S4, the key provider, is needed in telecom as well as in OT, so it moved to the generic overlay
+- S4, the key provider, is needed in telecom as well as in OT, so it moved to System Disclosure
   with S1 and S2.
 - The operator boundary has the same shape as the OT zones and conduits: an attribute that says
   whether a connection crosses a boundary, and a pointer to the component that guards it. The two
-  stay separate for now, because IEC 62443 zones and 3GPP security domains are not the same idea.
-  Registered as a question.
-- A service model and a CBOM join on service names. Nothing checks that the names on interfaces
-  match the names the system declares; the evaluator would need to compare two attributes.
+  stay separate, because IEC 62443 zones and 3GPP security domains are not the same idea.
+  Release 1 keeps such boundaries as sector rules (Publication 3, 13.2).
+- A service model and a CBOM join on service names. I1 checks that the names on interfaces
+  match the names the system declares, with `inSubjectList`.
 
 ## Values
 

@@ -340,6 +340,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "ssl_ecdh_curve X25519MLKEM768:X25519; certificate ECDSA P-256 from the internal CA"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "platform"
             }
           ]
         },
@@ -416,6 +420,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "Groups and suites are the JVM defaults (jdk.tls.namedGroups not set). Server certificate RSA-2048 from the internal CA."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         },
@@ -488,6 +496,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "The directory accepts TLS 1.2 only."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         },
@@ -560,6 +572,10 @@
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-broker"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         },
@@ -636,6 +652,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "Product-generated RSA-2048 key, rotated every 30 days (cannot be changed by configuration)."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         },
@@ -682,6 +702,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "http-enabled=true. Carries tokens and credentials in clear inside the cluster."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "crypto:protocol:ing-tls"
             }
           ],
           "type": "service"
@@ -729,6 +753,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "health-enabled=true. The management interface inherits the main server's scheme, which is HTTP here."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -772,6 +800,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "Realm defaultSignatureAlgorithm=ES256. Client 'legacy-portal' overrides it to RS256."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -811,6 +843,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -850,6 +886,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -889,6 +929,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"

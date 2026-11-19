@@ -48,12 +48,6 @@
   },
   "$inherited": "The disclosure model and the requirement keywords are inherited from the base and are deliberately not restated. Restating an inherited block would override the base's value silently, so a later change to the base, such as a new marker prefix, would not reach this profile and every marker would stop being recognised without an error. Only appliesTo is restated, because narrowing the carrier range is a real choice and the validator checks that a restated range does not widen the base's.",
   "$commentCertification": "IEDs are certified per product version. Changing their cryptography can trigger IEC 61850 conformance re-testing, IEC 62443-4-2 re-certification, or the operator's own type approval. certificationImpact states what enabling the interface's capability would trigger for this product; the operator's own type approval stays in the operator's register.",
-  "certificationImpactVocabulary": [
-    "none",
-    "retest",
-    "recertification",
-    "not-applicable"
-  ],
   "verifierReplaceableVocabulary": [
     "yes",
     "via-bootloader-update",
@@ -61,37 +55,6 @@
   ],
   "productRules": [],
   "interfaceRules": [
-    {
-      "id": "I1",
-      "attribute": "certificationImpact",
-      "level": "MUST",
-      "constraint": {
-        "enumRef": "certificationImpactVocabulary"
-      },
-      "withholdable": false,
-      "requiredWhen": {
-        "attribute": "interfaceType",
-        "notEquals": "peer"
-      },
-      "note": "What enabling the post-quantum capability this interface states would trigger in testing or certification for this product. 'not-applicable' where no capability is planned. A component fact: the supplier knows its certificates. Turns each action into a schedule."
-    },
-    {
-      "id": "I2",
-      "attribute": "certificationScheme",
-      "level": "SHOULD",
-      "constraint": {
-        "present": true
-      },
-      "withholdable": false,
-      "requiredWhen": {
-        "attribute": "certificationImpact",
-        "in": [
-          "retest",
-          "recertification"
-        ]
-      },
-      "note": "The scheme the re-test or re-certification falls under, such as IEC 61850 conformance testing or IEC 62443-4-2 (ISASecure CSA). In CycloneDX 2.0 it maps to certifications."
-    },
     {
       "id": "I3",
       "attribute": "keyStoreRef",
@@ -170,8 +133,20 @@
         {
           "kind": "tightening",
           "summary": "I3 now checks that keyStoreRef names an element of the same record or is one of the literals 'none', 'out-of-band' and 'product-managed', where it checked presence only. The protection IED example is unaffected."
+        },
+        {
+          "kind": "editorial",
+          "summary": "I1 and I2 moved to the change core as change-core#I17 and change-core#I18 (R2-23). This profile raises I17 to MUST, as I1 was; I18 stays at SHOULD, as I2 was. Verdicts are unchanged; the rule ids in a report change. I3 and I4 keep their ids."
         }
       ]
+    }
+  ],
+  "overrides": [
+    {
+      "id": "change-core#I17",
+      "level": "MUST",
+      "withholdable": false,
+      "note": "Raised to MUST: certification impact turns each substation action into a schedule. Was pqc-migration-ot#I1 before R2-23."
     }
   ]
 }

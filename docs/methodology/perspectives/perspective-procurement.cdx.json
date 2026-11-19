@@ -141,6 +141,12 @@
           "rationale": "Required when intrinsicData is not none."
         },
         {
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:terminatedBy')]",
+          "nativeName": "interface-disclosure#I14 terminatedBy",
+          "relevance": "optional",
+          "rationale": "Required when interfaceType is not storage."
+        },
+        {
           "expression": "$.externalReferences[?(@.properties[?(@.name=='pkic:profile:context' && @.value=='sbom')])]",
           "nativeName": "interface-disclosure#R1 sbom",
           "relevance": "required",

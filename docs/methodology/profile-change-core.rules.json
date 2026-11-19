@@ -289,6 +289,37 @@
         "equals": "storage"
       },
       "note": "Whether the keys and trust anchors this storage interface holds can be replaced in the field, only with a new software or firmware release, or not at all. Material fixed at manufacture turns an update decision into a replacement decision."
+    },
+    {
+      "id": "I17",
+      "attribute": "certificationImpact",
+      "level": "SHOULD",
+      "constraint": {
+        "enumRef": "certificationImpactVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "peer"
+      },
+      "note": "Added in R2-23. What enabling the post-quantum capability this interface states would trigger in testing or certification of this subject: none, a re-test, or re-certification. 'not-applicable' where no capability is planned. The supplier knows its certificates. Shared with the sibling profile under the same id."
+    },
+    {
+      "id": "I18",
+      "attribute": "certificationScheme",
+      "level": "SHOULD",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "certificationImpact",
+        "in": [
+          "retest",
+          "recertification"
+        ]
+      },
+      "note": "Added in R2-23. The scheme the re-test or re-certification falls under, such as FIPS 140-3, Common Criteria, PCI PTS, NESAS, FedRAMP or IEC 62443-4-2. In CycloneDX 2.0 it maps to certifications. Shared with the sibling profile under the same id."
     }
   ],
   "groupRules": [
@@ -425,8 +456,18 @@
         {
           "kind": "relaxing",
           "summary": "Accepts the subject type 'service' at the stage 'configured', beside products at 'implemented'. Adds 'provider-managed' to the update mechanisms, for a service the provider updates for every tenant. No rule changes for product records."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Adds I17 certificationImpact and I18 certificationScheme at SHOULD, shared with pqc-migration under the same ids (R2-23). The vocabulary moves here from the substation component profile. A SHOULD rule changes no verdict."
         }
       ]
     }
+  ],
+  "certificationImpactVocabulary": [
+    "none",
+    "retest",
+    "recertification",
+    "not-applicable"
   ]
 }

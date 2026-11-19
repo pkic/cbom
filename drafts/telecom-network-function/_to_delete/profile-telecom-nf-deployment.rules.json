@@ -1,0 +1,81 @@
+{
+  "$comment": "DRAFT. A deployment profile for a network function the operator runs on its own platform. It extends Deployment Disclosure with one rule: each interface that realises a product interface names what terminates its cryptography. Where a service mesh terminates TLS for the workload, the record names the mesh's interface, which is a component of the same record. The rule is not specific to telecom, and could move to Deployment Disclosure once a second sector uses it.",
+  "profileId": "pkic.example.telecom-nf-deployment",
+  "profileTag": "telecom-nf-deployment",
+  "title": "Telecom Network Function Deployment (Example, draft)",
+  "version": "0.1-draft",
+  "objective": {
+    "consumer": "An operator's security operations team",
+    "decision": "Which weakness affects each deployed interface, and which component has to change to remove it",
+    "decisionOptions": [
+      "change the workload",
+      "change the platform",
+      "accept"
+    ]
+  },
+  "scope": {
+    "subjectTypes": [
+      "deployment"
+    ],
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured",
+      "observed"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.deployment-disclosure",
+    "version": "0.2",
+    "file": "../../docs/methodology/profile-deployment-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "productRules": [],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "terminatedBy",
+      "level": "MUST",
+      "constraint": {
+        "refersToLocal": {
+          "literals": [
+            "workload",
+            "platform"
+          ]
+        }
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "'workload' where the network function terminates the cryptography itself; the bom-ref of the platform interface that terminates it for the workload, such as a service mesh sidecar or an ingress; or 'platform' on that platform interface itself."
+    }
+  ],
+  "referenceRules": [],
+  "exclusions": [
+    {
+      "item": "The platform's own product records",
+      "reason": "The mesh or ingress is described by its own records. This profile names it, and the record states its interface only as far as the deployment configures it."
+    }
+  ],
+  "artifacts": {
+    "conformingExample": "examples/cbom-open5gs-sepp-deployment-configured.cdx.json",
+    "nonConformingExample": "examples/cbom-open5gs-sepp-deployment-fail-termination.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1-draft",
+      "date": "2026-11-18",
+      "summary": "First draft, built on the Open5GS SEPP behind a service mesh.",
+      "changes": []
+    }
+  ]
+}

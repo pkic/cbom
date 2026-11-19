@@ -1,7 +1,7 @@
 {
   "specFormat": "CycloneDX",
   "specVersion": "2.0",
-  "$comment": "EXAMPLE CBOM, lifecycle stage 'observed'. What Example Org's deployment was seen to do between 18 and 25 October 2026. Illustrative values. Each interface names the methods its values came from: a passive sensor sees the group in a TLS 1.3 ServerHello but not the server certificate; only an active probe sees a TLS 1.3 server certificate; pg_stat_ssl reports version and cipher and not the group; a JWKS shows which signing keys are published. Two findings the configured record cannot show: 29% of ingress sessions still negotiate X25519 alone, and tokens for one client are still signed RS256. The brokering interfaces were not observed (the sensor does not cover egress), so coverage is partial. Each interface points to the configured interface it was compared with, and through it to the product. Conforms to deployment-disclosure v0.2.",
+  "$comment": "EXAMPLE CBOM, lifecycle stage 'observed'. What Example Org's deployment was seen to do between 18 and 25 October 2026. Illustrative values. Each interface names the methods its values came from: a passive sensor sees the group in a TLS 1.3 ServerHello but not the server certificate; only an active probe sees a TLS 1.3 server certificate; pg_stat_ssl reports version and cipher and not the group; a JWKS shows which signing keys are published. Two findings the configured record cannot show: 29% of ingress sessions still negotiate X25519 alone, and tokens for one client are still signed RS256. The brokering interfaces were not observed (the sensor does not cover egress), so coverage is partial. Each interface points to the configured interface it was compared with, and through it to the product. Conforms to deployment-disclosure v0.3.",
   "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-7263740b5e01",
   "version": 1,
   "metadata": {
@@ -271,6 +271,10 @@
             {
               "name": "pkic:profile:observationSummary",
               "value": "Groups negotiated: X25519MLKEM768 71%, X25519 29% of 1.2 million sessions."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "platform"
             }
           ],
           "externalReferences": [
@@ -354,6 +358,10 @@
             {
               "name": "pkic:profile:observationSummary",
               "value": "Version and cipher from pg_stat_ssl; group from the ServerHello; certificate from testssl.sh --starttls postgres."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "externalReferences": [
@@ -425,6 +433,10 @@
             {
               "name": "pkic:profile:observedAt",
               "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "externalReferences": [
@@ -500,6 +512,10 @@
             {
               "name": "pkic:profile:disclosure:context:observation-evidence",
               "value": "withheld"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         },
@@ -550,6 +566,10 @@
             {
               "name": "pkic:profile:authentication",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "crypto:protocol:ing-tls"
             }
           ],
           "type": "service"
@@ -601,6 +621,10 @@
             {
               "name": "pkic:profile:authentication",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -652,6 +676,10 @@
             {
               "name": "pkic:profile:observationSummary",
               "value": "The JWKS publishes an ES256 and an RS256 key. Tokens for 'legacy-portal' are RS256."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "externalReferences": [
@@ -718,6 +746,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -765,6 +797,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -868,7 +904,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "1efca032c6b028e5180662202ca6ae1f208ce891993012283a1af16b4b229605"
+          "content": "33032dcc89de040572d3b262910993526639f5ec40bf6eeef8e5063dbcaa7919"
         }
       ]
     },

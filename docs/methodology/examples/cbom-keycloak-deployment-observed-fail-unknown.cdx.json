@@ -271,6 +271,10 @@
             {
               "name": "pkic:profile:observationSummary",
               "value": "Groups negotiated: X25519MLKEM768 71%, X25519 29% of 1.2 million sessions."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "platform"
             }
           ],
           "externalReferences": [
@@ -346,6 +350,10 @@
             {
               "name": "pkic:profile:disclosure:keyExchange",
               "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "externalReferences": [
@@ -417,6 +425,10 @@
             {
               "name": "pkic:profile:observedAt",
               "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "externalReferences": [
@@ -492,6 +504,10 @@
             {
               "name": "pkic:profile:disclosure:context:observation-evidence",
               "value": "withheld"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         },
@@ -542,6 +558,10 @@
             {
               "name": "pkic:profile:authentication",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "crypto:protocol:ing-tls"
             }
           ],
           "type": "service"
@@ -593,6 +613,10 @@
             {
               "name": "pkic:profile:authentication",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -644,6 +668,10 @@
             {
               "name": "pkic:profile:observationSummary",
               "value": "The JWKS publishes an ES256 and an RS256 key. Tokens for 'legacy-portal' are RS256."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "externalReferences": [
@@ -710,6 +738,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -757,6 +789,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -860,7 +896,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "1efca032c6b028e5180662202ca6ae1f208ce891993012283a1af16b4b229605"
+          "content": "33032dcc89de040572d3b262910993526639f5ec40bf6eeef8e5063dbcaa7919"
         }
       ]
     },

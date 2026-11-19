@@ -135,6 +135,12 @@
           "rationale": "Required when intrinsicData is not none."
         },
         {
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:terminatedBy')]",
+          "nativeName": "interface-disclosure#I14 terminatedBy",
+          "relevance": "optional",
+          "rationale": "Required when interfaceType is not storage."
+        },
+        {
           "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:protocolVersionsSupported')]",
           "nativeName": "pqc-migration#I1 protocolVersionsSupported",
           "relevance": "required",
@@ -205,6 +211,18 @@
           "nativeName": "pqc-migration#I12 keyWrappingSupported",
           "relevance": "required",
           "rationale": "Required when interfaceType is storage."
+        },
+        {
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:certificationImpact')]",
+          "nativeName": "pqc-migration#I17 certificationImpact",
+          "relevance": "recommended",
+          "rationale": "Required when interfaceType is not peer."
+        },
+        {
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:certificationScheme')]",
+          "nativeName": "pqc-migration#I18 certificationScheme",
+          "relevance": "recommended",
+          "rationale": "Required when certificationImpact is not None."
         },
         {
           "expression": "$.inventories[*].components[*].properties[?(@.name=~'pkic:profile:capabilityByPurpose:.*:capabilityStatus')]",

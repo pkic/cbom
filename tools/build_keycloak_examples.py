@@ -59,10 +59,30 @@ def illustrative_hash(text):
     return hashlib.sha256(("illustrative:" + text).encode()).hexdigest()
 
 
+# What terminates each deployment interface (interface-disclosure#I14, required by
+# deployment-disclosure v0.3). The ingress terminates TLS for Keycloak's HTTP listener;
+# everything else is terminated by the workload itself.
+TERMINATED_BY = {"crypto:protocol:ing-tls": "platform", "service:svc-http": "crypto:protocol:ing-tls"}
+
+
+def add_termination(doc):
+    for inv in doc.get("inventories", []):
+        subj = inv.get("subject", {})
+        if not any(p["name"] == P + "subjectType" and p["value"] == "deployment" for p in subj.get("properties", [])):
+            continue
+        for c in inv.get("components", []):
+            ps = c.get("properties", [])
+            itype = [p["value"] for p in ps if p["name"] == P + "interfaceType"]
+            if not itype or itype[0] == "storage" or any(p["name"] == P + "terminatedBy" for p in ps):
+                continue
+            ps.append({"name": P + "terminatedBy", "value": TERMINATED_BY.get(c.get("bom-ref"), "workload")})
+    return doc
+
+
 def write(name, bom, legacy=False):
     """Write one example. CycloneDX 2.0 unless 'legacy' is set."""
     if not legacy:
-        doc = cdx17_to_20.convert(bom)
+        doc = add_termination(cdx17_to_20.convert(bom))
         data = (json.dumps(doc, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
         with open(os.path.join(OUT, name), "wb") as fh:
             fh.write(data)
@@ -541,7 +561,7 @@ def configured(product_sha):
         "Values are permitted sets where the outcome is negotiated. Each interface states the product "
         "interface it realises (correspondsTo), which is also how it inherits the implementing library. "
         "The ingress has no product CBOM, so its library is stated here. Conforms to "
-        "deployment-disclosure v0.2.",
+        "deployment-disclosure v0.3.",
         "2026-10-24T16:00:00Z",
         [{"type": "application", "name": "Example Org configuration export", "version": "1.0",
           "description": "Reads keycloak.conf, realm exports, java.security and the ingress manifest"}],
@@ -656,7 +676,7 @@ def db_configured(configured_sha):
                     "configured record, which this record cites by hash. Administration runs through the "
                     "platform's automation, so there is no administrative listener. PostgreSQL publishes no "
                     "CBOM, so the interface states 'no-product-document' and names its library here. Conforms "
-                    "to deployment-disclosure v0.2.",
+                    "to deployment-disclosure v0.3.",
         "metadata": {
             "timestamp": "2026-10-24T17:00:00Z", "lifecycles": [{"phase": "operations"}],
             "tools": {"components": [{"type": "application", "name": "Example Org configuration export",
@@ -715,7 +735,7 @@ def observed(product_sha, configured_sha, configured_hash_override=None):
         "show: 29% of ingress sessions still negotiate X25519 alone, and tokens for one client are still "
         "signed RS256. The brokering interfaces were not observed (the sensor does not cover egress), so "
         "coverage is partial. Each interface points to the configured interface it was compared with, and "
-        "through it to the product. Conforms to deployment-disclosure v0.2.",
+        "through it to the product. Conforms to deployment-disclosure v0.3.",
         "2026-10-25T08:00:00Z",
         [{"type": "application", "name": "testssl.sh", "version": "3.2"},
          {"type": "application", "name": "Zeek", "version": "7.0"},

@@ -309,7 +309,8 @@
             "none",
             "out-of-band",
             "product-managed"
-          ]
+          ],
+          "orCited": true
         }
       },
       "withholdable": true,
@@ -317,7 +318,7 @@
         "attribute": "interfaceType",
         "notEquals": "management"
       },
-      "note": "For every interface other than a management interface: the management interface that manages its keys, by reference within the document, or one of three literals: 'out-of-band' where keys are provisioned outside the product, for example TLS keys supplied as files; 'product-managed' where the product generates and rotates the key itself with no operator surface, for example a cluster transport certificate (decision 0022, K6); 'none' where the interface uses no keys (K3). 'out-of-band' is a fact about the product and is not a disclosure marker: a 'withheld' marker would claim something is being held back when nothing is (decision 0022, K4). SHOULD, because some products cannot say which surface manages a given key. The value is checked to name an element of the same record, or to be one of the three literals (decision 0022, F5). That the element is a management interface with keyManagementFunction 'keys-and-certificates' is not checked. Source: cprofile 'key_management_ref'."
+      "note": "For every interface other than a management interface: the management interface that manages its keys, by reference within the document, or one of three literals: 'out-of-band' where keys are provisioned outside the product, for example TLS keys supplied as files; 'product-managed' where the product generates and rotates the key itself with no operator surface, for example a cluster transport certificate (decision 0022, K6); 'none' where the interface uses no keys (K3). 'out-of-band' is a fact about the product and is not a disclosure marker: a 'withheld' marker would claim something is being held back when nothing is (decision 0022, K4). SHOULD, because some products cannot say which surface manages a given key. The value is checked to name an element of the same record, or to be one of the three literals (decision 0022, F5). That the element is a management interface with keyManagementFunction 'keys-and-certificates' is not checked. Source: cprofile 'key_management_ref'. Since R2-27 the reference may also be a BOM-Link to a key store in a record this document cites, such as an HSM's own record."
     },
     {
       "id": "I9",
@@ -431,6 +432,10 @@
         {
           "kind": "editorial",
           "summary": "I8 now checks that keyStoreRef names an element of the same record or is one of its three literals, where it checked presence only. It stays at SHOULD, so no verdict changes."
+        },
+        {
+          "kind": "editorial",
+          "summary": "I8 keyStoreRef may name a key store in a record the document cites, by BOM-Link, as well as an element of the same record or one of the literals (R2-27). I8 is SHOULD, so no verdict changes."
         }
       ]
     }

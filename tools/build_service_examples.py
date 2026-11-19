@@ -46,6 +46,8 @@ svc = {
   "extends": {"profileId": "pkic.example.interface-disclosure", "version": "0.10",
               "file": "profile-interface-disclosure.rules.json"},
   "appliesTo": {"cyclonedx": {"min": "1.6", "tested": "2.0"}},
+  "overrides": [{"id": "interface-disclosure#I14", "level": "SHOULD",
+                 "note": "Raised from MAY: a customer needs to know whether the provider's ingress or the application holds the TLS keys of each customer-facing interface."}],
   "storageAbsenceVocabulary": ["stores-no-customer-data"],
   "keyCustodyVocabulary": ["provider-managed", "customer-managed", "external"],
   "regenerationTriggerVocabulary": ["schedule", "interface-change", "schedule-and-interface-change"],
@@ -82,7 +84,8 @@ svc = {
   "artifacts": {"mapping": "mapping-cyclonedx-spdx.md",
                 "conformingExample": "examples/cbom-keycloak-service-restricted.cdx.json",
                 "nonConformingExample": "examples/cbom-keycloak-service-fail-custody.cdx.json"},
-  "changelog": [{"version": "0.1", "date": "2026-11-18", "summary": "Initial version, built on Keycloak run as a managed service.", "changes": []}]
+  "changelog": [{"version": "0.1", "date": "2026-11-18", "summary": "Initial version, built on Keycloak run as a managed service.",
+                 "changes": [{"kind": "editorial", "summary": "Raised interface-disclosure#I14 'terminatedBy' to SHOULD (19 November 2026). No verdict changes."}]}]
 }
 save("profile-service-disclosure.rules.json", svc)
 

@@ -177,3 +177,62 @@ should name a component of the same record. The evaluator checks each value on i
 compare it with another attribute of the same document. Left: whether to add a constraint that does,
 and whether a mismatch is a failure or a warning.
 Resolved in Release 1, 18 November 2026. `inSubjectList` checks a value against a list the record declares, and `refersToLocal` checks a pointer to a component. Publication 2, 6.2.
+
+**R2-21 — What terminates an interface's cryptography.** Resolved in Release 1, 19 November 2026.
+From: the telecom domain document, 8.4, and the Keycloak records, where the ingress terminates TLS for
+Keycloak's HTTP listener. Decision: the baseline v0.10 defines `terminatedBy` (I14) at MAY, checked with
+`refersToLocal` and the literals `workload` and `platform`. Deployment Disclosure v0.3 raises it to MUST on
+every interface but storage, and Service Disclosure v0.1 to SHOULD. IoT Device Estate's
+`cryptoTerminationPoint` stays as the product-level statement of what a device model allows.
+Publication 2, 7.2 and 8.2.
+
+
+**R2-22 — Keys held outside the record.**
+From: the OT document (10.4) and the SaaS tenant draft (8.4, 8.6). `keyStoreRef` names a component of
+the same record. OT writes `out-of-band` where the key plane lives outside the library, and SaaS writes
+`external-key-service` where the tenant's own service holds the keys. Publication 2, position 31, stops
+a derived profile adding values to a vocabulary that does not key a group. Left: one set of literals for
+keys held outside the record, added to PQC Migration Extended, and the drafts checked against it.
+Proposed, and applied in the working drafts on 19 November 2026. The literals stay those of PQC Migration Extended I8: `none`, `out-of-band` and `product-managed`. The SaaS key-custody draft uses `out-of-band` for keys held by the tenant's own service and drops `external-key-service`. Where that service has a record, the tenant record names it with `externalKeyService`, as before. The OT document already used the Release 1 literals.
+
+**R2-23 — Certification impact in the change core.**
+From: the financial services outline (HSM profile, 8.1), the telecom document (NESAS and SCAS) and the
+SaaS document (FedRAMP). `certificationImpact` exists only in the substation component profile.
+Publication 3, position 36, keeps module validation out of the change core. Left: whether
+`certificationImpact` and `certificationScheme` move into the change core, or the HSM profile is based on
+PQC Migration Extended instead.
+Proposed, and applied in the working draft on 19 November 2026. The change core and PQC Migration declare `certificationImpact` (I17, SHOULD) and `certificationScheme` (I18, SHOULD) under the same ids, with the vocabulary moved from the substation component profile. That profile raises change-core#I17 to MUST and no longer declares its own I1 and I2. Module validation stays out of the change core, so Publication 3 position 36 stands. An HSM profile extends PQC Migration Extended and gets both. Verdicts are unchanged; the rule ids in substation reports change.
+
+**R2-24 — Which device profile applies where.**
+From: the OT, telecom and financial services documents. OT field devices use the substation component
+profile, telecom SIMs and eSIMs follow IoT Device Estate, and financial services cards and terminals
+extend it. OT does not mention IoT Device Estate, though water telemetry RTUs fit it. Left: a rule for
+choosing between the two, written in the Change planning group document.
+Proposed. IoT Device Estate is for a device model in a fleet, where the decision is update, replace, shield or accept per model and resource limits decide it. The substation component profile is for a component of an engineered system, where certification impact and real-time limits decide it. A device may be evaluated against both. SIMs and eSIMs, payment cards and terminals, and water telemetry RTUs follow IoT Device Estate; protection IEDs follow the substation profile. The rule is written in the Change planning group document, and the OT document says so in chapter 6.
+
+**R2-25 — Shared names for boundary rules.**
+From: the OT document (8.3), the telecom document (8.2) and the financial services outline (4).
+Follows R2-19. OT records zones and conduits, telecom a crossing value and `boundaryProxy`, financial
+services borrows the telecom shape, and SaaS has none. Left: a shared note in the Change planning group
+document so that attribute names and checks (`refersToLocal`, `inSubjectList`) line up across sectors.
+Proposed. R2-19 stands: boundaries stay sector rules. Every boundary rule has two parts: a value on each interface, checked against a list the subject declares (`inSubjectList`) or a vocabulary, and a pointer to the component that guards it, checked with `refersToLocal`. A new sector reuses the telecom names `boundary` and `boundaryProxy` unless it has a recognised term of its own, as OT has for IEC 62443 zones and conduits. Financial services takes the telecom names. SaaS needs no boundary rule, because tenancy is a separate record. The note is kept in the Change planning group document.
+
+**R2-26 — Multi-party trust networks.**
+From: the financial services outline (4, 8.3) and the telecom document (4). Telecom reads interconnect
+from both ends, each operator describing its own end. Financial services has a card scheme cite its
+participants' records. Publication 2, position 34, limits version 1 of the model to two-party
+relationships. Left: one model for a scheme or network with many participants.
+Proposed. The model stays within two-party relationships (Publication 2, position 34). Each participant describes its own end, as telecom interconnect does. The scheme operator writes records only for what it runs, such as the scheme CA, directory servers and key distribution. Whether every participant can move is a policy over the set of participants' records: a new policy for the Operation group, not a new profile.
+
+**R2-27 — Key references across records.**
+From: the financial services outline (3, 8.4). The HSM has its own product and deployment records, so a
+key hierarchy crosses documents. `keyStoreRef` resolves only within one document. Left: a reference by
+BOM-Link and hash to a key store in another record, aligned with R2-22.
+Proposed, and applied in the working draft on 19 November 2026. `refersToLocal` gains the option `orCited`: the value may then also be a BOM-Link to an interface in a record the document cites, checked as `refersToCited` checks it. PQC Migration Extended I8 and the SaaS key-custody draft use it. Where no record exists, the value stays `out-of-band` (R2-22). I8 is SHOULD, so no verdict changes. Tested in `tests/check-additions.py`.
+
+**R2-28 — What a sector profile extends.**
+From: Publication 3, position 27, and the telecom and SaaS documents (12.1, 8.1). The position says a
+sector profile extends the baseline or the change core. The domain drafts extend System Disclosure,
+Deployment Disclosure, Procurement and Service Disclosure, Restricted. Left: whether position 27 is read
+as "directly or through a Release 1 profile", and the wording changed before ratification.
+Proposed. Publication 3, position 27, reads: "A sector profile extends a Release 1 profile, directly or through another. It adds only rules specific to its sector; a rule that serves several sectors moves to Release 1 or a group document." The OT and telecom documents quote the new wording. The position is not yet ratified, so it changes before the ballot.

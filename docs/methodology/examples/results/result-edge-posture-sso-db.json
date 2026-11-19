@@ -33,7 +33,7 @@
       "stage": "configured",
       "digest": {
         "alg": "SHA-256",
-        "value": "1efca032c6b028e5180662202ca6ae1f208ce891993012283a1af16b4b229605"
+        "value": "33032dcc89de040572d3b262910993526639f5ec40bf6eeef8e5063dbcaa7919"
       }
     },
     {
@@ -45,7 +45,7 @@
       "stage": "observed",
       "digest": {
         "alg": "SHA-256",
-        "value": "f9030cd3342f71ba3351b89e67ce8528e6e3830176e677cd0758f0888ee8b131"
+        "value": "044bc1a2d8ffeba1b35fbb04c6cfa9be78610792441a98a0863fa1ee8f75b09a"
       }
     },
     {
@@ -57,7 +57,7 @@
       "stage": "configured",
       "digest": {
         "alg": "SHA-256",
-        "value": "9c02027d02e8d9f364ef23b7dc72f00f8153574adc815dd68a880d2f6c221489"
+        "value": "697ee5c6a2dab26010cf36938742ce08a52fe78e5ee0be93d7372bb2a20e4820"
       }
     }
   ],

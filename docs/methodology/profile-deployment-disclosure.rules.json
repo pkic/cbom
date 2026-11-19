@@ -3,7 +3,7 @@
   "profileId": "pkic.example.deployment-disclosure",
   "profileTag": "deployment-disclosure",
   "title": "Deployment Disclosure (Example)",
-  "version": "0.2",
+  "version": "0.3",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
@@ -227,6 +227,17 @@
           "summary": "Added I4, peerInterface, at MAY: a pointer from an interface to the interface at the far end of the connection, as a BOM-Link into a cited document. No verdict changes. A document that omits it is unaffected, and a pointer that does not resolve is reported as a warning, so every v0.1 document conforms to v0.2 with the same result. The rule is normative in what it means, not in what it requires; it is classified as editorial because C10 classifies changes by their effect on verdicts."
         }
       ]
+    },
+    {
+      "version": "0.3",
+      "date": "2026-11-19",
+      "summary": "Requires terminatedBy on every interface except storage.",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Raised interface-disclosure#I14 'terminatedBy' to MUST, not withholdable. A v0.2 document without it no longer conforms."
+        }
+      ]
     }
   ],
   "artifacts": {
@@ -234,5 +245,13 @@
     "mapping": "mapping-cyclonedx-spdx.md",
     "conformingExample": "examples/cbom-keycloak-deployment-configured.cdx.json",
     "nonConformingExample": "examples/cbom-keycloak-deployment-configured-fail-literal.cdx.json"
-  }
+  },
+  "overrides": [
+    {
+      "id": "interface-disclosure#I14",
+      "level": "MUST",
+      "withholdable": false,
+      "note": "Tightened: an operator knows what terminates each interface it runs. Where an ingress or a service mesh terminates TLS for the workload, the workload's interface names the platform interface, and that interface states 'platform'."
+    }
+  ]
 }

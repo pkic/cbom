@@ -1,0 +1,534 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "DRAFT EXAMPLE CBOM, lifecycle stage 'implemented'. The Open5GS SEPP at v2.8.0, written from its public source by the PKIC CBOM Profiles working group. Library versions to confirm.",
+  "serialNumber": "urn:uuid:5e990002-0000-4000-8000-000000000001",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-18T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "Open5GS"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "app:open5gs-sepp",
+        "name": "Open5GS SEPP",
+        "version": "2.8.0",
+        "description": "The SEPP of Open5GS v2.8.0 (open5gs-seppd). Record written by the PKIC CBOM Profiles working group from the public source, not by the Open5GS maintainers.",
+        "properties": [
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          },
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "product"
+          },
+          {
+            "name": "pkic:profile:managementInterfaceAbsence",
+            "value": "configured-out-of-band"
+          },
+          {
+            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "value": "not-published"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:github/open5gs/open5gs@v2.8.0"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKIC CBOM Profiles Working Group"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:openssl",
+          "name": "OpenSSL",
+          "version": "3.0.13",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:deb/ubuntu/openssl@3.0.13-0ubuntu3?distro=ubuntu-24.04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:nghttp2",
+          "name": "nghttp2",
+          "version": "1.59.0",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:deb/ubuntu/nghttp2@1.59.0-1build4?distro=ubuntu-24.04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:curl",
+          "name": "libcurl",
+          "version": "8.5.0",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:deb/ubuntu/curl@8.5.0-2ubuntu10?distro=ubuntu-24.04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "n32c",
+          "name": "N32-c: N32 handshake between SEPPs (HTTPS)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.2"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ECDSA"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "RSA"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:peer-sepp"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Certificate and key from the 'tls' section of sepp.yaml; client certificate verification is off unless 'verify_client' is set"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The server context (lib/sbi/nghttp2-server.c) allows TLS 1.0 to 1.3 and sets the group list to P-256 only, so the server negotiates ECDHE on P-256 whatever the client offers. OpenSSL 3 refuses TLS 1.0 and 1.1 at its default security level. TLS 1.2 suites are ECDHE-ECDSA and ECDHE-RSA with AES-GCM or ChaCha20-Poly1305, and DHE-RSA with AES-GCM; TLS 1.3 suites are the OpenSSL defaults, with server preference. The client side (lib/sbi/client.c) uses libcurl with OpenSSL and its default groups. There is no setting for the group list. The SEPP advertises TLS as its only N32-f security capability. Library version from an Ubuntu 24.04 build; to confirm."
+            },
+            {
+              "name": "pkic:profile:referencePoint",
+              "value": "n32-c"
+            },
+            {
+              "name": "pkic:profile:referenceSpecification",
+              "value": "TS 33.501 13.1 and 13.5; TS 29.573"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sto-keys"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "documentation",
+              "url": "https://open5gs.org/open5gs/docs/",
+              "comment": "Where the operator sets the certificate and key: the 'tls' section of sepp.yaml.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "configuration-guidance"
+                },
+                {
+                  "name": "pkic:profile:accessProtocol",
+                  "value": "web-page"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "n32f",
+          "name": "N32-f: forwarded messages between SEPPs (HTTPS)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.2"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ECDSA"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "RSA"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:peer-sepp"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "A separate listener and certificate may be set in the 'n32f' section"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "PRINS is not implemented: N32-f is protected by TLS only. The server context (lib/sbi/nghttp2-server.c) allows TLS 1.0 to 1.3 and sets the group list to P-256 only, so the server negotiates ECDHE on P-256 whatever the client offers. OpenSSL 3 refuses TLS 1.0 and 1.1 at its default security level. TLS 1.2 suites are ECDHE-ECDSA and ECDHE-RSA with AES-GCM or ChaCha20-Poly1305, and DHE-RSA with AES-GCM; TLS 1.3 suites are the OpenSSL defaults, with server preference. The client side (lib/sbi/client.c) uses libcurl with OpenSSL and its default groups. There is no setting for the group list. Library version from an Ubuntu 24.04 build; to confirm."
+            },
+            {
+              "name": "pkic:profile:referencePoint",
+              "value": "n32-f"
+            },
+            {
+              "name": "pkic:profile:referenceSpecification",
+              "value": "TS 33.501 13.1 and 13.5"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sto-keys"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "documentation",
+              "url": "https://open5gs.org/open5gs/docs/",
+              "comment": "Where the operator sets the certificate and key: the 'tls' section of sepp.yaml.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "configuration-guidance"
+                },
+                {
+                  "name": "pkic:profile:accessProtocol",
+                  "value": "web-page"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sbi",
+          "name": "Service-based interface to the operator's network functions",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.2"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ECDSA"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "RSA"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:nf-consumer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "The scheme is set per server in the 'sbi' section: 'http' or 'https'"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The shipped configuration uses HTTP without TLS on the SBI. With 'https', the same TLS context as N32 applies. The server context (lib/sbi/nghttp2-server.c) allows TLS 1.0 to 1.3 and sets the group list to P-256 only, so the server negotiates ECDHE on P-256 whatever the client offers. OpenSSL 3 refuses TLS 1.0 and 1.1 at its default security level. TLS 1.2 suites are ECDHE-ECDSA and ECDHE-RSA with AES-GCM or ChaCha20-Poly1305, and DHE-RSA with AES-GCM; TLS 1.3 suites are the OpenSSL defaults, with server preference. The client side (lib/sbi/client.c) uses libcurl with OpenSSL and its default groups. There is no setting for the group list. Library version from an Ubuntu 24.04 build; to confirm."
+            },
+            {
+              "name": "pkic:profile:referencePoint",
+              "value": "sbi"
+            },
+            {
+              "name": "pkic:profile:referenceSpecification",
+              "value": "TS 33.501 13.1"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sto-keys"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "disabled"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "documentation",
+              "url": "https://open5gs.org/open5gs/docs/",
+              "comment": "Where the operator sets the certificate and key: the 'tls' section of sepp.yaml.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "configuration-guidance"
+                },
+                {
+                  "name": "pkic:profile:accessProtocol",
+                  "value": "web-page"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sto-keys",
+          "name": "Private keys, certificates and CA certificates (PEM files)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Read from the file paths in sepp.yaml at start-up. Protection of the files is left to the platform."
+            },
+            {
+              "name": "pkic:profile:referencePoint",
+              "value": "not-a-reference-point"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app:open5gs-sepp",
+      "dependsOn": [
+        "lib:openssl",
+        "lib:nghttp2",
+        "lib:curl"
+      ]
+    },
+    {
+      "ref": "lib:openssl",
+      "provides": [
+        "n32c",
+        "n32f",
+        "sbi",
+        "sto-keys"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:5e990002-0000-4000-8000-0000000000b0/1",
+      "comment": "Companion SBOM: examples/context/open5gs-sepp-2.8.0-sbom.cdx.json.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "sbom"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8af2d90b648e76a099b573c58e4952875a0e98fed3df6c444b47e917ec1fce47"
+        }
+      ]
+    },
+    {
+      "type": "advisories",
+      "url": "https://github.com/open5gs/open5gs/security/advisories",
+      "comment": "The project's published security advisories.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "advisories"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    },
+    {
+      "type": "configuration",
+      "url": "https://open5gs.org/open5gs/docs/",
+      "comment": "The project's documentation, including the TLS settings in sepp.yaml.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "configuration-guidance"
+        }
+      ]
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/open5gs/open5gs/tree/v2.8.0",
+      "comment": "The source the record was written from."
+    }
+  ]
+}

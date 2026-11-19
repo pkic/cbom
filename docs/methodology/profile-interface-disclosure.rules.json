@@ -362,6 +362,25 @@
         "notEquals": "none"
       },
       "note": "How long a credential, key or token carried by the interface stays valid, as an ISO 8601 duration (for example 'PT5M' for an access token, 'P1Y' for a certificate). The longest lifetime is stated where several apply."
+    },
+    {
+      "id": "I14",
+      "attribute": "terminatedBy",
+      "level": "MAY",
+      "constraint": {
+        "refersToLocal": {
+          "literals": [
+            "workload",
+            "platform"
+          ]
+        }
+      },
+      "withholdable": true,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "What terminates the interface's cryptography: 'workload' where the subject does it itself; the bom-ref of the component of the same record that does it for the subject, such as an ingress, a service mesh sidecar or a gateway; or 'platform' on that component's own interface. A product record seldom knows; Deployment Disclosure requires it. IoT Device Estate's cryptoTerminationPoint states what a device model allows; this states what does terminate it."
     }
   ],
   "exclusions": [
@@ -544,6 +563,10 @@
         {
           "kind": "editorial",
           "summary": "Added I12 'intrinsicData' and I13 'credentialLifetime' at MAY: what an interface exists to carry for the product's own operation, and how long it stays valid. Added the context kind 'change-notice', where a provider announces changes, with no rule. No verdict changes."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added I14 'terminatedBy' at MAY: what terminates an interface's cryptography, the workload itself or the component that does it for it. No verdict changes."
         }
       ]
     }

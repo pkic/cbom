@@ -12,6 +12,9 @@ breaks one of these facilities fails here rather than passing silently:
   purposes taken in depth      a derived profile may not drop one
   cited verdicts               --cited-profile
   the claim format             'evaluated', claim format 0.2
+  what terminates an interface terminatedBy (interface-disclosure I14, MUST in deployment-disclosure v0.3)
+  certification impact         change-core and pqc-migration I17 and I18 (R2-23)
+  key stores in a cited record keyStoreRef by BOM-Link (pqc-migration-extended I8, R2-27)
 
 Usage:  python3 tests/check-additions.py
 Exit:   0 every check as expected, 1 otherwise
@@ -41,7 +44,7 @@ def report(ok, label, detail=""):
     bad += not ok
     print("  %s %s" % ("ok  " if ok else "FAIL", label))
     if not ok and detail:
-        print("       %s" % detail)
+        print("       %s" % (detail,))
 
 
 def load(path):
@@ -136,6 +139,83 @@ report(len(cited_lines) == 2 and all("CONFORMS" in l for l in cited_lines),
 claim = load(os.path.join(M, "claim-example.json"))
 report(claim.get("claimFormatVersion") == "0.2" and all("evaluated" in e for e in claim["profiles"]),
        "the example claim uses claim format 0.2 and 'evaluated'")
+
+# what terminates an interface
+DEPL = os.path.join(M, "profile-deployment-disclosure.rules.json")
+BASE = os.path.join(M, "profile-interface-disclosure.rules.json")
+conf = load(os.path.join(EX, "cbom-keycloak-deployment-configured.cdx.json"))
+_, failed, _ = evaluate(conf, DEPL, ["cbom-keycloak-product.cdx.json"])
+report(not failed, "the configured Keycloak record states what terminates each interface", failed)
+for c in conf["inventories"][0]["components"]:
+    if c.get("bom-ref") == "service:svc-http":
+        c["properties"] = [q for q in c["properties"] if q["name"] != P + "terminatedBy"]
+_, failed, _ = evaluate(conf, DEPL, ["cbom-keycloak-product.cdx.json"])
+report(failed == ["service:svc-http/interface-disclosure#I14"],
+       "deployment-disclosure fails an interface that does not say what terminates it", failed)
+_, failed, _ = evaluate(conf, BASE, ["cbom-keycloak-product.cdx.json"])
+report("service:svc-http/interface-disclosure#I14" not in failed,
+       "the baseline leaves terminatedBy optional", failed)
+for c in conf["inventories"][0]["components"]:
+    if c.get("bom-ref") == "service:svc-http":
+        c["properties"].append({"name": P + "terminatedBy", "value": "crypto:protocol:no-such-ingress"})
+_, failed, _ = evaluate(conf, DEPL, ["cbom-keycloak-product.cdx.json"])
+report(failed == ["service:svc-http/interface-disclosure#I14"],
+       "terminatedBy must name a component of the same record", failed)
+
+# certification impact, shared by the change core and PQC Migration (R2-23)
+CORE = os.path.join(M, "profile-change-core.rules.json")
+PQC = os.path.join(M, "profile-pqc-migration.rules.json")
+OT = os.path.join(M, "profile-pqc-migration-ot.rules.json")
+ied = load(os.path.join(EX, "cbom-ot-protection-ied-product.cdx.json"))
+core_rules = {r["id"]: r for r in load(CORE)["interfaceRules"]}
+pqc_rules = {r["id"]: r for r in load(PQC)["interfaceRules"]}
+report(all(core_rules[k] == pqc_rules[k] for k in ("I17", "I18")),
+       "the change core and PQC Migration declare I17 and I18 identically")
+_, failed, rep = evaluate(ied, OT)
+rows = [r["id"] for i in rep["interfaces"] for r in i["rows"]]
+report(not failed and "change-core#I17" in rows and "pqc-migration-ot#I1" not in rows,
+       "the protection IED conforms to the substation profile, which reports change-core#I17", failed)
+b = copy.deepcopy(ied)
+for c in b["inventories"][0]["components"]:
+    if c.get("bom-ref") == "tls-mms":
+        c["properties"] = [q for q in c["properties"] if q["name"] != P + "certificationImpact"]
+_, failed, _ = evaluate(b, OT)
+report(failed == ["tls-mms/change-core#I17"],
+       "the substation profile raises certificationImpact to MUST", failed)
+_, failed, _ = evaluate(b, CORE)
+report("tls-mms/change-core#I17" not in failed,
+       "the change core asks for certificationImpact at SHOULD", failed)
+
+
+def i8(rep, iface):
+    for i in rep["interfaces"]:
+        if i["interfaceId"] == iface:
+            for r in i["rows"]:
+                if r["id"] == "pqc-migration-extended#I8":
+                    return r
+    return None
+
+
+# a key store in a record the document cites (R2-27)
+EXT = os.path.join(M, "profile-pqc-migration-extended.rules.json")
+kc = load(os.path.join(EX, "cbom-keycloak-product.cdx.json"))
+ied_key = V.doc_key(ied)
+b = copy.deepcopy(kc)
+set_prop(b, "service:sto-realm-keys", "keyStoreRef", ied_key + "#sto-keys")
+_, _, rep = evaluate(b, EXT, ["cbom-ot-protection-ied-product.cdx.json"])
+r = i8(rep, "service:sto-realm-keys")
+report(r is not None and not r["ok"],
+       "keyStoreRef into a record the document does not cite fails", r)
+b["externalReferences"] = (b.get("externalReferences") or []) + [
+    {"type": "bom", "url": ied_key,
+     "properties": [{"name": P + "context", "value": "cited-document"}]}]
+_, _, rep = evaluate(b, EXT, ["cbom-ot-protection-ied-product.cdx.json"])
+r = i8(rep, "service:sto-realm-keys")
+report(r is not None and r["ok"], "keyStoreRef may name a key store in a cited record", r)
+set_prop(b, "service:sto-realm-keys", "keyStoreRef", ied_key + "#no-such-store")
+_, _, rep = evaluate(b, EXT, ["cbom-ot-protection-ied-product.cdx.json"])
+r = i8(rep, "service:sto-realm-keys")
+report(r is not None and not r["ok"], "the key store must exist in the cited record", r)
 
 print("%s" % ("all additions behave as specified" if not bad else "%d check(s) failed" % bad))
 sys.exit(1 if bad else 0)

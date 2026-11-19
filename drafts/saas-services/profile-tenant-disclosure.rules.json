@@ -1,0 +1,95 @@
+{
+  "$comment": "DRAFT. The tenant record: a deployment record for one tenant of a managed service, citing the service record. It extends Deployment Disclosure with the tenant's choice of key custody on every storage interface and, for external keys, the key service that holds them.",
+  "profileId": "pkic.example.tenant-disclosure",
+  "profileTag": "tenant-disclosure",
+  "title": "Tenant Disclosure (Example, draft)",
+  "version": "0.1-draft",
+  "objective": {
+    "consumer": "A customer's security team, or an auditor acting for it",
+    "decision": "Whether the tenant's settings protect each data set as the customer's policy requires",
+    "decisionOptions": [
+      "accept the settings",
+      "change the settings",
+      "move the data"
+    ]
+  },
+  "scope": {
+    "subjectTypes": [
+      "deployment"
+    ],
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured",
+      "observed"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.deployment-disclosure",
+    "version": "0.3",
+    "file": "../../docs/methodology/profile-deployment-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "keyCustodyVocabulary": [
+    "provider-managed",
+    "customer-managed",
+    "external"
+  ],
+  "productRules": [],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "keyCustody",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "keyCustodyVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "note": "The custody model the tenant chose for this store. It should be one the service record offers (keyCustodySupported); the evaluator does not compare the two records."
+    },
+    {
+      "id": "I2",
+      "attribute": "externalKeyService",
+      "level": "MUST",
+      "constraint": {
+        "refersToCited": {}
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "keyCustody",
+        "equals": "external"
+      },
+      "note": "The interface of the tenant's own key service, in a record the tenant record cites."
+    }
+  ],
+  "referenceRules": [],
+  "exclusions": [
+    {
+      "item": "What the data is and how long it must stay confidential",
+      "reason": "The customer's data register holds it, linked by the context kind data-register."
+    }
+  ],
+  "artifacts": {
+    "conformingExample": "examples/cbom-keycloak-tenant-configured.cdx.json",
+    "nonConformingExample": "examples/cbom-keycloak-tenant-fail-custody.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1-draft",
+      "date": "2026-11-18",
+      "summary": "First draft, built on one tenant of the Keycloak managed service.",
+      "changes": []
+    }
+  ]
+}

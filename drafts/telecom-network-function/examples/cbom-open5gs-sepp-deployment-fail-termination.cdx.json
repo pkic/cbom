@@ -1,0 +1,441 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "DRAFT EXAMPLE CBOM, lifecycle stage 'configured'. An illustrative operator's deployment of the Open5GS SEPP v2.8.0 in a Kubernetes cluster with a service mesh. N32 is terminated by the SEPP; the SBI is terminated by the mesh sidecar. NON-CONFORMING: the SBI does not name what terminates it.",
+  "serialNumber": "urn:uuid:5e990002-0000-4000-8000-000000000011",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-18T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "operations"
+      }
+    ],
+    "supplier": {
+      "name": "Example Mobile Operator (illustrative)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "deployment:sepp-roaming",
+        "name": "SEPP for roaming, production cluster",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "deployment"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          },
+          {
+            "name": "pkic:profile:managementInterfaceAbsence",
+            "value": "configured-out-of-band"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": {
+                  "name": "tag-uri",
+                  "description": "A tag URI (RFC 4151)."
+                },
+                "value": "tag:operator.example,2026:deployment/sepp-roaming"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Mobile Operator (illustrative)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:openssl",
+          "name": "OpenSSL",
+          "version": "3.0.13",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:deb/ubuntu/openssl@3.0.13-0ubuntu3?distro=ubuntu-24.04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:nghttp2",
+          "name": "nghttp2",
+          "version": "1.59.0",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:deb/ubuntu/nghttp2@1.59.0-1build4?distro=ubuntu-24.04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:curl",
+          "name": "libcurl",
+          "version": "8.5.0",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:deb/ubuntu/curl@8.5.0-2ubuntu10?distro=ubuntu-24.04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:envoy",
+          "name": "Envoy (the mesh sidecar)",
+          "description": "Version as shipped with the operator's mesh release. Illustrative.",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:github/envoyproxy/envoy"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "dep:n32c",
+          "name": "N32-c to roaming partners",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:lifecycleStage",
+              "value": "configured"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e990002-0000-4000-8000-000000000001/1#n32c"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:peer-sepp"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "dep:sto-keys"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "dep:n32f",
+          "name": "N32-f to roaming partners",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:lifecycleStage",
+              "value": "configured"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e990002-0000-4000-8000-000000000001/1#n32f"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:peer-sepp"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "dep:sto-keys"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "dep:sbi",
+          "name": "SBI inside the pod: plain HTTP to the sidecar",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:lifecycleStage",
+              "value": "configured"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e990002-0000-4000-8000-000000000001/1#sbi"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "HTTP"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:mesh-sidecar"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The SEPP runs with scheme 'http' on the SBI. The sidecar terminates mutual TLS and forwards over the pod's loopback interface."
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "mesh:sbi-mtls",
+          "name": "Service mesh sidecar: mutual TLS on the SBI",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:lifecycleStage",
+              "value": "configured"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "X25519"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "RSA-2048-PKCS1-SHA256"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:nf-consumer-sidecar"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:mesh-sidecar"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Workload certificates issued by the mesh's own CA with its default RSA-2048 keys, rotated daily. The operator's SBA certificate profile (TS 33.310) is not applied to them. Values illustrative."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "platform"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "dep:sto-keys",
+          "name": "Kubernetes secret holding the N32 key and certificates",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:lifecycleStage",
+              "value": "configured"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e990002-0000-4000-8000-000000000001/1#sto-keys"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Mounted into the pod as files. Encrypted at rest by the cluster's secret encryption."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "lib:openssl",
+      "provides": [
+        "dep:n32c",
+        "dep:n32f",
+        "dep:sto-keys"
+      ]
+    },
+    {
+      "ref": "lib:envoy",
+      "provides": [
+        "mesh:sbi-mtls"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:5e990002-0000-4000-8000-000000000001/1",
+      "comment": "The product CBOM of the SEPP this deployment runs.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8ef151da3e1b9ebbd0a24717f053224222d93711f58f6baa4aa7f1da8c6db479"
+        }
+      ]
+    },
+    {
+      "type": "vcs",
+      "url": "https://git.operator.example/core/sepp-deploy/-/commit/7d1e0b2",
+      "comment": "Revision of the deployment repository this record was read from.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "configuration-source"
+        }
+      ]
+    }
+  ]
+}

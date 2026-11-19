@@ -38,6 +38,13 @@
       "tested": "2.0"
     }
   },
+  "overrides": [
+    {
+      "id": "interface-disclosure#I14",
+      "level": "SHOULD",
+      "note": "Raised from MAY: a customer needs to know whether the provider's ingress or the application holds the TLS keys of each customer-facing interface."
+    }
+  ],
   "storageAbsenceVocabulary": [
     "stores-no-customer-data"
   ],
@@ -178,7 +185,12 @@
       "version": "0.1",
       "date": "2026-11-18",
       "summary": "Initial version, built on Keycloak run as a managed service.",
-      "changes": []
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Raised interface-disclosure#I14 'terminatedBy' to SHOULD (19 November 2026). No verdict changes."
+        }
+      ]
     }
   ]
 }
