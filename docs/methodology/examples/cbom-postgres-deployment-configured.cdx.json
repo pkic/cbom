@@ -107,7 +107,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:x25519",
-          "name": "X25519",
+          "name": "x25519",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -267,7 +267,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "33032dcc89de040572d3b262910993526639f5ec40bf6eeef8e5063dbcaa7919"
+          "content": "948bf083ca9d4920aaa4f9c3bff746faab973c9fb446a65b35449a35ce35dc41"
         }
       ]
     },

@@ -10,7 +10,7 @@
     "file": "cbom-keycloak-product.cdx.json",
     "digest": {
       "alg": "sha-256",
-      "value": "ce1163d87b5dd45ea27fadcc3060b715231408bcf635c4261102f973077b64a9"
+      "value": "ed6d9b210f77f5817ba79dffd65ec7b21425ae5a2a978332ceff5c043c980edc"
     },
     "carrier": {
       "format": "cyclonedx",

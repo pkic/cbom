@@ -2,7 +2,7 @@
   "policyFormat": "pkic.cbom.policy",
   "policyFormatVersion": "0.1",
   "policyId": "pkic.example.policy.algorithm-transition",
-  "version": "0.2",
+  "version": "0.3",
   "title": "Quantum-vulnerable algorithm transition (NIST IR 8547, final)",
   "status": "illustrative",
   "$comment": "An example policy, not advice. It applies the transition schedule of NIST IR 8547 (final, 27 October 2026) to the algorithms a CBOM discloses. Quantum-vulnerable signature and key-establishment algorithms are deprecated after 2030 and disallowed after 2035, at every approved security strength. The schedule is data in this file; the evaluation method is implemented by evaluate_policy.py. The judgement is computed at evaluation time and recorded in a result that points to the CBOM by digest, never stored in the CBOM. Check the schedule against the NIST publication before relying on it.",
@@ -52,7 +52,15 @@
         "rsa_pss_rsae_sha512",
         "rsa_pss_pss_sha256",
         "RSA-SHA384",
-        "RSA-SHA512"
+        "RSA-SHA512",
+        "RSA-PKCS1-1.5-SHA-256",
+        "RSA-PKCS1-1.5-SHA-384",
+        "RSA-PKCS1-1.5-SHA-512",
+        "RSA-PSS-SHA-256",
+        "RSA-PSS-SHA-384",
+        "RSA-PSS-SHA-512",
+        "RSA-OAEP-SHA-1-MGF1-SHA-1",
+        "RSA-OAEP-SHA-256-MGF1-SHA-256"
       ],
       "family": "RSA",
       "securityStrength": 112,
@@ -69,7 +77,8 @@
     },
     {
       "names": [
-        "ffdhe2048"
+        "ffdhe2048",
+        "FFDHE-ffdhe2048"
       ],
       "family": "FFDH",
       "securityStrength": 112,
@@ -77,7 +86,8 @@
     },
     {
       "names": [
-        "ffdhe3072"
+        "ffdhe3072",
+        "FFDHE-ffdhe3072"
       ],
       "family": "FFDH",
       "securityStrength": 128,
@@ -95,7 +105,9 @@
         "Ed25519",
         "EdDSA",
         "ed25519",
-        "ECDSA-SHA256"
+        "ECDSA-SHA256",
+        "ECDHE-secp256r1",
+        "ECDH"
       ],
       "family": "EC",
       "securityStrength": 128,
@@ -107,7 +119,9 @@
         "P-384",
         "ES384",
         "ecdsa_secp384r1_sha384",
-        "ECDSA-SHA384"
+        "ECDSA-SHA384",
+        "ECDHE-secp384r1",
+        "ECDSA-P-384-SHA-384"
       ],
       "family": "EC",
       "securityStrength": 192,
@@ -129,7 +143,9 @@
         "P-521",
         "ES512",
         "ecdsa_secp521r1_sha512",
-        "ECDSA-SHA512"
+        "ECDSA-SHA512",
+        "ECDHE-secp521r1",
+        "ECDSA-P-521-SHA-512"
       ],
       "family": "EC",
       "securityStrength": 256,
@@ -171,7 +187,9 @@
         "HMAC-SHA512",
         "HS256",
         "HS384",
-        "HS512"
+        "HS512",
+        "HMAC-SHA-256",
+        "HMAC-SHA-384"
       ],
       "family": "symmetric",
       "quantumVulnerable": false,
@@ -204,6 +222,12 @@
     }
   ],
   "changelog": [
+    {
+      "version": "0.3",
+      "date": "2026-11-22",
+      "kind": "editorial",
+      "summary": "Adds the CycloneDX cryptography registry form of each name the examples now use (for example RSA-PKCS1-1.5-SHA-256 beside RS256, ECDHE-secp384r1 beside secp384r1), with the same classification. The earlier names are kept, so records that use them classify as before."
+    },
     {
       "version": "0.2",
       "date": "2026-11-15",

@@ -30,7 +30,7 @@
     {
       "type": "cryptographic-asset",
       "bom-ref": "crypto:algo:x25519",
-      "name": "X25519",
+      "name": "x25519",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {
@@ -52,7 +52,7 @@
     {
       "type": "cryptographic-asset",
       "bom-ref": "crypto:algo:ecdsa-p256",
-      "name": "ECDSA-P256-SHA256",
+      "name": "ECDSA-P-256-SHA-256",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {

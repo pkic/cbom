@@ -105,9 +105,9 @@ def iface(ref, name, kind, pairs):
             "properties": props([("interfaceType", kind)] + pairs + [("defaultState", "enabled")])}
 
 
-TLS = [("keyExchange", "ECDH-P256"), ("encryption", "AES-128-GCM"), ("authentication", "ECDSA-P256-SHA256"),
-       ("protocolVersionsSupported", ["1.2", "1.3"]), ("keyExchangeSupported", ["ECDH-P256", "ECDH-P384"]),
-       ("authenticationSupported", ["ECDSA-P256-SHA256", "ECDSA-P384-SHA384"])]
+TLS = [("keyExchange", "ECDH-P-256"), ("encryption", "AES-128-GCM"), ("authentication", "ECDSA-P-256-SHA-256"),
+       ("protocolVersionsSupported", ["1.2", "1.3"]), ("keyExchangeSupported", ["ECDH-P-256", "ECDH-P-384"]),
+       ("authenticationSupported", ["ECDSA-P-256-SHA-256", "ECDSA-P-384-SHA-384"])]
 
 
 def interfaces():
@@ -115,9 +115,9 @@ def interfaces():
         iface("svc-goose", "GOOSE protection messages (IEC 62351-6)", "service", [
             ("protocol", "GOOSE"), ("protocolVersion", "2.1"),
             ("endpointRole:publisher", "endpoint:ied"), ("endpointRole:subscriber", "endpoint:bay-peers"),
-            ("keyExchange", "none"), ("encryption", "none"), ("authentication", "HMAC-SHA256"),
+            ("keyExchange", "none"), ("encryption", "none"), ("authentication", "HMAC-SHA-256"),
             ("protocolVersionsSupported", "2.1"), ("keyExchangeSupported", "none"),
-            ("authenticationSupported", ["HMAC-SHA256", "AES-GMAC"]),
+            ("authenticationSupported", ["HMAC-SHA-256", "AES-GMAC"]),
             ("negotiationControl", "Not applicable: one-way multicast"),
             ("integrationConstraints", "Layer-2 multicast with a 3 ms transfer time for trip messages "
                                        "(IEC 61850-5 P2/P3). A per-message signature does not fit: ML-DSA-44 "
@@ -126,9 +126,9 @@ def interfaces():
         iface("svc-sv", "Sampled values (IEC 62351-6)", "service", [
             ("protocol", "SV"), ("protocolVersion", "2.1"),
             ("endpointRole:publisher", "endpoint:merging-unit"), ("endpointRole:subscriber", "endpoint:ied"),
-            ("keyExchange", "none"), ("encryption", "none"), ("authentication", "HMAC-SHA256"),
+            ("keyExchange", "none"), ("encryption", "none"), ("authentication", "HMAC-SHA-256"),
             ("protocolVersionsSupported", "2.1"), ("keyExchangeSupported", "none"),
-            ("authenticationSupported", ["HMAC-SHA256", "AES-GMAC"]),
+            ("authenticationSupported", ["HMAC-SHA-256", "AES-GMAC"]),
             ("negotiationControl", "Not applicable: one-way multicast"),
             ("integrationConstraints", "Layer-2 multicast within the sampling interval. Already symmetric."),
             ("keyStoreRef", "int-gdoi"), ("certificationImpact", "not-applicable")]),
@@ -143,9 +143,9 @@ def interfaces():
         iface("svc-mms", "MMS with role-based access tokens (IEC 62351-4, -8)", "service", [
             ("protocol", "MMS"), ("protocolVersion", "2003"),
             ("endpointRole:client", "endpoint:station-server"), ("endpointRole:server", "endpoint:ied"),
-            ("keyExchange", "none"), ("encryption", "none"), ("authentication", "ECDSA-P256-SHA256"),
+            ("keyExchange", "none"), ("encryption", "none"), ("authentication", "ECDSA-P-256-SHA-256"),
             ("protocolVersionsSupported", "2003"), ("keyExchangeSupported", "none"),
-            ("authenticationSupported", "ECDSA-P256-SHA256"),
+            ("authenticationSupported", "ECDSA-P-256-SHA-256"),
             ("negotiationControl", "Token signature algorithm set by the access token issuer"),
             ("integrationConstraints", "Carried over tls-mms. The token signature is what grants authority."),
             ("keyStoreRef", "sto-keys"), ("certificationImpact", "retest"),
@@ -153,9 +153,9 @@ def interfaces():
         iface("int-gdoi", "GDOI group key distribution (IEC 62351-9)", "interconnect", [
             ("protocol", "GDOI"), ("protocolVersion", "1"),
             ("endpointRole:group-member", "endpoint:ied"), ("endpointRole:key-server", "endpoint:station-server"),
-            ("keyExchange", "MODP-2048"), ("encryption", "AES-128-CBC"), ("authentication", "RSA-2048"),
-            ("protocolVersionsSupported", "1"), ("keyExchangeSupported", ["MODP-2048", "ECDH-P256"]),
-            ("authenticationSupported", ["RSA-2048", "ECDSA-P256-SHA256"]),
+            ("keyExchange", "FFDH-MODP-2048"), ("encryption", "AES-128-CBC"), ("authentication", "RSA-2048"),
+            ("protocolVersionsSupported", "1"), ("keyExchangeSupported", ["FFDH-MODP-2048", "ECDH-P-256"]),
+            ("authenticationSupported", ["RSA-2048", "ECDSA-P-256-SHA-256"]),
             ("negotiationControl", "Set by the key server's group policy"),
             ("integrationConstraints", "The key plane for GOOSE and SV. GDOI over IKEv1 phase 1 (RFC 8052). Its "
                                        "successor G-IKEv2 (RFC 9838) is not profiled by IEC 62351-9:2023, which "
@@ -164,9 +164,9 @@ def interfaces():
         iface("mgmt-enrol", "Certificate enrolment (EST, IEC 62351-9)", "management", [
             ("protocol", "EST"), ("protocolVersion", "1"),
             ("endpointRole:client", "endpoint:ied"), ("endpointRole:server", "endpoint:enrolment-service")] + [
-            ("keyExchange", "ECDH-P256"), ("encryption", "AES-128-GCM"), ("authentication", "ECDSA-P256-SHA256"),
-            ("protocolVersionsSupported", "1"), ("keyExchangeSupported", ["ECDH-P256", "ECDH-P384"]),
-            ("authenticationSupported", ["ECDSA-P256-SHA256", "ECDSA-P384-SHA384"]),
+            ("keyExchange", "ECDH-P-256"), ("encryption", "AES-128-GCM"), ("authentication", "ECDSA-P-256-SHA-256"),
+            ("protocolVersionsSupported", "1"), ("keyExchangeSupported", ["ECDH-P-256", "ECDH-P-384"]),
+            ("authenticationSupported", ["ECDSA-P-256-SHA-256", "ECDSA-P-384-SHA-384"]),
             ("negotiationControl", "Certificate profile set by the enrolment service"),
             ("integrationConstraints", "Device identity certificates with long validity."),
             ("updateMechanism", "none"), ("certificationImpact", "retest"),

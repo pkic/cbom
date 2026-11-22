@@ -343,9 +343,9 @@ nav: uc-pqc
       <tr><td><code>interfaceType</code></td><td><code>service</code></td><td><code>service</code></td></tr>
       <tr><td><code>endpointRoles</code></td><td><code>client</code>, <code>server</code></td><td><code>issuer</code>, <code>relying-party</code></td></tr>
       <tr><td><code>protocol</code> / <code>protocolVersion</code></td><td><code>TLS</code> / <code>1.3</code></td><td><code>OIDC</code> / <code>1.0</code></td></tr>
-      <tr><td><code>keyExchange</code></td><td><code>X25519</code></td><td><code>none</code> (token encryption is off by default)</td></tr>
+      <tr><td><code>keyExchange</code></td><td><code>x25519</code></td><td><code>none</code> (token encryption is off by default)</td></tr>
       <tr><td><code>encryption</code></td><td><code>AES-256-GCM</code></td><td><code>none</code></td></tr>
-      <tr><td><code>authentication</code></td><td><code>deployment-defined</code> (the operator supplies the certificate)</td><td><code>RS256</code></td></tr>
+      <tr><td><code>authentication</code></td><td><code>deployment-defined</code> (the operator supplies the certificate)</td><td><code>RSA-PKCS1-1.5-SHA-256</code> (JOSE RS256)</td></tr>
       <tr><td><code>implementationPurl</code></td><td><code>pkg:rpm/redhat/java-21-openjdk-headless?arch=x86_64&amp;distro=rhel-9</code></td><td><code>pkg:maven/org.keycloak/keycloak-services@26.7.3</code></td></tr>
       <tr><td><code>defaultState</code></td><td><code>enabled</code></td><td><code>enabled</code></td></tr>
       <tr><td><code>lifecycleStage</code></td><td><code>implemented</code>, declared once for the record in <code>metadata.lifecycles</code> (phase <code>build</code>)</td><td>the same</td></tr>

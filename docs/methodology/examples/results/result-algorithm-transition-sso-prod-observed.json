@@ -3,11 +3,11 @@
   "resultFormatVersion": "0.1",
   "policy": {
     "policyId": "pkic.example.policy.algorithm-transition",
-    "version": "0.2",
+    "version": "0.3",
     "file": "policy-algorithm-transition.policy.json",
     "digest": {
       "alg": "SHA-256",
-      "value": "2c6b2609de0222a6a45415b21d58796a18a4fdb1615aaf867e3d1c9ba8f518b9"
+      "value": "1d3b95b7aaf37d388f102b457bc0047b6a9aa8d6372a7c30e8e91c7aa8b0931c"
     }
   },
   "evaluationDate": "2026-10-25",
@@ -21,7 +21,7 @@
       "stage": "observed",
       "digest": {
         "alg": "SHA-256",
-        "value": "044bc1a2d8ffeba1b35fbb04c6cfa9be78610792441a98a0863fa1ee8f75b09a"
+        "value": "d235a61efd781bd491261b42c88cb6f423499addc4c4a0a9e8ad8a2a226a09de"
       }
     }
   ],
@@ -44,7 +44,7 @@
       "document": "cbom-keycloak-deployment-observed.cdx.json",
       "interface": "crypto:protocol:ing-tls",
       "attribute": "keyExchange",
-      "value": "X25519",
+      "value": "x25519",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
@@ -58,7 +58,7 @@
       "document": "cbom-keycloak-deployment-observed.cdx.json",
       "interface": "crypto:protocol:ing-tls",
       "attribute": "authentication",
-      "value": "ECDSA-P256-SHA256",
+      "value": "ECDSA-P-256-SHA-256",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
@@ -92,7 +92,7 @@
       "document": "cbom-keycloak-deployment-observed.cdx.json",
       "interface": "crypto:protocol:int-db",
       "attribute": "keyExchange",
-      "value": "X25519",
+      "value": "x25519",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
@@ -130,7 +130,7 @@
       "document": "cbom-keycloak-deployment-observed.cdx.json",
       "interface": "crypto:protocol:int-ldap",
       "attribute": "keyExchange",
-      "value": "secp384r1",
+      "value": "ECDHE-secp384r1",
       "family": "EC",
       "securityStrength": 192,
       "quantumVulnerable": true,
@@ -168,7 +168,7 @@
       "document": "cbom-keycloak-deployment-observed.cdx.json",
       "interface": "crypto:protocol:int-cache",
       "attribute": "keyExchange",
-      "value": "X25519",
+      "value": "x25519",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
@@ -255,7 +255,7 @@
       "document": "cbom-keycloak-deployment-observed.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authentication",
-      "value": "ES256",
+      "value": "ECDSA-P-256-SHA-256",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
@@ -269,7 +269,7 @@
       "document": "cbom-keycloak-deployment-observed.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authentication",
-      "value": "RS256",
+      "value": "RSA-PKCS1-1.5-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -297,7 +297,7 @@
       "document": "cbom-keycloak-deployment-observed.cdx.json",
       "interface": "service:svc-saml",
       "attribute": "authentication",
-      "value": "RSA-SHA256",
+      "value": "RSA-PKCS1-1.5-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -325,7 +325,7 @@
       "document": "cbom-keycloak-deployment-observed.cdx.json",
       "interface": "service:mgmt-admin",
       "attribute": "authentication",
-      "value": "RS256",
+      "value": "RSA-PKCS1-1.5-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,

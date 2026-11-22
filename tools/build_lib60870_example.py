@@ -82,9 +82,9 @@ def iface(ref, name, kind, pairs, state="enabled", refs=None):
 # Mbed TLS 3.6 default named groups for TLS 1.3 and ECDHE. lib60870 configures none of its own
 # (tls_mbedtls.c), and its own mbedtls_config.h for 3.6 is not used by the build (it holds an
 # #error line), so the Mbed TLS defaults apply. To be confirmed against the compiled configuration.
-GROUPS = ["X25519", "ECDH-P256", "ECDH-P384", "X448", "ECDH-P521", "ECDH-brainpoolP256r1",
-          "ECDH-brainpoolP384r1", "ECDH-brainpoolP512r1", "FFDHE-2048", "FFDHE-3072", "FFDHE-4096",
-          "FFDHE-6144", "FFDHE-8192"]
+GROUPS = ["x25519", "ECDH-P-256", "ECDH-P-384", "x448", "ECDH-P-521", "ECDH-brainpoolP256r1",
+          "ECDH-brainpoolP384r1", "ECDH-brainpoolP512r1", "FFDHE-ffdhe2048", "FFDHE-ffdhe3072", "FFDHE-ffdhe4096",
+          "FFDHE-ffdhe6144", "FFDHE-ffdhe8192"]
 
 NONE3 = [("keyExchange", "none"), ("encryption", "none"), ("authentication", "none"),
          ("implementationPurl", SUBJECT_PURL), ("keyStoreRef", "none")]
@@ -100,7 +100,7 @@ def interfaces():
             ("protocol", "TLS"), ("protocolVersion", "1.3"),
             ("endpointRole:client", "endpoint:peer"), ("endpointRole:server", "endpoint:embedding-application"),
             ("keyExchange", "peer-defined"), ("encryption", "peer-defined"), ("authentication", "deployment-defined"),
-            ("protocolVersionsSupported", ["1.2", "1.3"]), ("keyExchangeSupported", ["RSA"] + GROUPS),
+            ("protocolVersionsSupported", ["1.2", "1.3"]), ("keyExchangeSupported", ["RSA-PKCS1-1.5"] + GROUPS),
             ("negotiationControl", "Cipher suites through TLSConfiguration_addCipherSuite and "
                                    "_clearCipherSuiteList; minimum and maximum version through "
                                    "TLSConfiguration_setMinTlsVersion and _setMaxTlsVersion. The library has no "

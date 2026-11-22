@@ -2,7 +2,7 @@
   "policyFormat": "pkic.cbom.policy",
   "policyFormatVersion": "0.1",
   "policyId": "pkic.example.policy.edge-posture",
-  "version": "0.1",
+  "version": "0.2",
   "title": "Post-quantum posture of a connection, from both of its ends",
   "status": "illustrative",
   "$comment": "An example policy. It joins the two ends of each connection along peerInterface (deployment-disclosure I4, decision 0026) and, for each purpose, says whether the connection meets the target and, if not, which end limits it. Each end is described by its own operator's records: the configured record says what the end permits, and the observed record, where supplied, says what was negotiated. The classification and the targets are the readiness-gap policy's, so the two results can be read together. The evaluation method is implemented by evaluate_policy.py. The result points to every record it used by digest.",
@@ -45,7 +45,15 @@
         "rsa_pss_rsae_sha512",
         "rsa_pss_pss_sha256",
         "RSA-SHA384",
-        "RSA-SHA512"
+        "RSA-SHA512",
+        "RSA-PKCS1-1.5-SHA-256",
+        "RSA-PKCS1-1.5-SHA-384",
+        "RSA-PKCS1-1.5-SHA-512",
+        "RSA-PSS-SHA-256",
+        "RSA-PSS-SHA-384",
+        "RSA-PSS-SHA-512",
+        "RSA-OAEP-SHA-1-MGF1-SHA-1",
+        "RSA-OAEP-SHA-256-MGF1-SHA-256"
       ],
       "family": "RSA",
       "securityStrength": 112,
@@ -62,7 +70,8 @@
     },
     {
       "names": [
-        "ffdhe2048"
+        "ffdhe2048",
+        "FFDHE-ffdhe2048"
       ],
       "family": "FFDH",
       "securityStrength": 112,
@@ -70,7 +79,8 @@
     },
     {
       "names": [
-        "ffdhe3072"
+        "ffdhe3072",
+        "FFDHE-ffdhe3072"
       ],
       "family": "FFDH",
       "securityStrength": 128,
@@ -88,7 +98,9 @@
         "Ed25519",
         "EdDSA",
         "ed25519",
-        "ECDSA-SHA256"
+        "ECDSA-SHA256",
+        "ECDHE-secp256r1",
+        "ECDH"
       ],
       "family": "EC",
       "securityStrength": 128,
@@ -100,7 +112,9 @@
         "P-384",
         "ES384",
         "ecdsa_secp384r1_sha384",
-        "ECDSA-SHA384"
+        "ECDSA-SHA384",
+        "ECDHE-secp384r1",
+        "ECDSA-P-384-SHA-384"
       ],
       "family": "EC",
       "securityStrength": 192,
@@ -122,7 +136,9 @@
         "P-521",
         "ES512",
         "ecdsa_secp521r1_sha512",
-        "ECDSA-SHA512"
+        "ECDSA-SHA512",
+        "ECDHE-secp521r1",
+        "ECDSA-P-521-SHA-512"
       ],
       "family": "EC",
       "securityStrength": 256,
@@ -164,7 +180,9 @@
         "HMAC-SHA512",
         "HS256",
         "HS384",
-        "HS512"
+        "HS512",
+        "HMAC-SHA-256",
+        "HMAC-SHA-384"
       ],
       "family": "symmetric",
       "quantumVulnerable": false,
@@ -206,6 +224,12 @@
     "peer-not-found": "An interface names a far end that is not an interface in the document it points into."
   },
   "changelog": [
+    {
+      "version": "0.2",
+      "date": "2026-11-22",
+      "kind": "editorial",
+      "summary": "Adds the CycloneDX cryptography registry form of each name the examples now use (for example RSA-PKCS1-1.5-SHA-256 beside RS256, ECDHE-secp384r1 beside secp384r1), with the same classification. The earlier names are kept, so records that use them classify as before."
+    },
     {
       "version": "0.1",
       "date": "2026-11-01",

@@ -63,7 +63,7 @@ DESIGN = {
 # usage, zone, zonePath, conduitRef, keyProvider, configured values
 GATEWAY = {
     "tls-104": ("in-use", "station-bus", "crosses-zones", "sys:substation-gateway", "sys:enrolment-service",
-                [("protocolVersion", "1.2"), ("keyExchange", "RSA"), ("encryption", "AES-128-CBC"),
+                [("protocolVersion", "1.2"), ("keyExchange", "RSA-PKCS1-1.5"), ("encryption", "AES-128-CBC"),
                  ("authentication", "RSA-2048")]),
     "svc-104": ("disabled", "station-bus", None, None, None, []),
     "svc-101": ("not-connected", "station-bus", None, None, None, []),

@@ -176,9 +176,9 @@ def s2():
         iface("upd-fuota", "Firmware update over the air (LoRaWAN FUOTA)", "management", [
             ("protocol", "LoRaWAN FUOTA"), ("protocolVersion", "1.0.0"),
             ("endpointRole:client", "endpoint:sensor"), ("endpointRole:server", "endpoint:fuota-server"),
-            ("keyExchange", "none"), ("encryption", "AES-128-CTR"), ("authentication", "ECDSA-P256-SHA256"),
+            ("keyExchange", "none"), ("encryption", "AES-128-CTR"), ("authentication", "ECDSA-P-256-SHA-256"),
             ("protocolVersionsSupported", "1.0.0"), ("keyExchangeSupported", "none"),
-            ("authenticationSupported", "ECDSA-P256-SHA256"),
+            ("authenticationSupported", "ECDSA-P-256-SHA-256"),
             ("negotiationControl", "The firmware signature algorithm is fixed by the bootloader"),
             ("integrationConstraints", "Images arrive in fragments over multicast and are verified as a whole by "
                                        "the bootloader, so a larger post-quantum signature costs flash, not frames."),

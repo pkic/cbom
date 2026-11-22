@@ -159,27 +159,27 @@
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "RSA"
+              "value": "RSA-PKCS1-1.5"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "X25519"
+              "value": "x25519"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P384"
+              "value": "ECDH-P-384"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "X448"
+              "value": "x448"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P521"
+              "value": "ECDH-P-521"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
@@ -195,23 +195,23 @@
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "FFDHE-2048"
+              "value": "FFDHE-ffdhe2048"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "FFDHE-3072"
+              "value": "FFDHE-ffdhe3072"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "FFDHE-4096"
+              "value": "FFDHE-ffdhe4096"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "FFDHE-6144"
+              "value": "FFDHE-ffdhe6144"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "FFDHE-8192"
+              "value": "FFDHE-ffdhe8192"
             },
             {
               "name": "pkic:profile:negotiationControl",

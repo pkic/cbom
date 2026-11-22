@@ -16,7 +16,7 @@ From: Data Exposure; Publication 2, 11.6. Settled: the vendor states the data an
 carry for the product's own operation (credentials, keys, tokens, configuration); the operator states
 the conveyed payload in its own register. Left: the attribute itself, for example how long a
 credential stays valid, and the profile that requires it.
-Resolved in Release 1, 18 November 2026. The baseline v0.10 gains `intrinsicData` (I12) and `credentialLifetime` (I13) at MAY, with `credentialLifetime` asked for when `intrinsicData` is not `none`. Publication 2, 7.2 and 11.6.
+Resolved in Release 1, 18 November 2026. The baseline v0.10 gains `intrinsicData` (I12) and `credentialLifetime` (I13) at MAY, with `credentialLifetime` asked for when `intrinsicData` is not `none`. Publication 2, C.1 and 11.6.
 
 **R2-02 — Grace periods in the rules-file format and the validator.**
 From: Q15. Settled: a tightened rule takes effect after a grace period the profile recommends, and a
@@ -68,7 +68,7 @@ From: the IoT use case. Settled: the subject is a device model (Q62); a hard lim
 `integrationConstraints`; `updateSupportStatus`, `keyProvisioning` and `cryptoTerminationPoint`;
 values of `providerLocation` that fit devices; whether the physical attack surface is in scope; the
 worked interface.
-Resolved in Release 1, 18 November 2026. The IoT Device Estate profile v0.1 extends the change core, with two soil sensor records as worked examples. Publication 2, 8.2; Publication 4.
+Resolved in Release 1, 18 November 2026. The IoT Device Estate profile v0.1 extends the change core, with two soil sensor records as worked examples. Publication 2, 8.2; Publication 3, Chapter 16.
 
 **R2-10 — A transparency-service annex for shared CBOMs.**
 From: the Assurance use case. Settled: a digest is SHA-256 over the published file, byte for byte.
@@ -148,7 +148,7 @@ the note of `pqc-migration-ot#I3` in its next version, naming the literals `none
 From: the OT domain document, chapters 5 and 10. Decision: add `R-GOOSE`, tied to IEC 61850-8-1
 Amendment 1, and `R-SV`, tied to IEC 61850-9-2 Amendment 1. The session protocol that carries both is
 not a separate name: an interface names the message type it carries. Applied to the list in
-Publication 2, 7.3, and on the Terms page after Release 1 is tagged.
+Publication 2, C.2, and on the Terms page after Release 1 is tagged.
 
 **R2-18 — Checking that a system record lists every product interface.**
 From: the OT domain document, 8.3 (S2), tested in `drafts/ot-system/`. S2 asks a system record to
@@ -184,7 +184,7 @@ Keycloak's HTTP listener. Decision: the baseline v0.10 defines `terminatedBy` (I
 `refersToLocal` and the literals `workload` and `platform`. Deployment Disclosure v0.3 raises it to MUST on
 every interface but storage, and Service Disclosure v0.1 to SHOULD. IoT Device Estate's
 `cryptoTerminationPoint` stays as the product-level statement of what a device model allows.
-Publication 2, 7.2 and 8.2.
+Publication 2, C.1 and 8.2.
 
 
 **R2-22 — Keys held outside the record.**

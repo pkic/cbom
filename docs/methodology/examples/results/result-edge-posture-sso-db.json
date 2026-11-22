@@ -3,11 +3,11 @@
   "resultFormatVersion": "0.1",
   "policy": {
     "policyId": "pkic.example.policy.edge-posture",
-    "version": "0.1",
+    "version": "0.2",
     "file": "policy-edge-posture.policy.json",
     "digest": {
       "alg": "SHA-256",
-      "value": "ce2cd1fce6d4732ce552b8e79c24cc35e4aa23f7e517c31854b06e6383b86728"
+      "value": "268242a86a2bc0264a0356252d3f50c946616bd2d18ffa3ec004762853320cc8"
     }
   },
   "evaluationDate": "2026-10-25",
@@ -21,7 +21,7 @@
       "stage": "implemented",
       "digest": {
         "alg": "SHA-256",
-        "value": "ce1163d87b5dd45ea27fadcc3060b715231408bcf635c4261102f973077b64a9"
+        "value": "ed6d9b210f77f5817ba79dffd65ec7b21425ae5a2a978332ceff5c043c980edc"
       }
     },
     {
@@ -33,7 +33,7 @@
       "stage": "configured",
       "digest": {
         "alg": "SHA-256",
-        "value": "33032dcc89de040572d3b262910993526639f5ec40bf6eeef8e5063dbcaa7919"
+        "value": "948bf083ca9d4920aaa4f9c3bff746faab973c9fb446a65b35449a35ce35dc41"
       }
     },
     {
@@ -45,7 +45,7 @@
       "stage": "observed",
       "digest": {
         "alg": "SHA-256",
-        "value": "044bc1a2d8ffeba1b35fbb04c6cfa9be78610792441a98a0863fa1ee8f75b09a"
+        "value": "d235a61efd781bd491261b42c88cb6f423499addc4c4a0a9e8ad8a2a226a09de"
       }
     },
     {
@@ -57,7 +57,7 @@
       "stage": "configured",
       "digest": {
         "alg": "SHA-256",
-        "value": "697ee5c6a2dab26010cf36938742ce08a52fe78e5ee0be93d7372bb2a20e4820"
+        "value": "f7334a89de00be112132b4e417fab1c6eea7812367864fce34c15ae2d8c1b857"
       }
     }
   ],
@@ -85,7 +85,7 @@
           ],
           "permits": [
             "X25519MLKEM768",
-            "X25519"
+            "x25519"
           ],
           "observed": null,
           "permitsTarget": true
@@ -97,21 +97,21 @@
             "observed"
           ],
           "permits": [
-            "X25519",
-            "secp256r1",
-            "secp384r1",
-            "secp521r1",
-            "X448",
-            "ffdhe2048"
+            "x25519",
+            "ECDHE-secp256r1",
+            "ECDHE-secp384r1",
+            "ECDHE-secp521r1",
+            "x448",
+            "FFDHE-ffdhe2048"
           ],
           "observed": [
-            "X25519"
+            "x25519"
           ],
           "permitsTarget": false
         }
       ],
       "negotiated": [
-        "X25519"
+        "x25519"
       ],
       "limitedBy": "tag:example.org,2026:deployment/sso-prod#crypto:protocol:int-db",
       "productCapability": {

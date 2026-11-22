@@ -459,14 +459,14 @@ def product(hashes):
 # --------------------------------------------------------------------------- #
 ALGOS = {
     "x25519mlkem768": ("X25519MLKEM768", "kem"),
-    "x25519": ("X25519", "key-agree"), "secp256r1": ("secp256r1", "key-agree"),
-    "secp384r1": ("secp384r1", "key-agree"), "secp521r1": ("secp521r1", "key-agree"),
-    "x448": ("X448", "key-agree"), "ffdhe2048": ("ffdhe2048", "key-agree"),
+    "x25519": ("x25519", "key-agree"), "secp256r1": ("ECDHE-secp256r1", "key-agree"),
+    "secp384r1": ("ECDHE-secp384r1", "key-agree"), "secp521r1": ("ECDHE-secp521r1", "key-agree"),
+    "x448": ("x448", "key-agree"), "ffdhe2048": ("FFDHE-ffdhe2048", "key-agree"),
     "aes-256-gcm": ("AES-256-GCM", "ae"), "aes-128-gcm": ("AES-128-GCM", "ae"),
     "chacha20-poly1305": ("ChaCha20-Poly1305", "ae"),
-    "ecdsa-p256": ("ECDSA-P256-SHA256", "signature"), "rsa-2048": ("RSA-2048", "signature"),
-    "es256": ("ES256", "signature"), "rs256": ("RS256", "signature"),
-    "rsa-sha256": ("RSA-SHA256", "signature"),
+    "ecdsa-p256": ("ECDSA-P-256-SHA-256", "signature"), "rsa-2048": ("RSA-2048", "signature"),
+    "es256": ("ECDSA-P-256-SHA-256", "signature"), "rs256": ("RSA-PKCS1-1.5-SHA-256", "signature"),
+    "rsa-sha256": ("RSA-PKCS1-1.5-SHA-256", "signature"),
 }
 JDK_GROUPS = ["x25519", "secp256r1", "secp384r1", "secp521r1", "x448", "ffdhe2048"]
 TLS13_SUITES = ["aes-256-gcm", "aes-128-gcm", "chacha20-poly1305"]

@@ -99,7 +99,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:x25519",
-          "name": "X25519",
+          "name": "x25519",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -110,7 +110,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:secp384r1",
-          "name": "secp384r1",
+          "name": "ECDHE-secp384r1",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -143,7 +143,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:ecdsa-p256",
-          "name": "ECDSA-P256-SHA256",
+          "name": "ECDSA-P-256-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -165,7 +165,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:es256",
-          "name": "ES256",
+          "name": "ECDSA-P-256-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -176,7 +176,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:rs256",
-          "name": "RS256",
+          "name": "RSA-PKCS1-1.5-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -187,7 +187,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:rsa-sha256",
-          "name": "RSA-SHA256",
+          "name": "RSA-PKCS1-1.5-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -800,7 +800,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "ce1163d87b5dd45ea27fadcc3060b715231408bcf635c4261102f973077b64a9"
+          "content": "ed6d9b210f77f5817ba79dffd65ec7b21425ae5a2a978332ceff5c043c980edc"
         }
       ]
     },

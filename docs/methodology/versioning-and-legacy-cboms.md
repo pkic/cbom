@@ -17,7 +17,7 @@ separated. Three items each carry a version, and each changes independently.
 
 Conflating these axes is a common error. A CBOM may be current on one axis and older on
 another. A newly generated CBOM (a new content revision) may still be serialized in
-CycloneDX 1.7 (an older carrier) and evaluated against the baseline v0.9 (newer rules).
+CycloneDX 1.7 (an older carrier) and evaluated against the baseline v0.10 (newer rules).
 
 A conformance claim must reference all three. For example: "conforms to `interface-disclosure`
 v0.9, evaluated against a CycloneDX 2.0 CBOM, content revision 1." A claim that omits any of the
@@ -86,8 +86,8 @@ record from both. The rules are written once and see only that record.
 
 **The band changes the report, not the verdict.** The Keycloak product record is published twice
 with the same facts. `examples/legacy/cbom-keycloak-product-1.7.cdx.json` conforms to the same
-five profiles as the 2.0 record: interface-enumeration v0.3, the baseline v0.9, pqc-migration
-v0.8, pqc-migration-extended v0.2 and procurement v0.2. Its report opens with:
+five profiles as the 2.0 record: interface-enumeration v0.4, the baseline v0.10, pqc-migration
+v0.8, pqc-migration-extended v0.3 and procurement v0.2. Its report opens with:
 
 ```
 FORMAT  [warn] CycloneDX 1.7 accepted, profile tested against 2.0 (legacy -- warn)

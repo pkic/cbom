@@ -293,7 +293,7 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "HMAC-SHA256"
+              "value": "HMAC-SHA-256"
             },
             {
               "name": "pkic:profile:protocolVersionsSupported",
@@ -305,7 +305,7 @@
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "HMAC-SHA256"
+              "value": "HMAC-SHA-256"
             },
             {
               "name": "pkic:profile:authenticationSupported",
@@ -368,7 +368,7 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "HMAC-SHA256"
+              "value": "HMAC-SHA-256"
             },
             {
               "name": "pkic:profile:protocolVersionsSupported",
@@ -380,7 +380,7 @@
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "HMAC-SHA256"
+              "value": "HMAC-SHA-256"
             },
             {
               "name": "pkic:profile:authenticationSupported",
@@ -435,7 +435,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -443,7 +443,7 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
               "name": "pkic:profile:protocolVersionsSupported",
@@ -455,19 +455,19 @@
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P384"
+              "value": "ECDH-P-384"
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "ECDSA-P384-SHA384"
+              "value": "ECDSA-P-384-SHA-384"
             },
             {
               "name": "pkic:profile:negotiationControl",
@@ -530,7 +530,7 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
               "name": "pkic:profile:protocolVersionsSupported",
@@ -542,7 +542,7 @@
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
               "name": "pkic:profile:negotiationControl",
@@ -597,7 +597,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "MODP-2048"
+              "value": "FFDH-MODP-2048"
             },
             {
               "name": "pkic:profile:encryption",
@@ -613,11 +613,11 @@
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "MODP-2048"
+              "value": "FFDH-MODP-2048"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:authenticationSupported",
@@ -625,7 +625,7 @@
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
               "name": "pkic:profile:negotiationControl",
@@ -676,7 +676,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -684,7 +684,7 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
               "name": "pkic:profile:protocolVersionsSupported",
@@ -692,19 +692,19 @@
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P384"
+              "value": "ECDH-P-384"
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "ECDSA-P384-SHA384"
+              "value": "ECDSA-P-384-SHA-384"
             },
             {
               "name": "pkic:profile:negotiationControl",
@@ -755,7 +755,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -763,7 +763,7 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
               "name": "pkic:profile:protocolVersionsSupported",
@@ -775,19 +775,19 @@
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P384"
+              "value": "ECDH-P-384"
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "ECDSA-P384-SHA384"
+              "value": "ECDSA-P-384-SHA-384"
             },
             {
               "name": "pkic:profile:negotiationControl",
@@ -858,7 +858,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -866,7 +866,7 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
               "name": "pkic:profile:protocolVersionsSupported",
@@ -878,19 +878,19 @@
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:keyExchangeSupported",
-              "value": "ECDH-P384"
+              "value": "ECDH-P-384"
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
               "name": "pkic:profile:authenticationSupported",
-              "value": "ECDSA-P384-SHA384"
+              "value": "ECDSA-P-384-SHA-384"
             },
             {
               "name": "pkic:profile:negotiationControl",
