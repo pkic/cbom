@@ -211,6 +211,62 @@
           },
           "note": {
             "type": "string"
+          },
+          "graceUntil": {
+            "type": "string",
+            "format": "date",
+            "$comment": "A tightened rule's grace period ends on this date. Before it, a failure of the rule is reported and not counted. Set by the profile; a contract may set another."
+          },
+          "addMembers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "attribute",
+                "level",
+                "constraint"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[PIG][0-9]+\\.[0-9]+$"
+                },
+                "attribute": {
+                  "type": "string",
+                  "pattern": "^[a-z][A-Za-z0-9]*$"
+                },
+                "level": {
+                  "$ref": "#/definitions/level"
+                },
+                "constraint": {
+                  "$ref": "#/definitions/constraint"
+                },
+                "withholdable": {
+                  "type": "boolean"
+                },
+                "requiredWhen": {
+                  "$ref": "#/definitions/requiredWhen"
+                },
+                "note": {
+                  "type": "string"
+                },
+                "graceUntil": {
+                  "type": "string",
+                  "format": "date",
+                  "$comment": "A tightened rule's grace period ends on this date. Before it, a failure of the rule is reported and not counted. Set by the profile; a contract may set another."
+                },
+                "forKeys": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "$comment": "The member applies only to entries with these keys, such as a signing purpose."
+                }
+              }
+            },
+            "$comment": "Members a derived profile adds to a group it inherited. Asking for one more fact per key is a tightening; the new members carry the derived profile's tag."
           }
         }
       }
@@ -491,6 +547,27 @@
               }
             }
           }
+        },
+        "refersToLocal": {
+          "type": "object",
+          "properties": {
+            "literals": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "$comment": "The value is the bom-ref of another element of the same record, or one of the literals. A list value is checked element by element."
+        },
+        "inSubjectList": {
+          "type": "string",
+          "pattern": "^[a-z][A-Za-z0-9]*$",
+          "$comment": "The value is one of the values the record declares in the named attribute of its subject, such as a zone from the system's zones."
+        },
+        "coversCitedInterfaces": {
+          "const": true,
+          "$comment": "Every interface of every cited record supplied to the evaluator is the target of some correspondsTo in this record."
         }
       }
     },
@@ -522,6 +599,11 @@
         },
         "note": {
           "type": "string"
+        },
+        "graceUntil": {
+          "type": "string",
+          "format": "date",
+          "$comment": "A tightened rule's grace period ends on this date. Before it, a failure of the rule is reported and not counted. Set by the profile; a contract may set another."
         }
       }
     },
@@ -561,6 +643,11 @@
         },
         "note": {
           "type": "string"
+        },
+        "graceUntil": {
+          "type": "string",
+          "format": "date",
+          "$comment": "A tightened rule's grace period ends on this date. Before it, a failure of the rule is reported and not counted. Set by the profile; a contract may set another."
         }
       }
     },
@@ -634,6 +721,19 @@
               },
               "note": {
                 "type": "string"
+              },
+              "graceUntil": {
+                "type": "string",
+                "format": "date",
+                "$comment": "A tightened rule's grace period ends on this date. Before it, a failure of the rule is reported and not counted. Set by the profile; a contract may set another."
+              },
+              "forKeys": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "$comment": "The member applies only to entries with these keys, such as a signing purpose."
               }
             }
           }
@@ -713,6 +813,11 @@
         },
         "note": {
           "type": "string"
+        },
+        "graceUntil": {
+          "type": "string",
+          "format": "date",
+          "$comment": "A tightened rule's grace period ends on this date. Before it, a failure of the rule is reported and not counted. Set by the profile; a contract may set another."
         }
       }
     },

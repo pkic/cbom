@@ -11,7 +11,7 @@ points to the CBOMs; a CBOM never points to a result.
 Three evaluation methods are implemented, selected by the policy's 'method':
 
   algorithm-transition  classify each disclosed algorithm against a dated
-                        schedule (example: NIST IR 8547 initial public draft)
+                        schedule (example: NIST IR 8547, final)
   readiness-gap         join a product record, a configured record and an
                         observation along correspondsTo, and place each
                         interface and purpose in one gap class

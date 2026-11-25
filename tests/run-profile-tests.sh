@@ -299,10 +299,10 @@ else
 fi
 OUT="$("$PY" "$M/validate_cbom.py" "$TMP/cbom-1.5.json" "$BASE" --json 2>&1)"; RC=$?
 if [ "$RC" -eq 4 ] && printf '%s' "$OUT" | grep -q '"verdict": "refused"' \
-   && printf '%s' "$OUT" | grep -q '"assessed": false'; then
+   && printf '%s' "$OUT" | grep -q '"evaluated": false'; then
   ok "JSON reports refusal distinctly"
 else
-  bad "JSON reports refusal distinctly" "expected exit 4, verdict refused, assessed false"
+  bad "JSON reports refusal distinctly" "expected exit 4, verdict refused, evaluated false"
 fi
 
 # ------------------------------------------------------ derived PQC profile ---
@@ -813,7 +813,7 @@ RC=$?
 if [ "$RC" -eq 4 ] && "$PY" -c "
 import json,sys
 e=json.load(open(sys.argv[1]))['profiles'][0]
-sys.exit(0 if e['verdict']=='refused' and e['assessed'] is False and 'rules' not in e else 1)" "$TMP/claim-refused.json"; then
+sys.exit(0 if e['verdict']=='refused' and e['evaluated'] is False and 'rules' not in e else 1)" "$TMP/claim-refused.json"; then
   ok "a refused evaluation is refused in the claim, with no rule results"
 else
   bad "a refused evaluation is refused in the claim, with no rule results" "expected exit 4 and a refused entry carrying no rules, got exit $RC"
@@ -892,6 +892,18 @@ echo "Every example gets its expected verdicts"
 OUT="$("$PY" "$ROOT/tests/check-examples.py" 2>&1)"; RC=$?
 printf '%s\n' "$OUT" | tail -3 | sed 's/^/  /'
 if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else printf '%s\n' "$OUT" | grep FAIL -A2; failed=$((failed + 1)); fi
+
+echo
+echo "The example claim verifies against the product record"
+OUT="$("$PY" "$ROOT/tests/check-claim.py" 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else failed=$((failed + 1)); fi
+
+echo
+echo "Evaluator facilities added for Release 1"
+OUT="$("$PY" "$ROOT/tests/check-additions.py" 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else failed=$((failed + 1)); fi
 
 echo
 echo "Context documents the product record points to"

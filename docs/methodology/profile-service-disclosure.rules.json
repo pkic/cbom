@@ -1,0 +1,196 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile for a managed service, written by its provider. It extends the Interface Disclosure Baseline, narrowed to the subject type 'service' and the stages 'configured' and 'observed'. A service record cites the product records of the software it runs and joins each interface to the product interface it realises, as a deployment record does. It adds what a customer of a service needs and a deployment record does not carry: the regions covered, key custody on stores of customer data, and where the provider announces changes. The worked example is Keycloak 26.7.3 run as a managed identity service by an illustrative provider.",
+  "profileId": "pkic.example.service-disclosure",
+  "profileTag": "service-disclosure",
+  "title": "Service Disclosure (Example)",
+  "version": "0.1",
+  "objective": {
+    "consumer": "A customer, or an assessor acting for one, that relies on a service it does not run",
+    "decision": "Whether to rely on the service, and what to require of the provider in the contract",
+    "decisionOptions": [
+      "rely on the service as offered",
+      "rely on it with contractual requirements",
+      "do not rely on it"
+    ]
+  },
+  "scope": {
+    "$comment": "Narrows the base to running services, as configured or observed by the provider.",
+    "subjectTypes": [
+      "service"
+    ],
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured",
+      "observed"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.10",
+    "file": "profile-interface-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "overrides": [
+    {
+      "id": "interface-disclosure#I14",
+      "level": "SHOULD",
+      "note": "Raised from MAY: a customer needs to know whether the provider's ingress or the application holds the TLS keys of each customer-facing interface."
+    }
+  ],
+  "storageAbsenceVocabulary": [
+    "stores-no-customer-data"
+  ],
+  "keyCustodyVocabulary": [
+    "provider-managed",
+    "customer-managed",
+    "external"
+  ],
+  "regenerationTriggerVocabulary": [
+    "schedule",
+    "interface-change",
+    "schedule-and-interface-change"
+  ],
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Service names the regions the record describes",
+      "level": "MUST",
+      "constraint": {
+        "productAttribute": "serviceRegions"
+      },
+      "withholdable": false,
+      "note": "Part of the coverage statement. Where the cryptography differs between regions, the provider writes one record per group of regions."
+    },
+    {
+      "id": "P2",
+      "description": "Service declares at least one storage interface for customer data, or states why it has none",
+      "level": "MUST",
+      "constraint": {
+        "minInterfacesOfType": {
+          "interfaceType": "storage",
+          "min": 1
+        },
+        "orDeclaredAbsent": "storageInterfaceAbsence",
+        "absenceEnumRef": "storageAbsenceVocabulary"
+      },
+      "withholdable": false,
+      "note": "For most customers the store matters more than the session."
+    },
+    {
+      "id": "P3",
+      "description": "Service cites the records it builds on, each by BOM-Link and hash",
+      "level": "MUST",
+      "constraint": {
+        "citesDocuments": {
+          "min": 1,
+          "hashRequired": true
+        }
+      },
+      "withholdable": false,
+      "note": "The product records of the software it runs, and the records of the services beneath it."
+    },
+    {
+      "id": "P4",
+      "description": "Service states what makes the provider produce a new record",
+      "level": "MUST",
+      "constraint": {
+        "productAttribute": "regenerationTrigger",
+        "enumRef": "regenerationTriggerVocabulary"
+      },
+      "withholdable": false,
+      "note": "With the document timestamp and the change-notice pointer, a customer's policy can judge whether the record it holds is current."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "keyCustodySupported",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "keyCustodyVocabulary"
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "note": "The key-custody models a tenant can choose for this store."
+    },
+    {
+      "id": "I3",
+      "attribute": "keyCustody",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "keyCustodyVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "note": "The custody model a new tenant gets unless it chooses another. The present-state attribute behind keyCustodySupported (C12). A tenant's own choice is stated in its tenant record."
+    },
+    {
+      "id": "I2",
+      "attribute": "storageRegion",
+      "level": "SHOULD",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "note": "The regions where this store holds customer data."
+    }
+  ],
+  "referenceRules": [
+    {
+      "id": "R1",
+      "context": "change-notice",
+      "at": "document",
+      "level": "MUST",
+      "hashRequired": false,
+      "withholdable": false,
+      "note": "Where the provider announces changes to the service. The context kind is defined in the baseline. A service changes without a version number, so a customer needs this, with the document timestamp and the regeneration trigger (P4), to judge whether the record it holds is current."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "A maximum age for the record",
+      "reason": "Freshness is a policy matter (Release 1). The record supplies what a policy needs."
+    },
+    {
+      "item": "The customer's choice of key custody",
+      "reason": "A tenant fact. It belongs in the tenant record, which cites this one."
+    }
+  ],
+  "artifacts": {
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "examples/cbom-keycloak-service-restricted.cdx.json",
+    "nonConformingExample": "examples/cbom-keycloak-service-fail-custody.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-11-18",
+      "summary": "Initial version, built on Keycloak run as a managed service.",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Raised interface-disclosure#I14 'terminatedBy' to SHOULD (19 November 2026). No verdict changes."
+        }
+      ]
+    }
+  ]
+}

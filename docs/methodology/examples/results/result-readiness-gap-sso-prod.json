@@ -3,11 +3,11 @@
   "resultFormatVersion": "0.1",
   "policy": {
     "policyId": "pkic.example.policy.readiness-gap",
-    "version": "0.1",
+    "version": "0.2",
     "file": "policy-readiness-gap.policy.json",
     "digest": {
       "alg": "SHA-256",
-      "value": "649c21770410ff3a28766383916f582db3a8d86264db675a72978840a0e3f66c"
+      "value": "4b89166bf45d3dc338e292a247cb2683ca403234e417372c603945eae87bcd15"
     }
   },
   "evaluationDate": "2026-10-25",
@@ -21,7 +21,7 @@
       "stage": "implemented",
       "digest": {
         "alg": "SHA-256",
-        "value": "80b10b11705bc6425a371e307b5792f3d87e12bd4fca5349cb11bb4fae8b0929"
+        "value": "ed6d9b210f77f5817ba79dffd65ec7b21425ae5a2a978332ceff5c043c980edc"
       }
     },
     {
@@ -33,7 +33,7 @@
       "stage": "configured",
       "digest": {
         "alg": "SHA-256",
-        "value": "c9c39b69bb70e53d5f70dffe13833ab5c6f724656c66b499c467ac34aec64df3"
+        "value": "948bf083ca9d4920aaa4f9c3bff746faab973c9fb446a65b35449a35ce35dc41"
       }
     },
     {
@@ -45,7 +45,7 @@
       "stage": "observed",
       "digest": {
         "alg": "SHA-256",
-        "value": "7bea1c798a40a01464f58952a3ba344b80559953d6938ee8c3c3259c1211e0f5"
+        "value": "d235a61efd781bd491261b42c88cb6f423499addc4c4a0a9e8ad8a2a226a09de"
       }
     }
   ],
@@ -70,11 +70,11 @@
         "capability": null,
         "configured": [
           "X25519MLKEM768",
-          "X25519"
+          "x25519"
         ],
         "observed": [
           "X25519MLKEM768",
-          "X25519"
+          "x25519"
         ]
       },
       "class": "enabled-not-negotiated"
@@ -90,10 +90,10 @@
         "implemented": null,
         "capability": null,
         "configured": [
-          "ECDSA-P256-SHA256"
+          "ECDSA-P-256-SHA-256"
         ],
         "observed": [
-          "ECDSA-P256-SHA256"
+          "ECDSA-P-256-SHA-256"
         ]
       },
       "note": "no product record to say what the product can do",
@@ -120,15 +120,15 @@
           "peer-defined"
         ],
         "configured": [
-          "X25519",
-          "secp256r1",
-          "secp384r1",
-          "secp521r1",
-          "X448",
-          "ffdhe2048"
+          "x25519",
+          "ECDHE-secp256r1",
+          "ECDHE-secp384r1",
+          "ECDHE-secp521r1",
+          "x448",
+          "FFDHE-ffdhe2048"
         ],
         "observed": [
-          "X25519"
+          "x25519"
         ]
       },
       "productCapability": {
@@ -193,15 +193,15 @@
           "peer-defined"
         ],
         "configured": [
-          "X25519",
-          "secp256r1",
-          "secp384r1",
-          "secp521r1",
-          "X448",
-          "ffdhe2048"
+          "x25519",
+          "ECDHE-secp256r1",
+          "ECDHE-secp384r1",
+          "ECDHE-secp521r1",
+          "x448",
+          "FFDHE-ffdhe2048"
         ],
         "observed": [
-          "secp384r1"
+          "ECDHE-secp384r1"
         ]
       },
       "productCapability": {
@@ -254,7 +254,7 @@
       "purpose": "key-establishment",
       "evidence": {
         "implemented": [
-          "X25519"
+          "x25519"
         ],
         "capability": [
           "x25519",
@@ -263,18 +263,18 @@
           "secp521r1",
           "x448",
           "ffdhe2048",
-          "X25519"
+          "x25519"
         ],
         "configured": [
-          "X25519",
-          "secp256r1",
-          "secp384r1",
-          "secp521r1",
-          "X448",
-          "ffdhe2048"
+          "x25519",
+          "ECDHE-secp256r1",
+          "ECDHE-secp384r1",
+          "ECDHE-secp521r1",
+          "x448",
+          "FFDHE-ffdhe2048"
         ],
         "observed": [
-          "X25519"
+          "x25519"
         ]
       },
       "productCapability": {
@@ -370,7 +370,7 @@
       "purpose": "key-establishment",
       "evidence": {
         "implemented": [
-          "X25519"
+          "x25519"
         ],
         "capability": [
           "x25519",
@@ -379,7 +379,7 @@
           "secp521r1",
           "x448",
           "ffdhe2048",
-          "X25519"
+          "x25519"
         ],
         "configured": [
           "none"
@@ -432,9 +432,9 @@
           "none"
         ],
         "capability": [
-          "RSA-OAEP",
-          "RSA-OAEP-256",
-          "ECDH-ES",
+          "RSA-OAEP-SHA-1-MGF1-SHA-1",
+          "RSA-OAEP-SHA-256-MGF1-SHA-256",
+          "ECDH",
           "none"
         ],
         "configured": [
@@ -455,30 +455,31 @@
       "purpose": "entity-authentication",
       "evidence": {
         "implemented": [
-          "RS256"
+          "RSA-PKCS1-1.5-SHA-256"
         ],
         "capability": [
-          "RS256",
-          "RS384",
-          "RS512",
-          "PS256",
-          "PS384",
-          "PS512",
-          "ES256",
-          "ES384",
-          "ES512",
-          "EdDSA",
-          "HS256",
-          "HS384",
-          "HS512",
-          "RS256"
+          "RSA-PKCS1-1.5-SHA-256",
+          "RSA-PKCS1-1.5-SHA-384",
+          "RSA-PKCS1-1.5-SHA-512",
+          "RSA-PSS-SHA-256",
+          "RSA-PSS-SHA-384",
+          "RSA-PSS-SHA-512",
+          "ECDSA-P-256-SHA-256",
+          "ECDSA-P-384-SHA-384",
+          "ECDSA-P-521-SHA-512",
+          "Ed25519",
+          "Ed448",
+          "HMAC-SHA-256",
+          "HMAC-SHA-384",
+          "HMAC-SHA-512",
+          "RSA-PKCS1-1.5-SHA-256"
         ],
         "configured": [
-          "ES256"
+          "ECDSA-P-256-SHA-256"
         ],
         "observed": [
-          "ES256",
-          "RS256"
+          "ECDSA-P-256-SHA-256",
+          "RSA-PKCS1-1.5-SHA-256"
         ]
       },
       "productCapability": {
@@ -521,19 +522,19 @@
       "purpose": "entity-authentication",
       "evidence": {
         "implemented": [
-          "RSA-SHA256"
+          "RSA-PKCS1-1.5-SHA-256"
         ],
         "capability": [
-          "RSA-SHA256",
-          "RSA-SHA512",
-          "ECDSA-SHA256",
-          "RSA-SHA256"
+          "RSA-PKCS1-1.5-SHA-256",
+          "RSA-PKCS1-1.5-SHA-512",
+          "ECDSA-SHA-256",
+          "RSA-PKCS1-1.5-SHA-256"
         ],
         "configured": [
-          "RSA-SHA256"
+          "RSA-PKCS1-1.5-SHA-256"
         ],
         "observed": [
-          "RSA-SHA256"
+          "RSA-PKCS1-1.5-SHA-256"
         ]
       },
       "productCapability": {
@@ -575,20 +576,21 @@
       "purpose": "entity-authentication",
       "evidence": {
         "implemented": [
-          "RS256"
+          "RSA-PKCS1-1.5-SHA-256"
         ],
         "capability": [
-          "RS256",
-          "ES256",
-          "PS256",
-          "EdDSA",
-          "RS256"
+          "RSA-PKCS1-1.5-SHA-256",
+          "ECDSA-P-256-SHA-256",
+          "RSA-PSS-SHA-256",
+          "Ed25519",
+          "Ed448",
+          "RSA-PKCS1-1.5-SHA-256"
         ],
         "configured": [
-          "RS256"
+          "RSA-PKCS1-1.5-SHA-256"
         ],
         "observed": [
-          "RS256"
+          "RSA-PKCS1-1.5-SHA-256"
         ]
       },
       "productCapability": {
@@ -657,12 +659,12 @@
           "peer-defined"
         ],
         "configured": [
-          "X25519",
-          "secp256r1",
-          "secp384r1",
-          "secp521r1",
-          "X448",
-          "ffdhe2048"
+          "x25519",
+          "ECDHE-secp256r1",
+          "ECDHE-secp384r1",
+          "ECDHE-secp521r1",
+          "x448",
+          "FFDHE-ffdhe2048"
         ],
         "observed": null
       },
@@ -717,8 +719,8 @@
           "none"
         ],
         "capability": [
-          "RSA-OAEP",
-          "ECDH-ES",
+          "RSA-OAEP-SHA-1-MGF1-SHA-1",
+          "ECDH",
           "none"
         ],
         "configured": [
@@ -740,14 +742,15 @@
           "peer-defined"
         ],
         "capability": [
-          "RS256",
-          "PS256",
-          "ES256",
-          "EdDSA",
+          "RSA-PKCS1-1.5-SHA-256",
+          "RSA-PSS-SHA-256",
+          "ECDSA-P-256-SHA-256",
+          "Ed25519",
+          "Ed448",
           "peer-defined"
         ],
         "configured": [
-          "RS256"
+          "RSA-PKCS1-1.5-SHA-256"
         ],
         "observed": null
       },
@@ -767,7 +770,7 @@
       "purpose": "key-establishment",
       "evidence": {
         "implemented": [
-          "X25519"
+          "x25519"
         ],
         "capability": [
           "x25519",
@@ -776,7 +779,7 @@
           "secp521r1",
           "x448",
           "ffdhe2048",
-          "X25519"
+          "x25519"
         ],
         "configured": null,
         "observed": null

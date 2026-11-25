@@ -25,25 +25,25 @@ nav: uc-assurance
   <div class="crumb">GROUP</div>
   <h1>Assurance: a reader relies on the document as evidence</h1>
   <p class="lead">In these use cases, the reader is an auditor, an assessor or a regulator. The reader did not produce the document, cannot ask follow-up questions, and has to rely on it as evidence. The cryptographic facts are usually the disclosure facts. What changes is what the document has to show about itself: who made it, when, from what, whether it has been altered since, and whether it is still current.</p>
-  <div class="banner">Proposed in October 2026 as an amendment to draft decision 0023, which defined the first two groups. Not yet settled.</div>
+  <div class="banner">This group was proposed in October 2026 and settled provisionally on 11 November 2026.</div>
   <div class="banner warn">This is the least settled of the four groups. The working group may find that its requirements belong on the conformance claim, which any profile can carry, rather than in profiles of their own. The first worked example will show which.</div>
 
   <h2>What the group shares</h2>
   <p>In this group, provenance and freshness matter most. Provenance is who produced the document and from what. Freshness is whether it is still current. A reported position only means something to an external reader if it says when it was produced and from what. That makes the lifecycle stage and the date of each statement as important as the statement itself. An assurance reader also needs to know that the document it holds is the one that was evaluated, and that nothing has replaced it.</p>
-  <p>The methodology already provides part of this. A conformance claim is bound to one document by the document's digest, and it lists each profile separately (decision 0015). A claim can also be re-checked. Three of the open points are now settled provisionally. The publisher signs a profile, and a claim records its hash. Each profile decides whether a supplier may declare its own conformance. And a claim stays true about the revision it names after a newer one appears. One point is still open: how a digest is computed, so that two producers get the same value.</p>
-  <p>The consolidated baseline (decision 0025) adds two pieces. First, judgements made after a record is written point to the record by digest, and a record never points to them. A conformance claim and a policy result both work this way. Second, the baseline names four kinds of context that assurance profiles are expected to require: <code>code-analysis</code>, <code>protocol-testing</code> (the CycloneDX 2.0 <code>test-report</code> reference type), <code>build-provenance</code> (an SLSA or Sigstore attestation) and <code>platform-assessment</code>. No published profile requires them yet. See <a href="../methodology/context.html">Context Pointers</a>.</p>
+  <p>The methodology already provides part of this. A conformance claim is bound to one document by the document's digest, and it lists each profile separately. A claim can also be verified. Four further points have a provisional answer. The publisher signs a profile, and a claim records its hash. Each profile decides whether a supplier may declare its own conformance. A claim stays true about the revision it names after a newer one appears. And a digest is SHA-256 over the published file, byte for byte, so that two producers get the same value.</p>
+  <p>The consolidated baseline adds two pieces. First, judgements made after a record is written point to the record by digest, and a record never points to them. A conformance claim and a policy result both work this way. Second, the baseline names four kinds of context that assurance profiles are expected to require: <code>code-analysis</code>, <code>protocol-testing</code> (the CycloneDX 2.0 <code>test-report</code> reference type), <code>build-provenance</code> (an SLSA or Sigstore attestation) and <code>platform-assessment</code>. No published profile requires them yet. See <a href="../methodology/context.html">Context Pointers</a>.</p>
   <p>One document can serve both the disclosure and the assurance use cases. This is because an assurance profile adds no new cryptographic facts. It adds requirements on the document's provenance and on its conformance claim.</p>
 
-  <h2>Questions this group owns</h2>
+  <h2>Questions this group answers</h2>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th>Question</th><th>Why it belongs to this group</th></tr></thead>
+    <thead><tr><th>Question and provisional position</th></tr></thead>
     <tbody>
-      <tr><td>Q14</td><td>Whether a supplier may declare its own conformance, or someone else has to check it. <em>Settled provisionally: each profile decides, and a self-declared claim says so.</em></td></tr>
-      <tr><td>Q29</td><td>Whether published profiles are signed, or identified by fingerprint. <em>Settled provisionally: both. The publisher signs, and a claim records the hash.</em></td></tr>
-      <tr><td>Q60</td><td>What happens to a claim when the document it is bound to is superseded. <em>Settled provisionally: nothing. Freshness is a policy decision.</em></td></tr>
-      <tr><td>Q44</td><td>Whether a conforming CBOM is proposed as evidence in readiness assessments. <em>Settled provisionally: yes, as an informal offer to the maintainers of such models.</em></td></tr>
-      <tr><td>Discussions #18 and #37</td><td>How a digest is computed so that two producers agree, and whether an informative annex should describe transparency services for shared CBOMs</td></tr>
+      <tr><td>Whether a supplier may declare its own conformance, or someone else has to check it. <em>Provisional position: each profile decides, and a self-declared claim says so.</em></td></tr>
+      <tr><td>Whether published profiles are signed, or identified by fingerprint. <em>Provisional position: both. The publisher signs, and a claim records the hash.</em></td></tr>
+      <tr><td>What happens to a claim when the document it is bound to is superseded. <em>Provisional position: nothing. Freshness is a policy decision.</em></td></tr>
+      <tr><td>Whether a conforming CBOM is proposed as evidence in readiness assessments. <em>Provisional position: yes, as an informal offer to the maintainers of such models.</em></td></tr>
+      <tr><td>How a digest is computed so that two producers agree. <em>Provisional position: SHA-256 over the published file, byte for byte, with no canonicalisation. This is what the reference validator does. A transparency-service annex is not part of Release 1.</em></td></tr>
     </tbody>
   </table>
   </div>
@@ -54,15 +54,15 @@ nav: uc-assurance
   <h2>The use cases in this group</h2>
 
   <h3 id="compliance">Regulatory and compliance reporting</h3>
-  <p>An organization must demonstrate its cryptographic position against a framework such as the EU Cyber Resilience Act, NIS2, the BSI technical guidelines, or a national directive. The consumer is an auditor or regulator who did not generate the data and cannot ask follow-up questions of the system.</p>
-  <p>The cryptographic facts are largely the disclosure baseline's. A profile encodes what a given framework expects, so that conformance can be evidenced by a dated artifact that an auditor can re-check. Because the reader is external, provenance and lifecycle stage carry more weight than usual. A reported position only means something if it says when it was produced and from what. A jurisdiction-specific profile also lets a global vendor satisfy the requirement once and report against it in several places.</p>
+  <p>An organisation must demonstrate its cryptographic position against a framework such as the EU Cyber Resilience Act, NIS2, the BSI technical guidelines, or a national directive. The consumer is an auditor or regulator who did not generate the data and cannot ask follow-up questions of the system.</p>
+  <p>The cryptographic facts are largely the disclosure baseline's. A profile encodes what a given framework expects, so that conformance can be evidenced by a dated artefact that an auditor can verify. Because the reader is external, provenance and lifecycle stage carry more weight than usual. A reported position only means something if it says when it was produced and from what. A jurisdiction-specific profile also lets a global vendor satisfy the requirement once and report against it in several places.</p>
 
   <h3 id="certification-evidence">Certification and validation evidence</h3>
   <p>An evaluator or certification body checks a product against a scheme such as FIPS 140-3 module validation, Common Criteria or IEC 62443-4-2, and decides whether the cryptography a CBOM describes matches what was evaluated. A buyer asks the same question when it relies on a supplier's claim of validation. The cryptographic facts already exist: the module validation attributes of the PQC migration profile, which CycloneDX 2.0 carries natively in <code>certifications[]</code>, together with product certification. What matters for evidence is whether the document is bound to the version and configuration that were evaluated, and whether it still is.</p>
   <p><strong>Proposed.</strong></p>
 
   <h3 id="readiness-evidence">Readiness assessment evidence</h3>
-  <p>An assessor scores an organization against a readiness or maturity model, or against a national migration roadmap, and decides what level or status to record. A conforming CBOM could serve as evidence for some of the criteria, provided the assessor can tell when and from what it was produced. The working group will offer this to the owners of such models informally. The decision to accept it is theirs.</p>
+  <p>An assessor scores an organisation against a readiness or maturity model, or against a national migration roadmap, and decides what level or status to record. A conforming CBOM could serve as evidence for some of the criteria, provided the assessor can tell when and from what it was produced. The working group will offer this to the owners of such models informally. The decision to accept it is theirs.</p>
   <p><strong>Proposed.</strong></p>
 
   <div class="pagenav">

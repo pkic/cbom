@@ -1,6 +1,6 @@
 # Profile-to-format mapping: CycloneDX and SPDX (Keycloak example)
 
-> **Status:** Illustrative. Part of the consolidated baseline of 25 October 2026 (decision 0025).
+> **Status:** Illustrative. Part of the consolidated baseline of 25 October 2026.
 > The target carrier is **CycloneDX 2.0**, pinned to `CycloneDX/specification` branch `2.0-dev`,
 > commit `76f185c` (23 October 2026). Ecma is expected to ratify the release in December 2026.
 > The pinned schema is in `tests/schemas/cyclonedx-2.0/` in the repository. When 2.0 is
@@ -48,8 +48,7 @@ Four considerations shape the mapping:
 4. CycloneDX 2.0 uses two of our words for its own concepts. Its root `profiles` element holds
    reusable data and threat characterisations, and its blueprint model defines an `interface`
    with types such as `rest` and `cli`. Neither is the concept the PKIC CBOM profiles use. We write **"PKIC CBOM profile"**
-   and **"cryptographic interface"** wherever the CycloneDX concept could be meant
-   (decision 0021).
+   and **"cryptographic interface"** wherever the CycloneDX concept could be meant.
 
 ## Where the parts of a document sit
 
@@ -114,7 +113,7 @@ native object for the set of interfaces, so the count is derived.
 ## Document-level rule mapping
 
 Rule ids are local to the profile that declares them. `interface-disclosure#P1` is the
-baseline's P1, and `procurement#P5` is the procurement profile's P5.
+baseline's P1, and `procurement#P1` is the procurement profile's P1.
 
 | Rule | What it requires | CycloneDX 2.0 | CycloneDX 1.6 / 1.7 (legacy) | SPDX 3.0.1 |
 |---|---|---|---|---|
@@ -126,9 +125,9 @@ baseline's P1, and `procurement#P5` is the procurement profile's P5.
 | interface-disclosure#P6 | One lifecycle stage per document | `metadata.lifecycles[].phase`: `build` → implemented, `operations` → configured, `discovery` → observed, `design` → intended. A per-interface `pkic:profile:lifecycleStage`, where present, must agree | `metadata.lifecycles[].phase`, the same values | **unresolved** |
 | deployment-disclosure#P1 | Cites the documents the record builds on, each by BOM-Link and SHA-256 | `externalReferences[]` at document level with `type: "bom"`, property `pkic:profile:context = cited-document`, `url` a BOM-Link `urn:cdx:<serial>/<version>`, and `hashes` with SHA-256. See [Joins across documents](#joins-across-documents) | the same | not mapped |
 | pqc-migration#P1 | At least one implementing library identified (SHOULD) | count of `type: "library"` components with a package URL in `identifiers[]` | count of `library` components with `purl` | **unresolved** |
-| pqc-migration-extended#P1 and procurement#P5 | A storage interface, or a stated reason for none | count of interfaces with `interfaceType = storage`; otherwise the subject property `pkic:profile:storageInterfaceAbsence` | the same, on `metadata.component` | **unresolved** |
+| pqc-migration-extended#P1 and procurement#P1 | A storage interface, or a stated reason for none | count of interfaces with `interfaceType = storage`; otherwise the subject property `pkic:profile:storageInterfaceAbsence` | the same, on `metadata.component` | **unresolved** |
 | pqc-migration-extended#P2 | Product certification scheme (SHOULD) | `inventories[0].subject.certifications[]`: the first entry's `standard`. The validator reads "Common Criteria" (or "ISO/IEC 15408") as `common-criteria` and "EUCC" as `eucc`; any other text is read lower-cased and must be a value of `productCertificationVocabulary`. `none` is the subject property `pkic:profile:productCertificationScheme`, because `certifications[]` cannot state an absence | property `pkic:profile:productCertificationScheme` on `metadata.component` | **unresolved** |
-| procurement#P6 | Coverage is `all` or `all-external` | as interface-disclosure#P4, with the narrower vocabulary | as interface-disclosure#P4 | **unresolved** |
+| procurement#P2 | Coverage is `all` or `all-external` | as interface-disclosure#P4, with the narrower vocabulary | as interface-disclosure#P4 | **unresolved** |
 
 The Keycloak product record states coverage `all-external` as a property beside a `complete`
 composition. The observed deployment record states `partial`.
@@ -313,7 +312,7 @@ record points to (`deployment-disclosure#R3`, context kind `data-register`).
 
 One document describes one subject at one stage. The vendor writes the product record
 (`implemented`). The operator writes deployment records (`configured`, `observed`). The records
-are joined, not merged (decision 0025, generalising decision 0020).
+are joined, not merged, in the same way that a CBOM and its vulnerability statements are joined.
 
 | What | CycloneDX 2.0 | CycloneDX 1.6 / 1.7 (legacy) | Convention |
 |---|---|---|---|
@@ -399,8 +398,7 @@ be read with.
 
 - **`risks`.** CycloneDX 2.0 adds a root risk register with status, owner, responses and target
   dates. These are judgements, not product facts. The validator ignores `risks` for
-  conformance, and a supplier's product record should not contain them (decisions 0002 and
-  0007).
+  conformance, and a supplier's product record should not contain them.
 - **CycloneDX `profiles`.** These hold reusable data and threat characterisations. They are not
   PKIC CBOM profiles.
 - **CycloneDX perspectives.** A perspective lists JSONPath expressions into a document, each
@@ -428,7 +426,7 @@ Three ways out were visible:
    encoded so that several interfaces can be distinguished within it;
 3. accept that product-level rules cannot be evaluated from the SPDX side, and say so.
 
-**Decision 0016 takes the third, and the rows stay unresolved deliberately.** The first two would
+**The methodology takes the third option, and the rows stay unresolved on purpose.** The first two would
 have the working group invent something inside a format it does not own: a modelling convention
 SPDX has not adopted, or an encoding inside an extension point. The result would be documents
 that only our tools can read. That is the fragmentation the methodology exists to prevent.
@@ -438,14 +436,14 @@ For SPDX in this arrangement it sets `productRules: false`, and each kind of rul
 evaluable adds a line to the claim's `notAsserted` list. So the person who decides whether to
 accept a submission sees the bound, not only the person who implements the mapping.
 
-The rows added since decision 0016 are marked **not mapped**: the deployment profile's citations,
+Rows added since that choice was made are marked **not mapped**: the deployment profile's citations,
 `correspondsTo` and observation attributes, and the reference rules. SPDX 3 is not a target
 carrier, so the working group has not mapped them.
 
 The summary stands. The claim that one PKIC CBOM profile can be expressed in two formats holds
 for the per-interface attributes and not for the document-level rules. If SPDX's cryptographic
-modelling grows a structure that carries interfaces as distinct elements, decision 0016 is
-superseded, and `CARRIER_CAPABILITY` in the validator is the single table that changes. Settling
+modelling grows a structure that carries interfaces as distinct elements, this choice is
+revisited, and `CARRIER_CAPABILITY` in the validator is the single table that changes. Settling
 that still needs a contributor who works with SPDX 3.x at field level.
 
 ## Interpretation of the columns

@@ -1,7 +1,7 @@
 {
   "specFormat": "CycloneDX",
   "specVersion": "2.0",
-  "$comment": "EXAMPLE CBOM, lifecycle stage 'configured'. Example Org's production PostgreSQL cluster, the database Keycloak's int-db interface connects to, recorded by the database team from its own configuration repository. Illustrative values. The server permits the hybrid group X25519MLKEM768 (PostgreSQL 18 ssl_groups, OpenSSL 3.5). The TLS interface names the client end of the connection with peerInterface: Keycloak's int-db interface in the sso-prod configured record, which this record cites by hash. Administration runs through the platform's automation, so there is no administrative listener. PostgreSQL publishes no CBOM, so the interface states 'no-product-document' and names its library here. Conforms to deployment-disclosure v0.2.",
+  "$comment": "EXAMPLE CBOM, lifecycle stage 'configured'. Example Org's production PostgreSQL cluster, the database Keycloak's int-db interface connects to, recorded by the database team from its own configuration repository. Illustrative values. The server permits the hybrid group X25519MLKEM768 (PostgreSQL 18 ssl_groups, OpenSSL 3.5). The TLS interface names the client end of the connection with peerInterface: Keycloak's int-db interface in the sso-prod configured record, which this record cites by hash. Administration runs through the platform's automation, so there is no administrative listener. PostgreSQL publishes no CBOM, so the interface states 'no-product-document' and names its library here. Conforms to deployment-disclosure v0.3.",
   "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-72637400db01",
   "version": 1,
   "metadata": {
@@ -107,7 +107,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:x25519",
-          "name": "X25519",
+          "name": "x25519",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -220,6 +220,10 @@
             {
               "name": "pkic:profile:peerInterface",
               "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#crypto:protocol:int-db"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         }
@@ -263,7 +267,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "c9c39b69bb70e53d5f70dffe13833ab5c6f724656c66b499c467ac34aec64df3"
+          "content": "948bf083ca9d4920aaa4f9c3bff746faab973c9fb446a65b35449a35ce35dc41"
         }
       ]
     },

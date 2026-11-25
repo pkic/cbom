@@ -1,0 +1,456 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "EXAMPLE CBOM, lifecycle stage 'implemented'. lib60870 v2.4.1 built with Mbed TLS 3.6, described by the working group from the project's public source. Real values; not built, and not reviewed by the maintainers.",
+  "serialNumber": "urn:uuid:60870a1e-0b6c-4f2e-9d1a-160870000001",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-17T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+      "url": [
+        "https://pkic.org"
+      ]
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "library",
+        "bom-ref": "lib:lib60870",
+        "name": "lib60870",
+        "version": "2.4.1",
+        "licenses": [
+          {
+            "license": {
+              "id": "GPL-3.0-only"
+            }
+          }
+        ],
+        "description": "Open-source IEC 60870-5-101 and IEC 60870-5-104 library (lib60870-C), with TLS after IEC 62351-3, built with Mbed TLS 3.6. Described from its public source by the working group, not by its maintainers.",
+        "properties": [
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          },
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "product"
+          },
+          {
+            "name": "pkic:profile:managementInterfaceAbsence",
+            "value": "not-applicable-to-subject"
+          },
+          {
+            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "value": "not-published"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:github/mz-automation/lib60870@v2.4.1"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://pkic.org"
+                }
+              ]
+            }
+          },
+          {
+            "bom-ref": "party:maintainer",
+            "roles": [
+              {
+                "role": "supplier"
+              }
+            ],
+            "organization": {
+              "name": "MZ Automation GmbH"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:mbedtls",
+          "name": "Mbed TLS",
+          "version": "3.6.8",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:github/mbed-tls/mbedtls@mbedtls-3.6.8"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "tls-104",
+          "name": "TLS for IEC 60870-5-104 (IEC 62351-3)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:peer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:embedding-application"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "peer-defined"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "peer-defined"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.2"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "RSA-PKCS1-1.5"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "x25519"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-P-256"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-P-384"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "x448"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-P-521"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-brainpoolP256r1"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-brainpoolP384r1"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-brainpoolP512r1"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "FFDHE-ffdhe2048"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "FFDHE-ffdhe3072"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "FFDHE-ffdhe4096"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "FFDHE-ffdhe6144"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "FFDHE-ffdhe8192"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Cipher suites through TLSConfiguration_addCipherSuite and _clearCipherSuiteList; minimum and maximum version through TLSConfiguration_setMinTlsVersion and _setMaxTlsVersion. The library has no function for named groups or signature schemes."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Default cipher suites include TLS_RSA_WITH_AES_128_CBC_SHA256, RSA key transport without forward secrecy, which IEC 62351-4:2018 makes mandatory."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Default minimum TLS version 1.2, no maximum set."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Default maximum certificate size 8192 bytes (TLSConfiguration_setMaxCertificateSize)."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Default minimum key length 1024 bits (TLSConfiguration_setMinimumKeyLength)."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "TLS 1.2 renegotiation enabled, legacy renegotiation allowed; session resumption on, with a 6-hour interval."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Integrated with Mbed TLS 2.28 and 3.6. The README names only 2.28, whose support ended at the end of 2024. The CMake build takes 2.28 when both are present; the Makefile takes 3.6."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "out-of-band"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "documentation",
+              "url": "https://github.com/mz-automation/lib60870/blob/v2.4.1/lib60870-C/src/hal/inc/tls_config.h",
+              "comment": "Where the application sets its certificate, key, CA certificates, CRLs, cipher suites and TLS versions.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "configuration-guidance"
+                },
+                {
+                  "name": "pkic:profile:accessProtocol",
+                  "value": "web-page"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "svc-104",
+          "name": "IEC 60870-5-104 without TLS",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "IEC 60870-5-104"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2006"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:peer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:embedding-application"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:implementationPurl",
+              "value": "pkg:github/mz-automation/lib60870@v2.4.1"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Secure authentication (IEC 60870-5-7:2013, the application-layer authentication of IEC 62351-5) is a commercial add-on. The open-source library holds only the integration code for it."
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "svc-101",
+          "name": "IEC 60870-5-101, serial",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "IEC 60870-5-101"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2003"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:peer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:embedding-application"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:implementationPurl",
+              "value": "pkg:github/mz-automation/lib60870@v2.4.1"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Secure authentication (IEC 60870-5-7:2013, the application-layer authentication of IEC 62351-5) is a commercial add-on. The open-source library holds only the integration code for it."
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "lib:lib60870",
+      "dependsOn": [
+        "lib:mbedtls"
+      ]
+    },
+    {
+      "ref": "lib:mbedtls",
+      "provides": [
+        "tls-104"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:60870a1e-0b6c-4f2e-9d1a-1608700000b0/1",
+      "comment": "Companion SBOM: examples/context/lib60870-2.4.1-sbom.cdx.json.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "sbom"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0ffb8c36215cb4ca53d631a41952d95a01b7d53af8581970af8747f33251fd12"
+        }
+      ]
+    },
+    {
+      "type": "advisories",
+      "url": "https://github.com/mz-automation/lib60870/security/advisories",
+      "comment": "GitHub security advisories for lib60870.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "advisories"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    },
+    {
+      "type": "security-contact",
+      "url": "https://github.com/mz-automation/lib60870/security/policy",
+      "comment": "The project's security policy.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "security-contact"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    }
+  ]
+}

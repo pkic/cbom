@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>CBOM Tabletop Live</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+/* Layout: a control room for a tabletop exercise. Facilitator console, phone card stack, projector wall. */
+:root{
+  --bg:#eef2f4; --surface:#ffffff; --sunk:#e3e9ed; --ink:#14212b; --muted:#566673; --line:#cdd6dd;
+  --accent:#0b5c73; --accent-ink:#ffffff; --signal:#b9410f; --signal-soft:#fbe9df; --ok:#2c7a4b; --ok-soft:#e1f1e7;
+  --g-d:#2563a8; --g-cp:#0f7b6c; --g-o:#946200; --g-a:#7a3f9e; --g-x:#6b7680;
+  --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f171d; --surface:#17222a; --sunk:#1f2c35; --ink:#e4ecf1; --muted:#97a8b4; --line:#2e3e49;
+  --accent:#5fb7cf; --accent-ink:#06222b; --signal:#f08a52; --signal-soft:#3a2219; --ok:#6cc792; --ok-soft:#173326;
+  --g-d:#7aa9e6; --g-cp:#4fc3b0; --g-o:#e0b24f; --g-a:#c49be0; --g-x:#9aa6b0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f171d; --surface:#17222a; --sunk:#1f2c35; --ink:#e4ecf1; --muted:#97a8b4; --line:#2e3e49;
+  --accent:#5fb7cf; --accent-ink:#06222b; --signal:#f08a52; --signal-soft:#3a2219; --ok:#6cc792; --ok-soft:#173326;
+  --g-d:#7aa9e6; --g-cp:#4fc3b0; --g-o:#e0b24f; --g-a:#c49be0; --g-x:#9aa6b0; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:1.9rem;font-weight:700}h2{font-size:1.35rem;font-weight:600}h3{font-size:1.05rem;font-weight:600}
+p{margin:0}
+.lbl{font:600 .7rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono,code{font-family:var(--mono);font-size:.86em}
+.muted{color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+button,.btn{font:600 .9rem/1 var(--body);border-radius:var(--r);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 14px;cursor:pointer;min-height:40px}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.signal{background:var(--signal);color:#fff;border-color:var(--signal)}
+button.on{outline:2px solid var(--accent);outline-offset:1px;background:var(--sunk)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button:disabled{opacity:.45;cursor:default}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:9px 10px;width:100%;min-height:40px}
+textarea{min-height:76px;resize:vertical}
+label.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{padding:8px 11px;min-height:36px;font-weight:500}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;vertical-align:top;padding:7px 8px;border-bottom:1px solid var(--line)}
+th{font:600 .68rem/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+.pill{display:inline-block;font:600 .7rem/1 var(--mono);padding:4px 7px;border-radius:99px;background:var(--sunk);color:var(--ink);white-space:nowrap}
+.g-d{--g:var(--g-d)}.g-cp{--g:var(--g-cp)}.g-o{--g:var(--g-o)}.g-a{--g:var(--g-a)}.g-x{--g:var(--g-x)}
+.gtag{color:var(--g);border:1px solid var(--g);background:transparent}
+.hidden{display:none}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:var(--r);font-weight:600;z-index:50}
+
+/* Gap card, modelled on the printed A6 card */
+.gap{background:var(--surface);border:1.5px dashed var(--line);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.gap .q{font-weight:500}
+.gap .meta{display:flex;gap:6px;flex-wrap:wrap}
+
+/* Participant */
+.phone{max-width:560px;margin:0 auto;padding-block:14px 90px}
+.ptop{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;gap:4px;padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));z-index:5}
+.tabs button{flex:1;max-width:140px;border:none;background:transparent;font-size:.8rem;padding:8px 4px}
+.tabs button.on{outline:none;background:var(--sunk);color:var(--accent)}
+.inject{border:2px solid var(--signal);background:var(--signal-soft);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px}
+.inject .lbl{color:var(--signal)}
+.planrow{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.planrow:first-child{border-top:none;padding-top:0}
+.role{border-left:4px solid var(--accent);padding-left:12px}
+.answer{background:var(--ok-soft);border-radius:var(--r);padding:10px 12px;border:1px solid var(--ok)}
+
+/* Presenter */
+.console{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px;padding-block:16px;max-width:1400px;margin:0 auto}
+.stages{display:flex;flex-direction:column;gap:4px}
+.stages button{text-align:left;font-weight:500;display:flex;gap:8px;align-items:baseline}
+.stages button .mono{color:var(--muted);font-size:.72rem;min-width:36px}
+.stages button.on{background:var(--accent);color:var(--accent-ink);outline:none}
+.stages button.on .mono{color:var(--accent-ink)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.stat b{display:block;font:600 1.6rem/1.1 var(--display);font-variant-numeric:tabular-nums}
+.feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+@media (max-width:820px){.console{grid-template-columns:1fr}}
+
+/* Projector */
+.screen{min-height:100%;display:flex;flex-direction:column;padding-block:3vh;gap:2.4vh;font-size:clamp(14px,1.35vw,26px)}
+.screen h1{font-size:2.6em}.screen h2{font-size:1.6em}
+.screen .bar{display:flex;justify-content:space-between;align-items:baseline;gap:1em;border-bottom:2px solid var(--ink);padding-bottom:.6em}
+.screen table{font-size:.8em}
+.wall{display:grid;grid-template-columns:9em repeat(4,minmax(0,1fr));gap:6px}
+.wall .hd{font:600 .8em/1.2 var(--display);padding:.5em;border-top:4px solid var(--g);background:var(--surface)}
+.wall .rh{font:600 .66em/1.25 var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:.5em;align-self:center}
+.cell{background:var(--surface);border:1px solid var(--line);border-radius:4px;min-height:5.5em;padding:.45em;display:flex;flex-direction:column;gap:.35em;min-width:0}
+.cell .n{font:600 1.6em/1 var(--display);color:var(--g);font-variant-numeric:tabular-nums}
+.cell .s{font-size:.62em;line-height:1.3;border-left:3px solid var(--g);padding-left:.4em}
+.cell .s.key{border-left-style:double;font-weight:600}
+.dist{display:flex;height:1.3em;border-radius:3px;overflow:hidden;background:var(--sunk)}
+.dist span{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:.8em;font-size:.7em}
+.legend i{display:inline-block;width:.8em;height:.8em;border-radius:2px;margin-right:.3em;vertical-align:-1px}
+.big{font:700 5em/1 var(--display);font-variant-numeric:tabular-nums}
+.qr{background:#fff;padding:12px;border-radius:var(--r);display:inline-block;line-height:0}
+.qr img,.qr canvas{width:min(30vh,320px)!important;height:auto!important}
+
+/* Rehearsal */
+.reh{display:grid;grid-template-columns:minmax(0,1.25fr) 400px;gap:16px;padding-block:16px;max-width:1600px;margin:0 auto}
+.reh .pane{border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:auto;min-width:0}
+.reh .pane>.lbl{display:block;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--surface)}
+.reh .phoneframe{height:760px;position:relative;overflow:auto;padding:0 14px;transform:translateZ(0)}
+.reh .phoneframe .tabs{position:sticky}
+.reh .proj{aspect-ratio:16/9;overflow:hidden;padding:0 20px;max-width:100%}
+.reh .proj .screen{font-size:12px;min-height:0}
+.reh .console{padding-inline:12px;grid-template-columns:200px minmax(0,1fr)}
+.reh-head{max-width:1600px;margin:0 auto;padding-top:16px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:end}
+@media (max-width:1100px){.reh{grid-template-columns:1fr}.reh .phoneframe{height:680px}}
+@media (prefers-reduced-motion:no-preference){.inject{animation:pop .35s ease-out}@keyframes pop{from{transform:scale(.97);opacity:.6}to{transform:none;opacity:1}}}
+</style>
+
+<div id="app"></div>
+
+<script>
+/* ===================== CONFIG =====================
+   Leave supabaseUrl empty to run in local mode (one browser, several tabs) or rehearsal mode.
+   Fill both values to run the live event against a Supabase project (see README.md). */
+const CONFIG = {
+  supabaseUrl: "",          // e.g. "https://abcd1234.supabase.co"
+  supabaseKey: "",          // the project's anon (public) key
+  event: "PKI Consortium Conference · December 2026",
+  wgUrl: "https://pkic.org/wg/cbom/",
+  siteUrl: "https://pkic.github.io/cbom/",
+  maxTable: 40
+};
+
+/* ===================== CONTENT (from drafts/workshop-2026-12) ===================== */
+const ROLES = {
+  lead:{name:"Migration lead",job:"Own the plan sheet and make the call on each action. You report to the board.",worry:"A plan full of “escalate to supplier” will not survive the board. You need dates you can defend.",asked:"Which system moves first, and why."},
+  arch:{name:"Security architect",job:"Read the documents for the cryptographic facts, and say what each interface uses and could use.",worry:"A document can be complete and still not tell you what you need. Notice where that happens.",asked:"What the documents say a product could do, as opposed to what it does now."},
+  proc:{name:"Procurement manager",job:"Own the supplier relationships. You decide what to ask a supplier for, and what you can require at the next contract renewal.",worry:"“Send us a CBOM” got you three very different documents. Next time you have to ask for something specific.",asked:"What you would put in the next tender so that every supplier answers the same question."},
+  pac:{name:"Protection and control engineer",job:"The substations. You know the outage windows, the certification of each relay, and the refurbishment plan for 2028 and 2033.",worry:"Any change to a relay’s firmware means re-testing, and possibly re-certification and type approval. You cannot afford to do that twice.",asked:"What can happen at the 2028 refurbishment, and what has to wait for 2033."},
+  comp:{name:"Compliance officer",job:"The regulator and the auditor. Two of the inject cards are addressed to you.",worry:"Whatever the plan says, you will have to show the evidence it was built on.",asked:"Whether you could hand these documents to an auditor as they are."}
+};
+const ACTIONS = [
+  {k:"enable",n:"Enable now",d:"The capability exists; switch it on by configuration",c:"#2c7a4b"},
+  {k:"update",n:"Software update",d:"The capability arrives with a new release",c:"#2563a8"},
+  {k:"replace",n:"Replace",d:"No update path reaches it; replace the product or device",c:"#a3361b"},
+  {k:"shield",n:"Shield",d:"Carry the protection elsewhere: a tunnel, a gateway, segmentation",c:"#7a3f9e"},
+  {k:"accept",n:"Accept and revisit",d:"Take no action now; set a review date",c:"#8a8f94"},
+  {k:"escalate",n:"Escalate",d:"Ask the supplier for a commitment or for information",c:"#c88a12"}
+];
+const GROUPS = [
+  {k:"d",n:"Disclosure",s:"what a product uses"},
+  {k:"cp",n:"Change planning",s:"how it can change"},
+  {k:"o",n:"Operation",s:"what we run"},
+  {k:"a",n:"Assurance",s:"proof for an auditor"}
+];
+const WROWS = [{k:"profile",n:"A profile already requires it"},{k:"draft",n:"A draft profile requires it"},{k:"none",n:"No profile requires it yet"}];
+const WHO = ["supplier","us","a standards body","nobody yet"];
+
+const SYSTEMS = {
+  A:{name:"Identity",product:"Keycloak 26.7.3",doc:"Document A",what:"Keycloak runs single sign-on for staff, contractors and the customer portal. Forty internal applications accept the tokens it signs.",
+     intro:"Produced by the supplier against a <b>PQC migration profile</b> (the draft baseline and extended depth). The subject is the container image <code>quay.io/keycloak/keycloak:26.7.3</code>.",
+     cols:["Interface","What it protects","Uses now","Quantum-safe option","Blocked by","Notes"],
+     rows:[
+      ["tls-https, tls-mgmt","Main listener and health/metrics port","TLS 1.2 and 1.3, X25519, operator’s certificate","Planned","<b>Provider</b> (Java runtime)","Hybrid ML-KEM groups ship in JDK 27; backports announced. Inherited by all seven TLS interfaces"],
+      ["int-db, int-ldap, int-broker, int-smtp","Outbound connections to the database, directory, external identity providers and mail server","As above","Planned","<b>Provider</b>","The far end must support the hybrid groups too"],
+      ["svc-oidc","ID and access tokens","RS256 signature with the realm key; no token encryption","ML-DSA committed upstream","<b>Standard</b> (JOSE representation still an Internet-Draft)","Roadmap: Keycloak issue 43690. ML-DSA-signed tokens exceed the 4 KB browser cookie limit. Several realm keys can be active at once"],
+      ["svc-saml","SAML assertions","RSA-SHA256 with the realm key","Under evaluation","<b>Standard</b>",""],
+      ["svc-broker-tokens","Verifying tokens from external identity providers","Whatever the provider signs with","Under evaluation","<b>Standard</b>",""],
+      ["mgmt-admin","Administration, and creating and importing realm keys","Bearer token over TLS","Under evaluation","<b>Standard</b>","Cannot generate an ML-DSA key today"],
+      ["int-cache","Cluster transport between nodes","TLS 1.3, mutual, RSA-2048 key generated by Keycloak, rotated every 30 days","Not available","<b>Product</b>","The key type is fixed by the product"],
+      ["sto-realm-keys","Realm keys and the cluster key, held in the database","Stored <b>without wrapping</b>","Not planned","—",""],
+      ["svc-http","Plain HTTP, port 8080","<b>No cryptography</b>","—","—","Off by default in production mode; often used behind a TLS-terminating proxy"]],
+     also:["Validated mode uses an opt-in Bouncy Castle FIPS module. Whether new capability will work in validated mode is a certification question.","The implementing libraries are named: the Red Hat build of OpenJDK 21, and <code>keycloak-services</code> 26.7.3.","The coverage statement says every externally reachable interface is declared."],
+     plan:[["tls","TLS (seven interfaces)"],["tok","Token signing (svc-oidc, svc-saml, mgmt-admin)"],["cache","Cluster transport (int-cache)"],["keys","Realm keys at rest (sto-realm-keys)"],["http","Plain HTTP (svc-http)"]]},
+  B:{name:"Customer portal edge",product:"nginx 1.27.0",doc:"Document B",what:"nginx terminates TLS for the customer portal and is administered over SSH.",
+     intro:"Produced by the supplier against the <b>interface disclosure baseline</b>. It describes what is used today.",
+     cols:["Interface","Type","Protocol","Key exchange","Encryption","Authentication","Implementing library","Reported as"],
+     rows:[["svc-https","service","TLS 1.3","X25519","AES-256-GCM","RSA-2048 certificate for the portal’s domain","OpenSSL 3.4.0","observed"],
+           ["mgmt-ssh","management","SSH 2.0","curve25519-sha256","<b>unknown</b>","—","<b>withheld</b>","configured"]],
+     also:["Coverage: every externally reachable interface is declared.","The document conforms to the interface disclosure baseline."],
+     plan:[["https","svc-https"],["ssh","mgmt-ssh"]]},
+  C:{name:"Substations",product:"Vendor C PR-500, firmware 4.2",doc:"Document C",what:"Sixty substations use the PR-500 protection relay. The relays expect to run until at least 2040. Refurbishments are scheduled in 2028 and 2033.",
+     intro:"Produced by the supplier’s scanner against the <b>entry depth</b> of the interface family. It lists interfaces, protocols and versions. It is not required to say anything about algorithms.",
+     cols:["Interface","Type","Protocol","Version","Reported as"],
+     rows:[["mms","service","MMS over TLS","TLS 1.2","implemented"],["goose","service","GOOSE","IEC 61850 Ed. 2","implemented"],["eng","management","Vendor engineering protocol","3","implemented"],["fw-update","management","Firmware update","—","implemented"]],
+     also:["Coverage: <b>partial</b>.","Subject: <code>pkg:generic/vendor-c/pr-500@4.2</code>."],
+     plan:[["mms","mms"],["goose","goose"],["eng","eng"],["fw","fw-update"],["wan","WAN link to the substation"]]}
+};
+
+const INJECTS = [
+  null,
+  {t:"Advisory",at:"0:30",to:"",text:"A security advisory is published today against OpenSSL 3.4.x, affecting TLS 1.3 key exchange. The national CSIRT asks every essential entity which of its internet-facing systems are affected, by close of business.",ask:"Answer in 5 minutes: which of your systems are affected, and how sure are you?",
+   type:"grid",items:[["https","nginx svc-https"],["ssh","nginx mgmt-ssh"],["kc","Keycloak"],["pr","PR-500"]],opts:["Yes","Likely yes","No","Cannot tell"],
+   key:{https:"Likely yes",ssh:"Cannot tell",kc:"No",pr:"Cannot tell"},
+   keyText:{https:"OpenSSL 3.4.0 is named.",ssh:"The library is withheld.",kc:"The TLS is the Java runtime’s, not OpenSSL. You can say so because the library is named.",pr:"The entry depth does not ask for the library."},
+   lands:"Disclosure: implementationPurl (I9) is already required. Withholding it is allowed by the baseline; whether a vulnerability-response profile should forbid that is Q57. The procurement draft already does."},
+  {t:"Regulator",at:"0:45",to:"comp",text:"The national authority writes: “List the systems that carry data which must remain confidential beyond 2035, and state when the key exchange protecting that data becomes quantum-safe.”",ask:"Can you answer from the documents? What is missing, and who has it?",
+   type:"choice",opts:["Yes","Partly","No"],key:"Partly",
+   keyLong:"No document says what data an interface carries or how long it must stay confidential, and no supplier can, because it depends on what Nordhaven sends through the product. Document A gives part of the answer: realm keys are stored unwrapped, and the administrative surface carries credentials (Q36).",
+   lands:"Operation, in the “no profile yet” row (Q36, Q37, Q45)."},
+  {t:"Supplier slip",at:"0:55",to:"",text:"The JOSE working group announces that the representation for ML-DSA keys in JSON Web Keys will take another eighteen months.",ask:"What in your plan moves? Tick every row that moves.",
+   type:"multi",items:[["A:tls","A · TLS"],["A:tok","A · Token signing"],["A:cache","A · Cluster transport"],["A:keys","A · Realm keys"],["B","B · anything"],["C","C · anything"]],key:["A:tok"],
+   keyLong:"Teams that recorded a blocker per purpose see that only token signing moves. The TLS plan is untouched, because it is blocked by the provider, not by the standard. A supplier date would have hidden this.",
+   lands:"Change planning, already required: capability and blocker per purpose (decisions 0007 and 0010)."},
+  {t:"Auditor",at:"1:05",to:"comp",text:"Your auditor asks you to show that the three documents you planned from are the ones your suppliers issued, that they have not been altered, and that none has been replaced by a newer version since.",ask:"What can you show today?",
+   type:"choice",opts:["All of it","Some of it","Nothing"],key:"Nothing",
+   keyLong:"A conformance claim bound to the document by digest exists in the methodology (decision 0015), but none of the three documents came with one. Nothing says whether profiles or documents are signed (Q29), or what happens when a document is superseded (Q60).",
+   lands:"Assurance. Partly provided already (claims, 0015), partly no profile yet (Q29, Q60, Discussion #37)."}
+];
+
+const KEY_GAPS = [
+  ["What could it support that it doesn’t use today?","B, C","cp","profile","keyExchangeSupported, authenticationSupported"],
+  ["Is it a config change, an update or new hardware?","B, C","cp","profile","enablementMethod, providerLocation, minimumProductVersion"],
+  ["When will it be quantum-safe, and what is stopping it?","B, C","cp","profile","capabilityStatus, blockedBy, roadmapRef per purpose"],
+  ["Can we migrate while the far end is still classical?","B, C","cp","profile","coexistence, negotiationControl"],
+  ["What breaks when we switch?","B, C","cp","profile","integrationConstraints (the 4 KB cookie limit in A)"],
+  ["Which algorithms does the relay use at all?","C","d","profile","Baseline I3 to I5; the entry depth does not ask"],
+  ["Is this the whole list?","C","d","profile","Coverage (P4). C says partial, which is honest"],
+  ["Which library does SSH use?","B","d","profile","I9, but withholdable. Q57"],
+  ["Is SSH traffic encrypted?","B","d","profile","I4. Unknown is allowed by the disclosure model"],
+  ["Where are keys kept, and are they protected?","B, C","d","draft","keyWrapping (baseline v0.8 draft); procurement draft P5"],
+  ["Can the product create and hold the new key type?","A, B","cp","draft","keyTypesSupported, keyStoreRef (extended draft)"],
+  ["Will it work in FIPS mode?","A","cp","draft","validatedModeAvailability (PQC migration v0.7 draft)"],
+  ["Does changing the relay’s crypto mean re-certification?","C","cp","draft","certificationImpact (substation draft)"],
+  ["Can the relay’s firmware verification ever change?","C","cp","draft","verifierReplaceable, keyReplaceable"],
+  ["Who can install new firmware, and how?","C","cp","draft","updateAuthority, updateMechanism (IoT draft)"],
+  ["Does it fit the protection timing budget?","C","cp","draft","integrationConstraints with a timing entry"],
+  ["Where do GOOSE keys come from?","C","cp","draft","keyStoreRef for group-keyed interfaces; Q08"],
+  ["Can our forty applications accept ML-DSA tokens?","A","o","none","The operator’s estate (PKI estate placeholder)"],
+  ["How many relays, and which firmware where?","C","o","none","Instance data the operator holds (Q67)"],
+  ["Which data must stay confidential beyond 2035?","all","o","none","Q36, Q37, Q45"],
+  ["What did the database and directory actually negotiate?","A","o","none","Lifecycle stage observed, in an operator document"],
+  ["Is this the document the supplier issued, and still current?","all","a","profile","Partly: claims bound by digest (0015). Signing Q29, supersession Q60"],
+  ["Could I give this to my regulator as evidence?","all","a","none","The Assurance group’s open question"],
+  ["How much will it cost?","all","x","none","Not a CBOM question"]
+];
+
+const POLL = [
+  "When we buy a product, we should ask for a CBOM to a named profile, not just “a CBOM”.",
+  "A supplier should not be allowed to withhold the implementing library from a CBOM shared under a confidentiality agreement.",
+  "I would give a supplier’s CBOM to my regulator or auditor as evidence, if it came with a checkable conformance claim."
+];
+const POLL_OPTS = ["Agree","Disagree","Not sure"];
+
+const STAGES = [
+  {k:"lobby",t:"Join",at:"–"},
+  {k:"welcome",t:"Welcome and why",at:"0:00"},
+  {k:"briefing",t:"Briefing",at:"0:05"},
+  {k:"sysA",t:"Identity · document A",at:"0:15",sys:"A"},
+  {k:"sysB",t:"Portal edge · document B",at:"0:35",sys:"B"},
+  {k:"sysC",t:"Substations · document C",at:"0:50",sys:"C"},
+  {k:"prio",t:"Priorities",at:"1:10"},
+  {k:"wall",t:"Mapping wall: place cards",at:"1:15"},
+  {k:"walk",t:"Mapping wall: the walk",at:"1:25"},
+  {k:"poll",t:"Temperature poll",at:"1:45"},
+  {k:"close",t:"Close",at:"1:55"}
+];
+const QUESTION = "Could you plan your migration from what your suppliers send you?";
+
+/* ===================== UTIL ===================== */
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now().toString(36));
+const now = () => Date.now();
+const ls = {get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const ss = {get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}};
+function toast(msg){const t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),1800)}
+const stageOf = k => STAGES.find(s=>s.k===k) || STAGES[0];
+const gname = k => (GROUPS.find(g=>g.k===k)||{n:"Not a CBOM question"}).n;
+const rname = k => (WROWS.find(r=>r.k===k)||{n:""}).n;
+function joinUrl(){const u=location.href.split("#")[0];return u+"#join"}
+
+/* ===================== STORES =====================
+   Both stores expose: state, people, items (Map by id), signups (local only),
+   setState(patch), upsertPerson(p), upsertItem(it), addSignup(s), on(fn), start(role, ctx). */
+const DEFAULT_STATE = {stage:"lobby",inject:0,injectReveal:false,walkCol:-1,timerEnd:0,pollOpen:true};
+
+class LocalStore {
+  constructor(persist){this.persist=persist;this.fns=[];this.load();
+    if(persist) window.addEventListener("storage",e=>{if(e.key==="cbomws"){this.load();this.emit()}});}
+  load(){const d=(this.persist&&ls.get("cbomws"))||{};this.state={...DEFAULT_STATE,...(d.state||{})};
+    this.people=new Map(Object.entries(d.people||{}));this.items=new Map(Object.entries(d.items||{}));this.signups=d.signups||[];}
+  save(){if(this.persist) ls.set("cbomws",{state:this.state,people:Object.fromEntries(this.people),items:Object.fromEntries(this.items),signups:this.signups})}
+  on(fn){this.fns.push(fn)} emit(){this.fns.forEach(f=>f())}
+  async start(){} async checkPin(){return true}
+  async setState(p){this.state={...this.state,...p};this.save();this.emit()}
+  async upsertPerson(p){this.people.set(p.id,{...p,ts:now()});this.save();this.emit()}
+  async upsertItem(it){this.items.set(it.id,{...it,ts:now()});this.save();this.emit()}
+  async deleteItem(id){this.items.delete(id);this.save();this.emit()}
+  async addSignup(s){this.signups=this.signups.filter(x=>x.person!==s.person).concat([s]);this.save();this.emit()}
+  async getSignups(){return this.signups}
+  async reset(){this.state={...DEFAULT_STATE};this.people.clear();this.items.clear();this.signups=[];this.save();this.emit()}
+}
+
+class RestStore {
+  constructor(url,key){this.base=url.replace(/\/$/,"")+"/rest/v1";this.key=key;this.fns=[];this.state={...DEFAULT_STATE};
+    this.people=new Map();this.items=new Map();this.signups=[];this.since={items:"1970-01-01T00:00:00Z",people:"1970-01-01T00:00:00Z"};this.pin=ss.get("cbomws-pin")||"";this.ok=true;}
+  h(extra){return {"apikey":this.key,"Authorization":"Bearer "+this.key,"Content-Type":"application/json",...(extra||{})}}
+  async req(path,opt){const r=await fetch(this.base+path,{...opt,headers:this.h(opt&&opt.headers)});if(!r.ok){throw new Error((await r.text())||r.status)}const t=await r.text();return t?JSON.parse(t):null}
+  rpc(fn,body){return this.req("/rpc/"+fn,{method:"POST",body:JSON.stringify(body)})}
+  on(fn){this.fns.push(fn)} emit(){this.fns.forEach(f=>f())}
+  async checkPin(pin){try{const ok=await this.rpc("ws_check_pin",{p_pin:pin});if(ok){this.pin=pin;ss.set("cbomws-pin",pin)}return !!ok}catch(e){return false}}
+  /* role: "participant" polls its table only; "presenter"/"screen" poll everything incrementally. */
+  start(role,ctx){this.role=role;this.ctx=ctx||{};
+    const loopState=async()=>{try{const r=await this.req("/ws_state?id=eq.1&select=data");const d=r&&r[0]&&r[0].data;
+        if(d&&now()-(this.localSetAt||0)>2500&&JSON.stringify(d)!==JSON.stringify(this.state)){this.state={...DEFAULT_STATE,...d};this.emit()}this.setOk(true)}catch(e){this.setOk(false)}
+      setTimeout(loopState,2000)};
+    const loopItems=async()=>{try{let q;
+        if(role==="participant"){const t=this.ctx.table();q=t?`/ws_items?table_no=eq.${t}&select=*`:null;
+          if(q){const rows=await this.req(q);const seen=new Set();let ch=false;
+            for(const r of rows){seen.add(r.id);const it=this.fromRow(r),old=this.items.get(r.id);if(!old||old.ts!==it.ts){this.items.set(r.id,it);ch=true}}
+            for(const id of [...this.items.keys()]) if(!seen.has(id)){this.items.delete(id);ch=true}
+            if(ch)this.emit()}}
+        else{const rows=await this.req(`/ws_items?updated_at=gte.${encodeURIComponent(this.since.items)}&order=updated_at.asc&limit=2000`);
+          let ch=false;for(const r of rows){const it=this.fromRow(r),old=this.items.get(r.id);if(!old||old.ts!==it.ts){this.items.set(r.id,it);ch=true}this.since.items=r.updated_at}
+          const pr=await this.req(`/ws_people?updated_at=gte.${encodeURIComponent(this.since.people)}&order=updated_at.asc&limit=2000`);
+          for(const p of pr){const o=this.people.get(p.id);const np={id:p.id,name:p.name,table:p.table_no,role:p.role,ts:Date.parse(p.updated_at)};if(!o||o.ts!==np.ts){this.people.set(p.id,np);ch=true}this.since.people=p.updated_at}
+          if(this.state.deletedAt&&this.state.deletedAt!==this.lastDel){this.lastDel=this.state.deletedAt;await this.fullItems();ch=true}
+          if(ch)this.emit()}
+        this.setOk(true)}catch(e){this.setOk(false)}
+      setTimeout(loopItems,role==="participant"?4000:3000)};
+    loopState();loopItems();}
+  async fullItems(){const rows=await this.req(`/ws_items?select=*&limit=5000`);this.items=new Map(rows.map(r=>[r.id,this.fromRow(r)]))}
+  setOk(v){if(v!==this.ok){this.ok=v;this.emit()}}
+  fromRow(r){return {id:r.id,kind:r.kind,table:r.table_no,person:r.person,payload:r.payload,ts:Date.parse(r.updated_at)}}
+  async setState(p){const next={...this.state,...p};this.state=next;this.localSetAt=now();this.emit();await this.rpc("ws_set_state",{p_pin:this.pin,p_data:next})}
+  async upsertPerson(p){this.people.set(p.id,{...p,ts:now()});await this.req("/ws_people",{method:"POST",headers:{"Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({id:p.id,name:p.name,table_no:p.table,role:p.role})})}
+  async upsertItem(it){this.items.set(it.id,{...it,ts:now()});this.emit();await this.req("/ws_items",{method:"POST",headers:{"Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({id:it.id,kind:it.kind,table_no:it.table,person:it.person,payload:it.payload})})}
+  async deleteItem(id){this.items.delete(id);this.emit();await this.rpc("ws_delete_item",{p_pin:this.pin,p_id:id});await this.setState({deletedAt:now()})}
+  async addSignup(s){await this.req("/ws_signups",{method:"POST",headers:{"Prefer":"resolution=ignore-duplicates,return=minimal"},body:JSON.stringify({person:s.person,name:s.name,email:s.email,table_no:s.table})})}
+  async getSignups(){return (await this.rpc("ws_export_signups",{p_pin:this.pin}))||[]}
+  async reset(){await this.rpc("ws_reset",{p_pin:this.pin});this.items.clear();this.people.clear();this.since={items:"1970-01-01T00:00:00Z",people:"1970-01-01T00:00:00Z"};this.state={...DEFAULT_STATE};this.emit()}
+}
+
+/* ===================== DERIVED ===================== */
+const D = {
+  list(store,kind){return [...store.items.values()].filter(i=>i.kind===kind && !(i.payload&&i.payload.hidden))},
+  gaps(store,table){return D.list(store,"gap").filter(g=>table==null||g.table===table).sort((a,b)=>a.ts-b.ts)},
+  plan(store,table,sys,row){return store.items.get(`plan:t${table}:${sys}:${row}`)},
+  tables(store){return new Set([...store.people.values()].map(p=>p.table).filter(Boolean))},
+  injectAns(store,n){return D.list(store,"inject").filter(i=>i.payload.n===n)},
+  placement(g){const p=g.payload;return {group:p.final_group||p.group||"",row:p.final_row||p.row||"",final:!!p.final_group}}
+};
+
+/* ===================== VIEW BASE =====================
+   A view renders a static shell when its "shape" changes and refreshes [data-live] regions otherwise,
+   so participants never lose what they are typing while other people's answers stream in. */
+class View {
+  constructor(root,store){this.root=root;this.store=store;this.ui={};this.drafts={};this.shapeKey=null;
+    root.addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(b&&root.contains(b)){e.preventDefault();this.act(b.dataset.act,b,e)}});
+    root.addEventListener("change",e=>{const b=e.target.closest("[data-chg]");if(b)this.act(b.dataset.chg,b,e)});
+    root.addEventListener("input",e=>{const t=e.target;if(t.dataset.keep)this.drafts[t.dataset.keep]=t.value});
+    root.addEventListener("submit",e=>e.preventDefault());}
+  refresh(force){const k=this.shape();
+    if(force||k!==this.shapeKey){this.shapeKey=k;this.root.innerHTML=this.render();
+      this.root.querySelectorAll("[data-keep]").forEach(el=>{if(this.drafts[el.dataset.keep]!=null)el.value=this.drafts[el.dataset.keep]});
+      this.after&&this.after();}
+    this.root.querySelectorAll("[data-live]").forEach(el=>{
+      if(el.contains(document.activeElement)&&document.activeElement!==document.body&&/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName))return;
+      const fn=this.live[el.dataset.live];if(!fn)return;const h=fn.call(this,el);if(h!==el._h){el._h=h;el.innerHTML=h}});
+    this.afterLive&&this.afterLive();}
+}
+
+/* ===================== PARTICIPANT ===================== */
+class Participant extends View {
+  constructor(root,store,opts){super(root,store);this.opts=opts||{};this.me=this.opts.me||ls.get("cbomws-me");this.ui.tab="doc";this.ui.gapOpen=false;
+    this.live={
+      gaps(){return this.gapList()},
+      plan(){const sys=stageOf(this.st.stage).sys;return sys?this.planRows(sys):""},
+      prioorder(){return this.prioOrder()},
+      inj(){return this.injectBody()},
+      wallcards(){return this.wallCards()},
+      walkcards(){return this.walkCards()},
+      prioinfo(){const p=this.store.items.get(`prio:t${this.me.table}`);return p?`<p class="muted">Saved for table ${this.me.table}${p.payload.by?` by ${esc(p.payload.by)}`:""}.</p>`:""},
+      pollstate(){return this.pollBody()},
+      conn(){return this.store.ok===false?`<span class="pill" style="background:var(--signal-soft);color:var(--signal)">Reconnecting…</span>`:""}
+    };}
+  get st(){return this.store.state}
+  shape(){const s=this.st;if(s.stage!==this.ui.lastStage){this.ui.lastStage=s.stage;this.ui.tab="doc"}return [this.me?this.me.id:"-",s.stage,s.inject,s.injectReveal,this.ui.tab,this.ui.gapOpen,this.me&&this.me.table].join("|")}
+  render(){
+    if(!this.me) return this.joinForm();
+    const s=this.st, stg=stageOf(s.stage), sys=stg.sys;
+    const tabs = sys||s.stage==="prio" ? this.tabBar(sys) : "";
+    let body="";
+    if(s.stage==="lobby") body=`<div class="stack"><h1>You are in.</h1><p>Table <b>${this.me.table}</b> · ${esc(ROLES[this.me.role].name)}. The facilitator will start the session.</p>${this.roleCard()}</div>`;
+    else if(s.stage==="welcome") body=`<div class="stack"><span class="lbl">The question of the day</span><h1>${esc(QUESTION)}</h1><p class="muted">You are the migration team of a grid operator. Your suppliers have sent you CBOMs. Your board wants a plan.</p></div>`;
+    else if(s.stage==="briefing") body=this.briefing();
+    else if(sys) body=this.sysBody(sys);
+    else if(s.stage==="prio") body=this.ui.tab==="gaps"?this.gapsPane():this.ui.tab==="role"?this.roleCard():this.prioBody();
+    else if(s.stage==="wall") body=`<div class="stack"><span class="lbl">Mapping wall</span><h2>Place your table’s gap cards</h2><p>For each card, guess the column and the row. Anyone at your table can change a placement. Duplicates are fine: a tall stack is a finding.</p><div data-live="wallcards" class="stack"></div></div>`;
+    else if(s.stage==="walk") body=`<div class="stack"><span class="lbl">Mapping wall</span><h2>Watch the screen</h2><p class="muted">The facilitator is walking the wall. Your cards show where they landed.</p><div data-live="walkcards" class="stack"></div></div>`;
+    else if(s.stage==="poll") body=`<div class="stack"><span class="lbl">Temperature poll</span><p class="muted">This is a temperature reading for the working group, not a vote.</p><div data-live="pollstate" class="stack"></div></div>`;
+    else if(s.stage==="close") body=this.closeBody();
+    return `<div class="phone"><div class="ptop"><div><div class="lbl">CBOM tabletop · ${esc(stg.t)}</div><div style="font-weight:600">${esc(this.me.name)} · table ${this.me.table}</div></div><span data-live="conn"></span></div>
+      <div class="stack">${s.inject?`<div class="inject" data-live="inj"></div>`:""}${body}</div></div>${tabs}`;
+  }
+  joinForm(){const roles=Object.entries(ROLES).map(([k,r])=>`<option value="${k}">${esc(r.name)}</option>`).join("");
+    const tabOpts=Array.from({length:CONFIG.maxTable},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join("");
+    return `<div class="phone"><div class="stack" style="padding-top:8px">
+      <span class="lbl">${esc(CONFIG.event)}</span>
+      <h1>Your supplier sent a CBOM. Now what?</h1>
+      <p>A two-hour tabletop exercise with the PKI Consortium CBOM Profiles Working Group. Join your table to take part.</p>
+      <form class="card stack" id="joinf">
+        <label class="f"><span class="lbl">Your name</span><input id="j-name" data-keep="j-name" autocomplete="name" maxlength="80" required></label>
+        <label class="f"><span class="lbl">Table number (on the table card)</span><select id="j-table" data-keep="j-table">${tabOpts}</select></label>
+        <label class="f"><span class="lbl">Your role at the table</span><select id="j-role" data-keep="j-role">${roles}</select></label>
+        <button class="primary" data-act="join" type="submit">Join table</button>
+        <p class="muted" style="font-size:.8rem">Your name, table and answers are shared with the working group and appear on the room screen. They are used to write up the workshop results and are deleted after that.</p>
+      </form></div></div>`;}
+  tabBar(sys){const t=this.ui.tab;const b=(k,n)=>`<button class="${t===k?"on":""}" data-act="tab" data-tab="${k}">${n}</button>`;
+    return `<nav class="tabs">${sys?b("doc","Document "+sys)+b("plan","Plan"):b("doc","Priorities")}${b("gaps","Gap cards")}${b("role","Role")}</nav>`;}
+  roleCard(){const r=ROLES[this.me.role];return `<div class="card role stack"><span class="lbl">Your role card</span><h3>${esc(r.name)}</h3><p><b>Your job:</b> ${esc(r.job)}</p><p><b>Your worry:</b> ${esc(r.worry)}</p><p><b>You will be asked:</b> ${esc(r.asked)}</p></div>`}
+  briefing(){return `<div class="stack"><span class="lbl">Briefing</span><h2>Nordhaven Netz</h2>
+    <p>A regional electricity distribution operator in the EU, serving 1.2 million customers. It is an essential entity under NIS2.</p>
+    <div class="card tw"><table><tr><th>System</th><th>What it does</th><th>Doc</th></tr>${Object.entries(SYSTEMS).map(([k,s])=>`<tr><td><b>${s.name}</b></td><td>${s.what}</td><td>${k}</td></tr>`).join("")}</table></div>
+    <p><b>The task.</b> The board wants a post-quantum migration plan by the end of Q2 2027. The national authority expects high-risk systems to be migrated by the end of 2030. You have the three supplier documents and nothing else.</p>
+    <p>For each system: choose an action, a timing, and your confidence. Write a gap card for every question the documents cannot answer. Aim for at least five cards per table.</p>
+    <div class="card stack"><span class="lbl">The six actions</span>${ACTIONS.map(a=>`<div><b>${a.n}</b> <span class="muted">${a.d}</span></div>`).join("")}</div>
+    ${this.roleCard()}</div>`;}
+  docView(sys){const S=SYSTEMS[sys];return `<div class="stack"><span class="lbl">${S.doc} · ${esc(S.name)}</span><h2>${esc(S.product)}</h2><p>${S.intro}</p>
+    <div class="card tw" style="padding:0"><table><tr>${S.cols.map(c=>`<th>${c}</th>`).join("")}</tr>${S.rows.map(r=>`<tr>${r.map((c,i)=>`<td>${i===0?`<code>${c}</code>`:c}</td>`).join("")}</tr>`).join("")}</table></div>
+    <div class="stack"><span class="lbl">Also stated</span>${S.also.map(a=>`<p>• ${a}</p>`).join("")}</div>
+    <button data-act="tab" data-tab="gaps">Write a gap card</button></div>`;}
+  sysBody(sys){const t=this.ui.tab;if(t==="plan")return this.planPane(sys);if(t==="gaps")return this.gapsPane(sys);if(t==="role")return this.roleCard();return this.docView(sys);}
+  planPane(sys){const S=SYSTEMS[sys];
+    return `<div class="stack"><span class="lbl">Plan sheet · table ${this.me.table}</span><h2>${esc(S.name)}</h2><p class="muted">Your whole table shares one plan. The last change wins, so agree before you tap.</p>
+    <div class="card stack" data-live="plan"></div></div>`;}
+  planRows(sys){const S=SYSTEMS[sys];
+    return `${S.plan.map(([rk,rn])=>{const it=D.plan(this.store,this.me.table,sys,rk);const p=(it&&it.payload)||{};
+      return `<div class="planrow"><div class="row" style="justify-content:space-between"><b><code>${esc(rn)}</code></b>${it?`<span class="muted" style="font-size:.75rem">${esc(p.by||"")}</span>`:""}</div>
+        <div class="seg">${ACTIONS.map(a=>`<button class="${p.action===a.k?"on":""}" data-act="plan" data-sys="${sys}" data-row="${rk}" data-f="action" data-v="${a.k}">${a.n}</button>`).join("")}</div>
+        <div class="row"><label class="f" style="flex:1 1 140px"><span class="lbl">When</span><input id="pw-${sys}-${rk}" value="${esc(p.when||"")}" placeholder="e.g. 2027, at 2028 refurbishment" data-chg="planText" data-sys="${sys}" data-row="${rk}" data-f="when"></label>
+          <div class="f"><span class="lbl">Confidence</span><div class="seg">${["H","M","L"].map(c=>`<button class="${p.conf===c?"on":""}" data-act="plan" data-sys="${sys}" data-row="${rk}" data-f="conf" data-v="${c}">${c}</button>`).join("")}</div></div></div>
+        <label class="f"><span class="lbl">Depends on</span><input id="pd-${sys}-${rk}" value="${esc(p.dep||"")}" data-chg="planText" data-sys="${sys}" data-row="${rk}" data-f="dep"></label></div>`}).join("")}`;}
+  gapsPane(sys){const docs=["A","B","C","all"];const d=this.drafts;
+    return `<div class="stack"><span class="lbl">Gap cards · table ${this.me.table}</span>
+      <form class="gap stack" id="gapf" style="border-color:var(--accent)">
+        <div class="row" style="justify-content:space-between"><b>GAP</b><span class="lbl">Table ${this.me.table}</span></div>
+        <label class="f"><span class="lbl">The question we could not answer</span><textarea id="g-q" data-keep="g-q" maxlength="400"></textarea></label>
+        <div class="f"><span class="lbl">Document</span><div class="seg" data-grp="g-doc">${docs.map(x=>`<button type="button" class="${(d["g-doc"]||sys||"")===x?"on":""}" data-act="pick" data-k="g-doc" data-v="${x}">${x}</button>`).join("")}</div></div>
+        <div class="f"><span class="lbl">Who could answer it</span><div class="seg">${WHO.map(x=>`<button type="button" class="${d["g-who"]===x?"on":""}" data-act="pick" data-k="g-who" data-v="${x}">${x}</button>`).join("")}</div></div>
+        <div class="f"><span class="lbl">Does it block a decision?</span><div class="seg">${["yes","no"].map(x=>`<button type="button" class="${d["g-blk"]===x?"on":""}" data-act="pick" data-k="g-blk" data-v="${x}">${x}</button>`).join("")}</div></div>
+        <button class="primary" data-act="addgap" type="submit">Add gap card</button>
+      </form>
+      <div class="row" style="justify-content:space-between"><span class="lbl">Your table’s cards</span></div>
+      <div data-live="gaps" class="stack"></div></div>`;}
+  gapList(){const g=D.gaps(this.store,this.me.table).reverse();if(!g.length)return `<p class="muted">No cards yet. One question per card.</p>`;
+    return g.map(x=>`<div class="gap"><div class="q">${esc(x.payload.q)}</div><div class="meta"><span class="pill">Doc ${esc(x.payload.doc||"?")}</span>${x.payload.who?`<span class="pill">${esc(x.payload.who)}</span>`:""}${x.payload.blocks==="yes"?`<span class="pill" style="color:var(--signal)">blocks</span>`:""}<span class="muted" style="font-size:.75rem">${esc(x.payload.by||"")}</span></div></div>`).join("");}
+  injectBody(){const n=this.st.inject,I=INJECTS[n];if(!I)return "";const ans=this.store.items.get(`inj:t${this.me.table}:${n}`);const a=(ans&&ans.payload.a)||{};const rv=this.st.injectReveal;
+    let form="";
+    if(I.type==="grid") form=I.items.map(([k,l])=>`<div class="stack" style="gap:4px"><b>${esc(l)}</b><div class="seg">${I.opts.map(o=>`<button class="${a[k]===o?"on":""}" data-act="inj" data-k="${k}" data-v="${esc(o)}">${o}</button>`).join("")}</div>${rv?`<div class="answer"><b>${I.key[k]}.</b> ${I.keyText[k]}</div>`:""}</div>`).join("");
+    if(I.type==="choice") form=`<div class="seg">${I.opts.map(o=>`<button class="${a.v===o?"on":""}" data-act="inj" data-k="v" data-v="${esc(o)}">${o}</button>`).join("")}</div>`;
+    if(I.type==="multi") form=`<div class="seg">${I.items.map(([k,l])=>`<button class="${(a.v||[]).includes(k)?"on":""}" data-act="injm" data-v="${k}">${esc(l)}</button>`).join("")}</div>`;
+    if(I.type!=="grid") form+=`<label class="f"><span class="lbl">Note for the facilitator (optional)</span><input id="inj-note-${n}" value="${esc(a.note||"")}" data-chg="injnote"></label>`;
+    if(rv&&I.type!=="grid") form+=`<div class="answer">${esc(I.keyLong)}</div>`;
+    if(rv) form+=`<p style="font-size:.85rem"><b>Lands on:</b> ${esc(I.lands)}</p>`;
+    return `<div class="row" style="justify-content:space-between"><span class="lbl">Inject ${n} · ${esc(I.t)}${I.to?` · to the ${ROLES[I.to].name.toLowerCase()}`:""}</span>${ans?`<span class="pill">Answered by ${esc(ans.payload.by||"your table")}</span>`:""}</div>
+      <p><i>${esc(I.text)}</i></p><p><b>${esc(I.ask)}</b></p>${form}<p class="muted" style="font-size:.78rem">One answer per table. Anyone at the table can set it.</p>`;}
+  prioBody(){const p=(this.store.items.get(`prio:t${this.me.table}`)||{payload:{}}).payload;
+    return `<div class="stack"><span class="lbl">Priorities across the three systems</span><h2>Which system moves first, and why?</h2>
+    <div class="card stack"><div class="stack" data-live="prioorder"></div>
+      <label class="f"><span class="lbl">Why this order</span><textarea id="pr-why" data-keep="pr-why">${esc(p.why||"")}</textarea></label>
+      <label class="f"><span class="lbl">The one decision you could not make, and what would have let you make it</span><textarea id="pr-dec" data-keep="pr-dec">${esc(p.dec||"")}</textarea></label>
+      <button class="primary" data-act="priosave">Save for my table</button><div data-live="prioinfo"></div></div></div>`;}
+  prioOrder(){const ord=((this.store.items.get(`prio:t${this.me.table}`)||{payload:{}}).payload.order)||[];
+    return [0,1,2].map(i=>`<div class="f"><span class="lbl">${["First","Second","Third"][i]}</span><div class="seg">${["A","B","C"].map(k=>`<button class="${ord[i]===k?"on":""}" data-act="prio" data-i="${i}" data-v="${k}">${SYSTEMS[k].name}</button>`).join("")}</div></div>`).join("")}
+  wallCards(){const g=D.gaps(this.store,this.me.table);if(!g.length)return `<p class="muted">Your table has no cards. Write one now if you can.</p>`;
+    return g.map(x=>{const p=x.payload;return `<div class="gap"><div class="q">${esc(p.q)}</div>
+      <div class="row"><label class="f" style="flex:1 1 150px"><span class="lbl">Column</span><select id="wg-${x.id}" data-chg="place" data-id="${x.id}" data-f="group"><option value="">—</option>${GROUPS.map(gg=>`<option value="${gg.k}" ${p.group===gg.k?"selected":""}>${gg.n}</option>`).join("")}<option value="x" ${p.group==="x"?"selected":""}>Not a CBOM question</option></select></label>
+      <label class="f" style="flex:1 1 150px"><span class="lbl">Row</span><select id="wr-${x.id}" data-chg="place" data-id="${x.id}" data-f="row"><option value="">—</option>${WROWS.map(r=>`<option value="${r.k}" ${p.row===r.k?"selected":""}>${r.n}</option>`).join("")}</select></label></div></div>`}).join("");}
+  walkCards(){const g=D.gaps(this.store,this.me.table);if(!g.length)return "";
+    return g.map(x=>{const p=x.payload;const moved=p.final_group&&(p.final_group!==p.group||p.final_row!==p.row);
+      return `<div class="gap"><div class="q">${esc(p.q)}</div><div class="meta"><span class="pill gtag g-${p.final_group||p.group||"x"}">${esc(gname(p.final_group||p.group))}</span>${(p.final_row||p.row)?`<span class="pill">${esc(rname(p.final_row||p.row))}</span>`:""}${moved?`<span class="pill" style="color:var(--signal)">moved by facilitator</span>`:""}</div></div>`}).join("");}
+  pollBody(){const mine=this.store.items.get(`poll:${this.me.id}`);const a=(mine&&mine.payload.a)||{};
+    return POLL.map((q,i)=>`<div class="card stack"><span class="lbl">Statement ${i+1}</span><p>${esc(q)}</p><div class="seg">${POLL_OPTS.map(o=>`<button class="${a[i]===o?"on":""}" data-act="poll" data-i="${i}" data-v="${o}">${o}</button>`).join("")}</div></div>`).join("");}
+  closeBody(){const done=this.ui.signed;return `<div class="stack"><span class="lbl">Thank you</span><h2>What happens next</h2>
+    <p>The wall goes into a GitHub issue and into the working group’s decision backlog within a week. The poll is recorded as advisory.</p>
+    <div class="card stack"><h3>Continue with the working group</h3>${done?`<p>Thanks, you are on the list.</p>`:`<label class="f"><span class="lbl">Email</span><input id="su-email" data-keep="su-email" type="email" autocomplete="email"></label><button class="primary" data-act="signup">Keep me informed</button><p class="muted" style="font-size:.8rem">Only the workshop facilitators can see email addresses.</p>`}</div>
+    <p>Working group: <a href="${CONFIG.wgUrl}" target="_blank" rel="noopener">${CONFIG.wgUrl}</a><br>Methodology site: <a href="${CONFIG.siteUrl}" target="_blank" rel="noopener">${CONFIG.siteUrl}</a></p>
+    <p class="muted">GitHub is optional. The meetings are open.</p></div>`;}
+  async act(a,el,e){const st=this.store,me=this.me;
+    if(a==="join"){const name=(this.root.querySelector("#j-name").value||"").trim();if(!name){toast("Enter your name");return}
+      this.me={id:uid(),name,table:+this.root.querySelector("#j-table").value,role:this.root.querySelector("#j-role").value};
+      if(!this.opts.me) ls.set("cbomws-me",this.me);await st.upsertPerson(this.me);this.refresh(true);return}
+    if(a==="tab"){this.ui.tab=el.dataset.tab;this.refresh();this.root.scrollTop=0;if(!this.opts.me)window.scrollTo(0,0);return}
+    if(a==="pick"){this.drafts[el.dataset.k]=el.dataset.v;el.parentElement.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b===el));return}
+    if(a==="addgap"){const q=(this.root.querySelector("#g-q").value||"").trim();if(!q){toast("Write the question first");return}
+      const sys=stageOf(st.state.stage).sys;
+      await st.upsertItem({id:"gap:"+uid(),kind:"gap",table:me.table,person:me.id,payload:{q,doc:this.drafts["g-doc"]||sys||"all",who:this.drafts["g-who"]||"",blocks:this.drafts["g-blk"]||"",by:me.name,stage:st.state.stage}});
+      this.drafts["g-q"]="";this.drafts["g-who"]="";this.drafts["g-blk"]="";this.root.querySelector("#g-q").value="";
+      this.root.querySelectorAll("#gapf .seg button").forEach(b=>{if(b.dataset.k!=="g-doc")b.classList.remove("on")});toast("Gap card added");return}
+    if(a==="plan"||a==="planText"){const id=`plan:t${me.table}:${el.dataset.sys}:${el.dataset.row}`;const cur=(st.items.get(id)||{payload:{}}).payload;
+      const v=a==="plan"?el.dataset.v:el.value;const payload={...cur,sys:el.dataset.sys,row:el.dataset.row,[el.dataset.f]:v,by:me.name};
+      await st.upsertItem({id,kind:"plan",table:me.table,person:me.id,payload});return}
+    if(a==="inj"||a==="injm"||a==="injnote"){const n=st.state.inject;const id=`inj:t${me.table}:${n}`;const cur=(st.items.get(id)||{payload:{a:{}}}).payload;const ans={...(cur.a||{})};
+      if(a==="inj")ans[el.dataset.k]=el.dataset.v;
+      if(a==="injm"){const s=new Set(ans.v||[]);s.has(el.dataset.v)?s.delete(el.dataset.v):s.add(el.dataset.v);ans.v=[...s]}
+      if(a==="injnote")ans.note=el.value;
+      await st.upsertItem({id,kind:"inject",table:me.table,person:me.id,payload:{n,a:ans,by:me.name}});return}
+    if(a==="prio"){const id=`prio:t${me.table}`;const cur=(st.items.get(id)||{payload:{}}).payload;const ord=[...(cur.order||[])];const i=+el.dataset.i;
+      for(let j=0;j<3;j++) if(ord[j]===el.dataset.v) ord[j]=undefined;ord[i]=el.dataset.v;
+      await st.upsertItem({id,kind:"prio",table:me.table,person:me.id,payload:{...cur,order:ord,by:me.name}});return}
+    if(a==="priosave"){const id=`prio:t${me.table}`;const cur=(st.items.get(id)||{payload:{}}).payload;
+      await st.upsertItem({id,kind:"prio",table:me.table,person:me.id,payload:{...cur,why:this.root.querySelector("#pr-why").value,dec:this.root.querySelector("#pr-dec").value,by:me.name}});toast("Saved");return}
+    if(a==="place"){const it=st.items.get(el.dataset.id);if(!it)return;await st.upsertItem({...it,payload:{...it.payload,[el.dataset.f]:el.value}});return}
+    if(a==="poll"){const id=`poll:${me.id}`;const cur=(st.items.get(id)||{payload:{a:{}}}).payload;
+      await st.upsertItem({id,kind:"poll",table:me.table,person:me.id,payload:{a:{...cur.a,[el.dataset.i]:el.dataset.v}}});return}
+    if(a==="signup"){const email=(this.root.querySelector("#su-email").value||"").trim();if(!/.+@.+\..+/.test(email)){toast("Enter a valid email");return}
+      await st.addSignup({person:me.id,name:me.name,email,table:me.table});this.ui.signed=true;this.refresh(true);return}
+  }
+}
+
+/* ===================== SCREEN (projector) ===================== */
+function actionDist(store,sys,row){const tabs=[...D.tables(store)];const c={};let n=0;
+  for(const t of tabs){const it=D.plan(store,t,sys,row);if(it&&it.payload.action){c[it.payload.action]=(c[it.payload.action]||0)+1;n++}}return {c,n,of:tabs.length}}
+function distBar(c,n,order,colors){if(!n)return `<div class="dist"></div>`;return `<div class="dist">${order.map((k,i)=>c[k]?`<span title="${k}: ${c[k]}" style="width:${c[k]/n*100}%;background:${colors[i]}"></span>`:"").join("")}</div>`}
+const ACOL=ACTIONS.map(a=>a.c), AK=ACTIONS.map(a=>a.k);
+function wallGrid(store,opts){const gaps=D.gaps(store);const walk=opts.walk;const wc=store.state.walkCol;
+  const cell=(g,r)=>{const list=gaps.filter(x=>{const p=D.placement(x);return p.group===g&&(g==="x"||p.row===r)});
+    const showKey=walk&&(wc===-2||GROUPS.findIndex(x=>x.k===g)===wc||(g==="x"&&wc===4));
+    const keys=showKey?KEY_GAPS.filter(k=>k[2]===g&&(g==="x"||k[3]===r)):[];
+    const sample=list.slice(showKey?-1:-3).reverse();
+    return `<div class="cell g-${g}"><div class="n">${list.length||""}</div>${sample.map(x=>`<div class="s">${esc(x.payload.q)}</div>`).join("")}${keys.map(k=>`<div class="s key">${esc(k[0])} <span class="muted">· ${esc(k[4])}</span></div>`).join("")}</div>`};
+  const unplaced=gaps.filter(x=>!D.placement(x).group).length;
+  return `<div class="wall"><div></div>${GROUPS.map(g=>`<div class="hd g-${g.k}">${g.n}<br><span class="muted" style="font-weight:400">${g.s}</span></div>`).join("")}
+    ${WROWS.map(r=>`<div class="rh">${r.n}</div>${GROUPS.map(g=>cell(g.k,r.k)).join("")}`).join("")}</div>
+    <div class="row" style="align-items:stretch"><div class="cell g-x" style="flex:1"><span class="lbl">Not a CBOM question</span>${cell("x","none").replace('<div class="cell g-x">','<div>')}</div>${unplaced?`<div class="cell" style="flex:0 0 10em"><span class="lbl">Not placed yet</span><div class="n" style="color:var(--muted)">${unplaced}</div></div>`:""}</div>`;}
+
+class Screen extends View {
+  constructor(root,store){super(root,store);this.live={main(){return this.main()},clock(){return this.clock()}};}
+  shape(){const s=this.store.state;return s.stage+"|"+s.inject}
+  render(){const s=this.store.state,stg=stageOf(s.stage);
+    return `<div class="screen"><div class="bar"><div><span class="lbl">CBOM Profiles Working Group · tabletop</span><h2>${esc(stg.t)}</h2></div><div class="big" style="font-size:2em" data-live="clock"></div></div><div data-live="main" class="stack" style="gap:2.2vh"></div></div>`}
+  afterLive(){this.drawQR()}
+  drawQR(){const el=this.root.querySelector(".qr");if(el&&window.QRCode&&!el.dataset.done){el.dataset.done=1;try{new QRCode(el,{text:joinUrl(),width:320,height:320,correctLevel:QRCode.CorrectLevel.M})}catch(e){}}}
+  clock(){const s=this.store.state;if(!s.timerEnd)return "";const ms=Math.max(0,s.timerEnd-now());const m=Math.floor(ms/60000),sec=Math.floor(ms%60000/1000);return `${m}:${String(sec).padStart(2,"0")}`}
+  main(){const st=this.store,s=st.state,stg=stageOf(s.stage);const people=st.people.size,tables=D.tables(st).size;let h="";
+    if(s.inject){const I=INJECTS[s.inject];const ans=D.injectAns(st,s.inject);
+      h+=`<div class="inject" style="font-size:1.05em"><span class="lbl">Inject ${s.inject} · ${esc(I.t)}${I.to?` · to the compliance officer`:""}</span><p style="font-size:1.15em"><i>${esc(I.text)}</i></p><p><b>${esc(I.ask)}</b></p>
+        <span class="lbl">${ans.length} of ${tables} tables answered</span>${this.injectResults(I,ans,s.injectReveal)}${s.injectReveal?`<p><b>Lands on:</b> ${esc(I.lands)}</p>`:""}</div>`;
+      return h;}
+    if(s.stage==="lobby"){const q=this.root.querySelector(".qr");
+      return `<div class="row" style="gap:4vw;align-items:center;flex-wrap:nowrap"><div class="qr"></div><div class="stack" style="gap:2vh"><h1>Your supplier sent a CBOM. Now what?</h1><p style="font-size:1.2em">Scan to join your table, or open<br><b class="mono" style="font-size:.9em">${esc(joinUrl())}</b></p><div class="row" style="gap:3vw"><div><div class="big">${people}</div><span class="lbl">people</span></div><div><div class="big">${tables}</div><span class="lbl">tables</span></div></div></div></div>`}
+    if(s.stage==="welcome") return `<span class="lbl">The question of the day</span><h1 style="font-size:3.6em;max-width:22ch">${esc(QUESTION)}</h1><p style="font-size:1.2em" class="muted">You are the migration team of Nordhaven Netz, a grid operator. Your suppliers have sent you CBOMs. Your board wants a plan.</p>`;
+    if(s.stage==="briefing") return `<div class="tw"><table><tr><th>System</th><th>What it does</th><th>Supplier document</th></tr>${Object.entries(SYSTEMS).map(([k,S])=>`<tr><td><b>${S.name}</b></td><td>${S.what}</td><td>${k}: ${esc(S.product)}</td></tr>`).join("")}</table></div>
+      <div class="row" style="align-items:flex-start;gap:3vw"><div class="stack" style="flex:1"><span class="lbl">The task</span><p>A post-quantum migration plan by the end of Q2 2027. High-risk systems migrated by the end of 2030. You have the three documents and nothing else.</p><p><b>Fill in the plan</b> on your phone. <b>Write a gap card</b> for every question the documents cannot answer.</p></div>
+      <div class="stack" style="flex:1"><span class="lbl">The six actions</span>${ACTIONS.map(a=>`<div><i style="display:inline-block;width:.8em;height:.8em;background:${a.c};border-radius:2px;margin-right:.4em"></i><b>${a.n}</b> <span class="muted">${a.d}</span></div>`).join("")}</div></div>`;
+    if(stg.sys){const S=SYSTEMS[stg.sys];const gaps=D.gaps(st).filter(g=>g.payload.stage===s.stage);
+      return `<div class="row" style="align-items:flex-start;gap:2.5vw;flex-wrap:nowrap"><div class="stack" style="flex:1.4;min-width:0"><span class="lbl">${S.doc} · ${esc(S.product)}</span><div class="tw"><table><tr>${S.cols.map(c=>`<th>${c}</th>`).join("")}</tr>${S.rows.map(r=>`<tr>${r.map((c,i)=>`<td>${i===0?`<code>${c}</code>`:c}</td>`).join("")}</tr>`).join("")}</table></div></div>
+        <div class="stack" style="flex:1;min-width:0"><span class="lbl">The room’s plan · ${tables} tables</span>${S.plan.map(([rk,rn])=>{const d=actionDist(st,stg.sys,rk);return `<div class="stack" style="gap:.3em"><div class="row" style="justify-content:space-between"><code>${esc(rn)}</code><span class="muted" style="font-size:.75em">${d.n}/${d.of}</span></div>${distBar(d.c,d.n,AK,ACOL)}</div>`}).join("")}
+        <div class="legend">${ACTIONS.map(a=>`<span><i style="background:${a.c}"></i>${a.n}</span>`).join("")}</div>
+        <div class="row" style="gap:2vw;margin-top:1vh"><div><div class="big" style="font-size:3em">${gaps.length}</div><span class="lbl">gap cards on ${S.doc}</span></div><div><div class="big" style="font-size:3em">${D.gaps(st).length}</div><span class="lbl">in total</span></div></div>
+        ${gaps.slice(-3).reverse().map(g=>`<div class="gap" style="font-size:.8em"><div class="q">${esc(g.payload.q)}</div><span class="muted">Table ${g.table}</span></div>`).join("")}</div></div>`}
+    if(s.stage==="prio"){const ps=D.list(st,"prio");const first={},c={A:0,B:0,C:0};ps.forEach(p=>{const f=(p.payload.order||[])[0];if(f)c[f]++});const n=c.A+c.B+c.C;
+      return `<h1>Which system moves first, and why?</h1><div class="stack">${["A","B","C"].map(k=>`<div class="stack" style="gap:.3em"><div class="row" style="justify-content:space-between"><b>${SYSTEMS[k].name}</b><span class="mono">${c[k]}</span></div><div class="dist"><span style="width:${n?c[k]/n*100:0}%;background:var(--accent)"></span></div></div>`).join("")}</div>
+        <span class="lbl">${n} of ${tables} tables have chosen</span>${ps.filter(p=>p.payload.dec).slice(-3).map(p=>`<div class="gap"><span class="lbl">Table ${p.table} · the decision we could not make</span><div class="q">${esc(p.payload.dec)}</div></div>`).join("")}`}
+    if(s.stage==="wall"||s.stage==="walk") return wallGrid(st,{walk:s.stage==="walk"});
+    if(s.stage==="poll"){const ps=D.list(st,"poll");const cols=["var(--ok)","var(--signal)","var(--g-x)"];
+      return `<p class="muted">A temperature reading for the working group, not a vote. ${ps.length} responses.</p>`+POLL.map((q,i)=>{const c={};let n=0;ps.forEach(p=>{const v=p.payload.a&&p.payload.a[i];if(v){c[v]=(c[v]||0)+1;n++}});
+        return `<div class="stack" style="gap:.4em"><p style="font-size:1.1em"><b>${i+1}.</b> ${esc(q)}</p>${distBar(c,n,POLL_OPTS,cols)}<div class="legend">${POLL_OPTS.map((o,j)=>`<span><i style="background:${cols[j]}"></i>${o} ${c[o]||0}</span>`).join("")}</div></div>`}).join("")}
+    if(s.stage==="close") return `<h1 style="font-size:3em">Thank you.</h1><p style="font-size:1.2em">The wall becomes a GitHub issue and enters the decision backlog within a week.</p><div class="row" style="gap:3vw"><div><div class="big">${D.gaps(st).length}</div><span class="lbl">gap cards</span></div><div><div class="big">${people}</div><span class="lbl">people</span></div><div><div class="big">${tables}</div><span class="lbl">tables</span></div></div><p style="font-size:1.1em">Join us: <b>${esc(CONFIG.wgUrl)}</b></p>`;
+    return h;}
+  injectResults(I,ans,rv){
+    if(I.type==="grid") return `<div class="stack">${I.items.map(([k,l])=>{const c={};let n=0;ans.forEach(a=>{const v=a.payload.a&&a.payload.a[k];if(v){c[v]=(c[v]||0)+1;n++}});const cols=["#a3361b","#c88a12","#2c7a4b","#8a8f94"];
+      return `<div class="stack" style="gap:.3em"><div class="row" style="justify-content:space-between"><b>${esc(l)}</b>${rv?`<span class="pill" style="background:var(--ok-soft);color:var(--ok)">${I.key[k]}</span>`:""}</div>${distBar(c,n,I.opts,cols)}</div>`}).join("")}<div class="legend">${I.opts.map((o,j)=>`<span><i style="background:${["#a3361b","#c88a12","#2c7a4b","#8a8f94"][j]}"></i>${o}</span>`).join("")}</div></div>`;
+    if(I.type==="choice"){const c={};let n=0;ans.forEach(a=>{const v=a.payload.a&&a.payload.a.v;if(v){c[v]=(c[v]||0)+1;n++}});
+      return `<div class="stack">${I.opts.map(o=>`<div class="row" style="flex-wrap:nowrap"><b style="width:8em">${o}</b><div class="dist" style="flex:1"><span style="width:${n?(c[o]||0)/n*100:0}%;background:${rv&&o===I.key?"var(--ok)":"var(--accent)"}"></span></div><span class="mono">${c[o]||0}</span></div>`).join("")}</div>${rv?`<div class="answer">${esc(I.keyLong)}</div>`:""}`}
+    if(I.type==="multi"){const c={};ans.forEach(a=>(a.payload.a&&a.payload.a.v||[]).forEach(v=>c[v]=(c[v]||0)+1));const n=Math.max(1,ans.length);
+      return `<div class="stack">${I.items.map(([k,l])=>`<div class="row" style="flex-wrap:nowrap"><b style="width:10em">${esc(l)}</b><div class="dist" style="flex:1"><span style="width:${(c[k]||0)/n*100}%;background:${rv&&I.key.includes(k)?"var(--ok)":"var(--accent)"}"></span></div><span class="mono">${c[k]||0}</span></div>`).join("")}</div>${rv?`<div class="answer">${esc(I.keyLong)}</div>`:""}`}
+    return "";}
+}
+
+/* ===================== PRESENTER ===================== */
+class Presenter extends View {
+  constructor(root,store,opts){super(root,store);this.opts=opts||{};this.authed=!(store instanceof RestStore)||!!store.pin;
+    this.live={stats(){return this.stats()},feed(){return this.feed()},editor(){return this.editor()},inj(){return this.injStatus()},conn(){return this.store.ok===false?`<span class="pill" style="color:var(--signal)">Connection lost, retrying</span>`:`<span class="pill" style="color:var(--ok)">Live</span>`}};}
+  shape(){const s=this.store.state;return [this.authed,s.stage,s.inject,s.injectReveal,s.walkCol].join("|")}
+  render(){if(!this.authed) return `<div class="phone"><div class="card stack"><h2>Facilitator console</h2><label class="f"><span class="lbl">Facilitator PIN</span><input id="pin" type="password" data-keep="pin"></label><button class="primary" data-act="pin">Open console</button></div></div>`;
+    const s=this.store.state,idx=STAGES.findIndex(x=>x.k===s.stage);
+    return `<div class="console">
+      <aside class="stack"><div class="row" style="justify-content:space-between"><h3>Running order</h3><span data-live="conn"></span></div>
+        <div class="stages">${STAGES.map(x=>`<button class="${x.k===s.stage?"on":""}" data-act="stage" data-k="${x.k}"><span class="mono">${x.at}</span>${esc(x.t)}</button>`).join("")}</div>
+        <div class="row"><button data-act="prev" ${idx<=0?"disabled":""}>Back</button><button class="primary" data-act="next" style="flex:1" ${idx>=STAGES.length-1?"disabled":""}>Next: ${esc((STAGES[idx+1]||{t:"—"}).t)}</button></div>
+        <div class="card stack"><span class="lbl">Timer</span><div class="row">${[5,10,15,20].map(m=>`<button data-act="timer" data-m="${m}">${m} min</button>`).join("")}<button data-act="timer" data-m="0">Clear</button></div></div>
+        ${this.opts.embedded?"":`<div class="card stack"><span class="lbl">Links</span><p style="font-size:.85rem">Projector: <code>#screen</code><br>Participants: <code>#join</code></p><button data-act="openscreen">Open projector view</button></div>`}
+        <div class="card stack"><span class="lbl">Results</span><button data-act="copymd">Copy gaps as Markdown</button><button data-act="csv">Download all results (CSV)</button><button data-act="signups">Copy sign-up list</button>${this.opts.embedded?`<button data-act="sim">Add 6 simulated tables</button>`:""}<button data-act="reset">Reset session…</button>${this.ui.confirmReset?`<div class="row"><span class="muted">Delete all answers?</span><button class="signal" data-act="reset2">Delete</button><button data-act="reset0">Keep</button></div>`:""}</div>
+      </aside>
+      <main class="stack" style="min-width:0">
+        <div class="stats" data-live="stats"></div>
+        <div class="card stack"><div class="row" style="justify-content:space-between"><span class="lbl">Injects</span><span class="muted" style="font-size:.8rem">Opens on every phone and on the projector</span></div>
+          <div class="row">${[1,2,3,4].map(n=>`<button class="${s.inject===n?"signal":""}" data-act="inject" data-n="${n}"><span class="mono">${INJECTS[n].at}</span> ${n} · ${INJECTS[n].t}</button>`).join("")}</div>
+          ${s.inject?`<div class="row"><button data-act="reveal">${s.injectReveal?"Hide answers":"Reveal answers"}</button><button data-act="inject" data-n="0">Close inject ${s.inject}</button></div><div data-live="inj"></div>`:""}</div>
+        ${s.stage==="walk"?`<div class="card stack"><span class="lbl">Walk the wall: reveal the answer key one column at a time</span><div class="row">${GROUPS.map((g,i)=>`<button class="${s.walkCol===i?"on":""}" data-act="walk" data-i="${i}">${g.n}</button>`).join("")}<button class="${s.walkCol===4?"on":""}" data-act="walk" data-i="4">Not CBOM</button><button class="${s.walkCol===-2?"on":""}" data-act="walk" data-i="-2">All</button><button data-act="walk" data-i="-1">None</button></div></div>`:""}
+        ${s.stage==="wall"||s.stage==="walk"?`<div class="card stack"><span class="lbl">Move cards to their final place</span><div data-live="editor" class="stack"></div></div>`:`<div class="stack"><span class="lbl">Latest gap cards</span><div class="feed" data-live="feed"></div></div>`}
+      </main></div>`;}
+  stats(){const st=this.store;const gaps=D.gaps(st);const plans=D.list(st,"plan").filter(p=>p.payload.action);const t=D.tables(st);
+    const box=(n,l)=>`<div class="card stat"><b>${n}</b><span class="lbl">${l}</span></div>`;
+    return box(st.people.size,"people")+box(t.size,"tables")+box(gaps.length,"gap cards")+box(plans.length,"plan rows set")+box(D.list(st,"poll").length,"poll answers");}
+  injStatus(){const s=this.store.state;const a=D.injectAns(this.store,s.inject);const t=D.tables(this.store);const missing=[...t].filter(x=>!a.some(y=>y.table===x)).sort((x,y)=>x-y);
+    return `<p class="muted">${a.length} of ${t.size} tables answered.${missing.length&&missing.length<=12?` Waiting on tables ${missing.join(", ")}.`:""}</p>`}
+  feed(){return D.gaps(this.store).slice(-12).reverse().map(g=>`<div class="gap"><div class="q">${esc(g.payload.q)}</div><div class="meta"><span class="pill">T${g.table}</span><span class="pill">Doc ${esc(g.payload.doc)}</span><button style="min-height:28px;padding:4px 8px;font-size:.75rem;margin-left:auto" data-act="hide" data-id="${g.id}">Hide</button></div></div>`).join("")||`<p class="muted">Cards appear here as tables write them.</p>`}
+  editor(){const gaps=D.gaps(this.store);if(!gaps.length)return `<p class="muted">No cards yet.</p>`;
+    return `<div class="tw"><table><tr><th>Card</th><th>T</th><th>Team guess</th><th>Final column</th><th>Final row</th></tr>${gaps.map(g=>{const p=g.payload;return `<tr><td>${esc(p.q)}</td><td>${g.table}</td><td style="font-size:.75rem">${esc(p.group?gname(p.group):"—")}<br>${esc(rname(p.row))}</td>
+      <td><select id="fg-${g.id}" data-chg="final" data-id="${g.id}" data-f="final_group"><option value="">(team’s)</option>${GROUPS.map(x=>`<option value="${x.k}" ${p.final_group===x.k?"selected":""}>${x.n}</option>`).join("")}<option value="x" ${p.final_group==="x"?"selected":""}>Not CBOM</option></select></td>
+      <td><select id="fr-${g.id}" data-chg="final" data-id="${g.id}" data-f="final_row"><option value="">(team’s)</option>${WROWS.map(x=>`<option value="${x.k}" ${p.final_row===x.k?"selected":""}>${x.k}</option>`).join("")}</select></td></tr>`}).join("")}</table></div>`}
+  async act(a,el){const st=this.store,s=st.state;try{
+    if(a==="pin"){const ok=await st.checkPin(this.root.querySelector("#pin").value);if(ok){this.authed=true;this.refresh(true)}else toast("That PIN is not right");return}
+    if(a==="stage") return st.setState({stage:el.dataset.k,inject:0,injectReveal:false,walkCol:-1});
+    if(a==="next"||a==="prev"){const i=STAGES.findIndex(x=>x.k===s.stage)+(a==="next"?1:-1);if(STAGES[i])return st.setState({stage:STAGES[i].k,inject:0,injectReveal:false,walkCol:-1});return}
+    if(a==="timer"){const m=+el.dataset.m;return st.setState({timerEnd:m?now()+m*60000:0})}
+    if(a==="inject"){const n=+el.dataset.n;return st.setState({inject:s.inject===n?0:n,injectReveal:false,timerEnd:n===1?now()+5*60000:s.timerEnd})}
+    if(a==="reveal") return st.setState({injectReveal:!s.injectReveal});
+    if(a==="walk") return st.setState({walkCol:+el.dataset.i});
+    if(a==="final"){const it=st.items.get(el.dataset.id);if(it) await st.upsertItem({...it,payload:{...it.payload,[el.dataset.f]:el.value}});return}
+    if(a==="hide"){const it=st.items.get(el.dataset.id);if(it) await st.upsertItem({...it,payload:{...it.payload,hidden:true}});return}
+    if(a==="openscreen"){const w=window.open(location.href.split("#")[0]+"#screen","_blank");if(!w)toast("Open #screen in a new window");return}
+    if(a==="copymd"){await copy(gapsMarkdown(st));return}
+    if(a==="csv"){download("cbom-workshop-results.csv",resultsCsv(st));return}
+    if(a==="signups"){const l=await st.getSignups();await copy(l.map(x=>`${x.name}\t${x.email}\tT${x.table??x.table_no??""}`).join("\n")||"(no sign-ups yet)");return}
+    if(a==="sim"){simulate(st,6);return}
+    if(a==="reset"){this.ui.confirmReset=true;this.refresh(true);return}
+    if(a==="reset0"){this.ui.confirmReset=false;this.refresh(true);return}
+    if(a==="reset2"){this.ui.confirmReset=false;await st.reset();this.refresh(true);toast("Session reset");return}
+  }catch(e){toast("Could not save: "+String(e.message||e).slice(0,80))}}
+}
+async function copy(t){try{await navigator.clipboard.writeText(t);toast("Copied")}catch(e){const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast("Copied")}catch(_){toast("Copy failed")}ta.remove()}}
+function download(name,text){try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:"text/csv"}));a.download=name;document.body.appendChild(a);a.click();a.remove()}catch(e){copy(text)}}
+function gapsMarkdown(st){const g=D.gaps(st);const by={};g.forEach(x=>{const p=D.placement(x);const k=(p.group||"?")+"|"+(p.group==="x"?"":p.row||"?");(by[k]=by[k]||[]).push(x)});
+  let md=`## Workshop gaps, December 2026\n\n${g.length} gap cards from ${D.tables(st).size} tables.\n\n`;
+  for(const gr of [...GROUPS,{k:"x",n:"Not a CBOM question"}]) for(const r of gr.k==="x"?[{k:"",n:""}]:WROWS){const l=by[gr.k+"|"+r.k];if(!l)continue;
+    md+=`### ${gr.n}${r.n?" · "+r.n:""} (${l.length})\n\n| Team | Doc | Question | Who could answer | Blocks |\n|---|---|---|---|---|\n`+l.map(x=>`| ${x.table} | ${x.payload.doc} | ${x.payload.q.replace(/\|/g,"\\|").replace(/\n/g," ")} | ${x.payload.who||""} | ${x.payload.blocks||""} |`).join("\n")+"\n\n"}
+  const un=g.filter(x=>!D.placement(x).group);if(un.length) md+=`### Not placed (${un.length})\n\n`+un.map(x=>`- T${x.table} (${x.payload.doc}): ${x.payload.q}`).join("\n")+"\n";
+  return md}
+function resultsCsv(st){const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;const rows=[["kind","table","person","field","value"]];
+  for(const it of st.items.values()){const p=it.payload;
+    if(it.kind==="gap") rows.push(["gap",it.table,p.by,"card",JSON.stringify({q:p.q,doc:p.doc,who:p.who,blocks:p.blocks,group:p.group,row:p.row,final_group:p.final_group,final_row:p.final_row,hidden:!!p.hidden})]);
+    else if(it.kind==="plan") rows.push(["plan",it.table,p.by,`${p.sys}:${p.row}`,JSON.stringify({action:p.action,when:p.when,dep:p.dep,conf:p.conf})]);
+    else if(it.kind==="inject") rows.push(["inject",it.table,p.by,`inject ${p.n}`,JSON.stringify(p.a)]);
+    else if(it.kind==="prio") rows.push(["priorities",it.table,p.by,"order",JSON.stringify({order:p.order,why:p.why,dec:p.dec})]);
+    else if(it.kind==="poll") rows.push(["poll",it.table,"","answers",JSON.stringify(p.a)]);}
+  return rows.map(r=>r.map(q).join(",")).join("\n")}
+
+/* ===================== SIMULATION (rehearsal and local mode only) ===================== */
+function simulate(st,nTables){const names=["Anna","Bram","Chloé","Dario","Elif","Femke","Goran","Hana","Ines","Jonas","Katja","Luca","Mira","Nils","Oona","Pieter","Rosa","Sven","Tomás","Ute","Vera","Willem","Yara","Zeno"];
+  const roles=Object.keys(ROLES);const existing=D.tables(st);let t=1;const pick=a=>a[Math.floor(Math.random()*a.length)];
+  for(let k=0;k<nTables;k++){while(existing.has(t))t++;existing.add(t);
+    const ppl=roles.map(r=>({id:uid(),name:pick(names)+" "+String.fromCharCode(65+Math.floor(Math.random()*26))+".",table:t,role:r}));
+    ppl.forEach(p=>st.people.set(p.id,{...p,ts:now()}));
+    const put=it=>st.items.set(it.id,{...it,ts:now()});
+    const nG=4+Math.floor(Math.random()*5);
+    for(let i=0;i<nG;i++){const kg=pick(KEY_GAPS);const right=Math.random()<.6;put({id:"gap:"+uid(),kind:"gap",table:t,person:pick(ppl).id,payload:{q:kg[0],doc:kg[1].split(",")[0].trim(),who:pick(WHO),blocks:pick(["yes","no"]),by:pick(ppl).name,stage:"sys"+(["A","B","C"].includes(kg[1][0])?kg[1][0]:"A"),group:right?kg[2]:pick(["d","cp","o","a"]),row:right?kg[3]:pick(["profile","draft","none"])}})}
+    const like={A:{tls:"update",tok:"accept",cache:"escalate",keys:"escalate",http:"enable"},B:{https:"update",ssh:"escalate"},C:{mms:"escalate",goose:"shield",eng:"escalate",fw:"replace",wan:"shield"}};
+    for(const [sys,S] of Object.entries(SYSTEMS)) for(const [rk] of S.plan) put({id:`plan:t${t}:${sys}:${rk}`,kind:"plan",table:t,person:ppl[0].id,payload:{sys,row:rk,action:Math.random()<.55?like[sys][rk]:pick(AK),conf:pick(["H","M","L"]),by:ppl[0].name}});
+    const I1=INJECTS[1];put({id:`inj:t${t}:1`,kind:"inject",table:t,person:ppl[1].id,payload:{n:1,a:Object.fromEntries(I1.items.map(([k])=>[k,Math.random()<.5?I1.key[k]:pick(I1.opts)])),by:ppl[1].name}});
+    put({id:`inj:t${t}:2`,kind:"inject",table:t,person:ppl[4].id,payload:{n:2,a:{v:pick(["Partly","No","Partly","Yes"])},by:ppl[4].name}});
+    put({id:`inj:t${t}:3`,kind:"inject",table:t,person:ppl[0].id,payload:{n:3,a:{v:Math.random()<.5?["A:tok"]:["A:tok","A:tls"]},by:ppl[0].name}});
+    put({id:`inj:t${t}:4`,kind:"inject",table:t,person:ppl[4].id,payload:{n:4,a:{v:pick(["Nothing","Some of it","Nothing"])},by:ppl[4].name}});
+    put({id:`prio:t${t}`,kind:"prio",table:t,person:ppl[0].id,payload:{order:pick([["A","B","C"],["A","C","B"],["C","A","B"]]),dec:pick(["Whether the relay firmware can ever verify a PQC signature.","Whether nginx could do ML-KEM today. The document only says what is used.","Which of our forty applications would reject ML-DSA tokens."]),by:ppl[0].name}});
+    ppl.forEach(p=>put({id:`poll:${p.id}`,kind:"poll",table:t,person:p.id,payload:{a:{0:pick(["Agree","Agree","Agree","Not sure"]),1:pick(["Agree","Disagree","Not sure"]),2:pick(["Agree","Not sure","Disagree"])}}}));
+  }
+  st.save&&st.save();st.emit();toast(`Added ${nTables} simulated tables`)}
+
+/* ===================== BOOT ===================== */
+const app=document.getElementById("app");
+const live=!!(CONFIG.supabaseUrl&&CONFIG.supabaseKey);
+let route=(location.hash||"").slice(1)||(live?"join":"rehearse");
+function boot(){
+  app.innerHTML="";const views=[];
+  if(route==="rehearse"){
+    const store=new LocalStore(false);
+    simulate(store,5);
+    const me={id:uid(),name:"You (rehearsal)",table:1,role:"comp"};store.people.set(me.id,{...me,ts:now()});
+    app.innerHTML=`<div class="reh-head"><div class="stack" style="gap:4px"><span class="lbl">Rehearsal · everything runs in this page</span><h1>CBOM Tabletop Live</h1><p class="muted" style="max-width:70ch">Drive the session from the console. The phone shows what a participant at table 1 sees, and the projector shows the room screen. Five simulated tables are already playing. For the live event, each view opens on its own device.</p></div></div>
+      <div class="reh"><div class="stack" style="min-width:0"><div class="pane"><span class="lbl">Room projector · #screen</span><div class="proj" id="r-screen"></div></div><div class="pane"><span class="lbl">Facilitator console · #present</span><div id="r-present"></div></div></div>
+      <div class="pane" style="align-self:start"><span class="lbl">Participant phone · #join</span><div class="phoneframe" id="r-phone"></div></div></div>`;
+    views.push(new Screen(document.getElementById("r-screen"),store),new Presenter(document.getElementById("r-present"),store,{embedded:true}),new Participant(document.getElementById("r-phone"),store,{me}));
+    store.on(()=>views.forEach(v=>v.refresh()));
+  } else {
+    const store=live?new RestStore(CONFIG.supabaseUrl,CONFIG.supabaseKey):new LocalStore(true);
+    let v;
+    if(route==="present") v=new Presenter(app,store);
+    else if(route==="screen") v=new Screen(app,store);
+    else v=new Participant(app,store);
+    views.push(v);store.on(()=>v.refresh());
+    if(live) store.start(route==="join"||!["present","screen"].includes(route)?"participant":route,{table:()=>v.me&&v.me.table});
+  }
+  views.forEach(v=>v.refresh(true));
+  clearInterval(window._tick);window._tick=setInterval(()=>views.forEach(v=>{if(v instanceof Screen)v.refresh()}),1000);
+}
+window.addEventListener("hashchange",()=>{route=(location.hash||"").slice(1)||(live?"join":"rehearse");boot()});
+boot();
+</script>
+
+</body>
+</html>

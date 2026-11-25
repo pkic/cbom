@@ -22,10 +22,10 @@ nav: uc-substation
 {% include usecases-nav.html %}
 
 <main>
-  <div class="crumb">CHANGE PLANNING · WORKED USE CASE · DRAFT</div>
+  <div class="crumb">CHANGE PLANNING · WORKED USE CASE</div>
   <h1>Substation automation (OT): from use case to profile</h1>
   <p class="lead">A grid operator plans the post-quantum migration of one substation automation system. For each communication path, the operator decides whether to migrate it in place, migrate only the key plane, carry it on a conduit, or replace the device at its next refurbishment. This is an operational technology (OT) use case in the <a href="change-planning.html#substation">change-planning</a> group.</p>
-  <div class="banner warn">Draft for discussion. The values are illustrative. They are taken from the profiles in the published standards, and they stay illustrative until a supplier volunteers a real product. The attribute and profile names are proposals, not agreed names. The component profile extends the change core, the core profile shared by the change-planning use cases (draft decision 0023). The decisions proposed on this page are numbered for draft decision 0024. The working text is kept in <code>drafts/ot-substation/</code>.</div>
+  <div class="banner">The values are illustrative. They are taken from the profiles in the published standards, and they stay illustrative until a supplier volunteers a real product. The component side is published: the <a href="../methodology/profile-change-core.rules.json">change core</a> v0.1, the component profile <a href="../methodology/profile-pqc-migration-ot.rules.json"><code>pqc-migration-ot</code></a> v0.1, and a worked record of one protection IED that the reference validator evaluates. The system overlay, <code>sas-system</code>, is described here and is not yet published as a rules file.</div>
 
 <h2>Choice of case</h2>
 <p>The OT use case is the <strong>substation automation system (SAS) of an electricity grid operator</strong>.</p>
@@ -165,7 +165,7 @@ nav: uc-substation
     </svg>
     <figcaption>The reference system. Protection traffic stays inside the station zone and is protected with a symmetric MAC. All asymmetric cryptography sits elsewhere: the group key distribution, the TLS sessions to the HMI (human-machine interface) and the gateway, the engineering download, and the tunnel that carries the control-centre link across the conduit. Values are illustrative.</figcaption>
   </figure>
-<p><strong>The threats are weighted differently from the Keycloak use case.</strong> Protection and control traffic needs to stay confidential only for a short time. The quantum risk is that an attacker forges something that carries authority: firmware, configuration downloads, commands or group keys. The WAN link to the control centre is the main harvest-now-decrypt-later exposure. The profile asks for the facts for each purpose and does not rank them (decision 0002).</p>
+<p><strong>The threats are weighted differently from the Keycloak use case.</strong> Protection and control traffic needs to stay confidential only for a short time. The quantum risk is that an attacker forges something that carries authority: firmware, configuration downloads, commands or group keys. The WAN link to the control centre is the main harvest-now-decrypt-later exposure. The profile asks for the facts for each purpose and does not rank them.</p>
 <h2>2. Producer constraints</h2>
 <p>There are two producers. The black-box constraint applies to both: each producer can describe only what it can see from its own position.</p>
 <ul>
@@ -318,7 +318,7 @@ nav: uc-substation
 </ul>
 <h2>4. Profiles</h2>
 <p>There are two profiles: one for the component, one for the system.</p>
-<p><strong><code>pqc-migration-ot</code></strong> (component). It extends the change core monotonically: it adds rules and does not relax any (decision 0004). The core supplies the baseline capability attributes. It also supplies <code>keyReplaceable</code>, <code>updateAuthority</code> and <code>updateMechanism</code>, as conditional rules that apply to update interfaces.</p>
+<p><strong><code>pqc-migration-ot</code></strong> (component), published as <a href="../methodology/profile-pqc-migration-ot.rules.json"><code>profile-pqc-migration-ot.rules.json</code></a>. It extends the change core monotonically: it adds rules and does not relax any. The core supplies the capability attributes, and the update-path facts: <code>updateMechanism</code> for the product and for each management interface (<code>change-core#P2</code>, <code>#I13</code>), <code>updateAuthority</code> where an interface carries updates (<code>#I14</code>), and <code>keyReplaceable</code> on storage (<code>#I16</code>). The real-time rule is the core's <code>integrationConstraints</code> (<code>#I9</code>, SHOULD), so it is not restated.</p>
 <div style="overflow:auto">
 <table>
 <thead>
@@ -331,38 +331,33 @@ nav: uc-substation
 <tbody>
 <tr>
 <td>Inherited</td>
-<td>All change-core rules, including the conditional update-path rules</td>
+<td>All change-core rules, including the update-path rules</td>
 <td>same as in the core</td>
 </tr>
 <tr>
-<td>I-OT1</td>
-<td><code>certificationImpact</code> on every interface whose <code>capabilityStatus</code> is not <code>not-planned</code></td>
+<td>I1</td>
+<td><code>certificationImpact</code> on every interface except a peer interface: <code>none</code>, <code>retest</code>, <code>recertification</code>, or <code>not-applicable</code> where no capability is planned</td>
 <td>MUST</td>
 </tr>
 <tr>
-<td>I-OT2</td>
-<td><code>keyStoreRef</code> on every interface keyed by a group key service</td>
-<td>MUST</td>
-</tr>
-<tr>
-<td>I-OT3</td>
-<td><code>verifierReplaceable</code> on every update interface</td>
-<td>MUST</td>
-</tr>
-<tr>
-<td>I-OT5</td>
-<td>Real-time limits stated in <code>integrationConstraints</code> where they exist</td>
+<td>I2</td>
+<td><code>certificationScheme</code> where the impact is a re-test or a re-certification</td>
 <td>SHOULD</td>
 </tr>
 <tr>
-<td>P-OT1</td>
-<td>Declare at least one update interface, or state why there is none</td>
+<td>I3</td>
+<td><code>keyStoreRef</code> on every service interface, naming the interface that delivers or holds its keys</td>
+<td>MUST</td>
+</tr>
+<tr>
+<td>I4</td>
+<td><code>verifierReplaceable</code> on every interface that carries updates</td>
 <td>MUST</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p><strong><code>sas-system</code></strong> (integrator). This is a derived overlay. An overlay is a document that adds facts on top of other CBOMs. It references the component CBOMs and does not copy them.</p>
+<p><strong><code>sas-system</code></strong> (integrator), not yet published as a rules file. This is a derived overlay. Its subject is the <code>system</code> subject type: one system design, not a site. Only the overlay accepts it. An overlay is a document that adds facts on top of other CBOMs. It references the component CBOMs and does not copy them.</p>
 <div style="overflow:auto">
 <table>
 <thead>
@@ -405,7 +400,7 @@ nav: uc-substation
 <ul>
 <li>The update-path attributes are now part of the change core, so the IoT profile uses them too. A hard limit, such as a frame size fixed by a radio standard, is recorded with <code>resourceBound</code>, and both profiles use it.</li>
 <li>The overlay's verdict covers the integrator's own statements. The verdict on each component document is reported beside it.</li>
-<li>The scope declaration (decision 0008) must accept a whole system, not only a product, as the subject of a CBOM.</li>
+<li>The scope declaration must accept a whole system, not only a product, as the subject of a CBOM.</li>
 </ul>
   <figure>
     <svg viewBox="0 0 720 330" role="img" aria-label="Five supplier documents on the left, one per component: protection IED, bay controller, station gateway, station server and WAN router, each a component CBOM conforming to pqc-migration-ot. On the right, the integrator's system document, conforming to sas-system, cites each of them by link and digest and states the use of every interface, the zones and conduits, who provides the key plane, and the IEC 62443-3-3 level as delivered. Below both, the operator holds instance data and its migration register, outside both profiles." xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="11">
@@ -433,9 +428,10 @@ nav: uc-substation
     </svg>
     <figcaption>Two kinds of document. Each supplier describes one product, which it can see in full. The integrator describes how the products are put together, and cites the supplier documents rather than repeating them. The system verdict covers the integrator's statements, and each component's own verdict is reported beside it, including a component that conforms to no profile.</figcaption>
   </figure>
-<p><strong>No edge object.</strong> An edge object would treat a path between devices as an object with its own facts. The methodology does not define one. Decision 0026 represents a connection as the join of its two ends, through a <code>peerInterface</code> pointer in a deployment record, and leaves facts about a whole path to the inventory. In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so this use case needs no more than that join. A fact that belongs to the path itself, such as an end-to-end GOOSE transfer time, would need more. That fact is an operator requirement, so it stays out of the profiles.</p>
+<p><strong>No edge object.</strong> An edge object would treat a path between devices as an object with its own facts. The methodology does not define one. The methodology represents a connection as the join of its two ends, through a <code>peerInterface</code> pointer in a deployment record, and leaves facts about a whole path to the inventory. In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so this use case needs no more than that join. A fact that belongs to the path itself, such as an end-to-end GOOSE transfer time, would need more. That fact is an operator requirement, so it stays out of the profiles.</p>
 <h2>5. The worked example</h2>
 <p>The worked example is a reference SAS. It uses generic components, and its values are taken from the profiles in the published standards. Every value is marked illustrative until a supplier volunteers a real product.</p>
+<p><strong>Published record.</strong> The protection IED is published as <a href="../methodology/examples/cbom-ot-protection-ied-product.cdx.json"><code>examples/cbom-ot-protection-ied-product.cdx.json</code></a>, built by <code>tools/build_ot_examples.py</code>. It conforms to the entry profile, the baseline, the change core and <code>pqc-migration-ot</code>. Two variants each fail one rule: <a href="../methodology/examples/cbom-ot-protection-ied-product-fail-core-I13.cdx.json"><code>-fail-core-I13</code></a> leaves <code>updateMechanism</code> off the enrolment interface, and <a href="../methodology/examples/cbom-ot-protection-ied-product-fail-ot-I4.cdx.json"><code>-fail-ot-I4</code></a> leaves <code>verifierReplaceable</code> off the firmware update interface. The other components are described below and are not yet published.</p>
 <p><strong>Components:</strong></p>
 <ul>
 <li>a protection IED;</li>
@@ -572,7 +568,7 @@ nav: uc-substation
 </ul>
 <h2>6. What the profiles deliberately exclude</h2>
 <ul>
-<li>Migration priority, risk scores, target dates and compensating controls. These belong in the operator's register (decisions 0002 and 0007, and CycloneDX 2.0 <code>risks</code>).</li>
+<li>Migration priority, risk scores, target dates and compensating controls. These belong in the operator's register, or in CycloneDX 2.0 <code>risks</code>.</li>
 <li>Per-path latency budgets and safety analysis.</li>
 <li>Site topology in supplier documents. The system document carries the zone structure for one design, not for a specific site.</li>
 <li>Exploitability. It stays a separate artefact.</li>
@@ -585,30 +581,34 @@ nav: uc-substation
 <li><strong>CycloneDX 1.7 has no native way to express zones.</strong> In CycloneDX 2.0, the blueprint model (zones, boundaries and flows) is the candidate for expressing them. This case is the first worked use of the blueprint model, and a concrete input to the CycloneDX feedback on the edge gap.</li>
 <li><strong>Certification.</strong> In CycloneDX 2.0, <code>certificationScheme</code> maps to <code>certifications</code>. In 1.7 it is a property, in the same way as module validation.</li>
 </ul>
-<h2>8. Proposed decisions and open questions</h2>
-<p><strong>Proposed decisions</strong> (for a draft decision 0024):</p>
+<h2>8. Positions and what is carried forward</h2>
+<p><strong>Positions.</strong> Adopted provisionally on 16 November 2026, with the two design questions below.</p>
 <ul>
 <li><strong>O1.</strong> The OT use case is the substation automation system, named by its decision.</li>
 <li><strong>O2.</strong> Two profiles: a component profile extending the change core, and a system overlay.</li>
-<li><strong>O3.</strong> The data plane and the key plane are separate interfaces, linked by <code>keyStoreRef</code>, which is MUST for group-keyed interfaces.</li>
+<li><strong>O3.</strong> The data plane and the key plane are separate interfaces, linked by <code>keyStoreRef</code>, which the component profile requires on every service interface.</li>
 <li><strong>O4.</strong> Real-time limits are integration constraints, not a new attribute.</li>
-<li><strong>O5.</strong> A conduit is an interface of the device that implements it. Connections are joined through deployment records (decision 0026); there is no edge object.</li>
+<li><strong>O5.</strong> A conduit is an interface of the device that implements it. Connections are joined through deployment records; there is no edge object.</li>
 <li><strong>O6.</strong> Values are illustrative until a supplier volunteers a product.</li>
+<li><strong><code>certificationImpact</code></strong> is a component fact. The supplier states what enabling a capability would trigger for its product. The operator's own type approval stays in the operator's register.</li>
+<li><strong><code>usage</code></strong> stays in the system overlay.</li>
+<li><strong>The system subject.</strong> A <code>system</code> subject type names one system design. Only the system overlay accepts it. An estate of sites stays outside profiles.</li>
 </ul>
-<p><strong>Open questions:</strong></p>
-<ol>
-<li>Does IEC 62351-9:2023 already profile G-IKEv2, or only GDOI over IKEv1? The answer changes the <code>int-gdoi</code> finding.</li>
-<li>Has IEC TC 57 WG 15 started PQC work on IEC 62351-3, -6, -8 and -9?</li>
-<li>Is <code>certificationImpact</code> a product fact, or a deployment fact that belongs in the system document?</li>
-<li>Should <code>usage</code> stay in the system overlay, or become a general facility for derived CBOMs?</li>
-<li>Who can bring a protection IED supplier and a transmission or distribution operator to review the draft? The best route is to ask named people directly.</li>
-</ol>
+<p><strong>What the findings rest on.</strong> Checked on 16 November 2026. IEC 62351-9:2023 provides no post-quantum measures yet, so GDOI over IKEv1 stays the profiled key plane. G-IKEv2 is RFC 9838 (November 2025), which obsoletes RFC 6407. ML-KEM for IKEv2 has been approved and is in the RFC Editor queue, so it is not yet an RFC. No public source was found for post-quantum work on IEC 62351-3 in IEC TC 57 WG 15.</p>
+<p><strong>Carried forward.</strong></p>
+<ul>
+<li>The <code>sas-system</code> overlay as a rules file, with the <code>system</code> subject type and the reporting of cited verdicts beside the overlay's own in the validator.</li>
+<li>Records for the bay controller, station gateway, station server and WAN router, and the system document.</li>
+<li>Whether <code>usage</code> becomes a general facility for derived CBOMs.</li>
+<li>Review by a protection IED supplier and a transmission or distribution operator.</li>
+</ul>
 <h2>Sources</h2>
 <ul>
 <li><a href="https://cdn.standards.iteh.ai/samples/102476/88f51459928e44f3b051832d08a7518a/IEC-62351-6-2020.pdf">IEC 62351-6:2020 preview</a></li>
 <li><a href="https://cdn.standards.iteh.ai/samples/105100/b7a344cdd98f47e4a67e4a94e9df50b5/IEC-62351-3-2023.pdf">IEC 62351-3:2023 preview</a></li>
 <li><a href="https://www.rfc-editor.org/info/rfc8052/">RFC 8052, GDOI support for IEC 62351</a></li>
-<li><a href="https://datatracker.ietf.org/doc/draft-ietf-ipsecme-g-ikev2/23/">draft-ietf-ipsecme-g-ikev2, published as RFC 9838</a></li>
+<li><a href="https://www.rfc-editor.org/info/rfc9838">RFC 9838, Group Key Management Using IKEv2 (G-IKEv2), November 2025</a></li>
+<li><a href="https://webstore.iec.ch/en/publication/66864">IEC 62351-9:2023, scope</a></li>
 <li><a href="https://datatracker.ietf.org/doc/draft-ietf-ipsecme-ikev2-mlkem/">draft-ietf-ipsecme-ikev2-mlkem, RFC Editor queue</a></li>
 <li><a href="https://www.igrid-td.com/smartguide/iec61850/goose-messaging/">GOOSE transfer time, IEC 61850-5 P2/P3</a></li>
 <li><a href="https://industrialcyber.co/regulation-standards-and-compliance/eu-begins-coordinated-effort-for-member-states-to-switch-critical-infrastructure-to-quantum-resistant-encryption-by-2030/">EU PQC roadmap (Industrial Cyber)</a></li>

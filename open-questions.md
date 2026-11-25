@@ -202,6 +202,10 @@ producer can honestly state that an estate is complete, so an estate is not a su
 estate is read as a set of product and deployment documents, each carrying its own coverage
 statement, as the federated arrangement in the Inventory section describes.
 
+On 16 November 2026 decision 0024 added a narrower subject type, `system`, for one system design
+such as a substation automation design reused across sites. Only the system overlay accepts it. It
+does not change this answer: an estate of sites is still not a subject type.
+
 Revival trigger: a regulator or a due-diligence profile that needs a claim about a whole estate.
 
 **What would have to change.** The scope object, and the due-diligence and compliance entries.
@@ -592,8 +596,8 @@ the Conformance section currently has to disclose.
 it is imposed on every profile built on top. A supplier who cannot honestly claim a complete list
 may prefer to say nothing at all, so requiring the statement could reduce take-up.
 
-**Where it stands.** Option B, though the choice was never argued. Moving it would make the
-baseline stricter, so it would need a version increase and would affect every existing document.
+**Where it stood before the answer.** Option B, though the choice was never argued. Superseded by
+decision 0012: the completeness statement is in the baseline, as rule P4.
 
 **What would have to change.** Three rules, both baseline examples, the baseline changelog, and
 one row of the Conformance table. This question is bound up with Q02: the completeness statement
@@ -1656,7 +1660,8 @@ for each asset class. Profiles become longer and inventories become buildable.
 **Option B: leave it to each profile author.** Some profiles are not intended to feed an
 inventory, and requiring the statement everywhere imposes work with no benefit in those cases.
 
-**Where it stands.** Nothing requires it. One rule happens to do it for one asset class.
+**Where it stood before the answer.** Nothing required it. One rule happened to do it for one asset
+class. Superseded by the answer below (decision 0012).
 
 **What would have to change.** Possibly a new well-formedness requirement in the Conformance
 section, and the checker that enforces those requirements.
@@ -2365,8 +2370,8 @@ rule, since the blocker would also become per job.
 
 **Answered in the drafting, 21 August 2026, and awaiting ratification.** Option B, with "job" fixed as a *cryptographic purpose* from
 a vocabulary the methodology defines, and with a test for what belongs in that vocabulary so
-additions can be argued rather than accumulated. Seven purposes are proposed; `randomness` is left
-open as an eighth. The proposal also names the collision to avoid: `endpointRoles` already means
+additions can be argued rather than accumulated. Seven purposes are proposed; `randomness` was left
+open as an eighth, and was closed on 16 November 2026: it is a run-time dependency, not a purpose (decision 0010). The proposal also names the collision to avoid: `endpointRoles` already means
 which party you are, and CycloneDX `cryptoFunctions` already names *operations*, which is a
 different thing — `sign`/`verify` is one operation covering both a TLS certificate signature and a
 firmware signature, which migrate a decade apart. Recorded as decision 0010 and implemented: the migration
@@ -2379,8 +2384,8 @@ status, which is what keeps a stage from becoming a floor.
 
 **Option C: one per interface, with an optional breakdown.**
 
-**Where it stands.** Option A in the rules. The explanatory text describes Option B. The profile
-records the per-job version as deferred rather than rejected.
+**Where it stood before the answer.** Option A in the rules, while the explanatory text described
+Option B. Superseded by the answer above: Option B, per cryptographic purpose (decision 0010).
 
 **What would have to change.** Two rules, the conditional mechanism, both migration examples, and
 the field naming convention if the jobs become separate fields.
@@ -2818,7 +2823,7 @@ profile was also corrected, to say that P2 asks for disclosure, in line with Q02
 
 ## N03 — What goes into the first release, and when?
 
-**Status** open
+**Status** settled provisionally, chair's call on 11 November 2026: four publications, Publication 1 first
 
 **The question.** Members have been told that three sections are reviewed every two weeks and
 that an initial document appears in August. There are nineteen sections.
@@ -2838,6 +2843,12 @@ August, and lets the later sections benefit from decisions taken in the meantime
 published document. Faster, and members would be reviewing material that is already public.
 
 **Option C: keep the full scope and move the date.**
+
+**Where it stands.** Settled provisionally on 11 November 2026, as the chair's call. The material is
+released as four separate publications: 1, Foundations; 2, Profiles and conformance; 3, Applying the
+methodology; and 4, Use cases. Each has its own status page, summary and version. Publication 1
+comes out first. It has no open questions left. The order of the other three and the target dates
+are still to be set.
 
 **What would have to change.** The announced cadence, what members are asked to review next, and
 whether the migration profile is in scope, which depends on Q01.

@@ -34,6 +34,68 @@ title: Overview
   </div>
 </section>
 
+<section class="wrap cards-section">
+  <div class="section-head">
+    <h2>Release 1 publications</h2>
+    <p>Working Draft 0.1, for comment. Each publication can be downloaded as a Word document.</p>
+  </div>
+  <div class="card-grid">
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Publication-1-Foundations.docx' | relative_url }}" download>
+      <span class="card-kicker">Publication 1</span>
+      <h3>Foundations</h3>
+      <p>The problem that CBOM profiles solve, the scope of the methodology, the terms that all
+         three publications use, and the reasons why CBOM data is difficult to use today.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Publication-2-Profiles-and-conformance.docx' | relative_url }}" download>
+      <span class="card-kicker">Publication 2</span>
+      <h3>Profiles and conformance</h3>
+      <p>The model, how a profile and its rules are written, the attribute catalogue, profile
+         families, conformance and claims, facts and judgements, confidentiality and context
+         pointers.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Publication-3-Applying-the-methodology.docx' | relative_url }}" download>
+      <span class="card-kicker">Publication 3</span>
+      <h3>Applying the methodology</h3>
+      <p>How to write a profile and encode it in a format, how versions and governance work,
+         and the use cases, profile families and related work, with the supporting tools.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
+  </div>
+</section>
+
+<section class="wrap cards-section">
+  <div class="section-head">
+    <h2>Application domain documents</h2>
+    <p>Drafts that apply the methodology to one sector each. Each can be downloaded as a Word document.</p>
+  </div>
+  <div class="card-grid">
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Application-domain-Operational-technology.docx' | relative_url }}" download>
+      <span class="card-kicker">Working Draft 0.2</span>
+      <h3>Operational technology</h3>
+      <p>What is specific to industrial control and substation automation: system records,
+         certification impact, firmware and long equipment lifetimes, and the OT protocols
+         that profiles need to cover.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Application-domain-Telecommunications.docx' | relative_url }}" download>
+      <span class="card-kicker">Working Draft 0.1</span>
+      <h3>Telecommunications</h3>
+      <p>How the methodology applies to operator networks, network equipment vendors and
+         regulators, building on the existing paper CBOM for Telecommunications v1.0.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Application-domain-SaaS-and-cloud-services.docx' | relative_url }}" download>
+      <span class="card-kicker">Working Draft 0.1</span>
+      <h3>SaaS and cloud services</h3>
+      <p>How a customer can obtain cryptographic facts about a service that it does not operate,
+         including service records, key custody and shared tenancy.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
+  </div>
+</section>
+
 <section class="band">
   <div class="wrap">
     <div class="section-head">

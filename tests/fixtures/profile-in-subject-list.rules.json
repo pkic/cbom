@@ -1,0 +1,56 @@
+{
+  "$comment": "Test fixture. A value checked against a list the record declares on its subject (inSubjectList).",
+  "profileId": "pkic.test.in-subject-list",
+  "profileTag": "in-subject-list",
+  "title": "Fixture: inSubjectList",
+  "version": "0.1",
+  "objective": {
+    "consumer": "Test fixture",
+    "decision": "Test fixture",
+    "decisionOptions": [
+      "pass",
+      "fail"
+    ]
+  },
+  "scope": {
+    "subjectTypes": [
+      "system"
+    ],
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.system-disclosure",
+    "version": "0.1",
+    "file": "../../docs/methodology/profile-system-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "zone",
+      "level": "MUST",
+      "constraint": {
+        "inSubjectList": "zones"
+      },
+      "withholdable": false
+    }
+  ],
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-11-18",
+      "changes": []
+    }
+  ]
+}

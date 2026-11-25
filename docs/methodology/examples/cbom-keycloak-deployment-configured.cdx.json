@@ -1,7 +1,7 @@
 {
   "specFormat": "CycloneDX",
   "specVersion": "2.0",
-  "$comment": "EXAMPLE CBOM, lifecycle stage 'configured'. Example Org's deployment of the Keycloak 26.7.3 image, read from its configuration repository, realm exports and JVM settings. Illustrative: the operator, hostnames and configuration values are invented. TLS is terminated at the ingress (nginx with OpenSSL 3.5) and Keycloak runs with http-enabled=true and proxy-headers=xforwarded. So the product's TLS listener is not configured, the plaintext listener carries tokens on the hop from the ingress, and the management port inherits plain HTTP. No mail server is configured. Values are permitted sets where the outcome is negotiated. Each interface states the product interface it realises (correspondsTo), which is also how it inherits the implementing library. The ingress has no product CBOM, so its library is stated here. Conforms to deployment-disclosure v0.1.",
+  "$comment": "EXAMPLE CBOM, lifecycle stage 'configured'. Example Org's deployment of the Keycloak 26.7.3 image, read from its configuration repository, realm exports and JVM settings. Illustrative: the operator, hostnames and configuration values are invented. TLS is terminated at the ingress (nginx with OpenSSL 3.5) and Keycloak runs with http-enabled=true and proxy-headers=xforwarded. So the product's TLS listener is not configured, the plaintext listener carries tokens on the hop from the ingress, and the management port inherits plain HTTP. No mail server is configured. Values are permitted sets where the outcome is negotiated. Each interface states the product interface it realises (correspondsTo), which is also how it inherits the implementing library. The ingress has no product CBOM, so its library is stated here. Conforms to deployment-disclosure v0.3.",
   "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01",
   "version": 1,
   "metadata": {
@@ -103,7 +103,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:x25519",
-          "name": "X25519",
+          "name": "x25519",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -114,7 +114,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:secp256r1",
-          "name": "secp256r1",
+          "name": "ECDHE-secp256r1",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -125,7 +125,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:secp384r1",
-          "name": "secp384r1",
+          "name": "ECDHE-secp384r1",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -136,7 +136,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:secp521r1",
-          "name": "secp521r1",
+          "name": "ECDHE-secp521r1",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -147,7 +147,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:x448",
-          "name": "X448",
+          "name": "x448",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -158,7 +158,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:ffdhe2048",
-          "name": "ffdhe2048",
+          "name": "FFDHE-ffdhe2048",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -202,7 +202,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:ecdsa-p256",
-          "name": "ECDSA-P256-SHA256",
+          "name": "ECDSA-P-256-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -224,7 +224,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:es256",
-          "name": "ES256",
+          "name": "ECDSA-P-256-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -235,7 +235,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:rs256",
-          "name": "RS256",
+          "name": "RSA-PKCS1-1.5-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -246,7 +246,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:rsa-sha256",
-          "name": "RSA-SHA256",
+          "name": "RSA-PKCS1-1.5-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -332,6 +332,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "ssl_ecdh_curve X25519MLKEM768:X25519; certificate ECDSA P-256 from the internal CA"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "platform"
             }
           ]
         },
@@ -408,6 +412,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "Groups and suites are the JVM defaults (jdk.tls.namedGroups not set). Server certificate RSA-2048 from the internal CA."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         },
@@ -480,6 +488,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "The directory accepts TLS 1.2 only."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         },
@@ -552,6 +564,10 @@
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000c001/1#crypto:protocol:int-broker"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         },
@@ -628,6 +644,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "Product-generated RSA-2048 key, rotated every 30 days (cannot be changed by configuration)."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         },
@@ -674,6 +694,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "http-enabled=true. Carries tokens and credentials in clear inside the cluster."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "crypto:protocol:ing-tls"
             }
           ],
           "type": "service"
@@ -721,6 +745,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "health-enabled=true. The management interface inherits the main server's scheme, which is HTTP here."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -764,6 +792,10 @@
             {
               "name": "pkic:profile:integrationConstraints",
               "value": "Realm defaultSignatureAlgorithm=ES256. Client 'legacy-portal' overrides it to RS256."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -803,6 +835,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -817,11 +853,11 @@
             },
             {
               "name": "pkic:profile:protocol",
-              "value": "Admin REST (OAuth 2.0 bearer)"
+              "value": "OAuth 2.0"
             },
             {
               "name": "pkic:profile:protocolVersion",
-              "value": "1.0"
+              "value": "2.0"
             },
             {
               "name": "pkic:profile:endpointRole:administrator",
@@ -842,6 +878,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -881,6 +921,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -986,7 +1030,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "80b10b11705bc6425a371e307b5792f3d87e12bd4fca5349cb11bb4fae8b0929"
+          "content": "ed6d9b210f77f5817ba79dffd65ec7b21425ae5a2a978332ceff5c043c980edc"
         }
       ]
     },

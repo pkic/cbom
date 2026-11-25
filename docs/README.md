@@ -269,5 +269,5 @@ A change to the design system needs applying in both.
 
 The methodology documentation is an illustrative working draft, not an adopted deliverable of
 the working group. Field names target CycloneDX 2.0, pinned to the 2.0-dev schema of 23 October 2026 until the
-release (decision 0025); CycloneDX 1.6 and 1.7 are read as legacy. Check them against the current
+release; CycloneDX 1.6 and 1.7 are read as legacy. Check them against the current
 specifications before operational use.

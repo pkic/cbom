@@ -33,14 +33,15 @@ Record 0010 is now implemented alongside 0008 and 0009. It is the largest of the
 introduces a rule shape the validator did not have, and it tightens the migration profile, so a
 document conforming to the previous version does not conform to this one. It also leaves two
 points open rather than deciding them — whether `randomness` is a purpose, and how a sector
-profile widens the vocabulary — so it can be accepted in part.
+profile widens the vocabulary — so it can be accepted in part. The first was closed on 16 November
+2026: randomness is a run-time dependency, not a purpose.
 
 ## The October 2026 baseline
 
 Record 0025 instantiates every choice that was pending in October 2026, so that the working group
 has one consistent set of profiles, examples, policies and tools to use and challenge. Its choices
 are provisional and listed one by one, so each can be reopened on its own. Record 0022 is
-published with it. Numbers 0023 and 0024 are reserved by the drafts that cite them.
+published with it. Records 0023 and 0024 were promoted from drafts on 16 November 2026.
 
 ## Index
 
@@ -68,7 +69,11 @@ published with it. Numbers 0023 and 0024 are reserved by the drafts that cite th
 | [0020](./0020-cbom-joined-to-vulnerability-statements.md) | A CBOM is joined to vulnerability statements, not merged with them | 3.3 | Proposed | 2026-09-12 |
 | [0021](./0021-one-word-one-meaning.md) | A word means one thing: keyCoverage, and revision states | 3.7 | Proposed | 2026-09-15 |
 | [0022](./0022-pqc-migration-family-depths.md) | The PQC migration family has two depths, and a storage interface is described as data at rest | 3.9 | Proposed | 2026-09-26 |
+| [0023](./0023-use-cases-grouped-by-relation-to-the-baseline.md) | Use cases are grouped by their relation to the baseline, and change planning shares a core | 3.9 | Proposed | 2026-10-04 |
+| [0024](./0024-substation-automation-positions.md) | The substation automation use case: two documents, a separate key plane, and a system subject | 3.9 | Proposed | 2026-11-16 |
 | [0025](./0025-baseline-consolidation.md) | A consistent baseline: every pending choice instantiated, built on Keycloak | all | Proposed | 2026-10-25 |
+| [0026](./0026-connections-as-joins.md) | A connection is the join of its two ends | 3.3 | Proposed | 2026-11-01 |
+| [0027](./0027-publications-close-the-work-to-date.md) | The publications close the work to date, and the repository is aligned to them | 3.11 | Proposed | 2026-11-16 |
 
 <!-- Add a row per decision, newest at the bottom:
 | 0008 | Attribute model is a standalone cited artifact | 3.3 | Accepted | 2026-__-__ |
@@ -84,9 +89,10 @@ reasoning behind a choice survives the choice. Writing one is not a request for 
 way of making a choice arguable later, by whoever inherits it. A record says what was rejected and
 why, which is the half that is normally lost.
 
-Adoption comes per aspect, as each one stops moving, and it is not close for most of them: of the 64
-items in the open-questions register, 52 are still open and eight are settled by a record here and
-waiting on the group, and every aspect is unassigned. The last two records each opened four items
+Adoption comes per aspect, as each one stops moving. When this paragraph was first written, 52 of the
+64 items in the open-questions register were still open. By 16 November 2026 every item was settled
+provisionally or by a record here, and the records are closed when the publications are issued
+(record 0027). The last two records each opened four items
 rather than closing any, which is the normal shape of a decision that draws a boundary: 0019 settles
 what shape staged adoption takes and leaves where a family is recorded to the group, and 0020 settles
 that a CBOM is joined to vulnerability statements rather than merged with them, leaving the

@@ -1,0 +1,108 @@
+{
+  "$comment": "DRAFT. A product profile for a telecom network function release. It extends the Interface Disclosure Baseline with the reference point each interface implements and the specification that profiles its security, so that an operator can compare vendors reference point by reference point. A planning depth on the change core can follow.",
+  "profileId": "pkic.example.telecom-network-function",
+  "profileTag": "telecom-network-function",
+  "title": "Telecom Network Function (Example, draft)",
+  "version": "0.1-draft",
+  "objective": {
+    "consumer": "An operator's procurement or security team comparing network functions from several vendors",
+    "decision": "Whether a network function release implements each reference point as its specification profiles it",
+    "decisionOptions": [
+      "accept the release",
+      "accept with conditions",
+      "reject the release"
+    ]
+  },
+  "scope": {
+    "subjectTypes": [
+      "product"
+    ],
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.10",
+    "file": "../../docs/methodology/profile-interface-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "referencePointVocabulary": [
+    "n32-c",
+    "n32-f",
+    "sbi",
+    "n2",
+    "n3",
+    "n4",
+    "n9",
+    "nds-ip",
+    "o-ran-m-plane",
+    "o-ran-fronthaul",
+    "e2",
+    "a1",
+    "o1",
+    "o2",
+    "ota",
+    "rsp",
+    "not-a-reference-point"
+  ],
+  "productRules": [],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "referencePoint",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "referencePointVocabulary"
+      },
+      "withholdable": false,
+      "note": "The 3GPP, O-RAN or GSMA reference point the interface implements, or 'not-a-reference-point' for an interface no specification names, such as a key store."
+    },
+    {
+      "id": "I2",
+      "attribute": "referenceSpecification",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "referencePoint",
+        "notEquals": "not-a-reference-point"
+      },
+      "note": "The specification and clause that profile the interface's security, such as 'TS 33.501 13.1'."
+    }
+  ],
+  "referenceRules": [],
+  "exclusions": [
+    {
+      "item": "Whether the implementation meets the specification",
+      "reason": "A judgement for SCAS testing or a policy. The record states the values; the specification states what is allowed."
+    },
+    {
+      "item": "Capability, blocker and roadmap per purpose",
+      "reason": "Change planning. A depth on the change core can add them."
+    }
+  ],
+  "artifacts": {
+    "conformingExample": "examples/cbom-open5gs-sepp-2.8.0-product.cdx.json",
+    "nonConformingExample": "examples/cbom-open5gs-sepp-fail-referencepoint.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1-draft",
+      "date": "2026-11-18",
+      "summary": "First draft, built on the Open5GS SEPP.",
+      "changes": []
+    }
+  ]
+}

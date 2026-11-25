@@ -1,0 +1,473 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile: the change core. DERIVED from the interface disclosure baseline v0.10, and a SIBLING of pqc-migration (decision 0023). It holds the facts every change-planning profile asks for: capability per purpose and what blocks it, how a capability is enabled, coexistence, integration constraints, and the update-path facts that decide whether new software and new keys can reach a product at all. Each rule it shares with pqc-migration keeps the id pqc-migration uses, so no rule id moves. Its own rules are numbered after pqc-migration's, from I13 and P2. The core is target-neutral: it records what a product can be changed to, not which target is required (Q66).",
+  "profileId": "pkic.example.change-core",
+  "profileTag": "change-core",
+  "title": "Change Core (Example)",
+  "version": "0.2",
+  "objective": {
+    "$comment": "C1. The core states the decision every change-planning profile shares. A profile that extends it names its own consumer and narrower decision.",
+    "consumer": "An operator planning a change to products it did not build: a post-quantum migration, a firmware or software update, or a replacement.",
+    "decision": "For each interface a product exposes: what it could be changed to, what enabling that requires, what blocks it and who controls the blocker, and whether new software and new keys can reach the product at all.",
+    "decisionOptions": [
+      "enable a capability the product already has",
+      "update the product's software or firmware",
+      "replace the product, where no update path or key replacement reaches it",
+      "accept the interface as it stands and revisit at the next review",
+      "escalate to the supplier, where the blocker is theirs to clear"
+    ]
+  },
+  "scope": {
+    "$comment": "C11. Products as built, at the stage 'implemented', and managed services as their provider runs them, at the stage 'configured'. A provider states capability, blocker and roadmap per purpose for a service endpoint as a supplier does for a product interface, so the same rules apply. 'cryptographicPurposes' names the purposes required in depth; every purpose in the vocabulary still owes a status under G1, so a profile that extends the core cannot behave as though a deferred purpose does not exist.",
+    "subjectTypes": [
+      "product",
+      "service"
+    ],
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented",
+      "configured"
+    ],
+    "cryptographicPurposes": [
+      "key-establishment",
+      "encryption",
+      "entity-authentication"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.interface-disclosure",
+    "version": "0.10",
+    "file": "profile-interface-disclosure.rules.json"
+  },
+  "appliesTo": {
+    "$comment": "Carrier acceptance. The target is CycloneDX 2.0, pinned to CycloneDX/specification 2.0-dev commit 76f185c (23 October 2026) until Ecma ratifies the release; the pinned schema is in tests/schemas/cyclonedx-2.0. 'min' is the oldest version the adapter reads: CycloneDX 1.6 and 1.7 documents are evaluated and flagged legacy, because the tools that produce CBOMs today emit 1.x. Below 'min', evaluation is refused. A derived profile may narrow this range and may not widen it.",
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "$inherited": "The disclosure model and the requirement keywords are inherited from the base and are deliberately not restated. Restating an inherited block would override the base's value silently, so a later change to the base, such as a new marker prefix, would not reach this profile and every marker would stop being recognised without an error. Only appliesTo is restated, because narrowing the carrier range is a real choice and the validator checks that a restated range does not widen the base's.",
+  "$commentCryptographicPurpose": "The jobs cryptography does at an interface, each migrating on its own timetable. A purpose is not an operation: CycloneDX 'cryptoFunctions' already records sign/verify, and one sign/verify covers both a TLS certificate signature and a firmware signature, which migrate a decade apart and call for different work. Only the purpose carries a timetable. Entries qualify under the four-part test in decision 0010: declarable at the boundary, independently migratable, actionable, and not an ingredient of another purpose. That test excludes certificate path validation, which migrates when entity authentication does, and hashing, which is an ingredient of several purposes. 'randomness' is deliberately absent and left open in decision 0010. Note that a purpose is not a partition of algorithms: AES-GCM serves 'encryption' and 'data-integrity' at once, so an asset may appear under several purposes.",
+  "cryptographicPurposeVocabulary": [
+    "key-establishment",
+    "encryption",
+    "entity-authentication",
+    "data-integrity",
+    "non-repudiation",
+    "key-protection",
+    "key-derivation"
+  ],
+  "capabilityStatusVocabulary": [
+    "available",
+    "committed",
+    "planned",
+    "under-evaluation",
+    "not-planned"
+  ],
+  "blockedByVocabulary": [
+    "provider",
+    "product",
+    "hardware",
+    "standard",
+    "certification"
+  ],
+  "enablementMethodVocabulary": [
+    "already-enabled",
+    "configuration",
+    "software-update",
+    "hardware-change",
+    "licence",
+    "not-available"
+  ],
+  "coexistenceVocabulary": [
+    "simultaneous",
+    "exclusive",
+    "unknown"
+  ],
+  "$commentUpdatePath": "The update-path facts shared by the IoT and substation use cases. updateMechanism says how new software or firmware reaches the product; updateAuthority says which parties that mechanism accepts updates from; keyReplaceable says whether keys and trust anchors held by the product can be replaced without replacing the product. Commercial terms, such as support periods and service levels, are outside every profile (Model).",
+  "updateMechanismVocabulary": [
+    "none",
+    "physical-access",
+    "local-network",
+    "remote-managed",
+    "provider-managed"
+  ],
+  "updateAuthorityVocabulary": [
+    "operator",
+    "vendor",
+    "platform",
+    "installer"
+  ],
+  "keyReplaceableVocabulary": [
+    "in-field",
+    "software-update",
+    "not-replaceable"
+  ],
+  "overrides": [
+    {
+      "id": "interface-disclosure#I9",
+      "level": "MUST",
+      "withholdable": false,
+      "note": "Tightened by removing withholdability. The base already requires implementationPurl at MUST and accepts a 'withheld' marker in place of a value. Migration sequencing depends on knowing which library implements an interface, so this profile removes that option and requires the value itself. Level is restated as MUST for readability and is unchanged from the base."
+    }
+  ],
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Product identifies at least one cryptographic provider",
+      "level": "SHOULD",
+      "constraint": {
+        "minProviders": 1
+      },
+      "note": "This profile's only product-level rule, and therefore P1 in its own space. The baseline's P1 to P4 are inherited and keep their own ids: the two are told apart as 'pqc-migration#P1' and 'interface-disclosure#P1', which is what a report and a conformance claim print. The coverage rule this profile used to carry has moved into the baseline and is now inherited. See decision 0011."
+    },
+    {
+      "id": "P2",
+      "description": "Product states how new software or firmware reaches it, or that nothing can",
+      "level": "MUST",
+      "constraint": {
+        "productAttribute": "updateMechanism",
+        "enumRef": "updateMechanismVocabulary"
+      },
+      "withholdable": false,
+      "note": "A product with no update path at all is the most consequential fact in device and OT planning, and it is a fact about the whole product, so a rule checked per interface would let it go unstated. The value is the most capable mechanism the product has; 'none' is a complete answer."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "protocolVersionsSupported",
+      "level": "MUST",
+      "constraint": {
+        "minCount": 1
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Guarded in v0.7 to match the base's rule for the present-state attribute: not required of a storage interface, which has no protocol, key exchange or peer authentication. Its capability counterpart on storage is I12. See decision 0022."
+    },
+    {
+      "id": "I2",
+      "attribute": "keyExchangeSupported",
+      "level": "MUST",
+      "constraint": {
+        "minCount": 1
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Guarded in v0.7 to match the base's rule for the present-state attribute: not required of a storage interface, which has no protocol, key exchange or peer authentication. Its capability counterpart on storage is I12. See decision 0022."
+    },
+    {
+      "id": "I3",
+      "attribute": "authenticationSupported",
+      "level": "MUST",
+      "constraint": {
+        "minCount": 1
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Guarded in v0.7 to match the base's rule for the present-state attribute: not required of a storage interface, which has no protocol, key exchange or peer authentication. Its capability counterpart on storage is I12. See decision 0022."
+    },
+    {
+      "id": "I4",
+      "attribute": "enablementMethod",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "enablementMethodVocabulary"
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I5",
+      "attribute": "minimumProductVersion",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "enablementMethod",
+        "equals": "software-update"
+      },
+      "note": "Conditional. Applies only where the capability is enabled by a software update."
+    },
+    {
+      "id": "I7",
+      "attribute": "coexistence",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "coexistenceVocabulary"
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I8",
+      "attribute": "negotiationControl",
+      "level": "SHOULD",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": true,
+      "note": "Whether the far end can be pinned or forced is sometimes contractual; a producer may decline to publish it."
+    },
+    {
+      "id": "I9",
+      "attribute": "integrationConstraints",
+      "level": "SHOULD",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": true
+    },
+    {
+      "id": "I13",
+      "attribute": "updateMechanism",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "updateMechanismVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "management"
+      },
+      "note": "On every management interface: whether new software or firmware reaches the product through it, and how. 'none' for a management interface that carries no update, such as an administration console."
+    },
+    {
+      "id": "I14",
+      "attribute": "updateAuthority",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "updateAuthorityVocabulary"
+      },
+      "list": true,
+      "withholdable": true,
+      "requiredWhen": {
+        "attribute": "updateMechanism",
+        "notEquals": "none"
+      },
+      "note": "The parties the update mechanism accepts updates from now: in a product record, the default as shipped. Withholdable, because who can push code to a device can be security-sensitive (Q65)."
+    },
+    {
+      "id": "I15",
+      "attribute": "updateAuthoritySupported",
+      "level": "SHOULD",
+      "constraint": {
+        "enumRef": "updateAuthorityVocabulary"
+      },
+      "list": true,
+      "withholdable": true,
+      "requiredWhen": {
+        "attribute": "updateMechanism",
+        "notEquals": "none"
+      },
+      "note": "The parties the mechanism can be configured to accept. Capability counterpart of I14, required alongside it under C12."
+    },
+    {
+      "id": "I16",
+      "attribute": "keyReplaceable",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "keyReplaceableVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "note": "Whether the keys and trust anchors this storage interface holds can be replaced in the field, only with a new software or firmware release, or not at all. Material fixed at manufacture turns an update decision into a replacement decision."
+    },
+    {
+      "id": "I17",
+      "attribute": "certificationImpact",
+      "level": "SHOULD",
+      "constraint": {
+        "enumRef": "certificationImpactVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "peer"
+      },
+      "note": "Added in R2-23. What enabling the post-quantum capability this interface states would trigger in testing or certification of this subject: none, a re-test, or re-certification. 'not-applicable' where no capability is planned. The supplier knows its certificates. Shared with the sibling profile under the same id."
+    },
+    {
+      "id": "I18",
+      "attribute": "certificationScheme",
+      "level": "SHOULD",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "certificationImpact",
+        "in": [
+          "retest",
+          "recertification"
+        ]
+      },
+      "note": "Added in R2-23. The scheme the re-test or re-certification falls under, such as FIPS 140-3, Common Criteria, PCI PTS, NESAS, FedRAMP or IEC 62443-4-2. In CycloneDX 2.0 it maps to certifications. Shared with the sibling profile under the same id."
+    }
+  ],
+  "groupRules": [
+    {
+      "$comment": "Settles Q27. Readiness was a single value per interface, which cannot express the ordinary position: key agreement done, identity proof not yet. It is now a repeated group keyed by cryptographic purpose, so an interface states a status for each job its cryptography does. The blocker's guard is evaluated inside a group member rather than across the interface, which is what makes it evaluable again: it asks about the status of one purpose rather than about the interface as a whole. See decision 0010.",
+      "id": "G1",
+      "group": "capabilityByPurpose",
+      "keyedBy": "purpose",
+      "keyVocabularyRef": "cryptographicPurposeVocabulary",
+      "keyCoverage": "all-purposes",
+      "level": "MUST",
+      "description": "Every cryptographic purpose has an entry stating its capability status",
+      "note": "Coverage is the whole vocabulary and not only the purposes this profile takes in scope. In-scope purposes owe the full attribute set; the rest owe a status and, where the status is not 'available', a blocker. That is close to the cheapest obligation a profile can impose, and it is what stops a staged profile becoming a permanent floor: a supplier cannot conform while behaving as though authentication does not exist, and a buyer sees the long-lead blockers in the first document rather than the third.",
+      "members": [
+        {
+          "id": "G1.1",
+          "attribute": "capabilityStatus",
+          "level": "MUST",
+          "constraint": {
+            "enumRef": "capabilityStatusVocabulary"
+          },
+          "withholdable": false
+        },
+        {
+          "id": "G1.2",
+          "attribute": "blockedBy",
+          "level": "MUST",
+          "constraint": {
+            "enumRef": "blockedByVocabulary"
+          },
+          "withholdable": false,
+          "requiredWhen": {
+            "attribute": "capabilityStatus",
+            "notEquals": "available"
+          },
+          "note": "Conditional within the entry. Applies wherever this purpose's capability is not already available."
+        },
+        {
+          "id": "G1.3",
+          "attribute": "roadmapRef",
+          "level": "MAY",
+          "constraint": {
+            "present": true
+          },
+          "withholdable": true
+        }
+      ]
+    }
+  ],
+  "contextKinds": {
+    "support-lifecycle": {
+      "carrier": [
+        "support",
+        "release-notes",
+        "documentation"
+      ],
+      "form": "endpoint"
+    },
+    "roadmap": {
+      "carrier": [
+        "documentation",
+        "release-notes",
+        "other"
+      ],
+      "form": "document-or-endpoint"
+    }
+  },
+  "referenceRules": [
+    {
+      "id": "R1",
+      "context": "support-lifecycle",
+      "at": "document",
+      "level": "SHOULD",
+      "hashRequired": false,
+      "withholdable": false,
+      "orDeclaredAbsent": "contextAbsenceVocabulary",
+      "note": "Where the supplier states how long this version is supported. A migration plan depends on whether the version deployed today will receive the release that enables post-quantum cryptography, or has to be replaced first. A supplier that publishes no support lifecycle says so."
+    },
+    {
+      "id": "R2",
+      "context": "roadmap",
+      "at": "document",
+      "level": "SHOULD",
+      "hashRequired": "when-document",
+      "withholdable": false,
+      "orDeclaredAbsent": "contextAbsenceVocabulary",
+      "note": "The supplier's own roadmap for post-quantum capability. The record states each purpose's capability as a status and a blocker, never a date (decision 0007). A roadmap is where a supplier may name target releases and dependencies; the record points to it and does not evaluate it. A per-purpose roadmapRef may point into the same document or to the tracking item."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "A date on which an interface will gain a capability",
+      "reason": "Interfaces do not gain capability independently of one another, and a date offered where the blocker is an unfinished standard is not one the vendor can keep. The profile records capabilityStatus, blockedBy and roadmapRef instead. See decision 0007."
+    },
+    {
+      "item": "Any judgement as to whether an interface is quantum-safe",
+      "reason": "Inherited from the baseline. The profile requires the algorithm sets an interface uses and supports, and leaves the judgement to external versioned policy. See decision 0002."
+    },
+    {
+      "item": "Internal migration plans, engineering schedules, and unreleased design detail",
+      "reason": "Outside the black-box boundary. Anything the profile requires must be declarable at an interface or stated as a property of the shipped product."
+    },
+    {
+      "item": "A required target, such as a named post-quantum algorithm",
+      "reason": "The core is target-neutral (Q66). Which target an interface must reach belongs to the policy that evaluates the record, or to a profile that extends the core."
+    },
+    {
+      "item": "Module validation and validated-mode availability",
+      "reason": "Asked for by pqc-migration, where a regulated operator's sequencing depends on them. A profile that extends the core and needs them restates the rules."
+    },
+    {
+      "item": "Whether firmware will still be offered (updateSupportStatus), and resourceBound",
+      "reason": "Deferred to the IoT use case, which has no profile yet. Commercial terms are excluded at every depth."
+    }
+  ],
+  "artifacts": {
+    "$comment": "C9.",
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "examples/cbom-ot-protection-ied-product.cdx.json",
+    "nonConformingExample": "examples/cbom-ot-protection-ied-product-fail-core-I13.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-11-16",
+      "summary": "Initial draft. Extends the interface disclosure baseline v0.10 as a sibling of pqc-migration v0.8 (decision 0023). Shares P1, I1 to I5, I7 to I9, G1.1 to G1.3, R1 and R2 with pqc-migration under the same ids, and the tightening of interface-disclosure#I9. Adds P2 and I13 to I16 for the update path.",
+      "changes": []
+    },
+    {
+      "version": "0.2",
+      "date": "2026-11-18",
+      "summary": "Accepts managed services.",
+      "changes": [
+        {
+          "kind": "relaxing",
+          "summary": "Accepts the subject type 'service' at the stage 'configured', beside products at 'implemented'. Adds 'provider-managed' to the update mechanisms, for a service the provider updates for every tenant. No rule changes for product records."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Adds I17 certificationImpact and I18 certificationScheme at SHOULD, shared with pqc-migration under the same ids (R2-23). The vocabulary moves here from the substation component profile. A SHOULD rule changes no verdict."
+        }
+      ]
+    }
+  ],
+  "certificationImpactVocabulary": [
+    "none",
+    "retest",
+    "recertification",
+    "not-applicable"
+  ]
+}

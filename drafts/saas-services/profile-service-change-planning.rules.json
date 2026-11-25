@@ -1,0 +1,73 @@
+{
+  "$comment": "DRAFT. Service change planning: the change core applied to a managed service, for customers planning around the provider's post-quantum work. It narrows the change core to the subject type 'service' and the stage 'configured', and asks the record to cite the records it builds on. It adds no attribute: capability, blocker and roadmap per purpose apply to a service endpoint as they do to a product interface.",
+  "profileId": "pkic.example.service-change-planning",
+  "profileTag": "service-change-planning",
+  "title": "Service Change Planning (Example, draft)",
+  "version": "0.1-draft",
+  "objective": {
+    "consumer": "A customer, or its migration lead, that relies on a service it does not run",
+    "decision": "When the service can move to post-quantum cryptography, and what the customer must change itself",
+    "decisionOptions": [
+      "plan around the provider's roadmap",
+      "ask the provider for a commitment",
+      "plan a move away from the service"
+    ]
+  },
+  "scope": {
+    "subjectTypes": [
+      "service"
+    ],
+    "orientation": "migration",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.change-core",
+    "version": "0.2",
+    "file": "../../docs/methodology/profile-change-core.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Service cites the records it builds on, each by BOM-Link and hash",
+      "level": "MUST",
+      "constraint": {
+        "citesDocuments": {
+          "min": 1,
+          "hashRequired": true
+        }
+      },
+      "withholdable": false,
+      "note": "The provider's service record and the product records of the software it runs. A customer reads the capability facts here beside the present state there."
+    }
+  ],
+  "interfaceRules": [],
+  "referenceRules": [],
+  "exclusions": [
+    {
+      "item": "The customer's own migration plan",
+      "reason": "A customer fact. It belongs in the customer's migration register."
+    }
+  ],
+  "artifacts": {
+    "conformingExample": "examples/cbom-keycloak-service-change-planning.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1-draft",
+      "date": "2026-11-18",
+      "summary": "First draft, built on Keycloak run as a managed service.",
+      "changes": []
+    }
+  ]
+}

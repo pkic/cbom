@@ -1,0 +1,83 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "EXAMPLE SBOM for the illustrative Soil sensor S1 (illustrative). Lists only the libraries the CBOM names, so its composition is incomplete.",
+  "serialNumber": "urn:uuid:10700001-5e45-4e01-9a01-0000000000b1",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-18T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "Example Sensors (illustrative manufacturer)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "device",
+        "bom-ref": "dev:sensor",
+        "name": "Soil sensor S1 (illustrative)",
+        "version": "1.3.0",
+        "description": "",
+        "properties": [],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:generic/example-sensors/soil-sensor-s1@1.3.0"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Sensors (illustrative manufacturer)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:s1-firmware",
+          "name": "S1 firmware and LoRaWAN stack (illustrative)",
+          "version": "1.3.0",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/example-sensors/s1-firmware@1.3.0"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "incomplete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ]
+}

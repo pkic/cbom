@@ -1,0 +1,477 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "DRAFT NON-CONFORMING EXAMPLE for telecom-service-assurance. The conforming record with boundaryProxy removed from N32-c, which crosses the operator boundary. Fails telecom-service-assurance#I3.",
+  "serialNumber": "urn:uuid:5e990001-3c4d-4e5f-9a01-329020000012",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-17T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "operations"
+      }
+    ],
+    "supplier": {
+      "name": "Example Operator (illustrative)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "platform",
+        "bom-ref": "system:roaming-interconnect",
+        "name": "Roaming interconnect, reference design (illustrative)",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "system"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "partial"
+          },
+          {
+            "name": "pkic:profile:services",
+            "value": "inbound-roaming"
+          },
+          {
+            "name": "pkic:profile:services",
+            "value": "outbound-roaming"
+          },
+          {
+            "name": "pkic:profile:services",
+            "value": "mission-critical-roaming"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": {
+                  "name": "tag-uri",
+                  "description": "A tag URI (RFC 4151)."
+                },
+                "value": "tag:operator.example,2026:system/roaming-interconnect-reference"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Operator (illustrative)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "service",
+          "bom-ref": "sepp:n32c",
+          "name": "SEPP: N32-c: control plane between SEPPs (TLS)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:peer-sepp"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "X25519"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sepp:sto-keys"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e990001-3c4d-4e5f-9a01-329020000001/1#n32c"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:carriesService",
+              "value": "inbound-roaming"
+            },
+            {
+              "name": "pkic:profile:carriesService",
+              "value": "outbound-roaming"
+            },
+            {
+              "name": "pkic:profile:carriesService",
+              "value": "mission-critical-roaming"
+            },
+            {
+              "name": "pkic:profile:boundary",
+              "value": "inter-operator"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "sys:operator-pki"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sepp:n32f",
+          "name": "SEPP: N32-f: forwarded messages, application-layer protection (PRINS)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "PRINS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "17"
+            },
+            {
+              "name": "pkic:profile:endpointRole:sender",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:endpointRole:receiver",
+              "value": "endpoint:peer-sepp"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sepp:n32c"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e990001-3c4d-4e5f-9a01-329020000001/1#n32f"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:carriesService",
+              "value": "inbound-roaming"
+            },
+            {
+              "name": "pkic:profile:carriesService",
+              "value": "outbound-roaming"
+            },
+            {
+              "name": "pkic:profile:carriesService",
+              "value": "mission-critical-roaming"
+            },
+            {
+              "name": "pkic:profile:boundary",
+              "value": "inter-operator"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:boundaryProxy",
+              "value": "sys:ipx-provider"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sepp:sbi",
+          "name": "SEPP: Service-based interface to the operator's network functions (TLS, OAuth 2.0)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:nf-consumer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "X25519"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sepp:sto-keys"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e990001-3c4d-4e5f-9a01-329020000001/1#sbi"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:carriesService",
+              "value": "inbound-roaming"
+            },
+            {
+              "name": "pkic:profile:carriesService",
+              "value": "outbound-roaming"
+            },
+            {
+              "name": "pkic:profile:carriesService",
+              "value": "mission-critical-roaming"
+            },
+            {
+              "name": "pkic:profile:boundary",
+              "value": "intra-operator"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "sys:operator-pki"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sepp:mgmt",
+          "name": "SEPP: Management (NETCONF over SSH)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SSH"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:oam"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "X25519"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "Ed25519"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sepp:sto-keys"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e990001-3c4d-4e5f-9a01-329020000001/1#mgmt"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:carriesService",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:boundary",
+              "value": "intra-operator"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "product"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sepp:sto-keys",
+          "name": "SEPP: Private keys and trust anchors",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "AES-256-KW"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e990001-3c4d-4e5f-9a01-329020000001/1#sto-keys"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:carriesService",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:boundary",
+              "value": "intra-operator"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "sys:operator-hsm"
+            }
+          ]
+        },
+        {
+          "type": "device",
+          "bom-ref": "sys:sepp",
+          "name": "SEPP, both sites: the product cited, deployed in a redundant pair",
+          "properties": [
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            }
+          ]
+        },
+        {
+          "type": "device",
+          "bom-ref": "sys:operator-pki",
+          "name": "Operator PKI: issues the N32 and SBI certificates",
+          "properties": [
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            }
+          ]
+        },
+        {
+          "type": "device",
+          "bom-ref": "sys:operator-hsm",
+          "name": "Operator HSM: holds the SEPP's key-encryption key",
+          "properties": [
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            }
+          ]
+        },
+        {
+          "type": "device",
+          "bom-ref": "sys:ipx-provider",
+          "name": "Interconnect provider (IPX): relays N32-f to roaming partners",
+          "properties": [
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "system:roaming-interconnect",
+      "dependsOn": [
+        "sepp:n32c",
+        "sepp:n32f",
+        "sepp:sbi",
+        "sepp:mgmt",
+        "sepp:sto-keys",
+        "sys:sepp",
+        "sys:operator-pki",
+        "sys:operator-hsm",
+        "sys:ipx-provider"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:5e990001-3c4d-4e5f-9a01-329020000001/1",
+      "comment": "The SEPP's product record.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "78e6f4b98b4d850c83a1a2b453a97ac870c00dae082c2444eb0f642664746adf"
+        }
+      ]
+    }
+  ]
+}

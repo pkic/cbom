@@ -501,6 +501,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -566,6 +570,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -631,6 +639,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -700,6 +712,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -769,6 +785,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -834,6 +854,10 @@
         {
           "name": "pkic:profile:externalDependencies",
           "value": "certificate-authority"
+        },
+        {
+          "name": "pkic:profile:externalDependencies",
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -1104,7 +1128,7 @@
     {
       "type": "cryptographic-asset",
       "bom-ref": "crypto:algo:x25519",
-      "name": "X25519",
+      "name": "x25519",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {
@@ -1156,7 +1180,7 @@
     {
       "type": "cryptographic-asset",
       "bom-ref": "crypto:algo:rs256",
-      "name": "RS256",
+      "name": "RSA-PKCS1-1.5-SHA-256",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {
@@ -1173,7 +1197,7 @@
     {
       "type": "cryptographic-asset",
       "bom-ref": "crypto:algo:rsa-sha256",
-      "name": "RSA-SHA256",
+      "name": "RSA-PKCS1-1.5-SHA-256",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {
@@ -1190,7 +1214,7 @@
     {
       "type": "cryptographic-asset",
       "bom-ref": "crypto:algo:hmac-sha512",
-      "name": "HMAC-SHA512",
+      "name": "HMAC-SHA-512",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {
@@ -1335,67 +1359,71 @@
         },
         {
           "name": "pkic:profile:keyExchangeSupported",
-          "value": "RSA-OAEP"
+          "value": "RSA-OAEP-SHA-1-MGF1-SHA-1"
         },
         {
           "name": "pkic:profile:keyExchangeSupported",
-          "value": "RSA-OAEP-256"
+          "value": "RSA-OAEP-SHA-256-MGF1-SHA-256"
         },
         {
           "name": "pkic:profile:keyExchangeSupported",
-          "value": "ECDH-ES"
+          "value": "ECDH"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "RS256"
+          "value": "RSA-PKCS1-1.5-SHA-256"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "RS384"
+          "value": "RSA-PKCS1-1.5-SHA-384"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "RS512"
+          "value": "RSA-PKCS1-1.5-SHA-512"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "PS256"
+          "value": "RSA-PSS-SHA-256"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "PS384"
+          "value": "RSA-PSS-SHA-384"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "PS512"
+          "value": "RSA-PSS-SHA-512"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "ES256"
+          "value": "ECDSA-P-256-SHA-256"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "ES384"
+          "value": "ECDSA-P-384-SHA-384"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "ES512"
+          "value": "ECDSA-P-521-SHA-512"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "EdDSA"
+          "value": "Ed25519"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "HS256"
+          "value": "Ed448"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "HS384"
+          "value": "HMAC-SHA-256"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "HS512"
+          "value": "HMAC-SHA-384"
+        },
+        {
+          "name": "pkic:profile:authenticationSupported",
+          "value": "HMAC-SHA-512"
         },
         {
           "name": "pkic:profile:negotiationControl",
@@ -1411,7 +1439,7 @@
         },
         {
           "name": "pkic:profile:externalDependencies",
-          "value": "none"
+          "value": "random-bit-generator"
         }
       ]
     },
@@ -1464,15 +1492,15 @@
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "RSA-SHA256"
+          "value": "RSA-PKCS1-1.5-SHA-256"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "RSA-SHA512"
+          "value": "RSA-PKCS1-1.5-SHA-512"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "ECDSA-SHA256"
+          "value": "ECDSA-SHA-256"
         },
         {
           "name": "pkic:profile:coexistence",
@@ -1606,11 +1634,11 @@
         },
         {
           "name": "pkic:profile:protocol",
-          "value": "Admin REST (OAuth 2.0 bearer)"
+          "value": "OAuth 2.0"
         },
         {
           "name": "pkic:profile:protocolVersion",
-          "value": "1.0"
+          "value": "2.0"
         },
         {
           "name": "pkic:profile:endpointRole:administrator",
@@ -1638,19 +1666,23 @@
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "RS256"
+          "value": "RSA-PKCS1-1.5-SHA-256"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "ES256"
+          "value": "ECDSA-P-256-SHA-256"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "PS256"
+          "value": "RSA-PSS-SHA-256"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "EdDSA"
+          "value": "Ed25519"
+        },
+        {
+          "name": "pkic:profile:authenticationSupported",
+          "value": "Ed448"
         },
         {
           "name": "pkic:profile:negotiationControl",
@@ -1799,27 +1831,31 @@
         },
         {
           "name": "pkic:profile:keyExchangeSupported",
-          "value": "RSA-OAEP"
+          "value": "RSA-OAEP-SHA-1-MGF1-SHA-1"
         },
         {
           "name": "pkic:profile:keyExchangeSupported",
-          "value": "ECDH-ES"
+          "value": "ECDH"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "RS256"
+          "value": "RSA-PKCS1-1.5-SHA-256"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "PS256"
+          "value": "RSA-PSS-SHA-256"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "ES256"
+          "value": "ECDSA-P-256-SHA-256"
         },
         {
           "name": "pkic:profile:authenticationSupported",
-          "value": "EdDSA"
+          "value": "Ed25519"
+        },
+        {
+          "name": "pkic:profile:authenticationSupported",
+          "value": "Ed448"
         },
         {
           "name": "pkic:profile:negotiationControl",
@@ -1994,7 +2030,7 @@
       "properties": [
         {
           "name": "pkic:profile:protocol",
-          "value": "JGroups TCP"
+          "value": "JGroups"
         }
       ]
     }

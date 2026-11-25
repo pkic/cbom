@@ -2,7 +2,7 @@
   "policyFormat": "pkic.cbom.policy",
   "policyFormatVersion": "0.1",
   "policyId": "pkic.example.policy.readiness-gap",
-  "version": "0.1",
+  "version": "0.2",
   "title": "Post-quantum readiness gap, one interface at a time",
   "status": "illustrative",
   "$comment": "An example policy. It joins a product record (implemented), a deployment record (configured) and an observation (observed) along correspondsTo, and places each interface and purpose in one of the gaps the Lifecycle Data section describes. What counts as the target is data in this file. The evaluation method is implemented by evaluate_policy.py. The result points to every record it used by digest.",
@@ -45,7 +45,15 @@
         "rsa_pss_rsae_sha512",
         "rsa_pss_pss_sha256",
         "RSA-SHA384",
-        "RSA-SHA512"
+        "RSA-SHA512",
+        "RSA-PKCS1-1.5-SHA-256",
+        "RSA-PKCS1-1.5-SHA-384",
+        "RSA-PKCS1-1.5-SHA-512",
+        "RSA-PSS-SHA-256",
+        "RSA-PSS-SHA-384",
+        "RSA-PSS-SHA-512",
+        "RSA-OAEP-SHA-1-MGF1-SHA-1",
+        "RSA-OAEP-SHA-256-MGF1-SHA-256"
       ],
       "family": "RSA",
       "securityStrength": 112,
@@ -62,7 +70,8 @@
     },
     {
       "names": [
-        "ffdhe2048"
+        "ffdhe2048",
+        "FFDHE-ffdhe2048"
       ],
       "family": "FFDH",
       "securityStrength": 112,
@@ -70,7 +79,8 @@
     },
     {
       "names": [
-        "ffdhe3072"
+        "ffdhe3072",
+        "FFDHE-ffdhe3072"
       ],
       "family": "FFDH",
       "securityStrength": 128,
@@ -88,7 +98,9 @@
         "Ed25519",
         "EdDSA",
         "ed25519",
-        "ECDSA-SHA256"
+        "ECDSA-SHA256",
+        "ECDHE-secp256r1",
+        "ECDH"
       ],
       "family": "EC",
       "securityStrength": 128,
@@ -100,7 +112,9 @@
         "P-384",
         "ES384",
         "ecdsa_secp384r1_sha384",
-        "ECDSA-SHA384"
+        "ECDSA-SHA384",
+        "ECDHE-secp384r1",
+        "ECDSA-P-384-SHA-384"
       ],
       "family": "EC",
       "securityStrength": 192,
@@ -122,7 +136,9 @@
         "P-521",
         "ES512",
         "ecdsa_secp521r1_sha512",
-        "ECDSA-SHA512"
+        "ECDSA-SHA512",
+        "ECDHE-secp521r1",
+        "ECDSA-P-521-SHA-512"
       ],
       "family": "EC",
       "securityStrength": 256,
@@ -164,7 +180,9 @@
         "HMAC-SHA512",
         "HS256",
         "HS384",
-        "HS512"
+        "HS512",
+        "HMAC-SHA-256",
+        "HMAC-SHA-384"
       ],
       "family": "symmetric",
       "quantumVulnerable": false,
@@ -205,6 +223,12 @@
     "not-deployed": "The product has the interface and the deployment records do not: it is not configured in this deployment."
   },
   "changelog": [
+    {
+      "version": "0.2",
+      "date": "2026-11-22",
+      "kind": "editorial",
+      "summary": "Adds the CycloneDX cryptography registry form of each name the examples now use (for example RSA-PKCS1-1.5-SHA-256 beside RS256, ECDHE-secp384r1 beside secp384r1), with the same classification. The earlier names are kept, so records that use them classify as before."
+    },
     {
       "version": "0.1",
       "date": "2026-10-25",

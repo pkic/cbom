@@ -1,3 +1,6 @@
+> **Promoted, 16 November 2026.** This record is published as `decisions/0023-use-cases-grouped-by-relation-to-the-baseline.md`.
+> The text below is kept as it was drafted.
+
 # 0023. Use cases are grouped by their relation to the baseline, and change planning shares a core
 
 - **Status:** Proposed (draft; promotes to `decisions/` with the change-core rules file)

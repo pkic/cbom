@@ -1,0 +1,942 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "DRAFT NON-CONFORMING EXAMPLE for ot-system. The published substation system record with conduitRef removed from the enrolment interface, whose path crosses from the station bus to the control centre. Fails ot-system#I3 (S3).",
+  "serialNumber": "urn:uuid:5a5e0001-2b3c-4d5e-8f90-616850000003",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-17T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "operations"
+      }
+    ],
+    "supplier": {
+      "name": "Example Integrator (illustrative)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "platform",
+        "bom-ref": "system:sas-110kv-reference",
+        "name": "110 kV substation automation system, reference design (illustrative)",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "system"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "partial"
+          },
+          {
+            "name": "pkic:profile:zones",
+            "value": "station-bus"
+          },
+          {
+            "name": "pkic:profile:zones",
+            "value": "control-centre"
+          },
+          {
+            "name": "pkic:profile:claimedLevel62443",
+            "value": "SL-C 2"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": {
+                  "name": "tag-uri",
+                  "description": "A tag URI (RFC 4151)."
+                },
+                "value": "tag:integrator.example,2026:system/sas-110kv-reference"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Integrator (illustrative)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "service",
+          "bom-ref": "ied1:svc-goose",
+          "name": "Protection IED, bay 1: GOOSE protection messages (IEC 62351-6)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "GOOSE"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.1"
+            },
+            {
+              "name": "pkic:profile:endpointRole:publisher",
+              "value": "endpoint:ied"
+            },
+            {
+              "name": "pkic:profile:endpointRole:subscriber",
+              "value": "endpoint:bay-peers"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "HMAC-SHA256"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "ied1:int-gdoi"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#svc-goose"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            },
+            {
+              "name": "pkic:profile:zonePath",
+              "value": "within-zone"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "sys:station-server-gdoi"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ied1:svc-sv",
+          "name": "Protection IED, bay 1: Sampled values (IEC 62351-6)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SV"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.1"
+            },
+            {
+              "name": "pkic:profile:endpointRole:publisher",
+              "value": "endpoint:merging-unit"
+            },
+            {
+              "name": "pkic:profile:endpointRole:subscriber",
+              "value": "endpoint:ied"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "HMAC-SHA256"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "ied1:int-gdoi"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#svc-sv"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "not-connected"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ied1:tls-mms",
+          "name": "Protection IED, bay 1: TLS for MMS (IEC 62351-3)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:station-server"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:ied"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "ied1:sto-keys"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#tls-mms"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            },
+            {
+              "name": "pkic:profile:zonePath",
+              "value": "within-zone"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "sys:enrolment-service"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ied1:svc-mms",
+          "name": "Protection IED, bay 1: MMS with role-based access tokens (IEC 62351-4, -8)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "MMS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2003"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:station-server"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:ied"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "ied1:sto-keys"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#svc-mms"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            },
+            {
+              "name": "pkic:profile:zonePath",
+              "value": "within-zone"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "sys:enrolment-service"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ied1:int-gdoi",
+          "name": "Protection IED, bay 1: GDOI group key distribution (IEC 62351-9)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "GDOI"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1"
+            },
+            {
+              "name": "pkic:profile:endpointRole:group-member",
+              "value": "endpoint:ied"
+            },
+            {
+              "name": "pkic:profile:endpointRole:key-server",
+              "value": "endpoint:station-server"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "MODP-2048"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-CBC"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "RSA-2048"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#int-gdoi"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            },
+            {
+              "name": "pkic:profile:zonePath",
+              "value": "within-zone"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "sys:station-server-gdoi"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ied1:mgmt-enrol",
+          "name": "Protection IED, bay 1: Certificate enrolment (EST, IEC 62351-9)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "EST"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:ied"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:enrolment-service"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#mgmt-enrol"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            },
+            {
+              "name": "pkic:profile:zonePath",
+              "value": "crosses-zones"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "sys:enrolment-service"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ied1:upd-fw",
+          "name": "Protection IED, bay 1: Firmware update",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.2"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:engineering-workstation"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:ied"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#upd-fw"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "disabled"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ied1:mgmt-eng",
+          "name": "Protection IED, bay 1: Engineering configuration download",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.2"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:engineering-workstation"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:ied"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#mgmt-eng"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            },
+            {
+              "name": "pkic:profile:zonePath",
+              "value": "crosses-zones"
+            },
+            {
+              "name": "pkic:profile:conduitRef",
+              "value": "sys:substation-gateway"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "sys:enrolment-service"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ied1:peer-ptp",
+          "name": "Protection IED, bay 1: Time synchronisation (IEEE 1588)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "peer"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "PTP"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.1"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:ied"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:grandmaster-clock"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#peer-ptp"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            },
+            {
+              "name": "pkic:profile:zonePath",
+              "value": "within-zone"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "none"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ied1:sto-keys",
+          "name": "Protection IED, bay 1: Device private key and trust anchors",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#sto-keys"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            },
+            {
+              "name": "pkic:profile:zonePath",
+              "value": "within-zone"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "product"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "gw1:tls-104",
+          "name": "Substation gateway: TLS for IEC 60870-5-104 (IEC 62351-3)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.2"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:control-centre-front-end"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:substation-gateway"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "RSA"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-CBC"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "RSA-2048"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "out-of-band"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:60870a1e-0b6c-4f2e-9d1a-160870000001/1#tls-104"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            },
+            {
+              "name": "pkic:profile:zonePath",
+              "value": "crosses-zones"
+            },
+            {
+              "name": "pkic:profile:conduitRef",
+              "value": "sys:substation-gateway"
+            },
+            {
+              "name": "pkic:profile:keyProvider",
+              "value": "sys:enrolment-service"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "gw1:svc-104",
+          "name": "Substation gateway: IEC 60870-5-104 without TLS",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "IEC 60870-5-104"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2006"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:control-centre-front-end"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:substation-gateway"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:implementationPurl",
+              "value": "pkg:github/mz-automation/lib60870@v2.4.1"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:60870a1e-0b6c-4f2e-9d1a-160870000001/1#svc-104"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "disabled"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "gw1:svc-101",
+          "name": "Substation gateway: IEC 60870-5-101, serial",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "IEC 60870-5-101"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2003"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:control-centre-front-end"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:substation-gateway"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:implementationPurl",
+              "value": "pkg:github/mz-automation/lib60870@v2.4.1"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:60870a1e-0b6c-4f2e-9d1a-160870000001/1#svc-101"
+            },
+            {
+              "name": "pkic:profile:usage",
+              "value": "not-connected"
+            },
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            }
+          ]
+        },
+        {
+          "type": "device",
+          "bom-ref": "sys:station-server-gdoi",
+          "name": "Station server: GDOI group key server (IEC 62351-9)",
+          "properties": [
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            }
+          ]
+        },
+        {
+          "type": "device",
+          "bom-ref": "sys:enrolment-service",
+          "name": "Certificate enrolment service and issuing CA, control centre",
+          "properties": [
+            {
+              "name": "pkic:profile:zone",
+              "value": "control-centre"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            }
+          ]
+        },
+        {
+          "type": "device",
+          "bom-ref": "sys:substation-gateway",
+          "name": "Substation gateway and firewall: the conduit between the station bus and the control centre. Embeds lib60870 v2.4.1 for IEC 60870-5-104",
+          "properties": [
+            {
+              "name": "pkic:profile:zone",
+              "value": "station-bus"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "system:sas-110kv-reference",
+      "dependsOn": [
+        "ied1:svc-goose",
+        "ied1:svc-sv",
+        "ied1:tls-mms",
+        "ied1:svc-mms",
+        "ied1:int-gdoi",
+        "ied1:mgmt-enrol",
+        "ied1:upd-fw",
+        "ied1:mgmt-eng",
+        "ied1:peer-ptp",
+        "ied1:sto-keys",
+        "gw1:tls-104",
+        "gw1:svc-104",
+        "gw1:svc-101",
+        "sys:station-server-gdoi",
+        "sys:enrolment-service",
+        "sys:substation-gateway"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1",
+      "comment": "The protection IED's product record.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "966c49e764f04bd64af05931c65113460f3e21da7f3e6cb1c0b285393eecdeee"
+        }
+      ]
+    },
+    {
+      "type": "bom",
+      "url": "urn:cdx:60870a1e-0b6c-4f2e-9d1a-160870000001/1",
+      "comment": "The lib60870 product record. The gateway embeds lib60870 v2.4.1.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "825a9b2b0949c7450af195e7a7361428345bfb4a3abd7d81cb941380055dfc07"
+        }
+      ]
+    }
+  ]
+}

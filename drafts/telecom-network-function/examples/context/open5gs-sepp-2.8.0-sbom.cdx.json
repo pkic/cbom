@@ -1,0 +1,117 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "DRAFT EXAMPLE SBOM for the Open5GS SEPP v2.8.0. Lists only the libraries the CBOM names, so its composition is incomplete. Versions from an Ubuntu 24.04 build; to confirm.",
+  "serialNumber": "urn:uuid:5e990002-0000-4000-8000-0000000000b0",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-18T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "Open5GS"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "app:open5gs-sepp",
+        "name": "Open5GS SEPP",
+        "version": "2.8.0",
+        "description": "The SEPP of Open5GS v2.8.0 (open5gs-seppd). Record written by the PKIC CBOM Profiles working group from the public source, not by the Open5GS maintainers.",
+        "properties": [],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:github/open5gs/open5gs@v2.8.0"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKIC CBOM Profiles Working Group"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:openssl",
+          "name": "OpenSSL",
+          "version": "3.0.13",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:deb/ubuntu/openssl@3.0.13-0ubuntu3?distro=ubuntu-24.04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:nghttp2",
+          "name": "nghttp2",
+          "version": "1.59.0",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:deb/ubuntu/nghttp2@1.59.0-1build4?distro=ubuntu-24.04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:curl",
+          "name": "libcurl",
+          "version": "8.5.0",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:deb/ubuntu/curl@8.5.0-2ubuntu10?distro=ubuntu-24.04"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "incomplete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ]
+}

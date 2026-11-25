@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 660" width="900" height="660"
+     role="img" aria-label="The supplier's artefact describes the product at build time and changes at each release. The operator's artefact describes the deployed service and changes at every configuration change, failover, certificate renewal and trust store update. The second references the first through a derivedFrom pointer carrying identity, digest and the profile claimed, rather than rewriting it, because rewriting would break the signature applied at release and merge two authors' claims. The derived artefact records four kinds of statement: confirmed, suppressed, additive and divergent. Four cross-artefact checks become possible once the pair is linked." xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo0MjM4MzQ3Ny03NDQxLTQ5NDItYTAwNy1jZGEzOWJlMDk2ZTcAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaKaCgNcXbBYL+hywJQiOrioAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo0NGU5MmY2MC1jYTQxLTQwZmUtYTJlNi0xY2M4ZWFjZjYwYWZscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNo9tLMcB99iqE5WGgu1KID4QAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggHiZ/5r1H7R66Be+BzoMUlt7ySSUzrxDmK3AB0ikxP2CkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaDpMBd2LDra7UO/h4iBK2WsAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIJPscFSyPTgdm88hskC7yzjCugD2jkRaSGJNskCOqliGZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GQNdZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjQyMzgzNDc3LTc0NDEtNDk0Mi1hMDA3LWNkYTM5YmUwOTZlNy9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjFkYjRhOGQ2LTMwNjktNDVhZS04OTBhLTQzZDEyNjU3MTA1M3JjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCAeJn/mvUftHroF74HOgxSW3vJJJTOvEOYrcAHSKTE/YKJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFgg7K3W9imp0kUQuiYQY72oMNim+W5q6Uo1/O7YEuCo68aiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggToAjCMqSZ76MIotF8yF5rqQwlmjE8QUdkW90xjUNC210Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQN3V/jQhtqVnub+6qIRZUXOJaJoBRFt6z7WOPE8ajef3a0iVUFbV1J8B5KWpohSTLQRh2qLuEfM5MdZ1LuMWsxE=</c2pa:manifest></metadata>
+  <defs>
+    <marker id="d-ah" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="9" markerHeight="8" orient="auto">
+      <polygon points="0,0 10,4 0,8" fill="#1f5fa9"/>
+    </marker>
+  </defs>
+
+  <g font-family="Cambria, Caladea, Georgia, 'Times New Roman', serif" fill="#1a1a1a">
+
+    <!-- ============ supplier artefact ============ -->
+    <rect x="30" y="64" width="310" height="186" rx="4" fill="#ffffff" stroke="#1a1a1a" stroke-width="2.4"/>
+    <text x="185" y="92" font-size="17" font-weight="bold" text-anchor="middle">Supplier's artefact</text>
+    <line x1="52" y1="104" x2="318" y2="104" stroke="#c9c9c2" stroke-width="1"/>
+    <g font-size="14">
+      <text x="52" y="128">subject scope: <tspan font-weight="bold">product</tspan></text>
+      <text x="52" y="152">evidence: build time and test</text>
+      <text x="52" y="176">says what the product <tspan font-style="italic">can</tspan> do</text>
+      <text x="52" y="200">signed by the release pipeline</text>
+    </g>
+    <text x="52" y="230" font-size="14" fill="#1f5fa9" font-weight="bold">changes at each release</text>
+
+    <!-- ============ operator artefact ============ -->
+    <rect x="560" y="64" width="310" height="186" rx="4" fill="#ffffff" stroke="#1a1a1a" stroke-width="2.4"/>
+    <text x="715" y="92" font-size="17" font-weight="bold" text-anchor="middle">Operator's artefact</text>
+    <line x1="582" y1="104" x2="848" y2="104" stroke="#c9c9c2" stroke-width="1"/>
+    <g font-size="14">
+      <text x="582" y="128">subject scope: <tspan font-weight="bold">deployed service</tspan></text>
+      <text x="582" y="152">evidence: runtime and configuration</text>
+      <text x="582" y="176">says what the deployment <tspan font-style="italic">does</tspan></text>
+      <text x="582" y="200">its own author, date and scope</text>
+    </g>
+    <text x="582" y="224" font-size="14" fill="#1f5fa9" font-weight="bold">changes at every configuration</text>
+    <text x="582" y="242" font-size="14" fill="#1f5fa9" font-weight="bold">change, failover and renewal</text>
+
+    <!-- ============ the link ============ -->
+    <line x1="556" y1="140" x2="346" y2="140" stroke="#1f5fa9" stroke-width="2" marker-end="url(#d-ah)"/>
+    <text x="451" y="122" font-size="14.5" font-weight="bold" text-anchor="middle" fill="#1f5fa9">derivedFrom</text>
+    <text x="451" y="164" font-size="13.5" text-anchor="middle" fill="#1f5fa9">identity + digest</text>
+    <text x="451" y="182" font-size="13.5" text-anchor="middle" fill="#1f5fa9">+ profile claimed</text>
+    <text x="451" y="212" font-size="13.5" text-anchor="middle" fill="#5a5a55">it references,</text>
+    <text x="451" y="230" font-size="13.5" text-anchor="middle" fill="#5a5a55">it does not rewrite</text>
+
+    <!-- ============ why not rewrite ============ -->
+    <rect x="30" y="288" width="310" height="186" rx="4" fill="#f2f2ef" stroke="#c9c9c2" stroke-width="1.2"/>
+    <text x="52" y="314" font-size="15" font-weight="bold">Why not simply rewrite it</text>
+    <g font-size="13.5" fill="#3d3d3d">
+      <text x="52" y="340">Rewriting breaks the signature applied</text>
+      <text x="52" y="358">at release and destroys the chain back</text>
+      <text x="52" y="376">to the build.</text>
+      <text x="52" y="402">It also merges two sets of claims, from</text>
+      <text x="52" y="420">different evidence and different authors,</text>
+      <text x="52" y="438">into a document where neither can be</text>
+    </g>
+    <text x="52" y="456" font-size="13.5" fill="#3d3d3d">attributed.</text>
+
+    <!-- ============ four statement kinds ============ -->
+    <rect x="380" y="288" width="490" height="186" rx="4" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.4"/>
+    <text x="400" y="314" font-size="15" font-weight="bold">What the operator's artefact records</text>
+
+    <text x="400" y="344" font-size="14" font-weight="bold">confirmed</text>
+    <text x="520" y="344" font-size="13.5" fill="#5a5a55">supplier implements it, the operator has enabled it</text>
+
+    <text x="400" y="372" font-size="14" font-weight="bold">suppressed</text>
+    <text x="520" y="372" font-size="13.5" fill="#5a5a55">supplier implements it, the operator has disabled it</text>
+    <text x="520" y="389" font-size="13" fill="#6b6b6b" font-style="italic">mandatory: absence would be indistinguishable from not looking</text>
+
+    <text x="400" y="417" font-size="14" font-weight="bold">additive</text>
+    <text x="520" y="417" font-size="13.5" fill="#5a5a55">the operator's own trust anchors, keys, terminators</text>
+    <text x="520" y="434" font-size="13" fill="#6b6b6b" font-style="italic">mandatory: this is where the operator's real exposure sits</text>
+
+    <text x="400" y="462" font-size="14" font-weight="bold">divergent</text>
+    <text x="520" y="462" font-size="13.5" fill="#5a5a55">observation contradicts the supplier's declaration</text>
+
+    <!-- ============ what the pair makes checkable ============ -->
+    <rect x="30" y="500" width="840" height="114" rx="4" fill="#e8eff7"/>
+    <text x="52" y="526" font-size="15" font-weight="bold" fill="#1f5fa9">What the linked pair makes checkable, and neither artefact can check alone</text>
+    <g font-size="13.5" fill="#1f5fa9">
+      <text x="52" y="552">Every relationship resolves to one upstream, or is flagged additive</text>
+      <text x="52" y="574">Every suppression references a capability that still exists upstream</text>
+      <text x="470" y="552">No configured algorithm missing from the upstream list</text>
+      <text x="470" y="574">The derivedFrom digest matches the artefact actually held</text>
+    </g>
+    <text x="52" y="602" font-size="13.5" font-style="italic" fill="#1f5fa9">A mismatch on the configured-versus-implemented check is usually not an error: it means a proxy or sidecar is performing cryptography nobody attributed.</text>
+
+    <text x="30" y="642" font-size="13" fill="#6b6b6b">The two artefacts move on different clocks. Binding them into one document would force re-issue on the faster of the two.</text>
+  </g>
+</svg>

@@ -3,11 +3,11 @@
   "resultFormatVersion": "0.1",
   "policy": {
     "policyId": "pkic.example.policy.algorithm-transition",
-    "version": "0.1",
+    "version": "0.3",
     "file": "policy-algorithm-transition.policy.json",
     "digest": {
       "alg": "SHA-256",
-      "value": "445ca075159a93dec36496a9ffc98061f25b3a88433a216c1b14cdadea84afdc"
+      "value": "1d3b95b7aaf37d388f102b457bc0047b6a9aa8d6372a7c30e8e91c7aa8b0931c"
     }
   },
   "evaluationDate": "2026-10-25",
@@ -21,12 +21,12 @@
       "stage": "implemented",
       "digest": {
         "alg": "SHA-256",
-        "value": "80b10b11705bc6425a371e307b5792f3d87e12bd4fca5349cb11bb4fae8b0929"
+        "value": "ed6d9b210f77f5817ba79dffd65ec7b21425ae5a2a978332ceff5c043c980edc"
       }
     }
   ],
   "summary": {
-    "acceptable": 126,
+    "acceptable": 129,
     "not-fixed-by-product": 2,
     "decided-by-peer": 13,
     "not-applicable": 15
@@ -36,14 +36,14 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "crypto:protocol:tls-https",
       "attribute": "keyExchange",
-      "value": "X25519",
+      "value": "x25519",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -73,8 +73,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -87,8 +87,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -101,8 +101,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -115,8 +115,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -129,8 +129,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -213,8 +213,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -227,8 +227,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -241,22 +241,22 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "crypto:protocol:tls-mgmt",
       "attribute": "keyExchange",
-      "value": "X25519",
+      "value": "x25519",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -286,8 +286,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -300,8 +300,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -314,8 +314,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -328,8 +328,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -342,8 +342,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -426,8 +426,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -440,8 +440,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -454,8 +454,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -489,8 +489,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -503,8 +503,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -517,8 +517,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -531,8 +531,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -545,8 +545,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -629,8 +629,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -643,8 +643,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -657,8 +657,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -692,8 +692,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -706,8 +706,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -720,8 +720,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -734,8 +734,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -748,8 +748,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -832,8 +832,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -846,8 +846,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -860,8 +860,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -895,8 +895,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -909,8 +909,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -923,8 +923,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -937,8 +937,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -951,8 +951,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1035,8 +1035,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1049,8 +1049,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1063,8 +1063,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1098,8 +1098,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1112,8 +1112,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1126,8 +1126,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1140,8 +1140,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1154,8 +1154,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1238,8 +1238,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1252,8 +1252,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1266,22 +1266,22 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "crypto:protocol:int-cache",
       "attribute": "keyExchange",
-      "value": "X25519",
+      "value": "x25519",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1318,8 +1318,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1332,8 +1332,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1346,8 +1346,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1360,8 +1360,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1374,8 +1374,8 @@
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1431,7 +1431,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authentication",
-      "value": "RS256",
+      "value": "RSA-PKCS1-1.5-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1452,7 +1452,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "keyExchangeSupported",
-      "value": "RSA-OAEP",
+      "value": "RSA-OAEP-SHA-1-MGF1-SHA-1",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1466,7 +1466,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "keyExchangeSupported",
-      "value": "RSA-OAEP-256",
+      "value": "RSA-OAEP-SHA-256-MGF1-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1480,21 +1480,21 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "keyExchangeSupported",
-      "value": "ECDH-ES",
+      "value": "ECDH",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "RS256",
+      "value": "RSA-PKCS1-1.5-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1508,7 +1508,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "RS384",
+      "value": "RSA-PKCS1-1.5-SHA-384",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1522,7 +1522,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "RS512",
+      "value": "RSA-PKCS1-1.5-SHA-512",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1536,7 +1536,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "PS256",
+      "value": "RSA-PSS-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1550,7 +1550,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "PS384",
+      "value": "RSA-PSS-SHA-384",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1564,7 +1564,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "PS512",
+      "value": "RSA-PSS-SHA-512",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1578,63 +1578,77 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "ES256",
+      "value": "ECDSA-P-256-SHA-256",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "ES384",
+      "value": "ECDSA-P-384-SHA-384",
       "family": "EC",
       "securityStrength": 192,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "ES512",
+      "value": "ECDSA-P-521-SHA-512",
       "family": "EC",
       "securityStrength": 256,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "EdDSA",
+      "value": "Ed25519",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "HS256",
+      "value": "Ed448",
+      "family": "EC",
+      "securityStrength": 224,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "deprecated",
+        "after": "2030-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-product.cdx.json",
+      "interface": "service:svc-oidc",
+      "attribute": "authenticationSupported",
+      "value": "HMAC-SHA-256",
       "family": "symmetric",
       "securityStrength": null,
       "quantumVulnerable": false,
@@ -1644,7 +1658,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "HS384",
+      "value": "HMAC-SHA-384",
       "family": "symmetric",
       "securityStrength": null,
       "quantumVulnerable": false,
@@ -1654,7 +1668,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-oidc",
       "attribute": "authenticationSupported",
-      "value": "HS512",
+      "value": "HMAC-SHA-512",
       "family": "symmetric",
       "securityStrength": null,
       "quantumVulnerable": false,
@@ -1671,7 +1685,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-saml",
       "attribute": "authentication",
-      "value": "RSA-SHA256",
+      "value": "RSA-PKCS1-1.5-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1706,7 +1720,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-saml",
       "attribute": "authenticationSupported",
-      "value": "RSA-SHA256",
+      "value": "RSA-PKCS1-1.5-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1720,7 +1734,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-saml",
       "attribute": "authenticationSupported",
-      "value": "RSA-SHA512",
+      "value": "RSA-PKCS1-1.5-SHA-512",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1734,14 +1748,14 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-saml",
       "attribute": "authenticationSupported",
-      "value": "ECDSA-SHA256",
+      "value": "ECDSA-SHA-256",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1790,7 +1804,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:mgmt-admin",
       "attribute": "authentication",
-      "value": "RS256",
+      "value": "RSA-PKCS1-1.5-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1818,7 +1832,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:mgmt-admin",
       "attribute": "authenticationSupported",
-      "value": "RS256",
+      "value": "RSA-PKCS1-1.5-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1832,21 +1846,21 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:mgmt-admin",
       "attribute": "authenticationSupported",
-      "value": "ES256",
+      "value": "ECDSA-P-256-SHA-256",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:mgmt-admin",
       "attribute": "authenticationSupported",
-      "value": "PS256",
+      "value": "RSA-PSS-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1860,14 +1874,28 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:mgmt-admin",
       "attribute": "authenticationSupported",
-      "value": "EdDSA",
+      "value": "Ed25519",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-product.cdx.json",
+      "interface": "service:mgmt-admin",
+      "attribute": "authenticationSupported",
+      "value": "Ed448",
+      "family": "EC",
+      "securityStrength": 224,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
@@ -1895,7 +1923,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-broker-tokens",
       "attribute": "keyExchangeSupported",
-      "value": "RSA-OAEP",
+      "value": "RSA-OAEP-SHA-1-MGF1-SHA-1",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1909,21 +1937,21 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-broker-tokens",
       "attribute": "keyExchangeSupported",
-      "value": "ECDH-ES",
+      "value": "ECDH",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-broker-tokens",
       "attribute": "authenticationSupported",
-      "value": "RS256",
+      "value": "RSA-PKCS1-1.5-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1937,7 +1965,7 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-broker-tokens",
       "attribute": "authenticationSupported",
-      "value": "PS256",
+      "value": "RSA-PSS-SHA-256",
       "family": "RSA",
       "securityStrength": 112,
       "quantumVulnerable": true,
@@ -1951,28 +1979,42 @@
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-broker-tokens",
       "attribute": "authenticationSupported",
-      "value": "ES256",
+      "value": "ECDSA-P-256-SHA-256",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {
       "document": "cbom-keycloak-product.cdx.json",
       "interface": "service:svc-broker-tokens",
       "attribute": "authenticationSupported",
-      "value": "EdDSA",
+      "value": "Ed25519",
       "family": "EC",
       "securityStrength": 128,
       "quantumVulnerable": true,
       "status": "acceptable",
       "nextTransition": {
-        "status": "disallowed",
-        "after": "2035-12-31"
+        "status": "deprecated",
+        "after": "2030-12-31"
+      }
+    },
+    {
+      "document": "cbom-keycloak-product.cdx.json",
+      "interface": "service:svc-broker-tokens",
+      "attribute": "authenticationSupported",
+      "value": "Ed448",
+      "family": "EC",
+      "securityStrength": 224,
+      "quantumVulnerable": true,
+      "status": "acceptable",
+      "nextTransition": {
+        "status": "deprecated",
+        "after": "2030-12-31"
       }
     },
     {

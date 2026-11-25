@@ -95,7 +95,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:x25519",
-          "name": "X25519",
+          "name": "x25519",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -106,7 +106,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:secp384r1",
-          "name": "secp384r1",
+          "name": "ECDHE-secp384r1",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -139,7 +139,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:ecdsa-p256",
-          "name": "ECDSA-P256-SHA256",
+          "name": "ECDSA-P-256-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -161,7 +161,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:es256",
-          "name": "ES256",
+          "name": "ECDSA-P-256-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -172,7 +172,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:rs256",
-          "name": "RS256",
+          "name": "RSA-PKCS1-1.5-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -183,7 +183,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:rsa-sha256",
-          "name": "RSA-SHA256",
+          "name": "RSA-PKCS1-1.5-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -271,6 +271,10 @@
             {
               "name": "pkic:profile:observationSummary",
               "value": "Groups negotiated: X25519MLKEM768 71%, X25519 29% of 1.2 million sessions."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "platform"
             }
           ],
           "externalReferences": [
@@ -354,6 +358,10 @@
             {
               "name": "pkic:profile:observationSummary",
               "value": "Version and cipher from pg_stat_ssl; group from the ServerHello; certificate from testssl.sh --starttls postgres."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "externalReferences": [
@@ -425,6 +433,10 @@
             {
               "name": "pkic:profile:observedAt",
               "value": "2026-10-18T00:00:00Z/2026-10-25T00:00:00Z"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "externalReferences": [
@@ -500,6 +512,10 @@
             {
               "name": "pkic:profile:disclosure:context:observation-evidence",
               "value": "withheld"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ]
         },
@@ -550,6 +566,10 @@
             {
               "name": "pkic:profile:authentication",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "crypto:protocol:ing-tls"
             }
           ],
           "type": "service"
@@ -601,6 +621,10 @@
             {
               "name": "pkic:profile:authentication",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -652,6 +676,10 @@
             {
               "name": "pkic:profile:observationSummary",
               "value": "The JWKS publishes an ES256 and an RS256 key. Tokens for 'legacy-portal' are RS256."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "externalReferences": [
@@ -718,6 +746,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -732,11 +764,11 @@
             },
             {
               "name": "pkic:profile:protocol",
-              "value": "Admin REST (OAuth 2.0 bearer)"
+              "value": "OAuth 2.0"
             },
             {
               "name": "pkic:profile:protocolVersion",
-              "value": "1.0"
+              "value": "2.0"
             },
             {
               "name": "pkic:profile:endpointRole:administrator",
@@ -765,6 +797,10 @@
             {
               "name": "pkic:profile:encryption",
               "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
             }
           ],
           "type": "service"
@@ -885,7 +921,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "80b10b11705bc6425a371e307b5792f3d87e12bd4fca5349cb11bb4fae8b0929"
+          "content": "ed6d9b210f77f5817ba79dffd65ec7b21425ae5a2a978332ceff5c043c980edc"
         }
       ]
     },

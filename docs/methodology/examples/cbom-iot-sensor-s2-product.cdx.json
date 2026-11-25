@@ -1,0 +1,443 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "EXAMPLE CBOM, lifecycle stage 'implemented'. An illustrative LoRaWAN soil sensor that can be updated over the air, described by its manufacturer against iot-device v0.1. Read with the S1 record.",
+  "serialNumber": "urn:uuid:10700002-5e45-4e01-9a01-000000000001",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-18T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "Example Sensors (illustrative manufacturer)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "device",
+        "bom-ref": "dev:sensor",
+        "name": "Soil sensor S2 (illustrative)",
+        "version": "2.0.1",
+        "description": "A battery-powered soil sensor reaching a gateway over LoRaWAN, with firmware update over the air and keys in a secure element. Values are illustrative.",
+        "properties": [
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          },
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "product"
+          },
+          {
+            "name": "pkic:profile:updateMechanism",
+            "value": "remote-managed"
+          },
+          {
+            "name": "pkic:profile:updateSupportStatus",
+            "value": "supported"
+          },
+          {
+            "name": "pkic:profile:resourceBound",
+            "value": "flash=262144 ram=65536 frame=242"
+          },
+          {
+            "name": "pkic:profile:contextAbsent:support-lifecycle",
+            "value": "not-published"
+          },
+          {
+            "name": "pkic:profile:contextAbsent:roadmap",
+            "value": "not-published"
+          },
+          {
+            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "value": "not-published"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:generic/example-sensors/soil-sensor-s2@2.0.1"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Sensors (illustrative manufacturer)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:s2-firmware",
+          "name": "S2 firmware and LoRaWAN stack (illustrative)",
+          "version": "2.0.1",
+          "properties": [
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "software-update"
+            },
+            {
+              "name": "pkic:profile:coexistence",
+              "value": "simultaneous"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "unreleased"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            }
+          ],
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/example-sensors/s2-firmware@2.0.1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "radio-lorawan",
+          "name": "LoRaWAN radio link (uplink and downlink)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "LoRaWAN"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.0.4"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:sensor"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:network-server"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-CTR"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "AES-128-CMAC"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.0.4"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "AES-128-CMAC"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "None: the algorithms are fixed by the LoRaWAN specification"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The largest application payload is 242 bytes (EU868, highest data rate) and 51 bytes at the lowest. An ML-KEM-768 ciphertext is 1,088 bytes and an ML-DSA-44 signature 2,420 bytes, so neither fits a frame."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sto-keys"
+            },
+            {
+              "name": "pkic:profile:cryptoTerminationPoint",
+              "value": "device"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "secure-element"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "upd-fuota",
+          "name": "Firmware update over the air (LoRaWAN FUOTA)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "LoRaWAN FUOTA"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.0.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:sensor"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:fuota-server"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-CTR"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P-256-SHA-256"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.0.0"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ECDSA-P-256-SHA-256"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "The firmware signature algorithm is fixed by the bootloader"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Images arrive in fragments over multicast and are verified as a whole by the bootloader, so a larger post-quantum signature costs flash, not frames."
+            },
+            {
+              "name": "pkic:profile:updateMechanism",
+              "value": "remote-managed"
+            },
+            {
+              "name": "pkic:profile:updateAuthority",
+              "value": "platform"
+            },
+            {
+              "name": "pkic:profile:updateAuthoritySupported",
+              "value": "platform"
+            },
+            {
+              "name": "pkic:profile:updateAuthoritySupported",
+              "value": "vendor"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sto-keys"
+            },
+            {
+              "name": "pkic:profile:cryptoTerminationPoint",
+              "value": "device"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "secure-element"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sto-keys",
+          "name": "LoRaWAN root key and firmware verification key, in a secure element",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-CCM"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "AES-128-KW"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Not applicable"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The secure element holds the root key and the firmware verification key, which a signed update can replace."
+            },
+            {
+              "name": "pkic:profile:keyReplaceable",
+              "value": "software-update"
+            },
+            {
+              "name": "pkic:profile:keyProvisioning",
+              "value": "provisioned-at-onboarding"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dev:sensor",
+      "dependsOn": [
+        "lib:s2-firmware",
+        "radio-lorawan",
+        "upd-fuota",
+        "sto-keys"
+      ]
+    },
+    {
+      "ref": "lib:s2-firmware",
+      "provides": [
+        "radio-lorawan",
+        "upd-fuota",
+        "sto-keys"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:10700002-5e45-4e01-9a01-0000000000b1/1",
+      "comment": "Companion SBOM of the same firmware.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "sbom"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9150368e7f0095289865a4bc8eb32679ba14a564c98a8cc9d4519991754a54d1"
+        }
+      ]
+    },
+    {
+      "type": "advisories",
+      "url": "https://psirt.example.com/sensors/advisories",
+      "comment": "The manufacturer's security advisories (illustrative).",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "advisories"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    },
+    {
+      "type": "security-contact",
+      "url": "https://psirt.example.com/contact",
+      "comment": "The manufacturer's security contact (illustrative).",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "security-contact"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    }
+  ]
+}

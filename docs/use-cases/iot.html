@@ -25,7 +25,7 @@ nav: uc-iot
   <div class="crumb">CHANGE PLANNING · WORKED USE CASE · DRAFT</div>
   <h1>IoT device estate: from use case to profile</h1>
   <p class="lead">This use case follows the shape of the <a href="template.html">template</a>. It is developed as far as it can be without decisions from the working group. The sections that could be argued from the methodology are written. The sections that need a decision are marked and left open. Nothing here is a profile yet, and no rules file exists.</p>
-  <div class="banner warn">Draft for discussion. The attribute names below are proposals made on this page, not established terms, and the profile has not been written, validated or tested. See <a href="#next">what this page needs next</a>.</div>
+  <div class="banner warn">Carried past Release 1. The four questions that blocked the rules have provisional answers (section 8); the profile itself is the next step. Three of the attributes below are now in the published <a href="../methodology/profile-change-core.rules.json">change core</a>: <code>updateMechanism</code>, <code>updateAuthority</code> and <code>keyReplaceable</code>. The rest are proposals made on this page, and the IoT profile has not been written, validated or tested. See <a href="#next">what this page needs next</a>.</div>
 
   <h2>Choosing the decision</h2>
   <p>The term "IoT" on its own does not identify a consumer or a decision. It identifies a class of subject: devices that are numerous, constrained, deployed somewhere nobody visits, and expected to keep working for a decade or more. Several different consumers make several different decisions about that class, and they need different profiles.</p>
@@ -42,7 +42,7 @@ nav: uc-iot
       <tr>
         <td>Device procurement and certification</td>
         <td>A buyer or certification body checking a device against a scheme before it is bought or placed on the market</td>
-        <td>It is close to the <a href="disclosure.html#procurement">procurement</a> and <a href="assurance.html#compliance">compliance</a> entries already in the catalogue. A more detailed version of one of those profiles (a "depth", in the methodology's terms) may serve it. In that case it would not need a profile of its own.</td>
+        <td>It is close to the <a href="disclosure.html#procurement">procurement</a> and <a href="assurance.html#compliance">compliance</a> entries already in the register. A more detailed version of one of those profiles (a "depth", in the methodology's terms) may serve it. In that case it would not need a profile of its own.</td>
       </tr>
       <tr>
         <td>Manufacturer support planning</td>
@@ -138,8 +138,8 @@ nav: uc-iot
       <tr><td>What is it doing now, and what else could it do?</td><td><code>keyExchange</code>, <code>authentication</code>, and their <code>Supported</code> counterparts</td><td>Baseline and migration profile.</td></tr>
       <tr><td>Could any firmware carry the new algorithms, given what the hardware is?</td><td><code>resourceBound</code></td><td class="na">New. The hard limits that bound what this model could ever negotiate: usable flash and RAM headroom, and the maximum frame or message size the link imposes.</td></tr>
       <tr><td>Is there a way to get new firmware onto it?</td><td><code>updateMechanism</code></td><td class="na">New. <code>none</code> · <code>physical-access</code> · <code>local-network</code> · <code>remote-managed</code>.</td></tr>
-      <tr><td>Who can trigger that?</td><td><code>updateAuthority</code></td><td class="na">New. <code>operator</code> · <code>vendor</code> · <code>platform</code> · <code>installer</code>, as a set. This attribute separates an available action from a theoretical one. Q65 settles it provisionally as an attribute of the update mechanism, with <code>updateAuthoritySupported</code> for the parties the product can be configured to accept. See <a href="../methodology/terms.html">Terms</a>.</td></tr>
-      <tr><td>Will firmware still be offered?</td><td><code>updateSupportStatus</code></td><td class="na">New. A commitment class rather than a date, following decision 0007: <code>supported</code> · <code>limited</code> · <code>ended</code> · <code>never-offered</code>.</td></tr>
+      <tr><td>Who can trigger that?</td><td><code>updateAuthority</code></td><td class="na">New. <code>operator</code> · <code>vendor</code> · <code>platform</code> · <code>installer</code>, as a set. This attribute separates an available action from a theoretical one. It is provisionally an attribute of the update mechanism, with <code>updateAuthoritySupported</code> for the parties the product can be configured to accept. See <a href="../methodology/terms.html">Terms</a>.</td></tr>
+      <tr><td>Will firmware still be offered?</td><td><code>updateSupportStatus</code></td><td class="na">New. A commitment class rather than a date, in the same way as capability availability: <code>supported</code> · <code>limited</code> · <code>ended</code> · <code>never-offered</code>.</td></tr>
       <tr><td>Can the keys be replaced?</td><td><code>keyProvisioning</code>, <code>keyReplaceable</code></td><td class="na">New. Where key material came from, and whether anything short of replacing the device can change it. Factory-injected material that cannot be rotated is the case that turns an update decision into a replacement decision.</td></tr>
       <tr><td>Where do key operations execute?</td><td><code>providerLocation</code></td><td>Migration profile, but the value set is wrong here: <code>software</code>, <code>hsm</code>, <code>tee</code> and <code>unspecified</code> do not cover a secure element, an MCU's internal flash, or one-time-programmable fuses.</td></tr>
       <tr><td>Does the cryptography terminate on the device?</td><td><code>cryptoTerminationPoint</code></td><td class="na">New. <code>device</code> · <code>gateway</code> · <code>both</code>. The compensating-control option depends on this attribute. It is also the one most likely to be contested, because it is arguably a deployment fact rather than a product fact.</td></tr>
@@ -164,7 +164,7 @@ nav: uc-iot
   <p><strong>Whether a gateway can carry the cryptography instead</strong> is a fact about a deployment. <code>cryptoTerminationPoint</code> is an attempt to get at the part of it that is a product fact: whether the device's design permits termination elsewhere. Whether it has been deployed that way is not something the document can say.</p>
 
   <h2>4 · The profile definition</h2>
-  <p>One structural question has to be answered before any rule can be written: which profile does this one extend? This profile is not a deeper version of PQC migration. It supports a different decision, with a different set of actions. It adds attributes that the migration profile has no use for. It also ignores several attributes that the migration profile requires. In the terms used under composition in <a href="../methodology/profile.html">Profile</a>, it is a branch rather than a depth. A branch extends the interface disclosure baseline directly. A depth would extend the migration profile. The alternative also has a fair case. The same person often plans both an estate of gateways and an estate of sensors, and two unrelated profiles make that work harder. The answer, settled provisionally, is the one draft decision 0023 proposes. This profile and the migration profile both extend a shared change core, a common base for change-planning profiles. This profile stays a branch, but the two profiles are no longer unrelated, and this profile does not inherit migration rules that a small device cannot meet.</p>
+  <p>One structural question has to be answered before any rule can be written: which profile does this one extend? This profile is not a deeper version of PQC migration. It supports a different decision, with a different set of actions. It adds attributes that the migration profile has no use for. It also ignores several attributes that the migration profile requires. In the terms used under composition in <a href="../methodology/profile.html">Profile</a>, it is a branch rather than a depth. A branch extends the interface disclosure baseline directly. A depth would extend the migration profile. The alternative also has a fair case. The same person often plans both an estate of gateways and an estate of sensors, and two unrelated profiles make that work harder. The provisional answer is a shared change core. This profile and the migration profile both extend a shared change core, a common base for change-planning profiles. This profile stays a branch, but the two profiles are no longer unrelated, and this profile does not inherit migration rules that a small device cannot meet.</p>
   <div class="fill">
     <span class="fill-label">to fill in</span>
     <p><strong>The relationship to the base</strong>, the change core: one table with three rows for inherited, tightened and added.</p>
@@ -218,16 +218,16 @@ nav: uc-iot
     <p>What a producer records when it does not know. <code>unknown</code> has to be available on the update attributes in particular, because a manufacturer may really not know who can push firmware to a unit it sold through a channel.</p>
   </div>
 
-  <h2>8 · Recorded decisions and open questions</h2>
-  <p>No decision records yet. Four questions are carried in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a>. All four are settled provisionally, so the rules can now be written.</p>
+  <h2>8 · Questions and provisional positions</h2>
+  <p>Four questions had to be answered before the rules could be written. Each now has a provisional answer.</p>
   <div style="overflow:auto">
   <table>
-    <thead><tr><th>#</th><th>Question</th><th>Topic</th></tr></thead>
+    <thead><tr><th>Question and provisional position</th><th>Topic</th></tr></thead>
     <tbody>
-      <tr><td>Q62</td><td>Is the subject of a CBOM a device model or a deployed device, and does the methodology need to say which? <em>Settled provisionally: rule P5 already makes a document declare it. A device model is a <code>product</code>, and a deployed unit is a <code>deployment</code>.</em></td><td>3.3</td></tr>
-      <tr><td>Q63</td><td>Does the methodology need a way to say that a limit is permanent rather than a current state? <em>Settled provisionally: <code>resourceBound</code> records the hard limit itself, in bytes, and the consumer draws the conclusion.</em></td><td>3.3</td></tr>
-      <tr><td>Q64</td><td>Is an IoT profile a branch from the baseline or a depth of the migration family? <em>Settled provisionally: it extends a shared change core, as draft decision 0023 proposes.</em></td><td>3.9</td></tr>
-      <tr><td>Q65</td><td>May a profile require a fact about a process, such as who can push firmware, rather than about a product? <em>Settled provisionally: who can push firmware is the attribute <code>updateAuthority</code> of the update mechanism.</em></td><td>3.4</td></tr>
+      <tr><td>Is the subject of a CBOM a device model or a deployed device, and does the methodology need to say which? <em>Provisional position: rule P5 already makes a document declare it. A device model is a <code>product</code>, and a deployed unit is a <code>deployment</code>.</em></td><td>3.3</td></tr>
+      <tr><td>Does the methodology need a way to say that a limit is permanent rather than a current state? <em>Provisional position: <code>resourceBound</code> records the hard limit itself, in bytes, and the consumer draws the conclusion.</em></td><td>3.3</td></tr>
+      <tr><td>Is an IoT profile a branch from the baseline or a depth of the migration family? <em>Provisional position: it extends a shared change core.</em></td><td>3.9</td></tr>
+      <tr><td>May a profile require a fact about a process, such as who can push firmware, rather than about a product? <em>Provisional position: who can push firmware is the attribute <code>updateAuthority</code> of the update mechanism.</em></td><td>3.4</td></tr>
     </tbody>
   </table>
   </div>

@@ -1,0 +1,632 @@
+{
+  "$comment": "DRAFT v0.9, derived from the v0.8 draft in drafts/pqc-migration-depths using the Keycloak lifecycle example (drafts/keycloak-methodology). Not published. Changes from v0.8: the profile serves two subject types (a product and a deployment of it), so that a deployment-scope profile can extend it; 'intended' is no longer accepted; a document carries one lifecycle stage; I3-I5 accept two literals at the implemented stage only; I11 records whether an interface is enabled by default; and a new section of reference rules (R) says which context the document must point to without carrying it. See changelog v0.9.",
+  "profileId": "pkic.example.interface-disclosure",
+  "profileTag": "interface-disclosure",
+  "title": "Interface Disclosure Baseline (Example)",
+  "version": "0.9",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+  "objective": {
+    "$comment": "C1. Rewritten in v0.6. The previous decision — whether the cryptography is 'disclosed in enough detail to be recorded in an inventory and assessed against policy' — was circular: it was a decision about the document rather than about the product, so no attribute could be derived from it. Method step 3 says derive the questions from the decision, and a decision whose answer is 'whatever this profile requires' generates no questions. The decision below is the consumer's actual job, and every rule in this profile traces to it.",
+    "consumer": "An operator or purchaser holding a product it did not build and cannot inspect, maintaining a cryptographic inventory across an estate.",
+    "decision": "When a weakness is published against an algorithm, a protocol version, or a library, which of the deployed interfaces are affected — and, holding this record beside the one from last quarter, what has changed.",
+    "decisionOptions": [
+      "record the interfaces in the inventory and take no further action",
+      "act on an affected interface: reconfigure, upgrade, or isolate it",
+      "request a fuller disclosure from the producer, where the record cannot answer the question",
+      "reject the submission as insufficient to inventory"
+    ],
+    "$note": "The profile permits a producer to withhold implementationPurl (I9). A consumer should read a conforming document that exercises that permission as answering the second half of the decision and not the first: library-level vulnerability matching is the use this profile is built for, and a withheld library removes it. The verdict remains 'conforms'; the conformance report states the disclosure state of every rule, which is where that fact is visible. A procurement profile deriving from this one should tighten I9, as the migration profile does."
+  },
+  "scope": {
+    "$comment": "C11, revised in v0.9. 'subjectTypes' replaces 'subjectType' and is a set. A derived profile narrows it to a subset, as it narrows lifecycleStages. The baseline names two subject types because its rules describe an interface the same way whether a vendor reports what a product does at build time or an operator reports what a deployment does. Only the subject identifier (P3) and some reference rules differ, and they are keyed by subject type. 'intended' is removed: a design intention answers nothing about deployed interfaces, which is this profile's decision. A vendor's intention is a capability status (pqc-migration G1); an operator's intention is a requirement, held in policy or a tender, and a design document is referenced as context (R6), not reported as a stage.",
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented",
+      "configured",
+      "observed"
+    ],
+    "subjectTypes": [
+      "product",
+      "deployment"
+    ]
+  },
+  "appliesTo": {
+    "$comment": "Carrier-format acceptance. 'min' = oldest spec version the adapter is known to read; below it, evaluation is refused (unsupported). 'tested' = version the profile was authored/validated against; between min and tested the CBOM is accepted but flagged legacy. Newer-than-tested is accepted with a note.",
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "1.7"
+    }
+  },
+  "disclosure": {
+    "$comment": "An attribute that carries no value is not necessarily the same as an attribute that was never considered. Following the 2026 SBOM minimum elements, a producer states whether missing information is unknown to it or is being withheld. Neither CycloneDX nor SPDX has a native field for this, so the marker is carried as a property and the convention is fixed here. A rule with 'withholdable': true is satisfied by a 'withheld' marker; otherwise withholding fails the rule. 'unknown' never satisfies a MUST rule, but is reported separately from silent omission.",
+    "markerPrefix": "pkic:profile:disclosure:",
+    "states": [
+      "unknown",
+      "withheld"
+    ]
+  },
+  "interfaceTypeVocabulary": [
+    "management",
+    "service",
+    "interconnect",
+    "peer",
+    "storage"
+  ],
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Product declares at least one cryptographic interface",
+      "level": "MUST",
+      "constraint": {
+        "minInterfaces": 1
+      }
+    },
+    {
+      "id": "P2",
+      "description": "Product declares at least one management (configuration) interface, or states why it has none",
+      "level": "MUST",
+      "constraint": {
+        "minInterfacesOfType": {
+          "interfaceType": "management",
+          "min": 1
+        },
+        "orDeclaredAbsent": "managementInterfaceAbsence",
+        "absenceEnumRef": "managementAbsenceVocabulary"
+      },
+      "note": "Revised in v0.6. The rule exists to catch omission: the administrative interface is the one most often left out. But a library, a hardware token or an embedded component with no configuration surface hides nothing by having none, and previously failed. A structural rule is now satisfied by presence or by an explicit statement of absence, and silence is neither — the disclosure model applied to structure rather than to an attribute."
+    },
+    {
+      "id": "P3",
+      "description": "Document identifies the subject it describes",
+      "level": "MUST",
+      "constraint": {
+        "subjectIdentified": {
+          "startsWith": {
+            "product": "pkg:",
+            "deployment": "tag:"
+          }
+        }
+      },
+      "withholdable": false,
+      "note": "Revised in v0.9. The form of the identifier depends on the subject type the document declares (P5). A product is identified by a package URL. A deployment has no package URL. It is identified by a tag URI (RFC 4151), such as 'tag:example.org,2026:deployment/sso-prod'. A tag URI can be minted by anyone who controls a domain name, with no registration, which is the situation of an operator naming its own deployments. A URN would need a registered namespace. Two records of the same deployment must use the same identifier.",
+      "schemeRef": "subject"
+    },
+    {
+      "id": "P4",
+      "description": "Product states how complete its declared interface set is",
+      "level": "MUST",
+      "constraint": {
+        "productAttribute": "coverage",
+        "enumRef": "coverageVocabulary"
+      },
+      "withholdable": false,
+      "note": "Moved down from the migration profile in v0.6, settling Q34. Without it a missing interface is uninterpretable: silence could mean the interface does not exist or that the producer chose not to list it, and those are entirely different. The Conformance section names 'that the document is complete' and 'that every relevant interface was declared' as the two non-assertions most likely to cause difficulty in procurement, and this is the rule that addresses them. It belongs in every use of a CBOM, not only in migration planning."
+    },
+    {
+      "id": "P5",
+      "description": "Document declares which type of subject it describes, from the types the profile accepts",
+      "level": "MUST",
+      "constraint": {
+        "subjectDeclared": true
+      },
+      "withholdable": false,
+      "note": "New in v0.9. A consumer cannot tell from the content alone whether a record describes a product as built or one deployment of it, and the two answer different questions. Decision 0008 made the profile declare its subject; this makes the document declare its own, so the two can be compared mechanically."
+    },
+    {
+      "id": "P6",
+      "description": "Document declares one lifecycle stage, and every interface reports that stage",
+      "level": "MUST",
+      "constraint": {
+        "singleStage": true
+      },
+      "withholdable": false,
+      "note": "New in v0.9. One stage per document. A vendor's build record and an operator's scan are produced by different parties at different times, and each answers a different question. Mixing stages in one document makes an interface count meaningless (one boundary declared twice) and lets a producer fill a gap at one stage with a value from another. The readiness gap is shown by joining a document at one stage to a document at another (see the deployment profile), not by merging them. The document's stage is carried natively in metadata.lifecycles; a per-interface lifecycleStage, where present, must agree."
+    }
+  ],
+  "$commentInterface": "Added in v0.8. An interface is a logical cryptographic boundary, not a port. Where two layers of cryptography protect traffic on one port, each layer is its own interface and is described in its own terms. The usual case is application-layer signing or encryption carried over TLS: signed OIDC tokens or SAML assertions on an HTTPS listener. The TLS layer is one interface, with protocol 'TLS'. The token layer is another, with protocol 'OIDC' or 'SAML', 'authentication' naming the token signature algorithm and 'keyExchange' naming the token encryption key management algorithm. The layers migrate on different timetables and depend on different standards, so one entry could not state both. See decision 0022 (K2). An application-layer interface counts as an interface when it applies cryptography of its own, or when it is reachable without any transport protection. One that only rides a declared transport and applies nothing of its own is carried by that transport's interface and is not counted separately; otherwise interface counts and the coverage statement would vary with how many services a producer chose to list (decision 0022, K7). How the two layers are represented, and how the carrying relation is recorded, is the mapping's business.",
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "protocol",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "schemeRef": "protocol",
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Guarded in v0.8: not required of a storage interface. A storage interface is data at rest and has no protocol, peer or handshake, so this rule could not be satisfied honestly by one. A network path to remote storage is declared as its own service or interconnect interface and owes this rule there. See decision 0022."
+    },
+    {
+      "id": "I2",
+      "attribute": "protocolVersion",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Guarded in v0.8: not required of a storage interface. A storage interface is data at rest and has no protocol, peer or handshake, so this rule could not be satisfied honestly by one. A network path to remote storage is declared as its own service or interconnect interface and owes this rule there. See decision 0022."
+    },
+    {
+      "id": "I3",
+      "attribute": "keyExchange",
+      "level": "MUST",
+      "constraint": {
+        "present": true,
+        "literals": [
+          "none",
+          "deployment-defined",
+          "peer-defined"
+        ],
+        "literalStages": {
+          "deployment-defined": [
+            "implemented"
+          ],
+          "peer-defined": [
+            "implemented"
+          ]
+        }
+      },
+      "withholdable": false,
+      "schemeRef": "algorithm",
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Revised in v0.9. Three literals are values, not disclosure markers. 'none' states that no algorithm is applied for this job (K3). 'deployment-defined' states that the product does not fix the value and the operator chooses it, for example the server certificate. 'peer-defined' states that the outcome is negotiated with, or chosen by, the other endpoint, for example the group and the server certificate on a connection the product opens to a database. The two are accepted only at 'implemented'. At 'configured' or 'observed' the producer holds the answer and must give it. Decision 0012: a rule that no legitimate subject can satisfy honestly is wrong, not strict."
+    },
+    {
+      "id": "I4",
+      "attribute": "encryption",
+      "level": "MUST",
+      "constraint": {
+        "present": true,
+        "literals": [
+          "none",
+          "deployment-defined",
+          "peer-defined"
+        ],
+        "literalStages": {
+          "deployment-defined": [
+            "implemented"
+          ],
+          "peer-defined": [
+            "implemented"
+          ]
+        }
+      },
+      "withholdable": false,
+      "schemeRef": "algorithm",
+      "note": "Revised in v0.9. Three literals are values, not disclosure markers. 'none' states that no algorithm is applied for this job (K3). 'deployment-defined' states that the product does not fix the value and the operator chooses it, for example the server certificate. 'peer-defined' states that the outcome is negotiated with, or chosen by, the other endpoint, for example the group and the server certificate on a connection the product opens to a database. The two are accepted only at 'implemented'. At 'configured' or 'observed' the producer holds the answer and must give it. Decision 0012: a rule that no legitimate subject can satisfy honestly is wrong, not strict."
+    },
+    {
+      "id": "I5",
+      "attribute": "authentication",
+      "level": "MUST",
+      "constraint": {
+        "present": true,
+        "literals": [
+          "none",
+          "deployment-defined",
+          "peer-defined"
+        ],
+        "literalStages": {
+          "deployment-defined": [
+            "implemented"
+          ],
+          "peer-defined": [
+            "implemented"
+          ]
+        }
+      },
+      "withholdable": false,
+      "note": "Revised in v0.9. Three literals are values, not disclosure markers. 'none' states that no algorithm is applied for this job (K3). 'deployment-defined' states that the product does not fix the value and the operator chooses it, for example the server certificate. 'peer-defined' states that the outcome is negotiated with, or chosen by, the other endpoint, for example the group and the server certificate on a connection the product opens to a database. The two are accepted only at 'implemented'. At 'configured' or 'observed' the producer holds the answer and must give it. Decision 0012: a rule that no legitimate subject can satisfy honestly is wrong, not strict.",
+      "schemeRef": "algorithm",
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      }
+    },
+    {
+      "id": "I6",
+      "attribute": "endpointRoles",
+      "level": "MUST",
+      "constraint": {
+        "minCount": 2
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Guarded in v0.8: not required of a storage interface. A storage interface is data at rest and has no protocol, peer or handshake, so this rule could not be satisfied honestly by one. A network path to remote storage is declared as its own service or interconnect interface and owes this rule there. See decision 0022."
+    },
+    {
+      "id": "I7",
+      "attribute": "interfaceType",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "interfaceTypeVocabulary"
+      },
+      "withholdable": false
+    },
+    {
+      "id": "I8",
+      "attribute": "lifecycleStage",
+      "level": "MUST",
+      "constraint": {
+        "enum": [
+          "intended",
+          "implemented",
+          "configured",
+          "observed"
+        ]
+      },
+      "withholdable": false,
+      "note": "Revised in v0.9. Effective value: the interface's own lifecycleStage, or the document stage from metadata.lifecycles. P6 requires the two to agree."
+    },
+    {
+      "id": "I9",
+      "attribute": "implementationPurl",
+      "level": "MUST",
+      "constraint": {
+        "startsWith": "pkg:"
+      },
+      "withholdable": true,
+      "note": "Required, and withholdable. A producer unwilling to publish the implementing library says so with a 'withheld' marker, which satisfies the rule; silent omission does not. This is the one rule in the baseline where the disclosure model affects the verdict, which is the point of having it.",
+      "schemeRef": "library"
+    },
+    {
+      "id": "I10",
+      "attribute": "keyWrapping",
+      "level": "MUST",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "schemeRef": "algorithm",
+      "note": "Added in v0.8. On a storage interface: the algorithm that protects the data keys, for example RSA-OAEP over an AES key, or 'none' where the product does not wrap them. It stands in for I3 on storage, and it is a different attribute because it is a different job: wrapping keys at rest is the key-protection purpose, not key establishment between parties. It belongs at this depth because it answers this profile's decision. When RSA weakens, a storage path whose data keys are wrapped under RSA is one of the affected interfaces. I4 (encryption) and I9 (implementationPurl) apply to storage unchanged. See decision 0022."
+    },
+    {
+      "id": "I11",
+      "attribute": "defaultState",
+      "level": "SHOULD",
+      "constraint": {
+        "enumRef": "defaultStateVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "lifecycleStage",
+        "equals": "implemented"
+      },
+      "note": "New in v0.9. Whether a product interface is active in the product's default configuration. Keycloak's plaintext listener exists in the product and is off by default. Declared without this attribute it reads as an active plaintext interface; left out, it hides the interface that becomes the plaintext hop behind a TLS-terminating proxy. Applies only at 'implemented': in a deployment record, a declared interface is active, and a product interface with no counterpart is not."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "Internal cryptographic operations not reachable at an interface",
+      "reason": "The subject is treated as a black box. A consumer cannot verify internal operations and a vendor will not disclose them, so requiring them would produce a profile no one can satisfy."
+    },
+    {
+      "item": "Derived judgements such as post-quantum posture or cryptographic maturity",
+      "reason": "The criteria behind such judgements change while the product does not. The profile records the facts they are derived from and leaves the judgement to external versioned policy. See decision 0002."
+    },
+    {
+      "item": "Forward-looking capability and roadmap information",
+      "reason": "This profile records present state. A consumer needing planning information uses a derived profile, such as the PQC migration example, which adds it."
+    },
+    {
+      "item": "Properties of the conveyed payload crossing an interface, such as its confidentiality lifetime or its classification",
+      "reason": "A vendor does not know what a customer will send through its product, and the same product carries public information at one site and long-lived personal records at another. These facts are known to the operator and belong to a deployment-scope profile. Note the limit of this exclusion: data that an interface must carry in order to function, such as the credentials on a management interface or the key material on a key management interface, is a design property the vendor does know, and whether the baseline should require it is recorded as Q36. Both are required to assess the harvest-now-decrypt-later threat, which the cryptography alone does not measure."
+    },
+    {
+      "item": "Key material, secrets, and certificate private components",
+      "reason": "Never disclosed in a bill of materials under any profile."
+    }
+  ],
+  "artifacts": {
+    "$comment": "C9.",
+    "mapping": "../../pqc-migration-depths/mapping-cyclonedx-spdx.md",
+    "conformingExample": "../examples/kc-product-implemented.cdx.json",
+    "nonConformingExample": "../examples/kc-product-implemented-fail-R5.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-08-05",
+      "summary": "Initial draft. Product rules P1 and P2, per-interface rules I1 to I8.",
+      "changes": []
+    },
+    {
+      "version": "0.2",
+      "date": "2026-08-07",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Added the disclosure state model, with the marker prefix and a withholdable flag on every rule. Two markers, withheld and unknown, which with a supplied value and an undeclared attribute make the four outcomes an evaluation reports. An attribute previously omitted in silence now fails as undeclared; supplying a marker restores conformance."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added rule I9 implementationPurl at SHOULD level, withholdable. SHOULD rules are reported and do not determine the verdict."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Recorded the carrier acceptance range as CycloneDX min 1.6, tested 1.7. Documents at 1.6 are evaluated and flagged legacy rather than refused."
+        }
+      ]
+    },
+    {
+      "version": "0.3",
+      "date": "2026-08-09",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Raised I9 implementationPurl from SHOULD to MUST, keeping it withholdable. A document that omits the attribute in silence no longer conforms; a document that declares it withheld does. Until this version no rule combined MUST with withholdability, which is the only combination where the disclosure model affects a verdict, so the model was demonstrated in reporting and never at the point of decision."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Stated 'withholdable' explicitly on every rule. Behaviour is unchanged, since an absent flag was already treated as false, but a producer can now read the answer from the profile instead of inferring it from a validator's default."
+        }
+      ]
+    },
+    {
+      "version": "0.5",
+      "date": "2026-08-21",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Added 'scope.orientation', declared here as 'inventory'. No document verdict changes. The value constrains the profile rather than the document: an inventory profile may not require forward-looking attributes, which is checked as C12. Its purpose is to stop a present-state attribute and a capability attribute being read as interchangeable across profiles that share a vocabulary. See decision 0009."
+        }
+      ]
+    },
+    {
+      "version": "0.4",
+      "date": "2026-08-21",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Added the 'scope' object: subjectType, relationshipTypes, and the lifecycle stages the profile accepts. No document that conformed to v0.3 stops conforming, because this profile accepts all four stages, which is why the change is editorial rather than a tightening. The value of the field is that a derived profile can now narrow the set, and the migration profile does. See decision 0008."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added 'objective.decisionOptions'. The decision text was already phrased as a choice; stating the options explicitly is what makes the test in Method step 1 checkable by check_profile.py rather than a matter of review."
+        }
+      ]
+    },
+    {
+      "version": "0.7",
+      "date": "2026-08-24",
+      "changes": [
+        {
+          "kind": "editorial",
+          "summary": "Added 'profileTag'. Rule ids are local to the profile that declares them, so the citable form of a rule is '<profileTag>#<ruleId>' — 'interface-disclosure#I9', not 'I9'. No id in this profile changes and no requirement on any document changes: this profile is the base of its family and its rules were already numbered P for product and I for per-interface. What changes is that a derived profile is now free to number its own rules from P1 and I1 without colliding, and that a conformance report prints the qualified form. See decision 0011."
+        }
+      ]
+    },
+    {
+      "version": "0.8",
+      "date": "2026-09-26",
+      "changes": [
+        {
+          "kind": "relaxing",
+          "summary": "I1, I2, I3, I5 and I6 no longer apply to a storage interface. Each describes a channel: a protocol, its version, a key exchange, a peer authentication and two endpoint roles. A storage interface has none of these, so a product declaring one could not conform honestly. The defence is the one decision 0012 gave for P2: a rule no legitimate subject can satisfy honestly is wrong, not strict. No verdict on an existing example changes, because none declares a storage interface."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Added I10 (keyWrapping), MUST on a storage interface. A document declaring a storage interface now states how its data keys are protected. See decision 0022."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Stated that an interface is a logical boundary, not a port, so two cryptographic layers on one port are two interfaces (K2). Stated that 'none' is an accepted value for an algorithm attribute, distinct from the 'unknown' and 'withheld' markers (K3). No rule changes: both statements say how existing rules are read. See decision 0022."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Stated when an application-layer interface counts as an interface (K7). Sets how P1 and P4 count; changes no rule."
+        }
+      ]
+    },
+    {
+      "version": "0.9",
+      "date": "2026-10-25",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Removed 'intended' from the accepted lifecycle stages. A document reporting design intention no longer conforms. Design intention is a capability status (pqc-migration G1), a requirement held in policy, or context referenced under R6."
+        },
+        {
+          "kind": "relaxing",
+          "summary": "'scope.subjectTypes' replaces 'subjectType' and accepts 'product' and 'deployment', so that a deployment-scope profile can extend this one. P3 accepts a tag URI (RFC 4151) for a deployment."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Added P5 (the document declares its subject type) and P6 (one lifecycle stage per document)."
+        },
+        {
+          "kind": "relaxing",
+          "summary": "I3-I5 accept 'deployment-defined' and 'peer-defined' at 'implemented' only. A truthful build record of a product whose certificate or negotiated outcome is decided elsewhere could not conform before."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Added I11 'defaultState' at SHOULD."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Added reference rules R1-R6. R1, R2 and R5 are MUST."
+        }
+      ]
+    }
+  ],
+  "$commentIdentifierSchemes": "Q38. Identity cannot be settled in general, because some asset classes have no agreed identifier. It can be settled per profile, and this is the lever the methodology has. The baseline previously constrained the form of the least contested identifier — the implementing library, which had to be a purl — and left the most contested ones free, so 'our secure channel' and 'elliptic curve' were conforming values for protocol and keyExchange. An inventory built from twelve suppliers cannot correlate on free text. Whether the algorithm scheme should be the CycloneDX Cryptography Registry or another is Q20 and is unsettled; what this profile settles is that a scheme is named, so a consumer knows which naming they are reading. The validator cannot verify membership of a registry it does not hold, and does not pretend to: it checks that a scheme is declared for every asset class the rules constrain. Added in v0.8: wherever a rule requires an algorithm, the literal 'none' is an accepted value. It states that the interface applies no algorithm for that job, for example tokens that are signed and not encrypted, or data keys that are not wrapped. It is a claim about the product and is as checkable as any other value. It is not the same as not knowing, which is the 'unknown' disclosure marker, nor as declining to say, which is 'withheld'. See decision 0022 (K3).",
+  "identifierSchemes": {
+    "algorithm": "cyclonedx-cryptography-registry",
+    "protocol": "cyclonedx-cryptography-registry",
+    "library": "purl",
+    "subject": {
+      "product": "purl",
+      "deployment": "tag-uri (RFC 4151)"
+    }
+  },
+  "coverageVocabulary": [
+    "all-external",
+    "all",
+    "partial"
+  ],
+  "managementAbsenceVocabulary": [
+    "no-configuration-surface",
+    "configured-out-of-band",
+    "not-applicable-to-subject"
+  ],
+  "defaultStateVocabulary": [
+    "enabled",
+    "disabled"
+  ],
+  "$commentReferenceRules": "New in v0.9. A reference rule requires the document to point to an artefact that it does not carry. The profile defines the kind of context, where in the document the pointer sits, which carrier reference types express it, whether the target must be bound by a hash, and whether the producer may state that no such artefact exists. Conformance checks that the pointer is present and well formed, and, where the evaluator is given the target, that the hash matches. It never evaluates the target's content. This is decision 0020 generalised: a CBOM records facts that change when the product or deployment changes; context that changes on another trigger, or is held by another party, is joined and not merged. Direction matters. A document points to artefacts that exist when it is written: its companion SBOM, the configuration it was read from, the evidence it was built on, and the locations where later statements will be published (a VEX feed, an advisory API). A judgement made about the document afterwards, such as a conformance claim or a policy evaluation, points to the document by digest, never the reverse.",
+  "contextKinds": {
+    "sbom": {
+      "carrier": [
+        "bom"
+      ],
+      "form": "document"
+    },
+    "vulnerability-statements": {
+      "carrier": [
+        "vulnerability-assertion",
+        "exploitability-statement"
+      ],
+      "form": "document-or-endpoint"
+    },
+    "advisories": {
+      "carrier": [
+        "advisories"
+      ],
+      "form": "endpoint"
+    },
+    "security-contact": {
+      "carrier": [
+        "security-contact",
+        "rfc-9116"
+      ],
+      "form": "endpoint"
+    },
+    "configuration-guidance": {
+      "carrier": [
+        "documentation",
+        "configuration"
+      ],
+      "form": "endpoint"
+    },
+    "design-intent": {
+      "carrier": [
+        "threat-model",
+        "adversary-model",
+        "documentation"
+      ],
+      "form": "document-or-endpoint"
+    }
+  },
+  "accessProtocolVocabulary": [
+    "web-page",
+    "csaf-provider",
+    "osv-api",
+    "ghsa-api",
+    "vex-document",
+    "other"
+  ],
+  "contextAbsenceVocabulary": [
+    "not-published",
+    "not-applicable-to-subject"
+  ],
+  "referenceRules": [
+    {
+      "id": "R1",
+      "context": "sbom",
+      "at": "document",
+      "level": "MUST",
+      "hashRequired": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "subjectType": "product"
+      },
+      "note": "The SBOM of the same subject, as a BOM-Link with a hash. It is how a consumer reaches components the CBOM does not describe, and how a library named under I9 is placed in the dependency tree."
+    },
+    {
+      "id": "R2",
+      "context": "vulnerability-statements",
+      "at": "document",
+      "level": "MUST",
+      "hashRequired": "when-document",
+      "orDeclaredAbsent": "contextAbsenceVocabulary",
+      "withholdable": false,
+      "requiredWhen": {
+        "subjectType": "product"
+      },
+      "note": "Where the producer publishes statements about whether this subject is affected by a vulnerability (VEX, CSAF VEX, or an exploitability statement). Either a fixed document, with a hash, or a feed or API, with its access protocol named. A producer that publishes none says so ('not-published'). Silence fails, because a consumer cannot tell 'none published' from 'not addressed'. The rule completes decision 0020: the CBOM supplies the join key (I9) and says where the other half of the join is."
+    },
+    {
+      "id": "R3",
+      "context": "advisories",
+      "at": "document",
+      "level": "SHOULD",
+      "hashRequired": false,
+      "withholdable": false,
+      "requiredWhen": {
+        "subjectType": "product"
+      },
+      "note": "Where third-party or vendor advisories about the subject and its libraries are published, with the access protocol named: a web page, a CSAF provider, the OSV API or the GitHub advisory API. A machine-readable endpoint lets a consumer query by the package URLs the CBOM already carries."
+    },
+    {
+      "id": "R4",
+      "context": "security-contact",
+      "at": "document",
+      "level": "SHOULD",
+      "hashRequired": false,
+      "withholdable": false,
+      "requiredWhen": {
+        "subjectType": "product"
+      },
+      "note": "Where to report a weakness or request a fuller disclosure. The objective lists 'request a fuller disclosure from the producer' as a decision option; without a contact, that option has no address."
+    },
+    {
+      "id": "R5",
+      "context": "configuration-guidance",
+      "at": "interface",
+      "level": "MUST",
+      "hashRequired": false,
+      "withholdable": false,
+      "requiredWhen": {
+        "anyAttributeEquals": {
+          "attributes": [
+            "keyExchange",
+            "encryption",
+            "authentication"
+          ],
+          "value": "deployment-defined"
+        }
+      },
+      "note": "If a product states that the operator decides an algorithm, the interface points to where the operator decides it. 'deployment-defined' without this pointer tells the operator that the decision is theirs and not how to make it."
+    },
+    {
+      "id": "R6",
+      "context": "design-intent",
+      "at": "document",
+      "level": "MAY",
+      "hashRequired": false,
+      "withholdable": false,
+      "note": "A threat model or design document. This is where design intention is recorded now that 'intended' is not an accepted stage: as context the record points to, not as a stage it reports."
+    }
+  ]
+}

@@ -1,0 +1,579 @@
+{
+  "product": "IBM watsonx Orchestrate On-Prem",
+  "version": "5.0.2",
+  "sbom_ref": "urn:cdx:cbom-ibm-watsonx-orchestrate-onprem-5.0.2-202611",
+  "cryptographic_libraries": [
+    {
+      "library_id": "lib-openssl-fips-3.0",
+      "name": "OpenSSL FIPS Provider",
+      "version": "3.0.8",
+      "os": "Linux x86_64 (RHCOS / RHEL 9.2)",
+      "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+      "fips_140": {
+        "standard": "FIPS-140-3",
+        "level": 1,
+        "cavp_certificate": "A2470",
+        "notes": "NIST CMVP Validated OpenSSL 3.0 FIPS cryptographic module"
+      },
+      "common_criteria": {
+        "eal": "EAL4",
+        "augmented": true,
+        "protection_profile": "NDPP (Network Device Protection Profile) v2.2e",
+        "notes": "NIAP Common Criteria evaluation record"
+      },
+      "algorithms": [
+        {
+          "type": "encryption",
+          "name": "AES-256-GCM",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38D",
+          "modes": [
+            "GCM",
+            "CTR"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2, key size >= 256",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "encryption",
+          "name": "AES-256-XTS",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38E",
+          "modes": [
+            "XTS"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2, block cipher for data-at-rest storage",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "hash",
+          "name": "SHA-384",
+          "min_key_size": 384,
+          "standard_ref": "FIPS 180-4",
+          "modes": [],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": true,
+            "quantum_safe_basis": "vendor-claim"
+          }
+        },
+        {
+          "type": "key-exchange",
+          "name": "ECDH-P384",
+          "min_key_size": 384,
+          "standard_ref": "NIST SP 800-56A Rev3",
+          "modes": [
+            "secp384r1"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "signature",
+          "name": "RSA-4096",
+          "min_key_size": 4096,
+          "standard_ref": "FIPS 186-4",
+          "modes": [
+            "PSS",
+            "PKCS1v1.5"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2, key size >= 2048",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        }
+      ],
+      "notes": "Cryptographic engine for container ingress, TLS terminations, and microservice communications"
+    },
+    {
+      "library_id": "lib-openjceplus-fips-1",
+      "name": "IBM OpenJCEPlusFIPS Provider",
+      "version": "1.8.0",
+      "os": "Linux x86_64 (IBM Semeru Runtimes / OpenJ9 JVM)",
+      "security_provider": "IBMJSSE2 / OpenJCEPlusFIPS",
+      "fips_140": {
+        "standard": "FIPS-140-2",
+        "level": 1,
+        "cavp_certificate": "C1187",
+        "notes": "IBM Java Cryptographic Extension in FIPS mode"
+      },
+      "common_criteria": {
+        "eal": "EAL4",
+        "augmented": true,
+        "protection_profile": "Application Software Protection Profile (App PP) v1.3",
+        "notes": "NIAP Common Criteria EAL4+ Validated JCE Provider"
+      },
+      "algorithms": [
+        {
+          "type": "encryption",
+          "name": "AES-256-GCM",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 197 / NIST SP 800-38D",
+          "modes": [
+            "GCM"
+          ],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": false,
+            "quantum_safe_basis": "none"
+          }
+        },
+        {
+          "type": "mac",
+          "name": "HMAC-SHA384",
+          "min_key_size": 384,
+          "standard_ref": "FIPS 198-1",
+          "modes": [],
+          "compliance": {
+            "fips_approved": true,
+            "fips_approved_context": "SP 800-131A Rev2",
+            "quantum_safe": true,
+            "quantum_safe_basis": "vendor-claim"
+          }
+        }
+      ],
+      "notes": "Enterprise Java cryptographic engine for SQL query engines, governance frameworks, and data services"
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "watsonx Orchestrate Assistant Ingress & Webhook Listener",
+      "type": "gateway",
+      "data_sensitivity": "confidential",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 443
+        },
+        {
+          "name": "REST",
+          "port": 443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "P-256",
+          "x25519"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384",
+          "ecdsa_secp384r1_sha384"
+        ],
+        "features": [
+          "mutual-auth",
+          "SNI",
+          "ALPN",
+          "session-resumption",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "External conversational and webhook interface orchestrating multi-agent skills"
+    },
+    {
+      "name": "Agent Development Kit (ADK) CLI Gateway & Developer Edition",
+      "type": "listener",
+      "data_sensitivity": "internal",
+      "network_plane": "control-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 8080
+        },
+        {
+          "name": "REST",
+          "port": 8080
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "x25519"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384"
+        ],
+        "features": [
+          "mutual-auth",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) / Workstation Developer Edition",
+          "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Developer interface for local agent testing, custom credential registration, and Langfuse telemetry"
+    },
+    {
+      "name": "Knative Serverless Eventing Broker",
+      "type": "internal",
+      "data_sensitivity": "internal",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 8443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "key_exchange_groups": [
+          "P-384"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384"
+        ],
+        "features": [
+          "mutual-auth",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Asynchronous event distribution broker coordinating agent tool dispatching"
+    },
+    {
+      "name": "IBM App Connect in Containers Integration Bus",
+      "type": "internal",
+      "data_sensitivity": "confidential",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 7843
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "P-256"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384"
+        ],
+        "features": [
+          "mutual-auth",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "IBMJSSE2 / OpenJCEPlusFIPS",
+          "cryptographic_library": "OpenJCEPlusFIPS",
+          "cryptographic_library_ref": "lib-openjceplus-fips-1",
+          "fips_140": {
+            "standard": "FIPS-140-2",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Containerized integration engine connecting agents to enterprise applications and ERP systems"
+    },
+    {
+      "name": "Multicloud Object Gateway (MCG) S3 Endpoint",
+      "type": "gateway",
+      "data_sensitivity": "confidential",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "S3",
+          "port": 6443
+        },
+        {
+          "name": "HTTPS",
+          "port": 6443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.2",
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256"
+        ],
+        "key_exchange_groups": [
+          "P-384",
+          "P-256"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha256"
+        ],
+        "features": [
+          "SNI",
+          "session-resumption",
+          "perfect-forward-secrecy",
+          "renegotiation-disabled"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Red Hat Enterprise Linux 9.2 (x86_64) on Red Hat OpenShift",
+          "security_provider": "OpenSSL 3.0 Core & FIPS Module",
+          "cryptographic_library": "OpenSSL",
+          "cryptographic_library_ref": "lib-openssl-fips-3.0",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "notes": "Object storage gateway for persisting agent state, vector indexes, and run logs"
+    }
+  ],
+  "key_management_interfaces": [
+    {
+      "name": "ADK Custom Credential Store & OpenShift Secret Manager",
+      "interface_type": "CLI",
+      "store_type": "vault",
+      "supported_formats": [
+        "PKCS#12",
+        "PEM"
+      ],
+      "key_operations": [
+        "generate",
+        "import",
+        "export",
+        "wrap",
+        "unwrap",
+        "store",
+        "delete",
+        "encrypt",
+        "decrypt"
+      ],
+      "key_entry_method": "encrypted-import",
+      "fips_compliant_management": true,
+      "platforms": [
+        "Linux x86_64"
+      ],
+      "notes": "Stores and injects application credentials, API tokens, and mutual TLS certs for agent tools"
+    },
+    {
+      "name": "Kubernetes External Secrets Operator",
+      "interface_type": "API",
+      "store_type": "vault",
+      "supported_formats": [
+        "PKCS#12",
+        "PEM"
+      ],
+      "key_operations": [
+        "import",
+        "store",
+        "delete",
+        "decrypt"
+      ],
+      "key_entry_method": "direct",
+      "fips_compliant_management": true,
+      "platforms": [
+        "Linux x86_64"
+      ],
+      "notes": "Synchronizes secrets from HashiCorp Vault into OpenShift cluster namespaces"
+    }
+  ],
+  "security_controls": [
+    {
+      "name": "Agent Tool Execution & PII Leakage Protection Policy",
+      "control_type": "payload_protection",
+      "governing_parameters": [
+        "RESTRICT_TOOL_PERMISSIONS",
+        "DATA_MASKING",
+        "AUDIT_ALL_INVOCATIONS"
+      ],
+      "external_dependencies": [
+        "watsonx Orchestrate Policy Control Plane"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64",
+          "status": "enforced",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1
+          }
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "enabled",
+          "protocol_used": "TLS 1.3",
+          "hardening_parameters": [
+            "DISABLE_TLS_1.0",
+            "DISABLE_TLS_1.1"
+          ]
+        },
+        "roles": [
+          {
+            "name": "Agent Administrator",
+            "authentication_method": "multi-factor",
+            "authentication_algorithm": "RSA-4096 SHA-384"
+          },
+          {
+            "name": "Agent Developer",
+            "authentication_method": "token",
+            "authentication_algorithm": "ECDSA P-384 SHA-384"
+          }
+        ],
+        "secret_protection": {
+          "status": "enabled",
+          "protection_method": "vault-backed",
+          "hardening_parameters": [
+            "SECRETS_ENCRYPTION_AT_REST"
+          ]
+        },
+        "data_at_rest_protection": {
+          "status": "enabled",
+          "encryption_algorithm": "AES-256-GCM",
+          "key_management_ref": "ADK Custom Credential Store & OpenShift Secret Manager",
+          "hardware_acceleration": true,
+          "hardening_parameters": [
+            "NIST_SP800_131A_REV2_COMPLIANT"
+          ]
+        }
+      },
+      "notes": "Governs autonomous agent tool dispatching and prevents leakage of personally identifiable information"
+    },
+    {
+      "name": "ADK Local-to-Cluster Mutual TLS Authentication Policy",
+      "control_type": "transport_security_policy",
+      "governing_parameters": [
+        "REQUIRE_CLIENT_CERTIFICATES",
+        "CERTIFICATE_REVOCATION_CHECKING"
+      ],
+      "external_dependencies": [
+        "OpenShift Ingress Controller PKI"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64",
+          "status": "enforced"
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "enabled",
+          "protocol_used": "TLS 1.3",
+          "hardening_parameters": [
+            "MUTUAL_AUTH_REQUIRED",
+            "STRICT_ALPN"
+          ]
+        },
+        "roles": [
+          {
+            "name": "Developer Workstation",
+            "authentication_method": "certificate",
+            "authentication_algorithm": "ECDSA P-384 SHA-384"
+          }
+        ],
+        "secret_protection": {
+          "status": "enabled",
+          "protection_method": "os-keyring",
+          "hardening_parameters": [
+            "ENCRYPTED_PRIVATE_KEYS"
+          ]
+        },
+        "data_at_rest_protection": {
+          "status": "not-applicable"
+        }
+      },
+      "notes": "Secures developer connections between local ADK environments and the on-premises OpenShift cluster"
+    }
+  ],
+  "metadata": {
+    "created": "2026-11-11T07:30:00Z",
+    "last_updated": "2026-11-11T07:30:00Z",
+    "author": "IBM Enterprise Cryptographic Profile Architecture Team",
+    "generation_method": "automated-parser",
+    "information_source": "documentation",
+    "lifecycle_stage": "release",
+    "schema_version": "1.0.0",
+    "cbomgen_version": "1.4.2"
+  }
+}

@@ -2,7 +2,7 @@
 
 > **Status:** Design note for the PKIC CBOM Profiles Working Group, draft for comment.
 > Descriptive; not normative. Uses the Keycloak 26.7.3 worked example and the consolidated
-> baseline of 25 October 2026 (decision 0025).
+> baseline of 25 October 2026.
 
 The term "older CBOM files" is ambiguous until the versions it may refer to are
 separated. Three items each carry a version, and each changes independently.
@@ -17,7 +17,7 @@ separated. Three items each carry a version, and each changes independently.
 
 Conflating these axes is a common error. A CBOM may be current on one axis and older on
 another. A newly generated CBOM (a new content revision) may still be serialized in
-CycloneDX 1.7 (an older carrier) and evaluated against the baseline v0.9 (newer rules).
+CycloneDX 1.7 (an older carrier) and evaluated against the baseline v0.10 (newer rules).
 
 A conformance claim must reference all three. For example: "conforms to `interface-disclosure`
 v0.9, evaluated against a CycloneDX 2.0 CBOM, content revision 1." A claim that omits any of the
@@ -31,7 +31,7 @@ The current profile versions are:
 | `interface-disclosure` (the baseline) | 0.9 | – |
 | `deployment-disclosure` | 0.1 | baseline 0.9 |
 | `pqc-migration` | 0.8 | baseline 0.9 |
-| `pqc-migration-extended` | 0.1 | pqc-migration 0.8 |
+| `pqc-migration-extended` | 0.2 | pqc-migration 0.8 |
 | `procurement` | 0.1 | baseline 0.9 |
 
 ## 2. Carrier-format version: the acceptance range
@@ -66,7 +66,7 @@ unrestricted range is not appropriate either. Below `min`, the cryptographic obj
 differ enough that evaluation could produce an incorrect verdict, which is less acceptable than
 an explicit refusal.
 
-This amends decision 0006 in value, not in mechanism. The range was `min 1.6, tested 1.7`; it is
+This changes the accepted range in value, not in mechanism. The range was `min 1.6, tested 1.7`; it is
 now `min 1.6, tested 2.0`.
 
 ## 3. How a CycloneDX 1.7 document is read
@@ -86,8 +86,8 @@ record from both. The rules are written once and see only that record.
 
 **The band changes the report, not the verdict.** The Keycloak product record is published twice
 with the same facts. `examples/legacy/cbom-keycloak-product-1.7.cdx.json` conforms to the same
-five profiles as the 2.0 record: interface-enumeration v0.3, the baseline v0.9, pqc-migration
-v0.8, pqc-migration-extended v0.1 and procurement v0.1. Its report opens with:
+five profiles as the 2.0 record: interface-enumeration v0.4, the baseline v0.10, pqc-migration
+v0.8, pqc-migration-extended v0.3 and procurement v0.2. Its report opens with:
 
 ```
 FORMAT  [warn] CycloneDX 1.7 accepted, profile tested against 2.0 (legacy -- warn)
@@ -179,8 +179,8 @@ release in December 2026.
 - **Risks are ignored.** CycloneDX 2.0 adds a root `risks` array. A risk can reference a
   cryptographic asset and carries a status and an owner; each response carries a strategy,
   controls, a status, an owner and a target date. These are judgements, not product facts.
-  Decision 0002 places judgements in policy. Decision 0007 states forward-looking capability as a
-  status and a blocker rather than a date. The validator ignores `risks` for conformance, and a
+  Judgements belong in policy, and forward-looking capability is stated as a status and a
+  blocker rather than a date. The validator ignores `risks` for conformance, and a
   supplier's product record should not contain them.
 - **Perspectives.** CycloneDX 2.0 adds perspectives: JSONPath expressions, each marked required,
   recommended, optional or informative. A perspective cannot express conditions, vocabularies,
@@ -216,7 +216,7 @@ should regenerate it.
 
 When a profile is tightened, existing CBOMs do not become incorrect; they were evaluated against
 the profile in force at the time. An example is v0.9 of the baseline, which stopped accepting
-`intended` (decision 0025). The Keycloak 27.0 design record,
+`intended`. The Keycloak 27.0 design record,
 `examples/cbom-keycloak-product-intended.cdx.json`, fails baseline I8 and still conforms to the
 entry profile, which accepts `intended`. This is handled as any policy change:
 

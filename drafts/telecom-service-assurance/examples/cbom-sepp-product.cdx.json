@@ -1,0 +1,524 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "DRAFT EXAMPLE CBOM, lifecycle stage 'implemented'. An illustrative Security Edge Protection Proxy (SEPP), the network function at the N32 interface between roaming partners. Not a real product.",
+  "serialNumber": "urn:uuid:5e990001-3c4d-4e5f-9a01-329020000001",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-17T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "Example Telco Vendor (illustrative)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "app:sepp",
+        "name": "SEPP (illustrative)",
+        "version": "5.1.0",
+        "description": "A cloud-native SEPP at release 5.1.0, as its supplier would describe it. Five interfaces. Values are illustrative.",
+        "properties": [
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          },
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "product"
+          },
+          {
+            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "value": "not-published"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:generic/example-telco/sepp@5.1.0"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Telco Vendor (illustrative)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:openssl",
+          "name": "OpenSSL",
+          "version": "3.5.4",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:github/openssl/openssl@openssl-3.5.4"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:jose",
+          "name": "JOSE library (illustrative)",
+          "version": "2.0.0",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/example-telco/jose-library@2.0.0"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:openssh",
+          "name": "OpenSSH",
+          "version": "9.9p1",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:github/openssh/openssh-portable@V_9_9_P1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "n32c",
+          "name": "N32-c: control plane between SEPPs (TLS)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:peer-sepp"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "X25519"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.2"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "X25519MLKEM768"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "X25519"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-P384"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ECDSA-P384-SHA384"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "RSA-PSS-2048-SHA256"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Groups, signature schemes and cipher suites set per roaming partner"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "OpenSSL 3.5 offers X25519MLKEM768 by default. The SEPP sets its own group list and leaves the hybrid group out unless the operator enables it per roaming partner, because the 3GPP TLS profile for N32-c does not name it. Both SEPPs must support it."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sto-keys"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "n32f",
+          "name": "N32-f: forwarded messages, application-layer protection (PRINS)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "PRINS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "17"
+            },
+            {
+              "name": "pkic:profile:endpointRole:sender",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:endpointRole:receiver",
+              "value": "endpoint:peer-sepp"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Cipher suites for JWE and JWS agreed over N32-c"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The JWE keys are derived from the N32-c TLS session; an interconnect provider that modifies a message signs its change with JWS."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "n32c"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sbi",
+          "name": "Service-based interface to the operator's network functions (TLS, OAuth 2.0)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:nf-consumer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "X25519"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.2"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "X25519MLKEM768"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "X25519"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-P384"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Access tokens are JWTs signed ES256 by the operator's NRF."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sto-keys"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "mgmt",
+          "name": "Management (NETCONF over SSH)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SSH"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:oam"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:sepp"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "X25519"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "Ed25519"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "mlkem768x25519-sha256"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "sntrup761x25519-sha512"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "X25519"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH-P256"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The SEPP restricts SSH key exchange to X25519 and ECDH-P256 unless the operator enables the hybrid methods OpenSSH 9.9 provides."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sto-keys"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sto-keys",
+          "name": "Private keys and trust anchors",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "AES-256-KW"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The key-encryption key can be held in an external HSM over PKCS#11."
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app:sepp",
+      "dependsOn": [
+        "lib:openssl",
+        "lib:jose",
+        "lib:openssh"
+      ]
+    },
+    {
+      "ref": "lib:openssl",
+      "provides": [
+        "n32c",
+        "sbi",
+        "sto-keys"
+      ]
+    },
+    {
+      "ref": "lib:jose",
+      "provides": [
+        "n32f"
+      ]
+    },
+    {
+      "ref": "lib:openssh",
+      "provides": [
+        "mgmt"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:5e990001-3c4d-4e5f-9a01-3290200000b0/1",
+      "comment": "Companion SBOM: examples/sepp-5.1.0-sbom.cdx.json.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "sbom"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a0027cba37619f697922b4db6bb874045f917d0ccb4e22a01cd82180e99e7e85"
+        }
+      ]
+    },
+    {
+      "type": "advisories",
+      "url": "https://psirt.example.com/sepp/advisories",
+      "comment": "The supplier's security advisories (illustrative).",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "advisories"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    },
+    {
+      "type": "security-contact",
+      "url": "https://psirt.example.com/contact",
+      "comment": "The supplier's security contact (illustrative).",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "security-contact"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    }
+  ]
+}

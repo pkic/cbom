@@ -21,6 +21,12 @@ import validate_cbom as V  # noqa: E402
 
 ENUM, BASE, DEPL = "interface-enumeration", "interface-disclosure", "deployment-disclosure"
 PQC, EXT, PROC = "pqc-migration", "pqc-migration-extended", "procurement"
+CORE, OT = "change-core", "pqc-migration-ot"
+SYS, SVC, SVCR = "system-disclosure", "service-disclosure", "service-disclosure-restricted"
+IOT = "iot-device"
+LIB = "cbom-lib60870-2.4.1-product.cdx.json"
+SAS = "cbom-ot-sas-system-configured.cdx.json"
+IED = "cbom-ot-protection-ied-product.cdx.json"
 PRODUCT = "cbom-keycloak-product.cdx.json"
 CONF = "cbom-keycloak-deployment-configured.cdx.json"
 OBS = "cbom-keycloak-deployment-observed.cdx.json"
@@ -55,7 +61,7 @@ CASES = [
     ("cbom-keycloak-product-fail-pqc-I12.cdx.json", BASE, [], []),
     ("cbom-keycloak-product-fail-ext-I3.cdx.json", EXT, [], ["service:mgmt-admin/%s#I3" % EXT]),
     ("cbom-keycloak-product-fail-ext-I3.cdx.json", PQC, [], []),
-    ("cbom-keycloak-product-fail-procurement-P5.cdx.json", PROC, [], ["%s#P5" % PROC]),
+    ("cbom-keycloak-product-fail-procurement-P1.cdx.json", PROC, [], ["%s#P1" % PROC]),
     ("cbom-keycloak-product-intended.cdx.json", BASE, [], INTENDED),
     ("cbom-keycloak-product-intended.cdx.json", ENUM, [], []),
     ("legacy/cbom-keycloak-scanner-output.cdx.json", ENUM, [],
@@ -76,6 +82,44 @@ CASES = [
     # peerInterface (I4) resolves into the Keycloak configured record when that is supplied.
     ("cbom-postgres-deployment-configured.cdx.json", DEPL, [CONF], []),
     ("cbom-postgres-deployment-configured.cdx.json", DEPL, [], []),
+    # The substation automation (OT) worked example: one protection IED, described by its
+    # supplier against the component profile, which extends the change core.
+    (IED, ENUM, [], []),
+    (IED, BASE, [], []),
+    (IED, CORE, [], []),
+    (IED, OT, [], []),
+    ("cbom-ot-protection-ied-product-fail-core-I13.cdx.json", CORE, [], ["mgmt-enrol/%s#I13" % CORE]),
+    ("cbom-ot-protection-ied-product-fail-core-I13.cdx.json", BASE, [], []),
+    ("cbom-ot-protection-ied-product-fail-ot-I4.cdx.json", OT, [], ["upd-fw/%s#I4" % OT]),
+    ("cbom-ot-protection-ied-product-fail-ot-I4.cdx.json", CORE, [], []),
+    # lib60870, the open-source IEC 60870-5-101/104 library the substation gateway embeds, written
+    # from its public source. It meets the baseline and not the change core.
+    (LIB, ENUM, [], []),
+    (LIB, BASE, [], []),
+    # The reference substation as its integrator delivers it: a system record citing the IED and
+    # lib60870. Without the cited records, coverage (P2) cannot be evaluated and passes as such.
+    (SAS, SYS, [IED, LIB], []),
+    (SAS, SYS, [], []),
+    (SAS, BASE, [IED, LIB], []),
+    ("cbom-ot-sas-system-fail-keyprovider.cdx.json", SYS, [IED, LIB],
+     ["ied1:svc-goose/%s#I3" % SYS]),
+    ("cbom-ot-sas-system-fail-keyprovider.cdx.json", BASE, [IED, LIB], []),
+    # Keycloak run as a managed service: the restricted and public variants, and a store
+    # without its key-custody statements.
+    ("cbom-keycloak-service-restricted.cdx.json", SVC, [CONF, PRODUCT], []),
+    ("cbom-keycloak-service-restricted.cdx.json", SVCR, [CONF, PRODUCT], []),
+    ("cbom-keycloak-service-public.cdx.json", SVC, [CONF, PRODUCT], []),
+    ("cbom-keycloak-service-public.cdx.json", SVCR, [CONF, PRODUCT], ["%s#P1" % SVCR]),
+    ("cbom-keycloak-service-fail-custody.cdx.json", SVC, [CONF, PRODUCT],
+     ["service:sto-realm-keys/%s#%s" % (SVC, r) for r in ("I1", "I3")]),
+    # Two LoRaWAN soil sensors against the IoT device estate profile, which extends the change
+    # core: S1 can never be updated, S2 can. The variant without a resource bound fails P1 only.
+    ("cbom-iot-sensor-s1-product.cdx.json", BASE, [], []),
+    ("cbom-iot-sensor-s1-product.cdx.json", CORE, [], []),
+    ("cbom-iot-sensor-s1-product.cdx.json", IOT, [], []),
+    ("cbom-iot-sensor-s2-product.cdx.json", IOT, [], []),
+    ("cbom-iot-sensor-s1-product-fail-P1.cdx.json", IOT, [], ["%s#P1" % IOT]),
+    ("cbom-iot-sensor-s1-product-fail-P1.cdx.json", CORE, [], []),
     # A product profile refuses to treat a deployment record as a product record.
     (CONF, PQC, [PRODUCT], None),
     (PRODUCT, DEPL, [], None),

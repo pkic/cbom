@@ -1,0 +1,187 @@
+{
+  "$comment": "Illustrative machine-readable CBOM profile for fleet remediation of IoT devices: an operator of a deployed estate deciding, per device model, whether to update it, replace it, put something in front of it, or accept it. It extends the change core, as the PQC migration profile's sibling: a branch, not a depth, because it serves a different decision and asks for facts the migration profile has no use for. The subject is a device model as its manufacturer ships it. What varies per deployed unit is the operator's, held in its own inventory. The worked example is two illustrative LoRaWAN soil sensors, one that can never be updated and one that can.",
+  "profileId": "pkic.example.iot-device",
+  "profileTag": "iot-device",
+  "title": "IoT Device Estate (Example)",
+  "version": "0.1",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+  "extends": {
+    "profileId": "pkic.example.change-core",
+    "version": "0.2",
+    "file": "profile-change-core.rules.json"
+  },
+  "objective": {
+    "$comment": "C1. Fleet remediation, chosen from three candidate decisions in the IoT use case.",
+    "consumer": "An operator of a deployed device estate, or an assessor acting for one, that did not build the devices and cannot inspect them.",
+    "decision": "For each device model in the estate: whether its cryptography can change in place, has to wait for replacement, can be moved behind a gateway, or can be accepted and documented.",
+    "decisionOptions": [
+      "update in place",
+      "replace on a schedule",
+      "terminate the protected session at a gateway in front of it",
+      "accept and document"
+    ]
+  },
+  "scope": {
+    "$comment": "C11. Device models as shipped: subject type 'product', stage 'implemented'. The purposes taken in depth are the change core's.",
+    "subjectTypes": [
+      "product"
+    ],
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented"
+    ],
+    "cryptographicPurposes": [
+      "key-establishment",
+      "encryption",
+      "entity-authentication"
+    ]
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "$commentInterfaceTypes": "Devices have four kinds of interface a server does not, and the baseline's interface types cover them without new values: a provisioning or onboarding interface and a firmware update channel are 'management'; a radio link whose cryptography its own standard fixes is 'interconnect'; a telemetry uplink that only sends is 'service'. A device with no management interface states why under the baseline's P2.",
+  "updateSupportStatusVocabulary": [
+    "supported",
+    "limited",
+    "ended",
+    "never-offered"
+  ],
+  "$commentUpdateSupport": "A commitment class, not a date. 'never-offered' is the value for a model with no update mechanism.",
+  "keyProvisioningVocabulary": [
+    "factory-injected",
+    "provisioned-at-onboarding",
+    "generated-on-device",
+    "operator-provisioned"
+  ],
+  "cryptoTerminationPointVocabulary": [
+    "device",
+    "gateway",
+    "either"
+  ],
+  "$commentTermination": "Whether the model's design lets the cryptography of an interface terminate somewhere other than the device. 'either' means the design permits a gateway to terminate it. Whether a deployment does so is the operator's fact.",
+  "providerLocationVocabulary": [
+    "software",
+    "hsm",
+    "tee",
+    "secure-element",
+    "mcu-internal",
+    "otp-fuses",
+    "unspecified"
+  ],
+  "$commentProviderLocation": "The PQC migration profile's values, with three a device needs: a secure element, the microcontroller's internal flash, and one-time-programmable fuses.",
+  "overrides": [
+    {
+      "id": "change-core#I9",
+      "level": "MUST",
+      "note": "Tightened from SHOULD. On a constrained device, integrationConstraints is the attribute that explains the resource bound (P1): whether a post-quantum handshake fits the memory and the link's message size."
+    }
+  ],
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "Device states the hard limits that bound what any firmware could support",
+      "level": "MUST",
+      "constraint": {
+        "productAttribute": "resourceBound"
+      },
+      "withholdable": false,
+      "note": "Usable flash, RAM and the largest frame the link allows, in bytes, written 'flash=<n> ram=<n> frame=<n>'. On a constrained device, a 'no' to a capability question is often set by these limits, which no firmware release changes. This is how a permanent 'no' is told apart from a temporary one."
+    },
+    {
+      "id": "P2",
+      "description": "Device states whether the manufacturer will still offer firmware for it",
+      "level": "MUST",
+      "constraint": {
+        "productAttribute": "updateSupportStatus",
+        "enumRef": "updateSupportStatusVocabulary"
+      },
+      "withholdable": false,
+      "note": "A device in the field outlasts the commitment to ship firmware for it. With updateMechanism (change core P2) and updateAuthority (change core I14), it separates an update the operator can actually make from one that exists only on paper."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "keyProvisioning",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "keyProvisioningVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "note": "Where the key material came from. With keyReplaceable (change core I16), it is the fact that turns an update decision into a replacement decision: factory-injected material that cannot be replaced means the device has to go."
+    },
+    {
+      "id": "I2",
+      "attribute": "cryptoTerminationPoint",
+      "level": "SHOULD",
+      "constraint": {
+        "enumRef": "cryptoTerminationPointVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Whether the design permits the cryptography of this interface to terminate at a gateway. The option of putting something in front of the device depends on it. SHOULD, because it is partly a deployment fact."
+    },
+    {
+      "id": "I3",
+      "attribute": "providerLocation",
+      "level": "SHOULD",
+      "constraint": {
+        "enumRef": "providerLocationVocabulary"
+      },
+      "withholdable": true,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "storage"
+      },
+      "note": "Where the key operations of the interface execute."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "A verdict on the device",
+      "reason": "Whether a model is safe is a judgement against criteria that change while it sits in the field. The profile states facts; a dated policy reaches the verdict."
+    },
+    {
+      "item": "Anything per deployed unit",
+      "reason": "Serial numbers, locations, configuration and remaining life are not known to the manufacturer. The operator joins the record to its own inventory."
+    },
+    {
+      "item": "The firmware's component inventory",
+      "reason": "An SBOM question, reached through the baseline's R1."
+    },
+    {
+      "item": "The physical attack surface",
+      "reason": "Debug ports, bootloaders and readable flash decide whether key material can be extracted, but they are a product security assessment, not a fact about cryptography at an interface. A record can point to such an assessment through the 'code-analysis' or 'platform-assessment' context kinds when they are defined."
+    },
+    {
+      "item": "How long the operator will keep a model in the field",
+      "reason": "The operator's planning input. The manufacturer states support (P2); field life is the estate's."
+    }
+  ],
+  "artifacts": {
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "examples/cbom-iot-sensor-s1-product.cdx.json",
+    "nonConformingExample": "examples/cbom-iot-sensor-s1-product-fail-P1.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-11-18",
+      "summary": "Initial version, built on two illustrative LoRaWAN soil sensors.",
+      "changes": []
+    }
+  ]
+}

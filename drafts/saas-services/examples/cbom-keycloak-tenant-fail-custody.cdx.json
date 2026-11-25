@@ -1,0 +1,1010 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "DRAFT EXAMPLE, lifecycle stage 'configured'. A tenant record for one customer of the managed identity service. It cites the restricted service record. The only custody model the service offers for realm keys is provider-managed, so that is the tenant's choice. Values are illustrative. NON-CONFORMING: keyCustody removed from the realm-key store.",
+  "serialNumber": "urn:uuid:5e1c0a77-0000-4000-8000-000000000032",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-18T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "operations"
+      }
+    ],
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "Example Org configuration export",
+          "version": "1.0",
+          "description": "Reads keycloak.conf, realm exports, java.security and the ingress manifest"
+        }
+      ]
+    },
+    "supplier": {
+      "name": "Example Customer (illustrative tenant)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "deployment:tenant-example-customer",
+        "name": "Example Customer's tenant of the managed identity service",
+        "description": "One tenant of Example Cloud managed identity (EU regions), as the tenant configured it.",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "deployment"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all-external"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": {
+                  "name": "tag-uri",
+                  "description": "A tag URI (RFC 4151)."
+                },
+                "value": "tag:customer.example,2026:deployment/identity-tenant"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Customer (illustrative tenant)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:openssl",
+          "name": "OpenSSL (ingress controller)",
+          "version": "3.5.4",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/openssl@3.5.4"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:x25519mlkem768",
+          "name": "X25519MLKEM768",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "kem"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:x25519",
+          "name": "X25519",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:secp256r1",
+          "name": "secp256r1",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:secp384r1",
+          "name": "secp384r1",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:secp521r1",
+          "name": "secp521r1",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:x448",
+          "name": "X448",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:ffdhe2048",
+          "name": "ffdhe2048",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "key-agree"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:aes-256-gcm",
+          "name": "AES-256-GCM",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "ae"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:aes-128-gcm",
+          "name": "AES-128-GCM",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "ae"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:chacha20-poly1305",
+          "name": "ChaCha20-Poly1305",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "ae"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:ecdsa-p256",
+          "name": "ECDSA-P256-SHA256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:rsa-2048",
+          "name": "RSA-2048",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:es256",
+          "name": "ES256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:rs256",
+          "name": "RS256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:algo:rsa-sha256",
+          "name": "RSA-SHA256",
+          "cryptoProperties": {
+            "assetType": "algorithm",
+            "algorithmProperties": {
+              "primitive": "signature"
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:key:realm-keys",
+          "name": "Realm keys (ES256 active, RSA-2048 retained, HMAC, AES)",
+          "cryptoProperties": {
+            "assetType": "related-crypto-material",
+            "relatedCryptoMaterialProperties": {
+              "type": "private-key",
+              "state": "active",
+              "securedBy": {
+                "mechanism": "none"
+              },
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:es256"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "cryptographic-asset",
+          "bom-ref": "crypto:protocol:ing-tls",
+          "name": "TLS at the ingress (sso.example.org:443)",
+          "cryptoProperties": {
+            "assetType": "protocol",
+            "protocolProperties": {
+              "type": "tls",
+              "version": "1.3",
+              "relatedCryptographicAssets": [
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519mlkem768"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:x25519"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-256-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:aes-128-gcm"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:chacha20-poly1305"
+                },
+                {
+                  "type": "algorithm",
+                  "ref": "crypto:algo:ecdsa-p256"
+                }
+              ]
+            }
+          },
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:browser-or-relying-party"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:ingress"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "ssl_ecdh_curve X25519MLKEM768:X25519; certificate ECDSA P-256 from the internal CA"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "platform"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e1c0a77-0000-4000-8000-000000000001/1#crypto:protocol:ing-tls"
+            }
+          ]
+        },
+        {
+          "bom-ref": "service:svc-oidc",
+          "name": "OIDC token issuance, realm 'corp'",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "OIDC"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:issuer",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:relying-party",
+              "value": "endpoint:client-application"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Realm defaultSignatureAlgorithm=ES256. Client 'legacy-portal' overrides it to RS256."
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e1c0a77-0000-4000-8000-000000000001/1#service:svc-oidc"
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:svc-saml",
+          "name": "SAML 2.0 assertions, realm 'corp'",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SAML"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:identity-provider",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:endpointRole:service-provider",
+              "value": "endpoint:client-application"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e1c0a77-0000-4000-8000-000000000001/1#service:svc-saml"
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:mgmt-admin",
+          "name": "Admin REST API (master realm tokens)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "OAuth 2.0"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:administrator",
+              "value": "endpoint:admin-client"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:keycloak"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e1c0a77-0000-4000-8000-000000000001/1#service:mgmt-admin"
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "bom-ref": "service:sto-realm-keys",
+          "name": "Realm key persistence (PostgreSQL)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:5e1c0a77-0000-4000-8000-000000000001/1#service:sto-realm-keys"
+            }
+          ],
+          "type": "service"
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:openjdk",
+          "name": "OpenJDK 21 (java-21-openjdk-headless, UBI 9)",
+          "properties": [
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "software"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "not-available"
+            },
+            {
+              "name": "pkic:profile:coexistence",
+              "value": "simultaneous"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
+              "value": "provider"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:roadmapRef",
+              "value": "https://openjdk.org/jeps/527"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "under-evaluation"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "bom",
+              "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1#lib:openjdk",
+              "comment": "This library's entry in the companion SBOM."
+            }
+          ],
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:rpm/redhat/java-21-openjdk-headless?arch=x86_64&distro=rhel-9"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:keycloak-services",
+          "name": "Keycloak services",
+          "version": "26.7.3",
+          "properties": [
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "software"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "not-available"
+            },
+            {
+              "name": "pkic:profile:coexistence",
+              "value": "simultaneous"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "under-evaluation"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "committed"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:roadmapRef",
+              "value": "https://github.com/keycloak/keycloak/issues/43690"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "committed"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:roadmapRef",
+              "value": "https://github.com/keycloak/keycloak/issues/43690"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:roadmapRef",
+              "value": "https://github.com/keycloak/keycloak/issues/39933"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "bom",
+              "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1#lib:keycloak-services",
+              "comment": "This library's entry in the companion SBOM."
+            }
+          ],
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:maven/org.keycloak/keycloak-services@26.7.3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:keycloak-model-jpa",
+          "name": "Keycloak JPA model",
+          "version": "26.7.3",
+          "properties": [
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "software"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "not-available"
+            },
+            {
+              "name": "pkic:profile:coexistence",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:blockedBy",
+              "value": "product"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "bom",
+              "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1#lib:keycloak-model-jpa",
+              "comment": "This library's entry in the companion SBOM."
+            }
+          ],
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:maven/org.keycloak/keycloak-model-jpa@26.7.3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "lib:quarkus-vertx-http",
+          "name": "Quarkus HTTP (Vert.x)",
+          "properties": [
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "software"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "not-available"
+            },
+            {
+              "name": "pkic:profile:coexistence",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:blockedBy",
+              "value": "product"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "bom",
+              "url": "urn:cdx:6b3c1d2e-7a41-4c1e-9f0a-26730000b000/1#lib:quarkus-vertx-http",
+              "comment": "This library's entry in the companion SBOM."
+            }
+          ],
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:maven/io.quarkus/quarkus-vertx-http"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "deployment:sso-prod",
+      "dependsOn": [
+        "crypto:protocol:ing-tls",
+        "service:svc-oidc",
+        "service:svc-saml",
+        "service:mgmt-admin",
+        "service:sto-realm-keys"
+      ]
+    },
+    {
+      "ref": "service:svc-oidc",
+      "dependsOn": [
+        "crypto:algo:es256",
+        "crypto:key:realm-keys"
+      ]
+    },
+    {
+      "ref": "service:svc-saml",
+      "dependsOn": [
+        "crypto:algo:rsa-sha256"
+      ]
+    },
+    {
+      "ref": "service:mgmt-admin",
+      "dependsOn": [
+        "crypto:algo:rs256"
+      ]
+    },
+    {
+      "ref": "service:sto-realm-keys",
+      "dependsOn": [
+        "crypto:key:realm-keys"
+      ]
+    },
+    {
+      "ref": "lib:openssl",
+      "provides": [
+        "crypto:protocol:ing-tls"
+      ]
+    },
+    {
+      "ref": "lib:keycloak-services",
+      "provides": [
+        "service:svc-oidc",
+        "service:svc-saml",
+        "service:mgmt-admin"
+      ]
+    },
+    {
+      "ref": "lib:keycloak-model-jpa",
+      "provides": [
+        "service:sto-realm-keys"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:5e1c0a77-0000-4000-8000-000000000001/1",
+      "comment": "The provider's restricted service record.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f925d602a8d929305b53d0220d6c4511ddbdfb2643fb0108722241b7d6c72780"
+        }
+      ]
+    },
+    {
+      "type": "configuration",
+      "url": "https://console.example.org/tenants/example-customer/settings/2026-11-18",
+      "comment": "Export of the tenant's settings this record was read from.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "configuration-source"
+        }
+      ]
+    },
+    {
+      "type": "risk-assessment",
+      "url": "https://grc.customer.example/registers/data/identity",
+      "comment": "The customer's data register: what each store holds and how long it must stay confidential.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "data-register"
+        }
+      ]
+    }
+  ]
+}

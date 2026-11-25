@@ -1,0 +1,143 @@
+{
+  "$comment": "DRAFT. The OT system overlay, proposed in the operational technology domain document, 8.3, where its rules are S1 to S5. One overlay for every OT sector; the reference substation is its first worked example. S1, S2 and S4 are not specific to OT and now sit in the generic overlay system-disclosure, published in Release 1, which this profile extends. Each rule here names the S-rule it implements.",
+  "profileId": "pkic.example.ot-system",
+  "profileTag": "ot-system",
+  "title": "OT System Overlay (draft)",
+  "version": "0.2-draft",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+  "extends": {
+    "profileId": "pkic.example.system-disclosure",
+    "version": "0.1",
+    "file": "../../docs/methodology/profile-system-disclosure.rules.json"
+  },
+  "objective": {
+    "$comment": "C1. The consumer is the asset owner, or an assessor acting for one, receiving a system from an integrator. The generic overlay answers what the design uses and who provides its keys; this profile adds where each interface sits and which conduit it crosses.",
+    "consumer": "An asset owner, or an assessor acting for one, accepting an OT system from its integrator.",
+    "decision": "For each interface the design uses: which zone it sits in and which conduit it crosses, so that a migration of one component can be planned with the zones and conduits it affects.",
+    "decisionOptions": [
+      "accept the system as delivered",
+      "accept it and record the migration dependencies in the register",
+      "require the integrator to change the design before acceptance"
+    ]
+  },
+  "scope": {
+    "$comment": "As the generic overlay: one system design, as its integrator delivers it.",
+    "subjectTypes": [
+      "system"
+    ],
+    "orientation": "inventory",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured"
+    ]
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "zonePathVocabulary": [
+    "within-zone",
+    "crosses-zones"
+  ],
+  "securityLevelVocabulary": [
+    "SL-C 1",
+    "SL-C 2",
+    "SL-C 3",
+    "SL-C 4"
+  ],
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "S3. System names its zones",
+      "level": "MUST",
+      "constraint": {
+        "productAttribute": "zones"
+      },
+      "withholdable": false,
+      "note": "The zones of the design, in the sense of IEC 62443-3-2. Each interface names one of them (I1)."
+    },
+    {
+      "id": "P2",
+      "description": "S5. System states the IEC 62443-3-3 capability security level its integrator claims for it as delivered",
+      "level": "SHOULD",
+      "constraint": {
+        "productAttribute": "claimedLevel62443",
+        "enumRef": "securityLevelVocabulary"
+      },
+      "withholdable": true,
+      "note": "S5. A claim the record reports, not a judgement it makes: the capability security level (SL-C) the integrator states for the system as delivered. SHOULD, because many systems in service were never assessed against IEC 62443-3-3, and a MUST would exclude them."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "zone",
+      "level": "MUST",
+      "constraint": {
+        "inSubjectList": "zones"
+      },
+      "withholdable": false,
+      "note": "S3. The zone the interface sits in, one of the zones the system names (P1)."
+    },
+    {
+      "id": "I2",
+      "attribute": "zonePath",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "zonePathVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "usage",
+        "equals": "in-use"
+      },
+      "note": "S3. Whether the connection on this interface stays in its zone or crosses into another."
+    },
+    {
+      "id": "I3",
+      "attribute": "conduitRef",
+      "level": "MUST",
+      "constraint": {
+        "refersToLocal": {}
+      },
+      "withholdable": true,
+      "requiredWhen": {
+        "attribute": "zonePath",
+        "equals": "crosses-zones"
+      },
+      "note": "S3. The conduit the path crosses, as the bom-ref of the system component that implements it: a firewall, a VPN router or a gateway. A conduit is an interface of that device, not an object of its own. Withholdable, because a public record may not show the network design."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "Latency budgets, compensating controls and site variations",
+      "reason": "They belong in the asset owner's register, which describes sites, not the design."
+    },
+    {
+      "item": "A timing class for each interface",
+      "reason": "An integration constraint of the product."
+    }
+  ],
+  "changelog": [
+    {
+      "version": "0.1-draft",
+      "date": "2026-11-17",
+      "summary": "First draft, built on the reference substation.",
+      "changes": []
+    },
+    {
+      "version": "0.2-draft",
+      "date": "2026-11-17",
+      "summary": "Extends the generic overlay system-disclosure. S1, S2 and S4 moved there.",
+      "changes": []
+    }
+  ],
+  "artifacts": {
+    "conformingExample": "examples/cbom-sas-reference-system-configured.cdx.json",
+    "nonConformingExample": "examples/cbom-sas-reference-system-fail-conduit.cdx.json"
+  }
+}

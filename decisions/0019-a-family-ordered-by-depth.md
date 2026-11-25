@@ -116,7 +116,7 @@ scanner emits with no profile in mind, conforms to neither.
   checks it: rules only added, shared rules identical, shared vocabularies and identifier schemes
   identical, the disclosure convention identical, scope and carrier range not widened, orientation
   unchanged, and conformance carrying downwards over every committed document. Re-parenting is
-  Q51; it would retire most of that file and move seven rule ids to another profile tag.
+  Q51; it would retire most of that file and move nine rule ids to another profile tag.
 - `exclusions` now carries two kinds of statement — permanent exclusion and deferral to a greater
   depth — and distinguishes them only in prose. Q52.
 - Whether depths are numbered, and whether a consortium profile may be published as an entry depth

@@ -1,0 +1,350 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "NON-CONFORMING EXAMPLE. The S1 record with resourceBound left out. Fails iot-device#P1 only: the operator cannot tell a permanent 'no' from one a firmware release could change.",
+  "serialNumber": "urn:uuid:10700001-5e45-4e01-9a01-0000000000f1",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-18T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "Example Sensors (illustrative manufacturer)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "device",
+        "bom-ref": "dev:sensor",
+        "name": "Soil sensor S1 (illustrative)",
+        "version": "1.3.0",
+        "description": "A battery-powered soil sensor reaching a gateway over LoRaWAN. No update mechanism and a factory-injected root key. Values are illustrative.",
+        "properties": [
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          },
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "product"
+          },
+          {
+            "name": "pkic:profile:managementInterfaceAbsence",
+            "value": "no-configuration-surface"
+          },
+          {
+            "name": "pkic:profile:updateMechanism",
+            "value": "none"
+          },
+          {
+            "name": "pkic:profile:updateSupportStatus",
+            "value": "never-offered"
+          },
+          {
+            "name": "pkic:profile:contextAbsent:support-lifecycle",
+            "value": "not-published"
+          },
+          {
+            "name": "pkic:profile:contextAbsent:roadmap",
+            "value": "not-published"
+          },
+          {
+            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "value": "not-published"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:generic/example-sensors/soil-sensor-s1@1.3.0"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Sensors (illustrative manufacturer)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:s1-firmware",
+          "name": "S1 firmware and LoRaWAN stack (illustrative)",
+          "version": "1.3.0",
+          "properties": [
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "not-available"
+            },
+            {
+              "name": "pkic:profile:coexistence",
+              "value": "exclusive"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
+              "value": "hardware"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "hardware"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:blockedBy",
+              "value": "hardware"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            }
+          ],
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/example-sensors/s1-firmware@1.3.0"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "radio-lorawan",
+          "name": "LoRaWAN radio link (uplink and downlink)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "LoRaWAN"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.0.4"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:sensor"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:network-server"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128-CTR"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "AES-128-CMAC"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.0.4"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "AES-128-CMAC"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "None: the algorithms are fixed by the LoRaWAN specification"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The largest application payload is 242 bytes (EU868, highest data rate) and 51 bytes at the lowest. An ML-KEM-768 ciphertext is 1,088 bytes and an ML-DSA-44 signature 2,420 bytes, so neither fits a frame."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "sto-keys"
+            },
+            {
+              "name": "pkic:profile:cryptoTerminationPoint",
+              "value": "device"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "mcu-internal"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sto-keys",
+          "name": "LoRaWAN root key (AppKey) and device identity",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Not applicable"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The root key is written at manufacture into the microcontroller's internal flash, with read-out protection set."
+            },
+            {
+              "name": "pkic:profile:keyReplaceable",
+              "value": "not-replaceable"
+            },
+            {
+              "name": "pkic:profile:keyProvisioning",
+              "value": "factory-injected"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dev:sensor",
+      "dependsOn": [
+        "lib:s1-firmware",
+        "radio-lorawan",
+        "sto-keys"
+      ]
+    },
+    {
+      "ref": "lib:s1-firmware",
+      "provides": [
+        "radio-lorawan",
+        "sto-keys"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:10700001-5e45-4e01-9a01-0000000000b1/1",
+      "comment": "Companion SBOM of the same firmware.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "sbom"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "806141edba5b563efb3e08885e89fed4f4242b74aea1289e6d5298e3f8365bfd"
+        }
+      ]
+    },
+    {
+      "type": "advisories",
+      "url": "https://psirt.example.com/sensors/advisories",
+      "comment": "The manufacturer's security advisories (illustrative).",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "advisories"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    },
+    {
+      "type": "security-contact",
+      "url": "https://psirt.example.com/contact",
+      "comment": "The manufacturer's security contact (illustrative).",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "security-contact"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    }
+  ]
+}

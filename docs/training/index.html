@@ -710,7 +710,7 @@ F2.push({min:1,render:()=>`${head('warn','Why asking for everything does not wor
     <p class="quote">"Send us your CBOM."</p><p class="note">The supplier decides what to include. You receive Document A.</p>
     <p class="quote">"Send us everything."</p><p class="note">A large product performs thousands of cryptographic operations. A list of all of them buries the two or three facts your decision depends on. No supplier will produce it.</p></div>
    <div class="do"><h3>${I.ok} A request that works</h3>
-    <p class="quote">"Send a CBOM that conforms to the Interface Disclosure Baseline v0.9."</p>
+    <p class="quote">"Send a CBOM that conforms to the Interface Disclosure Baseline v0.10."</p>
     ${dash(['It names the reader and the decision.','It lists the facts that must be present, and stops there.','A validator can check the document before anyone relies on it.'])}</div>
   </div>
   ${concept('"Does this document contain everything?" has no answer. "Does it contain what this decision needs?" has one, once the decision is written down in a form that a machine can check.')}`});
@@ -722,7 +722,7 @@ F2.push({min:1.5,render:()=>`${head('decision','Start from the use case','A cons
    <li><span class="n">2</span><div><b>The actions to choose between</b>A decision with only one possible outcome is not a decision. A profile written for it has no point at which to stop adding rules.</div></li>
    <li><span class="n">3</span><div><b>The questions the consumer must answer</b>Each question becomes a fact the CBOM must carry.</div></li>
   </ol>
-  <div class="tbl"><table><thead><tr><th style="width:130px">Interface Disclosure Baseline v0.9</th><th></th></tr></thead><tbody>
+  <div class="tbl"><table><thead><tr><th style="width:130px">Interface Disclosure Baseline v0.10</th><th></th></tr></thead><tbody>
    <tr><td><b>Reader</b></td><td>An operator or buyer holding a product it did not build and cannot inspect, and keeping a cryptographic inventory across an estate.</td></tr>
    <tr><td><b>Decision</b></td><td>When a weakness is published against an algorithm, a protocol version or a library, which deployed interfaces are affected. And, compared with last quarter's record, what has changed.</td></tr>
    <tr><td><b>Actions</b></td><td>${dash(['Record the interfaces and take no further action.','Reconfigure, upgrade or isolate an affected interface.','Ask the producer for a fuller disclosure.','Reject the submission as insufficient for the inventory.'])}</td></tr>
@@ -741,7 +741,7 @@ F2.push({min:1.5,render:()=>`${head('rules','What a profile is','A minimum repor
   </div>
   ${concept('No rule asks whether the cryptography is any good. Post-quantum readiness is a judgement made against criteria that change. It lives in versioned policy outside the CBOM. The CBOM carries the facts, and the policy reaches a dated verdict.')}`});
 
-F2.push({min:2,render:()=>`${head('rules','The twenty-three rules','Interface Disclosure Baseline v0.9')}
+F2.push({min:2,render:()=>`${head('rules','The twenty-three rules','Interface Disclosure Baseline v0.10')}
   ${cue('Select a rule to see what it requires and why')}
   <div class="rules">
    <div>
@@ -766,7 +766,7 @@ F2.push({min:2,render:()=>`${head('verdict','Evaluate three documents','Conforma
   <div class="evalgrid">
    <div><p class="doc-title" id="evtitle"></p><pre class="doc" id="evdoc"></pre></div>
    <div><div class="tbl" style="margin-top:0"><table class="evtable"><thead><tr><th>Rule</th><th>Finding</th><th>Result</th></tr></thead><tbody id="evrows"></tbody></table></div>
-    <div class="runrow"><button class="btn" id="evrun">Run evaluation</button><span class="note" id="evhint">Against Interface Disclosure Baseline v0.9</span></div>
+    <div class="runrow"><button class="btn" id="evrun">Run evaluation</button><span class="note" id="evhint">Against Interface Disclosure Baseline v0.10</span></div>
     <div class="verdict wait" id="evverdict">Not yet evaluated</div></div>
   </div>
   <p id="evnote" class="note" style="margin-top:16px" hidden></p>`,
@@ -804,7 +804,7 @@ F2.push({min:0,next:null,render:()=>`${head('decision','Name the profile, then c
   <h3 style="margin-top:22px">Follow these practices</h3>
   ${dash(['Write down the reader, the decision and the actions before you ask for a CBOM.','Ask for conformance to a named profile and version. Never ask for "your CBOM" or for "everything".','Check conformance with a validator before you rely on a document.','Treat <span class="mono">withheld</span> as a position to negotiate and <span class="mono">undeclared</span> as a defect to fix.','Keep verdicts such as post-quantum readiness in versioned policy, outside the CBOM.','Ask for a deeper profile when your decision needs facts the baseline never collected.'])}
   <div class="nextup"><button class="btn" data-goto="F3">Next module: F3 Why CBOM data is hard to use today →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
-  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Introduction, Use Cases, Profile and Demo; Interface Disclosure Baseline v0.9 and its Keycloak 26.7.3 example CBOMs in CycloneDX 2.0.</p>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Introduction, Use Cases, Profile and Demo; Interface Disclosure Baseline v0.10 and its Keycloak 26.7.3 example CBOMs in CycloneDX 2.0.</p>
   <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally. Field names follow CycloneDX 2.0 (2.0-dev, commit 76f185c, pinned until Ecma ratifies the release); CycloneDX 1.6 and 1.7 documents are read as legacy.</p>`});
 
 /* ================= F3 Why CBOM data is hard to use today ================= */
@@ -1322,10 +1322,10 @@ const A1_FIG_ONE=`<svg viewBox="0 0 720 230" role="img" aria-label="One unchange
  <text class="t-muted" x="141" y="156" text-anchor="middle" font-size="11.5">one document, published once</text>
  <path class="l-pass" d="M266 115C340 115 350 36 430 36M266 115C340 115 350 78 430 78M266 115H430M266 115C340 115 350 162 430 162M266 115C340 115 350 204 430 204"/>
  <rect class="s-passbox" x="430" y="20" width="274" height="32" rx="8"/><text class="t-pass" x="446" y="41" font-size="12.5">interface enumeration v0.3</text>
- <rect class="s-passbox" x="430" y="62" width="274" height="32" rx="8"/><text class="t-pass" x="446" y="83" font-size="12.5">interface disclosure baseline v0.9</text>
+ <rect class="s-passbox" x="430" y="62" width="274" height="32" rx="8"/><text class="t-pass" x="446" y="83" font-size="12.5">interface disclosure baseline v0.10</text>
  <rect class="s-passbox" x="430" y="104" width="274" height="32" rx="8"/><text class="t-pass" x="446" y="125" font-size="12.5">PQC migration v0.8</text>
- <rect class="s-passbox" x="430" y="146" width="274" height="32" rx="8"/><text class="t-pass" x="446" y="167" font-size="12.5">PQC migration, extended v0.1</text>
- <rect class="s-passbox" x="430" y="188" width="274" height="32" rx="8"/><text class="t-pass" x="446" y="209" font-size="12.5">procurement v0.1</text>
+ <rect class="s-passbox" x="430" y="146" width="274" height="32" rx="8"/><text class="t-pass" x="446" y="167" font-size="12.5">PQC migration, extended v0.2</text>
+ <rect class="s-passbox" x="430" y="188" width="274" height="32" rx="8"/><text class="t-pass" x="446" y="209" font-size="12.5">procurement v0.2</text>
 </svg>`;
 
 const A1_FIG_STAGES=`<svg viewBox="0 0 720 210" role="img" aria-label="Five stages in order: scope (steps 1 and 2), content (steps 3 to 5), rules (steps 6 to 8), realisation (steps 9 to 11) and proof (step 12). An arrow returns from proof to content.">
@@ -1558,11 +1558,11 @@ const A2_FIG_IFACES=`<svg viewBox="0 0 720 320" role="img" aria-label="Keycloak 
  </g>
 </svg>`;
 
-const A2_FIG_FAMILY=`<svg viewBox="0 0 720 240" role="img" aria-label="Four profiles stacked by depth. Interface enumeration v0.3 at the bottom, the interface disclosure baseline v0.9 above it, PQC migration v0.8 above that, and the extended depth v0.1 at the top. A document that conforms to a higher profile conforms to every profile below it.">
+const A2_FIG_FAMILY=`<svg viewBox="0 0 720 240" role="img" aria-label="Four profiles stacked by depth. Interface enumeration v0.4 at the bottom, the interface disclosure baseline v0.10 above it, PQC migration v0.8 above that, and the extended depth v0.2 at the top. A document that conforms to a higher profile conforms to every profile below it.">
  <rect class="s-soft" x="16" y="186" width="330" height="38" rx="8"/><text class="t-ink" x="32" y="210" font-size="12.5" font-weight="600">interface enumeration v0.3</text>
- <rect class="s-soft" x="46" y="140" width="330" height="38" rx="8"/><text class="t-ink" x="62" y="164" font-size="12.5" font-weight="600">interface disclosure baseline v0.9</text>
+ <rect class="s-soft" x="46" y="140" width="330" height="38" rx="8"/><text class="t-ink" x="62" y="164" font-size="12.5" font-weight="600">interface disclosure baseline v0.10</text>
  <rect class="s-key" x="76" y="94" width="330" height="38" rx="8"/><text class="t-acc" x="92" y="118" font-size="12.5" font-weight="700">pqc-migration v0.8</text>
- <rect class="s-key" x="106" y="48" width="330" height="38" rx="8"/><text class="t-acc" x="122" y="72" font-size="12.5" font-weight="700">pqc-migration-extended v0.1</text>
+ <rect class="s-key" x="106" y="48" width="330" height="38" rx="8"/><text class="t-acc" x="122" y="72" font-size="12.5" font-weight="700">pqc-migration-extended v0.2</text>
  <g font-size="11.5">
   <text class="t-muted" x="456" y="62">key management surfaces, key stores,</text><text class="t-muted" x="456" y="77">external dependencies, storage declared</text>
   <text class="t-muted" x="426" y="108">capability per purpose, enablement,</text><text class="t-muted" x="426" y="123">blockers, module validation</text>
@@ -1714,7 +1714,7 @@ A2.push({min:0,next:null,render:()=>`${head('key','Worked example: PQC migration
   <h3 style="margin-top:22px">Follow these practices</h3>
   ${dash(['Plan migration one interface at a time, and treat a token signature and its TLS carrier as separate interfaces.','Ask for capability per cryptographic purpose, as a status and a blocker.','Keep target releases in a roadmap entry that interfaces reference, never as dates in the CBOM.','Treat a standard blocker as a reason to stop waiting and prepare compensating measures.','Ask for the extended depth when you need to sequence key management, storage and dependent services.','Insist on the implementing library: it decides whether an update path exists.'])}
   <div class="nextup"><button class="btn" data-goto="A3">Next module: A3 Encoding →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
-  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Use Cases, PQC Migration; profile-pqc-migration.rules.json v0.8 and profile-pqc-migration-extended.rules.json v0.1; the Keycloak 26.7.3 example documents and roadmap context example.</p>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Use Cases, PQC Migration; profile-pqc-migration.rules.json v0.8 and profile-pqc-migration-extended.rules.json v0.2; the Keycloak 26.7.3 example documents and roadmap context example.</p>
   <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally. Attribute names are proposals made for this example, and the roadmap document is not a statement by the Keycloak project.</p>`});
 
 /* ================= A3 Encoding: CycloneDX, SPDX and versions ================= */
@@ -1930,7 +1930,7 @@ A3.push({min:2,render:()=>`${head('ladder','Three version axes and four carrier 
    <tr><td>Profile</td><td><span class="mono">interface-disclosure</span> v0.8 to v0.9</td><td>the requirements change</td></tr>
    <tr><td>Content revision</td><td>a product's CBOM version over time</td><td>the product changes or is scanned again</td></tr>
   </tbody></table></div>
-  <p>The axes move independently. A CBOM generated today may still be written in CycloneDX 1.7 and checked against baseline v0.9. A conformance claim names all three, or nobody can repeat the check.</p>
+  <p>The axes move independently. A CBOM generated today may still be written in CycloneDX 1.7 and checked against baseline v0.10. A conformance claim names all three, or nobody can repeat the check.</p>
   ${A3_fig(A3_FIG_BANDS,'<b>Figure 5.</b> Every profile in the family declares <span class="mono">min 1.6, tested 2.0</span>. The range gives the 1.x files that tools emit today a migration window, and sets a floor below which a verdict could be wrong.')}
   ${cue('Pick the specVersion of an incoming CBOM')}
   <div class="seg" role="tablist">${Object.keys(A3_BANDS).map(k=>`<button role="tab" data-a3band="${k}" aria-selected="false"><span class="mono">${k}</span></button>`).join('')}</div>
@@ -2325,7 +2325,7 @@ C1.push({min:0,next:null,render:()=>`${head('relation','Relationships, endpoints
 
 /* ================= C2 Anatomy of a profile ================= */
 const C2_FIG_RECORDS=`<svg viewBox="0 0 720 210" role="img" aria-label="One baseline profile serves two subject types. The vendor writes a product record at the implemented stage, identified by a Package URL. The operator writes deployment records at the configured and observed stages, identified by a tag URI. The profile is the specification for each producer and the checklist for each consumer.">
- <rect class="s-key" x="270" y="70" width="180" height="70" rx="12"/><text class="t-ink" x="360" y="98" text-anchor="middle" font-weight="700" font-size="14">Baseline v0.9</text><text class="t-muted" x="360" y="118" text-anchor="middle" font-size="11">one rules file</text>
+ <rect class="s-key" x="270" y="70" width="180" height="70" rx="12"/><text class="t-ink" x="360" y="98" text-anchor="middle" font-weight="700" font-size="14">Baseline v0.10</text><text class="t-muted" x="360" y="118" text-anchor="middle" font-size="11">one rules file</text>
  <rect class="s-panel" x="16" y="20" width="200" height="66" rx="10"/><text class="t-ink" x="116" y="44" text-anchor="middle" font-weight="600" font-size="13">Product record</text><text class="t-muted" x="116" y="61" text-anchor="middle" font-size="11">vendor · implemented</text><text class="t-muted t-mono" x="116" y="77" text-anchor="middle" font-size="10.5">pkg: …</text>
  <rect class="s-panel" x="16" y="124" width="200" height="66" rx="10"/><text class="t-ink" x="116" y="148" text-anchor="middle" font-weight="600" font-size="13">Deployment records</text><text class="t-muted" x="116" y="165" text-anchor="middle" font-size="11">operator · configured, observed</text><text class="t-muted t-mono" x="116" y="181" text-anchor="middle" font-size="10.5">tag: …</text>
  <path class="l-pass" d="M216 53C245 53 250 85 270 95M216 157C245 157 250 125 270 115"/><text class="t-pass" x="236" y="40" font-size="11" font-weight="600">specification</text>
@@ -2342,7 +2342,7 @@ const C2_FIG_KINDS=`<svg viewBox="0 0 720 170" role="img" aria-label="Four kinds
  </g>
 </svg>`;
 
-const C2_FIG_FAMILY=`<svg viewBox="0 0 720 260" role="img" aria-label="Composition. Left: one CBOM evaluated independently against three profiles, each with its own verdict. Right: an extension chain. The interface disclosure baseline v0.9 is extended by PQC migration v0.8, procurement v0.1 and deployment disclosure v0.2. PQC migration extended v0.1 extends PQC migration.">
+const C2_FIG_FAMILY=`<svg viewBox="0 0 720 260" role="img" aria-label="Composition. Left: one CBOM evaluated independently against three profiles, each with its own verdict. Right: an extension chain. The interface disclosure baseline v0.10 is extended by PQC migration v0.8, procurement v0.2 and deployment disclosure v0.2. PQC migration extended v0.2 extends PQC migration.">
  <text class="t-ink" x="160" y="22" text-anchor="middle" font-weight="700" font-size="13">Independent evaluation</text>
  <rect class="s-key" x="20" y="100" width="110" height="56" rx="10"/><text class="t-ink" x="75" y="124" text-anchor="middle" font-weight="600" font-size="12.5">One CBOM</text><text class="t-muted" x="75" y="142" text-anchor="middle" font-size="10.5">published once</text>
  <rect class="s-panel" x="180" y="44" width="140" height="40" rx="8"/><text class="t-ink" x="250" y="69" text-anchor="middle" font-size="11.5">procurement profile</text>
@@ -2356,7 +2356,7 @@ const C2_FIG_FAMILY=`<svg viewBox="0 0 720 260" role="img" aria-label="Compositi
  <rect class="s-panel" x="384" y="122" width="104" height="40" rx="8"/><text class="t-ink" x="436" y="139" text-anchor="middle" font-size="11">procurement</text><text class="t-muted" x="436" y="154" text-anchor="middle" font-size="10.5">v0.1</text>
  <rect class="s-panel" x="498" y="122" width="104" height="40" rx="8"/><text class="t-ink" x="550" y="139" text-anchor="middle" font-size="11">PQC migration</text><text class="t-muted" x="550" y="154" text-anchor="middle" font-size="10.5">v0.8</text>
  <rect class="s-panel" x="612" y="122" width="100" height="40" rx="8"/><text class="t-ink" x="662" y="139" text-anchor="middle" font-size="11">deployment</text><text class="t-muted" x="662" y="154" text-anchor="middle" font-size="10.5">v0.1</text>
- <rect class="s-panel" x="490" y="200" width="120" height="40" rx="8"/><text class="t-ink" x="550" y="217" text-anchor="middle" font-size="11">PQC migration</text><text class="t-muted" x="550" y="232" text-anchor="middle" font-size="10.5">extended v0.1</text>
+ <rect class="s-panel" x="490" y="200" width="120" height="40" rx="8"/><text class="t-ink" x="550" y="217" text-anchor="middle" font-size="11">PQC migration</text><text class="t-muted" x="550" y="232" text-anchor="middle" font-size="10.5">extended v0.2</text>
  <path class="l-acc" d="M436 122V100H662V122M550 100V80M550 162V200"/>
  <text class="t-acc" x="572" y="186" font-size="10.5">extends</text>
 </svg>`;
@@ -2434,7 +2434,7 @@ C2.push(titleScreen(MODULES.find(m=>m.id==='C2'),{sub:'What is inside a profile:
  req:['Review the eight sections.','Pass the knowledge check with a score of 80% or higher.'],pre:'F2 Why a buyer names a profile, and C1.',aud:'Profile authors, CBOM producers, tool builders and procurement leads',level:'Concepts'}));
 
 C2.push({min:1,render:()=>`${head('rules','One rules file, two readers','A profile is product-independent')}
-  <p>The Interface Disclosure Baseline v0.9 says which kinds of cryptographic interface must exist, what each must disclose, and which context the document must point to. No rule names a product or an interface instance. An early draft required <span class="mono">interfaceId</span> to equal one product's listener name. That was wrong: rules constrain the set of interfaces and the attributes of each one.</p>
+  <p>The Interface Disclosure Baseline v0.10 says which kinds of cryptographic interface must exist, what each must disclose, and which context the document must point to. No rule names a product or an interface instance. An early draft required <span class="mono">interfaceId</span> to equal one product's listener name. That was wrong: rules constrain the set of interfaces and the attributes of each one.</p>
   ${fig(C2_FIG_RECORDS,'<b>Figure 1.</b> The vendor and the operator use the rules as a specification. Whoever receives the document uses the same rules as a checklist.')}
   <p class="note">The carrier target is CycloneDX 2.0, pinned to the 2.0-dev schema of 23 October 2026 until Ecma ratifies it. CycloneDX 2.0 has its own profiles element. Where confusion is possible, the methodology says "PKIC CBOM profile".</p>`});
 
@@ -2522,7 +2522,7 @@ C2.push({min:0,next:null,render:()=>`${head('rules','Anatomy of a profile','Summ
   <h3 style="margin-top:22px">Follow these practices</h3>
   ${dash(['Write rules about kinds of interface, never about one product\'s instances.','Keep one subject and one stage per document, and declare both.','Use deployment-defined and peer-defined only in a build record, and point to configuration guidance.','Mark a value unknown or withheld rather than leaving it out.','Point to context by hash or access protocol; do not copy it in.','When you derive a profile, pin the base version and only tighten what you inherit.'])}
   <div class="nextup"><button class="btn" data-goto="C3">Next module: C3 Conformance →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
-  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Profile and Objects; Interface Disclosure Baseline v0.9 rules file; Keycloak 26.7.3 example records and claim-example.json.</p>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Profile and Objects; Interface Disclosure Baseline v0.10 rules file; Keycloak 26.7.3 example records and claim-example.json.</p>
   <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally.</p>`});
 
 /* ================= C3 Conformance: what a verdict means ================= */
@@ -2571,7 +2571,7 @@ const C3_RULELBL={MUST:'MUST rule',WH:'MUST rule marked withholdable',SHOULD:'SH
 
 const C3_CLAIM={
  binds:{t:'What it binds',html:`<p style="margin:0 0 10px">A claim is about one document. It names the file and binds to it with a SHA-256 digest, so the claim cannot be moved to another revision. It also names the subject and the carrier format and version.</p>${dash(['Change one byte of the CBOM and the digest no longer matches.','The subject identifier is the package URL of the Keycloak image, with a plain fallback name.'])}`},
- lists:{t:'What it lists',html:`<p style="margin:0 0 10px">The claim lists every profile that was evaluated. Each entry carries its own verdict, the carrier band, and the whole chain of base profiles it pins. For the Keycloak product record that is the baseline v0.9 on its own, and PQC Migration v0.8 pinned to the baseline v0.9.</p>${dash(['Each profile entry sorts its rules into failed, withheld, unknown, undeclared and unresolved.','A reader months later sees which values were kept back, without access to the CBOM.'])}`},
+ lists:{t:'What it lists',html:`<p style="margin:0 0 10px">The claim lists every profile that was evaluated. Each entry carries its own verdict, the carrier band, and the whole chain of base profiles it pins. For the Keycloak product record that is the baseline v0.10 on its own, and PQC Migration v0.8 pinned to the baseline v0.10.</p>${dash(['Each profile entry sorts its rules into failed, withheld, unknown, undeclared and unresolved.','A reader months later sees which values were kept back, without access to the CBOM.'])}`},
  not:{t:'What it does not assert',html:`<p style="margin:0 0 10px">Every claim repeats, inside itself, what a verdict does not establish. The reader of a claim will usually not have read the methodology, and the word "conforms" invites more than it supports.</p>${dash(['That the disclosed values are true.','That every relevant interface was declared.','That the cryptography is adequate, now or later.','Anything inherited from a cited record the evaluator was not given.'])}`},
  who:{t:'Who made it',html:`<p style="margin:0 0 10px">The party that ran the evaluation makes the claim and names itself. A producer that evaluates its own document makes a self-declared claim, and the claim says so. A claim made by another party is an attested claim.</p>${dash(['Running the validator with --verify-claim checks the digest and runs every named profile again.','Re-running cannot show that the values are true. A producer that misstates a protocol version still gets a claim that verifies.','A claim covers one revision. A new revision, or a new profile version, needs a new evaluation.'])}`}
 };
@@ -2703,11 +2703,11 @@ const C4_FIG_LADDER=`<svg viewBox="0 0 720 300" role="img" aria-label="Keycloak 
  <path class="l-mute" d="M40 22V290" style="stroke-dasharray:none"/><path d="M40 12l-5 10h10z" style="fill:var(--muted)"/>
  <text class="t-muted" x="52" y="20" font-size="11" letter-spacing="1">MORE DISCLOSED</text>
  <rect class="s-passbox" x="70" y="28" width="634" height="34" rx="9"/><text class="t-pass" x="86" y="50" font-size="12.5" font-weight="600">cbom-keycloak-product</text><text class="t-pass" x="688" y="50" text-anchor="end" font-size="11.5">conforms to both</text>
- <text class="t-acc" x="704" y="80" text-anchor="end" font-size="12" font-weight="700">Interface Disclosure Baseline v0.9</text><path class="l-acc" d="M60 88H704" style="stroke-width:2.5"/>
+ <text class="t-acc" x="704" y="80" text-anchor="end" font-size="12" font-weight="700">Interface Disclosure Baseline v0.10</text><path class="l-acc" d="M60 88H704" style="stroke-width:2.5"/>
  <rect class="s-panel" x="70" y="100" width="634" height="32" rx="8" style="stroke:var(--warn)"/><text class="t-ink" x="86" y="121" font-size="12">fail-P2: management interfaces left out, no reason given</text><text class="t-warn" x="688" y="121" text-anchor="end" font-size="11">gap: P2</text>
  <rect class="s-panel" x="70" y="140" width="634" height="32" rx="8" style="stroke:var(--warn)"/><text class="t-ink" x="86" y="161" font-size="12">disclosure-states: one algorithm unknown, one undeclared</text><text class="t-warn" x="688" y="161" text-anchor="end" font-size="11">gap: I5, I4</text>
  <rect class="s-panel" x="70" y="180" width="634" height="32" rx="8" style="stroke:var(--warn)"/><text class="t-ink" x="86" y="201" font-size="12">observed record: database key exchange unknown</text><text class="t-warn" x="688" y="201" text-anchor="end" font-size="11">gap: I3</text>
- <text class="t-acc" x="704" y="234" text-anchor="end" font-size="12" font-weight="700">Interface Enumeration v0.3 · entry profile</text><path class="l-acc" d="M60 242H704" style="stroke-width:2.5"/>
+ <text class="t-acc" x="704" y="234" text-anchor="end" font-size="12" font-weight="700">Interface Enumeration v0.4 · entry profile</text><path class="l-acc" d="M60 242H704" style="stroke-width:2.5"/>
  <rect class="s-failbox" x="70" y="254" width="634" height="32" rx="8"/><text class="t-fail" x="86" y="275" font-size="12">untargeted scanner output, CycloneDX 1.7</text><text class="t-fail" x="688" y="275" text-anchor="end" font-size="11">conforms to neither</text>
 </svg>`;
 
@@ -2727,11 +2727,11 @@ const C4_FIG_FAMILY=`<svg viewBox="0 0 720 250" role="img" aria-label="The examp
 </svg>`;
 
 const C4_PROF={
- enum:{t:'Interface Enumeration v0.3',rel:'Entry depth',chip:'c-info',ask:'What the subject is, and whether it is a product or a deployment. Which interfaces it exposes, what each one speaks and at which version, which stage the report describes, and whether the list is the whole list.',rules:'P1, P3, P4, P5, P6, I1, I2, I7, I8',orient:'inventory',stages:'All four, including intended. A first inventory takes whatever a producer can report.'},
- base:{t:'Interface Disclosure Baseline v0.9',rel:'One depth deeper',chip:'c-info',ask:'Everything the entry profile asks, plus the algorithms for each cryptographic job, the endpoint roles, the implementing library, key wrapping on storage, the default state, a management interface or a stated reason there is none, and pointers to context the document does not carry.',rules:'Shares nine rules unchanged and adds P2, I3, I4, I5, I6, I9, I10, I11 (at SHOULD), plus reference rules R1 to R6',orient:'inventory',stages:'implemented, configured and observed. A design intention answers nothing about deployed interfaces.'},
+ enum:{t:'Interface Enumeration v0.4',rel:'Entry depth',chip:'c-info',ask:'What the subject is, and whether it is a product or a deployment. Which interfaces it exposes, what each one speaks and at which version, which stage the report describes, and whether the list is the whole list.',rules:'P1, P3, P4, P5, P6, I1, I2, I7, I8',orient:'inventory',stages:'All four, including intended. A first inventory takes whatever a producer can report.'},
+ base:{t:'Interface Disclosure Baseline v0.10',rel:'One depth deeper',chip:'c-info',ask:'Everything the entry profile asks, plus the algorithms for each cryptographic job, the endpoint roles, the implementing library, key wrapping on storage, the default state, a management interface or a stated reason there is none, and pointers to context the document does not carry.',rules:'Shares nine rules unchanged and adds P2, I3, I4, I5, I6, I9, I10, I11 (at SHOULD), plus reference rules R1 to R6',orient:'inventory',stages:'implemented, configured and observed. A design intention answers nothing about deployed interfaces.'},
  pqc:{t:'PQC Migration v0.8',rel:'Branch from the baseline',chip:'c-mgmt',ask:'For a product as built: capability per interface and cryptographic purpose, what enabling it requires, what blocks it, module validation, and key-wrapping capability on storage.',rules:'Extends the baseline. Adds I1 to I12, the group rule G1, R1 (support lifecycle) and R2 (roadmap). Makes I9 non-withholdable.',orient:'both',stages:'implemented only, for a product'},
- ext:{t:'PQC Migration Extended v0.1',rel:'Depth within the migration branch',chip:'c-info',ask:'Everything PQC Migration asks, plus key management and storage: the key types the management interfaces can generate, where keys are stored, external dependencies, and storage interfaces or a stated absence.',rules:'Extends PQC Migration. Adds P1, P2, I1 to I10, and tightens pqc-migration#G1.4.',orient:'both',stages:'Inherited from PQC Migration. A derived profile cannot widen them.'},
- proc:{t:'Procurement v0.1',rel:'Branch from the baseline',chip:'c-mgmt',ask:'For a product offered in a tender: a storage interface or a stated absence, coverage of all interfaces or all external ones, and the implementing library with no withholding.',rules:'Extends the baseline. Adds P5 and P6. Makes I9 non-withholdable.',orient:'inventory',stages:'implemented only, for a product'},
+ ext:{t:'PQC Migration Extended v0.2',rel:'Depth within the migration branch',chip:'c-info',ask:'Everything PQC Migration asks, plus key management and storage: the key types the management interfaces can generate, where keys are stored, external dependencies, and storage interfaces or a stated absence.',rules:'Extends PQC Migration. Adds P1, P2, I1 to I10, and tightens pqc-migration#G1.4.',orient:'both',stages:'Inherited from PQC Migration. A derived profile cannot widen them.'},
+ proc:{t:'Procurement v0.2',rel:'Branch from the baseline',chip:'c-mgmt',ask:'For a product offered in a tender: a storage interface or a stated absence, coverage of all interfaces or all external ones, and the implementing library with no withholding.',rules:'Extends the baseline. Adds P5 and P6. Makes I9 non-withholdable.',orient:'inventory',stages:'implemented only, for a product'},
  dep:{t:'Deployment Disclosure v0.2',rel:'Branch from the baseline',chip:'c-mgmt',ask:'For a deployment: the records it cites by BOM-Link and hash, the product interface each of its interfaces realises, and how and when each observed value was obtained. It may also name the interface at the far end of each connection.',rules:'Extends the baseline. Adds P1, I1 to I4 (I4 at MAY) and R1 to R4.',orient:'inventory',stages:'configured and observed, for a deployment'}
 };
 
@@ -2757,7 +2757,7 @@ const C4_GAP={
 };
 
 const QUIZ_C4=[
- {q:'A producer can list its interfaces and their protocol versions, but cannot yet say which algorithms each one uses. Which example profile can its CBOM conform to?',o:['None of them','Interface Enumeration v0.3, the entry profile','PQC Migration v0.8'],a:1,e:'The entry depth is set where a producer starting today can reach it, and the result is a verdict the producer can point to.'},
+ {q:'A producer can list its interfaces and their protocol versions, but cannot yet say which algorithms each one uses. Which example profile can its CBOM conform to?',o:['None of them','Interface Enumeration v0.4, the entry profile','PQC Migration v0.8'],a:1,e:'The entry depth is set where a producer starting today can reach it, and the result is a verdict the producer can point to.'},
  {q:'Is PQC Migration v0.8 the next depth after the baseline?',o:['Yes, it asks for more','No. It is a branch: it serves a different decision and declares orientation both','No. It is a separate family'],a:1,e:'Presenting a branch as a rung would tell producers to work in the wrong order and rank suppliers who answer different questions.'},
  {q:'How do you tell a depth from a branch?',o:['Count the rules','Compare the derived profile with its base: same decision and same orientation means depth, otherwise branch','Look at the version numbers'],a:1,e:'The test reads the objective and scope.orientation of the two profiles.'},
  {q:'Why does the methodology avoid calling depths "maturity levels"?',o:['The term is trademarked','A maturity level is a judgement that external policy derives from facts. A profile defines the facts the judgement reads','Depths are not ordered'],a:1,e:'Using one phrase for both would blur the line between facts in the CBOM and judgements made outside it.'},
@@ -3000,8 +3000,8 @@ C5.push({min:0,next:null,render:()=>`${head('withheld','Public and restricted CB
 const C6_FIG_POLICY=`<svg viewBox="0 0 720 220" role="img" aria-label="The same CBOM facts are evaluated twice. Under the policy applied on 2026-10-25, RSA-2048 is acceptable. Under the same policy applied on 2031-01-01, it is deprecated. The facts have not changed; the judgement has.">
  <rect class="s-key" x="16" y="70" width="190" height="84" rx="12"/><text class="t-ink" x="111" y="96" text-anchor="middle" font-weight="700" font-size="13">CBOM facts</text><text class="t-muted t-mono" x="111" y="118" text-anchor="middle" font-size="11">cluster transport</text><text class="t-muted t-mono" x="111" y="136" text-anchor="middle" font-size="11">auth RSA-2048</text>
  <path class="l-acc" d="M206 100C250 100 250 58 290 58M206 124C250 124 250 166 290 166"/>
- <rect class="s-soft" x="290" y="30" width="210" height="56" rx="10"/><text class="t-ink" x="395" y="53" text-anchor="middle" font-size="12.5" font-weight="600">algorithm-transition v0.1</text><text class="t-muted t-mono" x="395" y="72" text-anchor="middle" font-size="11">applied 2026-10-25</text>
- <rect class="s-soft" x="290" y="138" width="210" height="56" rx="10"/><text class="t-ink" x="395" y="161" text-anchor="middle" font-size="12.5" font-weight="600">algorithm-transition v0.1</text><text class="t-muted t-mono" x="395" y="180" text-anchor="middle" font-size="11">applied 2031-01-01</text>
+ <rect class="s-soft" x="290" y="30" width="210" height="56" rx="10"/><text class="t-ink" x="395" y="53" text-anchor="middle" font-size="12.5" font-weight="600">algorithm-transition v0.2</text><text class="t-muted t-mono" x="395" y="72" text-anchor="middle" font-size="11">applied 2026-10-25</text>
+ <rect class="s-soft" x="290" y="138" width="210" height="56" rx="10"/><text class="t-ink" x="395" y="161" text-anchor="middle" font-size="12.5" font-weight="600">algorithm-transition v0.2</text><text class="t-muted t-mono" x="395" y="180" text-anchor="middle" font-size="11">applied 2031-01-01</text>
  <path class="l-acc" d="M500 58H540M500 166H540"/>
  <rect class="s-passbox" x="540" y="36" width="164" height="44" rx="9"/><text class="t-pass" x="622" y="63" text-anchor="middle" font-weight="600" font-size="13">acceptable</text>
  <rect class="s-panel" x="540" y="144" width="164" height="44" rx="9" style="stroke:var(--warn)"/><text class="t-warn" x="622" y="171" text-anchor="middle" font-weight="600" font-size="13">deprecated</text>
@@ -3041,7 +3041,7 @@ const C6_VALS=[
  {v:'X25519',where:'key exchange at the ingress, in sessions that negotiate it alone',bits:128,qv:true},
  {v:'ES256',where:'the token algorithm an OIDC client can move to',bits:128,qv:true}
 ];
-const C6_status=(x,d)=>{const y=+d.slice(0,4);if(!x.qv)return['acceptable','c-pass'];if(x.bits<128){if(y>=2036)return['disallowed','c-fail'];if(y>=2031)return['deprecated','c-warn'];return['acceptable','c-pass']}if(y>=2036)return['disallowed','c-fail'];return['acceptable','c-pass']};
+const C6_status=(x,d)=>{const y=+d.slice(0,4);if(!x.qv)return['acceptable','c-pass'];if(y>=2036)return['disallowed','c-fail'];if(y>=2031)return['deprecated','c-warn'];return['acceptable','c-pass']};
 
 const C6_GAP={
  ing:{t:'Ingress key establishment',cls:'enabled-not-negotiated',chip:'c-warn',d:'The configured record permits X25519MLKEM768. The observed record shows 29% of sessions still negotiating X25519 alone.',who:'The other endpoint, or a fallback path, is the limit. Here the far ends are browsers, which have no records of their own. Where the far end has a record, an edge-posture evaluation names the end that limits the connection.'},
@@ -3081,7 +3081,7 @@ C6.push({min:2,render:()=>`${head('rules','Policies and results are files','Vers
   <p>A policy holds versioned data, which says what the criteria are, and names an evaluation method, which says how to apply them. Policies sit outside CBOMs and outside profiles. The working group has published two illustrative examples. They show the mechanism and are not advice.</p>
   <div class="tbl wide"><table><thead><tr><th>File</th><th>What it is</th></tr></thead><tbody>
    <tr><td class="mono">policy.schema.json</td><td>The structure of a policy: identifier, version, status, source, method, a classification of algorithm names, and a dated schedule or targets per purpose.</td></tr>
-   <tr><td class="mono">policies/policy-algorithm-transition.policy.json</td><td>Method <span class="mono">algorithm-transition</span>. Its schedule follows the NIST IR 8547 initial public draft, which NIST had not finalized as of October 2026.</td></tr>
+   <tr><td class="mono">policies/policy-algorithm-transition.policy.json</td><td>Method <span class="mono">algorithm-transition</span>. Its schedule follows the final NIST IR 8547, published on 27 October 2026.</td></tr>
    <tr><td class="mono">policies/policy-readiness-gap.policy.json</td><td>Method <span class="mono">readiness-gap</span>. Targets: ML-KEM for key establishment, ML-DSA or SLH-DSA for entity authentication.</td></tr>
    <tr><td class="mono">evaluate_policy.py</td><td>Runs either method: <span class="mono">evaluate_policy.py &lt;policy&gt; &lt;cbom...&gt; --date YYYY-MM-DD</span>.</td></tr>
    <tr><td class="mono">policy-result.schema.json</td><td>The structure of a result.</td></tr>
@@ -3090,7 +3090,7 @@ C6.push({min:2,render:()=>`${head('rules','Policies and results are files','Vers
   <p>Every example result also states what it does not assert. It does not assert that the disclosed values are true, or anything about what the CBOMs leave out. It does not assert that the policy is right, or anything after its evaluation date.</p>`});
 
 C6.push({min:2,render:()=>`${head('lifecycle','Re-evaluate on a later date','Algorithm transition, applied to Example Org\'s Keycloak records')}
-  <p>The algorithm-transition method looks up each disclosed algorithm in the policy's classification: its family, its strength in bits, and whether a quantum computer could break it. It then applies the schedule on the evaluation date. All five values below are quantum-vulnerable. Under the draft schedule, a quantum-vulnerable algorithm at 112 bits is deprecated after 2030 and disallowed after 2035. At 128 bits or more it is disallowed after 2035.</p>
+  <p>The algorithm-transition method looks up each disclosed algorithm in the policy's classification: its family, its strength in bits, and whether a quantum computer could break it. It then applies the schedule on the evaluation date. All five values below are quantum-vulnerable. Under the final NIST IR 8547, a quantum-vulnerable algorithm at any approved strength is deprecated after 2030 and disallowed after 2035.</p>
   ${cue('Pick an evaluation date')}
   <div class="seg" role="tablist">${C6_DATES.map(d=>`<button role="tab" data-c6d="${d}" aria-selected="false" class="mono">${d}</button>`).join('')}</div>
   <div class="tbl"><table><thead><tr><th>Value</th><th>Where it appears</th><th>Status</th></tr></thead><tbody id="c6rows"></tbody></table></div>
@@ -3160,7 +3160,7 @@ C6.push({min:0,next:null,render:()=>`${head('advisory','Facts, judgements and vu
   <h3 style="margin-top:22px">Follow these practices</h3>
   ${dash(['Keep verdicts out of the CBOM. Evaluate with a named policy version and record the date.','Bind every result to the policy and to each CBOM it read by SHA-256.','Use the readiness-gap classes to decide who acts on each interface.','Match implementation defects through I9 and the advisory endpoint, and read vendor statements through R2.','Remove withholdability from I9 in any profile that has to support incident response or migration.','Treat a passing verdict as a statement about disclosure, never about safety.'])}
   <div class="nextup"><button class="btn" data-goto="C7">Next module: C7 Context pointers →</button><button class="btn ghost" data-goto="hub">All modules</button></div>
-  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Policy Evaluation, Vulnerabilities and Lifecycle Data; policy.schema.json, policy-result.schema.json and the readiness-gap and algorithm-transition example policies with their Keycloak results (evaluated 2026-10-25); NIST IR 8547 initial public draft.</p>
+  <p class="src">Sources: PKI Consortium CBOM Profiles methodology (draft): Policy Evaluation, Vulnerabilities and Lifecycle Data; policy.schema.json, policy-result.schema.json and the readiness-gap and algorithm-transition example policies with their Keycloak results (evaluated 2026-10-25); NIST IR 8547 (final, 27 October 2026).</p>
   <p class="disclaimer">The methodology is a draft for comment from the PKIC CBOM Profiles Working Group, and its positions are settled provisionally. The example policies are illustrative and are not advice.</p>`});
 
 /* ================= C7 Context pointers ================= */

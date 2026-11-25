@@ -25,7 +25,7 @@ nav: uc-pqc
   <div class="crumb">CHANGE PLANNING · WORKED USE CASE</div>
   <h1>PQC migration: from use case to profile</h1>
   <p class="lead">One use case is developed here, from the decision a consumer is trying to make through to two profile definitions. Both profiles are applied throughout to one real product: Keycloak 26.7.3, an open-source identity provider. The work follows the twelve steps set out in <a href="../methodology/method.html">Method</a>. It is the reference example for how the other use cases are worked up.</p>
-  <div class="banner warn">Draft specification. The migration profiles are published as draft specifications (version 0.x) that buyers and suppliers can use now. A tightening takes effect only after a grace period, and every published version stays in the archive. The profiles and example documents follow decision 0022, now published, which sets the migration profile (now v0.8), adds a second, more demanding profile (the extended depth, v0.1), and states how application-layer interfaces are expressed in CycloneDX. Both profiles extend the interface disclosure baseline v0.9, and the example documents are written in CycloneDX 2.0. Choices made provisionally in the consolidated baseline are listed in decision 0025. The attribute names are proposals made for this example, not established terms. The Keycloak values are taken from its documentation and issue tracker; the few still to be verified are marked.</div>
+  <div class="banner warn">Draft specification. The migration profiles are published as draft specifications (version 0.x) that buyers and suppliers can use now. A tightening takes effect only after a grace period, and every published version stays in the archive. There are two profiles: the migration profile (now v0.8) and a second, more demanding profile (the extended depth, v0.2). The page also states how application-layer interfaces are expressed in CycloneDX. The migration profile extends the interface disclosure baseline v0.10, and the extended depth extends the migration profile, and the example documents are written in CycloneDX 2.0. Every choice in the consolidated baseline is provisional. The attribute names are proposals made for this example, not established terms. The Keycloak values are taken from its documentation and issue tracker; the few still to be verified are marked.</div>
 
   <h2>The decision being supported</h2>
   <p>An operator or enterprise architect is evaluating a product it did not build and cannot inspect. It must decide how and when that product can move to post-quantum cryptography. An inventory says which algorithms are in use. The migration decision also depends on questions about integration, enforcement and planning, asked of every exposed interface:</p>
@@ -179,7 +179,7 @@ nav: uc-pqc
   </div>
 
   <h2>From questions to attributes</h2>
-  <p>Each planning question implies particular facts. Working from the question to the attribute keeps a profile focused on its purpose. Working from the fields a format happens to offer does not. The second column names the rule that requires each attribute. The third column gives the depth. "Inherited" marks a rule of the interface disclosure baseline. "Baseline" marks a rule of the migration profile, and "Extended" a rule of its extended depth. The column also gives the Keycloak case that shows why the fact matters.</p>
+  <p>Each planning question implies particular facts. Working from the question to the attribute keeps a profile focused on its purpose. Working from the fields a format happens to offer does not. The second column names the rule that requires each attribute. The third column gives the depth. "Inherited" marks a rule of the interface disclosure baseline. "Migration" marks a rule of PQC Migration, and "Extended" a rule of its extended depth. The column also gives the Keycloak case that shows why the fact matters.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>What the consumer needs to know</th><th>Attribute that supplies it</th><th>Depth, and the Keycloak case</th></tr></thead>
@@ -187,30 +187,30 @@ nav: uc-pqc
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">1 · Cryptographic surface and boundary</th></tr>
       <tr><td>Which interface are we talking about, and what role does it play?</td><td><code>interfaceType</code> (<code>interface-disclosure#I7</code>)</td><td>Inherited. The token interface and its TLS carrier are separate entries</td></tr>
       <tr><td>Who controls cipher-suite negotiation at this interface?</td><td><code>endpointRoles</code> (<code>interface-disclosure#I6</code>)</td><td>Inherited. A server controls what it offers, and a client follows. Keycloak is a server on all inbound interfaces, a client on all outbound ones, and a peer on the cluster transport</td></tr>
-      <tr><td>What protocol, and which versions can it speak?</td><td><code>protocol</code> (<code>interface-disclosure#I1</code>), <code>protocolVersionsSupported</code> (<code>pqc-migration#I1</code>)</td><td>Baseline. The cluster transport speaks TLS 1.3 only</td></tr>
+      <tr><td>What protocol, and which versions can it speak?</td><td><code>protocol</code> (<code>interface-disclosure#I1</code>), <code>protocolVersionsSupported</code> (<code>pqc-migration#I1</code>)</td><td>Migration. The cluster transport speaks TLS 1.3 only</td></tr>
       <tr><td>Where is data stored at rest, and is that declared?</td><td>storage interfaces, or a stated absence (<code>pqc-migration-extended#P1</code>)</td><td>Extended. The key store in the database</td></tr>
       <tr><td>How much should we trust this record?</td><td><code>lifecycleStage</code> (<code>interface-disclosure#I8</code>)</td><td>Inherited. One stage for the whole record: <code>implemented</code>, the image as shipped. Where Keycloak does not fix a value, such as the server certificate, the record says <code>deployment-defined</code> and points to the guide where the operator sets it</td></tr>
 
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">2 · Current algorithms and quantum-safe capability</th></tr>
       <tr><td>What does the interface use now?</td><td><code>keyExchange</code>, <code>authentication</code> (<code>interface-disclosure#I3</code>, <code>#I5</code>)</td><td>Inherited. X25519 on TLS, RS256 on tokens, and <code>none</code> for token encryption</td></tr>
-      <tr><td>What could it use?</td><td><code>keyExchangeSupported</code>, <code>authenticationSupported</code> (<code>pqc-migration#I2</code>, <code>#I3</code>)</td><td>Baseline. The JDK 21 groups on TLS. The JOSE algorithms on tokens, none of them post-quantum</td></tr>
+      <tr><td>What could it use?</td><td><code>keyExchangeSupported</code>, <code>authenticationSupported</code> (<code>pqc-migration#I2</code>, <code>#I3</code>)</td><td>Migration. The JDK 21 groups on TLS. The JOSE algorithms on tokens, none of them post-quantum</td></tr>
       <tr><td>Are stored keys exposed at rest as well as traffic?</td><td><code>keyWrapping</code> (<code>interface-disclosure#I10</code>), <code>keyWrappingSupported</code> (<code>pqc-migration#I12</code>)</td><td><code>keyWrapping</code> is inherited from the interface disclosure baseline (new in its v0.8). <code>keyWrappingSupported</code> is new in pqc-migration v0.7. Realm keys are stored unwrapped</td></tr>
 
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">3 · Enablement route and deployment cost</th></tr>
-      <tr><td>How do we switch it on, and from which product version?</td><td><code>enablementMethod</code>, <code>minimumProductVersion</code> (<code>pqc-migration#I4</code>, <code>#I5</code>)</td><td>Baseline. <code>not-available</code> on every Keycloak interface today</td></tr>
-      <tr><td>Is this a software change or a hardware one, and which component supplies it?</td><td><code>providerLocation</code> (<code>pqc-migration#I6</code>), <code>implementationPurl</code> (<code>interface-disclosure#I9</code>)</td><td>Baseline. Software throughout. The provider is the JDK or Keycloak itself</td></tr>
+      <tr><td>How do we switch it on, and from which product version?</td><td><code>enablementMethod</code>, <code>minimumProductVersion</code> (<code>pqc-migration#I4</code>, <code>#I5</code>)</td><td>Migration. <code>not-available</code> on every Keycloak interface today</td></tr>
+      <tr><td>Is this a software change or a hardware one, and which component supplies it?</td><td><code>providerLocation</code> (<code>pqc-migration#I6</code>), <code>implementationPurl</code> (<code>interface-disclosure#I9</code>)</td><td>Migration. Software throughout. The provider is the JDK or Keycloak itself</td></tr>
 
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">4 · Operator enforcement</th></tr>
-      <tr><td>Can the operator require post-quantum algorithms and refuse a classical fallback?</td><td><code>negotiationControl</code> (<code>pqc-migration#I8</code>, SHOULD)</td><td>Baseline. On TLS, the JVM property <code>jdk.tls.namedGroups</code> sets the groups. On tokens, the signature algorithm is set per realm and per client</td></tr>
+      <tr><td>Can the operator require post-quantum algorithms and refuse a classical fallback?</td><td><code>negotiationControl</code> (<code>pqc-migration#I8</code>, SHOULD)</td><td>Migration. On TLS, the JVM property <code>jdk.tls.namedGroups</code> sets the groups. On tokens, the signature algorithm is set per realm and per client</td></tr>
 
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">5 · Integration friction</th></tr>
-      <tr><td>What is likely to break when the capability is enabled?</td><td><code>integrationConstraints</code> (<code>pqc-migration#I9</code>, SHOULD)</td><td>Baseline. ML-DSA-signed tokens exceed the 4 KB browser cookie limit</td></tr>
+      <tr><td>What is likely to break when the capability is enabled?</td><td><code>integrationConstraints</code> (<code>pqc-migration#I9</code>, SHOULD)</td><td>Migration. ML-DSA-signed tokens exceed the 4 KB browser cookie limit</td></tr>
 
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">6 · Blockers and roadmap</th></tr>
-      <tr><td>If it cannot do this yet, what is stopping it, and who can change that?</td><td><code>capabilityStatus</code>, <code>blockedBy</code>, <code>roadmapRef</code> (<code>pqc-migration#G1.1</code> to <code>#G1.3</code>, one entry per purpose)</td><td>Baseline. Four different blockers across thirteen interfaces</td></tr>
+      <tr><td>If it cannot do this yet, what is stopping it, and who can change that?</td><td><code>capabilityStatus</code>, <code>blockedBy</code>, <code>roadmapRef</code> (<code>pqc-migration#G1.1</code> to <code>#G1.3</code>, one entry per purpose)</td><td>Migration. Four different blockers across thirteen interfaces</td></tr>
 
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">7 · Module validation and compliance</th></tr>
-      <tr><td>Can the validated module we are obliged to use do it?</td><td><code>moduleValidationScheme</code>, <code>moduleValidationRef</code> (<code>pqc-migration#I10</code>, <code>#I11</code>), <code>validatedModeAvailability</code> (<code>pqc-migration#G1.4</code>)</td><td>Baseline, new in v0.7. Keycloak's validated mode is an opt-in Bouncy Castle FIPS module</td></tr>
+      <tr><td>Can the validated module we are obliged to use do it?</td><td><code>moduleValidationScheme</code>, <code>moduleValidationRef</code> (<code>pqc-migration#I10</code>, <code>#I11</code>), <code>validatedModeAvailability</code> (<code>pqc-migration#G1.4</code>)</td><td>Migration, new in v0.7. Keycloak's validated mode is an opt-in Bouncy Castle FIPS module</td></tr>
       <tr><td>Is the overall product certified under a formal security scheme?</td><td><code>productCertificationScheme</code> (<code>pqc-migration-extended#P2</code>)</td><td>Extended. Common Criteria or EUCC evaluated configuration</td></tr>
 
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">8 · Key management and ecosystem dependencies</th></tr>
@@ -223,17 +223,17 @@ nav: uc-pqc
 
   <h2>Two profiles, two depths</h2>
   <p>Keywords follow BCP 14. Both profiles are product-independent: no rule names a product, a vendor or an interface instance. Attribute names follow the conventions in <a href="../methodology/method.html">Method</a>: <code>keyExchange</code> and <code>authentication</code> denote what the interface uses now, and the <code>Supported</code> suffix denotes what it is able to use.</p>
-  <p>The questions split into two groups. The first is about the interface: what it does, what it could do, and what stands in the way. The second is about what surrounds the interface and has to move with it or before it: the surface that must create the new key, the store that must hold it, and the services it depends on. A supplier can usually answer the first group today. Many suppliers cannot yet answer the second. Putting both groups in one profile would set the minimum requirement so high that few suppliers could meet it. The use case is therefore served by a family of two profiles, ordered by depth: the extended profile asks for everything the baseline asks for, plus the second group of questions (<a href="https://github.com/pkic/cbom/blob/main/decisions/0019-a-family-ordered-by-depth.md">decision 0019</a>).</p>
+  <p>The questions split into two groups. The first is about the interface: what it does, what it could do, and what stands in the way. The second is about what surrounds the interface and has to move with it or before it: the surface that must create the new key, the store that must hold it, and the services it depends on. A supplier can usually answer the first group today. Many suppliers cannot yet answer the second. Putting both groups in one profile would set the minimum requirement so high that few suppliers could meet it. The use case is therefore served by a family of two profiles, ordered by depth: the extended profile asks for everything the baseline asks for, plus the second group of questions.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>Profile</th><th>Extends</th><th>Adds</th></tr></thead>
     <tbody>
-      <tr><td><strong>Baseline</strong><br><code>pkic.example.pqc-migration</code> v0.8</td><td>Interface disclosure baseline v0.9</td><td>Capability, enablement and blockers per interface and per purpose; module validation; key wrapping on storage; pointers to the support lifecycle (R1) and the supplier's roadmap (R2), both SHOULD. Accepts product records at the stage <code>implemented</code> only. Makes one inherited rule stricter.</td></tr>
-      <tr><td><strong>Extended</strong><br><code>pkic.example.pqc-migration-extended</code> v0.1</td><td>The baseline above</td><td>Key management surfaces, key-store references, external dependencies, the obligation to declare storage, product certification. Tightens validated-mode availability to MUST.</td></tr>
+      <tr><td><strong>PQC Migration</strong><br><code>pkic.example.pqc-migration</code> v0.8</td><td>Interface disclosure baseline v0.10</td><td>Capability, enablement and blockers per interface and per purpose; module validation; key wrapping on storage; pointers to the support lifecycle (R1) and the supplier's roadmap (R2), both SHOULD. Accepts product records at the stage <code>implemented</code> only. Makes one inherited rule stricter.</td></tr>
+      <tr><td><strong>Extended</strong><br><code>pkic.example.pqc-migration-extended</code> v0.2</td><td>PQC Migration</td><td>Key management surfaces, key-store references, external dependencies, the obligation to declare storage, product certification. Tightens validated-mode availability to MUST.</td></tr>
     </tbody>
   </table>
   </div>
-  <p>Both profiles serve the same consumer and the same decision. The extended profile therefore goes deeper into the same use case. It is not a branch serving a different purpose. Extension is monotonic: a CBOM conforming to the extended profile also conforms to the baseline, and to the interface profiles beneath it. Rule ids are local to the profile that declares them and are cited with that profile's tag as a prefix, so <code>pqc-migration#I1</code> and <code>interface-disclosure#I1</code> are different rules. See <a href="../methodology/profile.html">Profile</a> for the scheme.</p>
+  <p>Both profiles serve the same consumer and the same decision. The extended profile therefore goes deeper into the same use case. It is not a branch serving a different purpose. Extension is monotonic: a CBOM conforming to the extended profile also conforms to PQC Migration, and to the interface profiles beneath it. Rule ids are local to the profile that declares them and are cited with that profile's tag as a prefix, so <code>pqc-migration#I1</code> and <code>interface-disclosure#I1</code> are different rules. See <a href="../methodology/profile.html">Profile</a> for the scheme.</p>
 
   <h3>Baseline: product-level rules</h3>
   <table>
@@ -294,21 +294,21 @@ nav: uc-pqc
       <tr><td><code>I5</code>, <code>I6</code></td><td><code>keyStoreFormatsSupported</code>, <code>keyStoreFormats</code></td><td>SHOULD</td><td>Container formats, where a format cannot carry a new key type.</td></tr>
       <tr><td><code>I7</code></td><td><code>keyStoreLocation</code></td><td>MUST</td><td>Software, HSM, TEE, TPM, OS keyring or external vault: whether the new key type waits on hardware.</td></tr>
       <tr><td><code>I8</code></td><td><code>keyStoreRef</code></td><td>SHOULD</td><td>Every other interface: the management interface that manages its keys, or <code>out-of-band</code>, <code>product-managed</code> or <code>none</code>.</td></tr>
-      <tr><td><code>I9</code></td><td><code>externalDependencies</code></td><td>MUST</td><td>Services the interface's cryptography depends on at run time: certificate authority, revocation responder, directory, identity provider, HSM, key vault, time source, or <code>none</code>. These are what the operator must migrate first.</td></tr>
+      <tr><td><code>I9</code></td><td><code>externalDependencies</code></td><td>MUST</td><td>Services the interface's cryptography depends on at run time: certificate authority, revocation responder, directory, identity provider, HSM, key vault, time source, random bit generator, or <code>none</code>. These are what the operator must migrate first, or must be able to rely on.</td></tr>
       <tr><td><code>I10</code></td><td><code>enablementSetting</code></td><td>SHOULD</td><td>Where enablement is by configuration: the setting that enables it.</td></tr>
       <tr><td><code>pqc-migration#G1.4</code></td><td><code>validatedModeAvailability</code></td><td>MUST</td><td>Tightened from SHOULD. At the extended depth the consumer is deciding the order of actual changes, so it needs this fact.</td></tr>
     </tbody>
   </table>
   </div>
 
-  <h3>The one inherited rule the baseline makes stricter</h3>
+  <h3>The one inherited rule PQC Migration makes stricter</h3>
   <table>
-    <thead><tr><th>Inherited rule</th><th>Baseline</th><th>Here</th></tr></thead>
+    <thead><tr><th>Inherited rule</th><th>In the baseline</th><th>In PQC Migration</th></tr></thead>
     <tbody>
       <tr><td>I9 <code>implementationPurl</code></td><td>MUST, may be withheld</td><td>MUST, may not be withheld</td></tr>
     </tbody>
   </table>
-  <p>Migration planning depends on knowing which library implements an interface, since that determines whether an update exists and when it arrived. If a vendor withholds it, the consumer cannot plan the order of the work. This is the only inherited rule the baseline profile changes. Raising the level is permitted because it makes the rule stricter.</p>
+  <p>Migration planning depends on knowing which library implements an interface, since that determines whether an update exists and when it arrived. If a vendor withholds it, the consumer cannot plan the order of the work. This is the only inherited rule PQC Migration changes. Raising the level is permitted because it makes the rule stricter.</p>
 
   <h3>Conditional rules</h3>
   <p>Several rules apply only when another attribute has a particular value. A profile is not limited to a flat list of mandatory fields. A requirement can depend on the value of another attribute. <code>I5</code> obliges a producer claiming that a capability needs a software update to say which version provides it. <code>I11</code> asks for a certificate reference only where a validation scheme is declared, and <code>I12</code> asks for wrapping algorithms only on a storage interface. Inside the capability group, <code>G1.2</code> asks for a blocker only where a purpose is not available, and <code>G1.4</code> asks about validated mode only where it is. Making these rules unconditional would not help. Requiring a version or a certificate from every interface produces noise. Requiring none leaves the useful case unstated.</p>
@@ -343,9 +343,9 @@ nav: uc-pqc
       <tr><td><code>interfaceType</code></td><td><code>service</code></td><td><code>service</code></td></tr>
       <tr><td><code>endpointRoles</code></td><td><code>client</code>, <code>server</code></td><td><code>issuer</code>, <code>relying-party</code></td></tr>
       <tr><td><code>protocol</code> / <code>protocolVersion</code></td><td><code>TLS</code> / <code>1.3</code></td><td><code>OIDC</code> / <code>1.0</code></td></tr>
-      <tr><td><code>keyExchange</code></td><td><code>X25519</code></td><td><code>none</code> (token encryption is off by default)</td></tr>
+      <tr><td><code>keyExchange</code></td><td><code>x25519</code></td><td><code>none</code> (token encryption is off by default)</td></tr>
       <tr><td><code>encryption</code></td><td><code>AES-256-GCM</code></td><td><code>none</code></td></tr>
-      <tr><td><code>authentication</code></td><td><code>deployment-defined</code> (the operator supplies the certificate)</td><td><code>RS256</code></td></tr>
+      <tr><td><code>authentication</code></td><td><code>deployment-defined</code> (the operator supplies the certificate)</td><td><code>RSA-PKCS1-1.5-SHA-256</code> (JOSE RS256)</td></tr>
       <tr><td><code>implementationPurl</code></td><td><code>pkg:rpm/redhat/java-21-openjdk-headless?arch=x86_64&amp;distro=rhel-9</code></td><td><code>pkg:maven/org.keycloak/keycloak-services@26.7.3</code></td></tr>
       <tr><td><code>defaultState</code></td><td><code>enabled</code></td><td><code>enabled</code></td></tr>
       <tr><td><code>lifecycleStage</code></td><td><code>implemented</code>, declared once for the record in <code>metadata.lifecycles</code> (phase <code>build</code>)</td><td>the same</td></tr>
@@ -383,10 +383,10 @@ nav: uc-pqc
   </div>
   <p>The other five purposes carry a status as well. On the TLS interfaces, encryption, data integrity and key derivation are <code>available</code>, and each says whether it works in validated mode. Key protection is <code>not-planned</code> everywhere. This repeats the storage finding: nothing wraps Keycloak's keys at rest. A deferred purpose owes only a status and, where it is not available, a blocker. That costs a producer almost nothing, and it keeps a shallower depth from becoming a permanent floor.</p>
   <p>Most of these values are the same across interfaces because they are properties of the library that implements the interfaces. The document states them once, on that library, and an interface states only what differs. The cluster transport inherits the JDK's entries and overrides entity authentication. SAML inherits the Keycloak library's entries and overrides two purposes. Rules are evaluated on the values that result after inheritance and overrides.</p>
-  <p>A purpose is different from an operation. The purpose vocabulary is useful because it records that difference. CycloneDX already records operations: a certificate signature carries <code>cryptoFunctions: ["sign", "verify"]</code>, and so would a firmware signature on the same product. The certificate signature serves entity authentication and migrates when the PKI does. The firmware signature must still verify years after it was written. The operation is the same, but the migration timescale and the work are different. See <a href="../methodology/terms.html">Terms</a> for the four-part test an entry has to pass, and <a href="https://github.com/pkic/cbom/blob/main/decisions/0010-cryptographic-purpose-vocabulary.md">decision 0010</a> for the reasoning.</p>
+  <p>A purpose is different from an operation. The purpose vocabulary is useful because it records that difference. CycloneDX already records operations: a certificate signature carries <code>cryptoFunctions: ["sign", "verify"]</code>, and so would a firmware signature on the same product. The certificate signature serves entity authentication and migrates when the PKI does. The firmware signature must still verify years after it was written. The operation is the same, but the migration timescale and the work are different. See <a href="../methodology/terms.html">Terms</a> for the four-part test an entry has to pass.</p>
 
   <h3>What a planner concludes</h3>
-  <p>Without seeing inside the product, an operator reading the baseline document can conclude the following. No Keycloak interface can be made quantum-safe by configuration today. TLS key exchange arrives with the Java runtime, so the action is to track the runtime in the image and to test hybrid groups against the directory, the database and the mail server, which must support them too. Token signing will take the longest. It waits on a standard, so pressing the supplier for a date will achieve little. The time is better spent finding relying parties that reject unknown key types and flows that keep tokens in cookies. The cluster transport depends on a change in the product. Plain HTTP behind a proxy carries tokens in clear on the internal hop and should be closed first, because no post-quantum work protects traffic that is not encrypted at all. An inventory of the algorithms in use today yields none of these conclusions.</p>
+  <p>Without seeing inside the product, an operator reading the product record can conclude the following. No Keycloak interface can be made quantum-safe by configuration today. TLS key exchange arrives with the Java runtime, so the action is to track the runtime in the image and to test hybrid groups against the directory, the database and the mail server, which must support them too. Token signing will take the longest. It waits on a standard, so pressing the supplier for a date will achieve little. The time is better spent finding relying parties that reject unknown key types and flows that keep tokens in cookies. The cluster transport depends on a change in the product. Plain HTTP behind a proxy carries tokens in clear on the internal hop and should be closed first, because no post-quantum work protects traffic that is not encrypted at all. An inventory of the algorithms in use today yields none of these conclusions.</p>
 
   <h2>Keycloak under the extended profile</h2>
   <p>The baseline says what each interface could do. The extended profile asks whether the product around it can support the change. For Keycloak the answer is concentrated in one place: the Admin API, which generates and holds the realm keys every token interface signs with.</p>
@@ -401,13 +401,13 @@ nav: uc-pqc
       <tr><td><code>keyStoreLocation</code></td><td><code>software</code></td></tr>
       <tr><td><code>keyManagementFunction</code> on <code>tls-mgmt</code></td><td><code>none</code></td></tr>
       <tr><td><code>keyStoreRef</code></td><td><code>svc-oidc</code>, <code>svc-saml</code>: the Admin API. <code>tls-https</code> and the outbound TLS: <code>out-of-band</code>, because the keys arrive as files. <code>int-cache</code>: <code>product-managed</code>.</td></tr>
-      <tr><td><code>externalDependencies</code></td><td><code>tls-https</code>: <code>certificate-authority</code>. <code>int-ldap</code>: <code>directory</code>. <code>int-broker</code> and <code>svc-broker-tokens</code>: <code>identity-provider</code>. Token services: <code>none</code>.</td></tr>
+      <tr><td><code>externalDependencies</code></td><td><code>tls-https</code>: <code>certificate-authority</code>. <code>int-ldap</code>: <code>directory</code>. <code>int-broker</code> and <code>svc-broker-tokens</code>: <code>identity-provider</code>. The TLS interfaces and the OIDC token service also name <code>random-bit-generator</code>: the Java runtime draws its randomness from the operating system, which is outside the product image. Other token services: <code>none</code>.</td></tr>
       <tr><td>Storage</td><td><code>sto-realm-keys</code> declared, with <code>keyWrapping</code> <code>none</code></td></tr>
       <tr><td><code>productCertificationScheme</code></td><td><code>none</code> for the upstream project (to be verified)</td></tr>
     </tbody>
   </table>
   </div>
-  <p>The extended document adds three conclusions to the baseline's. When ML-DSA signing lands, the key management surface must be able to generate the key as well, and today it cannot. Every baseline rule passes, and yet the operator could not migrate. <code>pqc-migration-extended#I3</code> exists to catch this case. TLS migration cannot start until the operator's certificate authority can issue the new certificates, and the directory and identity providers have to follow. And the realm keys that sign every token sit unwrapped in the database, so a database backup is as sensitive as the signing service itself.</p>
+  <p>The extended document adds three conclusions to those PQC Migration supports. When ML-DSA signing lands, the key management surface must be able to generate the key as well, and today it cannot. Every PQC Migration rule passes, and yet the operator could not migrate. <code>pqc-migration-extended#I3</code> exists to catch this case. TLS migration cannot start until the operator's certificate authority can issue the new certificates, and the directory and identity providers have to follow. And the realm keys that sign every token sit unwrapped in the database, so a database backup is as sensitive as the signing service itself.</p>
 
   <h2>What the profiles deliberately exclude</h2>
   <p>The profile deliberately leaves out three kinds of information.</p>
@@ -477,7 +477,7 @@ nav: uc-pqc
   { "ref": "lib:keycloak-services", "provides": ["service:svc-oidc", "service:svc-saml",
                                                   "service:mgmt-admin", "service:svc-broker-tokens"] }
 ]</code></pre>
-  <p>Where an attribute is unavailable, the four disclosure outcomes apply. <code>none</code> is a value, not a marker: it states that no algorithm is applied for that job, as with Keycloak's unencrypted tokens.</p>
+  <p>Where an attribute is unavailable, the four disclosure states apply. <code>none</code> is a value, not a marker: it states that no algorithm is applied for that job, as with Keycloak's unencrypted tokens.</p>
 
   <h2>The example documents</h2>
   <p>The Keycloak product record makes the use case testable. The two failing migration examples each differ from it in one place, so each fails exactly one rule. The design record is different: it changes the stage of every interface and fails many rules. All are published under <a href="../methodology/files.html">Files</a>, and the verdicts come from the reference validator.</p>
@@ -492,49 +492,42 @@ nav: uc-pqc
   </table>
   <p>The rules files are <a href="../methodology/profile-pqc-migration.rules.json"><code>profile-pqc-migration.rules.json</code></a> and <a href="../methodology/profile-pqc-migration-extended.rules.json"><code>profile-pqc-migration-extended.rules.json</code></a>. The readiness-gap policy reads the same product record, joined to an operator's deployment records, and finds token signing <code>not-capable</code> and Keycloak's own TLS <code>not-capable</code>. Its result is <a href="../methodology/examples/results/result-readiness-gap-sso-prod.json"><code>result-readiness-gap-sso-prod.json</code></a>.</p>
 
-  <h2>Recorded decisions</h2>
-  <p>Several choices in these profiles were made against the more obvious alternative. Each is written up as a decision record in the repository, with the options considered, the rationale and what reversing it would involve. The records are authoritative. The summaries below are only for orientation.</p>
+  <h2>Design choices</h2>
+  <p>Several choices in these profiles were made against the more obvious alternative. The table states each choice and the methodology aspect it belongs to.</p>
   <table>
-    <thead><tr><th>Record</th><th>Decision</th><th>Aspect</th></tr></thead>
+    <thead><tr><th>Choice</th><th>Aspect</th></tr></thead>
     <tbody>
       <tr>
-        <td><a href="https://github.com/pkic/cbom/blob/main/decisions/0002-facts-in-cbom-judgements-in-policy.md">0002</a></td>
-        <td>Capability is stated as facts. The profile requires the algorithm sets an interface supports and does not ask whether they amount to being quantum-safe. That judgement is made by an external policy at the time of asking, for the reasons given in <a href="../methodology/policy-evaluation.html">Policy Evaluation</a>.</td>
+        <td><strong>Capability is stated as facts.</strong> The profile requires the algorithm sets an interface supports and does not ask whether they amount to being quantum-safe. That judgement is made by an external policy at the time of asking, for the reasons given in <a href="../methodology/policy-evaluation.html">Policy Evaluation</a>.</td>
         <td>3.3</td>
       </tr>
       <tr>
-        <td><a href="https://github.com/pkic/cbom/blob/main/decisions/0007-availability-as-status-and-blocker.md">0007</a></td>
-        <td>Availability is expressed as a status and a blocker. Dates and target releases sit in a referenced roadmap entry, away from the interface.</td>
+        <td><strong>Availability is expressed as a status and a blocker.</strong> Dates and target releases sit in a referenced roadmap entry, away from the interface.</td>
         <td>3.10</td>
       </tr>
           <tr>
-            <td><a href="https://github.com/pkic/cbom/blob/main/decisions/0010-cryptographic-purpose-vocabulary.md">0010</a></td>
             <td><strong>Capability is stated per cryptographic purpose.</strong> Capability status, blocker, roadmap reference and validated-mode availability are the four members of a purpose-keyed group rule (<code>G1</code>). An interface carries one entry for each of the seven purposes in the vocabulary, rather than one attribute per mechanism.</td>
             <td>3.7</td>
           </tr>
       <tr>
-        <td><a href="https://github.com/pkic/cbom/blob/main/decisions/0019-a-family-ordered-by-depth.md">0019</a></td>
         <td><strong>Adoption is staged by a family of profiles ordered by depth.</strong> The baseline and extended profiles are two depths of one family.</td>
         <td>3.9</td>
       </tr>
       <tr>
-        <td>0022</td>
-        <td><strong>The two depths, and how they meet a real product.</strong> Module validation and storage in the baseline; key management and dependencies in the extended profile; an interface is a logical boundary; application protocols are CycloneDX services; native fields first; implementation facts inherited from the providing library.</td>
+        <td><strong>The two depths, and how they meet a real product.</strong> Module validation and storage in PQC Migration; key management and dependencies in the extended profile; an interface is a logical boundary; application protocols are CycloneDX services; native fields first; implementation facts inherited from the providing library.</td>
         <td>3.9</td>
       </tr>
     </tbody>
   </table>
-  <p>The rules above also depend on decisions taken elsewhere in the methodology: <a href="https://github.com/pkic/cbom/blob/main/decisions/0004-monotonic-profile-extension.md">0004</a> for what this profile is permitted to change in the baseline it extends, and <a href="https://github.com/pkic/cbom/blob/main/decisions/0005-attribute-naming-conventions.md">0005</a> for the <code>Supported</code> suffix. The full index is in <a href="https://github.com/pkic/cbom/tree/main/decisions">decisions/</a>.</p>
 
-  <h2>Open questions for the working group</h2>
-  <p>These are also carried in the <a href="https://github.com/pkic/cbom/blob/main/open-questions.md">open questions register</a>, which collects the unresolved items from every section and maps each to the methodology aspect that tracks it.</p>
+  <h2>Points under discussion</h2>
   <ul>
-    <li>Whether raising <code>implementationPurl</code> to a non-withholdable MUST is acceptable to vendors. It is the one place where the baseline makes a rule of the interface profile it extends stricter.</li>
+    <li>Whether raising <code>implementationPurl</code> to a non-withholdable MUST is acceptable to vendors. It is the one place where PQC Migration makes a rule of the interface profile it extends stricter.</li>
     <li>Whether <code>enablementMethod</code> should be a single value or a set, since some capabilities need both an update and a configuration change.</li>
     <li>Whether <code>integrationConstraints</code> can be structured usefully or should remain prose.</li>
     <li>Whether an interface should be defined as a logical boundary rather than a port. Keycloak needs it, because its token signatures and its TLS migrate separately, but it means one port can carry several interfaces.</li>
     <li>Whether implementation facts stated on a library and inherited by interfaces make a document harder to read than they make it shorter. Keycloak's document halves in size, but a reader has to resolve the inheritance to see an interface's full answer.</li>
-    <li>Whether a CBOM should carry forward-looking data at all (Q26). This one is a substantive disagreement, not a detail to be tidied up. A procurement profile has a defensible claim on it. A runtime assurance profile arguably has none. Stating capability on library components as well as interfaces widens where the question applies.</li>
+    <li>Whether a CBOM should carry forward-looking data at all. This one is a substantive disagreement, not a detail to be tidied up. A procurement profile has a defensible claim on it. A runtime assurance profile arguably has none. Stating capability on library components as well as interfaces widens where the question applies.</li>
     <li>How the family relates to a sector baseline. A telecommunications or finance profile would most likely add required interface types and constrain the acceptable algorithm sets, leaving the attribute list intact.</li>
   </ul>
 

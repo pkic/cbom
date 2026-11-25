@@ -1,0 +1,123 @@
+{
+  "$comment": "DRAFT. A depth on Service Disclosure, Restricted, for a customer whose main concern is stored data. On every storage interface it asks which key service holds the keys, whether backups and replicas are protected as the live data is, and the key service's module validation. The algorithms that wrap the data keys are already required by the baseline (keyWrapping).",
+  "profileId": "pkic.example.service-key-custody",
+  "profileTag": "service-key-custody",
+  "title": "Service Key Custody (Example, draft)",
+  "version": "0.1-draft",
+  "objective": {
+    "consumer": "A customer under agreement whose main concern is the data it stores in the service",
+    "decision": "Which custody model to use for which data, and whether to place a data set in the service at all",
+    "decisionOptions": [
+      "place the data under the default custody",
+      "place it under another custody model",
+      "do not place it in the service"
+    ]
+  },
+  "scope": {
+    "subjectTypes": [
+      "service"
+    ],
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "configured",
+      "observed"
+    ]
+  },
+  "extends": {
+    "profileId": "pkic.example.service-disclosure-restricted",
+    "version": "0.1",
+    "file": "../../docs/methodology/profile-service-disclosure-restricted.rules.json"
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "replicaProtectionVocabulary": [
+    "same-as-primary",
+    "differs-from-primary",
+    "no-replicas"
+  ],
+  "moduleValidationSchemeVocabulary": [
+    "fips-140-2",
+    "fips-140-3",
+    "iso-19790",
+    "national-crypto-approval",
+    "none"
+  ],
+  "productRules": [],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "keyStoreRef",
+      "level": "MUST",
+      "constraint": {
+        "refersToLocal": {
+          "literals": [
+            "none",
+            "out-of-band",
+            "product-managed"
+          ],
+          "orCited": true
+        }
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "note": "The interface of the key service that holds the keys protecting this store: a component of the same record, or a BOM-Link to one in a record this document cites. 'out-of-band' where the keys are held outside any record, such as the tenant's own key service; 'none' where no key service is involved. The literals are those of PQC Migration Extended I8 (R2-22)."
+    },
+    {
+      "id": "I2",
+      "attribute": "replicaProtection",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "replicaProtectionVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "note": "Whether backups and copies replicated between regions use the same custody and wrapping as the live data."
+    },
+    {
+      "id": "I3",
+      "attribute": "moduleValidationScheme",
+      "level": "SHOULD",
+      "constraint": {
+        "enumRef": "moduleValidationSchemeVocabulary"
+      },
+      "withholdable": true,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "note": "The validation of the module that holds the keys, with the vocabulary of PQC Migration."
+    }
+  ],
+  "referenceRules": [],
+  "exclusions": [
+    {
+      "item": "How long the stored data must stay confidential",
+      "reason": "The customer's fact. It belongs in the customer's data register, linked from the tenant record."
+    }
+  ],
+  "artifacts": {
+    "conformingExample": "examples/cbom-keycloak-service-key-custody.cdx.json",
+    "nonConformingExample": "examples/cbom-keycloak-service-key-custody-fail-replica.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1-draft",
+      "date": "2026-11-18",
+      "summary": "First draft, built on Keycloak run as a managed service.",
+      "changes": []
+    }
+  ]
+}

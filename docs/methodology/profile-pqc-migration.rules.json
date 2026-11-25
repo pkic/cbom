@@ -36,7 +36,7 @@
   },
   "extends": {
     "profileId": "pkic.example.interface-disclosure",
-    "version": "0.9",
+    "version": "0.10",
     "file": "profile-interface-disclosure.rules.json"
   },
   "appliesTo": {
@@ -269,6 +269,37 @@
       },
       "schemeRef": "algorithm",
       "note": "Added in v0.7. Capability counterpart of the base's keyWrapping (interface-disclosure#I10): the wrapping algorithms the storage path can be configured to use. It sits beside the other Supported attributes. Declaring storage interfaces at all is required only at the extended depth; once one is declared, it is described in full at every depth."
+    },
+    {
+      "id": "I17",
+      "attribute": "certificationImpact",
+      "level": "SHOULD",
+      "constraint": {
+        "enumRef": "certificationImpactVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "notEquals": "peer"
+      },
+      "note": "Added in R2-23. What enabling the post-quantum capability this interface states would trigger in testing or certification of this subject: none, a re-test, or re-certification. 'not-applicable' where no capability is planned. The supplier knows its certificates. Shared with the sibling profile under the same id."
+    },
+    {
+      "id": "I18",
+      "attribute": "certificationScheme",
+      "level": "SHOULD",
+      "constraint": {
+        "present": true
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "certificationImpact",
+        "in": [
+          "retest",
+          "recertification"
+        ]
+      },
+      "note": "Added in R2-23. The scheme the re-test or re-certification falls under, such as FIPS 140-3, Common Criteria, PCI PTS, NESAS, FedRAMP or IEC 62443-4-2. In CycloneDX 2.0 it maps to certifications. Shared with the sibling profile under the same id."
     }
   ],
   "groupRules": [
@@ -515,6 +546,10 @@
         {
           "kind": "editorial",
           "summary": "Added reference rule R2 (roadmap) at SHOULD."
+        },
+        {
+          "kind": "editorial",
+          "summary": "Adds I17 certificationImpact and I18 certificationScheme at SHOULD, shared with change-core under the same ids (R2-23). The vocabulary moves here from the substation component profile. A SHOULD rule changes no verdict."
         }
       ]
     }
@@ -558,5 +593,11 @@
       "orDeclaredAbsent": "contextAbsenceVocabulary",
       "note": "The supplier's own roadmap for post-quantum capability. The record states each purpose's capability as a status and a blocker, never a date (decision 0007). A roadmap is where a supplier may name target releases and dependencies; the record points to it and does not evaluate it. A per-purpose roadmapRef may point into the same document or to the tracking item."
     }
+  ],
+  "certificationImpactVocabulary": [
+    "none",
+    "retest",
+    "recertification",
+    "not-applicable"
   ]
 }

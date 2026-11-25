@@ -1,0 +1,921 @@
+{
+  "product": "Keycloak",
+  "version": "26.7.3",
+  "cryptographic_libraries": [
+    {
+      "library_id": "lib-openjdk-21",
+      "name": "OpenJDK 21 security providers (SunJSSE, SunJCE, SunEC, SunRsaSign)",
+      "version": "21 (java-21-openjdk from the UBI 9 micro base image; update level from the image manifest, VERIFY)",
+      "os": "Linux x86_64 (UBI 9 micro container image)",
+      "security_provider": "SunJSSE",
+      "algorithms": [
+        {
+          "type": "key-exchange",
+          "name": "X25519",
+          "standard_ref": "RFC 7748"
+        },
+        {
+          "type": "key-exchange",
+          "name": "X448",
+          "standard_ref": "RFC 7748"
+        },
+        {
+          "type": "key-exchange",
+          "name": "ECDH",
+          "min_key_size": 256,
+          "standard_ref": "SP 800-56A",
+          "modes": [
+            "P-256",
+            "P-384",
+            "P-521"
+          ]
+        },
+        {
+          "type": "key-exchange",
+          "name": "FFDHE",
+          "min_key_size": 2048,
+          "standard_ref": "RFC 7919",
+          "modes": [
+            "ffdhe2048",
+            "ffdhe3072",
+            "ffdhe4096",
+            "ffdhe6144",
+            "ffdhe8192"
+          ]
+        },
+        {
+          "type": "pke",
+          "name": "RSA-OAEP",
+          "min_key_size": 2048,
+          "standard_ref": "RFC 8017",
+          "modes": [
+            "SHA-1",
+            "SHA-256"
+          ]
+        },
+        {
+          "type": "signature",
+          "name": "RSASSA-PKCS1-v1_5",
+          "min_key_size": 2048,
+          "standard_ref": "RFC 8017",
+          "modes": [
+            "SHA-256",
+            "SHA-384",
+            "SHA-512"
+          ]
+        },
+        {
+          "type": "signature",
+          "name": "RSASSA-PSS",
+          "min_key_size": 2048,
+          "standard_ref": "RFC 8017",
+          "modes": [
+            "SHA-256",
+            "SHA-384",
+            "SHA-512"
+          ]
+        },
+        {
+          "type": "signature",
+          "name": "ECDSA",
+          "min_key_size": 256,
+          "standard_ref": "FIPS 186-5",
+          "modes": [
+            "P-256",
+            "P-384",
+            "P-521"
+          ]
+        },
+        {
+          "type": "signature",
+          "name": "EdDSA",
+          "standard_ref": "RFC 8032",
+          "modes": [
+            "Ed25519",
+            "Ed448"
+          ]
+        },
+        {
+          "type": "encryption",
+          "name": "AES-GCM",
+          "min_key_size": 128,
+          "standard_ref": "FIPS 197 / SP 800-38D",
+          "modes": [
+            "GCM"
+          ]
+        },
+        {
+          "type": "encryption",
+          "name": "ChaCha20-Poly1305",
+          "min_key_size": 256,
+          "standard_ref": "RFC 8439"
+        },
+        {
+          "type": "mac",
+          "name": "HMAC",
+          "standard_ref": "FIPS 198-1",
+          "modes": [
+            "SHA-256",
+            "SHA-384",
+            "SHA-512"
+          ]
+        },
+        {
+          "type": "hash",
+          "name": "SHA-2",
+          "standard_ref": "FIPS 180-4",
+          "modes": [
+            "SHA-256",
+            "SHA-384",
+            "SHA-512"
+          ]
+        }
+      ],
+      "notes": "Default providers in the image. Not a validated module. ML-KEM and ML-DSA are not in the JDK 21 providers; hybrid ML-KEM TLS groups ship in JDK 27 and backports to JDK 21 have been announced (JEP 527), VERIFY for the Red Hat build in the image."
+    },
+    {
+      "library_id": "lib-bcfips-2.1",
+      "name": "Bouncy Castle FIPS Java API (bc-fips, bctls-fips, bcpkix-fips, bcutil-fips)",
+      "version": "bc-fips 2.1.2, bctls-fips 2.1.22, bcpkix-fips 2.1.10, bcutil-fips 2.1.5 (as named in Keycloak's FIPS guide)",
+      "os": "Linux x86_64 (UBI 9 micro container image)",
+      "security_provider": "BCFIPS / BCJSSE",
+      "fips_140": {
+        "standard": "FIPS-140-3",
+        "level": 1,
+        "cmvp_certificate_url": "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4943",
+        "notes": "The CMVP page for #4943 (checked 11 November 2026, last updated 10 November 2026) lists software version 2.1.1 and a sunset date of 16 January 2030. #4743 (FIPS 140-3, sunset 28 July 2029) covers 2.0.x. Keycloak's guide names bc-fips 2.1.2, which is not on the certificate: VERIFY which version an operator should install."
+      },
+      "notes": "Not shipped in the image. The operator adds the jars to the providers directory and starts Keycloak with --features=fips. Algorithms available in approved mode are those in the module's security policy, not restated here."
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "HTTPS listener (OIDC, OAuth 2.0, SAML 2.0, Account console, Admin console and Admin REST API)",
+      "type": "listener",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 8443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.3",
+          "TLS 1.2"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256",
+          "TLS_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256"
+        ],
+        "key_exchange_groups": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "ffdhe3072",
+          "ffdhe4096",
+          "ffdhe6144",
+          "ffdhe8192"
+        ],
+        "signature_algorithms": [
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ecdsa_secp521r1_sha512",
+          "ed25519",
+          "ed448",
+          "rsa_pss_rsae_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "rsa_pss_pss_sha256",
+          "rsa_pss_pss_sha384",
+          "rsa_pss_pss_sha512",
+          "rsa_pkcs1_sha256",
+          "rsa_pkcs1_sha384",
+          "rsa_pkcs1_sha512"
+        ],
+        "features": [
+          "SNI",
+          "ALPN",
+          "session-resumption",
+          "perfect-forward-secrecy"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "security_provider": "SunJSSE",
+          "cryptographic_library": "OpenJDK 21 providers (SunJSSE, SunJCE, SunEC, SunRsaSign)",
+          "cryptographic_library_ref": "lib-openjdk-21"
+        }
+      ],
+      "notes": "https-protocols defaults to TLSv1.3,TLSv1.2. https-cipher-suites has no fixed default ('a reasonable default is selected'); the suites and groups listed are the JDK defaults, VERIFY against the Quarkus/Vert.x selection; the plain JDK 21 default also enables DHE and CBC suites, which are not listed. The server key and certificate are supplied by the operator as PEM files (https-certificate-file, https-certificate-key-file) or a keystore (https-key-store-file, PKCS#12 or JKS); there is no product tool for them, so signature_algorithms depend on that certificate. Client-certificate authentication is off by default (https-client-auth). This listener also carries application-layer cryptography that transport_security cannot express: signed and optionally encrypted OIDC tokens and signed SAML assertions (see the 'Token signing and encryption' control), and administrator access by realm-issued tokens."
+    },
+    {
+      "name": "HTTP listener (plaintext)",
+      "type": "listener",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "HTTP",
+          "port": 8080
+        }
+      ],
+      "transport_security": {
+        "protocol": "none",
+        "supported_versions": []
+      },
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "security_provider": "SunJSSE",
+          "cryptographic_library": "OpenJDK 21 providers (SunJSSE, SunJCE, SunEC, SunRsaSign)",
+          "cryptographic_library_ref": "lib-openjdk-21"
+        }
+      ],
+      "notes": "Disabled by default in production mode; enabled with http-enabled=true. The usual configuration behind a TLS-terminating proxy, where tokens and credentials cross the internal hop in clear."
+    },
+    {
+      "name": "Management interface (health and metrics)",
+      "type": "listener",
+      "network_plane": "management-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 9000
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.3",
+          "TLS 1.2"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256",
+          "TLS_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256"
+        ],
+        "key_exchange_groups": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "ffdhe3072",
+          "ffdhe4096",
+          "ffdhe6144",
+          "ffdhe8192"
+        ],
+        "signature_algorithms": [
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ecdsa_secp521r1_sha512",
+          "ed25519",
+          "ed448",
+          "rsa_pss_rsae_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "rsa_pss_pss_sha256",
+          "rsa_pss_pss_sha384",
+          "rsa_pss_pss_sha512",
+          "rsa_pkcs1_sha256",
+          "rsa_pkcs1_sha384",
+          "rsa_pkcs1_sha512"
+        ],
+        "features": [
+          "SNI",
+          "perfect-forward-secrecy"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "security_provider": "SunJSSE",
+          "cryptographic_library": "OpenJDK 21 providers (SunJSSE, SunJCE, SunEC, SunRsaSign)",
+          "cryptographic_library_ref": "lib-openjdk-21"
+        }
+      ],
+      "notes": "Serves /health and /metrics only; the Admin Console and Admin REST API are on the main listener. http-management-scheme defaults to 'inherited', so the interface uses the main listener's TLS settings and certificate unless https-management-* options override them. No key or configuration functions."
+    },
+    {
+      "name": "Database connection (JDBC)",
+      "type": "client",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "PostgreSQL wire protocol (JDBC)",
+          "port": 5432
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.3",
+          "TLS 1.2"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256",
+          "TLS_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256"
+        ],
+        "key_exchange_groups": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "ffdhe3072",
+          "ffdhe4096",
+          "ffdhe6144",
+          "ffdhe8192"
+        ],
+        "signature_algorithms": [
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ecdsa_secp521r1_sha512",
+          "ed25519",
+          "ed448",
+          "rsa_pss_rsae_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "rsa_pss_pss_sha256",
+          "rsa_pss_pss_sha384",
+          "rsa_pss_pss_sha512",
+          "rsa_pkcs1_sha256",
+          "rsa_pkcs1_sha384",
+          "rsa_pkcs1_sha512"
+        ],
+        "features": [
+          "perfect-forward-secrecy"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "security_provider": "SunJSSE",
+          "cryptographic_library": "OpenJDK 21 providers (SunJSSE, SunJCE, SunEC, SunRsaSign)",
+          "cryptographic_library_ref": "lib-openjdk-21"
+        }
+      ],
+      "notes": "Driver-dependent. TLS and certificate verification are set in the JDBC URL (db-url); for PostgreSQL the driver default is opportunistic TLS without verification, VERIFY for the driver in 26.7.3. The database holds realm key material and the cluster mTLS key (see the storage notes under 'Token signing and encryption')."
+    },
+    {
+      "name": "User federation (LDAP / Active Directory)",
+      "type": "client",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "LDAPS",
+          "port": 636
+        },
+        {
+          "name": "LDAP with StartTLS",
+          "port": 389
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.3",
+          "TLS 1.2"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256",
+          "TLS_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256"
+        ],
+        "key_exchange_groups": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "ffdhe3072",
+          "ffdhe4096",
+          "ffdhe6144",
+          "ffdhe8192"
+        ],
+        "signature_algorithms": [
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ecdsa_secp521r1_sha512",
+          "ed25519",
+          "ed448",
+          "rsa_pss_rsae_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "rsa_pss_pss_sha256",
+          "rsa_pss_pss_sha384",
+          "rsa_pss_pss_sha512",
+          "rsa_pkcs1_sha256",
+          "rsa_pkcs1_sha384",
+          "rsa_pkcs1_sha512"
+        ],
+        "features": [
+          "perfect-forward-secrecy"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "security_provider": "SunJSSE",
+          "cryptographic_library": "OpenJDK 21 providers (SunJSSE, SunJCE, SunEC, SunRsaSign)",
+          "cryptographic_library_ref": "lib-openjdk-21"
+        }
+      ],
+      "notes": "Optional; configured per realm. Uses the JDK truststore or the Keycloak truststore (truststore-paths)."
+    },
+    {
+      "name": "Identity brokering and outbound HTTPS (external OIDC and SAML providers, client JWKS, back-channel requests)",
+      "type": "client",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "HTTPS",
+          "port": 443
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.3",
+          "TLS 1.2"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256",
+          "TLS_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256"
+        ],
+        "key_exchange_groups": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "ffdhe3072",
+          "ffdhe4096",
+          "ffdhe6144",
+          "ffdhe8192"
+        ],
+        "signature_algorithms": [
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ecdsa_secp521r1_sha512",
+          "ed25519",
+          "ed448",
+          "rsa_pss_rsae_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "rsa_pss_pss_sha256",
+          "rsa_pss_pss_sha384",
+          "rsa_pss_pss_sha512",
+          "rsa_pkcs1_sha256",
+          "rsa_pkcs1_sha384",
+          "rsa_pkcs1_sha512"
+        ],
+        "features": [
+          "SNI",
+          "perfect-forward-secrecy"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "security_provider": "SunJSSE",
+          "cryptographic_library": "OpenJDK 21 providers (SunJSSE, SunJCE, SunEC, SunRsaSign)",
+          "cryptographic_library_ref": "lib-openjdk-21"
+        }
+      ],
+      "notes": "Keycloak verifies external providers' token and assertion signatures and fetches client JWKS for signed client authentication. That verification is application-layer cryptography and is not expressed by transport_security."
+    },
+    {
+      "name": "Email (SMTP)",
+      "type": "client",
+      "network_plane": "data-plane",
+      "application_protocols": [
+        {
+          "name": "SMTP with StartTLS",
+          "port": 587
+        },
+        {
+          "name": "SMTPS",
+          "port": 465
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.3",
+          "TLS 1.2"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256",
+          "TLS_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+          "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256"
+        ],
+        "key_exchange_groups": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "ffdhe3072",
+          "ffdhe4096",
+          "ffdhe6144",
+          "ffdhe8192"
+        ],
+        "signature_algorithms": [
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ecdsa_secp521r1_sha512",
+          "ed25519",
+          "ed448",
+          "rsa_pss_rsae_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "rsa_pss_pss_sha256",
+          "rsa_pss_pss_sha384",
+          "rsa_pss_pss_sha512",
+          "rsa_pkcs1_sha256",
+          "rsa_pkcs1_sha384",
+          "rsa_pkcs1_sha512"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "security_provider": "SunJSSE",
+          "cryptographic_library": "OpenJDK 21 providers (SunJSSE, SunJCE, SunEC, SunRsaSign)",
+          "cryptographic_library_ref": "lib-openjdk-21"
+        }
+      ],
+      "notes": "Optional; configured per realm (StartTLS or SSL). The SMTP password may be held in the vault SPI."
+    },
+    {
+      "name": "Cluster transport (Infinispan / JGroups)",
+      "type": "peer",
+      "network_plane": "control-plane",
+      "application_protocols": [
+        {
+          "name": "JGroups TCP",
+          "port": 7800
+        }
+      ],
+      "transport_security": {
+        "protocol": "TLS",
+        "supported_versions": [
+          "TLS 1.3"
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256",
+          "TLS_CHACHA20_POLY1305_SHA256"
+        ],
+        "key_exchange_groups": [
+          "x25519",
+          "secp256r1",
+          "secp384r1",
+          "secp521r1",
+          "x448",
+          "ffdhe2048",
+          "ffdhe3072",
+          "ffdhe4096",
+          "ffdhe6144",
+          "ffdhe8192"
+        ],
+        "signature_algorithms": [
+          "rsa_pss_rsae_sha256",
+          "rsa_pkcs1_sha256"
+        ],
+        "features": [
+          "mutual-auth",
+          "perfect-forward-secrecy"
+        ]
+      },
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "security_provider": "SunJSSE",
+          "cryptographic_library": "OpenJDK 21 providers (SunJSSE, SunJCE, SunEC, SunRsaSign)",
+          "cryptographic_library_ref": "lib-openjdk-21"
+        }
+      ],
+      "notes": "mTLS is on by default for the TCP stack (cache-embedded-mtls-enabled=true). Keycloak generates a self-signed RSA-2048 certificate, stores key and certificate in the database, and rotates it every 30 days (cache-embedded-mtls-rotation-interval-days). No operator tool manages this key and its type is fixed by the product. The signature_algorithms listed are those usable with an RSA-2048 key, VERIFY."
+    }
+  ],
+  "key_management_interfaces": [
+    {
+      "name": "Realm key providers (Admin REST API; clients: Admin Console, kcadm.sh)",
+      "interface_type": "API",
+      "store_type": "keystore",
+      "supported_formats": [
+        "PEM",
+        "PKCS#12",
+        "JKS",
+        "BCFKS"
+      ],
+      "key_operations": [
+        "generate",
+        "import",
+        "export",
+        "store",
+        "delete"
+      ],
+      "key_entry_method": "direct",
+      "platforms": [
+        "Linux x86_64 (UBI 9 micro container image)"
+      ],
+      "notes": "One surface with two clients. Providers: rsa-generated (RS256/384/512, PS256/384/512; 1024, 2048 default, 4096), rsa-enc-generated (RSA1_5, RSA-OAEP, RSA-OAEP-256), ecdsa-generated (ES256/384/512; P-256 default, P-384, P-521), ecdh-generated (ECDH-ES and ECDH-ES+AnKW), eddsa-generated (Ed25519 default, Ed448), hmac-generated (HS256/384/512), aes-generated, rsa and rsa-enc (imported PEM), java-keystore (JKS or PKCS#12; BCFKS in FIPS mode). A new realm gets rsa-generated (RS256, 2048), rsa-enc-generated (RSA-OAEP), hmac-generated (HS512) and aes-generated. 'export' covers public keys and certificates only. Rotation is by adding a provider and changing priority. No ML-DSA or ML-KEM provider exists; ML-DSA signing is tracked in epic #43690 (milestone 27.0). Key material is persisted in the database in plaintext (#39933, open)."
+    }
+  ],
+  "security_controls": [
+    {
+      "name": "Token signing and encryption",
+      "control_type": "payload_protection",
+      "governing_parameters": [
+        "defaultSignatureAlgorithm (realm; default RS256)",
+        "realm key providers (see key management)",
+        "id.token.encrypted.response.alg (client; unset by default)",
+        "sslRequired (realm; default external)"
+      ],
+      "external_dependencies": [],
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "status": "enforced"
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "required",
+          "protocol_used": "TLS 1.3 / TLS 1.2",
+          "hardening_parameters": [
+            "sslRequired=external (default): HTTPS required except from private addresses"
+          ]
+        },
+        "secret_protection": {
+          "status": "disabled",
+          "protection_method": "plaintext",
+          "hardening_parameters": [
+            "Realm key material stored in the database in plaintext; encryption requested in #39933 (open). The vault SPI covers configuration secrets such as SMTP and LDAP bind passwords, not realm keys."
+          ]
+        },
+        "data_at_rest_protection": {
+          "status": "not-applicable"
+        }
+      },
+      "notes": "Keycloak's main cryptographic output. ID and access tokens are JWS-signed with the realm's active key (RS256 by default); SAML assertions and documents are signed (RSA-SHA256 by default). Token encryption (JWE, RSA-OAEP or ECDH-ES key management) is off unless a client requests it. Relying parties verify these signatures, so this is the most widely depended-on cryptography in the product."
+    },
+    {
+      "name": "Cluster transport mTLS",
+      "control_type": "transport_security_policy",
+      "governing_parameters": [
+        "cache-embedded-mtls-enabled=true",
+        "cache-embedded-mtls-rotation-interval-days=30",
+        "cache-embedded-network-bind-port=7800"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "status": "enabled"
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "enabled",
+          "protocol_used": "TLS 1.3"
+        },
+        "roles": [
+          {
+            "name": "Cluster node",
+            "authentication_method": "certificate",
+            "authentication_algorithm": "RSA-2048 (self-signed, product-generated)"
+          }
+        ],
+        "secret_protection": {
+          "status": "disabled",
+          "protection_method": "plaintext",
+          "hardening_parameters": [
+            "Key and certificate stored in the database; protection at rest not documented, VERIFY"
+          ]
+        }
+      },
+      "notes": "Keys are created and rotated by the product; no operator surface."
+    },
+    {
+      "name": "Database connection security",
+      "control_type": "transport_security_policy",
+      "governing_parameters": [
+        "db-url (TLS mode set in the JDBC URL)",
+        "db-password",
+        "config-keystore (optional encrypted store for configuration secrets)"
+      ],
+      "external_dependencies": [
+        "Database server"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "status": "optional"
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "supported-not-enabled",
+          "protocol_used": "TLS 1.3 / TLS 1.2",
+          "hardening_parameters": [
+            "Verified TLS requires an explicit JDBC URL setting such as sslmode=verify-full"
+          ]
+        },
+        "secret_protection": {
+          "status": "supported-not-enabled",
+          "protection_method": "plaintext",
+          "hardening_parameters": [
+            "db-password is read from options, environment or the optional config keystore"
+          ]
+        },
+        "data_at_rest_protection": {
+          "status": "disabled",
+          "hardening_parameters": [
+            "Keycloak does not encrypt database contents; storage encryption is the database's or the disk's"
+          ]
+        }
+      }
+    },
+    {
+      "name": "FIPS 140 mode",
+      "control_type": "fips_policy",
+      "governing_parameters": [
+        "features=fips",
+        "fips-mode=non-strict (default when FIPS is enabled) | strict"
+      ],
+      "external_dependencies": [
+        "org.bouncycastle:bc-fips",
+        "org.bouncycastle:bctls-fips",
+        "org.bouncycastle:bcpkix-fips",
+        "org.bouncycastle:bcutil-fips"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "status": "optional",
+          "fips_140": {
+            "standard": "FIPS-140-3",
+            "level": 1,
+            "cmvp_certificate_url": "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4943",
+            "notes": "See lib-bcfips-2.1: #4943 lists 2.1.1; Keycloak names 2.1.2, VERIFY."
+          }
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "required",
+          "protocol_used": "TLS 1.3 / TLS 1.2"
+        },
+        "secret_protection": {
+          "status": "not-applicable",
+          "protection_method": "none"
+        }
+      },
+      "notes": "Opt-in. Strict mode requires BCFKS keystores; PKCS#12 keystores in FIPS mode do not hold secret keys."
+    },
+    {
+      "name": "Password credential hashing",
+      "control_type": "authentication_policy",
+      "governing_parameters": [
+        "passwordPolicy hashAlgorithm (default argon2 outside FIPS mode, pbkdf2-sha512 in FIPS mode), VERIFY",
+        "passwordPolicy hashIterations"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "status": "enforced"
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "not-applicable",
+          "protocol_used": "none"
+        },
+        "secret_protection": {
+          "status": "enabled",
+          "protection_method": "encrypted-at-rest",
+          "hardening_parameters": [
+            "Passwords are stored as salted hashes, not encrypted; the enum has no value for hashing"
+          ]
+        }
+      },
+      "notes": "Internal operation, not reachable at an interface. Recorded for completeness."
+    },
+    {
+      "name": "Brute-force detection",
+      "control_type": "intrusion_detection_policy",
+      "governing_parameters": [
+        "bruteForceProtected=false (default)",
+        "failureFactor=30",
+        "waitIncrementSeconds=60",
+        "minimumQuickLoginWaitSeconds=60",
+        "maxFailureWaitSeconds=900",
+        "maxDeltaTimeSeconds=43200"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "status": "optional"
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "not-applicable",
+          "protocol_used": "none"
+        },
+        "secret_protection": {
+          "status": "not-applicable",
+          "protection_method": "none"
+        }
+      },
+      "notes": "Realm defaults. Not a cryptographic control."
+    },
+    {
+      "name": "Event auditing",
+      "control_type": "audit_logging_policy",
+      "governing_parameters": [
+        "eventsEnabled=false (default)",
+        "adminEventsEnabled=false (default)",
+        "eventsListeners=jboss-logging"
+      ],
+      "platforms": [
+        {
+          "os": "Linux x86_64 (UBI 9 micro container image)",
+          "status": "optional"
+        }
+      ],
+      "protection_mechanism": {
+        "transport_protection": {
+          "status": "not-applicable",
+          "protocol_used": "none"
+        },
+        "secret_protection": {
+          "status": "not-applicable",
+          "protection_method": "none"
+        }
+      },
+      "notes": "Realm defaults. Events are logged locally; forwarding to a SIEM is a deployment choice."
+    }
+  ],
+  "metadata": {
+    "created": "2026-09-27T01:50:00Z",
+    "last_updated": "2026-11-11T23:30:00Z",
+    "author": "Security Engineering; corrected for the PKIC CBOM Profiles WG worked example",
+    "generation_method": "manual",
+    "information_source": "documentation",
+    "lifecycle_stage": "release",
+    "schema_version": "1.0.0"
+  }
+}
