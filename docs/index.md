@@ -65,6 +65,37 @@ title: Overview
   </div>
 </section>
 
+<section class="wrap cards-section">
+  <div class="section-head">
+    <h2>Application domain documents</h2>
+    <p>Drafts that apply the methodology to one sector each. Each can be downloaded as a Word document.</p>
+  </div>
+  <div class="card-grid">
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Application-domain-Operational-technology.docx' | relative_url }}" download>
+      <span class="card-kicker">Working Draft 0.2</span>
+      <h3>Operational technology</h3>
+      <p>What is specific to industrial control and substation automation: system records,
+         certification impact, firmware and long equipment lifetimes, and the OT protocols
+         that profiles need to cover.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Application-domain-Telecommunications.docx' | relative_url }}" download>
+      <span class="card-kicker">Working Draft 0.1</span>
+      <h3>Telecommunications</h3>
+      <p>How the methodology applies to operator networks, network equipment vendors and
+         regulators, building on the existing paper CBOM for Telecommunications v1.0.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Application-domain-SaaS-and-cloud-services.docx' | relative_url }}" download>
+      <span class="card-kicker">Working Draft 0.1</span>
+      <h3>SaaS and cloud services</h3>
+      <p>How a customer can obtain cryptographic facts about a service that it does not operate,
+         including service records, key custody and shared tenancy.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
+  </div>
+</section>
+
 <section class="band">
   <div class="wrap">
     <div class="section-head">
