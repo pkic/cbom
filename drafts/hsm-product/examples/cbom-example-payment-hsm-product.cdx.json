@@ -1,0 +1,1075 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "Illustrative example for the draft HSM Product and HSM Key Hierarchy profiles. The HSM, its vendor and every value are invented. Built by drafts/hsm-product/build.py.",
+  "serialNumber": "urn:uuid:7e5a0000-0000-4000-8000-00000000a000",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-26T12:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "PKIC CBOM Profiles WG worked-example builder",
+          "version": "0.1"
+        }
+      ]
+    },
+    "supplier": {
+      "name": "Example HSM Vendor (illustrative)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "device",
+        "bom-ref": "device:example-payment-hsm",
+        "name": "Example Payment HSM 9000",
+        "version": "4.2.0",
+        "description": "Illustrative payment HSM, firmware 4.2.0, as shipped.",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "product"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          },
+          {
+            "name": "pkic:profile:productCertificationScheme",
+            "value": "none"
+          },
+          {
+            "name": "pkic:profile:hsmApproval",
+            "value": "pci-pts-hsm"
+          },
+          {
+            "name": "pkic:profile:hsmApprovalRef",
+            "value": "illustrative: PCI PTS HSM approval 0-00000"
+          },
+          {
+            "name": "pkic:profile:contextAbsent:support-lifecycle",
+            "value": "not-published"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:generic/example-hsm-vendor/payment-hsm-9000@4.2.0"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example HSM Vendor (illustrative)"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:hsm-firmware",
+          "name": "Payment HSM 9000 cryptographic firmware",
+          "version": "4.2.0",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/example-hsm-vendor/payment-hsm-9000-firmware@4.2.0"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:svc-host-commands",
+          "name": "Host command interface (mutually authenticated TLS)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:payment-application"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:hsm"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDHE-secp384r1"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P-384-SHA-384"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.2"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDHE-secp256r1"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDHE-secp384r1"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ECDSA-P-256-SHA-256"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ECDSA-P-384-SHA-384"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "RSA-PSS-SHA-256"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Client certificates and groups are set in the HSM's security settings"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Hybrid ML-KEM key exchange is committed for firmware 5.0; ML-DSA client certificates wait for FIPS 140-3 validation of the new firmware"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "service:sto-key-db"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "software-update"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "5.0"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:coexistence",
+              "value": "simultaneous"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "illustrative: FIPS 140-3 certificate #0000"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3 and PCI PTS HSM"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "committed"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "certification"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "certification"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:mgmt-console",
+          "name": "Management console and key custodian smart cards",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:endpointRole:administrator",
+              "value": "endpoint:security-officer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:hsm"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDHE-secp384r1"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P-384-SHA-384"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDHE-secp384r1"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ECDSA-P-384-SHA-384"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Fixed by the firmware"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Key ceremonies need a quorum of custodian smart cards"
+            },
+            {
+              "name": "pkic:profile:keyManagementFunction",
+              "value": "keys-and-certificates"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "generate"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "import"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "export"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "wrap"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "unwrap"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "derive"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "delete"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "zeroize"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "TDEA-3KEY"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "AES-128"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "RSA-2048"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "RSA-4096"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ECDSA-P256"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ECDSA-P384"
+            },
+            {
+              "name": "pkic:profile:keyTypes",
+              "value": "TDEA-3KEY"
+            },
+            {
+              "name": "pkic:profile:keyTypes",
+              "value": "AES-128"
+            },
+            {
+              "name": "pkic:profile:keyTypes",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:keyTypes",
+              "value": "RSA-2048"
+            },
+            {
+              "name": "pkic:profile:keyTypes",
+              "value": "ECDSA-P384"
+            },
+            {
+              "name": "pkic:profile:keyStoreFormatsSupported",
+              "value": "token-native"
+            },
+            {
+              "name": "pkic:profile:keyStoreFormatsSupported",
+              "value": "other"
+            },
+            {
+              "name": "pkic:profile:keyStoreFormats",
+              "value": "token-native"
+            },
+            {
+              "name": "pkic:profile:keyStoreLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:keyBlockFormatsSupported",
+              "value": "x9.143"
+            },
+            {
+              "name": "pkic:profile:keyBlockFormatsSupported",
+              "value": "tr-31"
+            },
+            {
+              "name": "pkic:profile:keyBlockFormatsSupported",
+              "value": "iso-20038"
+            },
+            {
+              "name": "pkic:profile:keyBlockFormats",
+              "value": "x9.143"
+            },
+            {
+              "name": "pkic:profile:keyBlockFormats",
+              "value": "tr-31"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "software-update"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "5.0"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:coexistence",
+              "value": "simultaneous"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "illustrative: FIPS 140-3 certificate #0000"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3 and PCI PTS HSM"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "committed"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "certification"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "certification"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:int-rkl-tr34",
+          "name": "Remote key loading to terminals (TR-34)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TR-34"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2019"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:hsm"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:terminal"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "RSA-2048"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-128"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "RSA-PKCS1-1.5-SHA-256"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "2019"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "RSA-2048"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "RSA-3072"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "RSA-PKCS1-1.5-SHA-256"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Set per terminal estate by the acquirer"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "No post-quantum key transport is standardised for TR-34 yet"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "service:sto-key-db"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "software-update"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "5.0"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:coexistence",
+              "value": "simultaneous"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "illustrative: FIPS 140-3 certificate #0000"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3 and PCI PTS HSM"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "certification"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:sto-lmk",
+          "name": "Local master key store (inside the tamper-responsive boundary)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:keyWrappingSupported",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Not applicable"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The local master key never leaves the HSM. It is protected by the tamper-responsive hardware."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "service:mgmt-console"
+            },
+            {
+              "name": "pkic:profile:protectedBy",
+              "value": "hardware-root"
+            },
+            {
+              "name": "pkic:profile:keyBlockFormat",
+              "value": "proprietary"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "software-update"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "5.0"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:coexistence",
+              "value": "simultaneous"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "illustrative: FIPS 140-3 certificate #0000"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3 and PCI PTS HSM"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "certification"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:sto-key-db",
+          "name": "Working key database on the host, under the local master key",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:keyWrappingSupported",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Not applicable"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Working keys and zone master keys are kept on the host in X9.143 key blocks, wrapped under the local master key."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "service:mgmt-console"
+            },
+            {
+              "name": "pkic:profile:protectedBy",
+              "value": "service:sto-lmk"
+            },
+            {
+              "name": "pkic:profile:keyBlockFormat",
+              "value": "x9.143"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "software-update"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "5.0"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:coexistence",
+              "value": "simultaneous"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "illustrative: FIPS 140-3 certificate #0000"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3 and PCI PTS HSM"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "certification"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "device:example-payment-hsm",
+      "dependsOn": [
+        "service:svc-host-commands",
+        "service:mgmt-console",
+        "service:int-rkl-tr34",
+        "service:sto-lmk",
+        "service:sto-key-db"
+      ]
+    },
+    {
+      "ref": "lib:hsm-firmware",
+      "provides": [
+        "service:svc-host-commands",
+        "service:mgmt-console",
+        "service:int-rkl-tr34",
+        "service:sto-lmk",
+        "service:sto-key-db"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:7e5a0000-0000-4000-8000-00000000a001/1",
+      "comment": "Illustrative SBOM of the same firmware release.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "sbom"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "type": "vulnerability-assertion",
+      "url": "https://hsm.example.com/.well-known/csaf/provider-metadata.json",
+      "comment": "Illustrative: the vendor's CSAF provider, where it publishes statements about whether its products are affected by vulnerabilities.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "vulnerability-statements"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "csaf-provider"
+        }
+      ]
+    },
+    {
+      "type": "documentation",
+      "url": "https://hsm.example.com/roadmap/post-quantum",
+      "comment": "Illustrative: the vendor's post-quantum roadmap.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "roadmap"
+        }
+      ]
+    }
+  ]
+}

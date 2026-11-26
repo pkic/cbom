@@ -85,7 +85,7 @@ PKI Consortium Publications 1 to 3 define all of this in full. This draft uses o
 
 **Estates are long-lived and certified.** Cards stay in the field for three to five years, and terminals much longer. A change to an HSM or a terminal can trigger re-validation under FIPS 140-3, PCI HSM or PCI PTS POI. The change core and the PQC migration profile record this with `certificationImpact` and `certificationScheme` (R2-23).
 
-**Inventories are already required.** PCI DSS 4.0.1 requires an inventory of the cipher suites and protocols in use (requirement 12.3.3), and an inventory of the trusted keys and certificates that protect card numbers in transit (requirement 4.2.1.1). The DORA technical standards require a register of certificates and certificate-storing devices. Chapter 12 shows how far CBOMs answer these requirements.
+**Inventories are already required.** PCI DSS 4.0.1 requires an inventory of the cipher suites and protocols in use (requirement 12.3.3), and an inventory of the trusted keys and certificates that protect card numbers in transit (requirement 4.2.1.1). The DORA technical standards require a register of certificates and certificate-storing devices (Delegated Regulation 2024/1774, Article 7(4)). Chapter 12 shows how far CBOMs answer these requirements.
 
 4. The financial system in the methodology's terms
 ---------------------------------------------------
@@ -132,7 +132,7 @@ Financial services is migrating its cryptography twice. The retirement of Triple
 
 **Triple DES.** NIST SP 800-131A Revision 2 disallowed encryption with Triple DES after 2023. In payments, the PCI PIN Security Requirements disallowed fixed-key Triple DES PIN encryption from 1 January 2023, in terminals and between hosts. The same standard requires symmetric keys to be held and exchanged in key blocks, which bind each key to its permitted usage. Key blocks were required within service provider environments from June 2019, for external connections to associations and networks from 1 January 2023, and for merchant hosts, points of sale and ATMs from 1 January 2025. The dates for supporting ISO format 4 PIN blocks, the only ISO PIN block format that uses AES, were suspended in 2021 while the Council considers how to support the move from Triple DES to AES across the ecosystem.
 
-**Post-quantum.** The final NIST IR 8547 deprecates quantum-vulnerable signature and key-establishment algorithms after 2030 and disallows them after 2035. EMVCo does not expect quantum computers to threaten EMV chip payments before 2040, and its August 2026 position paper treats symmetric cryptography as outside the quantum threat. In January 2026 the G7 Cyber Expert Group published a non-binding roadmap for a coordinated transition across the financial sector.
+**Post-quantum.** The final NIST IR 8547 deprecates quantum-vulnerable signature and key-establishment algorithms after 2030 and disallows them after 2035. EMVCo does not expect quantum computers to threaten EMV chip payments before 2040, and it considers the symmetric cryptography of online cryptograms resistant to quantum attacks. An updated EMVCo position paper of August 2026 has been reported, but has not yet been read in the original for this draft. In January 2026 the G7 Cyber Expert Group published a non-binding roadmap for a coordinated transition across the financial sector.
 
 ### 6.2 One record for both
 
@@ -206,7 +206,9 @@ The HSM profile extends PQC Migration Extended, which already carries module val
 
 -   what re-validation a change triggers (`certificationImpact`).
 
-The key hierarchy depth adds, for each working key, its chain to the master key through `keyStoreRef`, with the key block format and key length at each level. Where the HSM has its own record, `keyStoreRef` names the key store by BOM-Link in that record. Where it does not, the value is `out-of-band`.
+The key hierarchy depth adds, for each key store, the store whose key protects it (`protectedBy`), up to the store that the hardware protects, with the key block format and wrapping algorithm at each level. Where a bank's records cite the HSM's own record, `keyStoreRef` names the key store by BOM-Link in that record. Where they do not, the value is `out-of-band`.
+
+Both profiles are drafted in [`drafts/hsm-product/`](../../drafts/hsm-product/), with an illustrative payment HSM that conforms to both. They add two attributes that no inherited rule could carry: `hsmApproval`, because PCI PTS HSM is a device approval and not a module validation, and `keyBlockFormatsSupported`, because payment key blocks are not key store files.
 
 ### 9.2 Card and terminal extensions of IoT Device Estate (future devices document)
 
@@ -309,9 +311,10 @@ The working group's regulatory sufficiency register records, for each instrument
 | PCI DSS 4.0.1, requirement 12.3.3 | Which protocols and cipher suites are in use, where, and for what purpose? | Partial | The baseline requires the protocols and algorithms of every interface, but the purpose of an interface (I12) is optional. A payment-environment profile could make it mandatory |
 | PCI DSS 4.0.1, requirement 12.3.3 | Which protocols and cipher suites are losing their viability, and what is the plan? | Judgement | Viability is decided by a versioned policy, evaluated again at each annual review |
 | PCI DSS 4.0.1, requirement 4.2.1.1 | Which keys and certificates are trusted to protect card numbers in transit? | Partial | A CBOM names the algorithms and stores, but individual keys and certificates stay outside it by design |
-| DORA technical standards, Article 6 | How is data protected at rest, in transit and on internal networks? | Sufficient | The baseline requires the algorithms and type of every interface |
-| DORA technical standards, Article 7 | Which certificates and certificate-storing devices support each critical or important function? | Partial | A CBOM names the certificate-storing devices, but not individual certificates or which functions are critical |
-| DORA technical standards, Article 7 | Can keys be managed through their whole lifecycle? | Partial | A CBOM states what a product can do. The entity's procedures stay outside it |
+| DORA technical standards, Article 6(2) | How is data protected at rest, in transit and on internal networks? | Sufficient | The baseline requires the algorithms and type of every interface |
+| DORA technical standards, Article 6(4) | Can the cryptography be changed when developments in cryptanalysis require it? | Deeper profile | The change core has the facts; the baseline does not require them |
+| DORA technical standards, Article 7(4) | Which certificates and certificate-storing devices support each critical or important function? | Partial | A CBOM names the certificate-storing devices, but not individual certificates or which functions are critical |
+| DORA technical standards, Article 7(1) to (3) | Can keys be managed through their whole lifecycle, and replaced when lost or compromised? | Partial | A CBOM states what a product can do. The entity's procedures stay outside it |
 
 The register's general instruments also apply: NIST IR 8547, NIS2 where it applies (DORA takes precedence for financial entities), and the Cyber Resilience Act for products such as HSMs and terminals.
 

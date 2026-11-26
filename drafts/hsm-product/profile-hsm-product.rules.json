@@ -1,0 +1,159 @@
+{
+  "$comment": "Draft profile for a hardware security module (HSM) as its vendor ships it, for the Change planning group document (financial services draft, 9.1). It extends PQC Migration Extended, which already carries key management, key stores, module validation and certification impact. It tightens four inherited rules and adds what an HSM buyer needs that no Release 1 profile asks for: the payment HSM approval, and the key block formats the HSM can read and write. Draft only; not part of Release 1.",
+  "profileId": "pkic.example.hsm-product",
+  "profileTag": "hsm-product",
+  "title": "HSM Product (Draft)",
+  "version": "0.1",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+  "extends": {
+    "profileId": "pkic.example.pqc-migration-extended",
+    "version": "0.3",
+    "file": "../../docs/methodology/profile-pqc-migration-extended.rules.json"
+  },
+  "objective": {
+    "$comment": "C1. Procurement and change planning for HSMs, in any sector that uses them.",
+    "consumer": "A buyer or operator of HSMs, such as a bank, a payment processor, a certificate authority or a cloud provider, or an assessor acting for one.",
+    "decision": "Whether an HSM model and firmware release can carry the algorithms and key formats the buyer needs now and later, and what a change would cost in firmware, hardware and re-validation.",
+    "decisionOptions": [
+      "buy or keep the model",
+      "plan a firmware update",
+      "plan a hardware replacement",
+      "do not buy"
+    ]
+  },
+  "scope": {
+    "$comment": "C11. As PQC Migration Extended: HSM models as shipped, subject type 'product', stage 'implemented'.",
+    "subjectTypes": [
+      "product"
+    ],
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented"
+    ],
+    "cryptographicPurposes": [
+      "key-establishment",
+      "encryption",
+      "entity-authentication",
+      "key-protection"
+    ]
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "overrides": [
+    {
+      "id": "pqc-migration#I17",
+      "level": "MUST",
+      "note": "Raised from SHOULD. For an HSM, whether a new algorithm triggers re-validation often decides between a firmware update and a hardware replacement."
+    },
+    {
+      "id": "pqc-migration#I18",
+      "level": "MUST",
+      "note": "Raised from SHOULD: the scheme a re-test or re-validation falls under, such as FIPS 140-3 or PCI PTS HSM."
+    },
+    {
+      "id": "pqc-migration-extended#I5",
+      "level": "MUST",
+      "note": "Raised from SHOULD. The key store formats an HSM can read and write decide whether keys can be moved to another vendor's HSM."
+    },
+    {
+      "id": "pqc-migration-extended#I8",
+      "level": "MUST",
+      "note": "Raised from SHOULD. Every interface of an HSM uses keys held in one of its own stores, so the reference can always be given."
+    }
+  ],
+  "hsmApprovalVocabulary": [
+    "pci-pts-hsm",
+    "none"
+  ],
+  "keyBlockFormatVocabulary": [
+    "x9.143",
+    "tr-31",
+    "iso-20038",
+    "proprietary",
+    "none"
+  ],
+  "productRules": [
+    {
+      "id": "P1",
+      "description": "HSM states its payment HSM approval, or that it has none",
+      "level": "MUST",
+      "constraint": {
+        "productAttribute": "hsmApproval",
+        "enumRef": "hsmApprovalVocabulary"
+      },
+      "withholdable": false,
+      "note": "PCI PTS HSM is a device approval, not a module validation, so the module validation vocabulary of PQC Migration does not hold it. A derived profile may not widen an inherited vocabulary, so the approval has its own attribute."
+    },
+    {
+      "id": "P2",
+      "description": "HSM gives the reference of its payment HSM approval",
+      "level": "SHOULD",
+      "constraint": {
+        "productAttribute": "hsmApprovalRef"
+      },
+      "withholdable": false,
+      "note": "The approval number on the PCI list of approved devices. SHOULD, because the attribute has no value when P1 states 'none'."
+    }
+  ],
+  "interfaceRules": [
+    {
+      "id": "I1",
+      "attribute": "keyBlockFormatsSupported",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "keyBlockFormatVocabulary"
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "keyManagementFunction",
+        "equals": "keys-and-certificates"
+      },
+      "note": "The key block formats the HSM can import and export on this interface. A key block binds a key to its permitted usage. ANSI X9.143 superseded TR-31; ISO 20038 is the international form. Exchanging keys with a counterparty needs a format both ends support."
+    },
+    {
+      "id": "I2",
+      "attribute": "keyBlockFormats",
+      "level": "SHOULD",
+      "constraint": {
+        "enumRef": "keyBlockFormatVocabulary"
+      },
+      "list": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "keyManagementFunction",
+        "equals": "keys-and-certificates"
+      },
+      "note": "Present-state counterpart of I1 (C12): the formats enabled as shipped."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "The HSM's internal key hierarchy",
+      "reason": "Taken in depth by the HSM key hierarchy profile, which extends this one."
+    },
+    {
+      "item": "Key ceremonies and custodian procedures",
+      "reason": "Procedures, not facts about the product."
+    }
+  ],
+  "artifacts": {
+    "conformingExample": "examples/cbom-example-payment-hsm-product.cdx.json",
+    "nonConformingExample": "examples/cbom-example-payment-hsm-product-fail-I1.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-11-26",
+      "kind": "initial",
+      "summary": "First draft, from the financial services draft, 9.1."
+    }
+  ]
+}
