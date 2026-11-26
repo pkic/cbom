@@ -3,7 +3,7 @@
   "profileId": "pkic.example.hsm-key-hierarchy",
   "profileTag": "hsm-key-hierarchy",
   "title": "HSM Key Hierarchy (Draft)",
-  "version": "0.1",
+  "version": "0.2",
   "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
   "extends": {
     "profileId": "pkic.example.hsm-product",
@@ -53,7 +53,8 @@
       "constraint": {
         "refersToLocal": {
           "literals": [
-            "hardware-root"
+            "hardware-root",
+            "software-root"
           ]
         }
       },
@@ -62,7 +63,7 @@
         "attribute": "interfaceType",
         "equals": "storage"
       },
-      "note": "The storage interface whose key protects the keys in this store, or 'hardware-root' for the store at the top of the hierarchy, whose key the tamper-responsive hardware protects. Following protectedBy from any store reaches the root."
+      "note": "The storage interface whose key protects the keys in this store, or the root at the top of the hierarchy: 'hardware-root' where a tamper-responsive hardware module protects it, 'software-root' where it is protected in software, as in a key vault without a hardware module. Following protectedBy from any store reaches one of the two."
     },
     {
       "id": "I4",
@@ -90,6 +91,12 @@
     "nonConformingExample": "examples/cbom-example-payment-hsm-product-fail-I1.cdx.json"
   },
   "changelog": [
+    {
+      "version": "0.2",
+      "date": "2026-11-26",
+      "kind": "widening",
+      "summary": "protectedBy accepts 'software-root', so that a software key vault can record where its hierarchy is rooted (HSMs and key management domain document, 1)."
+    },
     {
       "version": "0.1",
       "date": "2026-11-26",

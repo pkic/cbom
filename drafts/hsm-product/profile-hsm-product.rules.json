@@ -1,5 +1,5 @@
 {
-  "$comment": "Draft profile for a hardware security module (HSM) as its vendor ships it, for the Change planning group document (financial services draft, 9.1). It extends PQC Migration Extended, which already carries key management, key stores, module validation and certification impact. It tightens four inherited rules and adds what an HSM buyer needs that no Release 1 profile asks for: the payment HSM approval, and the key block formats the HSM can read and write. Draft only; not part of Release 1.",
+  "$comment": "Draft profile for a hardware security module (HSM) as its vendor ships it, for the HSMs and key management domain document, which the financial services draft (9.1) relies on. It extends PQC Migration Extended, which already carries key management, key stores, module validation and certification impact. It tightens four inherited rules and adds what an HSM buyer needs that no Release 1 profile asks for: the payment HSM approval, and the key block formats the HSM can read and write. Draft only; not part of Release 1.",
   "profileId": "pkic.example.hsm-product",
   "profileTag": "hsm-product",
   "title": "HSM Product (Draft)",

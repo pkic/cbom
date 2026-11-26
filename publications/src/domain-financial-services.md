@@ -167,11 +167,11 @@ The record does not say which migration comes first. That is the bank's decision
 
 | Use case | Who decides, and what | Profile |
 |---|---|---|
-| Procurement of HSMs and payment platforms | A bank or processor: whether a tender's disclosure is complete enough to compare | Procurement (Release 1); the HSM product profile in the Change planning group document (9.1) |
+| Procurement of HSMs and payment platforms | A bank or processor: whether a tender's disclosure is complete enough to compare | Procurement (Release 1); HSM Product, in the HSMs and key management domain document (9.1) |
 | Shared-trust network migration | A scheme operator: when every participant can move to a new trust anchor | The scheme profile (9.3) for the scheme's own components, the participants' own records, and the scheme-readiness policy (10.2) |
 | Card estate migration | An issuer: which card products can carry new keys and which need reissue | IoT Device Estate, with the card extension in a future devices document (9.2) |
 | Terminal estate migration | An acquirer: which terminals can be updated and which must be replaced | IoT Device Estate, with the terminal extension in a future devices document (9.2) |
-| Key hierarchy migration | An HSM owner: which keys move first, and what each depends on | PQC Migration Extended, with the key hierarchy depth proposed for the Change planning group document (9.1) |
+| Key hierarchy migration | An HSM owner: which keys move first, and what each depends on | HSM Key Hierarchy, in the HSMs and key management domain document (9.1) |
 | Vulnerability response | A security operations centre: which services an HSM or library advisory reaches | The baseline, through I9 with R2 and R3. A restricted vulnerability-response profile is not yet written |
 | Annual review of cryptography | A bank: the cipher suites and protocols in use, reviewed against policy (PCI DSS 12.3.3) | Deployment Disclosure (Release 1), read by a policy |
 | Third-party register | A bank: the cryptography of each ICT provider, beside what DORA asks for | Service Disclosure (Release 1) |
@@ -192,9 +192,9 @@ The record does not say which migration comes first. That is the bank's decision
 9. Profiles financial services relies on
 ----------------------------------------
 
-The HSM profile and the card and terminal extensions serve every sector that uses HSMs and payment devices, so they are drafted in the generic documents and not here. This chapter states what financial services needs from each.
+The HSM profiles and the card and terminal extensions serve every sector that uses HSMs and payment devices, so they are drafted elsewhere and not here: the HSM profiles in a domain document of their own, and the card and terminal extensions in a future devices document. This chapter states what financial services needs from each.
 
-### 9.1 HSM product profile and key hierarchy depth (Change planning group document)
+### 9.1 HSM Product and HSM Key Hierarchy (HSMs and key management domain document)
 
 The HSM profile extends PQC Migration Extended, which already carries module validation and certification impact (R2-23). Financial services needs it to state, for each firmware release:
 
@@ -208,7 +208,7 @@ The HSM profile extends PQC Migration Extended, which already carries module val
 
 The key hierarchy depth adds, for each key store, the store whose key protects it (`protectedBy`), up to the store that the hardware protects, with the key block format and wrapping algorithm at each level. Where a bank's records cite the HSM's own record, `keyStoreRef` names the key store by BOM-Link in that record. Where they do not, the value is `out-of-band`.
 
-Both profiles are drafted in [`drafts/hsm-product/`](../../drafts/hsm-product/), with an illustrative payment HSM that conforms to both. They add two attributes that no inherited rule could carry: `hsmApproval`, because PCI PTS HSM is a device approval and not a module validation, and `keyBlockFormatsSupported`, because payment key blocks are not key store files.
+Both profiles are drafted in [`drafts/hsm-product/`](../../drafts/hsm-product/) for the HSMs and key management domain document, which is at outline stage, with an illustrative payment HSM that conforms to both. They add two attributes that no inherited rule could carry: `hsmApproval`, because PCI PTS HSM is a device approval and not a module validation, and `keyBlockFormatsSupported`, because payment key blocks are not key store files.
 
 ### 9.2 Card and terminal extensions of IoT Device Estate (future devices document)
 
@@ -351,7 +351,7 @@ Other sources this draft relies on:
 | A scheme's certificate authority is a scheme-administered trust anchor, verified by the scheme's members. | 4, 9.3 |
 | The interfaces that carry key-encryption keys come first in a payment estate's post-quantum migration, because every key sent under them inherits their exposure. | 3, 11.1 |
 | The Triple DES retirement and the post-quantum migration are recorded with the same attributes. A policy with two schedules decides which migration an interface needs. | 6 |
-| The HSM profile and the card and terminal extensions are drafted in the generic documents. Financial services states its needs and refers to them. | 9 |
+| The HSM profiles are drafted in an HSMs and key management domain document, and the card and terminal extensions in a future devices document. Financial services states its needs and refers to them. | 9 |
 
 ### 13.3 Questions for the working group
 
@@ -369,7 +369,7 @@ Other sources this draft relies on:
 
 4.  Write the scheme profile (9.3) and the scheme-readiness policy (10.2), with an illustrative scheme of three participants.
 
-5.  Send the needs in 9.1 and 9.2 to the Change planning group document and to the devices document.
+5.  Send the needs in 9.2 to the devices document. The needs in 9.1 are met by the HSM profiles drafted for the HSMs and key management domain document.
 
 6.  Check the proposed protocol names (chapter 5) against the CycloneDX cryptography registry.
 
