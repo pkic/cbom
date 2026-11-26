@@ -1,10 +1,11 @@
 {
   "policyFormat": "pkic.cbom.policy",
-  "policyFormatVersion": "0.1",
+  "policyFormatVersion": "0.2",
   "policyId": "pkic.example.policy.edge-posture",
-  "version": "0.2",
+  "version": "0.3",
   "title": "Post-quantum posture of a connection, from both of its ends",
   "status": "illustrative",
+  "interpretation": "interpretive",
   "$comment": "An example policy. It joins the two ends of each connection along peerInterface (deployment-disclosure I4, decision 0026) and, for each purpose, says whether the connection meets the target and, if not, which end limits it. Each end is described by its own operator's records: the configured record says what the end permits, and the observed record, where supplied, says what was negotiated. The classification and the targets are the readiness-gap policy's, so the two results can be read together. The evaluation method is implemented by evaluate_policy.py. The result points to every record it used by digest.",
   "method": "edge-posture",
   "inputs": {
@@ -18,177 +19,15 @@
       "observed"
     ]
   },
-  "classification": [
-    {
-      "names": [
-        "RSA-1024"
-      ],
-      "family": "RSA",
-      "securityStrength": 80,
-      "quantumVulnerable": true
-    },
-    {
-      "names": [
-        "RSA-2048",
-        "RS256",
-        "RS384",
-        "RS512",
-        "PS256",
-        "PS384",
-        "PS512",
-        "RSA-SHA256",
-        "RSA-OAEP",
-        "RSA-OAEP-256",
-        "rsa_pkcs1_sha256",
-        "rsa_pss_rsae_sha256",
-        "rsa_pss_rsae_sha384",
-        "rsa_pss_rsae_sha512",
-        "rsa_pss_pss_sha256",
-        "RSA-SHA384",
-        "RSA-SHA512",
-        "RSA-PKCS1-1.5-SHA-256",
-        "RSA-PKCS1-1.5-SHA-384",
-        "RSA-PKCS1-1.5-SHA-512",
-        "RSA-PSS-SHA-256",
-        "RSA-PSS-SHA-384",
-        "RSA-PSS-SHA-512",
-        "RSA-OAEP-SHA-1-MGF1-SHA-1",
-        "RSA-OAEP-SHA-256-MGF1-SHA-256"
-      ],
-      "family": "RSA",
-      "securityStrength": 112,
-      "quantumVulnerable": true,
-      "note": "JOSE and TLS names do not carry the RSA key size. They are classified at 112 bits, the strength of the RSA-2048 keys Keycloak generates by default; a record that states a larger key in its key material is classified by that key."
-    },
-    {
-      "names": [
-        "RSA-3072"
-      ],
-      "family": "RSA",
-      "securityStrength": 128,
-      "quantumVulnerable": true
-    },
-    {
-      "names": [
-        "ffdhe2048",
-        "FFDHE-ffdhe2048"
-      ],
-      "family": "FFDH",
-      "securityStrength": 112,
-      "quantumVulnerable": true
-    },
-    {
-      "names": [
-        "ffdhe3072",
-        "FFDHE-ffdhe3072"
-      ],
-      "family": "FFDH",
-      "securityStrength": 128,
-      "quantumVulnerable": true
-    },
-    {
-      "names": [
-        "X25519",
-        "secp256r1",
-        "P-256",
-        "ECDH-ES",
-        "ES256",
-        "ECDSA-P256-SHA256",
-        "ecdsa_secp256r1_sha256",
-        "Ed25519",
-        "EdDSA",
-        "ed25519",
-        "ECDSA-SHA256",
-        "ECDHE-secp256r1",
-        "ECDH"
-      ],
-      "family": "EC",
-      "securityStrength": 128,
-      "quantumVulnerable": true
-    },
-    {
-      "names": [
-        "secp384r1",
-        "P-384",
-        "ES384",
-        "ecdsa_secp384r1_sha384",
-        "ECDSA-SHA384",
-        "ECDHE-secp384r1",
-        "ECDSA-P-384-SHA-384"
-      ],
-      "family": "EC",
-      "securityStrength": 192,
-      "quantumVulnerable": true
-    },
-    {
-      "names": [
-        "X448",
-        "Ed448",
-        "ed448"
-      ],
-      "family": "EC",
-      "securityStrength": 224,
-      "quantumVulnerable": true
-    },
-    {
-      "names": [
-        "secp521r1",
-        "P-521",
-        "ES512",
-        "ecdsa_secp521r1_sha512",
-        "ECDSA-SHA512",
-        "ECDHE-secp521r1",
-        "ECDSA-P-521-SHA-512"
-      ],
-      "family": "EC",
-      "securityStrength": 256,
-      "quantumVulnerable": true
-    },
-    {
-      "names": [
-        "X25519MLKEM768",
-        "SecP256r1MLKEM768",
-        "SecP384r1MLKEM1024",
-        "ML-KEM-768",
-        "ML-KEM-1024",
-        "ML-KEM-512"
-      ],
-      "family": "ML-KEM",
-      "quantumVulnerable": false,
-      "note": "Hybrid groups are classified by their post-quantum component."
-    },
-    {
-      "names": [
-        "ML-DSA-44",
-        "ML-DSA-65",
-        "ML-DSA-87",
-        "mldsa44",
-        "mldsa65",
-        "mldsa87",
-        "SLH-DSA-SHA2-128s",
-        "SLH-DSA-SHAKE-128s"
-      ],
-      "family": "ML-DSA/SLH-DSA",
-      "quantumVulnerable": false
-    },
-    {
-      "names": [
-        "AES-128",
-        "AES-128-GCM",
-        "AES-256-GCM",
-        "ChaCha20-Poly1305",
-        "HMAC-SHA512",
-        "HS256",
-        "HS384",
-        "HS512",
-        "HMAC-SHA-256",
-        "HMAC-SHA-384"
-      ],
-      "family": "symmetric",
-      "quantumVulnerable": false,
-      "note": "Symmetric algorithms are outside the IR 8547 public-key transition."
+  "classificationSource": {
+    "setId": "pkic.example.classification.algorithms",
+    "version": "0.1",
+    "file": "pkic-example-algorithms.classification.json",
+    "digest": {
+      "alg": "SHA-256",
+      "value": "463c109c0cc29f3ea48e286cf80ff83fceb6821a000158043be3c40c8e04a57d"
     }
-  ],
+  },
   "purposes": {
     "key-establishment": {
       "attribute": "keyExchange",
@@ -224,6 +63,12 @@
     "peer-not-found": "An interface names a far end that is not an interface in the document it points into."
   },
   "changelog": [
+    {
+      "version": "0.3",
+      "date": "2026-11-26",
+      "kind": "editorial",
+      "summary": "The classification moves to the shared set pkic.example.classification.algorithms 0.1, referred to by digest under classificationSource. The entries are unchanged, so every result is the same apart from the policy version and digest. Adds interpretation: interpretive, because the classes are the working group's own judgement and not taken from an instrument."
+    },
     {
       "version": "0.2",
       "date": "2026-11-22",

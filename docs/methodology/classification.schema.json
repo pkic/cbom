@@ -1,0 +1,80 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://pkic.org/cbom/schema/classification.schema.json",
+    "title": "CBOM classification set",
+    "$comment": "Facts about algorithm names that policies share: family, classical security strength and quantum vulnerability. A classification set holds no judgement; schedules and classes stay in the policy (decision 0002).",
+    "type": "object",
+    "required": [
+        "classificationFormat",
+        "classificationFormatVersion",
+        "setId",
+        "version",
+        "status",
+        "entries"
+    ],
+    "properties": {
+        "classificationFormat": {
+            "const": "pkic.cbom.classification"
+        },
+        "classificationFormatVersion": {
+            "type": "string"
+        },
+        "setId": {
+            "type": "string"
+        },
+        "version": {
+            "type": "string"
+        },
+        "title": {
+            "type": "string"
+        },
+        "status": {
+            "enum": [
+                "illustrative",
+                "reference",
+                "endorsed"
+            ]
+        },
+        "source": {
+            "type": "object"
+        },
+        "entries": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "required": [
+                    "names",
+                    "quantumVulnerable"
+                ],
+                "properties": {
+                    "names": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 1
+                    },
+                    "family": {
+                        "type": "string"
+                    },
+                    "securityStrength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "quantumVulnerable": {
+                        "type": "boolean"
+                    },
+                    "note": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "changelog": {
+            "type": "array"
+        }
+    }
+}

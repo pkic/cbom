@@ -1,0 +1,28 @@
+instrument:
+  id: de-bsi-tr-02102-1
+  title: "BSI TR-02102-1, Cryptographic Mechanisms: Recommendations and Key Lengths, 2026 edition"
+  jurisdiction: DE
+  kind: national guideline
+  published: 2026
+  appliesTo: "German federal administration, and organisations that adopt the BSI recommendations, including under BSIG"
+  source: null  # to be added: the BSI publication page
+  summary: >
+    Recommends cryptographic mechanisms and key lengths, each with the period for which
+    the recommendation holds.
+
+questions:
+  - id: TR02102-mechanisms
+    clause: "Recommended mechanisms and key lengths"
+    checked: eu-report
+    question: >
+      Are the mechanisms and key lengths of each interface among those recommended, and
+      until when?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I3, I4, I5, I10]
+    levels: {expressible: "yes", required: "yes", evaluable: "yes"}
+    verdict: sufficient
+    rationale: >
+      The baseline requires the algorithms of every interface, with their parameter
+      sets. The recommendations are data that a policy can hold, in the same form as
+      the NIST IR 8547 schedule.

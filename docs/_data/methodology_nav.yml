@@ -55,6 +55,7 @@
   items:
     - { id: versioning,   title: Versioning,        url: versioning.html }
     - { id: governance,   title: Governance,        url: governance.html }
+    - { id: regulation,   title: Regulation,        url: regulation.html }
 
 - group: Reference
   items:

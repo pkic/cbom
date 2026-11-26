@@ -3,11 +3,20 @@
   "resultFormatVersion": "0.1",
   "policy": {
     "policyId": "pkic.example.policy.algorithm-transition",
-    "version": "0.3",
+    "version": "0.4",
     "file": "policy-algorithm-transition.policy.json",
     "digest": {
       "alg": "SHA-256",
-      "value": "1d3b95b7aaf37d388f102b457bc0047b6a9aa8d6372a7c30e8e91c7aa8b0931c"
+      "value": "e1b99cee28cc0494ce5f2c220cc4238021867bad52d9669d0d479d66bba1b08d"
+    },
+    "classificationSource": {
+      "setId": "pkic.example.classification.algorithms",
+      "version": "0.1",
+      "file": "pkic-example-algorithms.classification.json",
+      "digest": {
+        "alg": "SHA-256",
+        "value": "463c109c0cc29f3ea48e286cf80ff83fceb6821a000158043be3c40c8e04a57d"
+      }
     }
   },
   "evaluationDate": "2026-10-25",

@@ -52,9 +52,37 @@ def norm(name):
     return re.sub(r"[^a-z0-9]", "", str(name).lower())
 
 
+def load_classification(policy, policy_path):
+    """Return the policy's classification entries and a record of where they came from.
+
+    A policy may name a shared classification set under classificationSource.
+    The set is read from the policy's own folder and must match the pinned
+    digest, so a changed set cannot silently change a result. Inline entries
+    are applied after the set's, so the policy's own entry wins for a name
+    that both carry.
+    """
+    entries, source = [], None
+    ref = policy.get("classificationSource")
+    if ref:
+        path = os.path.join(os.path.dirname(os.path.abspath(policy_path)), ref["file"])
+        data = open(path, "rb").read()
+        digest = hashlib.sha256(data).hexdigest()
+        if digest != ref["digest"]["value"]:
+            raise SystemExit("classification set %s does not match the digest the policy pins" % ref["file"])
+        cset = json.loads(data.decode("utf-8"))
+        if cset.get("setId") != ref["setId"] or cset.get("version") != ref["version"]:
+            raise SystemExit("classification set %s is %s %s, but the policy names %s %s" % (
+                ref["file"], cset.get("setId"), cset.get("version"), ref["setId"], ref["version"]))
+        entries += cset.get("entries", [])
+        source = {"setId": ref["setId"], "version": ref["version"], "file": ref["file"],
+                  "digest": {"alg": "SHA-256", "value": digest}}
+    entries += policy.get("classification", [])
+    return entries, source
+
+
 def classifier(policy):
     table = {}
-    for entry in policy.get("classification", []):
+    for entry in policy.get("_entries", policy.get("classification", [])):
         for n in entry.get("names", []):
             table[norm(n)] = entry
     return lambda name: table.get(norm(name))
@@ -370,6 +398,7 @@ METHODS = {"algorithm-transition": algorithm_transition, "readiness-gap": readin
 
 def evaluate(policy_path, cbom_paths, date):
     policy = json.load(open(policy_path, encoding="utf-8"))
+    policy["_entries"], class_source = load_classification(policy, policy_path)
     method = METHODS.get(policy.get("method"))
     if not method:
         raise SystemExit("unknown policy method %r" % policy.get("method"))
@@ -383,7 +412,8 @@ def evaluate(policy_path, cbom_paths, date):
         "resultFormat": RESULT_FORMAT, "resultFormatVersion": RESULT_FORMAT_VERSION,
         "policy": {"policyId": policy.get("policyId"), "version": policy.get("version"),
                    "file": os.path.basename(policy_path),
-                   "digest": {"alg": "SHA-256", "value": hashlib.sha256(pdata).hexdigest()}},
+                   "digest": {"alg": "SHA-256", "value": hashlib.sha256(pdata).hexdigest()},
+                   **({"classificationSource": class_source} if class_source else {})},
         "evaluationDate": date,
         "documents": [doc_record(p, b) for p, b in docs],
         "summary": summary,

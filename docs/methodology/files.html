@@ -102,6 +102,8 @@ nav: files
   <table>
     <thead><tr><th>File</th><th>Description</th></tr></thead>
     <tbody>
+      <tr><td><a href="policies/pkic-example-algorithms.classification.json">policies/pkic-example-algorithms.classification.json</a></td><td>Shared classification set, pinned by digest from each example policy: the family, security strength and quantum vulnerability of each algorithm name the examples use.</td></tr>
+      <tr><td><a href="classification.schema.json">classification.schema.json</a></td><td>Schema for a classification set.</td></tr>
       <tr><td><a href="policies/policy-readiness-gap.policy.json">policies/policy-readiness-gap.policy.json</a></td><td>Example policy, method <code>readiness-gap</code>. Joins a product record, a configured record and an observed record, and places each interface and purpose in one gap class</td></tr>
       <tr><td><a href="policies/policy-algorithm-transition.policy.json">policies/policy-algorithm-transition.policy.json</a></td><td>Example policy, method <code>algorithm-transition</code>. Classifies each disclosed algorithm against the schedule in the final NIST IR 8547 (27 October 2026)</td></tr>
       <tr><td><a href="examples/results/result-readiness-gap-sso-prod.json">examples/results/result-readiness-gap-sso-prod.json</a></td><td>The readiness gap for <code>sso.example.org</code>, evaluated on 2026-10-25 from the product, configured and observed records. Ingress key establishment is <code>enabled-not-negotiated</code>; the plaintext proxy hop and the management port are <code>unprotected</code>; token signing and Keycloak's own TLS are <code>not-capable</code>; the product HTTPS listener is <code>not-deployed</code></td></tr>

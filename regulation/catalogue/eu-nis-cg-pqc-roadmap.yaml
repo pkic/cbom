@@ -1,0 +1,93 @@
+instrument:
+  id: eu-nis-cg-pqc-roadmap
+  title: "NIS Cooperation Group, coordinated implementation roadmap for the transition to post-quantum cryptography"
+  jurisdiction: EU
+  kind: recommendation
+  published: 2025-06
+  appliesTo: "EU Member States, and through national roadmaps, operators of high-risk and medium-risk use cases"
+  source: null  # to be added: the published roadmap
+  summary: >
+    Three milestones. By 31 December 2026, Member States complete the First Steps,
+    including cryptographic asset management, dependency mapping and quantum risk
+    analysis. By 31 December 2030, the transition is complete for high-risk use cases
+    and cryptographic agility is adopted. By 31 December 2035, it is complete for
+    medium-risk use cases, and for low-risk use cases where feasible. Section 6.2
+    names CBOM.
+
+questions:
+  - id: RM-6.2-format
+    clause: "Section 6.2, First Steps"
+    checked: eu-report
+    question: >
+      Is the cryptographic inventory held in a standardised format, so that
+      inventories built by different organisations can be compared?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [P3, P4, P5, P6]
+    levels: {expressible: "yes", required: "yes", evaluable: "yes"}
+    verdict: sufficient
+    rationale: >
+      A format alone does not make inventories comparable, because two documents in
+      the same format can contain different facts. A profile fixes the facts. The
+      baseline fixes the minimum, and a conformance claim shows which profile a
+      document meets.
+
+  - id: RM-6.2-assets
+    clause: "Section 6.2, First Steps: cryptographic asset management and dependency mapping"
+    checked: eu-report
+    question: >
+      Which cryptographic assets does each system use, and which components do they
+      depend on?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [P1, I3, I4, I5, I9, R1]
+      - profile: pkic.example.system-disclosure
+        rules: [P1, P2, I1, I3]
+    levels: {expressible: "yes", required: "yes", evaluable: "yes"}
+    verdict: sufficient
+    rationale: >
+      The baseline requires the assets of every interface, the implementing library of
+      each (which a producer may withhold), and a link to the SBOM. A system record
+      joins the product records a system is built from and names the component that
+      provides each interface's keys.
+
+  - id: RM-6.2-risk
+    clause: "Section 6.2, First Steps: quantum risk analysis"
+    checked: eu-report
+    question: >
+      Which interfaces carry data that must stay confidential beyond the date when a
+      quantum computer could break the algorithm that protects it?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I3, I12, I13]
+      - profile: pkic.example.deployment-disclosure
+        rules: [R3]
+    levels: {expressible: "partly", required: "partly", evaluable: "partly"}
+    verdict: partial
+    rationale: >
+      The CBOM supplies the algorithm and, optionally, the kind of data an interface
+      carries. How long the data must stay confidential is known only to the operator.
+    gap: >
+      Confidentiality lifetime is open as Q36 and Q37 of the question register
+      (cluster J). Until it is settled, the operator's data register supplies it.
+
+  - id: RM-2030-high-risk
+    clause: "Section 4.1: transition of high-risk use cases by 31 December 2030, and adoption of cryptographic agility"
+    checked: eu-report
+    question: >
+      Has each high-risk use case moved to post-quantum cryptography, and can its
+      cryptography be changed again without redesign?
+    evidence:
+      - profile: pkic.example.deployment-disclosure
+        rules: [I1, I3]
+      - profile: pkic.example.change-core
+        rules: [I1, I2, I3, I4, I7, I16, G1]
+    levels: {expressible: "yes", required: "yes", evaluable: "partly"}
+    verdict: partial
+    rationale: >
+      Deployment records show the present state, and the change core shows whether the
+      cryptography can be replaced. Which use cases are high risk is the national
+      authority's or the operator's classification.
+    gap: >
+      Risk tier stays with the operator. It is an input to the policy, not a fact in
+      the CBOM.

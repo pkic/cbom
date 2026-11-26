@@ -1,0 +1,93 @@
+instrument:
+  id: us-eo-14412-omb-m-26-15
+  title: "Executive Order 14412, Securing the Nation Against Advanced Cryptographic Attacks, and OMB memorandum M-26-15"
+  jurisdiction: US
+  kind: executive order and implementing memorandum
+  published: 2026-06-22
+  appliesTo: "US federal civilian agencies, and through the Federal Acquisition Regulation, covered contractors"
+  source: null  # to be added: the Federal Register entries for the order and the memorandum
+  summary: >
+    The order requires agencies to review the cryptographic inventories of high value
+    assets and high impact systems, sets dates for post-quantum key establishment
+    (end of 2030) and signatures (end of 2031) on those systems, and asks CISA and NIST
+    to publish minimum elements for a CBOM within 270 days. The memorandum, of
+    24 June 2026, states that inventory data should populate a central CBOM, without
+    naming a format.
+
+questions:
+  - id: EO14412-5d
+    clause: "EO 14412, section 5(d)"
+    checked: eu-report
+    question: >
+      Does a CBOM that conforms to a profile carry the minimum elements that CISA and
+      NIST will publish?
+    evidence: []
+    levels: {expressible: "partly", required: "partly", evaluable: "partly"}
+    verdict: open
+    rationale: >
+      The minimum elements are due around March 2027 and have not been published. The
+      question is answered when they are, by mapping each element to a profile rule.
+    gap: "Revisit when the CISA and NIST minimum elements are published."
+
+  - id: EO14412-inventory
+    clause: "EO 14412: review of the cryptographic inventories of high value assets and high impact systems"
+    checked: eu-report
+    question: >
+      What cryptography does each high value asset or high impact system use, as
+      deployed?
+    evidence:
+      - profile: pkic.example.deployment-disclosure
+        rules: [P1, I1, I2, I3]
+      - profile: pkic.example.interface-disclosure
+        rules: [I1, I2, I3, I4, I5, I8]
+      - profile: pkic.example.system-disclosure
+        rules: [P1, P2, I3]
+    levels: {expressible: "yes", required: "yes", evaluable: "partly"}
+    verdict: partial
+    rationale: >
+      Deployment records state the cryptography of each deployed interface, with how
+      and when it was observed, and system records join the products a system is
+      built from. Which systems count as high value assets is the agency's own
+      designation. A CBOM does not carry it.
+    gap: >
+      The designation of a system as a high value asset stays with the operator. The
+      operator joins it to the CBOMs in its own inventory.
+
+  - id: EO14412-dates
+    clause: "EO 14412: post-quantum key establishment by the end of 2030, and signatures by the end of 2031, on those systems"
+    checked: eu-report
+    question: >
+      Has each interface of a covered system moved to post-quantum key establishment
+      and post-quantum signatures, and if not, can it?
+    evidence:
+      - profile: pkic.example.deployment-disclosure
+        rules: [I1, I3]
+      - profile: pkic.example.interface-disclosure
+        rules: [I3, I5]
+      - profile: pkic.example.pqc-migration
+        rules: [I2, I3, I4, G1]
+    levels: {expressible: "yes", required: "yes", evaluable: "yes"}
+    verdict: deeper-profile
+    rationale: >
+      The present state comes from the deployment record, and a policy can compare it
+      with the dates. Whether an interface that has not moved can move needs the
+      capability facts of the PQC migration profile.
+
+  - id: M2615-cbom
+    clause: "OMB M-26-15, Appendix A, section 6"
+    checked: eu-report
+    question: >
+      Can each agency system's inventory data be supplied as a CBOM that a central
+      inventory can combine with others?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [P3, P4, P5, P6]
+      - profile: pkic.example.deployment-disclosure
+        rules: [P1]
+    levels: {expressible: "yes", required: "yes", evaluable: "yes"}
+    verdict: sufficient
+    rationale: >
+      The baseline requires every document to identify its subject, its subject type,
+      its lifecycle stage and how complete it is. Those are the facts a central
+      inventory needs to combine documents without counting an interface twice or
+      mistaking a product record for a deployment.

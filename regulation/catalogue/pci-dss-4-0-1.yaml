@@ -1,0 +1,80 @@
+instrument:
+  id: pci-dss-4-0-1
+  title: "PCI DSS v4.0.1, requirements 4.2.1.1 and 12.3.3"
+  jurisdiction: international
+  kind: industry standard
+  published: 2024-06
+  appliesTo: "Entities that store, process or transmit cardholder data, and service providers that can affect its security. Both requirements have been assessed since 31 March 2025"
+  source: https://www.pcisecuritystandards.org/
+  summary: >
+    Requirement 4.2.1.1 asks for an inventory of the entity's trusted keys and
+    certificates used to protect the primary account number during transmission.
+    Requirement 12.3.3 asks for the cipher suites and protocols in use to be documented,
+    with their purpose and where they are used, and reviewed at least once every
+    12 months, with industry trends on their continued viability monitored and a
+    documented strategy for responding to anticipated changes.
+
+questions:
+  - id: PCI-12.3.3-inventory
+    clause: "Requirement 12.3.3: an up-to-date inventory of cipher suites and protocols, with purpose and where used"
+    checked: secondary
+    question: >
+      Which protocols and cipher suites does each system in scope use, where, and for
+      what purpose?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I1, I2, I3, I4, I5, I7, I12]
+      - profile: pkic.example.deployment-disclosure
+        rules: [P1, I1, I2, I3]
+    levels: {expressible: "yes", required: "partly", evaluable: "yes"}
+    verdict: partial
+    rationale: >
+      The baseline requires the protocol, version and algorithms of every interface, and
+      the interface type. Deployment records place each interface in a running system.
+      The purpose of an interface, meaning the data it exists to carry, is optional in
+      the baseline (I12), so a record may leave it out.
+    gap: >
+      No profile yet requires I12. A payment-environment profile could raise it to
+      MUST. This needs a profile, not a new attribute.
+
+  - id: PCI-12.3.3-review
+    clause: "Requirement 12.3.3: annual review, monitoring of continued viability, and a strategy for anticipated changes"
+    checked: secondary
+    question: >
+      Which of the protocols and cipher suites in use are losing their viability, and
+      what is the plan for each?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I1, I2, I3, I4, I5]
+      - profile: pkic.example.pqc-migration
+        rules: [I1, I2, I3, I4, G1]
+    levels: {expressible: "yes", required: "yes", evaluable: "partly"}
+    verdict: judgement
+    rationale: >
+      Viability is a judgement. A versioned policy, evaluated again at each review,
+      records it with a date. The capability facts of the PQC migration profile show
+      what each interface could move to, and the supplier's roadmap (R2) shows what is
+      planned. The entity's own strategy is its decision, not a fact in the CBOM.
+
+  - id: PCI-4.2.1.1
+    clause: "Requirement 4.2.1.1: inventory of trusted keys and certificates protecting the PAN in transmission"
+    checked: secondary
+    question: >
+      Which keys and certificates does the entity trust to protect card numbers in
+      transit, and where are they used?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I3, I5, I13]
+      - profile: pkic.example.pqc-migration-extended
+        rules: [I4, I7, I8]
+    levels: {expressible: "partly", required: "partly", evaluable: "partly"}
+    verdict: partial
+    rationale: >
+      A CBOM names, for every interface, the algorithms that the keys and certificates
+      use, the key types a store holds and where keys are kept. It does not list
+      individual certificates or keys. Every profile excludes key material, and a
+      certificate inventory changes far more often than a CBOM does.
+    gap: >
+      Individual certificates stay outside the CBOM by design. The CBOM tells a
+      certificate inventory which interfaces it must cover and what algorithms to
+      expect there.

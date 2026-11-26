@@ -3,11 +3,20 @@
   "resultFormatVersion": "0.1",
   "policy": {
     "policyId": "pkic.example.policy.edge-posture",
-    "version": "0.2",
+    "version": "0.3",
     "file": "policy-edge-posture.policy.json",
     "digest": {
       "alg": "SHA-256",
-      "value": "268242a86a2bc0264a0356252d3f50c946616bd2d18ffa3ec004762853320cc8"
+      "value": "c60e1aee74e66ae81979033acc8f15ca96d527cb57c77483d2a2fe25641f61c8"
+    },
+    "classificationSource": {
+      "setId": "pkic.example.classification.algorithms",
+      "version": "0.1",
+      "file": "pkic-example-algorithms.classification.json",
+      "digest": {
+        "alg": "SHA-256",
+        "value": "463c109c0cc29f3ea48e286cf80ff83fceb6821a000158043be3c40c8e04a57d"
+      }
     }
   },
   "evaluationDate": "2026-10-25",

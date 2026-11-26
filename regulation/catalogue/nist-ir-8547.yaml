@@ -1,0 +1,50 @@
+instrument:
+  id: nist-ir-8547
+  title: "NIST IR 8547, Transition to Post-Quantum Cryptography Standards"
+  jurisdiction: US
+  kind: guidance
+  published: 2026-10-27
+  appliesTo: "US federal agencies, and suppliers that follow NIST's transition schedule"
+  source: https://csrc.nist.gov/pubs/ir/8547/final
+  summary: >
+    Sets the dates after which quantum-vulnerable signature and key-establishment
+    algorithms are deprecated (after 2030) and disallowed (after 2035), at every
+    security strength. The 2024 draft deprecated only the weakest strengths.
+
+questions:
+  - id: IR8547-1
+    clause: "Transition schedule for quantum-vulnerable algorithms"
+    checked: eu-report
+    question: >
+      Which quantum-vulnerable key-establishment and signature algorithms does each
+      interface use, and at what security strength?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I3, I5, I10]
+    levels: {expressible: "yes", required: "yes", evaluable: "yes"}
+    verdict: sufficient
+    rationale: >
+      The baseline requires the key-exchange and authentication algorithms of every
+      interface, and the key-wrapping algorithm of every storage interface. Algorithm
+      names follow the CycloneDX cryptography registry, which carries the parameter
+      set and so the security strength. The illustrative policy
+      policy-algorithm-transition already computes this answer.
+
+  - id: IR8547-2
+    clause: "Transition schedule for quantum-vulnerable algorithms"
+    checked: eu-report
+    question: >
+      Can each interface move to an approved post-quantum algorithm before the
+      deprecation date, and what does the move require of the operator?
+    evidence:
+      - profile: pkic.example.pqc-migration
+        rules: [I1, I2, I3, I4, I5, I7, G1]
+    levels: {expressible: "yes", required: "yes", evaluable: "partly"}
+    verdict: deeper-profile
+    rationale: >
+      The PQC migration profile requires the supported algorithms, how the capability
+      is enabled, the minimum product version and whether old and new algorithms can
+      coexist. The baseline does not require these facts, so a reader must ask for
+      the PQC migration profile by name. A policy can check that a capability exists
+      before 2030. Whether the operator can carry out the change in time also depends
+      on the operator's own plans.

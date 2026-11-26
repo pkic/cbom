@@ -91,10 +91,12 @@ nav: policyeval
   <table>
     <thead><tr><th>Artefact</th><th>File (in <code>docs/methodology/</code>)</th><th>What it is</th></tr></thead>
     <tbody>
-      <tr><td>Policy format</td><td><code>policy.schema.json</code></td><td>The structure of a policy: identifier, version, status, source, method, a classification of algorithm names, and either a dated schedule or a set of targets per purpose.</td></tr>
-      <tr><td>Readiness-gap policy</td><td><code>policies/policy-readiness-gap.policy.json</code></td><td>Example policy <code>pkic.example.policy.readiness-gap</code>, version 0.1, method <code>readiness-gap</code>.</td></tr>
-      <tr><td>Algorithm-transition policy</td><td><code>policies/policy-algorithm-transition.policy.json</code></td><td>Example policy <code>pkic.example.policy.algorithm-transition</code>, version 0.2, method <code>algorithm-transition</code>.</td></tr>
-      <tr><td>Edge-posture policy</td><td><code>policies/policy-edge-posture.policy.json</code></td><td>Example policy <code>pkic.example.policy.edge-posture</code>, version 0.1, method <code>edge-posture</code>.</td></tr>
+      <tr><td>Policy format</td><td><code>policy.schema.json</code></td><td>The structure of a policy: identifier, version, status, source, method, its status and interpretation, a classification of algorithm names or a shared classification set pinned by digest, and either a dated schedule or a set of targets per purpose.</td></tr>
+      <tr><td>Readiness-gap policy</td><td><code>policies/policy-readiness-gap.policy.json</code></td><td>Example policy <code>pkic.example.policy.readiness-gap</code>, version 0.3, method <code>readiness-gap</code>.</td></tr>
+      <tr><td>Algorithm-transition policy</td><td><code>policies/policy-algorithm-transition.policy.json</code></td><td>Example policy <code>pkic.example.policy.algorithm-transition</code>, version 0.4, method <code>algorithm-transition</code>.</td></tr>
+      <tr><td>Edge-posture policy</td><td><code>policies/policy-edge-posture.policy.json</code></td><td>Example policy <code>pkic.example.policy.edge-posture</code>, version 0.3, method <code>edge-posture</code>.</td></tr>
+      <tr><td>Classification format</td><td><code>classification.schema.json</code></td><td>The structure of a shared classification set: the family, security strength and quantum vulnerability of each algorithm name. Facts only; no judgement.</td></tr>
+      <tr><td>Classification set</td><td><code>policies/pkic-example-algorithms.classification.json</code></td><td>The set <code>pkic.example.classification.algorithms</code>, version 0.1, shared by the three example policies.</td></tr>
       <tr><td>Evaluator</td><td><code>evaluate_policy.py</code></td><td>Implements the three methods. Usage: <code>evaluate_policy.py &lt;policy&gt; &lt;cbom...&gt; --date YYYY-MM-DD</code>.</td></tr>
       <tr><td>Result format</td><td><code>policy-result.schema.json</code></td><td>The structure of a result.</td></tr>
       <tr><td>Results</td><td><code>examples/results/</code></td><td>The results for the Keycloak records, all evaluated on 2026-10-25.</td></tr>

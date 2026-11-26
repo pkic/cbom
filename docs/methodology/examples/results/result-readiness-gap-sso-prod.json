@@ -3,11 +3,20 @@
   "resultFormatVersion": "0.1",
   "policy": {
     "policyId": "pkic.example.policy.readiness-gap",
-    "version": "0.2",
+    "version": "0.3",
     "file": "policy-readiness-gap.policy.json",
     "digest": {
       "alg": "SHA-256",
-      "value": "4b89166bf45d3dc338e292a247cb2683ca403234e417372c603945eae87bcd15"
+      "value": "1ae17a86a1fefddea883181223fa17cd1a180cec1bbf80190aa9aa0b2ee7ce7d"
+    },
+    "classificationSource": {
+      "setId": "pkic.example.classification.algorithms",
+      "version": "0.1",
+      "file": "pkic-example-algorithms.classification.json",
+      "digest": {
+        "alg": "SHA-256",
+        "value": "463c109c0cc29f3ea48e286cf80ff83fceb6821a000158043be3c40c8e04a57d"
+      }
     }
   },
   "evaluationDate": "2026-10-25",

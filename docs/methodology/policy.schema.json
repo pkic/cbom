@@ -1,127 +1,246 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://pkic.org/cbom/schema/policy.schema.json",
-  "title": "CBOM example policy",
-  "$comment": "Structural schema for an example policy evaluated by evaluate_policy.py. A policy is versioned data plus a named evaluation method. Policies are kept outside CBOMs and outside profiles, because the criteria change while the facts do not (decision 0002).",
-  "type": "object",
-  "required": [
-    "policyFormat",
-    "policyFormatVersion",
-    "policyId",
-    "version",
-    "method",
-    "classification"
-  ],
-  "properties": {
-    "policyFormat": {
-      "const": "pkic.cbom.policy"
-    },
-    "policyFormatVersion": {
-      "type": "string"
-    },
-    "policyId": {
-      "type": "string"
-    },
-    "version": {
-      "type": "string"
-    },
-    "title": {
-      "type": "string"
-    },
-    "status": {
-      "enum": [
-        "illustrative",
-        "draft",
-        "adopted"
-      ]
-    },
-    "source": {
-      "type": "object"
-    },
-    "method": {
-      "enum": [
-        "algorithm-transition",
-        "readiness-gap",
-        "edge-posture"
-      ]
-    },
-    "inputs": {
-      "type": "object"
-    },
-    "classification": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": [
-          "names",
-          "quantumVulnerable"
-        ],
-        "properties": {
-          "names": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://pkic.org/cbom/schema/policy.schema.json",
+    "title": "CBOM example policy",
+    "$comment": "Structural schema for an example policy evaluated by evaluate_policy.py. A policy is versioned data plus a named evaluation method. Policies are kept outside CBOMs and outside profiles, because the criteria change while the facts do not (decision 0002). From format version 0.2 a policy may take its classification from a shared set (classificationSource), and declares its interpretation and status on the ladder illustrative, reference, endorsed.",
+    "type": "object",
+    "required": [
+        "policyFormat",
+        "policyFormatVersion",
+        "policyId",
+        "version",
+        "method"
+    ],
+    "properties": {
+        "policyFormat": {
+            "const": "pkic.cbom.policy"
+        },
+        "policyFormatVersion": {
+            "type": "string"
+        },
+        "policyId": {
+            "type": "string"
+        },
+        "version": {
+            "type": "string"
+        },
+        "title": {
+            "type": "string"
+        },
+        "status": {
+            "enum": [
+                "illustrative",
+                "reference",
+                "endorsed"
+            ],
+            "$comment": "illustrative: shows how the method works and is not advice. reference: the working group's encoding of an instrument, traced to the clauses it implements and checked against the source text; only a policy whose interpretation is mechanical may have this status. endorsed: the body that issued the instrument, or the sector body responsible for it, has confirmed the encoding in writing; the endorsement object records it."
+        },
+        "interpretation": {
+            "enum": [
+                "mechanical",
+                "interpretive"
+            ],
+            "$comment": "mechanical: the rules are dates, lists or thresholds taken from the source without judgement. interpretive: the rules depend on a judgement, such as what is appropriate or state of the art, or on the working group's own classes."
+        },
+        "endorsement": {
+            "type": "object",
+            "required": [
+                "by",
+                "date",
+                "reference"
+            ],
+            "properties": {
+                "by": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "reference": {
+                    "type": "string"
+                }
+            },
+            "$comment": "Who confirmed the encoding, when, and where the confirmation can be read."
+        },
+        "source": {
+            "type": "object"
+        },
+        "method": {
+            "enum": [
+                "algorithm-transition",
+                "readiness-gap",
+                "edge-posture"
+            ]
+        },
+        "inputs": {
+            "type": "object"
+        },
+        "classification": {
             "type": "array",
             "items": {
-              "type": "string"
+                "type": "object",
+                "required": [
+                    "names",
+                    "quantumVulnerable"
+                ],
+                "properties": {
+                    "names": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 1
+                    },
+                    "family": {
+                        "type": "string"
+                    },
+                    "securityStrength": {
+                        "type": "integer"
+                    },
+                    "quantumVulnerable": {
+                        "type": "boolean"
+                    },
+                    "note": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "classificationSource": {
+            "type": "object",
+            "required": [
+                "setId",
+                "version",
+                "file",
+                "digest"
+            ],
+            "properties": {
+                "setId": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                },
+                "file": {
+                    "type": "string"
+                },
+                "digest": {
+                    "type": "object",
+                    "required": [
+                        "alg",
+                        "value"
+                    ],
+                    "properties": {
+                        "alg": {
+                            "const": "SHA-256"
+                        },
+                        "value": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{64}$"
+                        }
+                    }
+                }
             },
-            "minItems": 1
-          },
-          "family": {
-            "type": "string"
-          },
-          "securityStrength": {
-            "type": "integer"
-          },
-          "quantumVulnerable": {
-            "type": "boolean"
-          },
-          "note": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "schedule": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": [
-          "when"
-        ],
-        "properties": {
-          "when": {
+            "$comment": "A shared classification set, named by identifier and version and pinned by digest. The file is found beside the policy. Inline classification entries, if any, take precedence over the set's entries for the same name."
+        },
+        "schedule": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "when"
+                ],
+                "properties": {
+                    "when": {
+                        "type": "object"
+                    },
+                    "status": {
+                        "enum": [
+                            "acceptable",
+                            "deprecated",
+                            "disallowed"
+                        ]
+                    },
+                    "deprecatedAfter": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "disallowedAfter": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "note": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "purposes": {
             "type": "object"
-          },
-          "status": {
-            "enum": [
-              "acceptable",
-              "deprecated",
-              "disallowed"
-            ]
-          },
-          "deprecatedAfter": {
-            "type": "string",
-            "format": "date"
-          },
-          "disallowedAfter": {
-            "type": "string",
-            "format": "date"
-          },
-          "note": {
-            "type": "string"
-          }
+        },
+        "classes": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "changelog": {
+            "type": "array"
         }
-      }
     },
-    "purposes": {
-      "type": "object"
-    },
-    "classes": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
-      }
-    },
-    "changelog": {
-      "type": "array"
-    }
-  }
+    "anyOf": [
+        {
+            "required": [
+                "classification"
+            ]
+        },
+        {
+            "required": [
+                "classificationSource"
+            ]
+        }
+    ],
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "status": {
+                        "const": "reference"
+                    }
+                },
+                "required": [
+                    "status"
+                ]
+            },
+            "then": {
+                "required": [
+                    "interpretation"
+                ],
+                "properties": {
+                    "interpretation": {
+                        "const": "mechanical"
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "status": {
+                        "const": "endorsed"
+                    }
+                },
+                "required": [
+                    "status"
+                ]
+            },
+            "then": {
+                "required": [
+                    "interpretation",
+                    "endorsement"
+                ]
+            }
+        }
+    ]
 }
