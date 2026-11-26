@@ -294,3 +294,25 @@ than applying a schedule row chosen by an assumed strength. For a quantum-vulner
 after 2030 is the same at every strength, so only the current status of possibly short keys changes. The
 CBOM can avoid the question: where an interface states the key size, for example in `keyTypes` or the
 certificate algorithm, the policy uses it. Not yet applied, because it changes published results.
+
+**R2-33 — Identifying a product that has no package URL.**
+From: the Luna T7 record written from its FIPS 140-3 security policy (`drafts/hsm-luna-t7/`). P3 requires a
+product to be identified by a package URL. A hardware module is known by its manufacturer's part numbers
+and its CMVP certificate, both of which the record carries, but by no package URL. A writer other than the
+vendor could mint a `pkg:generic` URL, but it would not be the vendor's and two writers could mint
+different ones. Left: whether P3 accepts other stable identifiers for a product.
+Proposed. P3 accepts, for a product, a package URL or a manufacturer part number (`mpn`) together with the
+manufacturer's name, since CycloneDX 2.0 defines `mpn` as assigned by the original manufacturer. A record
+may add the module validation reference, but a certificate covers several part numbers and versions, so it
+does not identify the subject alone. Not yet applied.
+
+**R2-34 — A capability status that the source does not state.**
+From: the same record. G1.1 requires a capability status for every purpose on every interface and cannot
+be withheld. A security policy states what a module does in the validated firmware and never what the
+vendor plans, so a record written from it cannot say whether the cloning protocol, the PED tunnel or the
+firmware verifier will move to a post-quantum algorithm. The record leaves those entries out and marks them
+unknown, and G1 fails twelve times. Left: whether a third-party writer may mark the status unknown.
+Proposed. Keep G1.1 non-withholdable, so that a vendor cannot conform without stating its plans, and let a
+document whose author is not the subject's supplier mark the status `unknown`, which fails the rule in the
+same way as any other unknown MUST fact but is reported as `unknown` rather than as missing. The verdict
+does not change; the report tells the reader who could supply the fact. Not yet applied.

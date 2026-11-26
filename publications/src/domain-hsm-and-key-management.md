@@ -172,23 +172,54 @@ The provider's record of a cloud HSM or key management service, under Service Di
 
 "Example Payment HSM 9000", firmware 4.2.0, invented but realistic. It has a host command interface over TLS 1.3 with hybrid ML-KEM key exchange committed for the next firmware, a management console with custodian smart cards, remote key loading with TR-34, a master key store with `hardware-root`, and a working key database protected by the master key. It conforms to both profiles. A variant without key block formats fails exactly the rule that requires them.
 
-### 10.2 A real product: Kryoptic (proposed first)
+### 10.2 A real HSM from its FIPS 140-3 security policy: Thales Luna T7 (drafted)
 
-The first real example should be **Kryoptic**, an open-source PKCS #11 software token written in Rust. It is the best fit for three reasons:
+The first real example is written from public sources alone: the CMVP certificate #5450 and the module's FIPS 140-3 security policy. The record is in [`drafts/hsm-luna-t7/`](../../drafts/hsm-luna-t7/). The vendor has not reviewed it.
+
+The Luna T7 was chosen because its certificate is current and covers post-quantum algorithms. It is a FIPS 140-3 module at overall level 3, validated on 29 July 2026, and its approved algorithms include ML-KEM, ML-DSA and LMS. The same module is built into several of the vendor's HSMs and services, so their records could later cite this one.
+
+A security policy maps well onto HSM Product:
+
+| Security policy | Record |
+|---|---|
+| Validated versions: firmware 7.15.1 | Product version and `moduleValidationRef` |
+| Ports and interfaces | The interfaces |
+| Approved algorithms, with their algorithm certificates | `validatedModeAvailability` for each purpose |
+| Table of keys and other sensitive parameters | The key hierarchy. The master tamper key protects the partition keys and is rooted in hardware |
+| Cloning, backup and key transport | The interconnect interfaces, with their key establishment and wrapping |
+| Firmware load test | The firmware verifier: an RSA 4096 signature with SHA2-384 |
+
+The record does not conform, and its failures show what a security policy cannot supply:
+
+-   **Identification.** The module has part numbers and a certificate, but no package URL, which the baseline requires of a product (question register R2-33).
+
+-   **SBOM and vulnerability statements.** The security policy points to neither. Only the vendor can say whether they are published.
+
+-   **Plans.** A security policy states what the validated firmware does, never what the vendor plans. On the PED, firmware load, cloning and export interfaces it lists only classical asymmetric algorithms, so the post-quantum status for those purposes is unknown (R2-34).
+
+-   **Signature state.** It lists LMS key generation and signing, but says nothing about protecting the signature state after a restore or a cloning. That supports the signature state attribute proposed in 8.1.
+
+The security policy also contradicts itself on the approved mode: one section says that without the configuration it describes the module uses non-approved cryptography, and another says the module has no non-approved mode. The record follows the configuration section, so the approved mode is recorded as disabled until the Security Officer sets it. A record forces such a statement to be resolved one way.
+
+A security policy describes only the module boundary. The network appliance and the services built on the module have interfaces outside it, such as SSH to the appliance, and they belong in records of their own.
+
+### 10.3 A software token: Kryoptic (proposed)
+
+**Kryoptic**, an open-source PKCS #11 software token written in Rust, is the proposed example of a module with a software root:
 
 -   It offers PKCS #11 3.2 by default, the version that adds ML-KEM, ML-DSA and SLH-DSA (LMS came in version 3.1), and it supports ML-KEM and ML-DSA.
 
--   Its cryptography comes from OpenSSL 3.5 or later, and it can be built to use only the OpenSSL FIPS provider. The record would therefore show how a module's post-quantum capability and its validated mode depend on a provider underneath, which is a question every HSM buyer faces.
+-   Its cryptography comes from OpenSSL 3.5 or later, and it can be built to use only the OpenSSL FIPS provider. The record would therefore show how a module's post-quantum capability and its validated mode depend on a provider underneath.
 
--   As a software token, it tests the `software-root` side of the key hierarchy, which no example covers yet.
+-   As a software token, it tests the `software-root` side of the key hierarchy.
 
-**SoftHSM version 2** is better known, and its documentation lists ML-DSA mechanisms when it is built against OpenSSL 3 with ML-DSA enabled. It would make a good second example, to compare two tokens behind the same interface.
+**SoftHSM version 2** is better known, and its documentation lists ML-DSA mechanisms when it is built against OpenSSL 3 with ML-DSA enabled. It would make a good comparison, with two tokens behind the same interface.
 
-### 10.3 A software vault: OpenBao (proposed)
+### 10.4 A software vault: OpenBao (proposed)
 
 **OpenBao**, the open-source key and secrets manager, is the right example of a vault. Version 2.7 adds ML-DSA to its Transit and PKI engines, lets its listeners require post-quantum key exchange in TLS, and can keep keys in an external HSM through PKCS #11 plugins. One record would show a vault, a hybrid TLS listener and a hierarchy whose root can be either software or hardware, depending on the deployment.
 
-### 10.4 A cloud service (drafted in the financial services document)
+### 10.5 A cloud service (drafted in the financial services document)
 
 The financial services document describes AWS Payment Cryptography as a service record, written from public documentation. It shows what a customer can learn about a cloud key service without the provider's help, and lists the 21 facts it cannot.
 
@@ -227,21 +258,26 @@ The financial services document describes AWS Payment Cryptography as a service 
 | The PCI PTS HSM approval is a device approval, recorded separately from module validation. | 8.1 |
 | Payment key block formats are recorded separately from key store formats. | 8.1 |
 | A key hierarchy is recorded as key stores linked by `protectedBy`, up to a hardware or software root. | 8.2 |
-| The first real example is Kryoptic, followed by OpenBao for the vault case. | 10 |
+| The first real example is an HSM written from its FIPS 140-3 security policy, the Thales Luna T7. Kryoptic follows for a software root, and OpenBao for a vault. | 10 |
+| A record written from a security policy describes the module boundary only. Appliances and services built on the module have records of their own, which cite it. | 10.2 |
 
 ### 12.3 Open work
 
-1.  Build the Kryoptic product record from its source, and check it against HSM Product.
+1.  Ask the vendor to review the Luna T7 record and supply the facts marked unknown, and write a record of the network appliance that cites it.
 
-2.  Add the signature state attribute for stateful hash-based signatures to HSM Product (8.1).
+2.  Settle R2-33 (identifying a product that has no package URL) and R2-34 (a capability status that the source does not state).
 
-3.  Write HSM Deployment (8.3) and the key management service profile (8.4).
+3.  Make the HSM Product rule on the PCI PTS HSM approval reference apply only when the HSM has an approval.
 
-4.  Add a check that following `protectedBy` from every store reaches a root without a cycle.
+4.  Add the signature state attribute for stateful hash-based signatures to HSM Product (8.1).
 
-5.  Build the OpenBao record.
+5.  Build the Kryoptic and OpenBao records.
 
-6.  Add FIPS 140-3, PCI PTS HSM and the code-signing requirements to the regulatory sufficiency register.
+6.  Write HSM Deployment (8.3) and the key management service profile (8.4).
+
+7.  Add a check that following `protectedBy` from every store reaches a root without a cycle.
+
+8.  Add FIPS 140-3, PCI PTS HSM and the code-signing requirements to the regulatory sufficiency register.
 
 Annex A. HSM terms and methodology terms
 ----------------------------------------

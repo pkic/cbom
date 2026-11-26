@@ -1,6 +1,6 @@
 # CBOM Profiles — Application domain: HSMs and key management (Outline)
 
-> This outline has been drafted as Working Draft 0.1, in [`publications/src/domain-hsm-and-key-management.md`](../../publications/src/domain-hsm-and-key-management.md). The outline is kept as a record of the plan. Decisions 2 to 4 are answered as proposed positions in chapters 1, 8.2 and 10 of the draft. Ownership remains open.
+> This outline has been drafted as Working Draft 0.1, in [`publications/src/domain-hsm-and-key-management.md`](../../publications/src/domain-hsm-and-key-management.md). The outline is kept as a record of the plan. Decisions 2 to 4 are answered as proposed positions in chapters 1, 8.2 and 10 of the draft. The first real example is the Thales Luna T7, written from its FIPS 140-3 security policy, with Kryoptic and OpenBao after it. Ownership remains open.
 
 Outline · 26 November 2026 · Mike
 
