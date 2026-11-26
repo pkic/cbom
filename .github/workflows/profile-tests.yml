@@ -13,6 +13,7 @@ on:
       - 'docs/_data/**'
       - 'docs/assets/presentations/**'
       - 'tests/**'
+      - 'publications/**'
       - '.github/workflows/profile-tests.yml'
   pull_request:
     paths:
@@ -20,6 +21,7 @@ on:
       - 'docs/_data/**'
       - 'docs/assets/presentations/**'
       - 'tests/**'
+      - 'publications/**'
       - '.github/workflows/profile-tests.yml'
   workflow_dispatch:
 
@@ -53,3 +55,9 @@ jobs:
         # exist, or a tool value with no display label builds cleanly under
         # Jekyll and is only visible to a visitor.
         run: python tests/check-site-data.py
+
+      - name: Check the external links in the publications
+        # Requests every external link in the Markdown sources of the
+        # publications. The links into this repository are checked by the
+        # profile tests above, without network access.
+        run: python tests/check-publication-links.py --online

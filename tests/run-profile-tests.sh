@@ -994,6 +994,17 @@ else
   failed=$((failed + 1))
 fi
 
+# ------------------------------------------------------- publication links ---
+echo
+echo "Links in the publications"
+OUT="$("$PY" "$ROOT/tests/check-publication-links.py" 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then
+  passed=$((passed + 1))
+else
+  failed=$((failed + 1))
+fi
+
 # ------------------------------------------------------------------ summary ---
 echo
 echo "=================="

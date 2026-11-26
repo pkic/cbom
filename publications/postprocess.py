@@ -41,6 +41,16 @@ def fix_tables(x):
         return t
     return re.sub(r"<w:tbl>.*?</w:tbl>", one, x, flags=re.S)
 
+def fix_code(x):
+    # Code blocks: pandoc's SourceCode paragraph becomes the Code style,
+    # with plain runs inside, as in the originals.
+    def block(m):
+        p = m.group(0).replace('<w:pStyle w:val="SourceCode" />', '<w:pStyle w:val="Code"/>')
+        return re.sub(r'<w:rPr><w:rStyle w:val="VerbatimChar" ?/></w:rPr>', "", p)
+    x = re.sub(r'<w:p>(?:(?!</w:p>).)*?<w:pStyle w:val="SourceCode" ?/>.*?</w:p>', block, x, flags=re.S)
+    # Inline code: VerbatimChar becomes the Code Char style.
+    return re.sub(r'<w:rStyle w:val="VerbatimChar" ?/>', '<w:rStyle w:val="CodeChar"/>', x)
+
 def fix_paragraphs(x):
     x = re.sub(r'<w:pStyle w:val="(?:BodyText|FirstParagraph|Compact)" ?/>', "", x)
     x = re.sub(r'<w:jc w:val="left" ?/>', "", x)
@@ -51,7 +61,7 @@ def fix_paragraphs(x):
 path = sys.argv[1]
 z = zipfile.ZipFile(path)
 x = z.read("word/document.xml").decode("utf8")
-x = fix_paragraphs(fix_tables(x))
+x = fix_paragraphs(fix_code(fix_tables(x)))
 tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".docx").name
 with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as out:
     for item in z.infolist():

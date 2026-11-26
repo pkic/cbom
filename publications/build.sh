@@ -8,6 +8,11 @@ export CBOM_TAG="${CBOM_TAG:-release-1}"
 OUT=${OUT:-../../docs/assets/publications}
 declare -A NAMES=(
   [publication-1-foundations]=CBOM-Profiles-Publication-1-Foundations
+  [publication-2-profiles-and-conformance]=CBOM-Profiles-Publication-2-Profiles-and-conformance
+  [publication-3-applying-the-methodology]=CBOM-Profiles-Publication-3-Applying-the-methodology
+  [domain-operational-technology]=CBOM-Profiles-Application-domain-Operational-technology
+  [domain-saas-and-cloud-services]=CBOM-Profiles-Application-domain-SaaS-and-cloud-services
+  [domain-telecommunications]=CBOM-Profiles-Application-domain-Telecommunications
 )
 for src in "${!NAMES[@]}"; do
   pandoc "$src.md" \

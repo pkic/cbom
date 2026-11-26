@@ -42,6 +42,8 @@ def load(path):
         "rows": len(re.findall(r"<w:tr[ >]", body)),
         "images": len(re.findall(r"<a:blip ", body)),
         "links": links,
+        "code": [norm(html.unescape(re.sub(r"<[^>]+>", "", r))) for r in re.findall(r'<w:r>(?:(?!</w:r>).)*?<w:rStyle w:val="CodeChar" ?/>.*?</w:r>', body, re.S)],
+        "codeblocks": [html.unescape(re.sub(r"<[^>]+>", "", re.sub(r"<w:br ?/>", "\n", p))) for p in re.findall(r'<w:p>(?:(?!</w:p>).)*?<w:pStyle w:val="Code" ?/>.*?</w:p>', body, re.S)],
         "bold": len(re.findall(r"<w:b(?: w:val=\"(?:true|1|on)\")? ?/>", body)),
         "italic": len(re.findall(r"<w:i(?: w:val=\"(?:true|1|on)\")? ?/>", body)),
     }
@@ -54,6 +56,12 @@ print(f"paragraphs  {len(ta):5} {len(tb):5}  text match {sm.ratio():.4f}")
 for k in ("tables", "rows", "images", "bold", "italic"):
     print(f"{k:11} {a[k]:5} {b[k]:5}")
 print(f"links       {len(a['links']):5} {len(b['links']):5}")
+ca, cb = "".join(a["code"]).replace(" ", ""), "".join(b["code"]).replace(" ", "")
+print(f"code text   {len(ca):5} {len(cb):5}  {'same' if ca == cb else 'DIFFERENT'}")
+print(f"codeblocks  {len(a['codeblocks']):5} {len(b['codeblocks']):5}  {'same' if a['codeblocks'] == b['codeblocks'] else 'DIFFERENT'}")
+if a["links"] != b["links"]:
+    print("  links only in original:", sorted(set(a["links"]) - set(b["links"])))
+    print("  links only in rebuilt: ", sorted(set(b["links"]) - set(a["links"])))
 kinds = lambda d: [k for k, _ in d["paras"]]
 ka, kb = kinds(a), kinds(b)
 same_kind = sum(1 for (x, y) in zip(ka, kb) if x == y) if ta == tb else None
