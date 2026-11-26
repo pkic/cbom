@@ -17,3 +17,6 @@ __pycache__/
 
 # Working files from Claude sessions; not part of the site or the methodology
 Claude outputs/
+
+# Local build and comparison output for the publications
+publications/_build/
