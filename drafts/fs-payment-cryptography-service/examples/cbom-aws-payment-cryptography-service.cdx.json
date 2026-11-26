@@ -1,0 +1,515 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "Worked example for the financial services domain draft (chapter 11). AWS Payment Cryptography as a service record, written by the PKI Consortium CBOM Profiles Working Group from the provider's public documentation, read on 26 November 2026. Not reviewed by the provider. Facts the documentation does not state are marked unknown. Built by drafts/fs-payment-cryptography-service/build.py.",
+  "serialNumber": "urn:uuid:5e1c0a77-0000-4000-8000-0000000f5001",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-26T12:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "operations"
+      }
+    ],
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "Manual reading of public documentation",
+          "version": "1.0",
+          "description": "Pages listed in the externalReferences of type documentation"
+        }
+      ]
+    },
+    "supplier": {
+      "name": "Amazon Web Services (provider of the service described)"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "service:aws-payment-cryptography",
+        "name": "AWS Payment Cryptography",
+        "description": "Managed payment HSM service: payment key management and payment cryptographic operations.",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "service"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all-external"
+          },
+          {
+            "name": "pkic:profile:serviceRegions",
+            "value": "every AWS Region where the service is offered; the list is not reproduced"
+          },
+          {
+            "name": "pkic:profile:regenerationTrigger",
+            "value": "interface-change"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": {
+                  "name": "tag-uri",
+                  "description": "A tag URI (RFC 4151)."
+                },
+                "value": "tag:pkic.org,2026:example/aws-payment-cryptography"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKI Consortium CBOM Profiles Working Group"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "service",
+          "bom-ref": "service:api-tls",
+          "name": "TLS on the control plane and data plane API endpoints",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.2, 1.3"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:customer-application"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:aws-api-endpoint"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            },
+            {
+              "name": "pkic:profile:disclosure:keyExchange",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:encryption",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:authentication",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Clients must support TLS 1.2 or later (infrastructure security page). The data protection page states that endpoints support TLS 1.0 to 1.3, and that the service requires the versions and cipher suites PCI defines as strong cryptography. Hybrid post-quantum key exchange with ML-KEM is offered, and the client decides whether to use it. The groups, cipher suites and server certificate algorithm are not stated, so the key exchange is marked unknown."
+            }
+          ],
+          "description": "Carries every API call. The pages read do not name the TLS groups, cipher suites or certificate algorithm."
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:mgmt-control-plane",
+          "name": "Control plane API: create, import, export and delete keys",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "HTTPS API"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersion",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:customer-application"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:aws-api-endpoint"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:disclosure:authentication",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Carried over service:api-tls. Every call must be signed (data protection page); the signing algorithm is not stated on the pages read."
+            }
+          ],
+          "description": "Key management operations, including import and export of keys."
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:svc-data-plane",
+          "name": "Data plane API: payment operations",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "HTTPS API"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersion",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:customer-application"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:aws-api-endpoint"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:disclosure:authentication",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Carried over service:api-tls. Every call must be signed (data protection page); the signing algorithm is not stated on the pages read."
+            }
+          ],
+          "description": "Payment operations such as PIN translation, card verification values and EMV cryptograms."
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:kt-kek-tr34",
+          "name": "Import and export of key-encryption keys with TR-34",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TR-34"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersion",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:key-distribution-host"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:key-receiving-device"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "RSA-2048, RSA-3072, RSA-4096"
+            },
+            {
+              "name": "pkic:profile:disclosure:encryption",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:authentication",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The import and export page lists TR-34 with RSA 2048, 3072 and 4096 bit keys for exchanging key-encryption keys, and RSA wrap where a partner does not support TR-34. Every working key later exchanged under a key-encryption key inherits the exposure of this interface."
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:kt-kek-ecdh",
+          "name": "Import and export of key-encryption keys with ECDH",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "ECDH key agreement"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersion",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:partner-hsm"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:aws-payment-cryptography"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDH-P-256, ECDH-P-384, ECDH-P-521"
+            },
+            {
+              "name": "pkic:profile:disclosure:encryption",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:authentication",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "NIST curves P-256, P-384 and P-521; the shared secret is derived with the key derivation function of NIST SP 800-56A or ANSI X9.63 (import and export page; AWS blog). ECDH is the only method listed for exchanging AES-256 key-encryption keys."
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:kt-working-keys",
+          "name": "Import and export of working keys in key blocks",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "ANSI X9.143 key block"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersion",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:partner-hsm"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:aws-payment-cryptography"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "TDEA-2KEY, TDEA-3KEY, AES-128, AES-192, AES-256"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Working keys are exchanged as TR-31 or ANSI X9.143 key blocks under a key-encryption key that was exchanged first. The key block binds each key to its usage. Triple DES is still accepted, for compatibility with counterparties."
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:sto-payment-keys",
+          "name": "Storage of payment keys in the service's HSMs",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "no-product-document"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:keyCustodySupported",
+              "value": "provider-managed"
+            },
+            {
+              "name": "pkic:profile:keyCustody",
+              "value": "provider-managed"
+            },
+            {
+              "name": "pkic:profile:storageRegion",
+              "value": "the AWS Region in which each key was created"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Keys are held in TR-31 key blocks protected by AES-256 main keys in the service's HSMs, which meet the PCI PTS HSM requirements (foundations page). A key exists in a single AWS Region (terminology page). A customer can import its own keys, but the service always holds them under its own main keys, so custody is provider-managed."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "service:aws-payment-cryptography",
+      "dependsOn": [
+        "service:api-tls",
+        "service:mgmt-control-plane",
+        "service:svc-data-plane",
+        "service:kt-kek-tr34",
+        "service:kt-kek-ecdh",
+        "service:kt-working-keys",
+        "service:sto-payment-keys"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "incomplete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "documentation",
+      "url": "https://docs.aws.amazon.com/payment-cryptography/latest/userguide/data-protection.html",
+      "comment": "Source: AWS Payment Cryptography user guide (data-protection)."
+    },
+    {
+      "type": "documentation",
+      "url": "https://docs.aws.amazon.com/payment-cryptography/latest/userguide/infrastructure-security.html",
+      "comment": "Source: AWS Payment Cryptography user guide (infrastructure)."
+    },
+    {
+      "type": "documentation",
+      "url": "https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-importexport.html",
+      "comment": "Source: AWS Payment Cryptography user guide (import-export)."
+    },
+    {
+      "type": "documentation",
+      "url": "https://docs.aws.amazon.com/payment-cryptography/latest/userguide/cryptographic-details.foundations.html",
+      "comment": "Source: AWS Payment Cryptography user guide (foundations)."
+    },
+    {
+      "type": "documentation",
+      "url": "https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html",
+      "comment": "Source: AWS Payment Cryptography user guide (key-attributes)."
+    },
+    {
+      "type": "documentation",
+      "url": "https://docs.aws.amazon.com/payment-cryptography/latest/userguide/terminology.html",
+      "comment": "Source: AWS Payment Cryptography user guide (terminology)."
+    },
+    {
+      "type": "release-notes",
+      "url": "https://aws.amazon.com/about-aws/whats-new/",
+      "comment": "Where AWS announces changes to its services.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "change-notice"
+        }
+      ]
+    },
+    {
+      "type": "advisories",
+      "url": "https://aws.amazon.com/security/security-bulletins/",
+      "comment": "Where AWS publishes security bulletins.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "vulnerability-statements"
+        }
+      ]
+    }
+  ]
+}

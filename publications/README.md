@@ -31,6 +31,12 @@ The build needs pandoc and Python 3. By default the links point to the tag
 `CBOM_TAG=release-1-rc1 bash publications/build.sh`. To write the output
 somewhere other than `docs/assets/publications/`, set `OUT`.
 
+The build is reproducible. Building an unchanged source gives a byte-identical
+Word file, so git shows a Word file as changed only when its source changed.
+The document's created and modified dates are taken from the draft date in its
+header line, for example "Working Draft 0.1 · Nov 26, 2026". Change that date
+when you issue a new draft.
+
 ## Writing rules for the sources
 
 - **Links to files in this repository** are written as relative paths from

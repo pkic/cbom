@@ -236,3 +236,13 @@ sector profile extends the baseline or the change core. The domain drafts extend
 Deployment Disclosure, Procurement and Service Disclosure, Restricted. Left: whether position 27 is read
 as "directly or through a Release 1 profile", and the wording changed before ratification.
 Proposed. Publication 3, position 27, reads: "A sector profile extends a Release 1 profile, directly or through another. It adds only rules specific to its sector; a rule that serves several sectors moves to Release 1 or a group document." The OT and telecom documents quote the new wording. The position is not yet ratified, so it changes before the ballot.
+**R2-29 — A service that has no records to cite.**
+From: the financial services worked example (AWS Payment Cryptography, chapter 11). Service Disclosure
+P3 requires a service record to cite at least one record it builds on, by BOM-Link and hash, and does
+not allow it to be withheld. A provider that runs its own platform on hardware whose vendor publishes no
+product records cannot meet P3 honestly. Publication 3 holds that a rule no legitimate subject can satisfy
+honestly is wrong, not strict (decision 0012). Left: whether P3 accepts a declared absence.
+Proposed. P3 gains `orDeclaredAbsent`, as P2 has, with a vocabulary of reasons: `no-records-published`
+(the products exist but their vendors publish no records) and `provider-built` (the provider wrote the
+software itself and publishes no product record of it). A record that declares an absence still conforms,
+and a policy can treat the absence as a gap. Not yet applied.
