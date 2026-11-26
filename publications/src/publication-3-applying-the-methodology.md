@@ -449,7 +449,7 @@ Regulators and policy makers increasingly ask for a cryptographic inventory, but
 
 A question that is only partly answered names its gap. A gap is either a candidate attribute, which goes to the question register, or a plain statement that the question stays outside a CBOM. For example, the evidence questions for CNSA 2.0 show that no profile yet requires the algorithm that a product uses to verify its updates. That finding is a candidate attribute for the change core. The evidence questions for NIS2 key management show the opposite case. A CBOM can state what a product's key management can do, but it cannot state how an entity runs its key management, and no attribute could change that.
 
-The first release of the register covers seven instruments that apply in every sector: NIST IR 8547, Executive Order 14412 with OMB memorandum M-26-15, NIS2 with Implementing Regulation (EU) 2024/2690, the NIS Cooperation Group's post-quantum roadmap, the Cyber Resilience Act, CNSA 2.0 and BSI TR-02102-1. Each application-domain document adds the instruments of its own sector in the same form.
+The register starts with seven instruments that apply in every sector: NIST IR 8547, Executive Order 14412 with OMB memorandum M-26-15, NIS2 with Implementing Regulation (EU) 2024/2690, the NIS Cooperation Group's post-quantum roadmap, the Cyber Resilience Act, CNSA 2.0 and BSI TR-02102-1. Each application-domain document adds the instruments of its own sector in the same form. The financial services draft, for example, adds PCI DSS and the DORA technical standards on ICT risk.
 
 17. Related work
 ----------------

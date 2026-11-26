@@ -93,6 +93,14 @@ title: Overview
          including service records, key custody and shared tenancy.</p>
       <span class="card-cta">Download (Word) &#8595;</span>
     </a>
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Application-domain-Financial-services.docx' | relative_url }}" download>
+      <span class="card-kicker">Working Draft 0.1</span>
+      <h3>Financial services</h3>
+      <p>How the methodology applies to payments, interbank messaging and HSM estates: key
+         hierarchies, payment schemes as shared-trust systems, and running the Triple DES
+         retirement and the post-quantum migration together.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
   </div>
 </section>
 
@@ -151,7 +159,7 @@ title: Overview
 <section class="wrap cards-section">
   <div class="section-head">
     <h2>Explore the project</h2>
-    <p>Nine places to dig in.</p>
+    <p>Ten places to dig in.</p>
   </div>
   <div class="card-grid">
     <a class="feature-card" href="{{ '/methodology/' | relative_url }}">
@@ -191,6 +199,13 @@ title: Overview
       <p>The evidence base — standards, regulation and guidance the methodology aligns to,
          filterable by category, status and jurisdiction.</p>
       <span class="card-cta">Browse the register &#8594;</span>
+    </a>
+    <a class="feature-card" href="{{ '/methodology/regulation.html' | relative_url }}">
+      <span class="card-kicker">9 instruments</span>
+      <h3>Regulation</h3>
+      <p>For each regulation and policy, whether a CBOM that conforms to a profile gives a
+         reader the facts needed to show the instrument is met, clause by clause, with the gaps.</p>
+      <span class="card-cta">See the coverage &#8594;</span>
     </a>
     <a class="feature-card" href="{{ '/tooling/' | relative_url }}">
       <span class="card-kicker">{{ ntools }} tools</span>

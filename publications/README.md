@@ -71,6 +71,6 @@ tables, images, emphasis and links.
 
 "Checked" means that `compare.py` found the same paragraphs, paragraph styles,
 tables, table rows, images, bold and italic text, inline code and code blocks as
-in the original Word file. Adding the links changed no text. The Word files in
-`docs/assets/publications/` are still the originals until the first build
-replaces them.
+in the original Word file. Adding the links changed no text. Since 26 November
+2026 the Word files in `docs/assets/publications/` are built from the Markdown
+sources.

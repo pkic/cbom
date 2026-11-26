@@ -12,10 +12,11 @@ kept outside the release as a living register.
 |---|---|
 | `catalogue/*.yaml` | One file for each instrument: its source, and one entry for each question a reader must answer to show compliance |
 | `coverage.md` | The coverage matrix, generated from the catalogue. Do not edit it by hand |
+| `../docs/methodology/regulation.html` | The same matrix as a page on the working group site, generated at the same time |
 | `../tools/build_regulatory_coverage.py` | Writes `coverage.md` |
 | `../tests/check-regulation.py` | Checks the catalogue against the profiles, and checks that `coverage.md` is up to date |
 
-To regenerate the matrix after editing the catalogue:
+To regenerate the matrix and the site page after editing the catalogue:
 
 ```
 python3 tools/build_regulatory_coverage.py
