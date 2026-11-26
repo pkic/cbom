@@ -1,0 +1,107 @@
+{
+  "$comment": "Draft depth of the HSM Product profile: the HSM's key hierarchy. For each key store, the store whose key protects it, up to the root that the hardware protects, with the key block format each store uses. A buyer reads it to see which keys move when the wrapping algorithm of one level changes. Draft only; not part of Release 1.",
+  "profileId": "pkic.example.hsm-key-hierarchy",
+  "profileTag": "hsm-key-hierarchy",
+  "title": "HSM Key Hierarchy (Draft)",
+  "version": "0.2",
+  "conformanceKeywords": "BCP 14 (MUST/SHOULD/MAY)",
+  "extends": {
+    "profileId": "pkic.example.hsm-product",
+    "version": "0.1",
+    "file": "profile-hsm-product.rules.json"
+  },
+  "objective": {
+    "$comment": "C1. A depth of HSM Product: the same decision, with the hierarchy needed to plan a change of wrapping algorithm.",
+    "consumer": "An HSM owner planning a change of algorithm, or an assessor acting for one.",
+    "decision": "Which keys must be re-wrapped or re-issued, and in which order, when the algorithm that protects one level of the hierarchy changes.",
+    "decisionOptions": [
+      "re-wrap in place",
+      "re-issue under a new parent key",
+      "replace the HSM"
+    ]
+  },
+  "scope": {
+    "$comment": "C11. As HSM Product.",
+    "subjectTypes": [
+      "product"
+    ],
+    "orientation": "both",
+    "relationshipTypes": [
+      "interface"
+    ],
+    "lifecycleStages": [
+      "implemented"
+    ],
+    "cryptographicPurposes": [
+      "key-establishment",
+      "encryption",
+      "entity-authentication",
+      "key-protection"
+    ]
+  },
+  "appliesTo": {
+    "cyclonedx": {
+      "min": "1.6",
+      "tested": "2.0"
+    }
+  },
+  "interfaceRules": [
+    {
+      "id": "I3",
+      "attribute": "protectedBy",
+      "level": "MUST",
+      "constraint": {
+        "refersToLocal": {
+          "literals": [
+            "hardware-root",
+            "software-root"
+          ]
+        }
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "note": "The storage interface whose key protects the keys in this store, or the root at the top of the hierarchy: 'hardware-root' where a tamper-responsive hardware module protects it, 'software-root' where it is protected in software, as in a key vault without a hardware module. Following protectedBy from any store reaches one of the two."
+    },
+    {
+      "id": "I4",
+      "attribute": "keyBlockFormat",
+      "level": "MUST",
+      "constraint": {
+        "enumRef": "keyBlockFormatVocabulary"
+      },
+      "withholdable": false,
+      "requiredWhen": {
+        "attribute": "interfaceType",
+        "equals": "storage"
+      },
+      "note": "The format of the key blocks in this store. With keyWrapping (baseline I10), it gives the algorithm and the format at each level of the hierarchy."
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "Individual keys and their values",
+      "reason": "Excluded at every depth. The hierarchy describes the stores and how they protect each other, not the keys in them."
+    }
+  ],
+  "artifacts": {
+    "conformingExample": "examples/cbom-example-payment-hsm-product.cdx.json",
+    "nonConformingExample": "examples/cbom-example-payment-hsm-product-fail-I1.cdx.json"
+  },
+  "changelog": [
+    {
+      "version": "0.2",
+      "date": "2026-11-26",
+      "kind": "widening",
+      "summary": "protectedBy accepts 'software-root', so that a software key vault can record where its hierarchy is rooted (HSMs and key management domain document, 1)."
+    },
+    {
+      "version": "0.1",
+      "date": "2026-11-26",
+      "kind": "initial",
+      "summary": "First draft, from the financial services draft, 9.1 (key hierarchy depth)."
+    }
+  ]
+}

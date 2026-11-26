@@ -10,14 +10,15 @@ instrument:
     Annex I sets essential cybersecurity requirements. Part I covers the properties of
     the product, including confidentiality by state-of-the-art encryption and the
     integrity of data, commands and configuration. Part II covers vulnerability
-    handling, including documenting components in an SBOM. The cryptographic
+    handling, including documenting components in an SBOM that covers at least the
+    top-level dependencies, and distributing updates securely. The cryptographic
     requirements of the harmonised standards are still being drafted. They include an
     allow list of mechanisms, key-management controls and crypto agility.
 
 questions:
   - id: CRA-I-2e
     clause: "Annex I, Part I, point (2)(e)"
-    checked: secondary
+    checked: primary
     question: >
       Is the data the product stores and transmits encrypted, and is each mechanism
       state of the art?
@@ -35,7 +36,7 @@ questions:
 
   - id: CRA-I-2f
     clause: "Annex I, Part I, point (2)(f)"
-    checked: secondary
+    checked: primary
     question: >
       How does the product protect the integrity of the data, commands and
       configuration it stores, sends and receives?
@@ -54,8 +55,8 @@ questions:
       holds, alongside keyWrapping (I10).
 
   - id: CRA-I-2c
-    clause: "Annex I, Part I, point (2)(c)"
-    checked: secondary
+    clause: "Annex I, Part I, point (2)(c), and Part II, point (7)"
+    checked: primary
     question: >
       How do security updates reach the product, and whose updates does the product
       accept?
@@ -70,7 +71,7 @@ questions:
 
   - id: CRA-II-1
     clause: "Annex I, Part II, point (1)"
-    checked: secondary
+    checked: primary
     question: "Can a reader reach the product's SBOM from its CBOM, and be sure it is the right one?"
     evidence:
       - profile: pkic.example.interface-disclosure

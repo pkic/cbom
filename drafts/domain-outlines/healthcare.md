@@ -1,5 +1,7 @@
 # CBOM Profiles — Application domain: Healthcare (Outline)
 
+> This outline has been drafted as Working Draft 0.1, in [`publications/src/domain-healthcare.md`](../../publications/src/domain-healthcare.md). The outline is kept as a record of the plan.
+
 Outline · 26 November 2026 · Mike
 
 ## Purpose and sources

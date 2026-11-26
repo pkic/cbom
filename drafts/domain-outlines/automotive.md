@@ -1,5 +1,7 @@
 # CBOM Profiles — Application domain: Automotive (Outline)
 
+> This outline has been drafted as Working Draft 0.1, in [`publications/src/domain-automotive.md`](../../publications/src/domain-automotive.md). The outline is kept as a record of the plan. Decision 2 is answered as a proposed position: charging is part of the document, and the station's grid side stays with the operational technology document. Decision 3 is answered as for healthcare: the ECU extension belongs in the future devices document. Ownership remains open.
+
 Outline · 26 November 2026 · Mike
 
 ## Purpose and sources

@@ -5,19 +5,22 @@ instrument:
   kind: guidance for national security systems
   published: 2022-09
   appliesTo: "Owners, operators and vendors of US national security systems"
-  source: null  # to be added: the NSA advisory and the CNSA 2.0 FAQ
+  source: https://media.defense.gov/2022/Sep/07/2003071836/-1/-1/0/CSI_CNSA_2.0_FAQ_.PDF
   summary: >
-    Names the algorithms for national security systems and sets two dates for each
-    category of technology: by when products should support and prefer CNSA 2.0, and
-    by when they should use it exclusively. Software and firmware signing comes first
-    (prefer by 2025, exclusively by 2030), then networking equipment (2026 and 2030),
-    operating systems (2027 and 2033), web browsers, servers and cloud services (2025
-    and 2033), and niche equipment (2030 and 2033).
+    Names the algorithms for national security systems. The current FAQ (version 2.1,
+    December 2024) gives the dates of CNSSP 15: new acquisitions must be CNSA 2.0
+    compliant from 1 January 2027, equipment and services that cannot support CNSA 2.0
+    are phased out by 31 December 2030, and CNSA 2.0 is mandated by 31 December 2031,
+    each unless otherwise noted. For firmware and software signing it prefers LMS or
+    XMSS now. The earlier FAQ (version 2.0, April 2024) set two dates for each category
+    of technology, for example software and firmware signing (prefer by 2025,
+    exclusively by 2030) and operating systems (2027 and 2033). Version 2.1 does not
+    repeat that table.
 
 questions:
   - id: CNSA-category
-    clause: "Transition timeline by category of technology"
-    checked: secondary
+    clause: "Transition timeline by category of technology (FAQ version 2.0, April 2024; not repeated in version 2.1)"
+    checked: primary
     question: >
       Does each interface support and prefer, or exclusively use, CNSA 2.0 algorithms
       by the date set for the product's category?
@@ -39,8 +42,8 @@ questions:
       programme.
 
   - id: CNSA-signing
-    clause: "Software and firmware signing: exclusive use by 2030"
-    checked: secondary
+    clause: "Firmware and software signing: LMS or XMSS preferred now; fielded equipment transitioned by 31 December 2030 (FAQ version 2.1)"
+    checked: primary
     question: >
       Which algorithm does the product use to verify new software and firmware, and
       can that algorithm and its trust anchor be replaced?
@@ -62,8 +65,8 @@ questions:
       change core.
 
   - id: CNSA-acquisition
-    clause: "New acquisitions for national security systems support CNSA 2.0 from 1 January 2027"
-    checked: secondary
+    clause: "CNSSP 15, as given in the FAQ version 2.1: new acquisitions CNSA 2.0 compliant from 1 January 2027"
+    checked: primary
     question: "Does the product support CNSA 2.0 algorithms for each cryptographic purpose?"
     evidence:
       - profile: pkic.example.pqc-migration

@@ -17,7 +17,7 @@ instrument:
 questions:
   - id: CIR-9.1
     clause: "Annex, point 9.1"
-    checked: eu-report
+    checked: primary
     question: "Has the entity adopted a policy and procedures on the use of cryptography?"
     evidence: []
     levels: {expressible: "no", required: "no", evaluable: "no"}
@@ -29,7 +29,7 @@ questions:
 
   - id: CIR-9.2a
     clause: "Annex, point 9.2(a)"
-    checked: secondary
+    checked: primary
     question: >
       Which cryptographic mechanisms protect each asset, and are they strong enough for
       the asset's classification?
@@ -54,7 +54,7 @@ questions:
 
   - id: CIR-9.2b
     clause: "Annex, point 9.2(b)"
-    checked: secondary
+    checked: primary
     question: >
       Which protocols and algorithm families are in use, and can they be replaced when
       the state of the art moves?
@@ -73,11 +73,12 @@ questions:
       profile that extends it.
 
   - id: CIR-9.2c
-    clause: "Annex, point 9.2(c)"
-    checked: secondary
+    clause: "Annex, point 9.2(c), items (i) to (xii)"
+    checked: primary
     question: >
-      How are keys generated, stored, renewed, revoked and destroyed for each
-      cryptographic system?
+      How are keys generated, distributed, stored, changed, revoked, recovered,
+      backed up and destroyed for each cryptographic system, and how are public key
+      certificates obtained?
     evidence:
       - profile: pkic.example.pqc-migration-extended
         rules: [I1, I2, I4, I7]
@@ -101,10 +102,10 @@ questions:
 
   - id: CIR-9.3
     clause: "Annex, point 9.3"
-    checked: secondary
+    checked: primary
     question: >
-      Has the entity reviewed its cryptography against developments in cryptanalysis,
-      and found what must change?
+      Has the entity reviewed its cryptography at planned intervals against the state
+      of the art in cryptography, and found what must change?
     evidence:
       - profile: pkic.example.interface-disclosure
         rules: [I3, I4, I5]

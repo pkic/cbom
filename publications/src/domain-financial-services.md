@@ -85,7 +85,7 @@ PKI Consortium Publications 1 to 3 define all of this in full. This draft uses o
 
 **Estates are long-lived and certified.** Cards stay in the field for three to five years, and terminals much longer. A change to an HSM or a terminal can trigger re-validation under FIPS 140-3, PCI HSM or PCI PTS POI. The change core and the PQC migration profile record this with `certificationImpact` and `certificationScheme` (R2-23).
 
-**Inventories are already required.** PCI DSS 4.0.1 requires an inventory of the cipher suites and protocols in use (requirement 12.3.3), and an inventory of the trusted keys and certificates that protect card numbers in transit (requirement 4.2.1.1). The DORA technical standards require a register of certificates and certificate-storing devices. Chapter 12 shows how far CBOMs answer these requirements.
+**Inventories are already required.** PCI DSS 4.0.1 requires an inventory of the cipher suites and protocols in use (requirement 12.3.3), and an inventory of the trusted keys and certificates that protect card numbers in transit (requirement 4.2.1.1). The DORA technical standards require a register of certificates and certificate-storing devices (Delegated Regulation 2024/1774, Article 7(4)). Chapter 12 shows how far CBOMs answer these requirements.
 
 4. The financial system in the methodology's terms
 ---------------------------------------------------
@@ -132,7 +132,7 @@ Financial services is migrating its cryptography twice. The retirement of Triple
 
 **Triple DES.** NIST SP 800-131A Revision 2 disallowed encryption with Triple DES after 2023. In payments, the PCI PIN Security Requirements disallowed fixed-key Triple DES PIN encryption from 1 January 2023, in terminals and between hosts. The same standard requires symmetric keys to be held and exchanged in key blocks, which bind each key to its permitted usage. Key blocks were required within service provider environments from June 2019, for external connections to associations and networks from 1 January 2023, and for merchant hosts, points of sale and ATMs from 1 January 2025. The dates for supporting ISO format 4 PIN blocks, the only ISO PIN block format that uses AES, were suspended in 2021 while the Council considers how to support the move from Triple DES to AES across the ecosystem.
 
-**Post-quantum.** The final NIST IR 8547 deprecates quantum-vulnerable signature and key-establishment algorithms after 2030 and disallows them after 2035. EMVCo does not expect quantum computers to threaten EMV chip payments before 2040, and its August 2026 position paper treats symmetric cryptography as outside the quantum threat. In January 2026 the G7 Cyber Expert Group published a non-binding roadmap for a coordinated transition across the financial sector.
+**Post-quantum.** The final NIST IR 8547 deprecates quantum-vulnerable signature and key-establishment algorithms after 2030 and disallows them after 2035. EMVCo does not expect quantum computers to threaten EMV chip payments before 2040, and it considers the symmetric cryptography of online cryptograms resistant to quantum attacks. An updated EMVCo position paper of August 2026 has been reported, but has not yet been read in the original for this draft. In January 2026 the G7 Cyber Expert Group published a non-binding roadmap for a coordinated transition across the financial sector.
 
 ### 6.2 One record for both
 
@@ -167,11 +167,11 @@ The record does not say which migration comes first. That is the bank's decision
 
 | Use case | Who decides, and what | Profile |
 |---|---|---|
-| Procurement of HSMs and payment platforms | A bank or processor: whether a tender's disclosure is complete enough to compare | Procurement (Release 1); the HSM product profile in the Change planning group document (9.1) |
+| Procurement of HSMs and payment platforms | A bank or processor: whether a tender's disclosure is complete enough to compare | Procurement (Release 1); HSM Product, in the HSMs and key management domain document (9.1) |
 | Shared-trust network migration | A scheme operator: when every participant can move to a new trust anchor | The scheme profile (9.3) for the scheme's own components, the participants' own records, and the scheme-readiness policy (10.2) |
 | Card estate migration | An issuer: which card products can carry new keys and which need reissue | IoT Device Estate, with the card extension in a future devices document (9.2) |
 | Terminal estate migration | An acquirer: which terminals can be updated and which must be replaced | IoT Device Estate, with the terminal extension in a future devices document (9.2) |
-| Key hierarchy migration | An HSM owner: which keys move first, and what each depends on | PQC Migration Extended, with the key hierarchy depth proposed for the Change planning group document (9.1) |
+| Key hierarchy migration | An HSM owner: which keys move first, and what each depends on | HSM Key Hierarchy, in the HSMs and key management domain document (9.1) |
 | Vulnerability response | A security operations centre: which services an HSM or library advisory reaches | The baseline, through I9 with R2 and R3. A restricted vulnerability-response profile is not yet written |
 | Annual review of cryptography | A bank: the cipher suites and protocols in use, reviewed against policy (PCI DSS 12.3.3) | Deployment Disclosure (Release 1), read by a policy |
 | Third-party register | A bank: the cryptography of each ICT provider, beside what DORA asks for | Service Disclosure (Release 1) |
@@ -192,9 +192,9 @@ The record does not say which migration comes first. That is the bank's decision
 9. Profiles financial services relies on
 ----------------------------------------
 
-The HSM profile and the card and terminal extensions serve every sector that uses HSMs and payment devices, so they are drafted in the generic documents and not here. This chapter states what financial services needs from each.
+The HSM profiles and the card and terminal extensions serve every sector that uses HSMs and payment devices, so they are drafted elsewhere and not here: the HSM profiles in a domain document of their own, and the card and terminal extensions in a future devices document. This chapter states what financial services needs from each.
 
-### 9.1 HSM product profile and key hierarchy depth (Change planning group document)
+### 9.1 HSM Product and HSM Key Hierarchy (HSMs and key management domain document)
 
 The HSM profile extends PQC Migration Extended, which already carries module validation and certification impact (R2-23). Financial services needs it to state, for each firmware release:
 
@@ -206,7 +206,9 @@ The HSM profile extends PQC Migration Extended, which already carries module val
 
 -   what re-validation a change triggers (`certificationImpact`).
 
-The key hierarchy depth adds, for each working key, its chain to the master key through `keyStoreRef`, with the key block format and key length at each level. Where the HSM has its own record, `keyStoreRef` names the key store by BOM-Link in that record. Where it does not, the value is `out-of-band`.
+The key hierarchy depth adds, for each key store, the store whose key protects it (`protectedBy`), up to the store that the hardware protects, with the key block format and wrapping algorithm at each level. Where a bank's records cite the HSM's own record, `keyStoreRef` names the key store by BOM-Link in that record. Where they do not, the value is `out-of-band`.
+
+Both profiles are drafted in [`drafts/hsm-product/`](../../drafts/hsm-product/) for the HSMs and key management domain document, which is at outline stage, with an illustrative payment HSM that conforms to both. They add two attributes that no inherited rule could carry: `hsmApproval`, because PCI PTS HSM is a device approval and not a module validation, and `keyBlockFormatsSupported`, because payment key blocks are not key store files.
 
 ### 9.2 Card and terminal extensions of IoT Device Estate (future devices document)
 
@@ -309,9 +311,10 @@ The working group's regulatory sufficiency register records, for each instrument
 | PCI DSS 4.0.1, requirement 12.3.3 | Which protocols and cipher suites are in use, where, and for what purpose? | Partial | The baseline requires the protocols and algorithms of every interface, but the purpose of an interface (I12) is optional. A payment-environment profile could make it mandatory |
 | PCI DSS 4.0.1, requirement 12.3.3 | Which protocols and cipher suites are losing their viability, and what is the plan? | Judgement | Viability is decided by a versioned policy, evaluated again at each annual review |
 | PCI DSS 4.0.1, requirement 4.2.1.1 | Which keys and certificates are trusted to protect card numbers in transit? | Partial | A CBOM names the algorithms and stores, but individual keys and certificates stay outside it by design |
-| DORA technical standards, Article 6 | How is data protected at rest, in transit and on internal networks? | Sufficient | The baseline requires the algorithms and type of every interface |
-| DORA technical standards, Article 7 | Which certificates and certificate-storing devices support each critical or important function? | Partial | A CBOM names the certificate-storing devices, but not individual certificates or which functions are critical |
-| DORA technical standards, Article 7 | Can keys be managed through their whole lifecycle? | Partial | A CBOM states what a product can do. The entity's procedures stay outside it |
+| DORA technical standards, Article 6(2) | How is data protected at rest, in transit and on internal networks? | Sufficient | The baseline requires the algorithms and type of every interface |
+| DORA technical standards, Article 6(4) | Can the cryptography be changed when developments in cryptanalysis require it? | Deeper profile | The change core has the facts; the baseline does not require them |
+| DORA technical standards, Article 7(4) | Which certificates and certificate-storing devices support each critical or important function? | Partial | A CBOM names the certificate-storing devices, but not individual certificates or which functions are critical |
+| DORA technical standards, Article 7(1) to (3) | Can keys be managed through their whole lifecycle, and replaced when lost or compromised? | Partial | A CBOM states what a product can do. The entity's procedures stay outside it |
 
 The register's general instruments also apply: NIST IR 8547, NIS2 where it applies (DORA takes precedence for financial entities), and the Cyber Resilience Act for products such as HSMs and terminals.
 
@@ -348,7 +351,7 @@ Other sources this draft relies on:
 | A scheme's certificate authority is a scheme-administered trust anchor, verified by the scheme's members. | 4, 9.3 |
 | The interfaces that carry key-encryption keys come first in a payment estate's post-quantum migration, because every key sent under them inherits their exposure. | 3, 11.1 |
 | The Triple DES retirement and the post-quantum migration are recorded with the same attributes. A policy with two schedules decides which migration an interface needs. | 6 |
-| The HSM profile and the card and terminal extensions are drafted in the generic documents. Financial services states its needs and refers to them. | 9 |
+| The HSM profiles are drafted in an HSMs and key management domain document, and the card and terminal extensions in a future devices document. Financial services states its needs and refers to them. | 9 |
 
 ### 13.3 Questions for the working group
 
@@ -366,7 +369,7 @@ Other sources this draft relies on:
 
 4.  Write the scheme profile (9.3) and the scheme-readiness policy (10.2), with an illustrative scheme of three participants.
 
-5.  Send the needs in 9.1 and 9.2 to the Change planning group document and to the devices document.
+5.  Send the needs in 9.2 to the devices document. The needs in 9.1 are met by the HSM profiles drafted for the HSMs and key management domain document.
 
 6.  Check the proposed protocol names (chapter 5) against the CycloneDX cryptography registry.
 

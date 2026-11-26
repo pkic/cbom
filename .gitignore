@@ -20,3 +20,6 @@ Claude outputs/
 
 # Local build and comparison output for the publications
 publications/_build/
+
+# Licensed standards kept locally for checking the regulatory register. Not redistributable.
+Standards/

@@ -246,3 +246,73 @@ Proposed. P3 gains `orDeclaredAbsent`, as P2 has, with a vocabulary of reasons: 
 (the products exist but their vendors publish no records) and `provider-built` (the provider wrote the
 software itself and publishes no product record of it). A record that declares an absence still conforms,
 and a policy can treat the absence as a gap. Not yet applied.
+
+**R2-30 — The algorithm that verifies updates.**
+From: the regulatory sufficiency register (CNSA 2.0, question CNSA-signing; CRA Annex I, Part II, point (7)),
+and the automotive and healthcare outlines. The change core requires how updates reach a product (I13) and
+whose updates it accepts (I14). It does not require the signature algorithm that verifies an update.
+Whether that algorithm and its trust anchor can be replaced is required only by the substation component
+profile (`pqc-migration-ot#I4`, `verifierReplaceable`). The update path is the root of trust: if the
+verifier cannot change, nothing else on the device can migrate safely. Left: whether the change core
+requires both facts.
+Proposed. The change core declares two rules, guarded like I14 (`updateMechanism` not `none`):
+`updateVerificationAlgorithm` (I19, MUST, an algorithm name under the inherited naming scheme, or
+`none` where updates are not verified) and `verifierReplaceable` (I20, SHOULD, with the vocabulary moved
+from the substation component profile: `yes`, `via-bootloader-update`, `no`). The substation component
+profile no longer declares its own I4 and raises change-core#I20 to MUST, in the same way as R2-23 moved
+`certificationImpact`. IoT Device Estate inherits both. The baseline is unchanged. Not yet applied.
+Effect on the register: CNSA-signing moves from partial to deeper-profile, and CRA-I-2c gains the
+algorithm in its evidence.
+
+**R2-31 — Integrity protection of what a store holds.**
+From: the regulatory sufficiency register (CRA Annex I, Part I, point (2)(f)). The CRA requires stored data,
+commands, programs and configuration to be protected against unauthorised modification. On a storage
+interface the baseline requires `encryption` (I4) and `keyWrapping` (I10), which show confidentiality.
+Where the encryption algorithm is authenticated, such as AES-GCM, it also shows integrity. Where it is
+not, or where the store holds configuration that is signed rather than encrypted, the record cannot say
+how integrity is protected. Left: whether to add an attribute, and at which level.
+Options. (a) Add nothing: a policy infers integrity from an authenticated encryption algorithm, and
+reports the rest as unknown. (b) Add `integrityProtection` to storage interfaces in the baseline at MAY,
+with an algorithm name, `authenticated-encryption` where I4 already covers it, or `none`. A profile written
+for CRA evidence raises it to SHOULD or MUST. (c) Add it at MUST in the baseline.
+Proposed: (b). Option (a) leaves signed configuration and non-authenticated encryption unanswerable, and
+(c) changes the conformance of every published record for a fact that matters to one regulation. At MAY,
+no existing record changes its verdict. Not yet applied. Effect on the register: CRA-I-2f stays partial
+for the baseline and becomes deeper-profile once a profile requires the attribute.
+
+**R2-32 — Strength for names that do not carry the key size.**
+From: the comparison of the example classification set with crypto-algorithm-kb
+(`docs/pkic-classification-comparison.md` in that repository). The KB and the PKIC set agree on quantum
+vulnerability for every name both classify, and agree in full for 54 names. For 29 names the KB leaves the
+strength unknown, because the name does not bind the parameter it depends on: 23 RSA names such as `RS256`,
+`rsa_pss_rsae_sha256` and `RSA-PSS-SHA-256` (no modulus size), and 6 elliptic-curve names such as
+`ECDSA-SHA256` and `ECDH-ES` (no curve). The PKIC set gives each of them a strength, which assumes a
+2048-bit modulus or a particular curve. Left: whether the set may assume.
+Proposed. The classification set gives no strength where the name does not bind the parameter, and says
+why in a note. The algorithm-transition method reports such a finding as `indeterminate-strength` rather
+than applying a schedule row chosen by an assumed strength. For a quantum-vulnerable algorithm the outcome
+after 2030 is the same at every strength, so only the current status of possibly short keys changes. The
+CBOM can avoid the question: where an interface states the key size, for example in `keyTypes` or the
+certificate algorithm, the policy uses it. Not yet applied, because it changes published results.
+
+**R2-33 — Identifying a product that has no package URL.**
+From: the Luna T7 record written from its FIPS 140-3 security policy (`drafts/hsm-luna-t7/`). P3 requires a
+product to be identified by a package URL. A hardware module is known by its manufacturer's part numbers
+and its CMVP certificate, both of which the record carries, but by no package URL. A writer other than the
+vendor could mint a `pkg:generic` URL, but it would not be the vendor's and two writers could mint
+different ones. Left: whether P3 accepts other stable identifiers for a product.
+Proposed. P3 accepts, for a product, a package URL or a manufacturer part number (`mpn`) together with the
+manufacturer's name, since CycloneDX 2.0 defines `mpn` as assigned by the original manufacturer. A record
+may add the module validation reference, but a certificate covers several part numbers and versions, so it
+does not identify the subject alone. Not yet applied.
+
+**R2-34 — A capability status that the source does not state.**
+From: the same record. G1.1 requires a capability status for every purpose on every interface and cannot
+be withheld. A security policy states what a module does in the validated firmware and never what the
+vendor plans, so a record written from it cannot say whether the cloning protocol, the PED tunnel or the
+firmware verifier will move to a post-quantum algorithm. The record leaves those entries out and marks them
+unknown, and G1 fails twelve times. Left: whether a third-party writer may mark the status unknown.
+Proposed. Keep G1.1 non-withholdable, so that a vendor cannot conform without stating its plans, and let a
+document whose author is not the subject's supplier mark the status `unknown`, which fails the rule in the
+same way as any other unknown MUST fact but is reported as `unknown` rather than as missing. The verdict
+does not change; the report tells the reader who could supply the fact. Not yet applied.

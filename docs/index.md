@@ -101,6 +101,27 @@ title: Overview
          retirement and the post-quantum migration together.</p>
       <span class="card-cta">Download (Word) &#8595;</span>
     </a>
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Application-domain-HSMs-and-key-management.docx' | relative_url }}" download>
+      <span class="card-kicker">Working Draft 0.1</span>
+      <h3>HSMs and key management</h3>
+      <p>How the methodology applies to HSMs, cloud key management services and software vaults:
+         validated modes, key hierarchies with hardware or software roots, and moving keys between vendors.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Application-domain-Healthcare.docx' | relative_url }}" download>
+      <span class="card-kicker">Working Draft 0.1</span>
+      <h3>Healthcare</h3>
+      <p>How the methodology applies to medical devices, clinical systems and health information
+         exchange, where devices live long and health data must stay confidential for decades.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
+    <a class="feature-card" href="{{ '/assets/publications/CBOM-Profiles-Application-domain-Automotive.docx' | relative_url }}" download>
+      <span class="card-kicker">Working Draft 0.1</span>
+      <h3>Automotive</h3>
+      <p>How the methodology applies to vehicles, updates, vehicle-to-everything communication and
+         charging, where constrained ECUs and update verifiers decide what can migrate.</p>
+      <span class="card-cta">Download (Word) &#8595;</span>
+    </a>
   </div>
 </section>
 

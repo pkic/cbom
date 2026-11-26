@@ -1,0 +1,1576 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "Product record of the Thales Luna T7 cryptographic module, firmware 7.15.1, written by the PKIC CBOM Profiles Working Group from the CMVP certificate #5450 and the module's FIPS 140-3 security policy, read on 26 November 2026. Not reviewed by the vendor. Facts the security policy does not state are marked unknown. Built by drafts/hsm-luna-t7/build.py.",
+  "serialNumber": "urn:uuid:7e5a0000-0000-4000-8000-00000000b000",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-26T12:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "Manual reading of public documentation",
+          "version": "1",
+          "description": "The CMVP certificate and security policy listed in externalReferences"
+        }
+      ]
+    },
+    "supplier": {
+      "name": "Thales Trusted Cyber Technologies"
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "device",
+        "bom-ref": "device:luna-t7",
+        "name": "Luna T7 cryptographic module",
+        "version": "7.15.1",
+        "description": "Half-height PCIe cryptographic module, part 872-500025-001 (Luna T7) and 875-500025-002 (Luna T7U), firmware 7.15.1, bootloader 2.0.1 and 2.0.2 (security policy, table 2). It is built into the Luna PCIe HSM, Luna Network HSM, Luna as a Service and CipherTrust Manager offerings.",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "product"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          },
+          {
+            "name": "pkic:profile:productCertificationScheme",
+            "value": "none"
+          },
+          {
+            "name": "pkic:profile:hsmApproval",
+            "value": "none"
+          },
+          {
+            "name": "pkic:profile:contextAbsent:support-lifecycle",
+            "value": "not-published"
+          },
+          {
+            "name": "pkic:profile:disclosure:correspondsTo",
+            "value": "unknown"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:vendor",
+            "identities": [
+              {
+                "scheme": "mpn",
+                "value": "872-500025-001"
+              },
+              {
+                "scheme": "mpn",
+                "value": "875-500025-002"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKIC CBOM Profiles Working Group (from public sources)"
+            }
+          },
+          {
+            "bom-ref": "party:vendor",
+            "roles": [
+              {
+                "role": "manufacturer"
+              }
+            ],
+            "organization": {
+              "name": "Thales Trusted Cyber Technologies"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:luna-t7-firmware",
+          "name": "Luna T7 firmware",
+          "version": "7.15.1"
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:svc-icd",
+          "name": "Cryptographic services for host applications over PCIe (ICD commands)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "Luna ICD command interface"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:host-application"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:luna-t7"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "password"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "password"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ped-key"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "AES-128"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "AES-192"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "TDEA-3KEY"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "RSA-2048"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "RSA-3072"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "RSA-4096"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ECDSA-P256"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ECDSA-P384"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ECDSA-P521"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ML-KEM"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ML-DSA"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "LMS"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "The application chooses the mechanism in each command"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The approved mode must be set by the Security Officer with HSM policy 12 (security policy, section 11.1.2); the module is valid only when configured that way. ICD input and output are plaintext over the PCIe bus (table 18). The user password is entered encrypted under the module's RSA-4096 PEC key (tables 18, 20, 21). Approved services include ML-KEM key generation, encapsulation and decapsulation, ML-DSA and LMS key generation, signing and verification (tables 4, 5 and 13; algorithm certificates A7879 and A7880). Parameter sets are not restated here."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "service:sto-partition-keys"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "7.15.1"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "CMVP certificate #5450 (FIPS 140-3, overall level 3, validated 29 July 2026)"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "disabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:disclosure:enablementMethod",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:coexistence",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersionsSupported",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersion",
+              "value": "unknown"
+            }
+          ],
+          "description": "The command interface that applications reach, normally through the vendor's PKCS #11 library on the host. The library is outside the module boundary, so its mechanism list is not part of this record."
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:mgmt-icd",
+          "name": "Administration by the Security Officer and Crypto Officer (ICD commands)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "Luna ICD command interface"
+            },
+            {
+              "name": "pkic:profile:endpointRole:administrator",
+              "value": "endpoint:security-officer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:luna-t7"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "password"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "password"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ped-key"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Fixed by the firmware; HSM policies set by the Security Officer"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The approved mode must be set by the Security Officer with HSM policy 12 (security policy, section 11.1.2); the module is valid only when configured that way. Roles authenticate with a password or with PED keys (section 11.1.2, tables 13 and 18)."
+            },
+            {
+              "name": "pkic:profile:keyManagementFunction",
+              "value": "keys-and-certificates"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "generate"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "import"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "export"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "wrap"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "unwrap"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "derive"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "delete"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "zeroize"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "AES-128"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "AES-192"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "TDEA-3KEY"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "RSA-2048"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "RSA-3072"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "RSA-4096"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ECDSA-P256"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ECDSA-P384"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ECDSA-P521"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ML-KEM"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ML-DSA"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "LMS"
+            },
+            {
+              "name": "pkic:profile:keyStoreFormatsSupported",
+              "value": "token-native"
+            },
+            {
+              "name": "pkic:profile:keyStoreLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:keyBlockFormatsSupported",
+              "value": "proprietary"
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "service:sto-partition-keys"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "7.15.1"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "CMVP certificate #5450 (FIPS 140-3, overall level 3, validated 29 July 2026)"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "disabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:disclosure:enablementMethod",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:coexistence",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersionsSupported",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersion",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:keyTypes",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:keyStoreFormats",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:keyBlockFormats",
+              "value": "unknown"
+            }
+          ],
+          "description": "Key generation, import, export, wrapping and zeroisation, and HSM policy changes. Which key types and formats an owner actually uses is a deployment fact, so it is marked unknown here."
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:mgmt-ped",
+          "name": "PIN entry device for role authentication and the master key split",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "Luna PED (local serial or remote PED)"
+            },
+            {
+              "name": "pkic:profile:endpointRole:administrator",
+              "value": "endpoint:ped-key-holder"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:luna-t7"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECDH"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "HMAC"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECDH"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "RSA"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "HMAC"
+            },
+            {
+              "name": "pkic:profile:keyManagementFunction",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Fixed by the firmware"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The PED tunnel is established with KAS-ECC (table 13). Remote PED traffic is protected with KTS-RSA and KTS-HMAC; a locally connected PED (TPED) passes data in plaintext over the serial port (table 18). The SRV, from which the master key is derived together with an internal split, is held on the purple PED key (section 7.7.1, table 21). The curve and the RSA key size of the remote path are not restated."
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "7.15.1"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "CMVP certificate #5450 (FIPS 140-3, overall level 3, validated 29 July 2026)"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "disabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:disclosure:enablementMethod",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:coexistence",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersionsSupported",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersion",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "unknown"
+            }
+          ],
+          "description": "The serial PED port carries authentication data only (table 10)."
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:mgmt-firmware-load",
+          "name": "Firmware load and its signature check",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "Luna firmware update"
+            },
+            {
+              "name": "pkic:profile:endpointRole:administrator",
+              "value": "endpoint:security-officer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:luna-t7"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "RSA-4096-SHA-384"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "RSA-4096-SHA-384"
+            },
+            {
+              "name": "pkic:profile:keyManagementFunction",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Fixed by the firmware"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "A firmware load test verifies an RSA 4096 signature with SHA2-384 before the new firmware is accepted (table 23). The bootloader checks its own integrity with a SHA-1 error detection code, and the firmware with a SHA2-256 known-answer test (table 22, section 5.1). Whether the verification key can itself be replaced is not stated."
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "7.15.1"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "CMVP certificate #5450 (FIPS 140-3, overall level 3, validated 29 July 2026)"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "disabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:disclosure:enablementMethod",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:coexistence",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersionsSupported",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersion",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "unknown"
+            }
+          ],
+          "description": "The verifier of firmware updates. It decides whether the module can later accept firmware signed with a new algorithm (question register R2-30)."
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:int-cloning",
+          "name": "Cloning of keys between Luna modules",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "Luna cloning protocol"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:luna-t7"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:luna-t7-peer"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "RSA-4096"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-KWP"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "RSA-4096"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "RSA-4096"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "RSA-4096"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Fixed by the firmware"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The cloning tunnel is established with KAS-RSA between the modules' RSA-4096 TUK keys, whose certificates (TWC) are signed by the module's HOK (tables 13, 20, 21). Objects are wrapped with AES KWP under a cloning key encryption vector derived with a two-step KDF of SP 800-56C and SP 800-108 (section 2.10.2). Only modules in the same domain can clone. No post-quantum key establishment is listed for this interface."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "service:sto-partition-keys"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "7.15.1"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "CMVP certificate #5450 (FIPS 140-3, overall level 3, validated 29 July 2026)"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "disabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:disclosure:enablementMethod",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:coexistence",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersionsSupported",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersion",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "unknown"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:int-wrapped-export",
+          "name": "Key export, import, backup and restore under a wrapping key",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "interconnect"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "Luna wrapped key transfer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:luna-t7"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:key-recipient"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "RSA-OAEP"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-KWP"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "RSA-OAEP"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "The application chooses the wrapping mechanism"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Key export and import, and partition backup and restore, use KTS-AES (table 13). Approved key transport is AES-KW and AES-KWP (SP 800-38F), RSA-OAEP (SP 800-56B rev 2, 128-bit strength), and AES-CBC with HMAC-SHA2-256 (section 2.10.3). Wrapped keys pass through the WICD path (table 18). ML-KEM is an approved service of the module, but its use for key transport on this interface is not stated."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "service:sto-partition-keys"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "7.15.1"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "CMVP certificate #5450 (FIPS 140-3, overall level 3, validated 29 July 2026)"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "disabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:disclosure:enablementMethod",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:coexistence",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersionsSupported",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersion",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "unknown"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:sto-mtk",
+          "name": "Master tamper key in battery-backed NVRAM",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:keyWrappingSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Not applicable"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The MTK, an AES-256 key, is held in battery-backed NVRAM inside the tamper-responsive boundary and is zeroised on tamper or decommission (tables 17, 19, 20, 21). It is derived from an internal split and the SRV held on the purple PED key (section 7.7.1)."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "service:mgmt-icd"
+            },
+            {
+              "name": "pkic:profile:protectedBy",
+              "value": "hardware-root"
+            },
+            {
+              "name": "pkic:profile:keyBlockFormat",
+              "value": "proprietary"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "7.15.1"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "CMVP certificate #5450 (FIPS 140-3, overall level 3, validated 29 July 2026)"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "disabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:disclosure:enablementMethod",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:coexistence",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersionsSupported",
+              "value": "unknown"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "service:sto-partition-keys",
+          "name": "Partition keys in flash, encrypted under the master tamper key",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:keyWrappingSupported",
+              "value": "AES-256"
+            },
+            {
+              "name": "pkic:profile:negotiationControl",
+              "value": "Not applicable"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Partition symmetric, RSA, ECDSA, DSA, LMS, ML-DSA and ML-KEM private keys are stored encrypted in flash and in RAM, under the MTK (section 7.7.1, tables 20 and 21). The wrapping mode is not restated."
+            },
+            {
+              "name": "pkic:profile:keyStoreRef",
+              "value": "service:mgmt-icd"
+            },
+            {
+              "name": "pkic:profile:protectedBy",
+              "value": "service:sto-mtk"
+            },
+            {
+              "name": "pkic:profile:keyBlockFormat",
+              "value": "proprietary"
+            },
+            {
+              "name": "pkic:profile:providerLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:minimumProductVersion",
+              "value": "7.15.1"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:moduleValidationRef",
+              "value": "CMVP certificate #5450 (FIPS 140-3, overall level 3, validated 29 July 2026)"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:certificationScheme",
+              "value": "FIPS 140-3"
+            },
+            {
+              "name": "pkic:profile:externalDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "disabled"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:disclosure:enablementMethod",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:coexistence",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:implementationPurl",
+              "value": "unknown"
+            },
+            {
+              "name": "pkic:profile:disclosure:protocolVersionsSupported",
+              "value": "unknown"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "device:luna-t7",
+      "dependsOn": [
+        "service:svc-icd",
+        "service:mgmt-icd",
+        "service:mgmt-ped",
+        "service:mgmt-firmware-load",
+        "service:int-cloning",
+        "service:int-wrapped-export",
+        "service:sto-mtk",
+        "service:sto-partition-keys"
+      ]
+    },
+    {
+      "ref": "lib:luna-t7-firmware",
+      "provides": [
+        "service:svc-icd",
+        "service:mgmt-icd",
+        "service:mgmt-ped",
+        "service:mgmt-firmware-load",
+        "service:int-cloning",
+        "service:int-wrapped-export",
+        "service:sto-mtk",
+        "service:sto-partition-keys"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "certification-report",
+      "url": "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5450",
+      "comment": "CMVP certificate #5450: FIPS 140-3, overall level 3, validated 29 July 2026, sunset 28 July 2031."
+    },
+    {
+      "type": "documentation",
+      "url": "https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp5450.pdf",
+      "comment": "FIPS 140-3 non-proprietary security policy, document 002-500027-001, revision G, 14 April 2026.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "security-policy"
+        }
+      ]
+    }
+  ]
+}

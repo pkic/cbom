@@ -6,21 +6,29 @@ instrument:
   published: 2024-06
   appliesTo: "Entities that store, process or transmit cardholder data, and service providers that can affect its security. Both requirements have been assessed since 31 March 2025"
   source: https://www.pcisecuritystandards.org/
+  sourceAccess: >
+    The official text is in the PCI document library, which requires accepting the
+    licence before download. The entries were checked against PCI DSS v4.0.1
+    (June 2024) on 26 November 2026. The licensed text is not kept in the repository.
   summary: >
     Requirement 4.2.1.1 asks for an inventory of the entity's trusted keys and
     certificates used to protect the primary account number during transmission.
-    Requirement 12.3.3 asks for the cipher suites and protocols in use to be documented,
-    with their purpose and where they are used, and reviewed at least once every
-    12 months, with industry trends on their continued viability monitored and a
-    documented strategy for responding to anticipated changes.
+    Requirement 12.3.3 asks for the cipher suites and protocols in use to be documented
+    and reviewed at least once every 12 months: an up-to-date inventory with their
+    purpose and where they are used, active monitoring of industry trends on their
+    continued viability, and a documented plan to respond to anticipated changes in
+    cryptographic vulnerabilities. It applies to every cipher suite and protocol used
+    to meet PCI DSS requirements, including those that protect card numbers in storage
+    and in transmission, protect passwords, and authenticate access.
 
 questions:
   - id: PCI-12.3.3-inventory
     clause: "Requirement 12.3.3: an up-to-date inventory of cipher suites and protocols, with purpose and where used"
-    checked: secondary
+    checked: primary
     question: >
       Which protocols and cipher suites does each system in scope use, where, and for
-      what purpose?
+      what purpose, including those that protect stored card numbers and passwords and
+      that authenticate access?
     evidence:
       - profile: pkic.example.interface-disclosure
         rules: [I1, I2, I3, I4, I5, I7, I12]
@@ -38,8 +46,8 @@ questions:
       MUST. This needs a profile, not a new attribute.
 
   - id: PCI-12.3.3-review
-    clause: "Requirement 12.3.3: annual review, monitoring of continued viability, and a strategy for anticipated changes"
-    checked: secondary
+    clause: "Requirement 12.3.3: annual review, monitoring of continued viability, and a plan for anticipated changes in cryptographic vulnerabilities"
+    checked: primary
     question: >
       Which of the protocols and cipher suites in use are losing their viability, and
       what is the plan for each?
@@ -54,11 +62,11 @@ questions:
       Viability is a judgement. A versioned policy, evaluated again at each review,
       records it with a date. The capability facts of the PQC migration profile show
       what each interface could move to, and the supplier's roadmap (R2) shows what is
-      planned. The entity's own strategy is its decision, not a fact in the CBOM.
+      planned. The entity's own response plan is its decision, not a fact in the CBOM.
 
   - id: PCI-4.2.1.1
     clause: "Requirement 4.2.1.1: inventory of trusted keys and certificates protecting the PAN in transmission"
-    checked: secondary
+    checked: primary
     question: >
       Which keys and certificates does the entity trust to protect card numbers in
       transit, and where are they used?
