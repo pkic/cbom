@@ -13,6 +13,7 @@ declare -A NAMES=(
   [domain-operational-technology]=CBOM-Profiles-Application-domain-Operational-technology
   [domain-saas-and-cloud-services]=CBOM-Profiles-Application-domain-SaaS-and-cloud-services
   [domain-telecommunications]=CBOM-Profiles-Application-domain-Telecommunications
+  [domain-financial-services]=CBOM-Profiles-Application-domain-Financial-services
 )
 for src in "${!NAMES[@]}"; do
   pandoc "$src.md" \

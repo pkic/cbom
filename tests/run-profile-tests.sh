@@ -1005,6 +1005,17 @@ else
   failed=$((failed + 1))
 fi
 
+# ------------------------------------------------- regulatory sufficiency ---
+echo
+echo "Regulatory sufficiency catalogue"
+OUT="$("$PY" "$ROOT/tests/check-regulation.py" 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then
+  passed=$((passed + 1))
+else
+  failed=$((failed + 1))
+fi
+
 # ------------------------------------------------------------------ summary ---
 echo
 echo "=================="

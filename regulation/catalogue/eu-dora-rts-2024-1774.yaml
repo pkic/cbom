@@ -1,0 +1,78 @@
+instrument:
+  id: eu-dora-rts-2024-1774
+  title: "DORA, Regulation (EU) 2022/2554, and Commission Delegated Regulation (EU) 2024/1774, Articles 6 and 7"
+  jurisdiction: EU
+  kind: binding regulation
+  published: 2024-03-13
+  appliesTo: "Financial entities under DORA, other than those under the simplified ICT risk-management framework"
+  source: https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj
+  summary: >
+    Article 6 requires a documented policy on encryption and cryptographic controls,
+    covering data at rest, in transit and on internal networks, and key management.
+    Article 7 requires key management across the whole lifecycle, and a register of all
+    certificates and certificate-storing devices, at least for the ICT assets that
+    support critical or important functions, kept up to date. The recitals ask
+    financial entities to keep abreast of developments in cryptanalysis.
+
+questions:
+  - id: DORA-6-controls
+    clause: "Delegated Regulation 2024/1774, Article 6"
+    checked: secondary
+    question: >
+      How is data protected at rest, in transit and on internal networks, interface by
+      interface?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I3, I4, I5, I7, I10, I14]
+      - profile: pkic.example.deployment-disclosure
+        rules: [I1, I2, I3]
+    levels: {expressible: "yes", required: "yes", evaluable: "yes"}
+    verdict: sufficient
+    rationale: >
+      The baseline requires the algorithms of every interface and its type, including
+      storage interfaces with their key-wrapping algorithm. Where the subject's
+      cryptography ends at a proxy or gateway, terminatedBy records it. Deployment
+      records show what is configured and observed.
+
+  - id: DORA-7-register
+    clause: "Delegated Regulation 2024/1774, Article 7: register of certificates and certificate-storing devices"
+    checked: secondary
+    question: >
+      Which certificates and certificate-storing devices support each critical or
+      important function?
+    evidence:
+      - profile: pkic.example.pqc-migration-extended
+        rules: [I7, I8]
+      - profile: pkic.example.system-disclosure
+        rules: [I3]
+    levels: {expressible: "partly", required: "partly", evaluable: "partly"}
+    verdict: partial
+    rationale: >
+      A CBOM names where keys and certificates are stored (keyStoreLocation) and which
+      store serves each interface (keyStoreRef), and a system record names the
+      component that provides each interface's keys. That identifies the
+      certificate-storing devices. Individual certificates, and which functions are
+      critical or important, are outside the CBOM.
+    gap: >
+      Certificates stay outside the CBOM by design. The designation of critical or
+      important functions stays with the financial entity.
+
+  - id: DORA-7-lifecycle
+    clause: "Delegated Regulation 2024/1774, Article 7: key management through the whole lifecycle"
+    checked: secondary
+    question: >
+      Can keys be generated, renewed, stored, backed up, revoked and destroyed for each
+      cryptographic system, and where are they held?
+    evidence:
+      - profile: pkic.example.pqc-migration-extended
+        rules: [I1, I2, I4, I7]
+      - profile: pkic.example.change-core
+        rules: [I16]
+    levels: {expressible: "partly", required: "partly", evaluable: "partly"}
+    verdict: partial
+    rationale: >
+      A CBOM states what a product's key management can do and where keys are held. How
+      the entity runs key management, including backup and contingency for lost keys,
+      is a procedure.
+    gap: >
+      Product capability is in scope. The entity's procedures stay out of scope.

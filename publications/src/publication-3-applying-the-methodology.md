@@ -420,6 +420,37 @@ Vulnerability response depends almost entirely on one attribute: the package URL
 
 However, the baseline also works against this use case, because it allows a producer to withhold the library. A profile written for vulnerability response would remove that permission, and such a profile would therefore be written for a restricted audience. Readers of public documents rely instead on the vendor's VEX statements.
 
+### 16.4 Checking profiles against a regulation
+
+Regulators and policy makers increasingly ask for a cryptographic inventory, but most instruments do not say what the inventory must contain. An organisation that wants to use CBOMs as evidence therefore needs to know, clause by clause, whether a CBOM that conforms to a given profile gives it the facts it needs. The working group answers this question with a register that is kept outside the release, because instruments change more often than the methodology does. The register is in the [`regulation/`](../../regulation/) folder of the repository, and its [coverage matrix](../../regulation/coverage.md) is generated from it.
+
+**Step 1: break each clause into evidence questions.** An evidence question is something a reader must be able to answer to show that a clause is met. "Which key-establishment algorithms does each interface use, and at what strength?" is an example. A clause that asks for several things becomes several questions. The register states each question in its own words and records which clause it comes from. It does not quote or interpret the instrument.
+
+**Step 2: map each question to profile rules.** Each question names the profiles and rule identifiers that supply the facts it needs. A test checks that every rule that is cited exists in the profile that is named, so the register stays correct when a profile changes.
+
+**Step 3: test the question at three levels.** The three levels are kept apart, because they lead to different kinds of work:
+
+-   **Expressible.** Can the model express the facts at all? If it cannot, the gap is in the methodology, and it leads to a candidate attribute.
+
+-   **Required.** Does a named profile require those facts? If the model can express them but no profile requires them, a reader can still ask for them by writing or choosing a deeper profile.
+
+-   **Evaluable.** Can a policy compute the answer from the facts without a person's judgement? If it cannot, the answer needs an allow list, a threshold or an operator's input that the policy must hold.
+
+**Step 4: give the question a verdict.** There are six verdicts:
+
+| Verdict | Meaning |
+|---|---|
+| Sufficient | A CBOM that conforms to the profile that is named answers the question |
+| Deeper profile | The model has the facts, but only a deeper or more specific profile requires them |
+| Partial | The CBOM supplies part of the answer, and the operator supplies the rest, for example how long data must stay confidential |
+| Judgement | The CBOM supplies the facts, but the answer is a judgement, such as whether a mechanism is state of the art. The judgement belongs in a versioned policy (Publication 2, chapter 10) |
+| Out of scope | The question is about an organisation or a process, and no CBOM can answer it |
+| Open | The text that defines the question has not been published yet |
+
+A question that is only partly answered names its gap. A gap is either a candidate attribute, which goes to the question register, or a plain statement that the question stays outside a CBOM. For example, the evidence questions for CNSA 2.0 show that no profile yet requires the algorithm that a product uses to verify its updates. That finding is a candidate attribute for the change core. The evidence questions for NIS2 key management show the opposite case. A CBOM can state what a product's key management can do, but it cannot state how an entity runs its key management, and no attribute could change that.
+
+The first release of the register covers seven instruments that apply in every sector: NIST IR 8547, Executive Order 14412 with OMB memorandum M-26-15, NIS2 with Implementing Regulation (EU) 2024/2690, the NIS Cooperation Group's post-quantum roadmap, the Cyber Resilience Act, CNSA 2.0 and BSI TR-02102-1. Each application-domain document adds the instruments of its own sector in the same form.
+
 17. Related work
 ----------------
 
@@ -502,6 +533,8 @@ Each row is a position this publication takes. Rows 1 to 16 were settled provisi
 | 35  | The change core and PQC Migration are siblings. Both extend the baseline, shared rules keep the same ids, and a test keeps them identical.                                                       | 16.2                     |
 | 36  | Provider location, module validation and key-wrapping capability stay in PQC Migration and are not in the change core.                                                                           | 16.2                     |
 | 37  | A continuous-integration gate and a comparison of CBOM versions are not use cases.                                                                                                               | 16.1                     |
+| 38  | Whether CBOMs are sufficient evidence for a regulation is recorded per evidence question, tested at three levels (expressible, required, evaluable), in a register kept outside the release. | 16.4 |
+| 39  | The register paraphrases instruments and does not interpret them. A gap it finds becomes either a candidate attribute or a statement that the question stays outside a CBOM. | 16.4 |
 
 Annex D. Tools and reproduction (informative)
 ---------------------------------------------

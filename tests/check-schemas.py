@@ -71,6 +71,43 @@ def main():
         check(path, profile_schema, "%s validates" % os.path.basename(path))
     for path in sorted(glob.glob(os.path.join(M, "policies", "*.policy.json"))):
         check(path, policy_schema, "%s validates" % os.path.basename(path))
+    class_schema = load(os.path.join(M, "classification.schema.json"))
+    try:
+        jsonschema.Draft7Validator.check_schema(class_schema)
+        print("  ok   classification.schema.json is a valid schema")
+    except jsonschema.SchemaError as err:
+        print("  FAIL classification.schema.json is not a valid schema\n     %s" % err)
+        failures += 1
+    for path in sorted(glob.glob(os.path.join(M, "policies", "*.classification.json"))):
+        check(path, class_schema, "%s validates" % os.path.basename(path))
+    # A policy that names a shared classification set must pin it correctly.
+    import hashlib
+    for path in sorted(glob.glob(os.path.join(M, "policies", "*.policy.json"))):
+        ref = load(path).get("classificationSource")
+        if not ref:
+            continue
+        target = os.path.join(os.path.dirname(path), ref["file"])
+        label = "%s pins %s %s by digest" % (os.path.basename(path), ref["setId"], ref["version"])
+        if (os.path.exists(target)
+                and hashlib.sha256(open(target, "rb").read()).hexdigest() == ref["digest"]["value"]
+                and load(target).get("setId") == ref["setId"] and load(target).get("version") == ref["version"]):
+            print("  ok   %s" % label)
+        else:
+            failures += 1
+            print("  FAIL %s" % label)
+    # The status ladder: a reference policy must be mechanical, an endorsed one
+    # must say who endorsed it. The schema must reject both mistakes.
+    base = load(os.path.join(M, "policies", "policy-algorithm-transition.policy.json"))
+    for label, change in (("a reference policy that is interpretive is rejected",
+                           {"status": "reference", "interpretation": "interpretive"}),
+                          ("an endorsed policy without an endorsement is rejected",
+                           {"status": "endorsed", "interpretation": "mechanical"})):
+        bad = dict(base, **change)
+        if list(jsonschema.Draft7Validator(policy_schema).iter_errors(bad)):
+            print("  ok   %s" % label)
+        else:
+            failures += 1
+            print("  FAIL %s" % label)
     for path in sorted(glob.glob(os.path.join(M, "examples", "results", "*.json"))):
         check(path, result_schema, "%s validates" % os.path.basename(path))
     check(os.path.join(FIX, "profile-l3-settlement.rules.json"), profile_schema,

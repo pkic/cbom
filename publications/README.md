@@ -67,6 +67,7 @@ tables, images, emphasis and links.
 | Application domain: Operational technology | `src/domain-operational-technology.md` | Converted, checked, 3 files linked |
 | Application domain: SaaS and cloud services | `src/domain-saas-and-cloud-services.md` | Converted, checked, 2 files linked |
 | Application domain: Telecommunications | `src/domain-telecommunications.md` | Converted, checked, 2 folders linked |
+| Application domain: Financial services | `src/domain-financial-services.md` | Working Draft 0.1, written in Markdown (26 November 2026). No Word original |
 
 "Checked" means that `compare.py` found the same paragraphs, paragraph styles,
 tables, table rows, images, bold and italic text, inline code and code blocks as

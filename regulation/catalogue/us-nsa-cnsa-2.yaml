@@ -1,0 +1,76 @@
+instrument:
+  id: us-nsa-cnsa-2
+  title: "NSA Commercial National Security Algorithm Suite 2.0 (CNSA 2.0)"
+  jurisdiction: US
+  kind: guidance for national security systems
+  published: 2022-09
+  appliesTo: "Owners, operators and vendors of US national security systems"
+  source: null  # to be added: the NSA advisory and the CNSA 2.0 FAQ
+  summary: >
+    Names the algorithms for national security systems and sets two dates for each
+    category of technology: by when products should support and prefer CNSA 2.0, and
+    by when they should use it exclusively. Software and firmware signing comes first
+    (prefer by 2025, exclusively by 2030), then networking equipment (2026 and 2030),
+    operating systems (2027 and 2033), web browsers, servers and cloud services (2025
+    and 2033), and niche equipment (2030 and 2033).
+
+questions:
+  - id: CNSA-category
+    clause: "Transition timeline by category of technology"
+    checked: secondary
+    question: >
+      Does each interface support and prefer, or exclusively use, CNSA 2.0 algorithms
+      by the date set for the product's category?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I3, I4, I5]
+      - profile: pkic.example.pqc-migration
+        rules: [I1, I2, I3, I8, G1]
+    levels: {expressible: "yes", required: "yes", evaluable: "partly"}
+    verdict: partial
+    rationale: >
+      The CBOM supplies the algorithms in use and the algorithms supported, with their
+      parameter sets, and whether the far end can be forced to a choice. The category
+      that sets the date (networking equipment, operating system, and so on) is not an
+      attribute of the CBOM.
+    gap: >
+      The evaluator supplies the product's CNSA 2.0 category as a policy input. A
+      category attribute is not proposed, because the categories are specific to one
+      programme.
+
+  - id: CNSA-signing
+    clause: "Software and firmware signing: exclusive use by 2030"
+    checked: secondary
+    question: >
+      Which algorithm does the product use to verify new software and firmware, and
+      can that algorithm and its trust anchor be replaced?
+    evidence:
+      - profile: pkic.example.change-core
+        rules: [I13, I14]
+      - profile: pkic.example.pqc-migration-ot
+        rules: [I4]
+    levels: {expressible: "partly", required: "partly", evaluable: "partly"}
+    verdict: partial
+    rationale: >
+      The change core requires how updates reach the product and whose updates it
+      accepts. Whether the verification algorithm and its trust anchor can be replaced
+      is required only by the OT profile (verifierReplaceable). No profile requires
+      the algorithm that verifies updates.
+    gap: >
+      Candidate attribute for the change core: the signature algorithm that verifies
+      updates. With it, verifierReplaceable could move from the OT profile to the
+      change core.
+
+  - id: CNSA-acquisition
+    clause: "New acquisitions for national security systems support CNSA 2.0 from 1 January 2027"
+    checked: secondary
+    question: "Does the product support CNSA 2.0 algorithms for each cryptographic purpose?"
+    evidence:
+      - profile: pkic.example.pqc-migration
+        rules: [I1, I2, I3, I4, I5, G1]
+    levels: {expressible: "yes", required: "yes", evaluable: "yes"}
+    verdict: deeper-profile
+    rationale: >
+      The PQC migration profile requires a capability status for every cryptographic
+      purpose, and the supported algorithms of every interface. A procurement policy
+      can check them against the CNSA 2.0 algorithm list.

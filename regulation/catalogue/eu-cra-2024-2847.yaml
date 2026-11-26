@@ -1,0 +1,83 @@
+instrument:
+  id: eu-cra-2024-2847
+  title: "Cyber Resilience Act, Regulation (EU) 2024/2847, Annex I"
+  jurisdiction: EU
+  kind: binding regulation
+  published: 2024-11-20
+  appliesTo: "Manufacturers of products with digital elements placed on the EU market. Reporting obligations apply from 11 September 2026, and the rest of the regulation from 11 December 2027"
+  source: https://eur-lex.europa.eu/eli/reg/2024/2847/oj
+  summary: >
+    Annex I sets essential cybersecurity requirements. Part I covers the properties of
+    the product, including confidentiality by state-of-the-art encryption and the
+    integrity of data, commands and configuration. Part II covers vulnerability
+    handling, including documenting components in an SBOM. The cryptographic
+    requirements of the harmonised standards are still being drafted. They include an
+    allow list of mechanisms, key-management controls and crypto agility.
+
+questions:
+  - id: CRA-I-2e
+    clause: "Annex I, Part I, point (2)(e)"
+    checked: secondary
+    question: >
+      Is the data the product stores and transmits encrypted, and is each mechanism
+      state of the art?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I4, I10, I11]
+    levels: {expressible: "yes", required: "yes", evaluable: "partly"}
+    verdict: judgement
+    rationale: >
+      The baseline requires the encryption algorithm of every interface, the
+      key-wrapping algorithm of every storage interface, and whether each interface is
+      active by default. Whether a mechanism is state of the art is a judgement. It
+      becomes computable once the allow list in the harmonised standards is published
+      and encoded as a policy.
+
+  - id: CRA-I-2f
+    clause: "Annex I, Part I, point (2)(f)"
+    checked: secondary
+    question: >
+      How does the product protect the integrity of the data, commands and
+      configuration it stores, sends and receives?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I4, I5, P2]
+    levels: {expressible: "partly", required: "partly", evaluable: "partly"}
+    verdict: partial
+    rationale: >
+      The baseline requires the authentication and encryption algorithms of every
+      interface, which show how traffic is protected, and it requires at least one
+      management interface to be declared. It does not separately require how stored
+      configuration is protected against change.
+    gap: >
+      Candidate attribute: how a storage interface protects the integrity of what it
+      holds, alongside keyWrapping (I10).
+
+  - id: CRA-I-2c
+    clause: "Annex I, Part I, point (2)(c)"
+    checked: secondary
+    question: >
+      How do security updates reach the product, and whose updates does the product
+      accept?
+    evidence:
+      - profile: pkic.example.change-core
+        rules: [P2, I13, I14, I15]
+    levels: {expressible: "yes", required: "yes", evaluable: "yes"}
+    verdict: deeper-profile
+    rationale: >
+      The change core requires how new software reaches the product, or that nothing
+      can, and the parties whose updates the product accepts. The baseline does not.
+
+  - id: CRA-II-1
+    clause: "Annex I, Part II, point (1)"
+    checked: secondary
+    question: "Can a reader reach the product's SBOM from its CBOM, and be sure it is the right one?"
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [R1, I9]
+    levels: {expressible: "yes", required: "yes", evaluable: "yes"}
+    verdict: sufficient
+    rationale: >
+      The baseline requires a link to the SBOM of the same subject, with a hash, and
+      the package URL of each interface's implementing library, which places that
+      library in the SBOM's dependency tree.

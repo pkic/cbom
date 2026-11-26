@@ -1,0 +1,187 @@
+{
+  "classificationFormat": "pkic.cbom.classification",
+  "classificationFormatVersion": "0.1",
+  "setId": "pkic.example.classification.algorithms",
+  "version": "0.1",
+  "title": "Example classification of the algorithm names used in the worked examples",
+  "status": "illustrative",
+  "$comment": "Facts about algorithms, not judgements: the family, the classical security strength in bits, and whether a cryptographically relevant quantum computer would break the algorithm. A policy refers to this set by its digest under classificationSource, and holds its own schedule or classes. The same facts can therefore serve several policies and several jurisdictions, and a correction is made once. The entries were moved here unchanged from the inline classification of policy-algorithm-transition 0.3, policy-edge-posture 0.2 and policy-readiness-gap 0.2, which held identical copies. Names follow the forms the examples use, including the CycloneDX cryptography registry form and some protocol code-point names; aligning these with the registry is open as cluster D of the decision backlog.",
+  "entries": [
+    {
+      "names": [
+        "RSA-1024"
+      ],
+      "family": "RSA",
+      "securityStrength": 80,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "RSA-2048",
+        "RS256",
+        "RS384",
+        "RS512",
+        "PS256",
+        "PS384",
+        "PS512",
+        "RSA-SHA256",
+        "RSA-OAEP",
+        "RSA-OAEP-256",
+        "rsa_pkcs1_sha256",
+        "rsa_pss_rsae_sha256",
+        "rsa_pss_rsae_sha384",
+        "rsa_pss_rsae_sha512",
+        "rsa_pss_pss_sha256",
+        "RSA-SHA384",
+        "RSA-SHA512",
+        "RSA-PKCS1-1.5-SHA-256",
+        "RSA-PKCS1-1.5-SHA-384",
+        "RSA-PKCS1-1.5-SHA-512",
+        "RSA-PSS-SHA-256",
+        "RSA-PSS-SHA-384",
+        "RSA-PSS-SHA-512",
+        "RSA-OAEP-SHA-1-MGF1-SHA-1",
+        "RSA-OAEP-SHA-256-MGF1-SHA-256"
+      ],
+      "family": "RSA",
+      "securityStrength": 112,
+      "quantumVulnerable": true,
+      "note": "JOSE and TLS names do not carry the RSA key size. They are classified at 112 bits, the strength of the RSA-2048 keys Keycloak generates by default; a record that states a larger key in its key material is classified by that key."
+    },
+    {
+      "names": [
+        "RSA-3072"
+      ],
+      "family": "RSA",
+      "securityStrength": 128,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "ffdhe2048",
+        "FFDHE-ffdhe2048"
+      ],
+      "family": "FFDH",
+      "securityStrength": 112,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "ffdhe3072",
+        "FFDHE-ffdhe3072"
+      ],
+      "family": "FFDH",
+      "securityStrength": 128,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "X25519",
+        "secp256r1",
+        "P-256",
+        "ECDH-ES",
+        "ES256",
+        "ECDSA-P256-SHA256",
+        "ecdsa_secp256r1_sha256",
+        "Ed25519",
+        "EdDSA",
+        "ed25519",
+        "ECDSA-SHA256",
+        "ECDHE-secp256r1",
+        "ECDH"
+      ],
+      "family": "EC",
+      "securityStrength": 128,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "secp384r1",
+        "P-384",
+        "ES384",
+        "ecdsa_secp384r1_sha384",
+        "ECDSA-SHA384",
+        "ECDHE-secp384r1",
+        "ECDSA-P-384-SHA-384"
+      ],
+      "family": "EC",
+      "securityStrength": 192,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "X448",
+        "Ed448",
+        "ed448"
+      ],
+      "family": "EC",
+      "securityStrength": 224,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "secp521r1",
+        "P-521",
+        "ES512",
+        "ecdsa_secp521r1_sha512",
+        "ECDSA-SHA512",
+        "ECDHE-secp521r1",
+        "ECDSA-P-521-SHA-512"
+      ],
+      "family": "EC",
+      "securityStrength": 256,
+      "quantumVulnerable": true
+    },
+    {
+      "names": [
+        "X25519MLKEM768",
+        "SecP256r1MLKEM768",
+        "SecP384r1MLKEM1024",
+        "ML-KEM-768",
+        "ML-KEM-1024",
+        "ML-KEM-512"
+      ],
+      "family": "ML-KEM",
+      "quantumVulnerable": false,
+      "note": "Hybrid groups are classified by their post-quantum component."
+    },
+    {
+      "names": [
+        "ML-DSA-44",
+        "ML-DSA-65",
+        "ML-DSA-87",
+        "mldsa44",
+        "mldsa65",
+        "mldsa87",
+        "SLH-DSA-SHA2-128s",
+        "SLH-DSA-SHAKE-128s"
+      ],
+      "family": "ML-DSA/SLH-DSA",
+      "quantumVulnerable": false
+    },
+    {
+      "names": [
+        "AES-128",
+        "AES-128-GCM",
+        "AES-256-GCM",
+        "ChaCha20-Poly1305",
+        "HMAC-SHA512",
+        "HS256",
+        "HS384",
+        "HS512",
+        "HMAC-SHA-256",
+        "HMAC-SHA-384"
+      ],
+      "family": "symmetric",
+      "quantumVulnerable": false,
+      "note": "Symmetric algorithms are outside the IR 8547 public-key transition."
+    }
+  ],
+  "changelog": [
+    {
+      "version": "0.1",
+      "date": "2026-11-26",
+      "summary": "Moved out of the three example policies, unchanged."
+    }
+  ]
+}

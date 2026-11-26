@@ -1,0 +1,117 @@
+instrument:
+  id: eu-nis2-cir-2024-2690
+  title: "NIS2 Directive (EU) 2022/2555, Article 21(2)(h), and Commission Implementing Regulation (EU) 2024/2690, Annex, point 9"
+  jurisdiction: EU
+  kind: binding regulation
+  published: 2024-10-17
+  appliesTo: "Essential and important entities under NIS2. The implementing regulation applies directly to the entity types it names, such as cloud, data centre, managed service and trust service providers"
+  source: https://eur-lex.europa.eu/eli/reg_impl/2024/2690/oj
+  summary: >
+    Article 21(2)(h) requires policies and procedures on the use of cryptography and,
+    where appropriate, encryption. Point 9 of the Annex to the implementing regulation
+    says what the policy must contain: the cryptographic measures for each class of
+    asset, the protocols and algorithm families with a crypto-agility approach where
+    appropriate, and key management. It also requires the policy to be reviewed. Neither
+    text explicitly requires an inventory of cryptographic assets.
+
+questions:
+  - id: CIR-9.1
+    clause: "Annex, point 9.1"
+    checked: eu-report
+    question: "Has the entity adopted a policy and procedures on the use of cryptography?"
+    evidence: []
+    levels: {expressible: "no", required: "no", evaluable: "no"}
+    verdict: out-of-scope
+    rationale: >
+      Whether a policy exists is a fact about the organisation. A CBOM describes the
+      cryptography of a product, service or system, and cannot show that a policy was
+      adopted.
+
+  - id: CIR-9.2a
+    clause: "Annex, point 9.2(a)"
+    checked: secondary
+    question: >
+      Which cryptographic mechanisms protect each asset, and are they strong enough for
+      the asset's classification?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I3, I4, I5, I10, I12]
+      - profile: pkic.example.deployment-disclosure
+        rules: [R3]
+    levels: {expressible: "yes", required: "partly", evaluable: "partly"}
+    verdict: partial
+    rationale: >
+      The baseline requires the algorithms of every interface. What data an interface
+      carries is optional in the baseline (I12), and the classification of that data
+      is the operator's. A deployment record should point to the operator's data
+      register (R3). A policy can then compare the algorithm strength with the
+      strength the classification calls for. The policy, not the CBOM, holds the
+      rule that maps classes to strengths.
+    gap: >
+      Data classification stays with the operator. Cluster J of the decision backlog
+      (data and harvest-now-decrypt-later) covers how the operator's register is
+      linked.
+
+  - id: CIR-9.2b
+    clause: "Annex, point 9.2(b)"
+    checked: secondary
+    question: >
+      Which protocols and algorithm families are in use, and can they be replaced when
+      the state of the art moves?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I1, I2, I3, I4, I5]
+      - profile: pkic.example.change-core
+        rules: [I1, I2, I3, I4, I7, I16, G1]
+    levels: {expressible: "yes", required: "yes", evaluable: "partly"}
+    verdict: deeper-profile
+    rationale: >
+      The baseline requires the protocols and algorithms in use. Replaceability is
+      what the change core requires: the algorithms supported, how a new one is
+      enabled, whether old and new can coexist, and whether keys can be replaced.
+      A reader who wants evidence of crypto agility must ask for the change core or a
+      profile that extends it.
+
+  - id: CIR-9.2c
+    clause: "Annex, point 9.2(c)"
+    checked: secondary
+    question: >
+      How are keys generated, stored, renewed, revoked and destroyed for each
+      cryptographic system?
+    evidence:
+      - profile: pkic.example.pqc-migration-extended
+        rules: [I1, I2, I4, I7]
+      - profile: pkic.example.change-core
+        rules: [I16]
+      - profile: pkic.example.interface-disclosure
+        rules: [I13]
+      - profile: pkic.example.iot-device
+        rules: [I1]
+    levels: {expressible: "partly", required: "partly", evaluable: "partly"}
+    verdict: partial
+    rationale: >
+      A CBOM can state what a product's key management offers: which key operations a
+      management interface supports, where keys are stored, whether they can be
+      replaced, and how long credentials stay valid. The regulation also asks how the
+      entity runs key management, for example who may generate keys and how backups
+      are protected. Those are procedures, and no CBOM can state them.
+    gap: >
+      Product capability is in scope. The entity's key-management procedures stay out
+      of scope.
+
+  - id: CIR-9.3
+    clause: "Annex, point 9.3"
+    checked: secondary
+    question: >
+      Has the entity reviewed its cryptography against developments in cryptanalysis,
+      and found what must change?
+    evidence:
+      - profile: pkic.example.interface-disclosure
+        rules: [I3, I4, I5]
+    levels: {expressible: "yes", required: "yes", evaluable: "yes"}
+    verdict: judgement
+    rationale: >
+      The CBOM supplies the facts. The review is a judgement over those facts. In the
+      methodology it is a versioned policy that is evaluated again whenever it changes,
+      and every result records which policy version produced it. A series of dated
+      results is evidence that the review took place.
