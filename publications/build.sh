@@ -22,6 +22,11 @@ for src in "${!NAMES[@]}"; do
     --lua-filter=../links.lua \
     --resource-path=. \
     -o "$OUT/${NAMES[$src]}.docx"
-  python3 ../postprocess.py "$OUT/${NAMES[$src]}.docx"
+  # The document date is the draft date in the header line ("Working Draft 0.1 · Nov 26, 2026"),
+  # so a rebuild gives a byte-identical file until the author changes the source.
+  date=$(python3 -c 'import re,sys,datetime
+m=re.search(r"^Working Draft [^\n]*?(\w{3} \d{1,2}, \d{4})", open(sys.argv[1]).read(), re.M)
+print(datetime.datetime.strptime(m.group(1), "%b %d, %Y").strftime("%Y-%m-%dT00:00:00Z") if m else "2026-01-01T00:00:00Z")' "$src.md")
+  TZ=UTC python3 ../postprocess.py "$OUT/${NAMES[$src]}.docx" --date "$date"
   echo "built ${NAMES[$src]}.docx"
 done

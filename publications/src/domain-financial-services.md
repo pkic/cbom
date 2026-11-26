@@ -260,27 +260,38 @@ This policy checks whether a bank holds its provider's current service record, b
 
 The first worked example is a service record for AWS Payment Cryptography, written from the provider's public documentation. It is chosen because the documentation states the key types, key exchange methods and storage protection in enough detail to write a record without the provider's help. The record has not been reviewed by the provider.
 
-The documentation describes these interfaces:
+The record is built by [`build.py`](../../drafts/fs-payment-cryptography-service/build.py) and written to [`cbom-aws-payment-cryptography-service.cdx.json`](../../drafts/fs-payment-cryptography-service/examples/cbom-aws-payment-cryptography-service.cdx.json). Every value comes from a documentation page that the record names. A fact the pages do not state is marked `unknown`, and no value is guessed. The record therefore shows what a customer can learn about the service from public documentation alone.
 
-| Interface | Type | Cryptography, as documented |
+| Interface | Type | What the documentation states |
 |---|---|---|
-| Control plane API | Management | Creating, importing and exporting keys |
-| Data plane API | Service | Payment operations, such as PIN translation, card verification values and EMV cryptograms |
-| Import and export of key-encryption keys | Key transport | TR-34 with RSA 2048, 3072 or 4096; RSA wrap; ECDH on NIST P-256, P-384 or P-521, with the key derivation function of NIST SP 800-56A or ANSI X9.63 |
-| Import and export of working keys | Key transport | TR-31 and ANSI X9.143 key blocks under a key-encryption key, with Triple DES or AES |
-| Key storage | Storage | Keys held in TR-31 key blocks, protected by AES-256 main keys in the service's HSMs |
+| TLS on the API endpoints | Service | Clients must support TLS 1.2 or later. Hybrid post-quantum key exchange with ML-KEM is offered, and the client decides whether to use it |
+| Control plane API | Management | Creating, importing, exporting and deleting keys. Every call is signed |
+| Data plane API | Service | Payment operations, such as PIN translation, card verification values and EMV cryptograms. Every call is signed |
+| Exchange of key-encryption keys with TR-34 | Interconnect | RSA with 2048, 3072 or 4096 bit keys. RSA wrap where a partner does not support TR-34 |
+| Exchange of key-encryption keys with ECDH | Interconnect | NIST curves P-256, P-384 or P-521, with the key derivation function of NIST SP 800-56A or ANSI X9.63 |
+| Exchange of working keys | Interconnect | TR-31 or ANSI X9.143 key blocks under a key-encryption key, with Triple DES or AES |
+| Key storage | Storage | Key blocks protected by AES-256 main keys in HSMs that meet PCI PTS HSM. Each key exists in one region. Custody is provider-managed |
 
-The documentation lists Triple DES (two-key and three-key) and AES (128, 192 and 256 bits) as symmetric key algorithms, and RSA and NIST elliptic curves as asymmetric ones. The pages consulted for this draft list no post-quantum key types.
+**Verdict.** The record does not conform to Service Disclosure. It passes 52 rule checks. Of the rest, 21 are facts that the documentation does not state, and one is a rule that the record cannot meet:
 
-Three findings are expected from the record, before any policy is applied:
+| What is missing | Rule | Interfaces |
+|---|---|---|
+| The implementing library or module | Baseline I9 | All seven |
+| The authentication algorithm, for example of the server certificate, request signing and TR-34 | Baseline I5 | Five |
+| The protocol version of the HTTP API, TR-34, the ECDH scheme and X9.143 | Baseline I2 | Five |
+| The encryption algorithm, for example the TLS cipher suites and the wrapping used by TR-34 and ECDH | Baseline I4 | Three |
+| The TLS key exchange groups | Baseline I3 | One |
+| A cited record of what the service builds on | Service Disclosure P3 | The document |
 
--   The quantum-exposed interfaces are the two that carry key-encryption keys: TR-34 and ECDH. Everything sent under those keys inherits their exposure (chapter 3).
+**What the example shows.**
 
--   Working keys and storage are symmetric. Their migration concern is Triple DES, which the service still supports for compatibility with counterparties.
+-   A customer can learn the shape of the service from public documentation: its interfaces, its key types, its methods for exchanging keys and how it stores them. It cannot learn the implementing modules, the authentication algorithms or the exact protocol versions. Those 21 facts are what a customer would ask the provider for, and they form the review request to the provider.
 
--   The TLS versions and key exchange groups of the two APIs have not yet been checked against the provider's documentation. Until they are, the record marks them as unknown rather than assuming them.
+-   The quantum-exposed interfaces are the two that carry key-encryption keys, TR-34 and ECDH. Every working key that is exchanged later inherits their exposure (chapter 3). The API already offers hybrid post-quantum TLS, so the migration work for a customer lies in the key exchange interfaces, not in the API.
 
-The record will be built by a script under `drafts/fs-payment-cryptography-service/`, in the same way as the other worked examples, and checked against Service Disclosure.
+-   Working keys and storage are symmetric. Their migration concern is Triple DES, which the service still accepts for compatibility with counterparties (chapter 6).
+
+-   Service Disclosure P3 assumes that a service can cite the product records of what it runs. A provider that runs its own platform on hardware whose vendor publishes no records cannot meet P3 honestly. The question register proposes that P3 accept a declared absence with a reason, in the same way as P2 (R2-29).
 
 ### 11.2 Examples proposed for later
 
@@ -347,15 +358,17 @@ Other sources this draft relies on:
 
 ### 13.4 Open work
 
-1.  Build the AWS Payment Cryptography service record (11.1), check it against Service Disclosure, and offer it to the provider for review.
+1.  Send the AWS Payment Cryptography record (11.1) to the provider, with the 21 facts it could not take from the public documentation, and ask for a review.
 
-2.  Add the symmetric schedule to the algorithm-transition policy (10.1), with each date checked against its source.
+2.  Settle R2-29, so that a service that has no records to cite can still conform.
 
-3.  Write the scheme profile (9.3) and the scheme-readiness policy (10.2), with an illustrative scheme of three participants.
+3.  Add the symmetric schedule to the algorithm-transition policy (10.1), with each date checked against its source.
 
-4.  Send the needs in 9.1 and 9.2 to the Change planning group document and to the devices document.
+4.  Write the scheme profile (9.3) and the scheme-readiness policy (10.2), with an illustrative scheme of three participants.
 
-5.  Check the proposed protocol names (chapter 5) against the CycloneDX cryptography registry.
+5.  Send the needs in 9.1 and 9.2 to the Change planning group document and to the devices document.
+
+6.  Check the proposed protocol names (chapter 5) against the CycloneDX cryptography registry.
 
 Annex A. Financial terms and methodology terms
 ----------------------------------------------

@@ -6,7 +6,13 @@ publications use: Normal paragraphs, ListParagraph for list items, and
 TableGrid tables with a shaded header row that repeats on each page.
 Column widths come from the Markdown separator rows.
 
-Usage: python3 publications/postprocess.py FILE.docx
+It also makes the build reproducible. Every zip entry gets a fixed timestamp,
+and the document's created and modified dates are set to the date given with
+--date (build.sh passes the date of the last commit that changed the source).
+Building the same source twice therefore gives byte-identical files, and git
+shows a Word file as changed only when its source changed.
+
+Usage: python3 publications/postprocess.py FILE.docx [--date YYYY-MM-DDTHH:MM:SSZ]
 """
 import re, sys, zipfile, shutil, tempfile
 
@@ -59,6 +65,7 @@ def fix_paragraphs(x):
     return x
 
 path = sys.argv[1]
+date = sys.argv[sys.argv.index("--date") + 1] if "--date" in sys.argv else None
 z = zipfile.ZipFile(path)
 x = z.read("word/document.xml").decode("utf8")
 x = fix_paragraphs(fix_code(fix_tables(x)))
@@ -66,6 +73,14 @@ tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".docx").name
 with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as out:
     for item in z.infolist():
         data = x.encode("utf8") if item.filename == "word/document.xml" else z.read(item.filename)
-        out.writestr(item, data)
+        if item.filename == "docProps/core.xml" and date:
+            core = data.decode("utf8")
+            core = re.sub(r"(<dcterms:(?:created|modified)[^>]*>)[^<]*(</dcterms:(?:created|modified)>)",
+                          lambda m: m.group(1) + date + m.group(2), core)
+            data = core.encode("utf8")
+        info = zipfile.ZipInfo(item.filename, date_time=(1980, 1, 1, 0, 0, 0))
+        info.compress_type = item.compress_type
+        info.external_attr = item.external_attr
+        out.writestr(info, data)
 z.close()
 shutil.move(tmp, path)
