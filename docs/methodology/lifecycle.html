@@ -22,8 +22,9 @@ nav: lifecycle
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">BACKGROUND</div>
+  <div class="crumb">PUBLICATION 1 · FOUNDATIONS</div>
   <h1>Data collected across development and deployment phases</h1>
+  <div class="pubref"><span class="pubref-where">Section 4.4 of chapter 4</span> This page explains section 4.4 of chapter 4, <em>Why CBOM data is hard to use today</em>, of <em>Foundations</em>, with diagrams, worked examples and checks you can run. The publication is the authoritative text: where the two differ, the publication applies. <a href="../assets/publications/CBOM-Profiles-Publication-1-Foundations.docx" download>Download Publication 1 (Word)</a></div><!-- /pubref -->
   <p class="lead">The significance of a cryptographic fact depends on the phase at which, and the party by which, it was captured. Each CBOM therefore declares one lifecycle stage for the whole document. A reader can then interpret the statement that a product uses a given algorithm precisely: as a default the vendor ships, as a set an operator permits, or as a set someone saw on the wire.</p>
 
   <h2>The four lifecycle stages</h2>
@@ -286,8 +287,8 @@ nav: lifecycle
   <p>Successive records form an audit trail. The <a href="versioning.html">Versioning</a> section describes content revision as one of the things that carry their own version. Each new deployment record cites the records it builds on by BOM-Link and hash, so every record in the series is bound to the exact revisions before it. Suppose an operator enables post-quantum key exchange, and a later observed record shows that every session negotiates it. Each policy result names the records it read by digest. The series of records and results then gives internal governance and regulators a verifiable record of the migration.</p>
 
   <div class="pagenav">
-    <a href="inventory.html">← Inventory</a>
-    <a class="next" href="model.html">Next: Model →</a>
+    <a href="inventory.html">← 4 · Inventory</a>
+    <a class="next" href="model.html">Next: 5 · Model →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>

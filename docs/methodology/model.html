@@ -22,8 +22,9 @@ nav: model
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">CONCEPT</div>
+  <div class="crumb">PUBLICATION 2 · PROFILES AND CONFORMANCE</div>
   <h1>The cryptographic relationship model</h1>
+  <div class="pubref"><span class="pubref-where">Chapter 5</span> This page explains chapter 5, <em>The model</em>, of <em>Profiles and conformance</em>, with diagrams, worked examples and checks you can run. The publication is the authoritative text: where the two differ, the publication applies. <a href="../assets/publications/CBOM-Profiles-Publication-2-Profiles-and-conformance.docx" download>Download Publication 2 (Word)</a></div><!-- /pubref -->
   <p class="lead">A profile states which facts a CBOM must disclose. Those statements are only as precise as the terms they use. The terms defined here are used throughout the methodology, and they must be settled before a profile can be written.</p>
 
   <h2>Why this section exists</h2>
@@ -425,8 +426,8 @@ nav: model
   <div class="banner">Neither CycloneDX nor SPDX currently provides an object that represents this relationship with its cryptographic meaning attached. The two formats fall short in different ways, and the difference affects how the model maps onto each. CycloneDX has cryptographic assets but no edge between endpoints. CycloneDX 2.0 adds a blueprint model with zones, boundaries and flows, but that model describes a deployed system for threat analysis. Its protocols are free text and its encryption is a boolean, so it does not represent a cryptographic interface. SPDX has a first-class <code>Relationship</code> element that can be addressed and annotated, but it has no cryptographic model to attach to that element. Both formats approximate the relationship by attaching relationship attributes to a protocol asset. This works for a single pairwise interface. It becomes increasingly awkward for the cases above. The methodology does not add such an object. It represents a connection as the join of its two ends. Each end is an interface in its own operator's record, and a <code>connectsTo</code> pointer in a deployment record joins them. A finding about the connection, such as which end limits the key exchange, belongs to the evaluation that performs the join. See <a href="policy-evaluation.html#edge-posture">Policy Evaluation</a>, <a href="challenges.html">Challenges</a> and <a href="formats.html">Formats</a>.</div>
 
   <div class="pagenav">
-    <a href="lifecycle.html">← Lifecycle Data</a>
-    <a class="next" href="objects.html">Next: Objects →</a>
+    <a href="lifecycle.html">← 4 · Lifecycle data</a>
+    <a class="next" href="objects.html">Next: 5 · Objects →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>

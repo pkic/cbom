@@ -912,6 +912,12 @@ printf '%s\n' "$OUT" | sed 's/^/  /'
 if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else failed=$((failed + 1)); fi
 
 echo
+echo "Every methodology page names the publication chapter it explains"
+OUT="$("$PY" "$ROOT/tools/sync-publication-map.py" --check 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | tail -1 | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else printf '%s\n' "$OUT"; failed=$((failed + 1)); fi
+
+echo
 echo "The example claim verifies against the product record"
 OUT="$("$PY" "$ROOT/tests/check-claim.py" 2>&1)"; RC=$?
 printf '%s\n' "$OUT" | sed 's/^/  /'

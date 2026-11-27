@@ -22,8 +22,9 @@ nav: formats
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">MAPPING</div>
+  <div class="crumb">PUBLICATION 3 · APPLYING THE METHODOLOGY</div>
   <h1>One profile against two formats</h1>
+  <div class="pubref"><span class="pubref-where">Chapter 14</span> This page explains chapter 14, <em>Encoding a profile in a format</em>, of <em>Applying the methodology</em>, with diagrams, worked examples and checks you can run. The publication is the authoritative text: where the two differ, the publication applies. <a href="../assets/publications/CBOM-Profiles-Publication-3-Applying-the-methodology.docx" download>Download Publication 3 (Word)</a></div><!-- /pubref -->
   <p class="lead">A PKIC CBOM profile is defined independently of any format. A mapping locates each attribute, and the interface count, within a concrete document. The target carrier is CycloneDX 2.0. The validator still reads CycloneDX 1.6 and 1.7 documents, as legacy, because the tools that produce CBOMs today emit 1.x. SPDX 3.0.1 has no cryptographic object model, so a CBOM is expressed in CycloneDX and referenced from an SPDX SBOM. SPDX 3 is not a target carrier, and the SPDX column of the mapping keeps its stated gaps.</p>
   <p>Both formats permit the same information to be encoded in more than one valid way. The mapping therefore also normalizes the encoding. It defines a single, canonical location for each attribute. A consumer that relies on the mapping reads each required value from one place. It does not have to handle every valid variant, and this reduces parsing complexity. See <a href="challenges.html">Challenges</a>.</p>
   <div class="banner warn">CycloneDX 2.0 is not yet released. The PKIC CBOM profiles are pinned to the development branch <code>2.0-dev</code> of <code>CycloneDX/specification</code>, commit <code>76f185c</code> (23 October 2026). Ecma is expected to ratify the release in December 2026. When it does, the working group replaces the pinned schema, regenerates the examples and revises any location that moved. When a format gains capability, the mapping changes and the profile rules do not. This is the practical benefit of keeping the profile separate from any format.</div>
@@ -200,8 +201,8 @@ nav: formats
   <p>The working group therefore keeps a short list of protocol names in <a href="terms.html#protocols">Terms</a>. Each name points to the protocol's own specification, and the version is written as that specification writes it, for example <code>1.3</code> for TLS. A protocol that is not on the list is recorded as <code>other</code>, with a pointer to its specification, and can be proposed for the list. An adapter normalizes what it receives before any rule is evaluated. Where a registry provides protocol identifiers, they are preferred, for the same reasons as for algorithms.</p>
 
   <div class="pagenav">
-    <a href="method.html">← Method</a>
-    <a class="next" href="data-exposure.html">Next: Data Exposure →</a>
+    <a href="use-cases.html">← 13 · Starting from a use case</a>
+    <a class="next" href="versioning.html">Next: 14 · Older CBOM files →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>

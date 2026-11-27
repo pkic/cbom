@@ -149,9 +149,22 @@ def render_page(docs):
             '  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>', "</main>", "</div>", "</body>", "</html>"]
     return "\n".join(out) + "\n"
 
+def with_publication_banner(text):
+    """The breadcrumb and banner that tools/sync-publication-map.py writes on every methodology
+    page, computed by that script from docs/_data/methodology_pubmap.yml, so the two cannot differ."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("pubmap", os.path.join(ROOT, "tools", "sync-publication-map.py"))
+    pm = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pm)
+    pubs, pages = pm.read_data()
+    entry = next(p for p in pages if p["id"] == "regulation")
+    text = pm.CRUMB.sub(pm.crumb(entry, pubs[entry["pub"]]), text, count=1)
+    return pm.H1_END.sub("</h1>" + pm.banner(entry, pubs[entry["pub"]]), text, count=1)
+
+
 if __name__ == "__main__":
     docs = load()
-    outputs = {OUT: render(docs), PAGE: render_page(docs)}
+    outputs = {OUT: render(docs), PAGE: with_publication_banner(render_page(docs))}
     if "--check" in sys.argv:
         for path, text in outputs.items():
             current = open(path, encoding="utf8").read() if os.path.exists(path) else ""

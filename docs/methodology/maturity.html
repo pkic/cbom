@@ -6,7 +6,7 @@ nav: maturity
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CBOM Profiles — Maturity</title>
+<title>CBOM Profiles — Depth families</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,8 +22,9 @@ nav: maturity
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">CONCEPT</div>
-  <h1>Profile maturity</h1>
+  <div class="crumb">PUBLICATION 2 · PROFILES AND CONFORMANCE</div>
+  <h1>Depth families</h1>
+  <div class="pubref"><span class="pubref-where">Chapter 8</span> This page explains chapter 8, <em>Depth families</em>, of <em>Profiles and conformance</em>, with diagrams, worked examples and checks you can run. The publication is the authoritative text: where the two differ, the publication applies. <a href="../assets/publications/CBOM-Profiles-Publication-2-Profiles-and-conformance.docx" download>Download Publication 2 (Word)</a></div><!-- /pubref -->
   <p class="lead">A profile sets one requirement, and a document either meets it or does not. That works for a conformance decision, but it makes adoption hard. Suppose a producer can list its interfaces this quarter, but cannot say which algorithms each one uses until it has changed its build tooling. Against a single demanding profile, that producer conforms to nothing. The answer is to publish a <strong>family</strong> of profiles, each asking for more detail than the one before. The methodology calls each step a depth. The first depth is within reach of most producers, the last is demanding, and a consumer can see which depth a supplier has met.</p>
 
   <h2>Depth uses existing mechanisms</h2>
@@ -174,8 +175,8 @@ nav: maturity
   <div class="banner">A depth is a profile. A family is a set of profiles ordered so that each contains the one below it. Maturity, in this methodology, is the decision to publish the family with an entry depth low enough for producers to reach. The mechanism is the monotonic extension already defined in <a href="profile.html">Profile</a>. Depth adds two obligations: to check that the order really holds, and to name the depth when asking for one.</div>
 
   <div class="pagenav">
-    <a href="conformance.html">← Conformance</a>
-    <a class="next" href="confidentiality.html">Next: Confidentiality →</a>
+    <a href="profile.html">← 6 · Profiles and rules</a>
+    <a class="next" href="conformance.html">Next: 9 · Conformance →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>

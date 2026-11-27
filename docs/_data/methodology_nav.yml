@@ -14,56 +14,53 @@
 # which rewrites every page's footer links from this file. Run it after any
 # change to the order below.
 #
-# This order is a READING order, for someone meeting the material for the
-# first time. It is deliberately not the clause order of the numbered draft,
-# where Scope, Terms and Conformance appear early because a normative document
-# has to be self-contained. Concrete before abstract here; self-contained
-# there. See docs/methodology/index.html.
+# The groups follow the Release 1 publications, and the pages within each group
+# follow the publication's chapter order. Each page explains a chapter, or part
+# of one; docs/_data/methodology_pubmap.yml says which, and
+# tools/sync-publication-map.py writes that onto the pages. A title starts with
+# its chapter number, or annex letter, so that a reader can find the same text
+# in the publication.
 
 - group: Start here
   items:
-    - { id: introduction, title: Introduction,      url: introduction.html }
     - { id: index,        title: Overview,          url: index.html }
-    - { id: demo,         title: Demo,              url: demo.html }
-    - { id: examples,     title: Examples,          url: examples.html }
 
-- group: Background
+- group: Publication 1 · Foundations
   items:
-    - { id: challenges,   title: Challenges,        url: challenges.html }
-    - { id: inventory,    title: Inventory,         url: inventory.html }
-    - { id: lifecycle,    title: Lifecycle Data,    url: lifecycle.html }
+    - { id: introduction, title: 1 · Introduction,  url: introduction.html }
+    - { id: terms,        title: 3 · Terms,         url: terms.html }
+    - { id: challenges,   title: 4 · Challenges,    url: challenges.html }
+    - { id: inventory,    title: 4 · Inventory,     url: inventory.html }
+    - { id: lifecycle,    title: 4 · Lifecycle data, url: lifecycle.html }
 
-- group: Concepts
+- group: Publication 2 · Profiles and conformance
   items:
-    - { id: model,        title: Model,             url: model.html }
-    - { id: objects,      title: Objects,           url: objects.html }
-    - { id: profile,      title: Profile,           url: profile.html }
-    - { id: conformance,  title: Conformance,       url: conformance.html }
-    - { id: maturity,     title: Maturity,          url: maturity.html }
-    - { id: confidentiality, title: Confidentiality, url: confidentiality.html }
-    - { id: policyeval,   title: Policy Evaluation, url: policy-evaluation.html }
-    - { id: vulns,        title: Vulnerabilities,   url: vulnerabilities.html }
-    - { id: context, title: Context Pointers, url: context.html }
+    - { id: model,        title: 5 · Model,         url: model.html }
+    - { id: objects,      title: 5 · Objects,       url: objects.html }
+    - { id: profile,      title: 6 · Profiles and rules, url: profile.html }
+    - { id: maturity,     title: 8 · Depth families, url: maturity.html }
+    - { id: conformance,  title: 9 · Conformance,   url: conformance.html }
+    - { id: policyeval,   title: 10 · Policy evaluation, url: policy-evaluation.html }
+    - { id: vulns,        title: 10 · Vulnerabilities, url: vulnerabilities.html }
+    - { id: confidentiality, title: 11 · Confidentiality, url: confidentiality.html }
+    - { id: dataexp,      title: 11 · Data exposure, url: data-exposure.html }
+    - { id: context,      title: 12 · Context pointers, url: context.html }
 
-- group: Applying it
+- group: Publication 3 · Applying the methodology
   items:
-    - { id: usecases,     title: Starting from a Use Case, url: use-cases.html }
-    - { id: method,       title: Method,            url: method.html }
-    - { id: formats,      title: Formats,           url: formats.html }
-    - { id: dataexp,      title: Data Exposure,     url: data-exposure.html }
+    - { id: method,       title: 13 · Writing a profile, url: method.html }
+    - { id: usecases,     title: 13 · Starting from a use case, url: use-cases.html }
+    - { id: formats,      title: 14 · Formats,      url: formats.html }
+    - { id: versioning,   title: 14 · Older CBOM files, url: versioning.html }
+    - { id: governance,   title: 15 · Governance,   url: governance.html }
+    - { id: regulation,   title: 16 · Regulation,   url: regulation.html }
+    - { id: related,      title: 17 · Related work, url: related-work.html }
 
-- group: Operations
+- group: Examples and tools
   items:
-    - { id: versioning,   title: Versioning,        url: versioning.html }
-    - { id: governance,   title: Governance,        url: governance.html }
-    - { id: regulation,   title: Regulation,        url: regulation.html }
-
-- group: Reference
-  items:
-    - { id: terms,        title: Terms,             url: terms.html }
-    - { id: related,      title: Related Work,      url: related-work.html }
-    - { id: files,        title: Files,             url: files.html }
-    - { id: references,   title: References,        url: ../references/ }
+    - { id: examples,     title: D · Examples,      url: examples.html }
+    - { id: demo,         title: D · Demo,          url: demo.html }
+    - { id: files,        title: D · Files,         url: files.html }
 
 # A pointer out of the section, kept last so that no page's previous or next
 # link lands on it: tools/renumber-pagenav.py skips entries whose url is not a
@@ -73,3 +70,4 @@
 - group: Other sections
   items:
     - { id: ucsection,    title: Use cases,         url: ../use-cases/ }
+    - { id: references,   title: References,        url: ../references/ }

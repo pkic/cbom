@@ -22,8 +22,9 @@ nav: context
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">CONCEPT</div>
+  <div class="crumb">PUBLICATION 2 · PROFILES AND CONFORMANCE</div>
   <h1>Context pointers</h1>
+  <div class="pubref"><span class="pubref-where">Chapter 12</span> This page explains chapter 12, <em>Context pointers</em>, of <em>Profiles and conformance</em>, with diagrams, worked examples and checks you can run. The publication is the authoritative text: where the two differ, the publication applies. <a href="../assets/publications/CBOM-Profiles-Publication-2-Profiles-and-conformance.docx" download>Download Publication 2 (Word)</a></div><!-- /pubref -->
   <p class="lead">A CBOM records cryptographic facts about one subject at one stage. A consumer usually needs more than those facts: the SBOM of the same product, the vendor's vulnerability statements, the configuration a deployment record was read from, the evidence behind an observation. These artefacts change on their own schedule, or another party holds them. A CBOM therefore does not carry them. It points to them. A profile states which pointers a document must contain, and the validator checks them.</p>
 
   <h2>The construct</h2>
@@ -170,8 +171,8 @@ nav: context
   <div class="banner">In short. A context pointer names an artefact that a CBOM needs and does not carry. A profile defines the kinds of context, the reference types that carry each kind, and whether the target is a document bound by a hash or an endpoint with an access protocol. Reference rules say which pointers a document must contain. Conformance checks the pointer and never the target. A record points to what exists when it is written and to the places where later statements will appear. Judgements made afterwards point to the record by digest.</div>
 
   <div class="pagenav">
-    <a href="vulnerabilities.html">← Vulnerabilities</a>
-    <a class="next" href="use-cases.html">Next: Starting from a Use Case →</a>
+    <a href="data-exposure.html">← 11 · Data exposure</a>
+    <a class="next" href="method.html">Next: 13 · Writing a profile →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>

@@ -22,8 +22,9 @@ nav: profile
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">CORE</div>
+  <div class="crumb">PUBLICATION 2 · PROFILES AND CONFORMANCE</div>
   <h1>The profile: Interface Disclosure Baseline</h1>
+  <div class="pubref"><span class="pubref-where">Chapter 6</span> This page explains chapter 6, <em>CBOM profiles</em>, of <em>Profiles and conformance</em>, with diagrams, worked examples and checks you can run. The publication is the authoritative text: where the two differ, the publication applies. <a href="../assets/publications/CBOM-Profiles-Publication-2-Profiles-and-conformance.docx" download>Download Publication 2 (Word)</a></div><!-- /pubref -->
   <p class="lead">The Interface Disclosure Baseline, v0.9, is product-independent. Its rules are structural: they say which categories of cryptographic interface must exist, what each one must disclose, and which context the document must point to. Written that way, they apply to any product and to any deployment of it. No rule names a specific product or a specific interface instance. The worked example is Keycloak 26.7.3, and the full write-up is <a href="profile-interface-disclosure.md">profile-interface-disclosure.md</a>.</p>
   <div class="banner warn">A profile must not bind a rule to a specific product or interface. An early draft wrongly required <code>interfaceId</code> to equal <code>"nginx-https"</code>. Rules instead constrain the set of interfaces and the attributes of each interface.</div>
   <div class="banner">The carrier target is CycloneDX 2.0, pinned to the <code>2.0-dev</code> schema of 23 October 2026 (commit <code>76f185c</code>) until Ecma ratifies the release. The validator reads CycloneDX 1.6 and 1.7 as legacy and flags them. CycloneDX 2.0 has its own <code>profiles</code> element and its own blueprint "interface". Neither is the concept the PKIC work uses. Where confusion is possible, the methodology says <em>PKIC CBOM profile</em> and <em>cryptographic interface</em>. The choices behind v0.9 are provisional.</div>
@@ -349,8 +350,8 @@ Content revision: 1</code></pre>
   </figure>
 
   <div class="pagenav">
-    <a href="objects.html">← Objects</a>
-    <a class="next" href="conformance.html">Next: Conformance →</a>
+    <a href="objects.html">← 5 · Objects</a>
+    <a class="next" href="maturity.html">Next: 8 · Depth families →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>

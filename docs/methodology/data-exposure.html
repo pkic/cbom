@@ -22,8 +22,9 @@ nav: dataexp
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">DESIGN NOTE</div>
+  <div class="crumb">PUBLICATION 2 · PROFILES AND CONFORMANCE</div>
   <h1>Data exposure and the harvest-now-decrypt-later threat</h1>
+  <div class="pubref"><span class="pubref-where">Section 11.6 of chapter 11</span> This page explains section 11.6 of chapter 11, <em>Confidentiality and data exposure</em>, of <em>Profiles and conformance</em>, with diagrams, worked examples and checks you can run. The publication is the authoritative text: where the two differ, the publication applies. <a href="../assets/publications/CBOM-Profiles-Publication-2-Profiles-and-conformance.docx" download>Download Publication 2 (Word)</a></div><!-- /pubref -->
   <p class="lead">An adversary who records encrypted traffic today can decrypt it once a cryptographically relevant quantum computer exists. This is the harvest-now-decrypt-later threat. The exposure it creates is not visible in the cryptography a CBOM currently discloses. It also depends on how long the data must remain confidential, and on whether the traffic can be captured at all. Assessing the exposure needs further facts, and those facts belong partly to the supplier and partly to the operator.</p>
   <div class="banner warn">Illustrative. The positions on this page are settled provisionally and can still be reopened. The vendor states the data an interface carries for the product's own operation. The operator states the payload, in its own data register, and a deployment record points to that register. No example profile yet requires the register fields listed below.</div>
 
@@ -182,8 +183,8 @@ nav: dataexp
   <div class="banner">The cryptography an interface uses is not sufficient to assess this threat. The missing information is a property of the data. Which party can state it depends on the kind of data. The vendor knows what an interface must carry in order to function. Only the operator knows what is sent across it. Each fact should be recorded at the scope where it is known, and the threat estimate should be left to external policy. Every fact in the document can then be verified by the party that stated it.</div>
 
   <div class="pagenav">
-    <a href="formats.html">← Formats</a>
-    <a class="next" href="versioning.html">Next: Versioning →</a>
+    <a href="confidentiality.html">← 11 · Confidentiality</a>
+    <a class="next" href="context.html">Next: 12 · Context pointers →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>

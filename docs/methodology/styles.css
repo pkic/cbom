@@ -168,3 +168,22 @@ li{margin:7px 0;color:var(--body)}
   main{padding:24px 18px 72px}
   .hback{margin-left:0;width:100%}
 }
+
+/* ==========================================================================
+   Publication banner and map. Written by tools/sync-publication-map.py from
+   docs/_data/methodology_pubmap.yml: each page names the chapter it explains,
+   and the Overview maps the publications to the pages.
+   ========================================================================== */
+.pubref{margin:4px 0 20px;padding:10px 14px;border:1px solid #d6e2f8;border-left:3px solid var(--accent);
+  border-radius:var(--radius);background:var(--accent-soft);font-size:14px;line-height:1.55;color:var(--body)}
+.pubref-where{display:block;font:600 11px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.4px;
+  color:var(--accent-ink);margin-bottom:3px}
+.pubref a{font-weight:600}
+.pubmap{margin:18px 0 30px}
+.pubmap-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;
+  border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:14px}
+.pubmap-num{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.4px;color:var(--accent)}
+.pubmap-head h3{margin:4px 0 2px;font-family:var(--font-display);font-size:20px;color:var(--ink)}
+.pubmap-head p{margin:0;font-size:14px;color:var(--muted)}
+.pubmap-dl{white-space:nowrap;font-size:13.5px;padding:6px 11px;border:1px solid var(--line);
+  border-radius:8px;background:var(--panel)}

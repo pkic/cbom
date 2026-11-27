@@ -22,8 +22,9 @@ nav: challenges
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">BACKGROUND</div>
+  <div class="crumb">PUBLICATION 1 · FOUNDATIONS</div>
   <h1>Challenges with SBOMs and current CBOMs</h1>
+  <div class="pubref"><span class="pubref-where">Sections 4.1–4.2 of chapter 4</span> This page explains sections 4.1–4.2 of chapter 4, <em>Why CBOM data is hard to use today</em>, of <em>Foundations</em>, with diagrams, worked examples and checks you can run. The publication is the authoritative text: where the two differ, the publication applies. <a href="../assets/publications/CBOM-Profiles-Publication-1-Foundations.docx" download>Download Publication 1 (Word)</a></div><!-- /pubref -->
   <p class="lead">CBOMs inherit the benefits and the limitations of software bills of materials, and introduce further difficulties specific to cryptography. These constraints are the primary motivation for a profile-based, format-independent methodology.</p>
   <div class="banner warn">The items below are observations of the position at the time of writing, not permanent properties of the formats. Both CycloneDX and SPDX are under active development and several of these points are already being addressed: CycloneDX 1.7 introduced the Cryptography Registry. CycloneDX 2.0, the carrier the methodology now targets, adds native fields for module validation, product certification and key rotation. SPDX is adding a cryptographic object model. Readers should check the current status of each specification. A profile methodology that stays independent of any one format remains useful as the formats change. When a format changes, the mapping is revised and the profile stays the same.</div>
 
@@ -121,8 +122,8 @@ nav: challenges
   <div class="banner">These challenges reduce to a small number of requirements that a profile methodology is designed to satisfy. The methodology has to set limits on the information that must be disclosed (profiling). It has to establish how the information is encoded and what the disclosed values mean (normalization of encoding and of naming). It also has to represent lifecycle state and cryptographic relationships explicitly. The formats continue to develop, so the methodology is deliberately kept separate from them. When a specification adds capability, the mapping is updated and the profile is unchanged.</div>
 
   <div class="pagenav">
-    <a href="examples.html">← Examples</a>
-    <a class="next" href="inventory.html">Next: Inventory →</a>
+    <a href="terms.html">← 3 · Terms</a>
+    <a class="next" href="inventory.html">Next: 4 · Inventory →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>

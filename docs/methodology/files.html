@@ -22,8 +22,9 @@ nav: files
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">REFERENCE</div>
+  <div class="crumb">PUBLICATION 3 · APPLYING THE METHODOLOGY</div>
   <h1>Files and how to run them</h1>
+  <div class="pubref"><span class="pubref-where">Annex D</span> This page explains annex D, <em>Tools and examples</em>, of <em>Applying the methodology</em>, with diagrams, worked examples and checks you can run. The publication is the authoritative text: where the two differ, the publication applies. <a href="../assets/publications/CBOM-Profiles-Publication-3-Applying-the-methodology.docx" download>Download Publication 3 (Word)</a></div><!-- /pubref -->
   <p class="lead">The machine-readable files that make up the example: eight PKIC CBOM profiles, four schemas, sixteen example CBOMs built on Keycloak 26.7.3, one PostgreSQL record, three protection IED records, three policies with four results, six perspectives and five tools. The commands reproduce every conformance result and policy result shown in the methodology. Every choice they embody is provisional and can still change.</p>
 
   <h2>Profiles</h2>
@@ -263,8 +264,8 @@ python3 cdx17_to_20.py examples/legacy/cbom-keycloak-product-1.7.cdx.json conver
   <div class="banner">The <a href="demo.html">Demo</a> page renders <code>demo-reports.json</code> and evaluates nothing itself. <code>tools/build_demo_reports.py</code> generates the reports with <code>validate_cbom.py</code>, and <code>tests/check-demo.py</code> fails if the committed file differs from a fresh run. Standards, regulation and specifications cited across the methodology are listed in the <a href="../references/">reference register</a>.</div>
 
   <div class="pagenav">
-    <a href="related-work.html">← Related Work</a>
-    <a class="next" href="../references/">Next: the reference register →</a>
+    <a href="demo.html">← D · Demo</a>
+    <a class="next" href="../use-cases/">Next: the reference register →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>

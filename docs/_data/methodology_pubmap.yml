@@ -1,0 +1,45 @@
+# How the methodology pages follow the Release 1 publications.
+#
+# The publications are the authoritative text. Each methodology page explains one
+# chapter, or part of one, with diagrams, worked examples and checks you can run.
+# This file says which. tools/sync-publication-map.py reads it and writes, on
+# every page, the breadcrumb and the banner that name the chapter, and on the
+# Overview, the map from chapters to pages. Run it after changing this file;
+# the test suite fails if a page is out of step.
+#
+# One JSON object per line, so that the file reads without a YAML library.
+# 'ch' is the chapter (or annex) the page belongs to; 'sections' narrows it when
+# the page covers only part of the chapter; 'chapter' is the chapter's title in
+# the publication; 'summary' is the page's line on the Overview.
+
+publications:
+- {"pub": 1, "title": "Foundations", "file": "CBOM-Profiles-Publication-1-Foundations.docx", "covers": "The problem that CBOM profiles solve, the scope of the methodology, the terms, and why CBOM data is hard to use today."}
+- {"pub": 2, "title": "Profiles and conformance", "file": "CBOM-Profiles-Publication-2-Profiles-and-conformance.docx", "covers": "The model, how a profile and its rules are written, attributes, depth families, conformance, facts and judgements, confidentiality and context pointers."}
+- {"pub": 3, "title": "Applying the methodology", "file": "CBOM-Profiles-Publication-3-Applying-the-methodology.docx", "covers": "How to write a profile and encode it in a format, governance, use cases and profile families, related work, and the tools and examples."}
+
+pages:
+- {"id": "introduction", "pub": 1, "ch": "1", "sections": "", "chapter": "Introduction", "summary": "A buyer asks a question about one product, and the product's CBOM cannot answer it. The example shows why, and how a profile makes the answer possible. About five minutes."}
+- {"id": "terms", "pub": 1, "ch": "3", "sections": "", "chapter": "Terms and definitions", "summary": "The terms used across the publications, every attribute and its permitted values, and the terms considered and not used. The attribute tables follow annex C of Publication 2."}
+- {"id": "challenges", "pub": 1, "ch": "4", "sections": "4.1–4.2", "chapter": "Why CBOM data is hard to use today", "summary": "What SBOM adoption has taught, and the further difficulties that are specific to cryptography."}
+- {"id": "inventory", "pub": 1, "ch": "4", "sections": "4.3", "chapter": "Why CBOM data is hard to use today", "summary": "How a CBOM differs from a cryptographic inventory, and how CBOMs feed one."}
+- {"id": "lifecycle", "pub": 1, "ch": "4", "sections": "4.4", "chapter": "Why CBOM data is hard to use today", "summary": "Who knows which cryptographic facts at design, build, deployment and operation, and why each fact carries its stage."}
+- {"id": "model", "pub": 2, "ch": "5", "sections": "", "chapter": "The model", "summary": "Cryptographic relationships, the endpoints at each end and the assets they use, with worked examples."}
+- {"id": "objects", "pub": 2, "ch": "5", "sections": "5.7", "chapter": "The model", "summary": "Every object the methodology defines: who creates it and how it is identified."}
+- {"id": "profile", "pub": 2, "ch": "6", "sections": "", "chapter": "CBOM profiles", "summary": "The rules of the disclosure baseline, for the product as a whole and for each interface: a specification for the producer and a checklist for the reader."}
+- {"id": "maturity", "pub": 2, "ch": "8", "sections": "", "chapter": "Depth families", "summary": "Families of profiles that ask for progressively more detail, so that a supplier can start with what it can meet now."}
+- {"id": "conformance", "pub": 2, "ch": "9", "sections": "", "chapter": "Conformance", "summary": "What can be evaluated, what a verdict means, how a conformance claim is recorded, and what a passing result does not tell you."}
+- {"id": "policyeval", "pub": 2, "ch": "10", "sections": "10.1–10.4", "chapter": "Facts, judgements and vulnerabilities", "summary": "Why a judgement such as \"post-quantum safe\" stays out of the CBOM, and how a versioned policy applies it to the facts."}
+- {"id": "vulns", "pub": 2, "ch": "10", "sections": "10.5–10.6", "chapter": "Facts, judgements and vulnerabilities", "summary": "The CBOM, the advisory and the VEX statement: three documents by three parties, and how they link."}
+- {"id": "confidentiality", "pub": 2, "ch": "11", "sections": "11.1–11.5", "chapter": "Confidentiality and data exposure", "summary": "Public and restricted versions of one CBOM: what a supplier may withhold, and what a consumer can tell from the version it holds."}
+- {"id": "dataexp", "pub": 2, "ch": "11", "sections": "11.6", "chapter": "Confidentiality and data exposure", "summary": "Harvest-now-decrypt-later exposure, and the data facts it depends on besides the algorithms."}
+- {"id": "context", "pub": 2, "ch": "12", "sections": "", "chapter": "Context pointers", "summary": "What a CBOM points to and does not carry, and why conformance checks the pointer and never the target."}
+- {"id": "method", "pub": 3, "ch": "13", "sections": "", "chapter": "Writing a profile: the method", "summary": "The procedure for writing a profile, in five stages, with the tests for each and the common mistakes."}
+- {"id": "usecases", "pub": 3, "ch": "13", "sections": "13.2", "chapter": "Writing a profile: the method", "summary": "Why every profile starts from a use case: a named reader and the decision that reader has to make."}
+- {"id": "formats", "pub": 3, "ch": "14", "sections": "", "chapter": "Encoding a profile in a format", "summary": "Where each attribute of one profile is written in CycloneDX and in SPDX."}
+- {"id": "versioning", "pub": 3, "ch": "14", "sections": "14.7–14.9", "chapter": "Encoding a profile in a format", "summary": "Format versions, profile versions and older CBOM files: how a profile says which versions it accepts."}
+- {"id": "governance", "pub": 3, "ch": "15", "sections": "", "chapter": "Governance", "summary": "Signing and provenance, how a CBOM relates to its SBOM, changing a profile, retention and stewardship."}
+- {"id": "regulation", "pub": 3, "ch": "16", "sections": "16.4", "chapter": "Use cases and profile families", "summary": "For each regulation and policy, whether a conforming CBOM gives the facts needed to show it is met, clause by clause."}
+- {"id": "related", "pub": 3, "ch": "17", "sections": "", "chapter": "Related work", "summary": "How CBOM profiles relate to the PQC Maturity Model and other PKI Consortium work."}
+- {"id": "examples", "pub": 3, "ch": "D", "sections": "D.3", "chapter": "Tools and examples", "summary": "Every example CBOM as a readable page, grouped by story, with the validator's verdicts and, for each failure variant, what is wrong and how to fix it."}
+- {"id": "demo", "pub": 3, "ch": "D", "sections": "D.2", "chapter": "Tools and examples", "summary": "The validator's reports for the Keycloak records, rule by rule."}
+- {"id": "files", "pub": 3, "ch": "D", "sections": "", "chapter": "Tools and examples", "summary": "The profiles, example CBOMs, policies and tools, with the commands to reproduce every result."}

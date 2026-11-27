@@ -19,6 +19,7 @@ on:
       - 'tools/build_regulatory_coverage.py'
       - 'tools/build_examples_catalogue.py'
       - 'tools/build_examples_site.py'
+      - 'tools/sync-publication-map.py'
       - '.github/workflows/profile-tests.yml'
   pull_request:
     paths:
@@ -32,6 +33,7 @@ on:
       - 'tools/build_regulatory_coverage.py'
       - 'tools/build_examples_catalogue.py'
       - 'tools/build_examples_site.py'
+      - 'tools/sync-publication-map.py'
       - '.github/workflows/profile-tests.yml'
   workflow_dispatch:
 

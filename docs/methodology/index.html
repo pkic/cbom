@@ -24,81 +24,95 @@ nav: index
 <main>
   <div class="crumb">START HERE</div>
   <h1>Overview</h1>
-  <p class="lead">A Cryptography Bill of Materials (CBOM) profile defines the subset of attributes that a CBOM is required to contain for a stated objective. It establishes a minimum reporting requirement rather than exhaustive coverage. The methodology is worked through one example: the Keycloak 26.7.3 identity server. Its CBOMs are expressed in CycloneDX 2.0 and evaluated against a family of small, product-independent profiles.</p>
+  <p class="lead">A Cryptography Bill of Materials (CBOM) profile states what a CBOM must contain to support one decision, for one reader, and how to check that it does. The working group sets out its methodology for writing such profiles in three publications. These pages are their companion on the web: each page explains a chapter, or part of one, with diagrams, worked examples and checks you can run.</p>
   <div>
     <span class="tag">PKIC CBOM Profiles WG</span>
-    <span class="tag">illustrative</span>
+    <span class="tag">companion to Release 1</span>
     <span class="tag">CycloneDX 2.0 (1.6 and 1.7 read as legacy)</span>
     <span class="tag">not normative</span>
   </div>
 
-  <div class="banner"><strong>Meeting this for the first time?</strong> Read the <a href="introduction.html">Introduction</a> first. It follows one product, its CBOM and one question a buyer asks about it, from start to finish. It takes about five minutes to read. This overview is easier to use once you have read it.</div>
+  <div class="banner"><strong>Meeting this for the first time?</strong> Read the <a href="introduction.html">Introduction</a> first. It follows one product, its CBOM and one question a buyer asks about it, from start to finish, and takes about five minutes. The rest of this overview is easier to use once you have read it.</div>
 
-  <h2>Scope of this documentation</h2>
-  <p>The example profile, the Interface Disclosure Baseline, requires a product to declare its cryptographic interfaces, including the interface used to configure the product, and to describe each one. It does not reference a specific product or interface instance, and therefore applies to any product that terminates TLS, SSH, or IPsec. Keycloak serves only as the example subject. The vendor of Keycloak writes the product record. An operator writes deployment records for what it configured and what it observed, and each deployment record cites the records it builds on. A single CBOM may satisfy several profiles at once.</p>
-  <p>The sidebar lists the sections in the order a newcomer should read them. Concrete examples come first. Definitions come last, under Reference, so that you can look up a term when it is unfamiliar.</p>
+  <h2>How these pages relate to the publications</h2>
+  <p>The publications are the authoritative text. They are written to be read in order and to be cited, so they define each term before using it and keep their examples short. These pages explain the same material for a reader who wants to see it working: they show the example records, run the validator, and draw the diagrams that a publication cannot.</p>
+  <p>The sidebar follows the publications. Each group is one publication, and each page title starts with the number of the chapter it explains, so that you can move between a page and the text it explains. Every page also says at the top which chapter it explains, and links to the publication. Where a page and a publication differ, the publication applies.</p>
+  <p>The examples are the same in both. The Keycloak identity server runs through the methodology from the first chapter. The <a href="examples.html">examples gallery</a> adds OpenSSH, a VPN gateway and the remote-administration system built from them, a substation, IoT sensors and the records of the application-domain drafts. The <a href="../">working group site</a> has the application-domain documents, which apply the methodology to one sector each.</p>
+
+  <h2>The publications and their pages</h2>
+  <!-- pubmap:start -->
+  <div class="pubmap">
+    <div class="pubmap-head"><div><span class="pubmap-num">Publication 1</span><h3>Foundations</h3><p>The problem that CBOM profiles solve, the scope of the methodology, the terms, and why CBOM data is hard to use today.</p></div><a class="pubmap-dl" href="../assets/publications/CBOM-Profiles-Publication-1-Foundations.docx" download>Download (Word)</a></div>
+    <div class="cards">
+      <a class="card" href="introduction.html"><div class="num">Chapter 1</div><h3>Introduction</h3><p>A buyer asks a question about one product, and the product&#x27;s CBOM cannot answer it. The example shows why, and how a profile makes the answer possible. About five minutes.</p></a>
+      <a class="card" href="terms.html"><div class="num">Chapter 3</div><h3>Terms</h3><p>The terms used across the publications, every attribute and its permitted values, and the terms considered and not used. The attribute tables follow annex C of Publication 2.</p></a>
+      <a class="card" href="challenges.html"><div class="num">§ 4.1–4.2</div><h3>Challenges</h3><p>What SBOM adoption has taught, and the further difficulties that are specific to cryptography.</p></a>
+      <a class="card" href="inventory.html"><div class="num">§ 4.3</div><h3>Inventory</h3><p>How a CBOM differs from a cryptographic inventory, and how CBOMs feed one.</p></a>
+      <a class="card" href="lifecycle.html"><div class="num">§ 4.4</div><h3>Lifecycle data</h3><p>Who knows which cryptographic facts at design, build, deployment and operation, and why each fact carries its stage.</p></a>
+    </div>
+  </div>
+  <div class="pubmap">
+    <div class="pubmap-head"><div><span class="pubmap-num">Publication 2</span><h3>Profiles and conformance</h3><p>The model, how a profile and its rules are written, attributes, depth families, conformance, facts and judgements, confidentiality and context pointers.</p></div><a class="pubmap-dl" href="../assets/publications/CBOM-Profiles-Publication-2-Profiles-and-conformance.docx" download>Download (Word)</a></div>
+    <div class="cards">
+      <a class="card" href="model.html"><div class="num">Chapter 5</div><h3>Model</h3><p>Cryptographic relationships, the endpoints at each end and the assets they use, with worked examples.</p></a>
+      <a class="card" href="objects.html"><div class="num">§ 5.7</div><h3>Objects</h3><p>Every object the methodology defines: who creates it and how it is identified.</p></a>
+      <a class="card" href="profile.html"><div class="num">Chapter 6</div><h3>Profiles and rules</h3><p>The rules of the disclosure baseline, for the product as a whole and for each interface: a specification for the producer and a checklist for the reader.</p></a>
+      <a class="card" href="maturity.html"><div class="num">Chapter 8</div><h3>Depth families</h3><p>Families of profiles that ask for progressively more detail, so that a supplier can start with what it can meet now.</p></a>
+      <a class="card" href="conformance.html"><div class="num">Chapter 9</div><h3>Conformance</h3><p>What can be evaluated, what a verdict means, how a conformance claim is recorded, and what a passing result does not tell you.</p></a>
+      <a class="card" href="policy-evaluation.html"><div class="num">§ 10.1–10.4</div><h3>Policy evaluation</h3><p>Why a judgement such as &quot;post-quantum safe&quot; stays out of the CBOM, and how a versioned policy applies it to the facts.</p></a>
+      <a class="card" href="vulnerabilities.html"><div class="num">§ 10.5–10.6</div><h3>Vulnerabilities</h3><p>The CBOM, the advisory and the VEX statement: three documents by three parties, and how they link.</p></a>
+      <a class="card" href="confidentiality.html"><div class="num">§ 11.1–11.5</div><h3>Confidentiality</h3><p>Public and restricted versions of one CBOM: what a supplier may withhold, and what a consumer can tell from the version it holds.</p></a>
+      <a class="card" href="data-exposure.html"><div class="num">§ 11.6</div><h3>Data exposure</h3><p>Harvest-now-decrypt-later exposure, and the data facts it depends on besides the algorithms.</p></a>
+      <a class="card" href="context.html"><div class="num">Chapter 12</div><h3>Context pointers</h3><p>What a CBOM points to and does not carry, and why conformance checks the pointer and never the target.</p></a>
+    </div>
+  </div>
+  <div class="pubmap">
+    <div class="pubmap-head"><div><span class="pubmap-num">Publication 3</span><h3>Applying the methodology</h3><p>How to write a profile and encode it in a format, governance, use cases and profile families, related work, and the tools and examples.</p></div><a class="pubmap-dl" href="../assets/publications/CBOM-Profiles-Publication-3-Applying-the-methodology.docx" download>Download (Word)</a></div>
+    <div class="cards">
+      <a class="card" href="method.html"><div class="num">Chapter 13</div><h3>Writing a profile</h3><p>The procedure for writing a profile, in five stages, with the tests for each and the common mistakes.</p></a>
+      <a class="card" href="use-cases.html"><div class="num">§ 13.2</div><h3>Starting from a use case</h3><p>Why every profile starts from a use case: a named reader and the decision that reader has to make.</p></a>
+      <a class="card" href="formats.html"><div class="num">Chapter 14</div><h3>Formats</h3><p>Where each attribute of one profile is written in CycloneDX and in SPDX.</p></a>
+      <a class="card" href="versioning.html"><div class="num">§ 14.7–14.9</div><h3>Older CBOM files</h3><p>Format versions, profile versions and older CBOM files: how a profile says which versions it accepts.</p></a>
+      <a class="card" href="governance.html"><div class="num">Chapter 15</div><h3>Governance</h3><p>Signing and provenance, how a CBOM relates to its SBOM, changing a profile, retention and stewardship.</p></a>
+      <a class="card" href="regulation.html"><div class="num">§ 16.4</div><h3>Regulation</h3><p>For each regulation and policy, whether a conforming CBOM gives the facts needed to show it is met, clause by clause.</p></a>
+      <a class="card" href="related-work.html"><div class="num">Chapter 17</div><h3>Related work</h3><p>How CBOM profiles relate to the PQC Maturity Model and other PKI Consortium work.</p></a>
+      <a class="card" href="examples.html"><div class="num">§ D.3</div><h3>Examples</h3><p>Every example CBOM as a readable page, grouped by story, with the validator&#x27;s verdicts and, for each failure variant, what is wrong and how to fix it.</p></a>
+      <a class="card" href="demo.html"><div class="num">§ D.2</div><h3>Demo</h3><p>The validator&#x27;s reports for the Keycloak records, rule by rule.</p></a>
+      <a class="card" href="files.html"><div class="num">Annex D</div><h3>Files</h3><p>The profiles, example CBOMs, policies and tools, with the commands to reproduce every result.</p></a>
+    </div>
+  </div>
+  <!-- pubmap:end -->
 
   <h2>Suggested reading paths</h2>
-  <p>Each section can be read on its own. You can read the sections in sidebar order, or follow one of the three routes below. Each route suits a particular role, and each assumes you have read the <a href="introduction.html">Introduction</a>.</p>
+  <p>You can read the pages in sidebar order, which is the order of the publications, or follow the route below that suits your role. Each route assumes you have read the <a href="introduction.html">Introduction</a>.</p>
   <div style="overflow:auto">
   <table>
     <thead><tr><th>If you are</th><th>Read in this order</th><th>Why this route</th></tr></thead>
     <tbody>
       <tr>
         <td><strong>Producing CBOMs</strong><br><span style="color:var(--muted);font-size:13px">a vendor, or a build or release team</span></td>
-        <td><a href="model.html">Model</a> → <a href="profile.html">Profile</a> → <a href="maturity.html">Maturity</a> → <a href="confidentiality.html">Confidentiality</a> → <a href="formats.html">Formats</a> → <a href="versioning.html">Versioning</a></td>
-        <td><ul style="margin:0;padding-left:18px"><li><strong>Model:</strong> the terms used throughout.</li><li><strong>Profile:</strong> what a profile requires you to declare.</li><li><strong>Maturity:</strong> which profile in a family to aim for first, and how to move on to a more detailed one.</li><li><strong>Confidentiality:</strong> which information you publish openly, which you release only under agreement, and how a profile allows for that.</li><li><strong>Formats:</strong> where each attribute is written in a CycloneDX or SPDX document.</li><li><strong>Versioning:</strong> what happens to CBOMs you have already published when a format or profile version changes.</li></ul></td>
+        <td><a href="model.html">Model</a> → <a href="profile.html">Profiles and rules</a> → <a href="maturity.html">Depth families</a> → <a href="confidentiality.html">Confidentiality</a> → <a href="formats.html">Formats</a> → <a href="versioning.html">Older CBOM files</a> → <a href="examples.html">Examples</a></td>
+        <td><ul style="margin:0;padding-left:18px"><li><strong>Model:</strong> the terms used throughout.</li><li><strong>Profiles and rules:</strong> what a profile requires you to declare.</li><li><strong>Depth families:</strong> which profile in a family to aim for first, and how to move on to a more detailed one.</li><li><strong>Confidentiality:</strong> which information you publish openly, which you release only under agreement, and how a profile allows for that.</li><li><strong>Formats:</strong> where each attribute is written in a CycloneDX or SPDX document.</li><li><strong>Older CBOM files:</strong> what happens to CBOMs you have already published when a format or profile version changes.</li><li><strong>Examples:</strong> a record close to your product, to start from.</li></ul></td>
       </tr>
       <tr>
         <td><strong>Requiring and reading CBOMs</strong><br><span style="color:var(--muted);font-size:13px">an operator or buyer assessing a supplier, an auditor or regulator</span></td>
-        <td><a href="use-cases.html">Use Cases</a> → <a href="challenges.html">Challenges</a> → <a href="profile.html">Profile</a> → <a href="conformance.html">Conformance</a> → <a href="maturity.html">Maturity</a> → <a href="confidentiality.html">Confidentiality</a> → <a href="vulnerabilities.html">Vulnerabilities</a> → <a href="context.html">Context Pointers</a> → <a href="governance.html">Governance</a></td>
-        <td><ul style="margin:0;padding-left:18px"><li><strong>Use Cases:</strong> what a profile can be written to require.</li><li><strong>Challenges:</strong> why the CBOM data supplied today is hard to use.</li><li><strong>Profile</strong> and <strong>Conformance:</strong> what a passing result confirms, and what it does not. Conformance matters most for this role.</li><li><strong>Maturity:</strong> how to write a requirement that a supplier can meet now, with a date for meeting a more demanding profile later.</li><li><strong>Confidentiality:</strong> why a conforming CBOM can still have information withheld, and how to ask for the more complete version.</li><li><strong>Vulnerabilities:</strong> how to use a CBOM when a security advisory is published, and why a passing result says nothing about whether the cryptography is safe.</li><li><strong>Context Pointers:</strong> how a CBOM points to its SBOM, the vendor's vulnerability statements and the advisory feed, and what a validator checks about each pointer.</li><li><strong>Governance:</strong> the signing, provenance and retention that a conformance claim relies on.</li></ul></td>
+        <td><a href="challenges.html">Challenges</a> → <a href="use-cases.html">Starting from a use case</a> → <a href="profile.html">Profiles and rules</a> → <a href="conformance.html">Conformance</a> → <a href="maturity.html">Depth families</a> → <a href="confidentiality.html">Confidentiality</a> → <a href="vulnerabilities.html">Vulnerabilities</a> → <a href="context.html">Context pointers</a> → <a href="regulation.html">Regulation</a></td>
+        <td><ul style="margin:0;padding-left:18px"><li><strong>Challenges:</strong> why the CBOM data supplied today is hard to use.</li><li><strong>Starting from a use case:</strong> what a profile can be written to require.</li><li><strong>Profiles and rules</strong> and <strong>Conformance:</strong> what a passing result confirms, and what it does not. Conformance matters most for this role.</li><li><strong>Depth families:</strong> how to write a requirement that a supplier can meet now, with a date for meeting a more demanding profile later.</li><li><strong>Confidentiality:</strong> why a conforming CBOM can still have information withheld, and how to ask for the more complete version.</li><li><strong>Vulnerabilities:</strong> how to use a CBOM when an advisory is published, and why a passing result says nothing about whether the cryptography is safe.</li><li><strong>Context pointers:</strong> how a CBOM points to its SBOM, the vendor's vulnerability statements and the advisory feed.</li><li><strong>Regulation:</strong> whether a conforming CBOM gives you the facts a regulation asks for.</li></ul></td>
       </tr>
       <tr>
         <td><strong>Writing or approving a profile</strong><br><span style="color:var(--muted);font-size:13px">working group members, sector bodies</span></td>
-        <td><a href="model.html">Model</a> → <a href="method.html">Method</a> → <a href="profile.html">Profile</a> → <a href="../use-cases/pqc-migration.html">PQC Migration</a> → <a href="governance.html">Governance</a></td>
-        <td><ul style="margin:0;padding-left:18px"><li><strong>Model:</strong> the terms used throughout.</li><li><strong>Method:</strong> the procedure for writing a profile.</li><li><strong>Profile:</strong> an example of the result.</li><li><strong>PQC Migration:</strong> one profile taken through the procedure from start to finish.</li><li><strong>Governance:</strong> what happens after a profile is published.</li></ul></td>
+        <td><a href="model.html">Model</a> → <a href="method.html">Writing a profile</a> → <a href="use-cases.html">Starting from a use case</a> → <a href="profile.html">Profiles and rules</a> → <a href="../use-cases/pqc-migration.html">PQC migration</a> → <a href="governance.html">Governance</a></td>
+        <td><ul style="margin:0;padding-left:18px"><li><strong>Model:</strong> the terms used throughout.</li><li><strong>Writing a profile:</strong> the procedure.</li><li><strong>Starting from a use case:</strong> the first stage of the procedure.</li><li><strong>Profiles and rules:</strong> an example of the result.</li><li><strong>PQC migration:</strong> one profile taken through the procedure from start to finish.</li><li><strong>Governance:</strong> what happens after a profile is published.</li></ul></td>
       </tr>
     </tbody>
   </table>
   </div>
-  <p style="font-size:13.5px;color:var(--muted)">Two sections are not part of any route. Read them when the topic comes up. <a href="data-exposure.html">Data Exposure</a> is a design note on the harvest-now-decrypt-later threat and the data attributes needed to measure it. <a href="related-work.html">Related Work</a> explains how CBOM profiles relate to other PKI Consortium work.</p>
-
-  <h2>Contents</h2>
-  <div class="cards">
-    <a class="card" href="introduction.html"><div class="num">start here</div><h3>Introduction</h3><p>A worked example. A buyer asks a question about one product, and the product's CBOM cannot answer it. The example shows why, and how a profile makes the answer possible.</p></a>
-    <a class="card" href="demo.html"><div class="num">interactive</div><h3>Demo</h3><p>The reports the reference validator produced for the Keycloak records. They show a conforming product record, a record with its management interfaces missing, the four disclosure outcomes (value, withheld, unknown and undeclared), a design record, the deployment records and the CycloneDX 1.7 legacy form.</p></a>
-    <a class="card" href="use-cases.html"><div class="num">applied</div><h3>Use Cases</h3><p>Why every profile starts from a use case: a named consumer and the decision that consumer has to make.</p></a>
-    <a class="card" href="challenges.html"><div class="num">background</div><h3>Challenges</h3><p>What SBOM adoption has taught, the further difficulties that are specific to cryptography, and the limits of current CBOM standards. These problems are the reason for a profile-based approach.</p></a>
-    <a class="card" href="inventory.html"><div class="num">background</div><h3>Inventory</h3><p>How a CBOM differs from a cryptographic inventory. CBOMs feed an inventory. An organization can also extract a CBOM from its inventory for a particular consumer: an internal team, a client or auditor, or a customer in its supply chain.</p></a>
-    <a class="card" href="lifecycle.html"><div class="num">background</div><h3>Lifecycle Data</h3><p>Cryptographic facts are captured at four stages: design, build, deployment and operation. What each stage can show, who captures it, and why the stage is recorded with each fact.</p></a>
-    <a class="card" href="model.html"><div class="num">concept</div><h3>Model</h3><p>The three terms the methodology is built on: a cryptographic relationship (where cryptography is applied between two parties), the endpoints at each end, and the cryptographic assets it uses. Illustrated with worked examples.</p></a>
-    <a class="card" href="objects.html"><div class="num">concept</div><h3>Objects</h3><p>A reference list of every object the methodology defines. For each one: which party or tool creates it and how it is identified. Also lists what the methodology deliberately leaves out.</p></a>
-    <a class="card" href="profile.html"><div class="num">core</div><h3>Profile</h3><p>The rules of the example profile, for the product as a whole and for each interface. The same rules serve two purposes: a specification for the party that produces a CBOM, and a checklist for the party that checks it.</p></a>
-    <a class="card" href="conformance.html"><div class="num">core</div><h3>Conformance</h3><p>What can be evaluated, what a pass or fail result means, who may claim conformance, how a claim is recorded, and what a passing result does not tell you.</p></a>
-    <a class="card" href="maturity.html"><div class="num">concept</div><h3>Maturity</h3><p>How to publish a family of profiles that ask for progressively more detail. A supplier can start with a profile it can meet now and move to more demanding ones later. A buyer can see which profile a supplier has met.</p></a>
-    <a class="card" href="confidentiality.html"><div class="num">concept</div><h3>Confidentiality</h3><p>Most suppliers will publish one version of a CBOM and release a more complete version only under agreement. How a profile marks the attributes a supplier may withhold, and what a consumer can tell from the version it holds.</p></a>
-    <a class="card" href="policy-evaluation.html"><div class="num">core</div><h3>Policy Evaluation</h3><p>Why a judgement such as "this interface is post-quantum safe" is not stored in a CBOM. The criteria change over time, so the judgement is made by an external, versioned policy applied to the facts in the CBOM.</p></a>
-    <a class="card" href="vulnerabilities.html"><div class="num">concept</div><h3>Vulnerabilities</h3><p>How information about cryptographic weaknesses is linked to a CBOM. The three documents involved (the CBOM, the advisory and the VEX statement) and who writes each. The difference between an implementation bug and a weak choice of algorithm. What a conforming CBOM does not tell you.</p></a>
-    <a class="card" href="context.html"><div class="num">concept</div><h3>Context Pointers</h3><p>What a CBOM points to and does not carry: the SBOM, vulnerability statements, advisories, configuration guidance and the records a deployment record cites. Each kind of pointer, how it is carried in CycloneDX, and why conformance checks the pointer and never the target.</p></a>
-    <a class="card" href="method.html"><div class="num">core</div><h3>Method</h3><p>The procedure for writing a profile: twelve steps in five stages (scope, content, rules, realisation and proof). Each stage has tests to apply, and the common mistakes are listed.</p></a>
-    <a class="card" href="../use-cases/"><div class="num">another section</div><h3>Worked use cases</h3><p>Use cases taken through to a finished profile, in a separate section. PQC migration is complete. Procurement and deployment disclosure have published profiles. IoT device estates and substation automation are drafts.</p></a>
-    <a class="card" href="formats.html"><div class="num">mapping</div><h3>Formats</h3><p>Where each attribute of one profile is written in CycloneDX and in SPDX. Neither format has an object that represents an interface, so both attach interface attributes to the protocol asset, and some facts about a connection cannot be recorded.</p></a>
-    <a class="card" href="data-exposure.html"><div class="num">design note</div><h3>Data Exposure</h3><p>Traffic recorded today can be decrypted once a quantum computer exists. The algorithms in a CBOM do not show this exposure on their own: it also depends on how long the data must stay confidential and whether the traffic can be captured. A design note on the data attributes needed to measure it.</p></a>
-    <a class="card" href="versioning.html"><div class="num">operations</div><h3>Versioning</h3><p>Three things carry their own version: the document format (for example CycloneDX 2.0), the profile, and the CBOM's content. How a profile declares the format versions it accepts, so that a tool can check this automatically.</p></a>
-    <a class="card" href="governance.html"><div class="num">operations</div><h3>Governance</h3><p>How CBOMs and profiles are managed over their lifetime: signing and provenance, how a CBOM relates to an SBOM, change control, retention, and who maintains a profile after publication.</p></a>
-    <a class="card" href="terms.html"><div class="num">reference</div><h3>Terms</h3><p>Definitions of the terms used across the methodology, every attribute and its permitted values, and the terms the methodology considered and chose not to use, with the reason for each.</p></a>
-    <a class="card" href="related-work.html"><div class="num">reference</div><h3>Related Work</h3><p>How CBOM profiles relate to the PQC Maturity Model and other PKI Consortium work, and where one depends on another.</p></a>
-    <a class="card" href="files.html"><div class="num">reference</div><h3>Files</h3><p>The profile rules files, the Keycloak example CBOMs, the policies and their results, and the tools, with the commands to reproduce every result in this documentation.</p></a>
-  </div>
-
-  <div class="banner"><strong>Note for standards authors.</strong> The numbered draft of the methodology orders its clauses differently from the sidebar. In the draft, Scope, Terms and Conformance come early, because a normative document must define its terms before it uses them. The working group maintains both orders.</div>
 
   <div class="banner">This material is a draft for comment from the PKIC CBOM Profiles Working Group. Its positions are settled provisionally and can be reopened. The definitions, the conformance requirements C1 to C18 and the migration profiles are written to be binding once the working group ratifies them. Everything else explains them. Field names are aligned to CycloneDX 2.0, pinned to the CycloneDX/specification branch 2.0-dev at commit <code>76f185c</code> (23 October 2026) until Ecma ratifies the release, which is expected in December 2026. CycloneDX 1.6 and 1.7 documents are still read, as legacy. Validate field names against the current schema before operational use.</div>
 
   <div class="pagenav">
-    <a href="introduction.html">← Introduction</a>
-    <a class="next" href="demo.html">Next: Demo →</a>
+    <span></span>
+    <a class="next" href="introduction.html">Next: 1 · Introduction →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>

@@ -22,8 +22,9 @@ nav: vulns
 {% include methodology-nav.html %}
 
 <main>
-  <div class="crumb">CONCEPT</div>
+  <div class="crumb">PUBLICATION 2 · PROFILES AND CONFORMANCE</div>
   <h1>Vulnerabilities</h1>
+  <div class="pubref"><span class="pubref-where">Sections 10.5–10.6 of chapter 10</span> This page explains sections 10.5–10.6 of chapter 10, <em>Facts, judgements and vulnerabilities</em>, of <em>Profiles and conformance</em>, with diagrams, worked examples and checks you can run. The publication is the authoritative text: where the two differ, the publication applies. <a href="../assets/publications/CBOM-Profiles-Publication-2-Profiles-and-conformance.docx" download>Download Publication 2 (Word)</a></div><!-- /pubref -->
   <p class="lead">A CBOM says what cryptography a product uses. Whether any of that cryptography is broken is a separate question. A different party answers it, at a different time, and the answer does not belong in the CBOM. Instead, the CBOM and the answer are linked. A profile has to require the facts that let a responder holding a CBOM match it to a security advisory. A reader must also know what a passing result does not say about safety.</p>
 
   <h2>Three statements, written by three different parties</h2>
@@ -168,8 +169,8 @@ nav: vulns
   <div class="banner">In short. A CBOM states cryptographic facts. An advisory states a weakness in a component. A VEX statement says whether this product is affected by it. The producer writes the first and the third, and they must stay separate, because one changes when the product changes and the other when knowledge changes. A profile requires the facts that make the join possible: a library identifier in a scheme the feeds use, a lifecycle stage saying what was described, and a digest the statement can be bound to. It requires no verdict, because a verdict is a judgement and judgements stay out of the CBOM. For implementation defects the CBOM makes existing machinery more precise. For algorithm weakness there is no machinery, no identifier and no patch, and the CBOM is the only evidence there is.</div>
 
   <div class="pagenav">
-    <a href="policy-evaluation.html">← Policy Evaluation</a>
-    <a class="next" href="context.html">Next: Context Pointers →</a>
+    <a href="policy-evaluation.html">← 10 · Policy evaluation</a>
+    <a class="next" href="confidentiality.html">Next: 11 · Confidentiality →</a>
   </div>
   <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
 </main>
