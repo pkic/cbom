@@ -30,7 +30,7 @@ Keycloak suits the migration family better than the gateway example does. Its cr
 cryptography is not TLS. It is the token signatures that every relying party verifies. That
 signing capability is committed upstream but blocked by an unfinished standard, which the
 per-purpose capability group (G1) exists to express. Its TLS key exchange is supplied by the Java
-runtime, so it shows `blockedBy: provider` and the platform-build question (F2). And the realm key
+runtime, so it shows `blockedBy: crypto-library` and the platform-build question (F2). And the realm key
 management it exposes lets the extended depth demonstrate its main rule on a real product.
 
 ## 1. Review of the cprofile (revision of 27 September, 09:11)
@@ -86,20 +86,20 @@ present-state value. Options: state `none`, or make the rule conditional. `none`
 consistent with `keyWrapping: none`. The examples should use it, and the decision record should
 say that `none` is an accepted value for algorithm attributes.
 
-**K4. TLS keys provisioned out of band.** `pqc-migration-extended#I8 keyStoreRef` has no truthful
+**K4. TLS keys provisioned out of band.** `pqc-migration-extended#I8 keysStoredIn` has no truthful
 value for the HTTPS interface. A `withheld` marker would be false, because nothing is being
 withheld. Allow the literal `out-of-band` alongside a reference, and record that in the rule's
 note now so the future `refersTo` constraint accepts it.
 
 **K6. Keys the product generates and rotates by itself.** The cluster transport's mTLS key has
 no management surface and is not provisioned out of band: Keycloak creates it, stores it in the
-database and rotates it. Neither a reference nor `out-of-band` is true. Proposed: `keyStoreRef`
+database and rotates it. Neither a reference nor `out-of-band` is true. Proposed: `keysStoredIn`
 also accepts `product-managed`. It is a fact, and it is the one that tells the operator the key
 type cannot be changed by configuration. RSA-2048 on the cluster transport then reads as
 `blockedBy: product` under G1.
 
 **K5. The management port is a management interface without key functions.** Port 9000 is the
-test case for the `keyManagementFunction: none` guard. The Admin REST API, on the main port, is
+test case for the `managesKeys: none` guard. The Admin REST API, on the main port, is
 the key management surface.
 
 ## 3. Interface set
@@ -154,17 +154,17 @@ Adds to the baseline document:
 - **P1:** `sto-realm-keys` declared.
 - **P2:** `productCertificationScheme: none` for upstream Keycloak, verified.
 - **`mgmt-admin`:**
-  - `keyManagementFunction: keys-and-certificates`
+  - `managesKeys: yes`
   - `keyOperations`: generate, import, rotate, delete
   - `keyTypesSupported`: the realm key providers, which are RSA, EC P-256/P-384/P-521, Ed25519,
     Ed448, HMAC and AES (to verify against 26.7), with no ML-DSA
   - `keyTypes`: the default realm set
   - `keyStoreFormatsSupported`: pkcs12, jks (the java-keystore provider) and pem (imported keys)
   - `keyStoreLocation`: software
-- **`mgmt-health`:** `keyManagementFunction: none`.
-- **`keyStoreRef`:** `svc-oidc` and `svc-saml` point to `mgmt-admin`; `svc-https` takes
+- **`mgmt-health`:** `managesKeys: none`.
+- **`keysStoredIn`:** `svc-oidc` and `svc-saml` point to `mgmt-admin`; `svc-https` takes
   `out-of-band` (K4); `int-cache` takes `product-managed` (K6, proposed).
-- **`externalDependencies`:**
+- **`trustServiceDependencies`:**
   - `svc-https`: certificate-authority
   - `int-broker`: identity-provider
   - `int-ldap`: directory

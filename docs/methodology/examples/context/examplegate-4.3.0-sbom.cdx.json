@@ -1,0 +1,109 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "EXAMPLE SBOM for the fictional ExampleGate 4.3.0. Lists only the module the CBOM names, so its composition is incomplete.",
+  "serialNumber": "urn:uuid:e8a7e000-0000-4000-8000-4300000000b0",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-26T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+      "url": [
+        "https://pkic.org"
+      ]
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "device",
+        "bom-ref": "dev:examplegate",
+        "name": "ExampleGate",
+        "version": "4.3.0",
+        "description": "ExampleGate 4.3.0, an IPsec VPN gateway appliance from Example Networks. Fictional: written by the working group to show a validated module and a post-quantum update.",
+        "properties": [],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:generic/example-networks/examplegate@4.3.0"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://pkic.org"
+                }
+              ]
+            }
+          },
+          {
+            "bom-ref": "party:supplier",
+            "roles": [
+              {
+                "role": "supplier"
+              }
+            ],
+            "organization": {
+              "name": "Example Networks (fictional)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://example.com"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:egcm",
+          "name": "ExampleGate Cryptographic Module",
+          "version": "2.1",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/example-networks/egcm@2.1"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "incomplete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ]
+}

@@ -484,7 +484,7 @@ const RULES={
  I6:{g:'i',t:'endpointRoles',lvl:'MUST',why:'Says who is at each end, so the reader can place the interface in a topology.'},
  I7:{g:'i',t:'interfaceType',lvl:'MUST',why:'One of five values, including service, management and interconnect. Product rule P2 is checked against this attribute.'},
  I8:{g:'i',t:'lifecycleStage',lvl:'MUST',why:'Says whether the values were implemented, configured or observed. This tells the reader how much weight to give them. It must agree with the stage the document declares under P6. The baseline does not accept intended.'},
- I9:{g:'i',t:'implementationPurl',lvl:'MUST',wh:true,why:'Names the library that implements the interface, so an advisory against that library can be matched. This is the only rule in the profile that a producer may answer by withholding the value.'},
+ I9:{g:'i',t:'implementingLibrary',lvl:'MUST',wh:true,why:'Names the library that implements the interface, so an advisory against that library can be matched. This is the only rule in the profile that a producer may answer by withholding the value.'},
  I10:{g:'i',t:'keyWrapping',lvl:'MUST',why:'On a storage interface: how stored keys are protected. Keycloak stores its realm keys in the database in plaintext.'},
  I11:{g:'i',t:'defaultState',lvl:'SHOULD',why:'At implemented: whether the interface is enabled or disabled as shipped. Keycloak\'s plaintext HTTP listener is disabled by default.'},
  R1:{g:'r',t:'Point to the SBOM',lvl:'MUST',why:'Product records only. The SBOM lists the components, so the CBOM does not repeat them.'},
@@ -1130,7 +1130,7 @@ F4.push({min:2.5,render:()=>`${head('chain','Posture across a whole path','A CBO
   ${fig(FIG_PATH,'<b>Figure 4.</b> For protection in transit, the weakest hop governs. A signature spans every hop at once, so its strength does not depend on any single hop and is composed on its own.')}
   <div class="pathres" aria-live="polite"><div id="pr-transit"></div><div id="pr-sig"></div></div>
   <h3 style="margin-top:22px">What linking needs</h3>
-  ${dash(['<b>Stable identity</b> for the interfaces being linked. Module F3 explains why this is the first obstacle.','<b>A topology record:</b> this interface connects to that one. Only the operator knows this, and it changes with the deployment, not with any product. A deployment record can state it one connection at a time with <span class="mono">peerInterface</span>.','<b>A rule for composing posture</b> along the path, applied separately for each relationship and dated like any other derived judgement.'])}`,
+  ${dash(['<b>Stable identity</b> for the interfaces being linked. Module F3 explains why this is the first obstacle.','<b>A topology record:</b> this interface connects to that one. Only the operator knows this, and it changes with the deployment, not with any product. A deployment record can state it one connection at a time with <span class="mono">connectsTo</span>.','<b>A rule for composing posture</b> along the path, applied separately for each relationship and dated like any other derived judgement.'])}`,
   init(){const st={hops:['hybrid','classical','hybrid'],sig:'ECDSA'};
    const draw=()=>{st.hops.forEach((v,i)=>{const p=document.getElementById('hop'+i),t=document.getElementById('hopt'+i);p.setAttribute('class',v==='hybrid'?'hop-pass':'hop-fail');t.setAttribute('class',v==='hybrid'?'t-pass':'t-fail');t.textContent=v==='hybrid'?'hybrid ML-KEM':'classical';t.setAttribute('font-weight',v==='hybrid'?'400':'700')});
     document.getElementById('sigt').textContent=`originator signature (${st.sig}), verified by the service: spans every hop`;
@@ -1564,7 +1564,7 @@ const A2_FIG_FAMILY=`<svg viewBox="0 0 720 240" role="img" aria-label="Four prof
  <rect class="s-key" x="76" y="94" width="330" height="38" rx="8"/><text class="t-acc" x="92" y="118" font-size="12.5" font-weight="700">pqc-migration v0.8</text>
  <rect class="s-key" x="106" y="48" width="330" height="38" rx="8"/><text class="t-acc" x="122" y="72" font-size="12.5" font-weight="700">pqc-migration-extended v0.2</text>
  <g font-size="11.5">
-  <text class="t-muted" x="456" y="62">key management surfaces, key stores,</text><text class="t-muted" x="456" y="77">external dependencies, storage declared</text>
+  <text class="t-muted" x="456" y="62">key management surfaces, key stores,</text><text class="t-muted" x="456" y="77">trust-service dependencies, storage declared</text>
   <text class="t-muted" x="426" y="108">capability per purpose, enablement,</text><text class="t-muted" x="426" y="123">blockers, module validation</text>
   <text class="t-muted" x="396" y="164">algorithms, roles, libraries, context</text>
   <text class="t-muted" x="366" y="210">which interfaces exist, and what they speak</text>
@@ -1597,9 +1597,9 @@ const A2_FIG_ROADMAP=`<svg viewBox="0 0 720 230" role="img" aria-label="One prov
 const A2_QA=[
  {t:'Surface',rows:[['Which interface is this, and what role does it play?','interfaceType','interface-disclosure#I7','Inherited','The token interface and its TLS carrier are separate entries.'],['Who controls negotiation at this interface?','endpointRoles','interface-disclosure#I6','Inherited','Keycloak is a server inbound, a client outbound, and a peer on the cluster transport.'],['Which protocol versions can it speak?','protocolVersionsSupported','pqc-migration#I1','Baseline','The cluster transport speaks TLS 1.3 only.'],['Is data stored at rest declared?','storage interface, or a stated absence','pqc-migration-extended#P1','Extended','The realm key store in the database.']]},
  {t:'Capability',rows:[['What does the interface use now?','keyExchange, authentication','interface-disclosure#I3, #I5','Inherited','X25519 on TLS, RS256 on tokens, no token encryption.'],['What could it use?','keyExchangeSupported, authenticationSupported','pqc-migration#I2, #I3','Baseline','The JDK 21 groups on TLS. The JOSE algorithms on tokens, none of them post-quantum.'],['Are stored keys exposed at rest?','keyWrapping, keyWrappingSupported','interface-disclosure#I10, pqc-migration#I12','Inherited and Baseline','Realm keys are stored unwrapped.']]},
- {t:'Enablement',rows:[['How is it switched on, and from which version?','enablementMethod, minimumProductVersion','pqc-migration#I4, #I5','Baseline','not-available on every Keycloak interface today.'],['Software or hardware, and which component supplies it?','providerLocation, implementationPurl','pqc-migration#I6, interface-disclosure#I9','Baseline','Software throughout. The provider is the JDK or Keycloak itself.'],['Can the operator require post-quantum and refuse fallback?','negotiationControl','pqc-migration#I8','Baseline (SHOULD)','On TLS, the JVM property jdk.tls.namedGroups. On tokens, the algorithm is set per realm and client.'],['What breaks when it is enabled?','integrationConstraints','pqc-migration#I9','Baseline (SHOULD)','ML-DSA-signed tokens exceed the 4 KB browser cookie limit.']]},
+ {t:'Enablement',rows:[['How is it switched on, and from which version?','enablementMethod, availableFromVersion','pqc-migration#I4, #I5','Baseline','not-available on every Keycloak interface today.'],['Software or hardware, and which component supplies it?','executionEnvironment, implementingLibrary','pqc-migration#I6, interface-disclosure#I9','Baseline','Software throughout. The provider is the JDK or Keycloak itself.'],['Can the operator require post-quantum and refuse fallback?','algorithmSelection','pqc-migration#I8','Baseline (SHOULD)','On TLS, the JVM property jdk.tls.namedGroups. On tokens, the algorithm is set per realm and client.'],['What breaks when it is enabled?','integrationConstraints','pqc-migration#I9','Baseline (SHOULD)','ML-DSA-signed tokens exceed the 4 KB browser cookie limit.']]},
  {t:'Blockers',rows:[['If it cannot do this yet, what stops it, and who can change that?','capabilityStatus, blockedBy, roadmapRef','pqc-migration#G1.1 to #G1.3','Baseline','Four different blockers across thirteen interfaces.'],['Can the validated module we must use do it?','moduleValidationScheme, moduleValidationRef, validatedModeAvailability','pqc-migration#I10, #I11, #G1.4','Baseline','Validated mode is an opt-in Bouncy Castle FIPS module.']]},
- {t:'Key management',rows:[['Can the product create and hold the new key types?','keyManagementFunction, keyOperations, keyTypesSupported, keyTypes, keyStoreLocation','pqc-migration-extended#I1 to #I4, #I7','Extended','The Admin API cannot generate an ML-DSA key.'],['Which surface manages this interface\'s key?','keyStoreRef','pqc-migration-extended#I8','Extended','Tokens: the Admin API. TLS: files, out of band. Cluster: the product itself.'],['What else has to move first?','externalDependencies','pqc-migration-extended#I9','Extended','The certificate authority, the directory, external identity providers.']]}
+ {t:'Key management',rows:[['Can the product create and hold the new key types?','managesKeys, keyOperations, keyTypesSupported, keyTypes, keyStoreLocation','pqc-migration-extended#I1 to #I4, #I7','Extended','The Admin API cannot generate an ML-DSA key.'],['Which surface manages this interface\'s key?','keysStoredIn','pqc-migration-extended#I8','Extended','Tokens: the Admin API. TLS: files, out of band. Cluster: the product itself.'],['What else has to move first?','trustServiceDependencies','pqc-migration-extended#I9','Extended','The certificate authority, the directory, external identity providers.']]}
 ];
 const A2_GROUPS=[
  {g:'TLS on the Java runtime',ids:'tls-https, tls-mgmt, int-db, int-ldap, int-broker, int-smtp',ke:['planned','provider','JEP 527'],ea:['under-evaluation','standard',''],note:'Hybrid ML-KEM groups arrive with the Java runtime, not with Keycloak. Track the runtime in the image, and test hybrid groups against the database, the directory and the mail server, which must support them too.'},
@@ -1614,7 +1614,7 @@ const QUIZ_A2=[
  {q:'Six TLS interfaces share one blocker: the Java runtime provider. Where does the target release belong?',o:['On each interface, as a date','In one roadmap entry that each interface references through roadmapRef','Nowhere; the profile forbids it'],a:1,e:'One provider update brings the capability to every interface at once. Six copies of one date drift apart, and a dated CBOM goes stale while the product stays the same.'},
  {q:'Token signing is blocked by standard. What should a migration lead do?',o:['Press the supplier for a firm date','Stop waiting on a date, prepare relying parties and consider compensating measures','Mark the interface as quantum-safe for now'],a:1,e:'No vendor can give a credible date for something a standards process has not finished.'},
  {q:'The Keycloak record passes every baseline rule. Which extended rule shows the operator still cannot migrate token signing?',o:['pqc-migration#I4 enablementMethod','pqc-migration-extended#I3 keyTypesSupported: the Admin API cannot generate an ML-DSA key','interface-disclosure#P2'],a:1,e:'An interface that can use a new algorithm is of no use if the product cannot create the key for it.'},
- {q:'Why does the PQC migration baseline make implementationPurl a non-withholdable MUST?',o:['To identify the vendor','Planning depends on which library implements an interface, because that decides whether an update exists and when','Because CycloneDX 2.0 requires it'],a:1,e:'This is the one inherited rule the baseline changes. Making a rule stricter is allowed when extending; relaxing one is not.'}
+ {q:'Why does the PQC migration baseline make implementingLibrary a non-withholdable MUST?',o:['To identify the vendor','Planning depends on which library implements an interface, because that decides whether an update exists and when','Because CycloneDX 2.0 requires it'],a:1,e:'This is the one inherited rule the baseline changes. Making a rule stricter is allowed when extending; relaxing one is not.'}
 ];
 
 const A2=[];
@@ -1688,7 +1688,7 @@ A2.push({min:1.5,render:()=>`${head('inventory','Keycloak under the extended pro
     <tr><td>enablementMethod</td><td class="mono">not-available</td></tr>
     <tr><td>moduleValidationScheme</td><td class="mono">none in default mode</td></tr></tbody></table></div><p class="note">Every baseline rule passes. The record looks like a plan waiting on a standard.</p>`;
    const E=`<div class="tbl" style="margin:0"><table><tbody>
-    <tr><td>keyManagementFunction</td><td class="mono">keys-and-certificates</td></tr>
+    <tr><td>managesKeys</td><td class="mono">yes</td></tr>
     <tr><td>keyOperations</td><td>generate, import, export (public keys and certificates only), rotate, delete</td></tr>
     <tr><td>keyTypesSupported</td><td>RSA-2048 and 4096, ECDSA P-256 to P-521, Ed25519, Ed448, HMAC, AES. <span class="chip c-fail">No ML-DSA</span></td></tr>
     <tr><td>keyTypes</td><td>RSA-2048, HMAC-SHA512, AES-128: the defaults of a new realm</td></tr>
@@ -1822,7 +1822,7 @@ const A3_TABS={
  spdx:{t:'SPDX 3.0.1',note:'SPDX 3.0.1 has no cryptographic object model and is not a target carrier. The SBOM names the implementing library by packageUrl, which is enough for rule I9, and links one CycloneDX CBOM for everything else. Rules that count or classify interfaces cannot be evaluated on an SPDX carrier.',code:`<span class="k">Package</span>
   name:        OpenJDK 21
   packageUrl:  pkg:rpm/redhat/java-21-openjdk-headless?...
-               <span class="s">(answers I9, implementationPurl)</span>
+               <span class="s">(answers I9, implementingLibrary)</span>
 
 <span class="k">ExternalRef</span> to the CBOM of the same subject
   a CycloneDX document, linked as one artifact
@@ -1901,7 +1901,7 @@ A3.push({min:2,render:()=>`${head('doc','The same facts in three documents','Pat
 A3.push({min:1.5,render:()=>`${head('rules','The mapping table and the edge gap','Where each rule is read, and what has no home')}
   <div class="tbl wide"><table><thead><tr><th>Rule</th><th>Requirement</th><th>CycloneDX 2.0</th><th>SPDX 3.0.1</th></tr></thead><tbody>
    <tr><td class="mono">P1</td><td>At least one cryptographic interface</td><td>count of components carrying <span class="mono">interfaceType</span></td><td><span class="chip c-mute">unresolved</span></td></tr>
-   <tr><td class="mono">P2</td><td>A management interface, or a reason for none</td><td>count where <span class="mono">interfaceType == management</span>, or the subject property <span class="mono">managementInterfaceAbsence</span></td><td><span class="chip c-mute">unresolved</span></td></tr>
+   <tr><td class="mono">P2</td><td>A management interface, or a reason for none</td><td>count where <span class="mono">interfaceType == management</span>, or the subject property <span class="mono">absent:management-interface</span></td><td><span class="chip c-mute">unresolved</span></td></tr>
    <tr><td class="mono">P3</td><td>Subject identifier</td><td><span class="mono">subject.identifiers[]</span>: purl for a product, tag-uri for a deployment</td><td><span class="chip c-mute">unresolved</span></td></tr>
    <tr><td class="mono">I3</td><td>Key exchange</td><td>a key-agree or KEM algorithm in <span class="mono">relatedCryptographicAssets</span>, or a literal</td><td><span class="chip c-info">via linked CBOM</span></td></tr>
    <tr><td class="mono">I6</td><td>Endpoint roles</td><td><span class="mono">properties[endpointRole:*]</span></td><td><span class="chip c-mute">unresolved</span></td></tr>
@@ -2026,7 +2026,7 @@ const A4_ROLES={
 };
 const A4_ARR={
  A:{t:'A · Unified document',d:'One bill of materials holds the software components and the cryptographic assets, with dependencies between them. CycloneDX supports this directly.',plus:'Nothing to resolve and no second document to keep in step. One signature covers the whole claim and one author is accountable.',minus:'The two kinds of data change at different rates. A deployment\'s cryptographic configuration can change with no software change, and the whole document must be republished. Anyone entitled to the software inventory also receives the cryptographic detail.',fit:'A product CBOM generated at build time, where the software and cryptographic views share an author and a release cadence.'},
- B:{t:'B · Standalone CBOM',d:'One document describes cryptography with no reference to any software inventory.',plus:'Simple to produce and distribute. It discloses no software composition the producer would rather keep private.',minus:'It cannot answer the next question: which library implements the algorithm, and can it be updated? The profile asks for implementationPurl (I9) to reduce this gap.',fit:'An operator describing cryptography observed on a service it did not build, or an estate survey from network discovery.'},
+ B:{t:'B · Standalone CBOM',d:'One document describes cryptography with no reference to any software inventory.',plus:'Simple to produce and distribute. It discloses no software composition the producer would rather keep private.',minus:'It cannot answer the next question: which library implements the algorithm, and can it be updated? The profile asks for implementingLibrary (I9) to reduce this gap.',fit:'An operator describing cryptography observed on a service it did not build, or an estate survey from network discovery.'},
  C:{t:'C · CBOM referencing an SBOM',d:'The CBOM is the entry point and points to the SBOM for the same subject. The consumer starts from the cryptography and resolves outward when it needs component detail.',plus:'The two documents keep their own lifecycles, so a configuration change produces a new CBOM revision without reissuing the SBOM. It suits migration planners and anyone assessing an interface.',minus:'The reference has to stay correct. A reference that does not pin a revision will drift, and a consumer that cannot resolve it sees an incomplete picture with no warning.',fit:'The Keycloak product record. It names the libraries behind its interfaces, so I9 is answered in the record, and baseline rule R1 points to the companion SBOM by BOM-Link and SHA-256. The SBOM already exists as its own document. A producer starting from nothing would still choose A for a product record generated at build time.'},
  D:{t:'D · SBOM referencing a CBOM',d:'The SBOM is the entry point and links the CBOM as an external artifact.',plus:'Existing supply-chain processes already request, store and verify SBOMs, and the CBOM inherits them. Access can be split, so software composition can be published more widely than cryptographic configuration.',minus:'Cryptography becomes a secondary artifact. A consumer whose tooling ignores unfamiliar references never sees the CBOM, and nothing in the SBOM signals that anything is missing.',fit:'Where the consumer requires SPDX. SPDX 3.0.1 has no cryptographic model, so an SPDX SBOM with a linked CycloneDX CBOM is the practical option today.'}
 };
@@ -2302,7 +2302,7 @@ C1.push({min:1.5,render:()=>`${head('chain','Product records, deployment records
    <tr><td>Token signing; Keycloak's own TLS</td><td><span class="chip c-fail">not-capable</span></td><td>The supplier: blocked by JOSE, and by the Java runtime</td></tr>
    <tr><td>Product HTTPS listener</td><td><span class="chip c-mute">not-deployed</span></td><td>Nobody: TLS ends at the ingress</td></tr>
   </tbody></table></div>
-  ${concept('The readiness gap is computed from the join and never stored. The readiness-gap policy reads the three records, follows correspondsTo, and classes each interface and purpose. A second join, peerInterface, links the two ends of one connection when two operators record them, and the edge-posture evaluation names the end that limits it. Module C6 covers policy evaluation.')}`});
+  ${concept('The readiness gap is computed from the join and never stored. The readiness-gap policy reads the three records, follows correspondsTo, and classes each interface and purpose. A second join, connectsTo, links the two ends of one connection when two operators record them, and the edge-posture evaluation names the end that limits it. Module C6 covers policy evaluation.')}`});
 
 C1.push({min:1,render:()=>`${head('doc','The objects around a CBOM','Who writes each one, and how each is identified')}
   ${fig(C1_FIG_OBJECTS,'<b>Figure 5.</b> A profile constrains a revision. A claim binds to it by digest. A policy reads it and produces a dated result. A vulnerability statement cites it by the same digest. A record points out to context; a judgement made later points back to the record.')}
@@ -2389,7 +2389,7 @@ const C2_RULES={
  I6:{k:'I',t:'endpointRoles',lvl:'MUST',c:'at least two endpoints; not on storage',w:'Places the interface in a topology.'},
  I7:{k:'I',t:'interfaceType',lvl:'MUST',c:'management, service, interconnect, peer or storage',w:'P2 is checked against this attribute.'},
  I8:{k:'I',t:'lifecycleStage',lvl:'MUST',c:'implemented, configured or observed',w:'The interface\'s own value, or the document\'s stage where it has none. The two must agree.'},
- I9:{k:'I',t:'implementationPurl',lvl:'MUST',wh:true,c:'Package URL of the implementing library',w:'Lets an advisory against the library be matched. The only rule here where a withheld marker passes.'},
+ I9:{k:'I',t:'implementingLibrary',lvl:'MUST',wh:true,c:'Package URL of the implementing library',w:'Lets an advisory against the library be matched. The only rule here where a withheld marker passes.'},
  I10:{k:'I',t:'keyWrapping',lvl:'MUST on storage',c:'algorithm protecting data keys at rest, or none',w:'Takes the place of I3 on a storage interface, which has no protocol, peer or handshake.'},
  I11:{k:'I',t:'defaultState',lvl:'SHOULD at implemented',c:'enabled or disabled',w:'Keycloak\'s plaintext HTTP listener is present and off by default. Without this value it reads as an active plaintext interface.'},
  R1:{k:'R',t:'sbom',lvl:'MUST',c:'product: BOM-Link with SHA-256',w:'The SBOM of the same subject.'},
@@ -2397,7 +2397,7 @@ const C2_RULES={
  R3:{k:'R',t:'advisories',lvl:'SHOULD',c:'product: web-page, csaf-provider, osv-api or ghsa-api',w:'Where later advisories will appear.'},
  R4:{k:'R',t:'security-contact',lvl:'SHOULD',c:'product: rfc-9116 or security-contact',w:'Where to report a weakness or ask for a fuller disclosure.'},
  R5:{k:'R',t:'configuration-guidance',lvl:'MUST',c:'each interface where I3, I4 or I5 is deployment-defined',w:'Where the operator makes the choice the product leaves open.'},
- R6:{k:'R',t:'design-intent',lvl:'MAY',c:'any',w:'A threat model or design document. Design intention lives here, not in a lifecycle stage.'}
+ R6:{k:'R',t:'threat-model',lvl:'MAY',c:'any',w:'A threat model or design document. Design intention lives here, not in a lifecycle stage.'}
 };
 const C2_VALS=[
  {v:'An algorithm, e.g. X25519',r:{implemented:[1,'Passes. A value that meets the constraint.'],configured:[1,'Passes.'],observed:[1,'Passes.']}},
@@ -2480,7 +2480,7 @@ C2.push({min:1,render:()=>`${head('chain','Reference rules: pointers, not conten
    <tr><td class="mono">R3</td><td>advisories</td><td>SHOULD</td><td>The GitHub advisory page and the OSV API</td></tr>
    <tr><td class="mono">R4</td><td>security-contact</td><td>SHOULD</td><td>The Keycloak security policy</td></tr>
    <tr><td class="mono">R5</td><td>configuration-guidance</td><td>MUST where a value is deployment-defined</td><td>The guide for setting the server certificate</td></tr>
-   <tr><td class="mono">R6</td><td>design-intent</td><td>MAY</td><td>A threat model or design document</td></tr>
+   <tr><td class="mono">R6</td><td>threat-model</td><td>MAY</td><td>A threat model or design document</td></tr>
   </tbody></table></div>
   <div class="two">
    <div class="box"><h3>Check the pointer, never the target</h3><p style="margin:0">The validator checks that the pointer is present and well formed, and checks the hash when it holds the target. It never evaluates what the target says.</p></div>
@@ -2551,8 +2551,8 @@ const C3_FIG_BANDS=`<svg viewBox="0 0 720 200" role="img" aria-label="The carrie
 
 const C3_FIG_CITE=`<svg viewBox="0 0 720 250" role="img" aria-label="The operator's deployment record cites the vendor's product record by BOM-Link and SHA-256 hash. Each deployment interface names the product interface it realises. Only implementation facts, such as the implementing library, follow the join.">
  <rect class="s-panel" x="16" y="16" width="270" height="170" rx="12"/><text class="t-ink" x="32" y="42" font-weight="700" font-size="13.5">Product record</text><text class="t-muted" x="32" y="60" font-size="11.5">written by the vendor · implemented</text>
- <rect class="s-svcbox" x="32" y="76" width="238" height="40" rx="8"/><text class="t-svc" x="46" y="94" font-size="12" font-weight="600">HTTPS interface</text><text class="t-svc t-mono" x="46" y="109" font-size="10.5">implementationPurl: a library purl</text>
- <rect class="s-mgmtbox" x="32" y="128" width="238" height="40" rx="8"/><text class="t-mgmt" x="46" y="146" font-size="12" font-weight="600">Admin interface</text><text class="t-mgmt t-mono" x="46" y="161" font-size="10.5">implementationPurl: a library purl</text>
+ <rect class="s-svcbox" x="32" y="76" width="238" height="40" rx="8"/><text class="t-svc" x="46" y="94" font-size="12" font-weight="600">HTTPS interface</text><text class="t-svc t-mono" x="46" y="109" font-size="10.5">implementingLibrary: a library purl</text>
+ <rect class="s-mgmtbox" x="32" y="128" width="238" height="40" rx="8"/><text class="t-mgmt" x="46" y="146" font-size="12" font-weight="600">Admin interface</text><text class="t-mgmt t-mono" x="46" y="161" font-size="10.5">implementingLibrary: a library purl</text>
  <rect class="s-panel" x="434" y="16" width="270" height="170" rx="12"/><text class="t-ink" x="450" y="42" font-weight="700" font-size="13.5">Deployment record</text><text class="t-muted" x="450" y="60" font-size="11.5">written by the operator · observed</text>
  <rect class="s-svcbox" x="450" y="76" width="238" height="40" rx="8"/><text class="t-svc" x="464" y="94" font-size="12" font-weight="600">Ingress HTTPS</text><text class="t-svc t-mono" x="464" y="109" font-size="10.5">correspondsTo: HTTPS interface</text>
  <rect class="s-mgmtbox" x="450" y="128" width="238" height="40" rx="8"/><text class="t-mgmt" x="464" y="146" font-size="12" font-weight="600">Admin listener</text><text class="t-mgmt t-mono" x="464" y="161" font-size="10.5">correspondsTo: Admin interface</text>
@@ -2730,7 +2730,7 @@ const C4_PROF={
  enum:{t:'Interface Enumeration v0.4',rel:'Entry depth',chip:'c-info',ask:'What the subject is, and whether it is a product or a deployment. Which interfaces it exposes, what each one speaks and at which version, which stage the report describes, and whether the list is the whole list.',rules:'P1, P3, P4, P5, P6, I1, I2, I7, I8',orient:'inventory',stages:'All four, including intended. A first inventory takes whatever a producer can report.'},
  base:{t:'Interface Disclosure Baseline v0.10',rel:'One depth deeper',chip:'c-info',ask:'Everything the entry profile asks, plus the algorithms for each cryptographic job, the endpoint roles, the implementing library, key wrapping on storage, the default state, a management interface or a stated reason there is none, and pointers to context the document does not carry.',rules:'Shares nine rules unchanged and adds P2, I3, I4, I5, I6, I9, I10, I11 (at SHOULD), plus reference rules R1 to R6',orient:'inventory',stages:'implemented, configured and observed. A design intention answers nothing about deployed interfaces.'},
  pqc:{t:'PQC Migration v0.8',rel:'Branch from the baseline',chip:'c-mgmt',ask:'For a product as built: capability per interface and cryptographic purpose, what enabling it requires, what blocks it, module validation, and key-wrapping capability on storage.',rules:'Extends the baseline. Adds I1 to I12, the group rule G1, R1 (support lifecycle) and R2 (roadmap). Makes I9 non-withholdable.',orient:'both',stages:'implemented only, for a product'},
- ext:{t:'PQC Migration Extended v0.2',rel:'Depth within the migration branch',chip:'c-info',ask:'Everything PQC Migration asks, plus key management and storage: the key types the management interfaces can generate, where keys are stored, external dependencies, and storage interfaces or a stated absence.',rules:'Extends PQC Migration. Adds P1, P2, I1 to I10, and tightens pqc-migration#G1.4.',orient:'both',stages:'Inherited from PQC Migration. A derived profile cannot widen them.'},
+ ext:{t:'PQC Migration Extended v0.2',rel:'Depth within the migration branch',chip:'c-info',ask:'Everything PQC Migration asks, plus key management and storage: the key types the management interfaces can generate, where keys are stored, the trust services they depend on, and storage interfaces or a stated absence.',rules:'Extends PQC Migration. Adds P1, P2, I1 to I10, and tightens pqc-migration#G1.4.',orient:'both',stages:'Inherited from PQC Migration. A derived profile cannot widen them.'},
  proc:{t:'Procurement v0.2',rel:'Branch from the baseline',chip:'c-mgmt',ask:'For a product offered in a tender: a storage interface or a stated absence, coverage of all interfaces or all external ones, and the implementing library with no withholding.',rules:'Extends the baseline. Adds P5 and P6. Makes I9 non-withholdable.',orient:'inventory',stages:'implemented only, for a product'},
  dep:{t:'Deployment Disclosure v0.2',rel:'Branch from the baseline',chip:'c-mgmt',ask:'For a deployment: the records it cites by BOM-Link and hash, the product interface each of its interfaces realises, and how and when each observed value was obtained. It may also name the interface at the far end of each connection.',rules:'Extends the baseline. Adds P1, I1 to I4 (I4 at MAY) and R1 to R4.',orient:'inventory',stages:'configured and observed, for a deployment'}
 };
@@ -2889,9 +2889,9 @@ const C5_FIG_DERIVE=`<svg viewBox="0 0 720 220" role="img" aria-label="The publi
 </svg>`;
 
 const C5_READ=[
- {line:'implementationPurl: withheld',ans:0,e:'Right. The producer knows which library implements the interface and has chosen not to release it on these terms. That is a conversation to open with the supplier, perhaps under an NDA.'},
- {line:'implementationPurl: unknown',ans:1,e:'Right. The producer cannot determine the value. That points to a limit in its tooling or process, and may justify giving the record less weight.'},
- {line:'implementationPurl missing, no marker',ans:2,e:'Right. The attribute is undeclared. The recipient cannot tell policy from tooling from oversight, and the document fails the rule.'}
+ {line:'implementingLibrary: withheld',ans:0,e:'Right. The producer knows which library implements the interface and has chosen not to release it on these terms. That is a conversation to open with the supplier, perhaps under an NDA.'},
+ {line:'implementingLibrary: unknown',ans:1,e:'Right. The producer cannot determine the value. That points to a limit in its tooling or process, and may justify giving the record less weight.'},
+ {line:'implementingLibrary missing, no marker',ans:2,e:'Right. The attribute is undeclared. The recipient cannot tell policy from tooling from oversight, and the document fails the rule.'}
 ];
 const C5_REL={
  depth:{t:'Depth',diff:'How much is asked about the same decision.',moves:'Engineering work: instrumenting a build, extending a scanner, recording something about the product it did not record before.',reads:'How far the supplier\'s own visibility reaches.'},
@@ -3196,13 +3196,13 @@ const C7_RULES={
   ['R3','advisories','SHOULD for a product','endpoint','GitHub advisories page (web-page) and the OSV API (osv-api)'],
   ['R4','security-contact','SHOULD for a product','endpoint','The project\'s security policy page'],
   ['R5','configuration-guidance','MUST on an interface whenever I3, I4 or I5 is deployment-defined','document or endpoint','Keycloak\'s TLS and management-interface guides'],
-  ['R6','design-intent','MAY','document or endpoint','None; the validator warns']]},
+  ['R6','threat-model','MAY','document or endpoint','None; the validator warns']]},
  dep:{t:'Deployment Disclosure',rows:[
   ['P1','cited-document','MUST for a deployment record','document: BOM-Link and SHA-256','Configured record cites the product record; observed cites both'],
   ['R1','configuration-source','MUST at configured','document or endpoint','A commit in the operator\'s config repository'],
   ['R2','observation-evidence','SHOULD at observed, per interface; withholdable','document, hash required','A sensor summary for the ingress'],
   ['R3','data-register','SHOULD; withholdable','document or endpoint','The operator\'s data register'],
-  ['R4','issuer-policy','MAY','endpoint','The internal CA\'s practice statement']]},
+  ['R4','certificate-policy','MAY','endpoint','The internal CA\'s practice statement']]},
  pqc:{t:'PQC migration',rows:[
   ['R1','support-lifecycle','SHOULD, or a stated absence','endpoint','Stated absence: not-published'],
   ['R2','roadmap','SHOULD, or a stated absence','document with hash, or endpoint','keycloak-pqc-roadmap.json, with SHA-256']]}
@@ -3234,7 +3234,7 @@ C7.push({min:1.5,render:()=>`${head('chain','Point to it, do not carry it','Join
 
 C7.push({min:1.5,render:()=>`${head('mapping','Three kinds of reference','Only the third is a context pointer')}
   <div class="tbl wide"><table><thead><tr><th>Kind</th><th>Points to</th><th>Form</th><th>Examples</th></tr></thead><tbody>
-   <tr><td><b>Internal</b></td><td>Another object in the same document</td><td>A <span class="mono">bom-ref</span></td><td><span class="mono">keyStoreRef</span></td></tr>
+   <tr><td><b>Internal</b></td><td>Another object in the same document</td><td>A <span class="mono">bom-ref</span></td><td><span class="mono">keysStoredIn</span></td></tr>
    <tr><td><b>Cross-document</b></td><td>Another CBOM or SBOM, or one object in it</td><td>A BOM-Link and a SHA-256 hash</td><td><span class="mono">correspondsTo</span>, cited documents, the companion SBOM</td></tr>
    <tr><td><b>Context</b></td><td>An artefact that is not a BOM</td><td>A URL, with a hash for a document or an access protocol for an endpoint</td><td>Advisories, security contact, configuration source, data register</td></tr>
   </tbody></table></div>
@@ -3314,7 +3314,7 @@ C7.push({min:1.5,render:()=>`${head('doc','How a pointer is written','An entry i
       { "name": "pkic:profile:context", "value": "advisories" },
       { "name": "pkic:profile:accessProtocol", "value": "osv-api" } ] }
 ]</pre>
-  <p class="note" style="margin-top:12px">A stated absence is a property on the subject named after the kind. The Keycloak record carries <span class="mono">pkic:profile:contextAbsent:support-lifecycle</span> with the value <span class="mono">not-published</span>. A record never points to its own judgements, to the vulnerability data itself, or to facts that have a native field.</p>`});
+  <p class="note" style="margin-top:12px">A stated absence is a property on the subject named after the kind. The Keycloak record carries <span class="mono">pkic:profile:absent:support-lifecycle</span> with the value <span class="mono">not-published</span>. A record never points to its own judgements, to the vulnerability data itself, or to facts that have a native field.</p>`});
 
 C7.push(quizScreen('C7',QUIZ_C7));
 C7.push({min:0,next:null,render:()=>`${head('chain','Context pointers','Summary')}

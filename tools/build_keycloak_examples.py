@@ -327,7 +327,7 @@ def roadmap():
                             p("crypto:protocol:int-broker"), p("crypto:protocol:int-smtp"),
                             p("crypto:protocol:int-cache")],
              "algorithms": ["X25519MLKEM768"],
-             "capabilityStatus": "planned", "blockedBy": "provider", "targetRelease": None,
+             "capabilityStatus": "planned", "blockedBy": "crypto-library", "targetRelease": None,
              "dependsOn": [{"what": "A Java runtime with hybrid ML-KEM TLS groups (JEP 527)",
                             "status": "in JDK 27", "ref": "https://openjdk.org/jeps/527"}],
              "note": "Available when the image ships a JDK that offers the hybrid groups; no Keycloak release "
@@ -382,7 +382,7 @@ def product(hashes):
     comp["description"] = ("Keycloak 26.7.3 container image at its defaults. Build record: what the image "
                            "does before anyone deploys it.")
     set_props(comp, {"subjectType": "product",
-                     "contextAbsent:support-lifecycle": "not-published"})
+                     "absent:support-lifecycle": "not-published"})
     bom["externalReferences"] = [
         ctx("sbom", link("sbom"), "bom",
             "Companion SBOM of the same image: examples/context/keycloak-26.7.3-sbom.cdx.json.",
@@ -572,7 +572,7 @@ def configured(product_sha):
             "vcs", "Revision of the configuration repository this record was read from."),
         ctx("data-register", "https://grc.example.org/registers/data/sso-prod", "risk-assessment",
             "Data classification and confidentiality lifetime per interface. Not reproduced here."),
-        ctx("issuer-policy", "https://pki.example.org/cps", "documentation",
+        ctx("certificate-policy", "https://pki.example.org/cps", "documentation",
             "Certification practice statement of the internal CA that issues the ingress, database and "
             "directory certificates.", protocol="web-page"),
     ]
@@ -660,7 +660,7 @@ def configured(product_sha):
 def db_configured(configured_sha):
     """The PostgreSQL deployment Keycloak connects to, recorded by the team that runs it.
 
-    Its TLS interface points to Keycloak's int-db interface with peerInterface
+    Its TLS interface points to Keycloak's int-db interface with connectsTo
     (deployment-disclosure I4, decision 0026), citing Keycloak's configured record
     by hash. The pointer sits on this side so that none of the Keycloak records
     changes: either end may state it. With both records, an evaluation can say
@@ -672,7 +672,7 @@ def db_configured(configured_sha):
                     "the database Keycloak's int-db interface connects to, recorded by the database team from "
                     "its own configuration repository. Illustrative values. The server permits the hybrid group "
                     "X25519MLKEM768 (PostgreSQL 18 ssl_groups, OpenSSL 3.5). The TLS interface names the client "
-                    "end of the connection with peerInterface: Keycloak's int-db interface in the sso-prod "
+                    "end of the connection with connectsTo: Keycloak's int-db interface in the sso-prod "
                     "configured record, which this record cites by hash. Administration runs through the "
                     "platform's automation, so there is no administrative listener. PostgreSQL publishes no "
                     "CBOM, so the interface states 'no-product-document' and names its library here. Conforms "
@@ -689,16 +689,16 @@ def db_configured(configured_sha):
                 "description": "PostgreSQL 18 with OpenSSL 3.5, operated by Example Org's database team.",
                 "properties": [prop("subjectType", "deployment"), prop("subjectIdentifier", DB_DEPLOYMENT_ID),
                                prop("coverage", "all"),
-                               prop("managementInterfaceAbsence", "configured-out-of-band")]}},
+                               prop("absent:management-interface", "configured-out-of-band")]}},
         "externalReferences": [
             cite("configured", configured_sha,
                  "The configured record of the sso-prod deployment, which holds the client end of the "
-                 "connection this record's TLS interface names with peerInterface."),
+                 "connection this record's TLS interface names with connectsTo."),
             ctx("configuration-source", "https://git.example.org/platform/db-config/-/commit/9c1d27e4a0",
                 "vcs", "Revision of the database configuration repository this record was read from."),
             ctx("data-register", "https://grc.example.org/registers/data/db-prod", "risk-assessment",
                 "Data classification and confidentiality lifetime for the cluster. Not reproduced here."),
-            ctx("issuer-policy", "https://pki.example.org/cps", "documentation",
+            ctx("certificate-policy", "https://pki.example.org/cps", "documentation",
                 "Certification practice statement of the internal CA that issues the database certificate.",
                 protocol="web-page"),
         ],
@@ -713,7 +713,7 @@ def db_configured(configured_sha):
                 {"integrationConstraints": "ssl_groups = 'X25519MLKEM768:X25519'; ssl_min_protocol_version = "
                                            "'TLSv1.3'; hostssl only in pg_hba.conf. Server certificate RSA-2048 "
                                            "from the internal CA.",
-                 "peerInterface": link("configured", "crypto:protocol:int-db")})
+                 "connectsTo": link("configured", "crypto:protocol:int-db")})
     bom["components"].append(iface)
     bom["dependencies"] = [{"ref": "deployment:db-prod", "dependsOn": ["crypto:protocol:pg-tls"]},
                            {"ref": "lib:openssl", "provides": ["crypto:protocol:pg-tls"]}]
@@ -878,7 +878,7 @@ def remove_elements(bom, refs):
     for c in bom.get("compositions", []):
         c["assemblies"] = [x for x in c.get("assemblies", []) if x not in refs]
     for el in bom["components"] + bom.get("services", []):
-        drop = [p for p in el.get("properties", []) if p["name"] == P + "keyStoreRef" and p["value"] in refs]
+        drop = [p for p in el.get("properties", []) if p["name"] == P + "keysStoredIn" and p["value"] in refs]
         el["properties"] = [p for p in el.get("properties", []) if p not in drop]
 
 
@@ -942,7 +942,7 @@ def main():
     for d in v["dependencies"]:
         if "provides" in d:
             d["provides"] = [x for x in d["provides"] if x != "service:svc-oidc"]
-    element(v, "service:svc-oidc")["properties"].append(prop("disclosure:implementationPurl", "withheld"))
+    element(v, "service:svc-oidc")["properties"].append(prop("disclosure:implementingLibrary", "withheld"))
     cache = element(v, "crypto:protocol:int-cache")
     cache["cryptoProperties"]["protocolProperties"]["cryptoRefArray"] = [
         r for r in cache["cryptoProperties"]["protocolProperties"]["cryptoRefArray"] if r != "crypto:algo:rsa-2048"]
@@ -952,7 +952,7 @@ def main():
     # satisfies interface-disclosure#R2, which is the true position of the upstream project.
     v["externalReferences"] = [r for r in v["externalReferences"]
                                if not any(p["value"] == "vulnerability-statements" for p in r.get("properties", []))]
-    v["metadata"]["component"]["properties"].append(prop("contextAbsent:vulnerability-statements", "not-published"))
+    v["metadata"]["component"]["properties"].append(prop("absent:vulnerability-statements", "not-published"))
     write("cbom-keycloak-product-disclosure-states.cdx.json", v)
 
     v = variant(prod, "c0e1", "NON-CONFORMING EXAMPLE. The product record with the storage interface's "
@@ -1032,7 +1032,7 @@ def main():
                                      "crypto:protocol:int-ldap": "crypto:protocol:int-ldap",
                                      "crypto:protocol:int-cache": "crypto:protocol:int-cache",
                                      "service:sto-realm-keys": "service:sto-realm-keys"}[el["bom-ref"]])
-    v["metadata"]["component"]["properties"].append(prop("managementInterfaceAbsence", "not-reached"))
+    v["metadata"]["component"]["properties"].append(prop("absent:management-interface", "not-reached"))
     write("cbom-keycloak-deployment-observed-outside.cdx.json", v)
     results()
     print("written to", os.path.abspath(OUT))

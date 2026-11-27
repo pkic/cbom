@@ -39,12 +39,12 @@
       "tested": "2.0"
     }
   },
-  "usageVocabulary": [
+  "designUseVocabulary": [
     "in-use",
     "disabled",
     "not-connected"
   ],
-  "$commentUsage": "'in-use': the design uses the interface. 'disabled': the product offers it and the design turns it off. 'not-connected': it is enabled but nothing in the design connects to it, such as an unused port.",
+  "$commentDesignUse": "'in-use': the design uses the interface. 'disabled': the product offers it and the design turns it off. 'not-connected': it is enabled but nothing in the design connects to it, such as an unused port.",
   "productRules": [
     {
       "id": "P1",
@@ -87,17 +87,17 @@
     },
     {
       "id": "I2",
-      "attribute": "usage",
+      "attribute": "designUse",
       "level": "MUST",
       "constraint": {
-        "enumRef": "usageVocabulary"
+        "enumRef": "designUseVocabulary"
       },
       "withholdable": false,
       "note": "Whether the design uses the interface. A product interface the design does not use is still listed, as 'disabled' or 'not-connected': an unused interface left enabled is an exposure, and an interface the design turns off needs no migration. The evaluator checks the value on each interface listed; it does not yet check that every interface of every cited product is listed."
     },
     {
       "id": "I3",
-      "attribute": "keyProvider",
+      "attribute": "keysProvidedBy",
       "level": "MUST",
       "constraint": {
         "refersToLocal": {
@@ -109,7 +109,7 @@
       },
       "withholdable": true,
       "requiredWhen": {
-        "attribute": "usage",
+        "attribute": "designUse",
         "equals": "in-use"
       },
       "note": "The system component that provides the keys or the trust this interface depends on, by its bom-ref in the same record: a group key server, a certificate authority, a key management service or a hardware security module outside the product. 'product' means the keys and trust are held in the product alone; 'none' means the interface uses no keys. This rule shows which component's migration another component waits for."
@@ -125,17 +125,28 @@
       "reason": "They belong in the owner's register, which describes sites and decisions, not the design."
     }
   ],
+  "artifacts": {
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "examples/cbom-ot-sas-system-configured.cdx.json",
+    "nonConformingExample": "examples/cbom-ot-sas-system-fail-keyprovider.cdx.json"
+  },
   "changelog": [
     {
       "version": "0.1",
       "date": "2026-11-18",
       "summary": "Initial version, built on the reference substation. The rules were first written for the substation overlay.",
       "changes": []
+    },
+    {
+      "version": "0.1",
+      "date": "2026-11-27",
+      "summary": "Attribute names made clearer and consistent across the profiles (drafts/attribute-naming-review.md; decision 0028). The version is unchanged because no release has been published.",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Renamed: keyProvider → keysProvidedBy. A record that uses the previous name no longer conforms."
+        }
+      ]
     }
-  ],
-  "artifacts": {
-    "mapping": "mapping-cyclonedx-spdx.md",
-    "conformingExample": "examples/cbom-ot-sas-system-configured.cdx.json",
-    "nonConformingExample": "examples/cbom-ot-sas-system-fail-keyprovider.cdx.json"
-  }
+  ]
 }

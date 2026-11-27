@@ -78,7 +78,7 @@
           "interfaceType": "storage",
           "min": 1
         },
-        "orDeclaredAbsent": "storageInterfaceAbsence",
+        "orDeclaredAbsent": "absent:storage-interface",
         "absenceEnumRef": "storageAbsenceVocabulary"
       },
       "withholdable": false,
@@ -102,7 +102,7 @@
       "description": "Service states what makes the provider produce a new record",
       "level": "MUST",
       "constraint": {
-        "productAttribute": "regenerationTrigger",
+        "productAttribute": "recordRefreshTrigger",
         "enumRef": "regenerationTriggerVocabulary"
       },
       "withholdable": false,

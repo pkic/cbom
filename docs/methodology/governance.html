@@ -159,7 +159,7 @@ nav: governance
 
   <h3>B · Standalone CBOM</h3>
   <p>The CBOM is a single document that describes cryptography without reference to any software inventory. This arrangement fits when the subject is not a piece of software. Examples are an operator describing the cryptography it observed on a service it did not build, or a survey of an estate built from network discovery.</p>
-  <p>It is simple to produce and to distribute, and it avoids publishing software composition that the producer may not wish to disclose. However, it cannot answer the question that usually follows. If an algorithm needs replacing, the next question is which library implements it and whether that library can be updated. A standalone CBOM does not carry that information. The profile asks for <code>implementationPurl</code> to reduce this problem. That attribute names the implementing package even when no SBOM is linked.</p>
+  <p>It is simple to produce and to distribute, and it avoids publishing software composition that the producer may not wish to disclose. However, it cannot answer the question that usually follows. If an algorithm needs replacing, the next question is which library implements it and whether that library can be updated. A standalone CBOM does not carry that information. The profile asks for <code>implementingLibrary</code> to reduce this problem. That attribute names the implementing package even when no SBOM is linked.</p>
 
   <h3>C · CBOM referencing an external SBOM</h3>
   <p>The CBOM is the entry point and carries a reference to the SBOM for the same subject. A consumer starts from the cryptography and resolves outward to component detail when it needs it.</p>
@@ -181,7 +181,7 @@ nav: governance
       <tr><td>Separate access control</td><td>no</td><td>not applicable</td><td>yes</td><td>yes</td></tr>
       <tr><td>Risk of version skew</td><td>none</td><td>none</td><td>present</td><td>present</td></tr>
       <tr><td>Risk of the CBOM being missed</td><td>none</td><td>none</td><td>low</td><td>higher</td></tr>
-      <tr><td>Answers "which library implements this"</td><td>directly</td><td>only via <code>implementationPurl</code></td><td>after resolution</td><td>directly, from the entry point</td></tr>
+      <tr><td>Answers "which library implements this"</td><td>directly</td><td>only via <code>implementingLibrary</code></td><td>after resolution</td><td>directly, from the entry point</td></tr>
       <tr><td>Available in SPDX today</td><td>no</td><td>no</td><td>no</td><td>yes</td></tr>
     </tbody>
   </table>

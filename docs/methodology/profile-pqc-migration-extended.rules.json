@@ -50,9 +50,9 @@
   },
   "$inherited": "The disclosure model, the requirement keywords, the identifier schemes and every vocabulary of the base are inherited and not restated, for the reason the base gives: a restated block silently overrides the base's value. The vocabularies below are new.",
   "$commentKeyManagement": "Key management is modelled as management interfaces carrying key attributes (decision 0022, F3). A key management utility is a configuration surface, which the disclosure baseline already requires under interface-disclosure#P2. A new relationship type would reopen the Model section and the parked edge model for no gain at this depth. A management interface states whether it performs key and certificate functions at all; the key attributes apply only where it does, so an administrative console that never touches a key owes nothing further.",
-  "keyManagementFunctionVocabulary": [
-    "keys-and-certificates",
-    "none"
+  "managesKeysVocabulary": [
+    "yes",
+    "no"
   ],
   "keyOperationVocabulary": [
     "generate",
@@ -80,17 +80,21 @@
     "token-native",
     "other"
   ],
-  "$commentKeyStoreLocation": "Where the key material a management surface creates is held. 'software', 'hsm' and 'tee' mean what they mean in the base's providerLocationVocabulary; the two attributes describe different things (where keys are held, where cryptography is performed) and share values where the sense is the same. See decision 0021.",
+  "$commentKeyStoreLocation": "Where the key material a management surface creates is held. 'software', 'hsm' and 'tee' mean what they mean in the base's executionEnvironmentVocabulary; the two attributes describe different things (where keys are held, where cryptography is performed) and share values where the sense is the same. See decision 0021.",
   "keyStoreLocationVocabulary": [
     "software",
     "hsm",
     "tee",
     "tpm",
+    "secure-element",
+    "mcu-internal",
+    "otp-fuses",
     "os-keyring",
-    "external-vault"
+    "external-vault",
+    "unspecified"
   ],
-  "$commentExternalDependency": "Services outside the product that an interface's cryptography depends on at run time. These are the operator's sequencing facts, not the supplier's blockers: blockedBy says what stops the supplier, externalDependencies says what the operator must migrate first. An interface cannot present an ML-DSA chain before its certificate authority issues one, nor rely on revocation before the responder signs with an algorithm its clients verify. 'none' is a complete answer. 'random-bit-generator' names a random bit generator outside the product, such as the operating system's entropy source, a CPU generator or an HSM, that the interface's cryptography draws on. Randomness is a run-time dependency, not a cryptographic purpose: it is not a job done at an interface and does not migrate on a timetable of its own.",
-  "externalDependencyVocabulary": [
+  "$commentExternalDependency": "Services outside the product that an interface's cryptography depends on at run time. These are the operator's sequencing facts, not the supplier's blockers: blockedBy says what stops the supplier, trustServiceDependencies says what the operator must migrate first. An interface cannot present an ML-DSA chain before its certificate authority issues one, nor rely on revocation before the responder signs with an algorithm its clients verify. 'none' is a complete answer. 'random-bit-generator' names a random bit generator outside the product, such as the operating system's entropy source, a CPU generator or an HSM, that the interface's cryptography draws on. Randomness is a run-time dependency, not a cryptographic purpose: it is not a job done at an interface and does not migrate on a timetable of its own.",
+  "trustServiceDependencyVocabulary": [
     "certificate-authority",
     "revocation-responder",
     "directory",
@@ -111,6 +115,7 @@
     "common-criteria",
     "eucc",
     "national-scheme",
+    "pci-pts-hsm",
     "none"
   ],
   "verifierPopulationVocabulary": [
@@ -175,7 +180,7 @@
           "interfaceType": "storage",
           "min": 1
         },
-        "orDeclaredAbsent": "storageInterfaceAbsence",
+        "orDeclaredAbsent": "absent:storage-interface",
         "absenceEnumRef": "storageAbsenceVocabulary"
       },
       "withholdable": false,
@@ -196,10 +201,10 @@
   "interfaceRules": [
     {
       "id": "I1",
-      "attribute": "keyManagementFunction",
+      "attribute": "managesKeys",
       "level": "MUST",
       "constraint": {
-        "enumRef": "keyManagementFunctionVocabulary"
+        "enumRef": "managesKeysVocabulary"
       },
       "withholdable": false,
       "requiredWhen": {
@@ -218,8 +223,8 @@
       "list": true,
       "withholdable": false,
       "requiredWhen": {
-        "attribute": "keyManagementFunction",
-        "equals": "keys-and-certificates"
+        "attribute": "managesKeys",
+        "equals": "yes"
       },
       "note": "The key lifecycle operations the surface offers. 'request-certificate' is listed separately from 'generate' because a tool that can generate an ML-DSA key and cannot produce a request for it still blocks the migration. Source: cprofile 'key_operations'."
     },
@@ -233,8 +238,8 @@
       "list": true,
       "withholdable": false,
       "requiredWhen": {
-        "attribute": "keyManagementFunction",
-        "equals": "keys-and-certificates"
+        "attribute": "managesKeys",
+        "equals": "yes"
       },
       "schemeRef": "algorithm",
       "note": "The key types the surface can generate or import, as algorithm names under the inherited scheme. This is the rule with the most value at this depth. The case it catches is ordinary: a TLS listener supports ML-DSA certificates and the product's key tool cannot create the key. Every baseline rule passes and the operator still cannot migrate. cprofile has no field for it."
@@ -249,8 +254,8 @@
       "list": true,
       "withholdable": false,
       "requiredWhen": {
-        "attribute": "keyManagementFunction",
-        "equals": "keys-and-certificates"
+        "attribute": "managesKeys",
+        "equals": "yes"
       },
       "schemeRef": "algorithm",
       "note": "Present-state counterpart of I3: the key types the surface holds in the state described. Required alongside I3 under C12, and useful on its own: it is the key population the migration has to replace."
@@ -265,8 +270,8 @@
       "list": true,
       "withholdable": false,
       "requiredWhen": {
-        "attribute": "keyManagementFunction",
-        "equals": "keys-and-certificates"
+        "attribute": "managesKeys",
+        "equals": "yes"
       },
       "note": "Formats the surface can read and write. SHOULD, because the format rarely decides the migration on its own; it matters where a format cannot carry a new key type, which is what the consumer checks it for. Source: cprofile 'supported_formats'."
     },
@@ -280,8 +285,8 @@
       "list": true,
       "withholdable": false,
       "requiredWhen": {
-        "attribute": "keyManagementFunction",
-        "equals": "keys-and-certificates"
+        "attribute": "managesKeys",
+        "equals": "yes"
       },
       "note": "Present-state counterpart of I5, required alongside it under C12: the formats in use in the state described."
     },
@@ -294,14 +299,14 @@
       },
       "withholdable": false,
       "requiredWhen": {
-        "attribute": "keyManagementFunction",
-        "equals": "keys-and-certificates"
+        "attribute": "managesKeys",
+        "equals": "yes"
       },
       "note": "Where the surface holds key material. Decides whether the new key type is a software change or waits on hardware. Source: cprofile 'store_type'."
     },
     {
       "id": "I8",
-      "attribute": "keyStoreRef",
+      "attribute": "keysStoredIn",
       "level": "SHOULD",
       "constraint": {
         "refersToLocal": {
@@ -318,14 +323,14 @@
         "attribute": "interfaceType",
         "notEquals": "management"
       },
-      "note": "For every interface other than a management interface: the management interface that manages its keys, by reference within the document, or one of three literals: 'out-of-band' where keys are provisioned outside the product, for example TLS keys supplied as files; 'product-managed' where the product generates and rotates the key itself with no operator surface, for example a cluster transport certificate (decision 0022, K6); 'none' where the interface uses no keys (K3). 'out-of-band' is a fact about the product and is not a disclosure marker: a 'withheld' marker would claim something is being held back when nothing is (decision 0022, K4). SHOULD, because some products cannot say which surface manages a given key. The value is checked to name an element of the same record, or to be one of the three literals (decision 0022, F5). That the element is a management interface with keyManagementFunction 'keys-and-certificates' is not checked. Source: cprofile 'key_management_ref'. Since R2-27 the reference may also be a BOM-Link to a key store in a record this document cites, such as an HSM's own record."
+      "note": "For every interface other than a management interface: the management interface that manages its keys, by reference within the document, or one of three literals: 'out-of-band' where keys are provisioned outside the product, for example TLS keys supplied as files; 'product-managed' where the product generates and rotates the key itself with no operator surface, for example a cluster transport certificate (decision 0022, K6); 'none' where the interface uses no keys (K3). 'out-of-band' is a fact about the product and is not a disclosure marker: a 'withheld' marker would claim something is being held back when nothing is (decision 0022, K4). SHOULD, because some products cannot say which surface manages a given key. The value is checked to name an element of the same record, or to be one of the three literals (decision 0022, F5). That the element is a management interface with managesKeys 'yes' is not checked. Source: cprofile 'key_management_ref'. Since R2-27 the reference may also be a BOM-Link to a key store in a record this document cites, such as an HSM's own record."
     },
     {
       "id": "I9",
-      "attribute": "externalDependencies",
+      "attribute": "trustServiceDependencies",
       "level": "MUST",
       "constraint": {
-        "enumRef": "externalDependencyVocabulary"
+        "enumRef": "trustServiceDependencyVocabulary"
       },
       "list": true,
       "withholdable": false,
@@ -436,6 +441,37 @@
         {
           "kind": "editorial",
           "summary": "I8 keyStoreRef may name a key store in a record the document cites, by BOM-Link, as well as an element of the same record or one of the literals (R2-27). I8 is SHOULD, so no verdict changes."
+        }
+      ]
+    },
+    {
+      "version": "0.3",
+      "date": "2026-11-27",
+      "summary": "Attribute names made clearer and consistent across the profiles (drafts/attribute-naming-review.md; decision 0028). The version is unchanged because no release has been published.",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Renamed: keyManagementFunction → managesKeys (values keys-and-certificates → yes, none → no). A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: keyStoreRef → keysStoredIn. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: externalDependencies → trustServiceDependencies. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: storageInterfaceAbsence → absent:storage-interface. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: keyStoreLocation shares one vocabulary with executionEnvironment. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "relaxing",
+          "summary": "pci-pts-hsm added to productCertificationVocabulary. A record that used the value before failed P2 and now conforms."
         }
       ]
     }

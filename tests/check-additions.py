@@ -14,7 +14,7 @@ breaks one of these facilities fails here rather than passing silently:
   the claim format             'evaluated', claim format 0.2
   what terminates an interface terminatedBy (interface-disclosure I14, MUST in deployment-disclosure v0.3)
   certification impact         change-core and pqc-migration I17 and I18 (R2-23)
-  key stores in a cited record keyStoreRef by BOM-Link (pqc-migration-extended I8, R2-27)
+  key stores in a cited record keysStoredIn by BOM-Link (pqc-migration-extended I8, R2-27)
 
 Usage:  python3 tests/check-additions.py
 Exit:   0 every check as expected, 1 otherwise
@@ -77,7 +77,7 @@ sas = load(os.path.join(EX, SAS))
 
 # references inside a record
 b = copy.deepcopy(sas)
-set_prop(b, "ied1:tls-mms", "keyProvider", "sys:enrolment-servce")
+set_prop(b, "ied1:tls-mms", "keysProvidedBy", "sys:enrolment-servce")
 v, f, _ = evaluate(b, SYS, CITED)
 report(f == ["ied1:tls-mms/system-disclosure#I3"],
        "a key provider that names no element of the record fails system-disclosure I3", f)
@@ -201,18 +201,18 @@ EXT = os.path.join(M, "profile-pqc-migration-extended.rules.json")
 kc = load(os.path.join(EX, "cbom-keycloak-product.cdx.json"))
 ied_key = V.doc_key(ied)
 b = copy.deepcopy(kc)
-set_prop(b, "service:sto-realm-keys", "keyStoreRef", ied_key + "#sto-keys")
+set_prop(b, "service:sto-realm-keys", "keysStoredIn", ied_key + "#sto-keys")
 _, _, rep = evaluate(b, EXT, ["cbom-ot-protection-ied-product.cdx.json"])
 r = i8(rep, "service:sto-realm-keys")
 report(r is not None and not r["ok"],
-       "keyStoreRef into a record the document does not cite fails", r)
+       "keysStoredIn into a record the document does not cite fails", r)
 b["externalReferences"] = (b.get("externalReferences") or []) + [
     {"type": "bom", "url": ied_key,
      "properties": [{"name": P + "context", "value": "cited-document"}]}]
 _, _, rep = evaluate(b, EXT, ["cbom-ot-protection-ied-product.cdx.json"])
 r = i8(rep, "service:sto-realm-keys")
-report(r is not None and r["ok"], "keyStoreRef may name a key store in a cited record", r)
-set_prop(b, "service:sto-realm-keys", "keyStoreRef", ied_key + "#no-such-store")
+report(r is not None and r["ok"], "keysStoredIn may name a key store in a cited record", r)
+set_prop(b, "service:sto-realm-keys", "keysStoredIn", ied_key + "#no-such-store")
 _, _, rep = evaluate(b, EXT, ["cbom-ot-protection-ied-product.cdx.json"])
 r = i8(rep, "service:sto-realm-keys")
 report(r is not None and not r["ok"], "the key store must exist in the cited record", r)

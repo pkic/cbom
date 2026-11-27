@@ -33,7 +33,7 @@ The draft covers three kinds of subject:
 
 Two boundaries are drawn with other documents:
 
--   **Cloud key management belongs here, and key custody stays in the SaaS document.** A service whose purpose is to hold and use keys for others is described in this document, with the profiles of chapter 8. The SaaS document keeps the customer's view of key custody in every other service: who holds the keys that protect a customer's data in a collaboration or database service. Where such a service relies on a key management service, its record names that service with `externalKeyService`, and the key management service has its own record under this document. The two documents therefore meet at one reference and do not overlap.
+-   **Cloud key management belongs here, and key custody stays in the SaaS document.** A service whose purpose is to hold and use keys for others is described in this document, with the profiles of chapter 8. The SaaS document keeps the customer's view of key custody in every other service: who holds the keys that protect a customer's data in a collaboration or database service. Where such a service relies on a key management service, its record names that service with `keysHeldBy`, and the key management service has its own record under this document. The two documents therefore meet at one reference and do not overlap.
 
 -   **Software key vaults are included.** Many estates hold their keys in a software vault, either alone or in front of an HSM. The questions a buyer asks are the same: which algorithms the vault supports, how its keys are protected, and whether the keys can move. Only validation differs. The key hierarchy records where the hierarchy is rooted: `hardware-root` where a hardware module protects the top key, and `software-root` where it is protected in software. A reader can therefore tell a vault with a hardware root from one without.
 
@@ -65,7 +65,7 @@ PKI Consortium Publications 1 to 3 define all of this in full. This draft uses o
 
 **Key hierarchies set the order of a migration.** An HSM holds a master key, which protects the keys stored outside the module, which in turn protect the keys that applications use. If the algorithm that wraps one level is deprecated, every key below that level has to be re-wrapped or re-issued. A buyer therefore needs to know the hierarchy before planning anything else, and the key hierarchy depth records it (8.2).
 
-**Validation lags capability.** A vendor can add a post-quantum algorithm in firmware months or years before that firmware is validated under FIPS 140-3. Until it is, a buyer who needs validated cryptography can use the algorithm only outside the validated mode, if at all. The methodology already records this per purpose, with `validatedModeAvailability`, and per interface, with `certificationImpact` and `certificationScheme`. The FIPS 140-2 certificates moved to the CMVP Historical list on 21 September 2026. Modules validated only under FIPS 140-2 can still be used in existing systems, but not cited for new ones.
+**Validation lags capability.** A vendor can add a post-quantum algorithm in firmware months or years before that firmware is validated under FIPS 140-3. Until it is, a buyer who needs validated cryptography can use the algorithm only outside the validated mode, if at all. The methodology already records this per purpose, with `validatedModeAvailability`, and per interface, with `certificationImpact` and `impactedCertification`. The FIPS 140-2 certificates moved to the CMVP Historical list on 21 September 2026. Modules validated only under FIPS 140-2 can still be used in existing systems, but not cited for new ones.
 
 **Applications and operators use different interfaces.** Applications reach an HSM through PKCS #11, KMIP or a vendor's host command set. Operators reach it through a management console, custodian smart cards and key ceremonies. The two are different interfaces with different cryptography, and they migrate at different times. A record that describes only the application interface misses the keys that protect the HSM itself.
 
@@ -136,9 +136,9 @@ The two drafted profiles are in [`drafts/hsm-product/`](../../drafts/hsm-product
 
 ### 8.1 HSM Product (drafted)
 
-HSM Product extends PQC Migration Extended, which already carries key management, key stores, module validation and certification impact. It makes four inherited rules mandatory: `certificationImpact`, `certificationScheme`, `keyStoreFormatsSupported` and `keyStoreRef`. It adds two facts that no inherited rule could carry:
+HSM Product extends PQC Migration Extended, which already carries key management, key stores, module validation and certification impact. It makes four inherited rules mandatory: `certificationImpact`, `impactedCertification`, `keyStoreFormatsSupported` and `keysStoredIn`. It adds two facts that no inherited rule could carry:
 
--   **`hsmApproval`**: the PCI PTS HSM approval, or `none`. PCI PTS HSM is a device approval, not a module validation, so the module validation vocabulary does not hold it, and a derived profile may not widen an inherited vocabulary.
+-   **`productCertificationScheme`**: the PCI PTS HSM approval, or `none`. PCI PTS HSM is a device approval, not a module validation, so the module validation vocabulary does not hold it, and a derived profile may not widen an inherited vocabulary.
 
 -   **`keyBlockFormatsSupported`**: the key block formats the HSM can import and export, from X9.143, TR-31, ISO 20038, a proprietary format or none. Payment key blocks bind each key to its permitted usage, and they are not key store files such as PKCS #12.
 
@@ -146,7 +146,7 @@ A signing module needs one more fact, which this draft proposes for the next ver
 
 ### 8.2 HSM Key Hierarchy (drafted)
 
-HSM Key Hierarchy is a depth of HSM Product. On every key store it adds `protectedBy`, the store whose key protects this one, and `keyBlockFormat`, the format of the key blocks in the store. Following `protectedBy` from any store reaches the root, which is `hardware-root` for a hardware module and `software-root` for a vault without one.
+HSM Key Hierarchy is a depth of HSM Product. On every key store it adds `protectedBy`, the store whose key protects this one, and `keyBlockFormats`, the format of the key blocks in the store. Following `protectedBy` from any store reaches the root, which is `hardware-root` for a hardware module and `software-root` for a vault without one.
 
 ### 8.3 HSM Deployment (proposed)
 
@@ -253,7 +253,7 @@ The financial services document describes AWS Payment Cryptography as a service 
 
 | Position | Chapter |
 |---|---|
-| A service whose purpose is to hold and use keys for others is described in this document. The SaaS document keeps key custody in other services, and the two meet at `externalKeyService`. | 1 |
+| A service whose purpose is to hold and use keys for others is described in this document. The SaaS document keeps key custody in other services, and the two meet at `keysHeldBy`. | 1 |
 | Software key vaults are included. The key hierarchy records whether its root is in hardware or in software. | 1, 8.2 |
 | The PCI PTS HSM approval is a device approval, recorded separately from module validation. | 8.1 |
 | Payment key block formats are recorded separately from key store formats. | 8.1 |

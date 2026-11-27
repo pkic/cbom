@@ -153,9 +153,9 @@ Release 1 publishes the component profile as PQC Migration for substation compon
 | Rule             | Requirement                                                                                                                                                                                                                                                                                 | Level  |
 |------------------------|--------------------------------------------------------------|---------------|
 | change-core\#I17 | `certificationImpact` on every interface except a peer interface: `none`, `retest`, `recertification`, or `not-applicable` where no capability is planned | MUST   |
-| change-core\#I18 | `certificationScheme` where the impact is a re-test or a re-certification                                                                                                                                                                                         | SHOULD |
-| I3               | `keyStoreRef` on every service interface, naming the interface that delivers or holds its keys                                                                                                                                                                    | MUST   |
-| I4               | `verifierReplaceable` on every interface that carries updates: `yes`, `via-bootloader-update` or `no`                                                                               | MUST   |
+| change-core\#I18 | `impactedCertification` where the impact is a re-test or a re-certification                                                                                                                                                                                         | SHOULD |
+| I3               | `keysStoredIn` on every service interface, naming the interface that delivers or holds its keys                                                                                                                                                                    | MUST   |
+| I4               | `verifierReplaceable` on every interface that carries updates: `in-field`, `bootloader-update` or `not-replaceable`                                                                               | MUST   |
 
 The change core already supplies the update path: `updateMechanism` for the product and each management interface, `updateAuthority` where an interface carries updates, and `keyReplaceable` on storage.
 
@@ -170,8 +170,8 @@ The profile's subject is one system design, not a site. A system record cites th
 | Rule | Requirement                                                                                                                                                                                                   | Level  |
 |-----------|------------------------------------------------------------------------|-----------------|
 | S1   | Cite every product record by link and digest                                                                                                                                                                  | MUST   |
-| S2   | State `usage` for every interface of every cited product: `in-use`, `disabled` or `not-connected`     | MUST   |
-| S3   | Declare the zones, and name the conduit each path between zones crosses with `conduitRef`                                                                                           | MUST   |
+| S2   | State `designUse` for every interface of every cited product: `in-use`, `disabled` or `not-connected`     | MUST   |
+| S3   | Declare the zones, and name the conduit each path between zones crosses with `crossesConduit`                                                                                           | MUST   |
 | S4   | For every interface in use, name the system component that provides its keys or trust, or state `product` (held in the product alone) or `none` (no keys) | MUST   |
 | S5   | State the IEC 62443-3-3 security level of the system as delivered                                                                                                                                             | SHOULD |
 
@@ -186,20 +186,20 @@ There is no object for a connection between devices. A conduit is an interface o
 | Rule | Rules file               | Attribute                                                                                                                                                                                                         |
 |--------|----------------------------------|----------------------------------------------------------|
 | S1   | system-disclosure P1, I1 | the citations, each with its digest; `correspondsTo`                                                                                                                                    |
-| S2   | system-disclosure P2, I2 | `usage`; each interface of a cited record matched by a `correspondsTo`                                                                                        |
-| S3   | ot-system P1, I1, I2, I3 | `zones` on the system; `zone` and `zonePath` on each interface; `conduitRef` where the path crosses zones |
-| S4   | system-disclosure I3     | `keyProvider` on each interface in use                                                                                                                                                  |
-| S5   | ot-system P2             | `claimedLevel62443`, from `SL-C 1` to `SL-C 4`                                                                                      |
+| S2   | system-disclosure P2, I2 | `designUse`; each interface of a cited record matched by a `correspondsTo`                                                                                        |
+| S3   | ot-system P1, I1, I2, I3 | `zones` on the system; `zone` and `zonePath` on each interface; `crossesConduit` where the path crosses zones |
+| S4   | system-disclosure I3     | `keysProvidedBy` on each interface in use                                                                                                                                                  |
+| S5   | ot-system P2             | `claimedSecurityLevel`, from `sl-c-1` to `sl-c-4`                                                                                      |
 
 Writing the rules showed four things. Three of them led to new checks in the reference evaluator for Release 1.
 
--   S4 asks every interface in use where its keys or trust come from. `keyProvider` names a component of the same record, or states `product` or `none`. The evaluator checks this with `refersToLocal`.
+-   S4 asks every interface in use where its keys or trust come from. `keysProvidedBy` names a component of the same record, or states `product` or `none`. The evaluator checks this with `refersToLocal`.
 
--   The methodology rejects attribute names that suggest a judgement, and `securityLevel` is one. The attribute for S5 is `claimedLevel62443`: the record reports the integrator's claim and judges nothing.
+-   The methodology rejects attribute names that suggest a judgement, and `securityLevel` is one. The attribute for S5 is `claimedSecurityLevel`: the record reports the integrator's claim and judges nothing.
 
 -   S2 asks that every interface of every cited product is listed. The product rule `coversCitedInterfaces` reads each cited record and fails if one of its interfaces has no `correspondsTo` pointing at it. With `--cited-profile`, the evaluator also reports each cited record's verdict beside the system record's.
 
--   An interface's `zone` must be one of the system's `zones`, which `inSubjectList` checks. A `conduitRef` must name a component of the same record, which `refersToLocal` checks.
+-   An interface's `zone` must be one of the system's `zones`, which `inSubjectList` checks. A `crossesConduit` must name a component of the same record, which `refersToLocal` checks.
 
 The first system record is the reference substation (chapter 11). It cites two product records: the protection IED, and lib60870, which the substation gateway embeds (12.1). It lists their thirteen interfaces. Nine are in use. Sampled values and IEC 60870-5-101 are `not-connected`, and the design turns off the firmware update interface and IEC 60870-5-104 without TLS. Three paths cross from the station bus to the control centre, all through the substation gateway: certificate enrolment, remote engineering and IEC 60870-5-104 over TLS. GOOSE and the GDOI interface name the station server's group key server as their key provider. TLS, MMS, enrolment, engineering and the IEC 104 link name the enrolment service. The record conforms to the baseline, System Disclosure and `ot-system`. Two variants fail: one has no conduit on the enrolment path, and one has no key provider on GOOSE.
 
@@ -276,12 +276,12 @@ The record names Mbed TLS 3.6.0 as the implementing library of `tls-mms` and `sv
 |-------------------------|----------------------|-----------------------------------------------------|
 | Interface Enumeration                   | Conforms         |                                                                                                                                          |
 | Interface Disclosure Baseline           | Conforms         | P2 is met by the stated absence. R5 is met by the pointers to `tls_config.h` and the R-session source.        |
-| Change core                             | Does not conform | No capability per purpose, enablement method or coexistence, and no update mechanism. Public source cannot state the maintainer's plans. |
+| Change core                             | Does not conform | No capability per purpose, enablement method or transition mode, and no update mechanism. Public source cannot state the maintainer's plans. |
 | PQC Migration for substation components | Does not conform | The change core's failures, plus `certificationImpact`                                                         |
 
 A record written from public source stops at the baseline. The change-planning facts come from the maintainer, or from the supplier of a device that embeds the library.
 
-MMS, GOOSE and SV use no key at all. The record states their `keyStoreRef` as `none`, the literal PQC Migration Extended already defines for an interface that uses no keys, and the component profile's rule I3 accepts it.
+MMS, GOOSE and SV use no key at all. The record states their `keysStoredIn` as `none`, the literal PQC Migration Extended already defines for an interface that uses no keys, and the component profile's rule I3 accepts it.
 
 ### 10.4 What a planner can already see
 
@@ -293,7 +293,7 @@ MMS, GOOSE and SV use no key at all. The record states their `keyStoreRef` as `n
 
 -   The default minimum key length is 1,024 bits, and TLS 1.2 renegotiation, including legacy renegotiation, is on. These are findings for a configured record and a policy, not for migration.
 
--   R-GOOSE keys come from the application. The key plane lives outside the library, which the record states with `keyStoreRef` set to `out-of-band`.
+-   R-GOOSE keys come from the application. The key plane lives outside the library, which the record states with `keysStoredIn` set to `out-of-band`.
 
 None of this needed the maintainer. What the record cannot show is whether the maintainer plans post-quantum support, and when.
 
@@ -419,7 +419,7 @@ The working group adopted these positions provisionally on 16 November 2026, wit
 |-----------------------------------------------------------|-----------------------------------------|
 | The OT use case is the substation automation system, named by its decision.                                                                        | 11                              |
 | It has two profiles: the component profile, published in Release 1 and extending the change core, and the system profile, ot-system, drafted here. | 8                               |
-| The data plane and the key plane are separate interfaces, linked by `keyStoreRef`.                                       | 3, 8                            |
+| The data plane and the key plane are separate interfaces, linked by `keysStoredIn`.                                       | 3, 8                            |
 | Real-time limits are integration constraints, not a new attribute.                                                                                 | 3, 8                            |
 | A conduit is an interface of the device that implements it. There is no connection object.                                                         | 8                               |
 | Values are illustrative until a supplier offers a real product.                                                                                    | 11                              |

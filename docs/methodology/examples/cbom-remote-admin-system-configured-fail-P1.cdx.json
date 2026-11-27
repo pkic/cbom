@@ -1,0 +1,473 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "NON-CONFORMING EXAMPLE, derived from cbom-remote-admin-system-configured.cdx.json. It breaks one thing: the bastion's product record is cited without a digest. Everything else is unchanged.",
+  "serialNumber": "urn:uuid:5a5a0000-0000-4000-8000-c0000000f007",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-20T10:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "operations"
+      }
+    ],
+    "supplier": {
+      "name": "Example Integrator (fictional)",
+      "url": [
+        "https://integrator.example"
+      ]
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "platform",
+        "bom-ref": "system:remote-admin-access",
+        "name": "Remote administration access, reference design",
+        "description": "Administrators reach production through an IPsec VPN gateway and then an SSH bastion. Delivered by an integrator as a reference design. Fictional.",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "system"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": {
+                  "name": "tag-uri",
+                  "description": "A tag URI (RFC 4151)."
+                },
+                "value": "tag:integrator.example,2026:system/remote-admin-access"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Integrator (fictional)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://integrator.example"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "service",
+          "bom-ref": "gw:ike",
+          "name": "Gateway IKEv2 for administrators",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "IKEv2"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:admin-workstation"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:gateway"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ECP-256 (group 19)"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "ML-KEM-768 (additional key exchange, RFC 9370)"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:e8a7e000-0000-4000-8000-430000000001/1#ike"
+            },
+            {
+              "name": "pkic:profile:designUse",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:keysProvidedBy",
+              "value": "sys:enterprise-ca"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "gw:esp",
+          "name": "Gateway ESP tunnels",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "ESP"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "RFC 4303"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:admin-workstation"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:gateway"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:e8a7e000-0000-4000-8000-430000000001/1#esp"
+            },
+            {
+              "name": "pkic:profile:designUse",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:keysProvidedBy",
+              "value": "product"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "gw:mgmt-https",
+          "name": "Gateway management interface",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:endpointRole:administrator",
+              "value": "endpoint:bastion"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:gateway"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "X25519MLKEM768"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:e8a7e000-0000-4000-8000-430000000001/1#mgmt-https"
+            },
+            {
+              "name": "pkic:profile:designUse",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:keysProvidedBy",
+              "value": "sys:enterprise-ca"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "gw:sto-hsm",
+          "name": "Gateway HSM key store",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "AES-256-KWP"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:e8a7e000-0000-4000-8000-430000000001/1#sto-hsm"
+            },
+            {
+              "name": "pkic:profile:designUse",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:keysProvidedBy",
+              "value": "product"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "bastion:ssh-transport",
+          "name": "Bastion SSH",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SSH"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:admin-workstation"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:bastion"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "mlkem768x25519-sha256"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "sntrup761x25519-sha512"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "chacha20-poly1305@openssh.com"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "aes256-gcm@openssh.com"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ssh-ed25519"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0a55e100-0000-4000-8000-100000000001/1#ssh-transport"
+            },
+            {
+              "name": "pkic:profile:designUse",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:keysProvidedBy",
+              "value": "product"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "bastion:ssh-userauth",
+          "name": "Bastion administrator authentication",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SSH user authentication (RFC 4252)"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:admin-workstation"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:bastion"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "sk-ssh-ed25519@openssh.com"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0a55e100-0000-4000-8000-100000000001/1#ssh-userauth"
+            },
+            {
+              "name": "pkic:profile:designUse",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:keysProvidedBy",
+              "value": "sys:admin-security-keys"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "bastion:sto-hostkeys",
+          "name": "Bastion host key file",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0a55e100-0000-4000-8000-100000000001/1#sto-hostkeys"
+            },
+            {
+              "name": "pkic:profile:designUse",
+              "value": "in-use"
+            },
+            {
+              "name": "pkic:profile:keysProvidedBy",
+              "value": "product"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sys:enterprise-ca",
+          "name": "Enterprise certificate authority",
+          "description": "Issues the gateway's IKE and management certificates and the administrators' client certificates. ECDSA P-256 today; the gateway cannot authenticate with ML-DSA until the CA issues ML-DSA certificates."
+        },
+        {
+          "type": "device",
+          "bom-ref": "sys:admin-security-keys",
+          "name": "Administrators' FIDO2 security keys",
+          "description": "Hold the administrators' sk-ssh-ed25519 keys. No post-quantum signature exists for them."
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "system:remote-admin-access",
+      "dependsOn": [
+        "gw:ike",
+        "gw:esp",
+        "gw:mgmt-https",
+        "gw:sto-hsm",
+        "bastion:ssh-transport",
+        "bastion:ssh-userauth",
+        "bastion:sto-hostkeys",
+        "sys:enterprise-ca",
+        "sys:admin-security-keys"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:e8a7e000-0000-4000-8000-430000000001/1",
+      "comment": "The VPN gateway's product record (fictional ExampleGate 4.3.0).",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e684e9db638748ada08177de20b18da5a8376442371da10785be7a5d8022e470"
+        }
+      ]
+    },
+    {
+      "type": "bom",
+      "url": "urn:cdx:0a55e100-0000-4000-8000-100000000001/1",
+      "comment": "The bastion's product record (OpenSSH 10.0p2).",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ]
+    }
+  ]
+}

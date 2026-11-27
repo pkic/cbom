@@ -7,7 +7,7 @@
     "file": "policy-edge-posture.policy.json",
     "digest": {
       "alg": "SHA-256",
-      "value": "c60e1aee74e66ae81979033acc8f15ca96d527cb57c77483d2a2fe25641f61c8"
+      "value": "f262b906b62451dd29c51adf63209002a01f8c60d463487e3ca32313c7509649"
     },
     "classificationSource": {
       "setId": "pkic.example.classification.algorithms",
@@ -30,7 +30,7 @@
       "stage": "implemented",
       "digest": {
         "alg": "SHA-256",
-        "value": "ed6d9b210f77f5817ba79dffd65ec7b21425ae5a2a978332ceff5c043c980edc"
+        "value": "1f1eb1d84e94ddd3134a8b72fcc1d126181afe81efdbb25c279090f302c9e59c"
       }
     },
     {
@@ -42,7 +42,7 @@
       "stage": "configured",
       "digest": {
         "alg": "SHA-256",
-        "value": "948bf083ca9d4920aaa4f9c3bff746faab973c9fb446a65b35449a35ce35dc41"
+        "value": "bb9d7131feae768377187fdadbda92e78cc700daa4a6abf390a321af646dd688"
       }
     },
     {
@@ -54,7 +54,7 @@
       "stage": "observed",
       "digest": {
         "alg": "SHA-256",
-        "value": "d235a61efd781bd491261b42c88cb6f423499addc4c4a0a9e8ad8a2a226a09de"
+        "value": "cde255c6e5f1044a52364134e9a1d5890b2e8d233035ce24511e200e44f6ddb8"
       }
     },
     {
@@ -66,7 +66,7 @@
       "stage": "configured",
       "digest": {
         "alg": "SHA-256",
-        "value": "f7334a89de00be112132b4e417fab1c6eea7812367864fce34c15ae2d8c1b857"
+        "value": "bfffbc7791f1486cfa14282e5308375ef1ca8c1094448cc12200eddc47f80a5a"
       }
     }
   ],
@@ -125,7 +125,7 @@
       "limitedBy": "tag:example.org,2026:deployment/sso-prod#crypto:protocol:int-db",
       "productCapability": {
         "capabilityStatus": "planned",
-        "blockedBy": "provider",
+        "blockedBy": "crypto-library",
         "roadmapRef": "https://openjdk.org/jeps/527"
       },
       "class": "limited-by-end"

@@ -11,8 +11,8 @@ Run `python3 build.py` in this folder to regenerate the examples.
 
 | File | Extends | Adds |
 | --- | --- | --- |
-| `profile-hsm-product.rules.json` | PQC Migration Extended v0.3 | P1 `hsmApproval` (`pci-pts-hsm` or `none`), P2 `hsmApprovalRef` (SHOULD); on management interfaces that handle keys, I1 `keyBlockFormatsSupported` and I2 `keyBlockFormats` (SHOULD), from `x9.143`, `tr-31`, `iso-20038`, `proprietary`, `none`. Raises four inherited rules to MUST: `certificationImpact` and `certificationScheme` (pqc-migration I17, I18), `keyStoreFormatsSupported` and `keyStoreRef` (pqc-migration-extended I5, I8) |
-| `profile-hsm-key-hierarchy.rules.json` | HSM Product v0.1 | On every storage interface: I3 `protectedBy`, the store whose key protects this one, or `hardware-root`, or `software-root` for a vault without a hardware module; I4 `keyBlockFormat`, the format of the key blocks in the store |
+| `profile-hsm-product.rules.json` | PQC Migration Extended v0.3 | P1 `productCertificationScheme` (`pci-pts-hsm` or `none`), P2 `productCertificationRef` (SHOULD); on management interfaces that handle keys, I1 `keyBlockFormatsSupported` and I2 `keyBlockFormats` (SHOULD), from `x9-143`, `tr-31`, `iso-20038`, `proprietary`, `none`. Raises four inherited rules to MUST: `certificationImpact` and `impactedCertification` (pqc-migration I17, I18), `keyStoreFormatsSupported` and `keysStoredIn` (pqc-migration-extended I5, I8) |
+| `profile-hsm-key-hierarchy.rules.json` | HSM Product v0.1 | On every storage interface: I3 `protectedBy`, the store whose key protects this one, or `hardware-root`, or `software-root` for a vault without a hardware module; I4 `keyBlockFormats`, the format of the key blocks in the store |
 
 Two facts needed their own attributes rather than an inherited one:
 

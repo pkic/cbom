@@ -530,7 +530,7 @@ references:
       post-quantum mitigation is needed, on the grounds that post-quantum algorithms are not
       yet mature enough to stand alone, and sets the agenda for French security visas
       covering hybrid implementations. Bears directly on how a profile represents hybrid and
-      coexistence as facts rather than as a judgement.
+      transitionMode as facts rather than as a judgement.
 
   - id: E12
     doc: NÚKIB minimum requirements
@@ -1098,7 +1098,7 @@ references:
     tags: [ietf, hybrid, terminology]
     notes: >-
       Informational, and the agreed vocabulary for schemes combining post-quantum and
-      traditional algorithms — hybrid, composite, combiner. A profile describing coexistence
+      traditional algorithms — hybrid, composite, combiner. A profile describing transitionMode
       or hybrid capability should take its terms from here rather than coin its own.
 
   - id: S10

@@ -262,6 +262,17 @@
           "summary": "Accepts the subject types 'service' and 'system', as the interface disclosure baseline v0.10 does. P3 stays identical to the baseline's, as a sibling requires."
         }
       ]
+    },
+    {
+      "version": "0.4",
+      "date": "2026-11-27",
+      "summary": "Attribute names made clearer and consistent across the profiles (drafts/attribute-naming-review.md; decision 0028). The version is unchanged because no release has been published.",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Renamed: managementInterfaceAbsence → absent:management-interface. A record that uses the previous name no longer conforms."
+        }
+      ]
     }
   ]
 }

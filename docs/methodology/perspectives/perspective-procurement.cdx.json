@@ -112,7 +112,7 @@
         },
         {
           "expression": "$.dependencies[*].provides",
-          "nativeName": "interface-disclosure#I9 implementationPurl",
+          "nativeName": "interface-disclosure#I9 implementingLibrary",
           "relevance": "required",
           "rationale": "Every declared interface."
         },
@@ -177,8 +177,8 @@
           "rationale": "If a product states that the operator decides an algorithm, the interface points to where the operator decides it. 'deployment-defined' without this pointer tells the operator that the decision is theirs and not how to make it."
         },
         {
-          "expression": "$.externalReferences[?(@.properties[?(@.name=='pkic:profile:context' && @.value=='design-intent')])]",
-          "nativeName": "interface-disclosure#R6 design-intent",
+          "expression": "$.externalReferences[?(@.properties[?(@.name=='pkic:profile:context' && @.value=='threat-model')])]",
+          "nativeName": "interface-disclosure#R6 threat-model",
           "relevance": "optional",
           "rationale": "A threat model or design document. This is where design intention is recorded now that 'intended' is not an accepted stage: as context the record points to, not as a stage it reports."
         }

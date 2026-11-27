@@ -47,7 +47,7 @@
             "value": "every AWS Region where the service is offered; the list is not reproduced"
           },
           {
-            "name": "pkic:profile:regenerationTrigger",
+            "name": "pkic:profile:recordRefreshTrigger",
             "value": "interface-change"
           }
         ],
@@ -122,7 +122,7 @@
               "value": "unknown"
             },
             {
-              "name": "pkic:profile:disclosure:implementationPurl",
+              "name": "pkic:profile:disclosure:implementingLibrary",
               "value": "unknown"
             },
             {
@@ -174,7 +174,7 @@
               "value": "unknown"
             },
             {
-              "name": "pkic:profile:disclosure:implementationPurl",
+              "name": "pkic:profile:disclosure:implementingLibrary",
               "value": "unknown"
             },
             {
@@ -226,7 +226,7 @@
               "value": "unknown"
             },
             {
-              "name": "pkic:profile:disclosure:implementationPurl",
+              "name": "pkic:profile:disclosure:implementingLibrary",
               "value": "unknown"
             },
             {
@@ -278,7 +278,7 @@
               "value": "unknown"
             },
             {
-              "name": "pkic:profile:disclosure:implementationPurl",
+              "name": "pkic:profile:disclosure:implementingLibrary",
               "value": "unknown"
             },
             {
@@ -329,7 +329,7 @@
               "value": "unknown"
             },
             {
-              "name": "pkic:profile:disclosure:implementationPurl",
+              "name": "pkic:profile:disclosure:implementingLibrary",
               "value": "unknown"
             },
             {
@@ -380,7 +380,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:disclosure:implementationPurl",
+              "name": "pkic:profile:disclosure:implementingLibrary",
               "value": "unknown"
             },
             {
@@ -411,7 +411,7 @@
               "value": "AES-256"
             },
             {
-              "name": "pkic:profile:disclosure:implementationPurl",
+              "name": "pkic:profile:disclosure:implementingLibrary",
               "value": "unknown"
             },
             {

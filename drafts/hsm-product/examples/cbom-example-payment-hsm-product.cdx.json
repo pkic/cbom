@@ -44,18 +44,14 @@
           },
           {
             "name": "pkic:profile:productCertificationScheme",
-            "value": "none"
-          },
-          {
-            "name": "pkic:profile:hsmApproval",
             "value": "pci-pts-hsm"
           },
           {
-            "name": "pkic:profile:hsmApprovalRef",
+            "name": "pkic:profile:productCertificationRef",
             "value": "illustrative: PCI PTS HSM approval 0-00000"
           },
           {
-            "name": "pkic:profile:contextAbsent:support-lifecycle",
+            "name": "pkic:profile:absent:support-lifecycle",
             "value": "not-published"
           }
         ],
@@ -168,7 +164,7 @@
               "value": "RSA-PSS-SHA-256"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Client certificates and groups are set in the HSM's security settings"
             },
             {
@@ -176,7 +172,7 @@
               "value": "Hybrid ML-KEM key exchange is committed for firmware 5.0; ML-DSA client certificates wait for FIPS 140-3 validation of the new firmware"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "service:sto-key-db"
             },
             {
@@ -184,16 +180,16 @@
               "value": "software-update"
             },
             {
-              "name": "pkic:profile:minimumProductVersion",
+              "name": "pkic:profile:availableFromVersion",
               "value": "5.0"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "hsm"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "simultaneous"
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
             },
             {
               "name": "pkic:profile:moduleValidationScheme",
@@ -208,11 +204,11 @@
               "value": "recertification"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "FIPS 140-3 and PCI PTS HSM"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "none"
             },
             {
@@ -327,7 +323,7 @@
               "value": "ECDSA-P-384-SHA-384"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Fixed by the firmware"
             },
             {
@@ -335,8 +331,8 @@
               "value": "Key ceremonies need a quorum of custodian smart cards"
             },
             {
-              "name": "pkic:profile:keyManagementFunction",
-              "value": "keys-and-certificates"
+              "name": "pkic:profile:managesKeys",
+              "value": "yes"
             },
             {
               "name": "pkic:profile:keyOperations",
@@ -436,7 +432,7 @@
             },
             {
               "name": "pkic:profile:keyBlockFormatsSupported",
-              "value": "x9.143"
+              "value": "x9-143"
             },
             {
               "name": "pkic:profile:keyBlockFormatsSupported",
@@ -448,7 +444,7 @@
             },
             {
               "name": "pkic:profile:keyBlockFormats",
-              "value": "x9.143"
+              "value": "x9-143"
             },
             {
               "name": "pkic:profile:keyBlockFormats",
@@ -459,16 +455,16 @@
               "value": "software-update"
             },
             {
-              "name": "pkic:profile:minimumProductVersion",
+              "name": "pkic:profile:availableFromVersion",
               "value": "5.0"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "hsm"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "simultaneous"
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
             },
             {
               "name": "pkic:profile:moduleValidationScheme",
@@ -483,11 +479,11 @@
               "value": "recertification"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "FIPS 140-3 and PCI PTS HSM"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "none"
             },
             {
@@ -606,7 +602,7 @@
               "value": "RSA-PKCS1-1.5-SHA-256"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Set per terminal estate by the acquirer"
             },
             {
@@ -614,7 +610,7 @@
               "value": "No post-quantum key transport is standardised for TR-34 yet"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "service:sto-key-db"
             },
             {
@@ -622,16 +618,16 @@
               "value": "software-update"
             },
             {
-              "name": "pkic:profile:minimumProductVersion",
+              "name": "pkic:profile:availableFromVersion",
               "value": "5.0"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "hsm"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "simultaneous"
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
             },
             {
               "name": "pkic:profile:moduleValidationScheme",
@@ -646,11 +642,11 @@
               "value": "recertification"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "FIPS 140-3 and PCI PTS HSM"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "none"
             },
             {
@@ -737,7 +733,7 @@
               "value": "AES-256"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Not applicable"
             },
             {
@@ -745,7 +741,7 @@
               "value": "The local master key never leaves the HSM. It is protected by the tamper-responsive hardware."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "service:mgmt-console"
             },
             {
@@ -753,7 +749,7 @@
               "value": "hardware-root"
             },
             {
-              "name": "pkic:profile:keyBlockFormat",
+              "name": "pkic:profile:keyBlockFormats",
               "value": "proprietary"
             },
             {
@@ -761,16 +757,16 @@
               "value": "software-update"
             },
             {
-              "name": "pkic:profile:minimumProductVersion",
+              "name": "pkic:profile:availableFromVersion",
               "value": "5.0"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "hsm"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "simultaneous"
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
             },
             {
               "name": "pkic:profile:moduleValidationScheme",
@@ -785,11 +781,11 @@
               "value": "recertification"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "FIPS 140-3 and PCI PTS HSM"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "none"
             },
             {
@@ -876,7 +872,7 @@
               "value": "AES-256"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Not applicable"
             },
             {
@@ -884,7 +880,7 @@
               "value": "Working keys and zone master keys are kept on the host in X9.143 key blocks, wrapped under the local master key."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "service:mgmt-console"
             },
             {
@@ -892,24 +888,24 @@
               "value": "service:sto-lmk"
             },
             {
-              "name": "pkic:profile:keyBlockFormat",
-              "value": "x9.143"
+              "name": "pkic:profile:keyBlockFormats",
+              "value": "x9-143"
             },
             {
               "name": "pkic:profile:enablementMethod",
               "value": "software-update"
             },
             {
-              "name": "pkic:profile:minimumProductVersion",
+              "name": "pkic:profile:availableFromVersion",
               "value": "5.0"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "hsm"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "simultaneous"
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
             },
             {
               "name": "pkic:profile:moduleValidationScheme",
@@ -924,11 +920,11 @@
               "value": "recertification"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "FIPS 140-3 and PCI PTS HSM"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "none"
             },
             {

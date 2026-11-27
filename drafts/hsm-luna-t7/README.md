@@ -45,7 +45,7 @@ cannot supply:
   only classical asymmetric algorithms and states no plan, so the post-quantum status for key
   establishment, authentication and non-repudiation is unknown (R2-34).
 - **P1 and P2 (SHOULD).** The firmware has no package URL, and a general-purpose HSM has no PCI PTS HSM
-  approval reference. P2 should apply only when `hsmApproval` is not `none`.
+  approval reference. P2 should apply only when `productCertificationScheme` is not `none`.
 
 The unknowns are the protocol versions of the vendor's own protocols, the implementation's package URL, how
 a new algorithm is enabled, and whether old and new algorithms can run together.
@@ -77,5 +77,5 @@ follows section 11.1.2: the approved mode must be set with HSM policy 12, so `de
 
 1. Ask the vendor to review the record and supply the unknown facts.
 2. Write a record of the Luna Network HSM appliance that cites this one.
-3. Make hsm-product P2 conditional on `hsmApproval` not being `none`.
+3. Make hsm-product P2 conditional on `productCertificationScheme` not being `none`.
 4. Settle R2-33 and R2-34.

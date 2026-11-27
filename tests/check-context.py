@@ -97,7 +97,7 @@ def main():
 
     # VEX statements join to the SBOM, and through it to I9.
     vex = next(e["bom"] for e in reg.docs.values() if e["path"].endswith("vex.cdx.json"))
-    implementations = {i.get("implementationPurl") for i in interfaces.values()}
+    implementations = {i.get("implementingLibrary") for i in interfaces.values()}
     for v in vex.get("vulnerabilities", []):
         for a in v.get("affects", []):
             doc, ref = V.split_bomlink(a.get("ref"))
@@ -106,7 +106,7 @@ def main():
                 bad("every VEX statement names an SBOM component", "%s -> %s" % (v["id"], a.get("ref")))
             elif V.purl_of(target) not in implementations:
                 bad("the affected component implements a declared interface",
-                    "%s: %s is no interface's implementationPurl" % (v["id"], V.purl_of(target)))
+                    "%s: %s is no interface's implementingLibrary" % (v["id"], V.purl_of(target)))
     ok("%d VEX statement(s) join to SBOM components that implement declared interfaces"
        % len(vex.get("vulnerabilities", [])))
 

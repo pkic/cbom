@@ -60,7 +60,7 @@
     },
     {
       "id": "I2",
-      "attribute": "externalKeyService",
+      "attribute": "keysHeldBy",
       "level": "MUST",
       "constraint": {
         "refersToCited": {}

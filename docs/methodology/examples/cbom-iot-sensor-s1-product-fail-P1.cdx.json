@@ -1,7 +1,7 @@
 {
   "specFormat": "CycloneDX",
   "specVersion": "2.0",
-  "$comment": "NON-CONFORMING EXAMPLE. The S1 record with resourceBound left out. Fails iot-device#P1 only: the operator cannot tell a permanent 'no' from one a firmware release could change.",
+  "$comment": "NON-CONFORMING EXAMPLE. The S1 record with resourceLimits left out. Fails iot-device#P1 only: the operator cannot tell a permanent 'no' from one a firmware release could change.",
   "serialNumber": "urn:uuid:10700001-5e45-4e01-9a01-0000000000f1",
   "version": 1,
   "metadata": {
@@ -34,7 +34,7 @@
             "value": "product"
           },
           {
-            "name": "pkic:profile:managementInterfaceAbsence",
+            "name": "pkic:profile:absent:management-interface",
             "value": "no-configuration-surface"
           },
           {
@@ -46,15 +46,15 @@
             "value": "never-offered"
           },
           {
-            "name": "pkic:profile:contextAbsent:support-lifecycle",
+            "name": "pkic:profile:absent:support-lifecycle",
             "value": "not-published"
           },
           {
-            "name": "pkic:profile:contextAbsent:roadmap",
+            "name": "pkic:profile:absent:roadmap",
             "value": "not-published"
           },
           {
-            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "name": "pkic:profile:absent:vulnerability-statements",
             "value": "not-published"
           }
         ],
@@ -95,8 +95,8 @@
               "value": "not-available"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "exclusive"
+              "name": "pkic:profile:transitionMode",
+              "value": "switch-over"
             },
             {
               "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
@@ -205,7 +205,7 @@
               "value": "AES-128-CMAC"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "None: the algorithms are fixed by the LoRaWAN specification"
             },
             {
@@ -213,15 +213,15 @@
               "value": "The largest application payload is 242 bytes (EU868, highest data rate) and 51 bytes at the lowest. An ML-KEM-768 ciphertext is 1,088 bytes and an ML-DSA-44 signature 2,420 bytes, so neither fits a frame."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {
-              "name": "pkic:profile:cryptoTerminationPoint",
+              "name": "pkic:profile:terminationOptions",
               "value": "device"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "mcu-internal"
             },
             {
@@ -248,7 +248,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Not applicable"
             },
             {

@@ -20,15 +20,15 @@ Run `python3 build.py` in this folder to regenerate every file.
 
 ## Rules
 
-System Disclosure supplies the citations, the join to product interfaces, `usage` and `keyProvider`.
+System Disclosure supplies the citations, the join to product interfaces, `designUse` and `keysProvidedBy`.
 This profile adds:
 
 | Rule | Attribute | Level |
 | --- | --- | --- |
 | P1 | `services`: the services the system delivers, as the operator's service model names them | MUST |
 | I1 | `carriesService` on each interface in use: the services that depend on it, or `none` | MUST, withholdable |
-| I2 | `boundary` on each interface in use: `intra-operator` or `inter-operator` | MUST |
-| I3 | `boundaryProxy` where the connection crosses the operator boundary: the SEPP, a security gateway or the interconnect provider | MUST, withholdable |
+| I2 | `operatorBoundary` on each interface in use: `intra-operator` or `inter-operator` | MUST |
+| I3 | `proxiedBy` where the connection crosses the operator boundary: the SEPP, a security gateway or the interconnect provider | MUST, withholdable |
 
 Service levels, availability targets, customers and a criticality rating stay in the operator's
 service model, which the record joins by service name.

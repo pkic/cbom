@@ -44,10 +44,10 @@
     "crosses-zones"
   ],
   "securityLevelVocabulary": [
-    "SL-C 1",
-    "SL-C 2",
-    "SL-C 3",
-    "SL-C 4"
+    "sl-c-1",
+    "sl-c-2",
+    "sl-c-3",
+    "sl-c-4"
   ],
   "productRules": [
     {
@@ -65,7 +65,7 @@
       "description": "S5. System states the IEC 62443-3-3 capability security level its integrator claims for it as delivered",
       "level": "SHOULD",
       "constraint": {
-        "productAttribute": "claimedLevel62443",
+        "productAttribute": "claimedSecurityLevel",
         "enumRef": "securityLevelVocabulary"
       },
       "withholdable": true,
@@ -92,14 +92,14 @@
       },
       "withholdable": false,
       "requiredWhen": {
-        "attribute": "usage",
+        "attribute": "designUse",
         "equals": "in-use"
       },
       "note": "S3. Whether the connection on this interface stays in its zone or crosses into another."
     },
     {
       "id": "I3",
-      "attribute": "conduitRef",
+      "attribute": "crossesConduit",
       "level": "MUST",
       "constraint": {
         "refersToLocal": {}

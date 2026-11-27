@@ -41,15 +41,15 @@
             "value": "local-network"
           },
           {
-            "name": "pkic:profile:contextAbsent:support-lifecycle",
+            "name": "pkic:profile:absent:support-lifecycle",
             "value": "not-published"
           },
           {
-            "name": "pkic:profile:contextAbsent:roadmap",
+            "name": "pkic:profile:absent:roadmap",
             "value": "not-published"
           },
           {
-            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "name": "pkic:profile:absent:vulnerability-statements",
             "value": "not-published"
           }
         ],
@@ -106,12 +106,12 @@
               "value": "software-update"
             },
             {
-              "name": "pkic:profile:minimumProductVersion",
+              "name": "pkic:profile:availableFromVersion",
               "value": "unreleased"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "simultaneous"
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
             },
             {
               "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
@@ -187,12 +187,12 @@
               "value": "software-update"
             },
             {
-              "name": "pkic:profile:minimumProductVersion",
+              "name": "pkic:profile:availableFromVersion",
               "value": "unreleased"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "simultaneous"
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
             },
             {
               "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
@@ -312,7 +312,7 @@
               "value": "AES-GMAC"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Not applicable: one-way multicast"
             },
             {
@@ -320,7 +320,7 @@
               "value": "Layer-2 multicast with a 3 ms transfer time for trip messages (IEC 61850-5 P2/P3). A per-message signature does not fit: ML-DSA-44 signatures are 2,420 bytes. Already symmetric."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "int-gdoi"
             },
             {
@@ -387,7 +387,7 @@
               "value": "AES-GMAC"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Not applicable: one-way multicast"
             },
             {
@@ -395,7 +395,7 @@
               "value": "Layer-2 multicast within the sampling interval. Already symmetric."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "int-gdoi"
             },
             {
@@ -470,7 +470,7 @@
               "value": "ECDSA-P-384-SHA-384"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Groups and signature schemes limited to those IEC 62351-3:2023 profiles"
             },
             {
@@ -478,7 +478,7 @@
               "value": "Conformance to IEC 62351-3 permits only the groups and signature schemes it lists, and it lists no post-quantum ones."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {
@@ -486,7 +486,7 @@
               "value": "recertification"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "IEC 62443-4-2 (ISASecure CSA)"
             },
             {
@@ -545,7 +545,7 @@
               "value": "ECDSA-P-256-SHA-256"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Token signature algorithm set by the access token issuer"
             },
             {
@@ -553,7 +553,7 @@
               "value": "Carried over tls-mms. The token signature is what grants authority."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {
@@ -561,7 +561,7 @@
               "value": "retest"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "IEC 61850 conformance testing"
             },
             {
@@ -628,7 +628,7 @@
               "value": "ECDSA-P-256-SHA-256"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Set by the key server's group policy"
             },
             {
@@ -640,7 +640,7 @@
               "value": "recertification"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "IEC 62443-4-2 (ISASecure CSA)"
             },
             {
@@ -707,7 +707,7 @@
               "value": "ECDSA-P-384-SHA-384"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Certificate profile set by the enrolment service"
             },
             {
@@ -723,7 +723,7 @@
               "value": "retest"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "IEC 61850 conformance testing"
             },
             {
@@ -794,7 +794,7 @@
               "value": "ECDSA-P-384-SHA-384"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Firmware signature algorithm fixed by the bootloader"
             },
             {
@@ -819,14 +819,14 @@
             },
             {
               "name": "pkic:profile:verifierReplaceable",
-              "value": "via-bootloader-update"
+              "value": "bootloader-update"
             },
             {
               "name": "pkic:profile:certificationImpact",
               "value": "recertification"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "IEC 62443-4-2 (ISASecure CSA)"
             },
             {
@@ -897,7 +897,7 @@
               "value": "ECDSA-P-384-SHA-384"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Inherits the device TLS settings"
             },
             {
@@ -913,7 +913,7 @@
               "value": "retest"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "IEC 61850 conformance testing"
             },
             {
@@ -972,7 +972,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Not applicable"
             },
             {
@@ -1003,7 +1003,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Not applicable"
             },
             {
@@ -1019,7 +1019,7 @@
               "value": "recertification"
             },
             {
-              "name": "pkic:profile:certificationScheme",
+              "name": "pkic:profile:impactedCertification",
               "value": "IEC 62443-4-2 (ISASecure CSA)"
             },
             {

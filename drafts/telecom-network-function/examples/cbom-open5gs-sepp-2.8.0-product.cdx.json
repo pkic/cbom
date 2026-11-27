@@ -34,11 +34,11 @@
             "value": "product"
           },
           {
-            "name": "pkic:profile:managementInterfaceAbsence",
+            "name": "pkic:profile:absent:management-interface",
             "value": "configured-out-of-band"
           },
           {
-            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "name": "pkic:profile:absent:vulnerability-statements",
             "value": "not-published"
           }
         ],
@@ -177,7 +177,7 @@
               "value": "endpoint:peer-sepp"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Certificate and key from the 'tls' section of sepp.yaml; client certificate verification is off unless 'verify_client' is set"
             },
             {
@@ -189,11 +189,11 @@
               "value": "n32-c"
             },
             {
-              "name": "pkic:profile:referenceSpecification",
+              "name": "pkic:profile:governingSpecification",
               "value": "TS 33.501 13.1 and 13.5; TS 29.573"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {
@@ -277,7 +277,7 @@
               "value": "endpoint:peer-sepp"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "A separate listener and certificate may be set in the 'n32f' section"
             },
             {
@@ -289,11 +289,11 @@
               "value": "n32-f"
             },
             {
-              "name": "pkic:profile:referenceSpecification",
+              "name": "pkic:profile:governingSpecification",
               "value": "TS 33.501 13.1 and 13.5"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {
@@ -377,7 +377,7 @@
               "value": "endpoint:sepp"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "The scheme is set per server in the 'sbi' section: 'http' or 'https'"
             },
             {
@@ -389,11 +389,11 @@
               "value": "sbi"
             },
             {
-              "name": "pkic:profile:referenceSpecification",
+              "name": "pkic:profile:governingSpecification",
               "value": "TS 33.501 13.1"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {

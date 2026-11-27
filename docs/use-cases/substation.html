@@ -263,7 +263,7 @@ nav: uc-substation
 </tr>
 <tr>
 <td>Can it migrate while the other end still uses classical algorithms</td>
-<td><code>coexistence</code>, <code>negotiationControl</code></td>
+<td><code>transitionMode</code>, <code>algorithmSelection</code></td>
 <td>Baseline. One-way multicast needs a defined value: <code>not-applicable</code></td>
 </tr>
 <tr>
@@ -273,7 +273,7 @@ nav: uc-substation
 </tr>
 <tr>
 <td>Which interface delivers this interface's keys</td>
-<td><code>keyStoreRef</code></td>
+<td><code>keysStoredIn</code></td>
 <td>Extended. <strong>Promoted to MUST</strong> for group-keyed interfaces</td>
 </tr>
 <tr>
@@ -289,21 +289,21 @@ nav: uc-substation
 <tr>
 <td>Can the firmware verification algorithm change in the field</td>
 <td><code>verifierReplaceable</code></td>
-<td><strong>New</strong>. <code>yes</code>, <code>no</code> (boot ROM), <code>via-bootloader-update</code>, <code>unknown</code></td>
+<td><strong>New</strong>. <code>in-field</code>, <code>not-replaceable</code> (boot ROM), <code>bootloader-update</code>, <code>unknown</code></td>
 </tr>
 <tr>
 <td>What does enabling the capability cost in certification</td>
-<td><code>certificationImpact</code> with <code>certificationScheme</code></td>
+<td><code>certificationImpact</code> with <code>impactedCertification</code></td>
 <td><strong>New</strong>. <code>none</code>, <code>retest</code>, <code>recertification</code>, <code>unknown</code></td>
 </tr>
 <tr>
 <td>Which component interfaces are actually used</td>
-<td><code>usage</code></td>
+<td><code>designUse</code></td>
 <td>System document. <strong>New</strong>. <code>in-use</code>, <code>disabled</code>, <code>not-connected</code></td>
 </tr>
 <tr>
 <td>Which conduit carries an inter-zone path, and which interface implements it</td>
-<td><code>conduitRef</code></td>
+<td><code>crossesConduit</code></td>
 <td>System document. <strong>New</strong></td>
 </tr>
 </tbody>
@@ -341,12 +341,12 @@ nav: uc-substation
 </tr>
 <tr>
 <td>I2</td>
-<td><code>certificationScheme</code> where the impact is a re-test or a re-certification</td>
+<td><code>impactedCertification</code> where the impact is a re-test or a re-certification</td>
 <td>SHOULD</td>
 </tr>
 <tr>
 <td>I3</td>
-<td><code>keyStoreRef</code> on every service interface, naming the interface that delivers or holds its keys</td>
+<td><code>keysStoredIn</code> on every service interface, naming the interface that delivers or holds its keys</td>
 <td>MUST</td>
 </tr>
 <tr>
@@ -375,12 +375,12 @@ nav: uc-substation
 </tr>
 <tr>
 <td>S2</td>
-<td>State <code>usage</code> for every interface of every referenced component</td>
+<td>State <code>designUse</code> for every interface of every referenced component</td>
 <td>MUST</td>
 </tr>
 <tr>
 <td>S3</td>
-<td>Declare zones, and for each inter-zone path name the conduit with <code>conduitRef</code></td>
+<td>Declare zones, and for each inter-zone path name the conduit with <code>crossesConduit</code></td>
 <td>MUST</td>
 </tr>
 <tr>
@@ -398,7 +398,7 @@ nav: uc-substation
 </div>
 <p><strong>Dependencies:</strong></p>
 <ul>
-<li>The update-path attributes are now part of the change core, so the IoT profile uses them too. A hard limit, such as a frame size fixed by a radio standard, is recorded with <code>resourceBound</code>, and both profiles use it.</li>
+<li>The update-path attributes are now part of the change core, so the IoT profile uses them too. A hard limit, such as a frame size fixed by a radio standard, is recorded with <code>resourceLimits</code>, and both profiles use it.</li>
 <li>The overlay's verdict covers the integrator's own statements. The verdict on each component document is reported beside it.</li>
 <li>The scope declaration must accept a whole system, not only a product, as the subject of a CBOM.</li>
 </ul>
@@ -428,7 +428,7 @@ nav: uc-substation
     </svg>
     <figcaption>Two kinds of document. Each supplier describes one product, which it can see in full. The integrator describes how the products are put together, and cites the supplier documents rather than repeating them. The system verdict covers the integrator's statements, and each component's own verdict is reported beside it, including a component that conforms to no profile.</figcaption>
   </figure>
-<p><strong>No edge object.</strong> An edge object would treat a path between devices as an object with its own facts. The methodology does not define one. The methodology represents a connection as the join of its two ends, through a <code>peerInterface</code> pointer in a deployment record, and leaves facts about a whole path to the inventory. In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so this use case needs no more than that join. A fact that belongs to the path itself, such as an end-to-end GOOSE transfer time, would need more. That fact is an operator requirement, so it stays out of the profiles.</p>
+<p><strong>No edge object.</strong> An edge object would treat a path between devices as an object with its own facts. The methodology does not define one. The methodology represents a connection as the join of its two ends, through a <code>connectsTo</code> pointer in a deployment record, and leaves facts about a whole path to the inventory. In a substation every conduit is implemented by a device: a firewall, a VPN router or a gateway. A conduit's cryptography is therefore a fact on that device's interface, so this use case needs no more than that join. A fact that belongs to the path itself, such as an end-to-end GOOSE transfer time, would need more. That fact is an operator requirement, so it stays out of the profiles.</p>
 <h2>5. The worked example</h2>
 <p>The worked example is a reference SAS. It uses generic components, and its values are taken from the profiles in the published standards. Every value is marked illustrative until a supplier volunteers a real product.</p>
 <p><strong>Published record.</strong> The protection IED is published as <a href="../methodology/examples/cbom-ot-protection-ied-product.cdx.json"><code>examples/cbom-ot-protection-ied-product.cdx.json</code></a>, built by <code>tools/build_ot_examples.py</code>. It conforms to the entry profile, the baseline, the change core and <code>pqc-migration-ot</code>. Two variants each fail one rule: <a href="../methodology/examples/cbom-ot-protection-ied-product-fail-core-I13.cdx.json"><code>-fail-core-I13</code></a> leaves <code>updateMechanism</code> off the enrolment interface, and <a href="../methodology/examples/cbom-ot-protection-ied-product-fail-ot-I4.cdx.json"><code>-fail-ot-I4</code></a> leaves <code>verifierReplaceable</code> off the firmware update interface. The other components are described below and are not yet published.</p>
@@ -576,22 +576,22 @@ nav: uc-substation
 <h2>7. Expressing it in CycloneDX</h2>
 <ul>
 <li><strong>Components are modelled as in the Keycloak use case (K7).</strong> TLS is a protocol component. GOOSE, SV, MMS, IEC 60870-5-104 and GDOI are services (in CycloneDX 2.0, components of <code>type: "service"</code>), because the CycloneDX protocol types do not include them. Each service has a dependency on the component that carries it.</li>
-<li><strong>The group-key relationship is a dependency.</strong> <code>svc-goose</code> depends on the key material, and the key material on <code>int-gdoi</code>. <code>keyStoreRef</code> points to <code>int-gdoi</code>.</li>
-<li><strong>The system document is a separate BOM.</strong> It references component BOMs through BOM-Link with a hash. <code>usage</code> and <code>conduitRef</code> are <code>pkic:profile:</code> properties.</li>
+<li><strong>The group-key relationship is a dependency.</strong> <code>svc-goose</code> depends on the key material, and the key material on <code>int-gdoi</code>. <code>keysStoredIn</code> points to <code>int-gdoi</code>.</li>
+<li><strong>The system document is a separate BOM.</strong> It references component BOMs through BOM-Link with a hash. <code>designUse</code> and <code>crossesConduit</code> are <code>pkic:profile:</code> properties.</li>
 <li><strong>CycloneDX 1.7 has no native way to express zones.</strong> In CycloneDX 2.0, the blueprint model (zones, boundaries and flows) is the candidate for expressing them. This case is the first worked use of the blueprint model, and a concrete input to the CycloneDX feedback on the edge gap.</li>
-<li><strong>Certification.</strong> In CycloneDX 2.0, <code>certificationScheme</code> maps to <code>certifications</code>. In 1.7 it is a property, in the same way as module validation.</li>
+<li><strong>Certification.</strong> In CycloneDX 2.0, <code>impactedCertification</code> maps to <code>certifications</code>. In 1.7 it is a property, in the same way as module validation.</li>
 </ul>
 <h2>8. Positions and what is carried forward</h2>
 <p><strong>Positions.</strong> Adopted provisionally on 16 November 2026, with the two design questions below.</p>
 <ul>
 <li><strong>O1.</strong> The OT use case is the substation automation system, named by its decision.</li>
 <li><strong>O2.</strong> Two profiles: a component profile extending the change core, and a system overlay.</li>
-<li><strong>O3.</strong> The data plane and the key plane are separate interfaces, linked by <code>keyStoreRef</code>, which the component profile requires on every service interface.</li>
+<li><strong>O3.</strong> The data plane and the key plane are separate interfaces, linked by <code>keysStoredIn</code>, which the component profile requires on every service interface.</li>
 <li><strong>O4.</strong> Real-time limits are integration constraints, not a new attribute.</li>
 <li><strong>O5.</strong> A conduit is an interface of the device that implements it. Connections are joined through deployment records; there is no edge object.</li>
 <li><strong>O6.</strong> Values are illustrative until a supplier volunteers a product.</li>
 <li><strong><code>certificationImpact</code></strong> is a component fact. The supplier states what enabling a capability would trigger for its product. The operator's own type approval stays in the operator's register.</li>
-<li><strong><code>usage</code></strong> stays in the system overlay.</li>
+<li><strong><code>designUse</code></strong> stays in the system overlay.</li>
 <li><strong>The system subject.</strong> A <code>system</code> subject type names one system design. Only the system overlay accepts it. An estate of sites stays outside profiles.</li>
 </ul>
 <p><strong>What the findings rest on.</strong> Checked on 16 November 2026. IEC 62351-9:2023 provides no post-quantum measures yet, so GDOI over IKEv1 stays the profiled key plane. G-IKEv2 is RFC 9838 (November 2025), which obsoletes RFC 6407. ML-KEM for IKEv2 has been approved and is in the RFC Editor queue, so it is not yet an RFC. No public source was found for post-quantum work on IEC 62351-3 in IEC TC 57 WG 15.</p>
@@ -599,7 +599,7 @@ nav: uc-substation
 <ul>
 <li>The <code>sas-system</code> overlay as a rules file, with the <code>system</code> subject type and the reporting of cited verdicts beside the overlay's own in the validator.</li>
 <li>Records for the bay controller, station gateway, station server and WAN router, and the system document.</li>
-<li>Whether <code>usage</code> becomes a general facility for derived CBOMs.</li>
+<li>Whether <code>designUse</code> becomes a general facility for derived CBOMs.</li>
 <li>Review by a protection IED supplier and a transmission or distribution operator.</li>
 </ul>
 <h2>Sources</h2>

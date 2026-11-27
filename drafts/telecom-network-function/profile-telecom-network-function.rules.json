@@ -69,7 +69,7 @@
     },
     {
       "id": "I2",
-      "attribute": "referenceSpecification",
+      "attribute": "governingSpecification",
       "level": "MUST",
       "constraint": {
         "present": true

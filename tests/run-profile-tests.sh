@@ -217,10 +217,10 @@ bom = load()
 bom["inventories"][0]["components"] = [c for c in entries(bom)
     if c.get("bom-ref") not in ("service:mgmt-admin", "crypto:protocol:tls-mgmt")]
 subject(bom)["properties"].append(
-    {"name": "pkic:profile:managementInterfaceAbsence", "value": "no-configuration-surface"})
+    {"name": "pkic:profile:absent:management-interface", "value": "no-configuration-surface"})
 save(bom, "cbom-noadmin.json")
 subject(bom)["properties"] = [p for p in subject(bom)["properties"]
-    if p["name"] != "pkic:profile:managementInterfaceAbsence"]
+    if p["name"] != "pkic:profile:absent:management-interface"]
 save(bom, "cbom-noadmin-silent.json")
 
 # 'not-reached' is an observer's reason, accepted only on an observed record.
@@ -228,7 +228,7 @@ bom = load()
 bom["inventories"][0]["components"] = [c for c in entries(bom)
     if c.get("bom-ref") not in ("service:mgmt-admin", "crypto:protocol:tls-mgmt")]
 subject(bom)["properties"].append(
-    {"name": "pkic:profile:managementInterfaceAbsence", "value": "not-reached"})
+    {"name": "pkic:profile:absent:management-interface", "value": "not-reached"})
 save(bom, "cbom-notreached-at-build.json")
 PY
 expect_exit   "a document that does not say what it describes fails" 1 \
@@ -398,11 +398,11 @@ for d in bom["dependencies"]:
         d["provides"] = [x for x in d["provides"] if x != "service:svc-oidc"]
 for c in bom["inventories"][0]["components"]:
     if c.get("bom-ref") == "service:svc-oidc":
-        c["properties"].append({"name": "pkic:profile:disclosure:implementationPurl", "value": "withheld"})
+        c["properties"].append({"name": "pkic:profile:disclosure:implementingLibrary", "value": "withheld"})
 json.dump(bom, open(os.path.join(sys.argv[2], "cbom-withheld.json"), "w"))
 for c in bom["inventories"][0]["components"]:
     c["properties"] = [p for p in c.get("properties", [])
-                       if p.get("name") != "pkic:profile:disclosure:implementationPurl"]
+                       if p.get("name") != "pkic:profile:disclosure:implementingLibrary"]
 json.dump(bom, open(os.path.join(sys.argv[2], "cbom-no-marker.json"), "w"))
 PY
 expect_exit   "a withheld marker satisfies the MUST"       0 "$TMP/cbom-withheld.json" "$BASE"
@@ -971,7 +971,7 @@ r=json.load(open(sys.argv[1]))
 c={f['purpose']:f for f in r['findings']}
 ke,ea=c.get('key-establishment',{}),c.get('entity-authentication',{})
 sys.exit(0 if ke.get('class')=='limited-by-end' and ke.get('limitedBy','').endswith('#crypto:protocol:int-db')
-         and ke.get('productCapability',{}).get('blockedBy')=='provider'
+         and ke.get('productCapability',{}).get('blockedBy')=='crypto-library'
          and ea.get('class')=='neither-end-permits' else 1)" "$EX/results/result-edge-posture-sso-db.json"; then
   ok "the edge posture joins the database and Keycloak ends and names Keycloak's end as the limit"
 else

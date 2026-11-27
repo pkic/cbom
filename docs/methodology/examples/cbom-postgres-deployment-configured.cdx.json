@@ -1,7 +1,7 @@
 {
   "specFormat": "CycloneDX",
   "specVersion": "2.0",
-  "$comment": "EXAMPLE CBOM, lifecycle stage 'configured'. Example Org's production PostgreSQL cluster, the database Keycloak's int-db interface connects to, recorded by the database team from its own configuration repository. Illustrative values. The server permits the hybrid group X25519MLKEM768 (PostgreSQL 18 ssl_groups, OpenSSL 3.5). The TLS interface names the client end of the connection with peerInterface: Keycloak's int-db interface in the sso-prod configured record, which this record cites by hash. Administration runs through the platform's automation, so there is no administrative listener. PostgreSQL publishes no CBOM, so the interface states 'no-product-document' and names its library here. Conforms to deployment-disclosure v0.3.",
+  "$comment": "EXAMPLE CBOM, lifecycle stage 'configured'. Example Org's production PostgreSQL cluster, the database Keycloak's int-db interface connects to, recorded by the database team from its own configuration repository. Illustrative values. The server permits the hybrid group X25519MLKEM768 (PostgreSQL 18 ssl_groups, OpenSSL 3.5). The TLS interface names the client end of the connection with connectsTo: Keycloak's int-db interface in the sso-prod configured record, which this record cites by hash. Administration runs through the platform's automation, so there is no administrative listener. PostgreSQL publishes no CBOM, so the interface states 'no-product-document' and names its library here. Conforms to deployment-disclosure v0.3.",
   "serialNumber": "urn:uuid:8b1f0c2a-3d4e-4f50-8a61-72637400db01",
   "version": 1,
   "metadata": {
@@ -43,7 +43,7 @@
             "value": "all"
           },
           {
-            "name": "pkic:profile:managementInterfaceAbsence",
+            "name": "pkic:profile:absent:management-interface",
             "value": "configured-out-of-band"
           }
         ],
@@ -218,7 +218,7 @@
               "value": "ssl_groups = 'X25519MLKEM768:X25519'; ssl_min_protocol_version = 'TLSv1.3'; hostssl only in pg_hba.conf. Server certificate RSA-2048 from the internal CA."
             },
             {
-              "name": "pkic:profile:peerInterface",
+              "name": "pkic:profile:connectsTo",
               "value": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1#crypto:protocol:int-db"
             },
             {
@@ -257,7 +257,7 @@
     {
       "type": "bom",
       "url": "urn:cdx:8b1f0c2a-3d4e-4f50-8a61-7263740c0f01/1",
-      "comment": "The configured record of the sso-prod deployment, which holds the client end of the connection this record's TLS interface names with peerInterface.",
+      "comment": "The configured record of the sso-prod deployment, which holds the client end of the connection this record's TLS interface names with connectsTo.",
       "properties": [
         {
           "name": "pkic:profile:context",
@@ -267,7 +267,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "948bf083ca9d4920aaa4f9c3bff746faab973c9fb446a65b35449a35ce35dc41"
+          "content": "bb9d7131feae768377187fdadbda92e78cc700daa4a6abf390a321af646dd688"
         }
       ]
     },
@@ -300,7 +300,7 @@
       "properties": [
         {
           "name": "pkic:profile:context",
-          "value": "issuer-policy"
+          "value": "certificate-policy"
         },
         {
           "name": "pkic:profile:accessProtocol",

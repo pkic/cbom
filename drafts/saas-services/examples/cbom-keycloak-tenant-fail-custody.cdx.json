@@ -103,7 +103,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:x25519",
-          "name": "X25519",
+          "name": "x25519",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -114,7 +114,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:secp256r1",
-          "name": "secp256r1",
+          "name": "ECDHE-secp256r1",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -125,7 +125,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:secp384r1",
-          "name": "secp384r1",
+          "name": "ECDHE-secp384r1",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -136,7 +136,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:secp521r1",
-          "name": "secp521r1",
+          "name": "ECDHE-secp521r1",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -147,7 +147,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:x448",
-          "name": "X448",
+          "name": "x448",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -158,7 +158,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:ffdhe2048",
-          "name": "ffdhe2048",
+          "name": "FFDHE-ffdhe2048",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -202,7 +202,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:ecdsa-p256",
-          "name": "ECDSA-P256-SHA256",
+          "name": "ECDSA-P-256-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -224,7 +224,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:es256",
-          "name": "ES256",
+          "name": "ECDSA-P-256-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -235,7 +235,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:rs256",
-          "name": "RS256",
+          "name": "RSA-PKCS1-1.5-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -246,7 +246,7 @@
         {
           "type": "cryptographic-asset",
           "bom-ref": "crypto:algo:rsa-sha256",
-          "name": "RSA-SHA256",
+          "name": "RSA-PKCS1-1.5-SHA-256",
           "cryptoProperties": {
             "assetType": "algorithm",
             "algorithmProperties": {
@@ -501,7 +501,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "software"
             },
             {
@@ -509,8 +509,8 @@
               "value": "not-available"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "simultaneous"
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
             },
             {
               "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
@@ -518,7 +518,7 @@
             },
             {
               "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
-              "value": "provider"
+              "value": "crypto-library"
             },
             {
               "name": "pkic:profile:capabilityByPurpose:key-establishment:roadmapRef",
@@ -603,7 +603,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "software"
             },
             {
@@ -611,8 +611,8 @@
               "value": "not-available"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "simultaneous"
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
             },
             {
               "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
@@ -713,7 +713,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "software"
             },
             {
@@ -721,7 +721,7 @@
               "value": "not-available"
             },
             {
-              "name": "pkic:profile:coexistence",
+              "name": "pkic:profile:transitionMode",
               "value": "unknown"
             },
             {
@@ -810,7 +810,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "software"
             },
             {
@@ -818,7 +818,7 @@
               "value": "not-available"
             },
             {
-              "name": "pkic:profile:coexistence",
+              "name": "pkic:profile:transitionMode",
               "value": "unknown"
             },
             {
@@ -980,7 +980,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "f925d602a8d929305b53d0220d6c4511ddbdfb2643fb0108722241b7d6c72780"
+          "content": "c1f60c430147821c3fb3f036aff7049e3502338a92fee015ba75e2a6fb4bdfea"
         }
       ]
     },

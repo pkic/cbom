@@ -99,7 +99,7 @@ INGRESS_FACTS = [
     ("protocolVersionsSupported", ["1.2", "1.3"]),
     ("keyExchangeSupported", ["X25519MLKEM768", "X25519", "ECDH-P256"]),
     ("authenticationSupported", ["ECDSA-P256-SHA256", "RSA-PSS-2048-SHA256"]),
-    ("enablementMethod", "already-enabled"), ("coexistence", "simultaneous"),
+    ("enablementMethod", "already-enabled"), ("transitionMode", "side-by-side"),
     ("capabilityByPurpose:key-establishment:capabilityStatus", "available"),
     ("capabilityByPurpose:encryption:capabilityStatus", "available"),
     ("capabilityByPurpose:entity-authentication:capabilityStatus", "under-evaluation"),
@@ -143,7 +143,7 @@ def key_custody_profile():
         "moduleValidationSchemeVocabulary": MODULE_VALIDATION,
         "productRules": [],
         "interfaceRules": [
-            {"id": "I1", "attribute": "keyStoreRef", "level": "MUST",
+            {"id": "I1", "attribute": "keysStoredIn", "level": "MUST",
              "constraint": {"refersToLocal": {"literals": ["none", "out-of-band", "product-managed"],
                                               "orCited": True}}, "withholdable": False,
              "requiredWhen": {"attribute": "interfaceType", "equals": "storage"},
@@ -231,7 +231,7 @@ def tenant_profile():
              "withholdable": False, "requiredWhen": {"attribute": "interfaceType", "equals": "storage"},
              "note": "The custody model the tenant chose for this store. It should be one the service record offers "
                      "(keyCustodySupported); the evaluator does not compare the two records."},
-            {"id": "I2", "attribute": "externalKeyService", "level": "MUST",
+            {"id": "I2", "attribute": "keysHeldBy", "level": "MUST",
              "constraint": {"refersToCited": {}}, "withholdable": False,
              "requiredWhen": {"attribute": "keyCustody", "equals": "external"},
              "note": "The interface of the tenant's own key service, in a record the tenant record cites."}],
@@ -253,7 +253,7 @@ def key_custody_record(svc, serial, with_replica=True):
     d["serialNumber"] = "urn:uuid:" + serial
     d["metadata"]["timestamp"] = STAMP
     st = comp(d, "service:sto-realm-keys")
-    setprop(st, "keyStoreRef", "service:mgmt-admin")
+    setprop(st, "keysStoredIn", "service:mgmt-admin")
     if with_replica:
         setprop(st, "replicaProtection", "same-as-primary")
     setprop(st, "moduleValidationScheme", "none")
@@ -276,7 +276,7 @@ def change_planning_record(svc, svc_hash, prod, prod_hash, serial):
     setprop(subj, "updateMechanism", "provider-managed")
     prod_url = prod["serialNumber"].replace("urn:uuid:", "urn:cdx:") + "/%d" % prod["version"]
     carry = ("protocolVersionsSupported", "keyExchangeSupported", "authenticationSupported", "enablementMethod",
-             "minimumProductVersion", "coexistence", "negotiationControl", "capabilityByPurpose:")
+             "availableFromVersion", "transitionMode", "algorithmSelection", "capabilityByPurpose:")
     for c in ifaces(d):
         corr = getprops(c, "correspondsTo")
         if corr and "#" in corr[0]["value"]:
@@ -343,7 +343,7 @@ def tenant_record(svc, svc_hash, prod, serial, with_custody=True):
     subj["description"] = "One tenant of Example Cloud managed identity (EU regions), as the tenant configured it."
     subj["identifiers"][0]["identities"][0]["value"] = "tag:customer.example,2026:deployment/identity-tenant"
     subj["parties"][0]["organization"]["name"] = "Example Customer (illustrative tenant)"
-    for n in ("serviceRegions", "regenerationTrigger"):
+    for n in ("serviceRegions", "recordRefreshTrigger"):
         delprop(subj, n)
     setprop(subj, "subjectType", "deployment")
     setprop(subj, "coverage", "all-external")

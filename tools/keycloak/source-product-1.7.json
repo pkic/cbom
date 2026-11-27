@@ -3,7 +3,7 @@
   "specVersion": "1.7",
   "serialNumber": "urn:uuid:6b3c1d2e-7a41-4c1e-9f0a-26730000b003",
   "version": 1,
-  "$comment": "EXAMPLE CBOM. Intended to CONFORM to pkic.example.pqc-migration-extended v0.1 (draft). Adds the product certification statement, the Admin API as key management surface, key-store references and external dependencies. It shows the case the extended depth exists for: token signing is committed, and the key management surface cannot yet generate an ML-DSA key. Worked example built from cprofile/Linux_Keycloak_26.7.3_cprofile.json (corrected 27 September 2026) and the sources in drafts/pqc-migration-depths/examples-keycloak-plan.md. Subject is the container image (decision 0022, K1). Transport and security protocols are cryptographic-asset protocol components. Every application protocol is a CycloneDX service, HTTPS included; every protocol component is a TLS instance (K7). A service that applies cryptography of its own (OIDC, SAML, the Admin API, brokered token verification) or has no transport protection (plain HTTP) is an interface and carries pkic:profile:interfaceType. A service that only rides TLS (HTTPS, JDBC, LDAP, SMTP, JGroups) is declared for its layering and carries no interface attributes; the TLS component under it is the interface. Layering is the dependency graph: OIDC depends on HTTPS, HTTPS on TLS; plain HTTP depends on nothing. 'none' states that no algorithm is applied for a job (K3). Implementation facts are stated once on the library that provides an interface and inherited by it (K9): module validation, provider location, enablement method, coexistence and capability by purpose. An interface states a value only where it differs, and a capability entry for one purpose replaces the provider's entry for that purpose. Each distinct TLS configuration is one protocol component without interfaceType, which the TLS interfaces reference through relatedCryptographicAssets. Native CycloneDX fields carry what they can (see drafts/pqc-migration-depths/mapping-native-fields-review.md): the implementing library by dependencies[].provides, provider location by executionEnvironment, supported TLS groups and signature schemes by cipherSuites (which list the supported set, while cryptoRefArray lists what is in use), key types, formats and wrapping by related-crypto-material components and their securedBy, and interface-set completeness by compositions. Attributes with no CycloneDX field are pkic:profile: properties. The companion SBOM reference is an illustrative BOM-Link. To verify before publication: the JDK update in the image; the SAML, cluster-transport and brokered-verification capability status; the JEP 527 backport status for the Red Hat build of JDK 21; productCertificationScheme for upstream Keycloak.",
+  "$comment": "EXAMPLE CBOM. Intended to CONFORM to pkic.example.pqc-migration-extended v0.1 (draft). Adds the product certification statement, the Admin API as key management surface, key-store references and external dependencies. It shows the case the extended depth exists for: token signing is committed, and the key management surface cannot yet generate an ML-DSA key. Worked example built from cprofile/Linux_Keycloak_26.7.3_cprofile.json (corrected 27 September 2026) and the sources in drafts/pqc-migration-depths/examples-keycloak-plan.md. Subject is the container image (decision 0022, K1). Transport and security protocols are cryptographic-asset protocol components. Every application protocol is a CycloneDX service, HTTPS included; every protocol component is a TLS instance (K7). A service that applies cryptography of its own (OIDC, SAML, the Admin API, brokered token verification) or has no transport protection (plain HTTP) is an interface and carries pkic:profile:interfaceType. A service that only rides TLS (HTTPS, JDBC, LDAP, SMTP, JGroups) is declared for its layering and carries no interface attributes; the TLS component under it is the interface. Layering is the dependency graph: OIDC depends on HTTPS, HTTPS on TLS; plain HTTP depends on nothing. 'none' states that no algorithm is applied for a job (K3). Implementation facts are stated once on the library that provides an interface and inherited by it (K9): module validation, provider location, enablement method, transitionMode and capability by purpose. An interface states a value only where it differs, and a capability entry for one purpose replaces the provider's entry for that purpose. Each distinct TLS configuration is one protocol component without interfaceType, which the TLS interfaces reference through relatedCryptographicAssets. Native CycloneDX fields carry what they can (see drafts/pqc-migration-depths/mapping-native-fields-review.md): the implementing library by dependencies[].provides, provider location by executionEnvironment, supported TLS groups and signature schemes by cipherSuites (which list the supported set, while cryptoRefArray lists what is in use), key types, formats and wrapping by related-crypto-material components and their securedBy, and interface-set completeness by compositions. Attributes with no CycloneDX field are pkic:profile: properties. The companion SBOM reference is an illustrative BOM-Link. To verify before publication: the JDK update in the image; the SAML, cluster-transport and brokered-verification capability status; the JEP 527 backport status for the Red Hat build of JDK 21; productCertificationScheme for upstream Keycloak.",
   "metadata": {
     "timestamp": "2026-09-27T12:00:00Z",
     "tools": {
@@ -84,7 +84,7 @@
           "value": "none"
         },
         {
-          "name": "pkic:profile:providerLocation",
+          "name": "pkic:profile:executionEnvironment",
           "value": "software"
         },
         {
@@ -92,8 +92,8 @@
           "value": "not-available"
         },
         {
-          "name": "pkic:profile:coexistence",
-          "value": "simultaneous"
+          "name": "pkic:profile:transitionMode",
+          "value": "side-by-side"
         },
         {
           "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
@@ -101,7 +101,7 @@
         },
         {
           "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
-          "value": "provider"
+          "value": "crypto-library"
         },
         {
           "name": "pkic:profile:capabilityByPurpose:key-establishment:roadmapRef",
@@ -176,7 +176,7 @@
           "value": "none"
         },
         {
-          "name": "pkic:profile:providerLocation",
+          "name": "pkic:profile:executionEnvironment",
           "value": "software"
         },
         {
@@ -184,8 +184,8 @@
           "value": "not-available"
         },
         {
-          "name": "pkic:profile:coexistence",
-          "value": "simultaneous"
+          "name": "pkic:profile:transitionMode",
+          "value": "side-by-side"
         },
         {
           "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
@@ -276,7 +276,7 @@
           "value": "none"
         },
         {
-          "name": "pkic:profile:providerLocation",
+          "name": "pkic:profile:executionEnvironment",
           "value": "software"
         },
         {
@@ -284,7 +284,7 @@
           "value": "not-available"
         },
         {
-          "name": "pkic:profile:coexistence",
+          "name": "pkic:profile:transitionMode",
           "value": "unknown"
         },
         {
@@ -363,7 +363,7 @@
           "value": "none"
         },
         {
-          "name": "pkic:profile:providerLocation",
+          "name": "pkic:profile:executionEnvironment",
           "value": "software"
         },
         {
@@ -371,7 +371,7 @@
           "value": "not-available"
         },
         {
-          "name": "pkic:profile:coexistence",
+          "name": "pkic:profile:transitionMode",
           "value": "unknown"
         },
         {
@@ -487,7 +487,7 @@
           "value": "1.3"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "Named groups are set by the JVM property jdk.tls.namedGroups"
         },
         {
@@ -495,15 +495,15 @@
           "value": "Server certificate and key are operator-supplied files. Carries the HTTPS service, and through it OIDC, SAML and the Admin API."
         },
         {
-          "name": "pkic:profile:keyStoreRef",
+          "name": "pkic:profile:keysStoredIn",
           "value": "out-of-band"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "certificate-authority"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "random-bit-generator"
         }
       ]
@@ -556,7 +556,7 @@
           "value": "1.3"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "Inherits the main listener TLS settings by default"
         },
         {
@@ -564,15 +564,15 @@
           "value": "Health and metrics only; the services it carries apply no cryptography of their own and are not declared separately (K7)"
         },
         {
-          "name": "pkic:profile:keyManagementFunction",
-          "value": "none"
+          "name": "pkic:profile:managesKeys",
+          "value": "no"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "certificate-authority"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "random-bit-generator"
         }
       ]
@@ -625,7 +625,7 @@
           "value": "1.3"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "TLS mode set in the JDBC URL"
         },
         {
@@ -633,15 +633,15 @@
           "value": "Driver default is opportunistic TLS without verification"
         },
         {
-          "name": "pkic:profile:keyStoreRef",
+          "name": "pkic:profile:keysStoredIn",
           "value": "out-of-band"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "certificate-authority"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "random-bit-generator"
         }
       ]
@@ -694,7 +694,7 @@
           "value": "1.3"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "JVM named groups"
         },
         {
@@ -702,19 +702,19 @@
           "value": "Directory server must also support the new groups"
         },
         {
-          "name": "pkic:profile:keyStoreRef",
+          "name": "pkic:profile:keysStoredIn",
           "value": "out-of-band"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "directory"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "certificate-authority"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "random-bit-generator"
         }
       ]
@@ -767,7 +767,7 @@
           "value": "1.3"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "JVM named groups"
         },
         {
@@ -775,19 +775,19 @@
           "value": "Carries the brokered token verification service"
         },
         {
-          "name": "pkic:profile:keyStoreRef",
+          "name": "pkic:profile:keysStoredIn",
           "value": "out-of-band"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "identity-provider"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "certificate-authority"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "random-bit-generator"
         }
       ]
@@ -840,7 +840,7 @@
           "value": "1.3"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "JVM named groups"
         },
         {
@@ -848,15 +848,15 @@
           "value": "Mail server must also support the new groups"
         },
         {
-          "name": "pkic:profile:keyStoreRef",
+          "name": "pkic:profile:keysStoredIn",
           "value": "out-of-band"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "certificate-authority"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "random-bit-generator"
         }
       ]
@@ -905,7 +905,7 @@
           "value": "1.3"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "Not configurable beyond the JVM named groups"
         },
         {
@@ -921,11 +921,11 @@
           "value": "product"
         },
         {
-          "name": "pkic:profile:keyStoreRef",
+          "name": "pkic:profile:keysStoredIn",
           "value": "product-managed"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "none"
         }
       ]
@@ -1426,7 +1426,7 @@
           "value": "HMAC-SHA-512"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "Signature algorithm is set per realm (defaultSignatureAlgorithm) and per client"
         },
         {
@@ -1434,11 +1434,11 @@
           "value": "ML-DSA-65 signed tokens exceed the 4 KB browser cookie limit; relying parties must accept the AKP JWK key type, which is still an Internet-Draft"
         },
         {
-          "name": "pkic:profile:keyStoreRef",
+          "name": "pkic:profile:keysStoredIn",
           "value": "service:mgmt-admin"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "random-bit-generator"
         }
       ]
@@ -1503,11 +1503,11 @@
           "value": "ECDSA-SHA-256"
         },
         {
-          "name": "pkic:profile:coexistence",
+          "name": "pkic:profile:transitionMode",
           "value": "unknown"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "Signature algorithm is set per client"
         },
         {
@@ -1531,11 +1531,11 @@
           "value": "standard"
         },
         {
-          "name": "pkic:profile:keyStoreRef",
+          "name": "pkic:profile:keysStoredIn",
           "value": "service:mgmt-admin"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "none"
         }
       ]
@@ -1600,7 +1600,7 @@
           "value": "none"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "Enabled only with http-enabled=true"
         },
         {
@@ -1608,11 +1608,11 @@
           "value": "Carries tokens and credentials in clear on the proxy hop"
         },
         {
-          "name": "pkic:profile:keyStoreRef",
+          "name": "pkic:profile:keysStoredIn",
           "value": "none"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "none"
         }
       ]
@@ -1685,7 +1685,7 @@
           "value": "Ed448"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "Master realm signature algorithm"
         },
         {
@@ -1693,8 +1693,8 @@
           "value": "Carried over the HTTPS listener"
         },
         {
-          "name": "pkic:profile:keyManagementFunction",
-          "value": "keys-and-certificates"
+          "name": "pkic:profile:managesKeys",
+          "value": "yes"
         },
         {
           "name": "pkic:profile:keyOperations",
@@ -1781,7 +1781,7 @@
           "value": "software"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "none"
         }
       ]
@@ -1858,7 +1858,7 @@
           "value": "Ed448"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "Accepted algorithms set per identity provider"
         },
         {
@@ -1866,11 +1866,11 @@
           "value": "The external provider chooses the signature algorithm; Keycloak can accept ML-DSA only once it can verify it"
         },
         {
-          "name": "pkic:profile:keyStoreRef",
+          "name": "pkic:profile:keysStoredIn",
           "value": "none"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "identity-provider"
         }
       ]
@@ -1905,7 +1905,7 @@
           "value": "none"
         },
         {
-          "name": "pkic:profile:negotiationControl",
+          "name": "pkic:profile:algorithmSelection",
           "value": "Not applicable"
         },
         {
@@ -1913,11 +1913,11 @@
           "value": "Key material held in the database in plaintext (#39933)"
         },
         {
-          "name": "pkic:profile:keyStoreRef",
+          "name": "pkic:profile:keysStoredIn",
           "value": "service:mgmt-admin"
         },
         {
-          "name": "pkic:profile:externalDependencies",
+          "name": "pkic:profile:trustServiceDependencies",
           "value": "none"
         }
       ]

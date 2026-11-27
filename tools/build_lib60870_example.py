@@ -87,7 +87,7 @@ GROUPS = ["x25519", "ECDH-P-256", "ECDH-P-384", "x448", "ECDH-P-521", "ECDH-brai
           "FFDHE-ffdhe6144", "FFDHE-ffdhe8192"]
 
 NONE3 = [("keyExchange", "none"), ("encryption", "none"), ("authentication", "none"),
-         ("implementationPurl", SUBJECT_PURL), ("keyStoreRef", "none")]
+         ("implementingLibrary", SUBJECT_PURL), ("keysStoredIn", "none")]
 
 SECURE_AUTH = ("integrationConstraints", "Secure authentication (IEC 60870-5-7:2013, the application-layer "
                "authentication of IEC 62351-5) is a commercial add-on. The open-source library holds only the "
@@ -101,7 +101,7 @@ def interfaces():
             ("endpointRole:client", "endpoint:peer"), ("endpointRole:server", "endpoint:embedding-application"),
             ("keyExchange", "peer-defined"), ("encryption", "peer-defined"), ("authentication", "deployment-defined"),
             ("protocolVersionsSupported", ["1.2", "1.3"]), ("keyExchangeSupported", ["RSA-PKCS1-1.5"] + GROUPS),
-            ("negotiationControl", "Cipher suites through TLSConfiguration_addCipherSuite and "
+            ("algorithmSelection", "Cipher suites through TLSConfiguration_addCipherSuite and "
                                    "_clearCipherSuiteList; minimum and maximum version through "
                                    "TLSConfiguration_setMinTlsVersion and _setMaxTlsVersion. The library has no "
                                    "function for named groups or signature schemes."),
@@ -116,7 +116,7 @@ def interfaces():
             ("integrationConstraints", "Integrated with Mbed TLS 2.28 and 3.6. The README names only 2.28, whose "
                                        "support ended at the end of 2024. The CMake build takes 2.28 when both are "
                                        "present; the Makefile takes 3.6."),
-            ("keyStoreRef", "out-of-band")],
+            ("keysStoredIn", "out-of-band")],
             refs=guidance(SRC + "src/hal/inc/tls_config.h",
                           "Where the application sets its certificate, key, CA certificates, CRLs, cipher suites "
                           "and TLS versions.")),
@@ -142,8 +142,8 @@ def product(sbom_hash):
                      "supplier": {"name": AUTHOR["name"], "url": ["https://pkic.org"]}},
         "inventories": [{"bom-ref": "inventory:subject", "subject": subject(props([
             ("coverage", "all"), ("subjectType", "product"),
-            ("managementInterfaceAbsence", "not-applicable-to-subject"),
-            ("contextAbsent:vulnerability-statements", "not-published")])),
+            ("absent:management-interface", "not-applicable-to-subject"),
+            ("absent:vulnerability-statements", "not-published")])),
             "components": [{"type": "library", "bom-ref": "lib:mbedtls", "name": "Mbed TLS",
                             "version": MBEDTLS_VERSION, "identifiers": ident(MBEDTLS_PURL)}] + interfaces()}],
         "dependencies": [{"ref": "lib:lib60870", "dependsOn": ["lib:mbedtls"]},

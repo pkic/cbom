@@ -1,0 +1,673 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "NON-CONFORMING EXAMPLE, derived from cbom-openssh-10.0p2-product.cdx.json. It breaks one thing: the host key store is left out, and no reason is given. Everything else is unchanged.",
+  "serialNumber": "urn:uuid:0a55e100-0000-4000-8000-10000000f009",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-26T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+      "url": [
+        "https://pkic.org"
+      ]
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "app:openssh",
+        "name": "OpenSSH (portable)",
+        "version": "10.0p2",
+        "description": "The OpenSSH server, sshd, from the portable release 10.0p2, linked to OpenSSL libcrypto. Described from the release notes and manual pages by the working group, not by the OpenSSH developers.",
+        "properties": [
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all-external"
+          },
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "product"
+          },
+          {
+            "name": "pkic:profile:absent:management-interface",
+            "value": "configured-out-of-band"
+          },
+          {
+            "name": "pkic:profile:productCertificationScheme",
+            "value": "none"
+          },
+          {
+            "name": "pkic:profile:absent:vulnerability-statements",
+            "value": "not-published"
+          },
+          {
+            "name": "pkic:profile:absent:support-lifecycle",
+            "value": "not-published"
+          },
+          {
+            "name": "pkic:profile:absent:roadmap",
+            "value": "not-published"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:generic/openssh-portable@10.0p2"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://pkic.org"
+                }
+              ]
+            }
+          },
+          {
+            "bom-ref": "party:supplier",
+            "roles": [
+              {
+                "role": "supplier"
+              }
+            ],
+            "organization": {
+              "name": "OpenSSH project",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://www.openssh.com"
+                }
+              ]
+            }
+          }
+        ],
+        "licenses": [
+          {
+            "license": {
+              "id": "BSD-2-Clause"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:openssl",
+          "name": "OpenSSL libcrypto",
+          "version": "3.5.4",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:github/openssl/openssl@openssl-3.5.4"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ssh-transport",
+          "name": "SSH transport layer (sshd, port 22)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SSH"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:ssh-client"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:sshd"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "peer-defined"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "peer-defined"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:implementingLibrary",
+              "value": "pkg:generic/openssh-portable@10.0p2"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "mlkem768x25519-sha256"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "sntrup761x25519-sha512"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "sntrup761x25519-sha512@openssh.com"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "curve25519-sha256"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "curve25519-sha256@libssh.org"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ecdh-sha2-nistp256"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ecdh-sha2-nistp384"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ecdh-sha2-nistp521"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ssh-ed25519"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ecdsa-sha2-nistp256"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ecdsa-sha2-nistp384"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ecdsa-sha2-nistp521"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "sk-ssh-ed25519@openssh.com"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "sk-ecdsa-sha2-nistp256@openssh.com"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "rsa-sha2-512"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "rsa-sha2-256"
+            },
+            {
+              "name": "pkic:profile:algorithmSelection",
+              "value": "KexAlgorithms, Ciphers, MACs and HostKeyAlgorithms in sshd_config."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The client's preference decides the key exchange. OpenSSH clients from 10.0 choose mlkem768x25519-sha256 by default, and sshd offers it from 9.9. A client older than 9.0 negotiates a classical key exchange."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Finite-field Diffie-Hellman methods are no longer offered by default; an operator can add them back in KexAlgorithms for old clients."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "No post-quantum signature algorithm is available for host keys or user keys."
+            },
+            {
+              "name": "pkic:profile:keysStoredIn",
+              "value": "out-of-band"
+            },
+            {
+              "name": "pkic:profile:trustServiceDependencies",
+              "value": "random-bit-generator"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "already-enabled"
+            },
+            {
+              "name": "pkic:profile:executionEnvironment",
+              "value": "software"
+            },
+            {
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "not-applicable"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:validatedModeAvailability",
+              "value": "no-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "no-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "no-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "no-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "under-evaluation"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:verifierPopulation",
+              "value": "counterparty"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:trustDomain",
+              "value": "private"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:verifierPopulation",
+              "value": "counterparty"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:trustDomain",
+              "value": "private"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ],
+          "endpoints": [
+            "ssh://{host}:22"
+          ],
+          "externalReferences": [
+            {
+              "type": "documentation",
+              "url": "https://man.openbsd.org/sshd_config",
+              "comment": "Where the operator sets HostKey, KexAlgorithms, Ciphers, MACs and HostKeyAlgorithms.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "configuration-guidance"
+                },
+                {
+                  "name": "pkic:profile:accessProtocol",
+                  "value": "web-page"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ssh-userauth",
+          "name": "SSH public key user authentication",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SSH user authentication (RFC 4252)"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:ssh-client"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:sshd"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "peer-defined"
+            },
+            {
+              "name": "pkic:profile:implementingLibrary",
+              "value": "pkg:generic/openssh-portable@10.0p2"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ssh-ed25519"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ecdsa-sha2-nistp256"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ecdsa-sha2-nistp384"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ecdsa-sha2-nistp521"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "sk-ssh-ed25519@openssh.com"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "sk-ecdsa-sha2-nistp256@openssh.com"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "rsa-sha2-512"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "rsa-sha2-256"
+            },
+            {
+              "name": "pkic:profile:algorithmSelection",
+              "value": "PubkeyAcceptedAlgorithms and AuthorizedKeysFile in sshd_config."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Carried over ssh-transport."
+            },
+            {
+              "name": "pkic:profile:keysStoredIn",
+              "value": "out-of-band"
+            },
+            {
+              "name": "pkic:profile:trustServiceDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "already-enabled"
+            },
+            {
+              "name": "pkic:profile:executionEnvironment",
+              "value": "software"
+            },
+            {
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "not-applicable"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:validatedModeAvailability",
+              "value": "no-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "no-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "no-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "no-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "under-evaluation"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:verifierPopulation",
+              "value": "counterparty"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:trustDomain",
+              "value": "private"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:verifierPopulation",
+              "value": "counterparty"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:trustDomain",
+              "value": "private"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app:openssh",
+      "dependsOn": [
+        "lib:openssl",
+        "ssh-transport",
+        "ssh-userauth"
+      ]
+    },
+    {
+      "ref": "ssh-userauth",
+      "dependsOn": [
+        "ssh-transport"
+      ]
+    },
+    {
+      "ref": "ssh-transport",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:0a55e100-0000-4000-8000-1000000000b0/1",
+      "comment": "Companion SBOM: examples/context/openssh-10.0p2-sbom.cdx.json.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "sbom"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4cd34d66d678bee036a3a30b3097004c78e9b8561253d92d628edf8fa95cb059"
+        }
+      ]
+    },
+    {
+      "type": "advisories",
+      "url": "https://www.openssh.com/security.html",
+      "comment": "OpenSSH security advisories.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "advisories"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    },
+    {
+      "type": "security-contact",
+      "url": "https://www.openssh.com/report.html",
+      "comment": "How to report a security problem to the OpenSSH developers.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "security-contact"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    },
+    {
+      "type": "release-notes",
+      "url": "https://www.openssh.com/txt/release-10.0",
+      "comment": "Release notes: the client uses mlkem768x25519-sha256 by default; DSA is removed; sshd drops finite-field Diffie-Hellman from its default key exchange list."
+    }
+  ]
+}

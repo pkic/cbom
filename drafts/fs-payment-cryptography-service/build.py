@@ -55,7 +55,7 @@ API_TLS = iface(
      unknown("keyExchange"),
      unknown("encryption"),
      unknown("authentication"),
-     unknown("implementationPurl"),
+     unknown("implementingLibrary"),
      prop("integrationConstraints",
           "Clients must support TLS 1.2 or later (infrastructure security page). The data protection page "
           "states that endpoints support TLS 1.0 to 1.3, and that the service requires the versions and "
@@ -75,7 +75,7 @@ def api(ref, name, itype, what):
          prop("keyExchange", "none"),
          prop("encryption", "none"),
          unknown("authentication"),
-         unknown("implementationPurl"),
+         unknown("implementingLibrary"),
          prop("integrationConstraints",
               "Carried over service:api-tls. Every call must be signed (data protection page); the signing "
               "algorithm is not stated on the pages read.")],
@@ -97,7 +97,7 @@ KEK_TR34 = iface(
      prop("keyExchange", "RSA-2048, RSA-3072, RSA-4096"),
      unknown("encryption"),
      unknown("authentication"),
-     unknown("implementationPurl"),
+     unknown("implementingLibrary"),
      prop("integrationConstraints",
           "The import and export page lists TR-34 with RSA 2048, 3072 and 4096 bit keys for exchanging "
           "key-encryption keys, and RSA wrap where a partner does not support TR-34. Every working key "
@@ -114,7 +114,7 @@ KEK_ECDH = iface(
      prop("keyExchange", "ECDH-P-256, ECDH-P-384, ECDH-P-521"),
      unknown("encryption"),
      unknown("authentication"),
-     unknown("implementationPurl"),
+     unknown("implementingLibrary"),
      prop("integrationConstraints",
           "NIST curves P-256, P-384 and P-521; the shared secret is derived with the key derivation "
           "function of NIST SP 800-56A or ANSI X9.63 (import and export page; AWS blog). ECDH is the only "
@@ -131,7 +131,7 @@ WORKING = iface(
      prop("keyExchange", "none"),
      prop("encryption", "TDEA-2KEY, TDEA-3KEY, AES-128, AES-192, AES-256"),
      prop("authentication", "none"),
-     unknown("implementationPurl"),
+     unknown("implementingLibrary"),
      prop("integrationConstraints",
           "Working keys are exchanged as TR-31 or ANSI X9.143 key blocks under a key-encryption key that "
           "was exchanged first. The key block binds each key to its usage. Triple DES is still accepted, "
@@ -143,7 +143,7 @@ STORE = iface(
      prop("correspondsTo", "no-product-document"),
      prop("encryption", "AES-256"),
      prop("keyWrapping", "AES-256"),
-     unknown("implementationPurl"),
+     unknown("implementingLibrary"),
      prop("keyCustodySupported", "provider-managed"),
      prop("keyCustody", "provider-managed"),
      prop("storageRegion", "the AWS Region in which each key was created"),
@@ -184,7 +184,7 @@ bom = {
                 prop("subjectType", "service"),
                 prop("coverage", "all-external"),
                 prop("serviceRegions", "every AWS Region where the service is offered; the list is not reproduced"),
-                prop("regenerationTrigger", "interface-change"),
+                prop("recordRefreshTrigger", "interface-change"),
             ],
             "identifiers": [{"party": "party:document-author", "identities": [{
                 "scheme": {"name": "tag-uri", "description": "A tag URI (RFC 4151)."},

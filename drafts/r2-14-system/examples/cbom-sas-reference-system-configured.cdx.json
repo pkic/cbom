@@ -96,10 +96,10 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "HMAC-SHA256"
+              "value": "HMAC-SHA-256"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "int-gdoi"
             },
             {
@@ -107,7 +107,7 @@
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#svc-goose"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             }
           ]
@@ -147,10 +147,10 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "HMAC-SHA256"
+              "value": "HMAC-SHA-256"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "int-gdoi"
             },
             {
@@ -158,7 +158,7 @@
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#svc-sv"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             }
           ]
@@ -190,7 +190,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -198,18 +198,22 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 62443-4-2 (ISASecure CSA)"
             },
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#tls-mms"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             }
           ]
@@ -249,18 +253,22 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 61850 conformance testing"
             },
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#svc-mms"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             }
           ]
@@ -292,7 +300,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "MODP-2048"
+              "value": "FFDH-MODP-2048"
             },
             {
               "name": "pkic:profile:encryption",
@@ -303,11 +311,15 @@
               "value": "RSA-2048"
             },
             {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 62443-4-2 (ISASecure CSA)"
+            },
+            {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#int-gdoi"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             }
           ]
@@ -339,7 +351,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -347,14 +359,18 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 61850 conformance testing"
             },
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#mgmt-enrol"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             }
           ]
@@ -386,7 +402,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -394,14 +410,18 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 62443-4-2 (ISASecure CSA)"
             },
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#upd-fw"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             }
           ]
@@ -433,7 +453,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -441,14 +461,18 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 61850 conformance testing"
             },
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#mgmt-eng"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             }
           ]
@@ -495,7 +519,7 @@
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#peer-ptp"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             }
           ]
@@ -518,11 +542,15 @@
               "value": "none"
             },
             {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 62443-4-2 (ISASecure CSA)"
+            },
+            {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#sto-keys"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             }
           ]
@@ -561,7 +589,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "966c49e764f04bd64af05931c65113460f3e21da7f3e6cb1c0b285393eecdeee"
+          "content": "714b0b2b048b8df9ffd1e3e7fa5e71708a5d1f4705208f60e1b00bb027fe11ea"
         }
       ]
     }

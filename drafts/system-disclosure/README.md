@@ -9,8 +9,8 @@ Run `python3 build.py` in this folder to regenerate the profile.
 | --- | --- | --- | --- |
 | P1 | cite every product record by BOM-Link and digest | MUST | OT S1 |
 | I1 | `correspondsTo`: the product interface this interface realises | MUST | OT S1 |
-| I2 | `usage`: `in-use`, `disabled` or `not-connected` | MUST | OT S2 |
-| I3 | `keyProvider` on each interface in use: a system component, or `product` or `none` | MUST | OT S4 |
+| I2 | `designUse`: `in-use`, `disabled` or `not-connected` | MUST | OT S2 |
+| I3 | `keysProvidedBy` on each interface in use: a system component, or `product` or `none` | MUST | OT S4 |
 
 The profile extends the interface disclosure baseline v0.10, narrowed to the subject type `system`
 and the stage `configured`. Two sector overlays extend it:

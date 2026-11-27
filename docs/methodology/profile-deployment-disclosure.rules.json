@@ -70,7 +70,7 @@
         }
       },
       "withholdable": false,
-      "note": "The interface in a cited document that this interface realises, as a BOM-Link (urn:cdx:<serial>/<version>#<bom-ref>). This is the join that shows the readiness gap one interface at a time. It is also the path by which implementation facts reach the deployment record: implementationPurl (base I9) is inherited from the corresponding interface when the deployment record does not state it. Present-state facts are never inherited, because they belong to a stage. 'no-product-document' is a fact: the supplier of this part of the deployment publishes no CBOM."
+      "note": "The interface in a cited document that this interface realises, as a BOM-Link (urn:cdx:<serial>/<version>#<bom-ref>). This is the join that shows the readiness gap one interface at a time. It is also the path by which implementation facts reach the deployment record: implementingLibrary (base I9) is inherited from the corresponding interface when the deployment record does not state it. Present-state facts are never inherited, because they belong to a stage. 'no-product-document' is a fact: the supplier of this part of the deployment publishes no CBOM."
     },
     {
       "id": "I2",
@@ -103,7 +103,7 @@
     },
     {
       "id": "I4",
-      "attribute": "peerInterface",
+      "attribute": "connectsTo",
       "level": "MAY",
       "constraint": {
         "refersToCited": {
@@ -149,7 +149,7 @@
       ],
       "form": "document-or-endpoint"
     },
-    "issuer-policy": {
+    "certificate-policy": {
       "carrier": [
         "documentation"
       ],
@@ -192,7 +192,7 @@
     },
     {
       "id": "R4",
-      "context": "issuer-policy",
+      "context": "certificate-policy",
       "at": "document",
       "level": "MAY",
       "hashRequired": false,
@@ -208,6 +208,20 @@
     {
       "item": "The content of the data register, evidence and configuration",
       "reason": "Referenced under R1-R3. They change on their own triggers, and are often more sensitive than the CBOM."
+    }
+  ],
+  "artifacts": {
+    "$comment": "C9.",
+    "mapping": "mapping-cyclonedx-spdx.md",
+    "conformingExample": "examples/cbom-keycloak-deployment-configured.cdx.json",
+    "nonConformingExample": "examples/cbom-keycloak-deployment-configured-fail-literal.cdx.json"
+  },
+  "overrides": [
+    {
+      "id": "interface-disclosure#I14",
+      "level": "MUST",
+      "withholdable": false,
+      "note": "Tightened: an operator knows what terminates each interface it runs. Where an ingress or a service mesh terminates TLS for the workload, the workload's interface names the platform interface, and that interface states 'platform'."
     }
   ],
   "changelog": [
@@ -238,20 +252,21 @@
           "summary": "Raised interface-disclosure#I14 'terminatedBy' to MUST, not withholdable. A v0.2 document without it no longer conforms."
         }
       ]
-    }
-  ],
-  "artifacts": {
-    "$comment": "C9.",
-    "mapping": "mapping-cyclonedx-spdx.md",
-    "conformingExample": "examples/cbom-keycloak-deployment-configured.cdx.json",
-    "nonConformingExample": "examples/cbom-keycloak-deployment-configured-fail-literal.cdx.json"
-  },
-  "overrides": [
+    },
     {
-      "id": "interface-disclosure#I14",
-      "level": "MUST",
-      "withholdable": false,
-      "note": "Tightened: an operator knows what terminates each interface it runs. Where an ingress or a service mesh terminates TLS for the workload, the workload's interface names the platform interface, and that interface states 'platform'."
+      "version": "0.3",
+      "date": "2026-11-27",
+      "summary": "Attribute names made clearer and consistent across the profiles (drafts/attribute-naming-review.md; decision 0028). The version is unchanged because no release has been published.",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Renamed: peerInterface → connectsTo. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: context issuer-policy → certificate-policy. A record that uses the previous name no longer conforms."
+        }
+      ]
     }
   ]
 }

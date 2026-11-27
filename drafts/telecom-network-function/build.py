@@ -96,7 +96,7 @@ def nf_profile():
              "withholdable": False,
              "note": "The 3GPP, O-RAN or GSMA reference point the interface implements, or 'not-a-reference-point' "
                      "for an interface no specification names, such as a key store."},
-            {"id": "I2", "attribute": "referenceSpecification", "level": "MUST", "constraint": {"present": True},
+            {"id": "I2", "attribute": "governingSpecification", "level": "MUST", "constraint": {"present": True},
              "withholdable": False,
              "requiredWhen": {"attribute": "referencePoint", "notEquals": "not-a-reference-point"},
              "note": "The specification and clause that profile the interface's security, such as 'TS 33.501 13.1'."}],
@@ -184,26 +184,26 @@ def sepp_interfaces():
     return [
         iface("n32c", "N32-c: N32 handshake between SEPPs (HTTPS)", "interconnect", tls + [
             ("endpointRole:client", "endpoint:sepp"), ("endpointRole:server", "endpoint:peer-sepp"),
-            ("negotiationControl", "Certificate and key from the 'tls' section of sepp.yaml; client "
+            ("algorithmSelection", "Certificate and key from the 'tls' section of sepp.yaml; client "
                                    "certificate verification is off unless 'verify_client' is set"),
             ("integrationConstraints", SERVER_TLS + " The SEPP advertises TLS as its only N32-f security capability."
                                        + TO_CONFIRM),
-            ("referencePoint", "n32-c"), ("referenceSpecification", "TS 33.501 13.1 and 13.5; TS 29.573"),
-            ("keyStoreRef", "sto-keys")]),
+            ("referencePoint", "n32-c"), ("governingSpecification", "TS 33.501 13.1 and 13.5; TS 29.573"),
+            ("keysStoredIn", "sto-keys")]),
         iface("n32f", "N32-f: forwarded messages between SEPPs (HTTPS)", "interconnect", tls + [
             ("endpointRole:client", "endpoint:sepp"), ("endpointRole:server", "endpoint:peer-sepp"),
-            ("negotiationControl", "A separate listener and certificate may be set in the 'n32f' section"),
+            ("algorithmSelection", "A separate listener and certificate may be set in the 'n32f' section"),
             ("integrationConstraints", "PRINS is not implemented: N32-f is protected by TLS only. " + SERVER_TLS
                                        + TO_CONFIRM),
-            ("referencePoint", "n32-f"), ("referenceSpecification", "TS 33.501 13.1 and 13.5"),
-            ("keyStoreRef", "sto-keys")]),
+            ("referencePoint", "n32-f"), ("governingSpecification", "TS 33.501 13.1 and 13.5"),
+            ("keysStoredIn", "sto-keys")]),
         iface("sbi", "Service-based interface to the operator's network functions", "service", tls + [
             ("endpointRole:client", "endpoint:nf-consumer"), ("endpointRole:server", "endpoint:sepp"),
-            ("negotiationControl", "The scheme is set per server in the 'sbi' section: 'http' or 'https'"),
+            ("algorithmSelection", "The scheme is set per server in the 'sbi' section: 'http' or 'https'"),
             ("integrationConstraints", "The shipped configuration uses HTTP without TLS on the SBI. With 'https', "
                                        "the same TLS context as N32 applies. " + SERVER_TLS + TO_CONFIRM),
-            ("referencePoint", "sbi"), ("referenceSpecification", "TS 33.501 13.1"),
-            ("keyStoreRef", "sto-keys")], state="disabled"),
+            ("referencePoint", "sbi"), ("governingSpecification", "TS 33.501 13.1"),
+            ("keysStoredIn", "sto-keys")], state="disabled"),
         iface("sto-keys", "Private keys, certificates and CA certificates (PEM files)", "storage", [
             ("encryption", "none"), ("keyWrapping", "none"),
             ("integrationConstraints", "Read from the file paths in sepp.yaml at start-up. Protection of the "
@@ -250,8 +250,8 @@ def sepp(sbom_hash, serial=SERIAL["sepp"]):
         "metadata": {"timestamp": STAMP, "lifecycles": [{"phase": "build"}], "supplier": {"name": "Open5GS"}},
         "inventories": [{"bom-ref": "inventory:subject", "subject": subject(props([
             ("coverage", "all"), ("subjectType", "product"),
-            ("managementInterfaceAbsence", "configured-out-of-band"),
-            ("contextAbsent:vulnerability-statements", "not-published")])),
+            ("absent:management-interface", "configured-out-of-band"),
+            ("absent:vulnerability-statements", "not-published")])),
             "components": libs() + sepp_interfaces()}],
         "dependencies": [{"ref": "app:open5gs-sepp", "dependsOn": ["lib:openssl", "lib:nghttp2", "lib:curl"]},
                          {"ref": "lib:openssl", "provides": ["n32c", "n32f", "sbi", "sto-keys"]}],
@@ -288,10 +288,10 @@ def deployment(product_hash, drop_termination=False, serial=SERIAL["dep"]):
     comps = [
         d_iface("dep:n32c", "N32-c to roaming partners", "interconnect", n32 + [
             ("endpointRole:client", "endpoint:sepp"), ("endpointRole:server", "endpoint:peer-sepp"),
-            ("keyStoreRef", "dep:sto-keys")], SEPP_DOC + "#n32c", "workload"),
+            ("keysStoredIn", "dep:sto-keys")], SEPP_DOC + "#n32c", "workload"),
         d_iface("dep:n32f", "N32-f to roaming partners", "interconnect", n32 + [
             ("endpointRole:client", "endpoint:sepp"), ("endpointRole:server", "endpoint:peer-sepp"),
-            ("keyStoreRef", "dep:sto-keys")], SEPP_DOC + "#n32f", "workload"),
+            ("keysStoredIn", "dep:sto-keys")], SEPP_DOC + "#n32f", "workload"),
         d_iface("dep:sbi", "SBI inside the pod: plain HTTP to the sidecar", "service", [
             ("protocol", "HTTP"), ("protocolVersion", "2"), ("keyExchange", "none"), ("encryption", "none"),
             ("authentication", "none"),
@@ -324,7 +324,7 @@ def deployment(product_hash, drop_termination=False, serial=SERIAL["dep"]):
         "inventories": [{"bom-ref": "inventory:subject", "subject": {
             "type": "application", "bom-ref": "deployment:sepp-roaming", "name": "SEPP for roaming, production cluster",
             "properties": props([("subjectType", "deployment"), ("coverage", "all"),
-                                 ("managementInterfaceAbsence", "configured-out-of-band")]),
+                                 ("absent:management-interface", "configured-out-of-band")]),
             "identifiers": [{"party": "party:document-author", "identities": [
                 {"scheme": {"name": "tag-uri", "description": "A tag URI (RFC 4151)."},
                  "value": "tag:operator.example,2026:deployment/sepp-roaming"}]}],
@@ -353,7 +353,7 @@ def main():
     bad["$comment"] += " NON-CONFORMING: N32-c does not state its reference point."
     for c in bad["inventories"][0]["components"]:
         if c["bom-ref"] == "n32c":
-            c["properties"] = [p for p in c["properties"] if p["name"] not in (P + "referencePoint", P + "referenceSpecification")]
+            c["properties"] = [p for p in c["properties"] if p["name"] not in (P + "referencePoint", P + "governingSpecification")]
     write("examples/cbom-open5gs-sepp-fail-referencepoint.cdx.json", bad)
     write("examples/cbom-open5gs-sepp-deployment-configured.cdx.json", deployment(h_sepp))
     write("examples/cbom-open5gs-sepp-deployment-fail-termination.cdx.json",

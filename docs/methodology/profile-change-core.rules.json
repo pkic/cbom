@@ -1,5 +1,5 @@
 {
-  "$comment": "Illustrative machine-readable CBOM profile: the change core. DERIVED from the interface disclosure baseline v0.10, and a SIBLING of pqc-migration (decision 0023). It holds the facts every change-planning profile asks for: capability per purpose and what blocks it, how a capability is enabled, coexistence, integration constraints, and the update-path facts that decide whether new software and new keys can reach a product at all. Each rule it shares with pqc-migration keeps the id pqc-migration uses, so no rule id moves. Its own rules are numbered after pqc-migration's, from I13 and P2. The core is target-neutral: it records what a product can be changed to, not which target is required (Q66).",
+  "$comment": "Illustrative machine-readable CBOM profile: the change core. DERIVED from the interface disclosure baseline v0.10, and a SIBLING of pqc-migration (decision 0023). It holds the facts every change-planning profile asks for: capability per purpose and what blocks it, how a capability is enabled, transitionMode, integration constraints, and the update-path facts that decide whether new software and new keys can reach a product at all. Each rule it shares with pqc-migration keeps the id pqc-migration uses, so no rule id moves. Its own rules are numbered after pqc-migration's, from I13 and P2. The core is target-neutral: it records what a product can be changed to, not which target is required (Q66).",
   "profileId": "pkic.example.change-core",
   "profileTag": "change-core",
   "title": "Change Core (Example)",
@@ -67,7 +67,7 @@
     "not-planned"
   ],
   "blockedByVocabulary": [
-    "provider",
+    "crypto-library",
     "product",
     "hardware",
     "standard",
@@ -81,9 +81,9 @@
     "licence",
     "not-available"
   ],
-  "coexistenceVocabulary": [
-    "simultaneous",
-    "exclusive",
+  "transitionModeVocabulary": [
+    "side-by-side",
+    "switch-over",
     "unknown"
   ],
   "$commentUpdatePath": "The update-path facts shared by the IoT and substation use cases. updateMechanism says how new software or firmware reaches the product; updateAuthority says which parties that mechanism accepts updates from; keyReplaceable says whether keys and trust anchors held by the product can be replaced without replacing the product. Commercial terms, such as support periods and service levels, are outside every profile (Model).",
@@ -110,7 +110,7 @@
       "id": "interface-disclosure#I9",
       "level": "MUST",
       "withholdable": false,
-      "note": "Tightened by removing withholdability. The base already requires implementationPurl at MUST and accepts a 'withheld' marker in place of a value. Migration sequencing depends on knowing which library implements an interface, so this profile removes that option and requires the value itself. Level is restated as MUST for readability and is unchanged from the base."
+      "note": "Tightened by removing withholdability. The base already requires implementingLibrary at MUST and accepts a 'withheld' marker in place of a value. Migration sequencing depends on knowing which library implements an interface, so this profile removes that option and requires the value itself. Level is restated as MUST for readability and is unchanged from the base."
     }
   ],
   "productRules": [
@@ -192,7 +192,7 @@
     },
     {
       "id": "I5",
-      "attribute": "minimumProductVersion",
+      "attribute": "availableFromVersion",
       "level": "MUST",
       "constraint": {
         "present": true
@@ -206,16 +206,17 @@
     },
     {
       "id": "I7",
-      "attribute": "coexistence",
+      "attribute": "transitionMode",
       "level": "MUST",
       "constraint": {
-        "enumRef": "coexistenceVocabulary"
+        "enumRef": "transitionModeVocabulary"
       },
-      "withholdable": false
+      "withholdable": false,
+      "note": "Whether the interface can move to post-quantum cryptography while it still serves, verifies or holds classical counterparts ('side-by-side'), or only by replacing them all at once ('switch-over'). An interface that offers only a hybrid algorithm, with no classical fallback, is 'switch-over'. Not the same as a hybrid algorithm, which is a fact about the algorithm."
     },
     {
       "id": "I8",
-      "attribute": "negotiationControl",
+      "attribute": "algorithmSelection",
       "level": "SHOULD",
       "constraint": {
         "present": true
@@ -306,7 +307,7 @@
     },
     {
       "id": "I18",
-      "attribute": "certificationScheme",
+      "attribute": "impactedCertification",
       "level": "SHOULD",
       "constraint": {
         "present": true
@@ -431,7 +432,7 @@
       "reason": "Asked for by pqc-migration, where a regulated operator's sequencing depends on them. A profile that extends the core and needs them restates the rules."
     },
     {
-      "item": "Whether firmware will still be offered (updateSupportStatus), and resourceBound",
+      "item": "Whether firmware will still be offered (updateSupportStatus), and resourceLimits",
       "reason": "Deferred to the IoT use case, which has no profile yet. Commercial terms are excluded at every depth."
     }
   ],
@@ -441,6 +442,12 @@
     "conformingExample": "examples/cbom-ot-protection-ied-product.cdx.json",
     "nonConformingExample": "examples/cbom-ot-protection-ied-product-fail-core-I13.cdx.json"
   },
+  "certificationImpactVocabulary": [
+    "none",
+    "retest",
+    "recertification",
+    "not-applicable"
+  ],
   "changelog": [
     {
       "version": "0.1",
@@ -462,12 +469,33 @@
           "summary": "Adds I17 certificationImpact and I18 certificationScheme at SHOULD, shared with pqc-migration under the same ids (R2-23). The vocabulary moves here from the substation component profile. A SHOULD rule changes no verdict."
         }
       ]
+    },
+    {
+      "version": "0.2",
+      "date": "2026-11-27",
+      "summary": "Attribute names made clearer and consistent across the profiles (drafts/attribute-naming-review.md; decision 0028). The version is unchanged because no release has been published.",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Renamed: negotiationControl → algorithmSelection. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: coexistence → transitionMode (values simultaneous → side-by-side, exclusive → switch-over). A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: minimumProductVersion → availableFromVersion. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: certificationScheme → impactedCertification. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: blockedBy value provider → crypto-library. A record that uses the previous name no longer conforms."
+        }
+      ]
     }
-  ],
-  "certificationImpactVocabulary": [
-    "none",
-    "retest",
-    "recertification",
-    "not-applicable"
   ]
 }

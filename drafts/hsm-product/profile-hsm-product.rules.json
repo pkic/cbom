@@ -48,6 +48,11 @@
   },
   "overrides": [
     {
+      "id": "pqc-migration-extended#P2",
+      "level": "MUST",
+      "note": "Raised from SHOULD. A buyer of a payment HSM needs to know whether it holds a PCI PTS HSM approval ('pci-pts-hsm') or another product certification. Replaces the separate productCertificationScheme attribute of the earlier draft."
+    },
+    {
       "id": "pqc-migration#I17",
       "level": "MUST",
       "note": "Raised from SHOULD. For an HSM, whether a new algorithm triggers re-validation often decides between a firmware update and a hardware replacement."
@@ -68,12 +73,8 @@
       "note": "Raised from SHOULD. Every interface of an HSM uses keys held in one of its own stores, so the reference can always be given."
     }
   ],
-  "hsmApprovalVocabulary": [
-    "pci-pts-hsm",
-    "none"
-  ],
   "keyBlockFormatVocabulary": [
-    "x9.143",
+    "x9-143",
     "tr-31",
     "iso-20038",
     "proprietary",
@@ -82,24 +83,13 @@
   "productRules": [
     {
       "id": "P1",
-      "description": "HSM states its payment HSM approval, or that it has none",
-      "level": "MUST",
-      "constraint": {
-        "productAttribute": "hsmApproval",
-        "enumRef": "hsmApprovalVocabulary"
-      },
-      "withholdable": false,
-      "note": "PCI PTS HSM is a device approval, not a module validation, so the module validation vocabulary of PQC Migration does not hold it. A derived profile may not widen an inherited vocabulary, so the approval has its own attribute."
-    },
-    {
-      "id": "P2",
-      "description": "HSM gives the reference of its payment HSM approval",
+      "description": "HSM gives the reference of its product certification or approval",
       "level": "SHOULD",
       "constraint": {
-        "productAttribute": "hsmApprovalRef"
+        "productAttribute": "productCertificationRef"
       },
       "withholdable": false,
-      "note": "The approval number on the PCI list of approved devices. SHOULD, because the attribute has no value when P1 states 'none'."
+      "note": "The certificate or approval number, such as the entry on the PCI list of approved devices. SHOULD, because there is no reference when productCertificationScheme is 'none'."
     }
   ],
   "interfaceRules": [
@@ -113,8 +103,8 @@
       "list": true,
       "withholdable": false,
       "requiredWhen": {
-        "attribute": "keyManagementFunction",
-        "equals": "keys-and-certificates"
+        "attribute": "managesKeys",
+        "equals": "yes"
       },
       "note": "The key block formats the HSM can import and export on this interface. A key block binds a key to its permitted usage. ANSI X9.143 superseded TR-31; ISO 20038 is the international form. Exchanging keys with a counterparty needs a format both ends support."
     },
@@ -128,8 +118,8 @@
       "list": true,
       "withholdable": false,
       "requiredWhen": {
-        "attribute": "keyManagementFunction",
-        "equals": "keys-and-certificates"
+        "attribute": "managesKeys",
+        "equals": "yes"
       },
       "note": "Present-state counterpart of I1 (C12): the formats enabled as shipped."
     }

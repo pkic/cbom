@@ -103,7 +103,7 @@ nav: conformance
   <p>A verdict on a deployment record depends on what the evaluator was given.</p>
   <ul>
     <li>When the caller supplies a cited record (<code>validate_cbom.py ... --with &lt;cited record&gt;</code>), the validator checks its serial number, version and hash. A changed revision fails the deployment profile's P1. <code>cbom-keycloak-deployment-observed-fail-P1.cdx.json</code> shows this case.</li>
-    <li>Only implementation facts, such as the implementing library (<code>implementationPurl</code>), follow the join. Present-state facts never do, because each belongs to one stage.</li>
+    <li>Only implementation facts, such as the implementing library (<code>implementingLibrary</code>), follow the join. Present-state facts never do, because each belongs to one stage.</li>
     <li>When the caller does not supply a cited record, the validator reports each inherited value as <code>OPEN</code> (unresolved), not as failed. An unresolved rule does not decide the verdict. The report lists it, and a claim lists it under <code>unresolved</code> and states that it asserts nothing about it.</li>
   </ul>
   <p>One rule has a route that depends on a cited record. At <code>observed</code>, baseline P2 passes when a cited configured record declares a management interface that the observer could not reach. An observer with nothing to cite, such as an outside assessor, states <code>not-reached</code> instead, and the validator accepts that reason only with coverage <code>partial</code>.</p>

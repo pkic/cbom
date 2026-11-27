@@ -118,7 +118,7 @@
         },
         {
           "expression": "$.dependencies[*].provides",
-          "nativeName": "interface-disclosure#I9 implementationPurl",
+          "nativeName": "interface-disclosure#I9 implementingLibrary",
           "relevance": "required",
           "rationale": "Every declared interface."
         },
@@ -177,26 +177,26 @@
           "rationale": "Every declared interface."
         },
         {
-          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:minimumProductVersion')]",
-          "nativeName": "pqc-migration#I5 minimumProductVersion",
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:availableFromVersion')]",
+          "nativeName": "pqc-migration#I5 availableFromVersion",
           "relevance": "required",
           "rationale": "Required when enablementMethod is software-update."
         },
         {
-          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:providerLocation')]",
-          "nativeName": "pqc-migration#I6 providerLocation",
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:executionEnvironment')]",
+          "nativeName": "pqc-migration#I6 executionEnvironment",
           "relevance": "required",
           "rationale": "Every declared interface."
         },
         {
-          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:coexistence')]",
-          "nativeName": "pqc-migration#I7 coexistence",
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:transitionMode')]",
+          "nativeName": "pqc-migration#I7 transitionMode",
           "relevance": "required",
           "rationale": "Every declared interface."
         },
         {
-          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:negotiationControl')]",
-          "nativeName": "pqc-migration#I8 negotiationControl",
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:algorithmSelection')]",
+          "nativeName": "pqc-migration#I8 algorithmSelection",
           "relevance": "recommended",
           "rationale": "Every declared interface."
         },
@@ -231,14 +231,14 @@
           "rationale": "Required when interfaceType is not peer."
         },
         {
-          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:certificationScheme')]",
-          "nativeName": "pqc-migration#I18 certificationScheme",
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:impactedCertification')]",
+          "nativeName": "pqc-migration#I18 impactedCertification",
           "relevance": "recommended",
           "rationale": "Required when certificationImpact is not None."
         },
         {
-          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:keyManagementFunction')]",
-          "nativeName": "pqc-migration-extended#I1 keyManagementFunction",
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:managesKeys')]",
+          "nativeName": "pqc-migration-extended#I1 managesKeys",
           "relevance": "required",
           "rationale": "Required when interfaceType is management."
         },
@@ -246,47 +246,47 @@
           "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:keyOperations')]",
           "nativeName": "pqc-migration-extended#I2 keyOperations",
           "relevance": "required",
-          "rationale": "Required when keyManagementFunction is keys-and-certificates."
+          "rationale": "Required when managesKeys is yes."
         },
         {
           "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:keyTypesSupported')]",
           "nativeName": "pqc-migration-extended#I3 keyTypesSupported",
           "relevance": "required",
-          "rationale": "Required when keyManagementFunction is keys-and-certificates."
+          "rationale": "Required when managesKeys is yes."
         },
         {
           "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:keyTypes')]",
           "nativeName": "pqc-migration-extended#I4 keyTypes",
           "relevance": "required",
-          "rationale": "Required when keyManagementFunction is keys-and-certificates."
+          "rationale": "Required when managesKeys is yes."
         },
         {
           "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:keyStoreFormatsSupported')]",
           "nativeName": "pqc-migration-extended#I5 keyStoreFormatsSupported",
           "relevance": "recommended",
-          "rationale": "Required when keyManagementFunction is keys-and-certificates."
+          "rationale": "Required when managesKeys is yes."
         },
         {
           "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:keyStoreFormats')]",
           "nativeName": "pqc-migration-extended#I6 keyStoreFormats",
           "relevance": "recommended",
-          "rationale": "Required when keyManagementFunction is keys-and-certificates."
+          "rationale": "Required when managesKeys is yes."
         },
         {
           "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:keyStoreLocation')]",
           "nativeName": "pqc-migration-extended#I7 keyStoreLocation",
           "relevance": "required",
-          "rationale": "Required when keyManagementFunction is keys-and-certificates."
+          "rationale": "Required when managesKeys is yes."
         },
         {
-          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:keyStoreRef')]",
-          "nativeName": "pqc-migration-extended#I8 keyStoreRef",
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:keysStoredIn')]",
+          "nativeName": "pqc-migration-extended#I8 keysStoredIn",
           "relevance": "recommended",
           "rationale": "Required when interfaceType is not management."
         },
         {
-          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:externalDependencies')]",
-          "nativeName": "pqc-migration-extended#I9 externalDependencies",
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:trustServiceDependencies')]",
+          "nativeName": "pqc-migration-extended#I9 trustServiceDependencies",
           "relevance": "required",
           "rationale": "Every declared interface."
         },
@@ -363,8 +363,8 @@
           "rationale": "If a product states that the operator decides an algorithm, the interface points to where the operator decides it. 'deployment-defined' without this pointer tells the operator that the decision is theirs and not how to make it."
         },
         {
-          "expression": "$.externalReferences[?(@.properties[?(@.name=='pkic:profile:context' && @.value=='design-intent')])]",
-          "nativeName": "interface-disclosure#R6 design-intent",
+          "expression": "$.externalReferences[?(@.properties[?(@.name=='pkic:profile:context' && @.value=='threat-model')])]",
+          "nativeName": "interface-disclosure#R6 threat-model",
           "relevance": "optional",
           "rationale": "A threat model or design document. This is where design intention is recorded now that 'intended' is not an accepted stage: as context the record points to, not as a stage it reports."
         },

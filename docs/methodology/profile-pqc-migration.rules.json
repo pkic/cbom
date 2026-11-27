@@ -65,7 +65,7 @@
     "not-planned"
   ],
   "blockedByVocabulary": [
-    "provider",
+    "crypto-library",
     "product",
     "hardware",
     "standard",
@@ -79,15 +79,21 @@
     "licence",
     "not-available"
   ],
-  "providerLocationVocabulary": [
+  "executionEnvironmentVocabulary": [
     "software",
     "hsm",
     "tee",
+    "tpm",
+    "secure-element",
+    "mcu-internal",
+    "otp-fuses",
+    "os-keyring",
+    "external-vault",
     "unspecified"
   ],
-  "coexistenceVocabulary": [
-    "simultaneous",
-    "exclusive",
+  "transitionModeVocabulary": [
+    "side-by-side",
+    "switch-over",
     "unknown"
   ],
   "$commentModuleValidation": "The schemes under which the cryptographic module implementing an interface has been validated. Only schemes that validate the cryptographic implementation itself are listed. Common Criteria and EUCC evaluate a product against a protection profile, which is a different object; they are carried at product level in the extended depth and are deliberately absent here, so one attribute never mixes the two. 'iso-19790' covers national schemes built on it. 'national-crypto-approval' covers approval of a module by a national authority outside those schemes. 'none' is a complete answer and keeps the rule cheap for products with no regulated market. See decision 0022. In CycloneDX 2.0 the scheme and reference are carried natively as a certifications[] entry on the implementing library ('standard' and 'url'), inherited by the interfaces it provides (K9). The property form remains for 'none' and for CycloneDX 1.x.",
@@ -104,13 +110,13 @@
     "outside-validated-mode-only",
     "no-validated-mode"
   ],
-  "$commentInheritance": "Added in v0.7 (decision 0022, K9). Rules are evaluated on effective values. Six attributes and the capability group describe the implementation rather than the boundary: moduleValidationScheme, moduleValidationRef, providerLocation, enablementMethod, minimumProductVersion, coexistence, and each capabilityByPurpose entry. A document may state them once on the implementation that provides an interface; the interface inherits them and states a value only where it differs. Precedence is per attribute, and per purpose for the group: an interface's entry for one purpose replaces the provider's entry for that purpose as a whole, so a status never travels without its blocker. Attributes that describe the boundary are never inherited: interfaceType, endpointRoles, lifecycleStage, negotiationControl, integrationConstraints, and the algorithm attributes. How the providing implementation is identified is the mapping's business.",
+  "$commentInheritance": "Added in v0.7 (decision 0022, K9). Rules are evaluated on effective values. Six attributes and the capability group describe the implementation rather than the boundary: moduleValidationScheme, moduleValidationRef, executionEnvironment, enablementMethod, availableFromVersion, transitionMode, and each capabilityByPurpose entry. A document may state them once on the implementation that provides an interface; the interface inherits them and states a value only where it differs. Precedence is per attribute, and per purpose for the group: an interface's entry for one purpose replaces the provider's entry for that purpose as a whole, so a status never travels without its blocker. Attributes that describe the boundary are never inherited: interfaceType, endpointRoles, lifecycleStage, algorithmSelection, integrationConstraints, and the algorithm attributes. How the providing implementation is identified is the mapping's business.",
   "overrides": [
     {
       "id": "interface-disclosure#I9",
       "level": "MUST",
       "withholdable": false,
-      "note": "Tightened by removing withholdability. The base already requires implementationPurl at MUST and accepts a 'withheld' marker in place of a value. Migration sequencing depends on knowing which library implements an interface, so this profile removes that option and requires the value itself. Level is restated as MUST for readability and is unchanged from the base."
+      "note": "Tightened by removing withholdability. The base already requires implementingLibrary at MUST and accepts a 'withheld' marker in place of a value. Migration sequencing depends on knowing which library implements an interface, so this profile removes that option and requires the value itself. Level is restated as MUST for readability and is unchanged from the base."
     }
   ],
   "productRules": [
@@ -181,7 +187,7 @@
     },
     {
       "id": "I5",
-      "attribute": "minimumProductVersion",
+      "attribute": "availableFromVersion",
       "level": "MUST",
       "constraint": {
         "present": true
@@ -195,25 +201,27 @@
     },
     {
       "id": "I6",
-      "attribute": "providerLocation",
+      "attribute": "executionEnvironment",
       "level": "MUST",
       "constraint": {
-        "enumRef": "providerLocationVocabulary"
+        "enumRef": "executionEnvironmentVocabulary"
       },
-      "withholdable": false
+      "withholdable": false,
+      "note": "Where key operations run: in software, an HSM, a TEE, a TPM, a secure element or the microcontroller itself. It decides whether a new algorithm can be adopted through software at all. Shares one vocabulary with 'keyStoreLocation', and matches the CycloneDX name for the same concept."
     },
     {
       "id": "I7",
-      "attribute": "coexistence",
+      "attribute": "transitionMode",
       "level": "MUST",
       "constraint": {
-        "enumRef": "coexistenceVocabulary"
+        "enumRef": "transitionModeVocabulary"
       },
-      "withholdable": false
+      "withholdable": false,
+      "note": "Whether the interface can move to post-quantum cryptography while it still serves, verifies or holds classical counterparts ('side-by-side'), or only by replacing them all at once ('switch-over'). An interface that offers only a hybrid algorithm, with no classical fallback, is 'switch-over'. Not the same as a hybrid algorithm, which is a fact about the algorithm."
     },
     {
       "id": "I8",
-      "attribute": "negotiationControl",
+      "attribute": "algorithmSelection",
       "level": "SHOULD",
       "constraint": {
         "present": true
@@ -286,7 +294,7 @@
     },
     {
       "id": "I18",
-      "attribute": "certificationScheme",
+      "attribute": "impactedCertification",
       "level": "SHOULD",
       "constraint": {
         "present": true
@@ -396,6 +404,53 @@
     "nonConformingExample": "examples/cbom-keycloak-product-fail-pqc-I12.cdx.json"
   },
   "$commentChangelog": "Entries before v0.6 cite the pre-0.6 rule numbering, in which this profile's own rules ran M1 to M14 and its product rules continued the baseline's P-sequence. The v0.6 entry carries the mapping. Nothing was released under the old numbering, so no id is retired and none is held back from reuse; the no-reuse rule in decision 0011 starts from v0.6.",
+  "contextKinds": {
+    "support-lifecycle": {
+      "carrier": [
+        "support",
+        "release-notes",
+        "documentation"
+      ],
+      "form": "endpoint"
+    },
+    "roadmap": {
+      "carrier": [
+        "documentation",
+        "release-notes",
+        "other"
+      ],
+      "form": "document-or-endpoint"
+    }
+  },
+  "referenceRules": [
+    {
+      "id": "R1",
+      "context": "support-lifecycle",
+      "at": "document",
+      "level": "SHOULD",
+      "hashRequired": false,
+      "withholdable": false,
+      "orDeclaredAbsent": "contextAbsenceVocabulary",
+      "note": "Where the supplier states how long this version is supported. A migration plan depends on whether the version deployed today will receive the release that enables post-quantum cryptography, or has to be replaced first. A supplier that publishes no support lifecycle says so."
+    },
+    {
+      "id": "R2",
+      "context": "roadmap",
+      "at": "document",
+      "level": "SHOULD",
+      "hashRequired": "when-document",
+      "withholdable": false,
+      "orDeclaredAbsent": "contextAbsenceVocabulary",
+      "note": "The supplier's own roadmap for post-quantum capability. The record states each purpose's capability as a status and a blocker, never a date (decision 0007). A roadmap is where a supplier may name target releases and dependencies; the record points to it and does not evaluate it. A per-purpose roadmapRef may point into the same document or to the tracking item."
+    }
+  ],
+  "certificationImpactVocabulary": [
+    "none",
+    "retest",
+    "recertification",
+    "not-applicable"
+  ],
+  "$commentExecutionEnvironment": "One location vocabulary is shared by executionEnvironment (where key operations run) and keyStoreLocation (where keys are held), so that a consumer can compare the two on one interface. A value that makes no sense for one of them, such as os-keyring for execution, is simply not used there.",
   "changelog": [
     {
       "version": "0.1",
@@ -552,52 +607,37 @@
           "summary": "Adds I17 certificationImpact and I18 certificationScheme at SHOULD, shared with change-core under the same ids (R2-23). The vocabulary moves here from the substation component profile. A SHOULD rule changes no verdict."
         }
       ]
-    }
-  ],
-  "contextKinds": {
-    "support-lifecycle": {
-      "carrier": [
-        "support",
-        "release-notes",
-        "documentation"
-      ],
-      "form": "endpoint"
-    },
-    "roadmap": {
-      "carrier": [
-        "documentation",
-        "release-notes",
-        "other"
-      ],
-      "form": "document-or-endpoint"
-    }
-  },
-  "referenceRules": [
-    {
-      "id": "R1",
-      "context": "support-lifecycle",
-      "at": "document",
-      "level": "SHOULD",
-      "hashRequired": false,
-      "withholdable": false,
-      "orDeclaredAbsent": "contextAbsenceVocabulary",
-      "note": "Where the supplier states how long this version is supported. A migration plan depends on whether the version deployed today will receive the release that enables post-quantum cryptography, or has to be replaced first. A supplier that publishes no support lifecycle says so."
     },
     {
-      "id": "R2",
-      "context": "roadmap",
-      "at": "document",
-      "level": "SHOULD",
-      "hashRequired": "when-document",
-      "withholdable": false,
-      "orDeclaredAbsent": "contextAbsenceVocabulary",
-      "note": "The supplier's own roadmap for post-quantum capability. The record states each purpose's capability as a status and a blocker, never a date (decision 0007). A roadmap is where a supplier may name target releases and dependencies; the record points to it and does not evaluate it. A per-purpose roadmapRef may point into the same document or to the tracking item."
+      "version": "0.8",
+      "date": "2026-11-27",
+      "summary": "Attribute names made clearer and consistent across the profiles (drafts/attribute-naming-review.md; decision 0028). The version is unchanged because no release has been published.",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Renamed: negotiationControl → algorithmSelection. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: coexistence → transitionMode (values simultaneous → side-by-side, exclusive → switch-over). A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: providerLocation → executionEnvironment, with the vocabulary shared with keyStoreLocation. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: minimumProductVersion → availableFromVersion. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: certificationScheme → impactedCertification. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: blockedBy value provider → crypto-library. A record that uses the previous name no longer conforms."
+        }
+      ]
     }
-  ],
-  "certificationImpactVocabulary": [
-    "none",
-    "retest",
-    "recertification",
-    "not-applicable"
   ]
 }

@@ -34,7 +34,7 @@
             "value": "product"
           },
           {
-            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "name": "pkic:profile:absent:vulnerability-statements",
             "value": "not-published"
           }
         ],
@@ -189,7 +189,7 @@
               "value": "RSA-PSS-2048-SHA256"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Groups, signature schemes and cipher suites set per roaming partner"
             },
             {
@@ -197,7 +197,7 @@
               "value": "OpenSSL 3.5 offers X25519MLKEM768 by default. The SEPP sets its own group list and leaves the hybrid group out unless the operator enables it per roaming partner, because the 3GPP TLS profile for N32-c does not name it. Both SEPPs must support it."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {
@@ -244,7 +244,7 @@
               "value": "ECDSA-P256-SHA256"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Cipher suites for JWE and JWS agreed over N32-c"
             },
             {
@@ -252,7 +252,7 @@
               "value": "The JWE keys are derived from the N32-c TLS session; an interconnect provider that modifies a message signs its change with JWS."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "n32c"
             },
             {
@@ -327,7 +327,7 @@
               "value": "Access tokens are JWTs signed ES256 by the operator's NRF."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {
@@ -394,7 +394,7 @@
               "value": "The SEPP restricts SSH key exchange to X25519 and ECDH-P256 unless the operator enables the hybrid methods OpenSSH 9.9 provides."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {

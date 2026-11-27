@@ -73,7 +73,7 @@ PKI Consortium Publications 1 to 3 define all of this in full. This draft uses o
 3. What is different about cryptography in financial services
 ------------------------------------------------------------
 
-**Keys live in HSMs, in hierarchies.** A payment HSM holds a master key. The master key protects key-encryption keys, also called zone master keys, which are exchanged with each counterparty. These in turn protect working keys, such as PIN encryption keys and card verification keys. A record follows this chain. On each interface, `keyStoreRef` names the store that delivers its keys, and the store's `providerLocation` is almost always `hsm`. Where the HSM has its own record, `keyStoreRef` points into it by BOM-Link (question register, R2-27). Where no record exists, the value is `out-of-band` (R2-22).
+**Keys live in HSMs, in hierarchies.** A payment HSM holds a master key. The master key protects key-encryption keys, also called zone master keys, which are exchanged with each counterparty. These in turn protect working keys, such as PIN encryption keys and card verification keys. A record follows this chain. On each interface, `keysStoredIn` names the store that delivers its keys, and the store's `executionEnvironment` is almost always `hsm`. Where the HSM has its own record, `keysStoredIn` points into it by BOM-Link (question register, R2-27). Where no record exists, the value is `out-of-band` (R2-22).
 
 **Most of the load is symmetric.** PIN blocks, message authentication codes, card session keys and key derivation for each transaction all use symmetric cryptography. A quantum computer does not break AES, so these mechanisms are not part of the post-quantum migration. Many of them still use Triple DES, which is being retired. Chapter 6 treats the two migrations together.
 
@@ -83,7 +83,7 @@ PKI Consortium Publications 1 to 3 define all of this in full. This draft uses o
 
 **Schemes set the rules.** The algorithms, the trust anchors and the dates are set by the card schemes, by EMVCo, by the PCI Security Standards Council and by payment system operators. An issuer or acquirer cannot move until the scheme and its counterparties can.
 
-**Estates are long-lived and certified.** Cards stay in the field for three to five years, and terminals much longer. A change to an HSM or a terminal can trigger re-validation under FIPS 140-3, PCI HSM or PCI PTS POI. The change core and the PQC migration profile record this with `certificationImpact` and `certificationScheme` (R2-23).
+**Estates are long-lived and certified.** Cards stay in the field for three to five years, and terminals much longer. A change to an HSM or a terminal can trigger re-validation under FIPS 140-3, PCI HSM or PCI PTS POI. The change core and the PQC migration profile record this with `certificationImpact` and `impactedCertification` (R2-23).
 
 **Inventories are already required.** PCI DSS 4.0.1 requires an inventory of the cipher suites and protocols in use (requirement 12.3.3), and an inventory of the trusted keys and certificates that protect card numbers in transit (requirement 4.2.1.1). The DORA technical standards require a register of certificates and certificate-storing devices (Delegated Regulation 2024/1774, Article 7(4)). Chapter 12 shows how far CBOMs answer these requirements.
 
@@ -103,7 +103,7 @@ PKI Consortium Publications 1 to 3 define all of this in full. This draft uses o
 
 **A scheme's certificate authority is a scheme-administered trust anchor.** PQC Migration Extended already has the values for this: `trustDomain` is `scheme-administered`, and `verifierPopulation` is `scheme-members`, because every terminal in the scheme must be able to verify what the authority signs.
 
-**The boundary between scheme and participant uses the telecom names.** Each interface that crosses it states `boundary`, and `boundaryProxy` names the component that guards the crossing, such as a network access gateway (R2-25).
+**The boundary between scheme and participant uses the telecom names.** Each interface that crosses it states `boundary`, and `proxiedBy` names the component that guards the crossing, such as a network access gateway (R2-25).
 
 5. Protocols and their cryptography
 -----------------------------------
@@ -154,9 +154,9 @@ Four facts in a record help a bank combine the two migrations:
 
 -   **`certificationImpact`** shows whether the change triggers re-validation of the HSM or terminal. Two migrations that each trigger a re-validation cost twice as much as one that combines them.
 
--   **`keyStoreRef`** follows each working key to its key-encryption key. When a key-encryption key moves to a new exchange mechanism, every working key under it can be re-issued under AES at the same time.
+-   **`keysStoredIn`** follows each working key to its key-encryption key. When a key-encryption key moves to a new exchange mechanism, every working key under it can be re-issued under AES at the same time.
 
--   **`coexistence`** shows whether old and new algorithms can run side by side, which decides whether counterparties can move one at a time.
+-   **`transitionMode`** shows whether old and new algorithms can run side by side, which decides whether counterparties can move one at a time.
 
 ### 6.4 What stays outside the record
 
@@ -206,9 +206,9 @@ The HSM profile extends PQC Migration Extended, which already carries module val
 
 -   what re-validation a change triggers (`certificationImpact`).
 
-The key hierarchy depth adds, for each key store, the store whose key protects it (`protectedBy`), up to the store that the hardware protects, with the key block format and wrapping algorithm at each level. Where a bank's records cite the HSM's own record, `keyStoreRef` names the key store by BOM-Link in that record. Where they do not, the value is `out-of-band`.
+The key hierarchy depth adds, for each key store, the store whose key protects it (`protectedBy`), up to the store that the hardware protects, with the key block format and wrapping algorithm at each level. Where a bank's records cite the HSM's own record, `keysStoredIn` names the key store by BOM-Link in that record. Where they do not, the value is `out-of-band`.
 
-Both profiles are drafted in [`drafts/hsm-product/`](../../drafts/hsm-product/) for the HSMs and key management domain document, which is at outline stage, with an illustrative payment HSM that conforms to both. They add two attributes that no inherited rule could carry: `hsmApproval`, because PCI PTS HSM is a device approval and not a module validation, and `keyBlockFormatsSupported`, because payment key blocks are not key store files.
+Both profiles are drafted in [`drafts/hsm-product/`](../../drafts/hsm-product/) for the HSMs and key management domain document, which is at outline stage, with an illustrative payment HSM that conforms to both. They add two attributes that no inherited rule could carry: `productCertificationScheme`, because PCI PTS HSM is a device approval and not a module validation, and `keyBlockFormatsSupported`, because payment key blocks are not key store files.
 
 ### 9.2 Card and terminal extensions of IoT Device Estate (future devices document)
 
@@ -228,7 +228,7 @@ The scheme profile is the one profile that belongs here, because it describes so
 
 -   the interfaces that depend on each trust anchor;
 
--   the boundary between the scheme and its participants, with `boundary` and `boundaryProxy`.
+-   the boundary between the scheme and its participants, with `boundary` and `proxiedBy`.
 
 Participants' records stay their own. The scheme record does not cite them, and the readiness of the scheme as a whole is computed by a policy (10.2).
 
@@ -378,12 +378,12 @@ Annex A. Financial terms and methodology terms
 
 | Financial term | Methodology term |
 |---|---|
-| Hardware security module (HSM) | A product. Its key store is a storage interface with `providerLocation` `hsm` |
+| Hardware security module (HSM) | A product. Its key store is a storage interface with `executionEnvironment` `hsm` |
 | HSM partition | A deployment of the HSM, described by a deployment record |
 | Host command interface | A management or service interface of the HSM |
 | Key block (TR-31, X9.143, ISO 20038) | The key-wrapping format of a storage or key-transport interface (`keyWrapping`, `keyStoreFormats`) |
 | Master key (local master key) | The key that protects a key store. Named by the store; its value is never recorded |
-| Key-encryption key (zone master key) | A key delivered over a key-transport interface and held in a key store, reached through `keyStoreRef` |
+| Key-encryption key (zone master key) | A key delivered over a key-transport interface and held in a key store, reached through `keysStoredIn` |
 | Working key (PIN, MAC or data key) | A key held in a key store under a key-encryption key |
 | Key ceremony | A procedure. It changes keys, not the record, unless it changes an algorithm or a store |
 | Scheme | A system, described by a system record of what the scheme operator runs |

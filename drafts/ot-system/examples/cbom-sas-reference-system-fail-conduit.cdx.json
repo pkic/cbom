@@ -1,7 +1,7 @@
 {
   "specFormat": "CycloneDX",
   "specVersion": "2.0",
-  "$comment": "DRAFT NON-CONFORMING EXAMPLE for ot-system. The published substation system record with conduitRef removed from the enrolment interface, whose path crosses from the station bus to the control centre. Fails ot-system#I3 (S3).",
+  "$comment": "DRAFT NON-CONFORMING EXAMPLE for ot-system. The published substation system record with crossesConduit removed from the enrolment interface, whose path crosses from the station bus to the control centre. Fails ot-system#I3 (S3).",
   "serialNumber": "urn:uuid:5a5e0001-2b3c-4d5e-8f90-616850000003",
   "version": 1,
   "metadata": {
@@ -40,8 +40,8 @@
             "value": "control-centre"
           },
           {
-            "name": "pkic:profile:claimedLevel62443",
-            "value": "SL-C 2"
+            "name": "pkic:profile:claimedSecurityLevel",
+            "value": "sl-c-2"
           }
         ],
         "identifiers": [
@@ -108,10 +108,10 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "HMAC-SHA256"
+              "value": "HMAC-SHA-256"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "ied1:int-gdoi"
             },
             {
@@ -119,7 +119,7 @@
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#svc-goose"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -131,7 +131,7 @@
               "value": "within-zone"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "sys:station-server-gdoi"
             }
           ]
@@ -171,10 +171,10 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "HMAC-SHA256"
+              "value": "HMAC-SHA-256"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "ied1:int-gdoi"
             },
             {
@@ -182,7 +182,7 @@
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#svc-sv"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "not-connected"
             },
             {
@@ -218,7 +218,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -226,18 +226,22 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "ied1:sto-keys"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 62443-4-2 (ISASecure CSA)"
             },
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#tls-mms"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -249,7 +253,7 @@
               "value": "within-zone"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "sys:enrolment-service"
             }
           ]
@@ -289,18 +293,22 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "ied1:sto-keys"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 61850 conformance testing"
             },
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#svc-mms"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -312,7 +320,7 @@
               "value": "within-zone"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "sys:enrolment-service"
             }
           ]
@@ -344,7 +352,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "MODP-2048"
+              "value": "FFDH-MODP-2048"
             },
             {
               "name": "pkic:profile:encryption",
@@ -355,11 +363,15 @@
               "value": "RSA-2048"
             },
             {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 62443-4-2 (ISASecure CSA)"
+            },
+            {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#int-gdoi"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -371,7 +383,7 @@
               "value": "within-zone"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "sys:station-server-gdoi"
             }
           ]
@@ -403,7 +415,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -411,14 +423,18 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 61850 conformance testing"
             },
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#mgmt-enrol"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -430,7 +446,7 @@
               "value": "crosses-zones"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "sys:enrolment-service"
             }
           ]
@@ -462,7 +478,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -470,14 +486,18 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 62443-4-2 (ISASecure CSA)"
             },
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#upd-fw"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "disabled"
             },
             {
@@ -513,7 +533,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "ECDH-P256"
+              "value": "ECDH-P-256"
             },
             {
               "name": "pkic:profile:encryption",
@@ -521,14 +541,18 @@
             },
             {
               "name": "pkic:profile:authentication",
-              "value": "ECDSA-P256-SHA256"
+              "value": "ECDSA-P-256-SHA-256"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 61850 conformance testing"
             },
             {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#mgmt-eng"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -540,11 +564,11 @@
               "value": "crosses-zones"
             },
             {
-              "name": "pkic:profile:conduitRef",
+              "name": "pkic:profile:crossesConduit",
               "value": "sys:substation-gateway"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "sys:enrolment-service"
             }
           ]
@@ -591,7 +615,7 @@
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#peer-ptp"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -603,7 +627,7 @@
               "value": "within-zone"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "none"
             }
           ]
@@ -626,11 +650,15 @@
               "value": "none"
             },
             {
+              "name": "pkic:profile:impactedCertification",
+              "value": "IEC 62443-4-2 (ISASecure CSA)"
+            },
+            {
               "name": "pkic:profile:correspondsTo",
               "value": "urn:cdx:0d7a5e10-62f3-4b51-9e3a-61850000c001/1#sto-keys"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -642,7 +670,7 @@
               "value": "within-zone"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "product"
             }
           ]
@@ -674,7 +702,7 @@
             },
             {
               "name": "pkic:profile:keyExchange",
-              "value": "RSA"
+              "value": "RSA-PKCS1-1.5"
             },
             {
               "name": "pkic:profile:encryption",
@@ -685,7 +713,7 @@
               "value": "RSA-2048"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "out-of-band"
             },
             {
@@ -693,7 +721,7 @@
               "value": "urn:cdx:60870a1e-0b6c-4f2e-9d1a-160870000001/1#tls-104"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -705,11 +733,11 @@
               "value": "crosses-zones"
             },
             {
-              "name": "pkic:profile:conduitRef",
+              "name": "pkic:profile:crossesConduit",
               "value": "sys:substation-gateway"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "sys:enrolment-service"
             }
           ]
@@ -752,11 +780,11 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:implementationPurl",
+              "name": "pkic:profile:implementingLibrary",
               "value": "pkg:github/mz-automation/lib60870@v2.4.1"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "none"
             },
             {
@@ -764,7 +792,7 @@
               "value": "urn:cdx:60870a1e-0b6c-4f2e-9d1a-160870000001/1#svc-104"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "disabled"
             },
             {
@@ -811,11 +839,11 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:implementationPurl",
+              "name": "pkic:profile:implementingLibrary",
               "value": "pkg:github/mz-automation/lib60870@v2.4.1"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "none"
             },
             {
@@ -823,7 +851,7 @@
               "value": "urn:cdx:60870a1e-0b6c-4f2e-9d1a-160870000001/1#svc-101"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "not-connected"
             },
             {
@@ -917,7 +945,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "966c49e764f04bd64af05931c65113460f3e21da7f3e6cb1c0b285393eecdeee"
+          "content": "714b0b2b048b8df9ffd1e3e7fa5e71708a5d1f4705208f60e1b00bb027fe11ea"
         }
       ]
     },
@@ -934,7 +962,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "825a9b2b0949c7450af195e7a7361428345bfb4a3abd7d81cb941380055dfc07"
+          "content": "4ad0bd77248a08cc810b1ece650ea2a0e7306213a4aaad9e479bad3974e96571"
         }
       ]
     }

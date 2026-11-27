@@ -57,13 +57,13 @@ svc = {
      "note": "Part of the coverage statement. Where the cryptography differs between regions, the provider writes one record per group of regions."},
     {"id": "P2", "description": "Service declares at least one storage interface for customer data, or states why it has none",
      "level": "MUST", "constraint": {"minInterfacesOfType": {"interfaceType": "storage", "min": 1},
-     "orDeclaredAbsent": "storageInterfaceAbsence", "absenceEnumRef": "storageAbsenceVocabulary"},
+     "orDeclaredAbsent": "absent:storage-interface", "absenceEnumRef": "storageAbsenceVocabulary"},
      "withholdable": False, "note": "For most customers the store matters more than the session."},
     {"id": "P3", "description": "Service cites the records it builds on, each by BOM-Link and hash", "level": "MUST",
      "constraint": {"citesDocuments": {"min": 1, "hashRequired": True}}, "withholdable": False,
      "note": "The product records of the software it runs, and the records of the services beneath it."},
     {"id": "P4", "description": "Service states what makes the provider produce a new record", "level": "MUST",
-     "constraint": {"productAttribute": "regenerationTrigger", "enumRef": "regenerationTriggerVocabulary"},
+     "constraint": {"productAttribute": "recordRefreshTrigger", "enumRef": "regenerationTriggerVocabulary"},
      "withholdable": False, "note": "With the document timestamp and the change-notice pointer, a customer's policy can judge whether the record it holds is current."}],
   "interfaceRules": [
     {"id": "I1", "attribute": "keyCustodySupported", "level": "MUST", "constraint": {"enumRef": "keyCustodyVocabulary"},
@@ -146,7 +146,7 @@ def build(serial_suffix, coverage, keep_internal, with_custody):
     prop(subj, "subjectType", "service")
     prop(subj, "coverage", coverage)
     prop(subj, "serviceRegions", "eu-west, eu-central")
-    prop(subj, "regenerationTrigger", "interface-change")
+    prop(subj, "recordRefreshTrigger", "interface-change")
     comps = d["inventories"][0]["components"]
     internal = {"crypto:protocol:int-db", "crypto:protocol:int-ldap", "crypto:protocol:int-cache",
                 "service:mgmt-health"}

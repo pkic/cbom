@@ -56,17 +56,17 @@ router, and the system document; review by a protection IED supplier and a trans
 distribution operator.
 Partly resolved in Release 1, 18 November 2026. The lib60870 product record and the reference substation's system record are worked examples. Left: values marked to confirm in the lib60870 record, and a real supplier product for the IED.
 
-**R2-08 — `usage` as a general facility.**
-From: record 0024. Settled: `usage` stays in the substation overlay. Left: whether other derived
+**R2-08 — `designUse` as a general facility.**
+From: record 0024. Settled: `designUse` stays in the substation overlay. Left: whether other derived
 documents need it.
-Resolved in Release 1, 18 November 2026. `usage` is defined in System Disclosure, so any system record can state it.
+Resolved in Release 1, 18 November 2026. `designUse` is defined in System Disclosure, so any system record can state it.
 
 **R2-09 — The IoT device estate profile.**
 From: the IoT use case. Settled: the subject is a device model (Q62); a hard limit is recorded in
-`resourceBound` (Q63); the profile extends the change core (Q64); who can install firmware is
-`updateAuthority` (Q65). Left: the rules file; whether `resourceBound` is MUST, and with it
-`integrationConstraints`; `updateSupportStatus`, `keyProvisioning` and `cryptoTerminationPoint`;
-values of `providerLocation` that fit devices; whether the physical attack surface is in scope; the
+`resourceLimits` (Q63); the profile extends the change core (Q64); who can install firmware is
+`updateAuthority` (Q65). Left: the rules file; whether `resourceLimits` is MUST, and with it
+`integrationConstraints`; `updateSupportStatus`, `keyProvisioning` and `terminationOptions`;
+values of `executionEnvironment` that fit devices; whether the physical attack surface is in scope; the
 worked interface.
 Resolved in Release 1, 18 November 2026. The IoT Device Estate profile v0.1 extends the change core, with two soil sensor records as worked examples. Publication 2, 8.2; Publication 3, Chapter 16.
 
@@ -136,11 +136,11 @@ PKI. Left: the working group to confirm the move of S4, and the generic overlay'
 Operation group document.
 Resolved in Release 1, 18 November 2026. The move of S4 is confirmed. System Disclosure v0.1 is published in Release 1, and the OT and telecom drafts extend it.
 
-**R2-16 — `keyStoreRef` on interfaces that use no key.** Resolved, 17 November 2026. No profile change.
+**R2-16 — `keysStoredIn` on interfaces that use no key.** Resolved, 17 November 2026. No profile change.
 From: the OT domain document, 10.3. The libIEC61850 record failed `pqc-migration-ot#I3` on its MMS,
-GOOSE and SV interfaces because it left `keyStoreRef` out. The literal `none` already means "this
+GOOSE and SV interfaces because it left `keysStoredIn` out. The literal `none` already means "this
 interface uses no keys" (PQC Migration Extended I8, decision 0022, K3), and I3 accepts it. With
-`keyStoreRef` set to `none` on those interfaces, the record passes I3. Left: an editorial change to
+`keysStoredIn` set to `none` on those interfaces, the record passes I3. Left: an editorial change to
 the note of `pqc-migration-ot#I3` in its next version, naming the literals `none`, `out-of-band` and
 `product-managed` as PQC Migration Extended I8 does.
 
@@ -152,8 +152,8 @@ Publication 2, C.2, and on the Terms page after Release 1 is tagged.
 
 **R2-18 — Checking that a system record lists every product interface.**
 From: the OT domain document, 8.3 (S2), tested in `drafts/ot-system/`. S2 asks a system record to
-state `usage` for every interface of every product it cites, so that an interface left enabled and
-unused is visible. The evaluator checks `usage` on each interface the record lists. It cannot check
+state `designUse` for every interface of every product it cites, so that an interface left enabled and
+unused is visible. The evaluator checks `designUse` on each interface the record lists. It cannot check
 that none is missing: that needs a constraint that reads each cited document and looks for an
 interface no `correspondsTo` points at. Left: whether to add that constraint, as a product rule on
 cited documents, and whether a missing interface is a failure or a warning. The same check would
@@ -172,7 +172,7 @@ Resolved in Release 1, 18 November 2026. Zones and operator boundaries stay sect
 
 **R2-20 — Checking a value against a list the record declares.**
 From: both overlays. An interface's `zone` should be one of the system's `zones`, and its
-`carriesService` one of the system's `services`. A `conduitRef`, `boundaryProxy` or `keyProvider`
+`carriesService` one of the system's `services`. A `crossesConduit`, `proxiedBy` or `keysProvidedBy`
 should name a component of the same record. The evaluator checks each value on its own and cannot
 compare it with another attribute of the same document. Left: whether to add a constraint that does,
 and whether a mismatch is a failure or a warning.
@@ -183,25 +183,25 @@ From: the telecom domain document, 8.4, and the Keycloak records, where the ingr
 Keycloak's HTTP listener. Decision: the baseline v0.10 defines `terminatedBy` (I14) at MAY, checked with
 `refersToLocal` and the literals `workload` and `platform`. Deployment Disclosure v0.3 raises it to MUST on
 every interface but storage, and Service Disclosure v0.1 to SHOULD. IoT Device Estate's
-`cryptoTerminationPoint` stays as the product-level statement of what a device model allows.
+`terminationOptions` stays as the product-level statement of what a device model allows.
 Publication 2, C.1 and 8.2.
 
 
 **R2-22 — Keys held outside the record.**
-From: the OT document (10.4) and the SaaS tenant draft (8.4, 8.6). `keyStoreRef` names a component of
+From: the OT document (10.4) and the SaaS tenant draft (8.4, 8.6). `keysStoredIn` names a component of
 the same record. OT writes `out-of-band` where the key plane lives outside the library, and SaaS writes
 `external-key-service` where the tenant's own service holds the keys. Publication 2, position 31, stops
 a derived profile adding values to a vocabulary that does not key a group. Left: one set of literals for
 keys held outside the record, added to PQC Migration Extended, and the drafts checked against it.
-Proposed, and applied in the working drafts on 19 November 2026. The literals stay those of PQC Migration Extended I8: `none`, `out-of-band` and `product-managed`. The SaaS key-custody draft uses `out-of-band` for keys held by the tenant's own service and drops `external-key-service`. Where that service has a record, the tenant record names it with `externalKeyService`, as before. The OT document already used the Release 1 literals.
+Proposed, and applied in the working drafts on 19 November 2026. The literals stay those of PQC Migration Extended I8: `none`, `out-of-band` and `product-managed`. The SaaS key-custody draft uses `out-of-band` for keys held by the tenant's own service and drops `external-key-service`. Where that service has a record, the tenant record names it with `keysHeldBy`, as before. The OT document already used the Release 1 literals.
 
 **R2-23 — Certification impact in the change core.**
 From: the financial services outline (HSM profile, 8.1), the telecom document (NESAS and SCAS) and the
 SaaS document (FedRAMP). `certificationImpact` exists only in the substation component profile.
 Publication 3, position 36, keeps module validation out of the change core. Left: whether
-`certificationImpact` and `certificationScheme` move into the change core, or the HSM profile is based on
+`certificationImpact` and `impactedCertification` move into the change core, or the HSM profile is based on
 PQC Migration Extended instead.
-Proposed, and applied in the working draft on 19 November 2026. The change core and PQC Migration declare `certificationImpact` (I17, SHOULD) and `certificationScheme` (I18, SHOULD) under the same ids, with the vocabulary moved from the substation component profile. That profile raises change-core#I17 to MUST and no longer declares its own I1 and I2. Module validation stays out of the change core, so Publication 3 position 36 stands. An HSM profile extends PQC Migration Extended and gets both. Verdicts are unchanged; the rule ids in substation reports change.
+Proposed, and applied in the working draft on 19 November 2026. The change core and PQC Migration declare `certificationImpact` (I17, SHOULD) and `impactedCertification` (I18, SHOULD) under the same ids, with the vocabulary moved from the substation component profile. That profile raises change-core#I17 to MUST and no longer declares its own I1 and I2. Module validation stays out of the change core, so Publication 3 position 36 stands. An HSM profile extends PQC Migration Extended and gets both. Verdicts are unchanged; the rule ids in substation reports change.
 
 **R2-24 — Which device profile applies where.**
 From: the OT, telecom and financial services documents. OT field devices use the substation component
@@ -212,10 +212,10 @@ Proposed. IoT Device Estate is for a device model in a fleet, where the decision
 
 **R2-25 — Shared names for boundary rules.**
 From: the OT document (8.3), the telecom document (8.2) and the financial services outline (4).
-Follows R2-19. OT records zones and conduits, telecom a crossing value and `boundaryProxy`, financial
+Follows R2-19. OT records zones and conduits, telecom a crossing value and `proxiedBy`, financial
 services borrows the telecom shape, and SaaS has none. Left: a shared note in the Change planning group
 document so that attribute names and checks (`refersToLocal`, `inSubjectList`) line up across sectors.
-Proposed. R2-19 stands: boundaries stay sector rules. Every boundary rule has two parts: a value on each interface, checked against a list the subject declares (`inSubjectList`) or a vocabulary, and a pointer to the component that guards it, checked with `refersToLocal`. A new sector reuses the telecom names `boundary` and `boundaryProxy` unless it has a recognised term of its own, as OT has for IEC 62443 zones and conduits. Financial services takes the telecom names. SaaS needs no boundary rule, because tenancy is a separate record. The note is kept in the Change planning group document.
+Proposed. R2-19 stands: boundaries stay sector rules. Every boundary rule has two parts: a value on each interface, checked against a list the subject declares (`inSubjectList`) or a vocabulary, and a pointer to the component that guards it, checked with `refersToLocal`. A new sector reuses the telecom names `boundary` and `proxiedBy` unless it has a recognised term of its own, as OT has for IEC 62443 zones and conduits. Financial services takes the telecom names. SaaS needs no boundary rule, because tenancy is a separate record. The note is kept in the Change planning group document.
 
 **R2-26 — Multi-party trust networks.**
 From: the financial services outline (4, 8.3) and the telecom document (4). Telecom reads interconnect
@@ -226,7 +226,7 @@ Proposed. The model stays within two-party relationships (Publication 2, positio
 
 **R2-27 — Key references across records.**
 From: the financial services outline (3, 8.4). The HSM has its own product and deployment records, so a
-key hierarchy crosses documents. `keyStoreRef` resolves only within one document. Left: a reference by
+key hierarchy crosses documents. `keysStoredIn` resolves only within one document. Left: a reference by
 BOM-Link and hash to a key store in another record, aligned with R2-22.
 Proposed, and applied in the working draft on 19 November 2026. `refersToLocal` gains the option `orCited`: the value may then also be a BOM-Link to an interface in a record the document cites, checked as `refersToCited` checks it. PQC Migration Extended I8 and the SaaS key-custody draft use it. Where no record exists, the value stays `out-of-band` (R2-22). I8 is SHOULD, so no verdict changes. Tested in `tests/check-additions.py`.
 
@@ -258,7 +258,7 @@ requires both facts.
 Proposed. The change core declares two rules, guarded like I14 (`updateMechanism` not `none`):
 `updateVerificationAlgorithm` (I19, MUST, an algorithm name under the inherited naming scheme, or
 `none` where updates are not verified) and `verifierReplaceable` (I20, SHOULD, with the vocabulary moved
-from the substation component profile: `yes`, `via-bootloader-update`, `no`). The substation component
+from the substation component profile: `in-field`, `bootloader-update`, `not-replaceable`). The substation component
 profile no longer declares its own I4 and raises change-core#I20 to MUST, in the same way as R2-23 moved
 `certificationImpact`. IoT Device Estate inherits both. The baseline is unchanged. Not yet applied.
 Effect on the register: CNSA-signing moves from partial to deeper-profile, and CRA-I-2c gains the

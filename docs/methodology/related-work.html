@@ -72,10 +72,10 @@ nav: related
     <thead><tr><th>Attribute</th><th>What an assessment could use it for</th></tr></thead>
     <tbody>
       <tr><td><code>keyExchangeSupported</code>, <code>authenticationSupported</code></td><td>Which post-quantum algorithms the product can be configured to use</td></tr>
-      <tr><td><code>coexistence</code></td><td>Whether hybrid operation is possible, which Level 4 requires</td></tr>
-      <tr><td><code>enablementMethod</code>, <code>minimumProductVersion</code></td><td>Whether a capability is available in a shipped release, and what a customer must do to reach it</td></tr>
+      <tr><td><code>transitionMode</code></td><td>Whether hybrid operation is possible, which Level 4 requires</td></tr>
+      <tr><td><code>enablementMethod</code>, <code>availableFromVersion</code></td><td>Whether a capability is available in a shipped release, and what a customer must do to reach it</td></tr>
       <tr><td><code>capabilityStatus</code>, <code>blockedBy</code></td><td>Where a capability stands, and what is preventing it</td></tr>
-      <tr><td><code>implementationPurl</code></td><td>Which library provides the capability, which bears on agility and on zero-legacy claims</td></tr>
+      <tr><td><code>implementingLibrary</code></td><td>Which library provides the capability, which bears on agility and on zero-legacy claims</td></tr>
       <tr><td><code>lifecycleStage</code></td><td>Whether the facts in a record were implemented in the product, configured in a deployment or observed in operation, which determines how far the evidence goes. A record carries one stage. The baseline does not accept <code>intended</code>; a vendor's intention appears as a <code>capabilityStatus</code> instead</td></tr>
     </tbody>
   </table>

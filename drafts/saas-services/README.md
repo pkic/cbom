@@ -11,9 +11,9 @@ Run `python3 build.py` in this folder to regenerate every file.
 
 | File | SaaS document | Extends | Adds |
 | --- | --- | --- | --- |
-| `profile-service-key-custody.rules.json` | 8.4 | Service Disclosure, Restricted v0.1 | On every storage interface: `keyStoreRef` (I1, a component of this or a cited record, or the PQC Migration Extended literals `none`, `out-of-band` and `product-managed`), `replicaProtection` (I2: `same-as-primary`, `differs-from-primary` or `no-replicas`), `moduleValidationScheme` (I3, SHOULD) |
+| `profile-service-key-custody.rules.json` | 8.4 | Service Disclosure, Restricted v0.1 | On every storage interface: `keysStoredIn` (I1, a component of this or a cited record, or the PQC Migration Extended literals `none`, `out-of-band` and `product-managed`), `replicaProtection` (I2: `same-as-primary`, `differs-from-primary` or `no-replicas`), `moduleValidationScheme` (I3, SHOULD) |
 | `profile-service-change-planning.rules.json` | 8.5 | Change core v0.2 | Narrowed to `service` and `configured`; P1: cite the records it builds on, by hash. No new attribute |
-| `profile-tenant-disclosure.rules.json` | 8.6 | Deployment Disclosure v0.3 | On every storage interface: the tenant's `keyCustody` (I1); for `external`, `externalKeyService` in a cited record (I2) |
+| `profile-tenant-disclosure.rules.json` | 8.6 | Deployment Disclosure v0.3 | On every storage interface: the tenant's `keyCustody` (I1); for `external`, `keysHeldBy` in a cited record (I2) |
 
 The baseline already requires `keyWrapping` on every storage interface, so the key-custody depth
 does not repeat it.

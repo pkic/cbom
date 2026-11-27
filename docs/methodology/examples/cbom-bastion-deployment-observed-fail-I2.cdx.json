@@ -1,0 +1,391 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "NON-CONFORMING EXAMPLE, derived from cbom-bastion-deployment-observed.cdx.json. It breaks one thing: ssh-transport does not say how it was observed. Everything else is unchanged.",
+  "serialNumber": "urn:uuid:ba571000-0000-4000-8000-0b000000f004",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-27T08:30:00Z",
+    "lifecycles": [
+      {
+        "phase": "discovery"
+      }
+    ],
+    "supplier": {
+      "name": "Example Org platform team (fictional)",
+      "url": [
+        "https://example.org"
+      ]
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "deployment:bastion",
+        "name": "bastion.example.org SSH bastion (production)",
+        "description": "OpenSSH 10.0p2 on a hardened Linux virtual machine. The only route for administrators into the production network.",
+        "properties": [
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "deployment"
+          },
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          },
+          {
+            "name": "pkic:profile:absent:management-interface",
+            "value": "configured-out-of-band"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": {
+                  "name": "tag-uri",
+                  "description": "A tag URI (RFC 4151)."
+                },
+                "value": "tag:example.org,2026:deployment/bastion"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "Example Org platform team (fictional)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://example.org"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "service",
+          "bom-ref": "ssh-transport",
+          "name": "SSH on bastion.example.org:22",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SSH"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:admin-workstation"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:bastion"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "mlkem768x25519-sha256"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "sntrup761x25519-sha512"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "curve25519-sha256"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "chacha20-poly1305@openssh.com"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "aes256-gcm@openssh.com"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ssh-ed25519"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0a55e100-0000-4000-8000-100000000001/1#ssh-transport"
+            },
+            {
+              "name": "pkic:profile:connectsTo",
+              "value": "peer-not-recorded"
+            },
+            {
+              "name": "pkic:profile:keysStoredIn",
+              "value": "sto-hostkeys"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-11-27T08:30:00Z"
+            }
+          ],
+          "endpoints": [
+            "ssh://bastion.example.org:22"
+          ],
+          "externalReferences": [
+            {
+              "type": "evidence",
+              "url": "https://grc.example.org/scans/bastion-2026-11-27.json",
+              "comment": "The scan output: examples/context/bastion-ssh-scan-2026-11-27.json.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "observation-evidence"
+                }
+              ],
+              "hashes": [
+                {
+                  "alg": "SHA-256",
+                  "content": "bc437b502d87973246489963564a61f7efd8651e18adf3f97ba13684b878dc0a"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ssh-userauth",
+          "name": "Administrator public key authentication",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "SSH user authentication (RFC 4252)"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2.0"
+            },
+            {
+              "name": "pkic:profile:endpointRole:client",
+              "value": "endpoint:admin-workstation"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:bastion"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "sk-ssh-ed25519@openssh.com"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "ssh-ed25519"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0a55e100-0000-4000-8000-100000000001/1#ssh-userauth"
+            },
+            {
+              "name": "pkic:profile:connectsTo",
+              "value": "peer-not-recorded"
+            },
+            {
+              "name": "pkic:profile:keysStoredIn",
+              "value": "out-of-band"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "active-probe"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-11-27T08:30:00Z"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "evidence",
+              "url": "https://grc.example.org/scans/bastion-2026-11-27.json",
+              "comment": "The scan output: examples/context/bastion-ssh-scan-2026-11-27.json.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "observation-evidence"
+                }
+              ],
+              "hashes": [
+                {
+                  "alg": "SHA-256",
+                  "content": "bc437b502d87973246489963564a61f7efd8651e18adf3f97ba13684b878dc0a"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sto-hostkeys",
+          "name": "Host key file (/etc/ssh/ssh_host_ed25519_key)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:correspondsTo",
+              "value": "urn:cdx:0a55e100-0000-4000-8000-100000000001/1#sto-hostkeys"
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Only the Ed25519 host key is configured; the other default types were removed after installation."
+            },
+            {
+              "name": "pkic:profile:observationMethod",
+              "value": "active-probe"
+            },
+            {
+              "name": "pkic:profile:observedAt",
+              "value": "2026-11-27T08:30:00Z"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "evidence",
+              "url": "https://grc.example.org/scans/bastion-2026-11-27.json",
+              "comment": "The scan output: examples/context/bastion-ssh-scan-2026-11-27.json.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "observation-evidence"
+                }
+              ],
+              "hashes": [
+                {
+                  "alg": "SHA-256",
+                  "content": "bc437b502d87973246489963564a61f7efd8651e18adf3f97ba13684b878dc0a"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "deployment:bastion",
+      "dependsOn": [
+        "ssh-transport",
+        "ssh-userauth",
+        "sto-hostkeys"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:0a55e100-0000-4000-8000-100000000001/1",
+      "comment": "The product record of the OpenSSH release this host runs.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6ec8c92ee5c75af87f038465a6a2ea2c775595973f45f3d7162efb679e3a2831"
+        }
+      ]
+    },
+    {
+      "type": "bom",
+      "url": "urn:cdx:ba571000-0000-4000-8000-c00000000001/1",
+      "comment": "The configured record this observation was compared with.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "cited-document"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c62b3e88de1c059d2aaa873739d7e1ec2cdc367869d6389c0fb2b11f7d2845da"
+        }
+      ]
+    },
+    {
+      "type": "vcs",
+      "url": "https://git.example.org/platform/bastion-config/-/commit/9c1d4e7a2b",
+      "comment": "The configuration revision in force when the scan ran, according to the deployment log.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "configuration-source"
+        }
+      ]
+    },
+    {
+      "type": "risk-assessment",
+      "url": "https://grc.example.org/registers/data/bastion",
+      "comment": "What the administrators' sessions carry and how long it must stay confidential.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "data-register"
+        }
+      ]
+    }
+  ]
+}

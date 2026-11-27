@@ -30,9 +30,9 @@ nav: uc-change
   <h2>The change core</h2>
   <p>The profiles in this group share most of what they ask for. Each profile extends exactly one base profile. A fact that two profiles both need therefore has to be defined in a profile that both of them extend, rather than defined twice. That shared base profile is the change core.</p>
   <ul>
-    <li><strong>In the core:</strong> <code>capabilityStatus</code>, <code>blockedBy</code> and <code>roadmapRef</code> per purpose; the <code>Supported</code> forms of protocol version, key exchange and authentication; <code>enablementMethod</code> and <code>minimumProductVersion</code>; <code>coexistence</code> and <code>negotiationControl</code>; <code>integrationConstraints</code>.</li>
+    <li><strong>In the core:</strong> <code>capabilityStatus</code>, <code>blockedBy</code> and <code>roadmapRef</code> per purpose; the <code>Supported</code> forms of protocol version, key exchange and authentication; <code>enablementMethod</code> and <code>availableFromVersion</code>; <code>transitionMode</code> and <code>algorithmSelection</code>; <code>integrationConstraints</code>.</li>
     <li><strong>Update path:</strong> <code>updateMechanism</code> for the product as a whole and for each management interface; <code>updateAuthority</code> and <code>updateAuthoritySupported</code> where an interface carries updates; <code>keyReplaceable</code> on storage. The IoT and substation profiles need them. A product with no update path says so with <code>none</code>.</li>
-    <li><strong>Kept in PQC migration, not in the core:</strong> <code>providerLocation</code>, whose values do not fit constrained devices, module validation, and key wrapping capability.</li>
+    <li><strong>Kept in PQC migration, not in the core:</strong> <code>executionEnvironment</code>, whose values do not fit constrained devices, module validation, and key wrapping capability.</li>
     <li><strong>Not in the core:</strong> what each profile adds for its own subject, shown in the last column of the table below.</li>
   </ul>
   <p>The core is published as a sibling of the PQC migration profile. Both the core and the PQC migration profile extend the interface disclosure baseline. The core declares each shared rule under the id that the migration profile already uses, so no rule id changes. The tree below shows how the profiles relate by what they share. In the files, PQC migration and the core are siblings, and <code>tests/check-core.py</code> keeps their shared rules identical. The same choice keeps the entry profile and the baseline siblings. The core works for any target algorithm. It says what each interface can do for each cryptographic purpose, and a policy says whether that meets the target. So crypto-agility assessment needs no profile of its own, and the same core can serve the next algorithm transition.</p>
@@ -60,7 +60,7 @@ sas-system                         overlay over component documents (system)</co
   <div style="overflow:auto">
   <table>
     <thead><tr>
-      <th>Change-planning use case</th><th>capability per purpose, blocker</th><th>enablement, provider location</th><th>coexistence</th><th>update path (conditional)</th><th>added by the profile itself</th>
+      <th>Change-planning use case</th><th>capability per purpose, blocker</th><th>enablement, execution environment</th><th>transition mode</th><th>update path (conditional)</th><th>added by the profile itself</th>
     </tr></thead>
     <tbody>
       <tr><td>PQC migration</td><td>●</td><td>●</td><td>●</td><td>○</td><td>module validation, the extended key-management depth</td></tr>

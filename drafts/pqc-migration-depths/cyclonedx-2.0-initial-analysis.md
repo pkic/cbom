@@ -97,7 +97,7 @@ distinction stays open.
 |---|---|---|
 | `moduleValidationScheme`, `moduleValidationRef` (I10, I11) | `certifications[]` on the implementing library: `standard`, `identifier`, `level`, `url`, `issuer`, dates | Good. Put it on the library and inherit through `provides` (K9). This also answers our feedback on ISO/IEC 19790 and national approval, because `standard` is free text |
 | `productCertificationScheme` (extended P2) | `certifications[]` on the subject | Good |
-| `negotiationControl` (I8) | `agility.negotiated` | Partial. It says whether the configuration is negotiated, not whether the far end can be pinned |
+| `algorithmSelection` (I8) | `agility.negotiated` | Partial. It says whether the configuration is negotiated, not whether the far end can be pinned |
 | `enablementMethod` | `agility.changeMechanism` | Partial. It describes changing the current configuration. It has no `licence` and no "not available" in the product's sense |
 | `enablementSetting` (extended) | `agility.configurationRef` to a `data` component of type `configuration` | Plausible. Needs a worked example |
 | Key rotation and certificate renewal (extended) | `rotation`, `renewal` | Good, where the extended rules ask how keys are replaced |

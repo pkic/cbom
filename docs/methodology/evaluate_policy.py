@@ -15,7 +15,7 @@ Three evaluation methods are implemented, selected by the policy's 'method':
   readiness-gap         join a product record, a configured record and an
                         observation along correspondsTo, and place each
                         interface and purpose in one gap class
-  edge-posture          join the two ends of a connection along peerInterface
+  edge-posture          join the two ends of a connection along connectsTo
                         (decision 0026), and say for each purpose whether the
                         connection meets the target and, if not, which end
                         limits it
@@ -275,7 +275,7 @@ def edge_posture(policy, docs, date, registry):
     """Join the two ends of each connection and find which end limits it.
 
     A connection has no record of its own. Each end is described by its own
-    operator's records, and a peerInterface pointer (deployment-disclosure I4)
+    operator's records, and a connectsTo pointer (deployment-disclosure I4)
     on either end joins them. An end is a subject and an interface id; its
     configured record says what it permits and its observed record, if
     supplied, says what was negotiated. The finding is computed here and dated
@@ -301,18 +301,18 @@ def edge_posture(policy, docs, date, registry):
     for path, bom in docs:
         subject = V.extract_product(bom).get("identifier")
         for i in V.extract_interfaces(bom, registry):
-            for v in as_list(i.get("peerInterface")):
+            for v in as_list(i.get("connectsTo")):
                 if v == "peer-not-recorded":
                     continue
                 doc, ref = V.split_bomlink(v)
                 entry = registry.get(doc) if doc else None
                 if not entry:
                     unresolved.append({"statedIn": os.path.basename(path), "interface": i["interfaceId"],
-                                       "peerInterface": v})
+                                       "connectsTo": v})
                     continue
                 if ref not in [x["interfaceId"] for x in V.extract_interfaces(entry["bom"], registry)]:
                     unresolved.append({"statedIn": os.path.basename(path), "interface": i["interfaceId"],
-                                       "peerInterface": v, "missing": True})
+                                       "connectsTo": v, "missing": True})
                     continue
                 peer_subject = V.extract_product(entry["bom"]).get("identifier")
                 key = tuple(sorted([(subject, i["interfaceId"]), (peer_subject, ref)]))
@@ -381,11 +381,11 @@ def edge_posture(policy, docs, date, registry):
         if u.get("missing"):
             findings.append({"edge": {"ends": None, "statedIn": [u["statedIn"]]}, "class": "peer-not-found",
                              "note": "%s names %s, which is not an interface in that document"
-                                     % (u["interface"], u["peerInterface"])})
+                                     % (u["interface"], u["connectsTo"])})
         else:
             findings.append({"edge": {"ends": None, "statedIn": [u["statedIn"]]}, "class": "peer-not-supplied",
                              "note": "%s names %s, and that document was not supplied"
-                                     % (u["interface"], u["peerInterface"])})
+                                     % (u["interface"], u["connectsTo"])})
     summary = {}
     for f in findings:
         summary[f["class"]] = summary.get(f["class"], 0) + 1

@@ -6,7 +6,7 @@
   "title": "Post-quantum posture of a connection, from both of its ends",
   "status": "illustrative",
   "interpretation": "interpretive",
-  "$comment": "An example policy. It joins the two ends of each connection along peerInterface (deployment-disclosure I4, decision 0026) and, for each purpose, says whether the connection meets the target and, if not, which end limits it. Each end is described by its own operator's records: the configured record says what the end permits, and the observed record, where supplied, says what was negotiated. The classification and the targets are the readiness-gap policy's, so the two results can be read together. The evaluation method is implemented by evaluate_policy.py. The result points to every record it used by digest.",
+  "$comment": "An example policy. It joins the two ends of each connection along connectsTo (deployment-disclosure I4, decision 0026) and, for each purpose, says whether the connection meets the target and, if not, which end limits it. Each end is described by its own operator's records: the configured record says what the end permits, and the observed record, where supplied, says what was negotiated. The classification and the targets are the readiness-gap policy's, so the two results can be read together. The evaluation method is implemented by evaluate_policy.py. The result points to every record it used by digest.",
   "method": "edge-posture",
   "inputs": {
     "profiles": [

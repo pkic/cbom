@@ -61,8 +61,8 @@ def system_record(ied, ied_bytes):
     # system record states what the design configures, and joins to the rest.
     drop = ["protocolVersionsSupported", "keyExchangeSupported", "authenticationSupported",
             "certification", "updateAuthoritySupported", "verifierReplaceable", "keyReplaceable",
-            "negotiationControl", "integrationConstraints", "defaultState", "capabilityByPurpose",
-            "enablementMethod", "minimumProductVersion", "coexistence", "updateMechanism", "updateAuthority"]
+            "algorithmSelection", "integrationConstraints", "defaultState", "capabilityByPurpose",
+            "enablementMethod", "availableFromVersion", "transitionMode", "updateMechanism", "updateAuthority"]
     usage = {"peer-ptp": "in-use", "mgmt-eng": "in-use"}
     for c in ied["inventories"][0]["components"]:
         if c.get("type") != "service":
@@ -72,7 +72,7 @@ def system_record(ied, ied_bytes):
         i["name"] = "Protection IED, bay 1: " + c["name"]
         i["properties"] = strip(i["properties"], drop) + [
             {"name": P + "correspondsTo", "value": "urn:cdx:%s/1#%s" % (serial, c["bom-ref"])},
-            {"name": P + "usage", "value": usage.get(c["bom-ref"], "in-use")}]
+            {"name": P + "designUse", "value": usage.get(c["bom-ref"], "in-use")}]
         keep.append(i)
     return {
         "specFormat": "CycloneDX", "specVersion": "2.0",

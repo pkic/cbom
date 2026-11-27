@@ -60,7 +60,7 @@ what this suite is an early form of.
 | Area | Checks |
 |---|---|
 | Artifacts | Every JSON artifact parses; both Python tools are syntactically valid. |
-| Baseline profile | The conforming CBOM is accepted and its withheld `implementationPurl` is reported as `HELD`; the non-conforming one is rejected on product rule P2. |
+| Baseline profile | The conforming CBOM is accepted and its withheld `implementingLibrary` is reported as `HELD`; the non-conforming one is rejected on product rule P2. |
 | Carrier version bands | 1.6 and 1.8 copies are accepted and flagged legacy and newer; a 1.5 copy is refused with exit 4, a REFUSED verdict, no rule results, and a JSON report marking it unassessed. Four bands need four inputs, which is why a 1.8 copy is generated. |
 | Derived PQC profile | The conforming CBOM is accepted and the base profile resolves; the non-conforming one trips both conditional rules and the tightened inherited rule. |
 | Composition | The document that fails the derived profile still conforms to the base, which is the tightening doing its work. A fixture with a relaxing override is rejected with exit code 3. |
@@ -134,7 +134,7 @@ a real profile.
 | `profile-c13-uncovered-purposes.rules.json` | C13 | A group rule covering only the purposes in scope, so a supplier conforms while saying nothing at all about the four the profile deferred. The floor a staged profile is meant not to become. |
 | `profile-c13-unkeyed-group.rules.json` | C13 | A group keyed by a vocabulary the profile does not declare. It requires an entry for no keys, so every document passes it and the rule reads as satisfied — silent success rather than a loud failure. |
 | `profile-relax-mincount.rules.json` | C7, and exit 3 from the validator | Lowers the inherited `endpointRoles` minimum from 2 to 1. Accepted before decision 0013, while C7 reported *no override relaxes it*. |
-| `profile-relax-identifier.rules.json` | C7, and exit 3 from the validator | Replaces the inherited requirement that `implementationPurl` be a `pkg:` Package URL with a bare presence check, so free text would satisfy the rule that exists to make records correlatable. |
+| `profile-relax-identifier.rules.json` | C7, and exit 3 from the validator | Replaces the inherited requirement that `implementingLibrary` be a `pkg:` Package URL with a bare presence check, so free text would satisfy the rule that exists to make records correlatable. |
 | `profile-tighten-constraint.rules.json` | none — valid | Raises the same minimum from 2 to 3. The counterpart to the two above: a check that rejects relaxations is only worth having if it still admits the tightenings the mechanism exists for. |
 | `profile-c17-unknown-constraint.rules.json` | C17, and exit 3 from the validator | `startswith` instead of `startsWith`. The evaluator recognised nothing and reported the rule as `ok` against every value — a rule that cannot fail, which is worse than a missing rule. |
 | `profile-c17-unresolved-vocabulary.rules.json` | C17, and exit 3 from the validator | An `enumRef` naming a vocabulary the profile does not declare. The mirror defect: every value fails, and the report says only that the value was not accepted. |

@@ -1,0 +1,853 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "NON-CONFORMING EXAMPLE, derived from cbom-examplegate-4.3.0-product.cdx.json. It breaks one thing: a FIPS 140-3 module is claimed with no certificate reference. Everything else is unchanged.",
+  "serialNumber": "urn:uuid:e8a7e000-0000-4000-8000-43000000f013",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-26T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+      "url": [
+        "https://pkic.org"
+      ]
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "device",
+        "bom-ref": "dev:examplegate",
+        "name": "ExampleGate",
+        "version": "4.3.0",
+        "description": "ExampleGate 4.3.0, an IPsec VPN gateway appliance from Example Networks. Fictional: written by the working group to show a validated module and a post-quantum update.",
+        "properties": [
+          {
+            "name": "pkic:profile:coverage",
+            "value": "all"
+          },
+          {
+            "name": "pkic:profile:subjectType",
+            "value": "product"
+          },
+          {
+            "name": "pkic:profile:productCertificationScheme",
+            "value": "common-criteria"
+          }
+        ],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:generic/example-networks/examplegate@4.3.0"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://pkic.org"
+                }
+              ]
+            }
+          },
+          {
+            "bom-ref": "party:supplier",
+            "roles": [
+              {
+                "role": "supplier"
+              }
+            ],
+            "organization": {
+              "name": "Example Networks (fictional)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://example.com"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:egcm",
+          "name": "ExampleGate Cryptographic Module (embedded HSM)",
+          "version": "2.1",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:generic/example-networks/egcm@2.1"
+                }
+              ]
+            }
+          ],
+          "properties": [
+            {
+              "name": "pkic:profile:executionEnvironment",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
+            },
+            {
+              "name": "pkic:profile:moduleValidationScheme",
+              "value": "fips-140-3"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "configuration"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:validatedModeAvailability",
+              "value": "outside-validated-mode-only"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-establishment:roadmapRef",
+              "value": "https://docs.example.com/examplegate/pqc-roadmap"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:encryption:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:data-integrity:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-derivation:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:capabilityStatus",
+              "value": "available"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:key-protection:validatedModeAvailability",
+              "value": "in-validated-mode"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:capabilityStatus",
+              "value": "planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:blockedBy",
+              "value": "standard"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:roadmapRef",
+              "value": "https://docs.example.com/examplegate/pqc-roadmap"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:verifierPopulation",
+              "value": "counterparty"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:entity-authentication:trustDomain",
+              "value": "private"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:capabilityStatus",
+              "value": "not-planned"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:blockedBy",
+              "value": "product"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:verifierPopulation",
+              "value": "counterparty"
+            },
+            {
+              "name": "pkic:profile:capabilityByPurpose:non-repudiation:trustDomain",
+              "value": "private"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "ike",
+          "name": "IKEv2 key exchange (UDP 500 and 4500)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "IKEv2"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "2"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:remote-peer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:examplegate"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "2"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECP-256 (group 19)"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ECP-384 (group 20)"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "Curve25519 (group 31)"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "MODP-2048 (group 14)"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "MODP-3072 (group 15)"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ML-KEM-768 (additional key exchange, RFC 9370)"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "ML-KEM-1024 (additional key exchange, RFC 9370)"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ECDSA-P256-SHA256"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ECDSA-P384-SHA384"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "RSA-PSS-SHA256"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "RSA-PKCS1-1.5-SHA256"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "PSK"
+            },
+            {
+              "name": "pkic:profile:algorithmSelection",
+              "value": "IKE proposals in the gateway configuration: one ordered list of transforms per tunnel."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "The peer must support RFC 9370 additional key exchanges for ML-KEM to be negotiated; otherwise the tunnel falls back to the classical group."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Fragmentation (RFC 7383) is on by default, because ML-KEM key shares make IKE_INTERMEDIATE messages larger than a typical path MTU."
+            },
+            {
+              "name": "pkic:profile:keysStoredIn",
+              "value": "sto-hsm"
+            },
+            {
+              "name": "pkic:profile:trustServiceDependencies",
+              "value": "certificate-authority"
+            },
+            {
+              "name": "pkic:profile:trustServiceDependencies",
+              "value": "revocation-responder"
+            },
+            {
+              "name": "pkic:profile:trustServiceDependencies",
+              "value": "time-source"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            },
+            {
+              "name": "pkic:profile:enablementSetting",
+              "value": "crypto ike proposal <name> additional-key-exchange mlkem768"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "FIPS 140-3"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ],
+          "endpoints": [
+            "udp://{gateway}:500",
+            "udp://{gateway}:4500"
+          ],
+          "externalReferences": [
+            {
+              "type": "documentation",
+              "url": "https://docs.example.com/examplegate/4.3.0/ike-proposals",
+              "comment": "Where the operator sets the IKE proposals, the tunnel certificates and pre-shared keys.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "configuration-guidance"
+                },
+                {
+                  "name": "pkic:profile:accessProtocol",
+                  "value": "web-page"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "esp",
+          "name": "ESP tunnel traffic",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "service"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "ESP"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "RFC 4303"
+            },
+            {
+              "name": "pkic:profile:endpointRole:initiator",
+              "value": "endpoint:remote-peer"
+            },
+            {
+              "name": "pkic:profile:endpointRole:responder",
+              "value": "endpoint:examplegate"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "RFC 4303"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:algorithmSelection",
+              "value": "ESP proposals in the gateway configuration, per tunnel."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Keyed by ike."
+            },
+            {
+              "name": "pkic:profile:keysStoredIn",
+              "value": "sto-hsm"
+            },
+            {
+              "name": "pkic:profile:trustServiceDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            },
+            {
+              "name": "pkic:profile:enablementSetting",
+              "value": "None of its own: ESP keys are derived in the IKE SA, so enabling ML-KEM on ike protects them."
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "FIPS 140-3"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ],
+          "externalReferences": [
+            {
+              "type": "documentation",
+              "url": "https://docs.example.com/examplegate/4.3.0/esp-proposals",
+              "comment": "Where the operator sets the ESP proposals.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "configuration-guidance"
+                },
+                {
+                  "name": "pkic:profile:accessProtocol",
+                  "value": "web-page"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "mgmt-https",
+          "name": "Management web interface and REST API (HTTPS, port 443)",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "management"
+            },
+            {
+              "name": "pkic:profile:protocol",
+              "value": "TLS"
+            },
+            {
+              "name": "pkic:profile:protocolVersion",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:endpointRole:administrator",
+              "value": "endpoint:admin-browser"
+            },
+            {
+              "name": "pkic:profile:endpointRole:server",
+              "value": "endpoint:examplegate"
+            },
+            {
+              "name": "pkic:profile:keyExchange",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:authentication",
+              "value": "deployment-defined"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.2"
+            },
+            {
+              "name": "pkic:profile:protocolVersionsSupported",
+              "value": "1.3"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "x25519"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "secp256r1"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "secp384r1"
+            },
+            {
+              "name": "pkic:profile:keyExchangeSupported",
+              "value": "X25519MLKEM768"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ecdsa_secp256r1_sha256"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "ecdsa_secp384r1_sha384"
+            },
+            {
+              "name": "pkic:profile:authenticationSupported",
+              "value": "rsa_pss_rsae_sha256"
+            },
+            {
+              "name": "pkic:profile:algorithmSelection",
+              "value": "TLS versions, cipher suites and groups under 'system tls'."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Administrators authenticate with a client certificate or with a password and a one-time code."
+            },
+            {
+              "name": "pkic:profile:managesKeys",
+              "value": "yes"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "generate"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "import"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "request-certificate"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "rotate"
+            },
+            {
+              "name": "pkic:profile:keyOperations",
+              "value": "zeroize"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "RSA-2048"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "RSA-3072"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ECDSA-P256"
+            },
+            {
+              "name": "pkic:profile:keyTypesSupported",
+              "value": "ECDSA-P384"
+            },
+            {
+              "name": "pkic:profile:keyTypes",
+              "value": "ECDSA-P256"
+            },
+            {
+              "name": "pkic:profile:keyStoreFormatsSupported",
+              "value": "pkcs12"
+            },
+            {
+              "name": "pkic:profile:keyStoreFormatsSupported",
+              "value": "pem"
+            },
+            {
+              "name": "pkic:profile:keyStoreFormatsSupported",
+              "value": "token-native"
+            },
+            {
+              "name": "pkic:profile:keyStoreFormats",
+              "value": "token-native"
+            },
+            {
+              "name": "pkic:profile:keyStoreLocation",
+              "value": "hsm"
+            },
+            {
+              "name": "pkic:profile:trustServiceDependencies",
+              "value": "certificate-authority"
+            },
+            {
+              "name": "pkic:profile:trustServiceDependencies",
+              "value": "revocation-responder"
+            },
+            {
+              "name": "pkic:profile:trustServiceDependencies",
+              "value": "time-source"
+            },
+            {
+              "name": "pkic:profile:terminatedBy",
+              "value": "workload"
+            },
+            {
+              "name": "pkic:profile:enablementSetting",
+              "value": "system tls groups x25519mlkem768,x25519,secp256r1"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "recertification"
+            },
+            {
+              "name": "pkic:profile:impactedCertification",
+              "value": "FIPS 140-3"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ],
+          "endpoints": [
+            "https://{gateway}/"
+          ],
+          "externalReferences": [
+            {
+              "type": "documentation",
+              "url": "https://docs.example.com/examplegate/4.3.0/management-tls",
+              "comment": "Where the operator sets the management certificate and the TLS settings.",
+              "properties": [
+                {
+                  "name": "pkic:profile:context",
+                  "value": "configuration-guidance"
+                },
+                {
+                  "name": "pkic:profile:accessProtocol",
+                  "value": "web-page"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "bom-ref": "sto-hsm",
+          "name": "Key store in the embedded HSM",
+          "properties": [
+            {
+              "name": "pkic:profile:interfaceType",
+              "value": "storage"
+            },
+            {
+              "name": "pkic:profile:encryption",
+              "value": "AES-256-GCM"
+            },
+            {
+              "name": "pkic:profile:keyWrapping",
+              "value": "AES-256-KWP"
+            },
+            {
+              "name": "pkic:profile:keyWrappingSupported",
+              "value": "AES-256-KWP"
+            },
+            {
+              "name": "pkic:profile:algorithmSelection",
+              "value": "Not applicable: nothing is negotiated at the key store."
+            },
+            {
+              "name": "pkic:profile:integrationConstraints",
+              "value": "Private keys are generated in the HSM and cannot be exported in the clear. A backup leaves the HSM wrapped under a key-encryption key held on a smart card."
+            },
+            {
+              "name": "pkic:profile:keysStoredIn",
+              "value": "product-managed"
+            },
+            {
+              "name": "pkic:profile:enablementMethod",
+              "value": "already-enabled"
+            },
+            {
+              "name": "pkic:profile:certificationImpact",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:trustServiceDependencies",
+              "value": "none"
+            },
+            {
+              "name": "pkic:profile:defaultState",
+              "value": "enabled"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dev:examplegate",
+      "dependsOn": [
+        "lib:egcm",
+        "ike",
+        "esp",
+        "mgmt-https",
+        "sto-hsm"
+      ]
+    },
+    {
+      "ref": "lib:egcm",
+      "provides": [
+        "ike",
+        "esp",
+        "mgmt-https",
+        "sto-hsm"
+      ]
+    },
+    {
+      "ref": "esp",
+      "dependsOn": [
+        "ike"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "complete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "bom",
+      "url": "urn:cdx:e8a7e000-0000-4000-8000-4300000000b0/1",
+      "comment": "Companion SBOM: examples/context/examplegate-4.3.0-sbom.cdx.json.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "sbom"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "dabf324f4d75200758cd6d562c2c13a13efe8a49008379870d62e4af95c68b74"
+        }
+      ]
+    },
+    {
+      "type": "vulnerability-assertion",
+      "url": "https://example.com/.well-known/csaf/provider-metadata.json",
+      "comment": "The supplier's CSAF provider, which publishes VEX documents for each release (fictional).",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "vulnerability-statements"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "csaf-provider"
+        }
+      ]
+    },
+    {
+      "type": "advisories",
+      "url": "https://example.com/security/advisories",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "advisories"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    },
+    {
+      "type": "rfc-9116",
+      "url": "https://example.com/.well-known/security.txt",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "security-contact"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "other"
+        }
+      ]
+    },
+    {
+      "type": "support",
+      "url": "https://example.com/examplegate/support-lifecycle",
+      "comment": "End-of-sale and end-of-support dates for each release.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "support-lifecycle"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    },
+    {
+      "type": "documentation",
+      "url": "https://docs.example.com/examplegate/pqc-roadmap",
+      "comment": "Post-quantum roadmap: ML-KEM for IKEv2 and management TLS in 4.3.0; module revalidation; ML-DSA authentication once IKEv2 signatures are standardised.",
+      "properties": [
+        {
+          "name": "pkic:profile:context",
+          "value": "roadmap"
+        },
+        {
+          "name": "pkic:profile:accessProtocol",
+          "value": "web-page"
+        }
+      ]
+    }
+  ]
+}

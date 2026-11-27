@@ -1,0 +1,116 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "$comment": "EXAMPLE SBOM for OpenSSH 10.0p2. Lists only the library the CBOM names, so its composition is incomplete.",
+  "serialNumber": "urn:uuid:0a55e100-0000-4000-8000-1000000000b0",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-26T09:00:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "supplier": {
+      "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+      "url": [
+        "https://pkic.org"
+      ]
+    }
+  },
+  "inventories": [
+    {
+      "bom-ref": "inventory:subject",
+      "subject": {
+        "type": "application",
+        "bom-ref": "app:openssh",
+        "name": "OpenSSH (portable)",
+        "version": "10.0p2",
+        "description": "The OpenSSH server, sshd, from the portable release 10.0p2, linked to OpenSSL libcrypto. Described from the release notes and manual pages by the working group, not by the OpenSSH developers.",
+        "properties": [],
+        "identifiers": [
+          {
+            "party": "party:document-author",
+            "identities": [
+              {
+                "scheme": "purl",
+                "value": "pkg:generic/openssh-portable@10.0p2"
+              }
+            ]
+          }
+        ],
+        "parties": [
+          {
+            "bom-ref": "party:document-author",
+            "roles": [
+              {
+                "role": "author"
+              }
+            ],
+            "organization": {
+              "name": "PKI Consortium CBOM Profiles Working Group (worked example)",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://pkic.org"
+                }
+              ]
+            }
+          },
+          {
+            "bom-ref": "party:supplier",
+            "roles": [
+              {
+                "role": "supplier"
+              }
+            ],
+            "organization": {
+              "name": "OpenSSH project",
+              "url": [
+                {
+                  "name": "website",
+                  "url": "https://www.openssh.com"
+                }
+              ]
+            }
+          }
+        ],
+        "licenses": [
+          {
+            "license": {
+              "id": "BSD-2-Clause"
+            }
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "lib:openssl",
+          "name": "OpenSSL libcrypto",
+          "version": "3.5.4",
+          "identifiers": [
+            {
+              "party": "party:document-author",
+              "identities": [
+                {
+                  "scheme": "purl",
+                  "value": "pkg:github/openssl/openssl@openssl-3.5.4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "kind": "components",
+      "aggregate": "incomplete",
+      "targets": [
+        "inventory:subject"
+      ]
+    }
+  ]
+}

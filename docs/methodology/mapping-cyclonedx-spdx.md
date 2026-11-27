@@ -118,14 +118,14 @@ baseline's P1, and `procurement#P1` is the procurement profile's P1.
 | Rule | What it requires | CycloneDX 2.0 | CycloneDX 1.6 / 1.7 (legacy) | SPDX 3.0.1 |
 |---|---|---|---|---|
 | interface-disclosure#P1 | At least one cryptographic interface | count of components in `inventories[0].components[]` that carry `pkic:profile:interfaceType` | the same count over `components[]` and `services[]` | **unresolved**, see [The unresolved SPDX rows](#the-unresolved-spdx-rows) |
-| interface-disclosure#P2 | A management interface, or a stated reason for none | count of those with `interfaceType = management`; otherwise the subject property `pkic:profile:managementInterfaceAbsence` with a value from `managementAbsenceVocabulary`. At `observed`, a management interface declared in a cited configured record also satisfies it, and the reason `not-reached` is accepted only with coverage `partial` | the same, with the subject property on `metadata.component` | **unresolved** |
+| interface-disclosure#P2 | A management interface, or a stated reason for none | count of those with `interfaceType = management`; otherwise the subject property `pkic:profile:absent:management-interface` with a value from `managementAbsenceVocabulary`. At `observed`, a management interface declared in a cited configured record also satisfies it, and the reason `not-reached` is accepted only with coverage `partial` | the same, with the subject property on `metadata.component` | **unresolved** |
 | interface-disclosure#P3 | The subject's identifier: a package URL for a product, a tag URI (RFC 4151) for a deployment | product: `inventories[0].subject.identifiers[].identities[]` with `scheme: "purl"`. Deployment: an identity with the custom scheme `{"name": "tag-uri", "description": "A tag URI (RFC 4151)."}` and a value such as `tag:example.org,2026:deployment/sso-prod` | product: `metadata.component.purl`. Deployment: property `pkic:profile:subjectIdentifier` on `metadata.component` | **unresolved** |
 | interface-disclosure#P4 | Coverage: `all`, `all-external` or `partial` | subject property `pkic:profile:coverage`; or `compositions[]` with `kind: "components"`, `targets` naming the inventory's `bom-ref`, and `aggregate` `complete` (read as `all`) or `incomplete` (read as `partial`). `all-external` has no CycloneDX value and is always the property | the property; or `compositions[]` with `aggregate` over an `assemblies` list of the interfaces | **unresolved** |
 | interface-disclosure#P5 | The document declares its subject type (`product` or `deployment`) | subject property `pkic:profile:subjectType` | property on `metadata.component` | **unresolved** |
 | interface-disclosure#P6 | One lifecycle stage per document | `metadata.lifecycles[].phase`: `build` → implemented, `operations` → configured, `discovery` → observed, `design` → intended. A per-interface `pkic:profile:lifecycleStage`, where present, must agree | `metadata.lifecycles[].phase`, the same values | **unresolved** |
 | deployment-disclosure#P1 | Cites the documents the record builds on, each by BOM-Link and SHA-256 | `externalReferences[]` at document level with `type: "bom"`, property `pkic:profile:context = cited-document`, `url` a BOM-Link `urn:cdx:<serial>/<version>`, and `hashes` with SHA-256. See [Joins across documents](#joins-across-documents) | the same | not mapped |
 | pqc-migration#P1 | At least one implementing library identified (SHOULD) | count of `type: "library"` components with a package URL in `identifiers[]` | count of `library` components with `purl` | **unresolved** |
-| pqc-migration-extended#P1 and procurement#P1 | A storage interface, or a stated reason for none | count of interfaces with `interfaceType = storage`; otherwise the subject property `pkic:profile:storageInterfaceAbsence` | the same, on `metadata.component` | **unresolved** |
+| pqc-migration-extended#P1 and procurement#P1 | A storage interface, or a stated reason for none | count of interfaces with `interfaceType = storage`; otherwise the subject property `pkic:profile:absent:storage-interface` | the same, on `metadata.component` | **unresolved** |
 | pqc-migration-extended#P2 | Product certification scheme (SHOULD) | `inventories[0].subject.certifications[]`: the first entry's `standard`. The validator reads "Common Criteria" (or "ISO/IEC 15408") as `common-criteria` and "EUCC" as `eucc`; any other text is read lower-cased and must be a value of `productCertificationVocabulary`. `none` is the subject property `pkic:profile:productCertificationScheme`, because `certifications[]` cannot state an absence | property `pkic:profile:productCertificationScheme` on `metadata.component` | **unresolved** |
 | procurement#P2 | Coverage is `all` or `all-external` | as interface-disclosure#P4, with the narrower vocabulary | as interface-disclosure#P4 | **unresolved** |
 
@@ -144,7 +144,7 @@ composition. The observed deployment record states `partial`.
 | I6 | `endpointRoles` | properties `pkic:profile:endpointRole:<role>` (no edge or endpoint model) | the same | **unresolved** |
 | I7 | `interfaceType` | property `pkic:profile:interfaceType` (no native field) | the same | **unresolved** |
 | I8 | `lifecycleStage` | taken from the document's stage (P6). A property `pkic:profile:lifecycleStage` is optional and must agree | the same | **unresolved** |
-| I9 | `implementationPurl` | the package URL, in `identifiers[]`, of the library component whose `dependencies[].provides` lists the interface. No property. Withholdable in the baseline | the library's `purl` | `Package` with `packageUrl` |
+| I9 | `implementingLibrary` | the package URL, in `identifiers[]`, of the library component whose `dependencies[].provides` lists the interface. No property. Withholdable in the baseline | the library's `purl` | `Package` with `packageUrl` |
 | I10 | `keyWrapping` (storage interfaces) | `relatedCryptoMaterialProperties.securedBy` of the keys the storage service depends on. `mechanism: "none"` states an unwrapped key. Otherwise the names of the algorithms in `securedBy.algorithmRef`, which is an array in 2.0 | `securedBy.algorithmRef` as a single string | via linked CycloneDX CBOM |
 | I11 | `defaultState` (SHOULD, at `implemented`) | property `pkic:profile:defaultState`: `enabled` or `disabled` | the same | **unresolved** |
 | deployment-disclosure#I1 | `correspondsTo` | property `pkic:profile:correspondsTo`: a BOM-Link `urn:cdx:<serial>/<version>#<bom-ref>`, or the literal `no-product-document` | the same | not mapped |
@@ -152,7 +152,7 @@ composition. The observed deployment record states `partial`.
 | deployment-disclosure#I3 | `observedAt` (at `observed`) | property `pkic:profile:observedAt`, an ISO 8601 interval such as `2026-10-18T00:00:00Z/2026-10-25T00:00:00Z` | the same | not mapped |
 
 An interface is identified by its `bom-ref`. There is no `interfaceId` property in the examples.
-References to an interface, such as `keyStoreRef` and `correspondsTo`, use the `bom-ref`.
+References to an interface, such as `keysStoredIn` and `correspondsTo`, use the `bom-ref`.
 
 ### Literal values for I3 to I5
 
@@ -206,8 +206,8 @@ derives the attribute from the field.
 | Attribute | CycloneDX 2.0 | CycloneDX 1.6 / 1.7 (legacy) | Convention |
 |---|---|---|---|
 | interface identity | `bom-ref` of the protocol component or service | the same | No `interfaceId` property |
-| `implementationPurl` | `dependencies[].provides` from a library component with a package URL in `identifiers[]` | the same, with `purl` | One library provides each interface |
-| `providerLocation` | `algorithmProperties.executionEnvironment` of the algorithms the interface uses | the same | `software-plain-ram` and `software-encrypted-ram` → `software`; `software-tee` → `tee`; `hardware` → `hsm`. A property is used only where the interface uses no algorithm |
+| `implementingLibrary` | `dependencies[].provides` from a library component with a package URL in `identifiers[]` | the same, with `purl` | One library provides each interface |
+| `executionEnvironment` | `algorithmProperties.executionEnvironment` of the algorithms the interface uses | the same | `software-plain-ram` and `software-encrypted-ram` → `software`; `software-tee` → `tee`; `hardware` → `hsm`. A property is used only where the interface uses no algorithm |
 | `keyExchangeSupported`, `authenticationSupported` (TLS) | `cipherSuites[].tlsGroups`, `.tlsSignatureSchemes` | the same | See [Supported and in use](#supported-and-in-use) |
 | `keyTypes` | `related-crypto-material` components the service depends on: the algorithm each one names in `relatedCryptoMaterialProperties.relatedCryptographicAssets` | the same, through `relatedCryptoMaterialProperties.algorithmRef` | Size, state and dates come with the component |
 | `keyStoreFormats` | `relatedCryptoMaterialProperties.format` of those components, lower-cased | the same | Values from the profile's vocabulary |
@@ -247,8 +247,8 @@ neither record carries a `certifications[]` entry.
 ## Inheritance from the providing library (K9)
 
 The library component that `provides` an interface may carry implementation facts as
-`pkic:profile:` properties: `moduleValidationScheme`, `moduleValidationRef`, `providerLocation`,
-`enablementMethod`, `minimumProductVersion`, `coexistence` and `capabilityByPurpose` entries. In
+`pkic:profile:` properties: `moduleValidationScheme`, `moduleValidationRef`, `executionEnvironment`,
+`enablementMethod`, `availableFromVersion`, `transitionMode` and `capabilityByPurpose` entries. In
 2.0, module validation may come from the library's `certifications[]` instead. The interface
 inherits these facts and states only the values that differ. For the capability group, an
 interface's entry for a purpose replaces the library's entry for that purpose.
@@ -257,7 +257,7 @@ In the Keycloak example, `lib:openjdk` provides all seven TLS interfaces. It sta
 establishment as `planned`, blocked by the provider, with roadmap JEP 527. Every TLS interface
 inherits that entry.
 
-Inheritance across documents is narrower. Only `implementationPurl` follows a `correspondsTo`
+Inheritance across documents is narrower. Only `implementingLibrary` follows a `correspondsTo`
 join from a deployment record to the record it realises. See
 [Joins across documents](#joins-across-documents).
 
@@ -293,11 +293,11 @@ classifiers.
 The remaining attributes of the family have no native CycloneDX field in 2.0 or 1.x. Each is
 carried as `pkic:profile:<attribute>` on the protocol component or service. List-valued
 attributes are repeated properties of the same name. They are `protocolVersionsSupported`,
-`enablementMethod`, `minimumProductVersion`, `coexistence`, `negotiationControl`,
-`integrationConstraints`, `keyWrappingSupported`, `keyManagementFunction`, `keyOperations`,
-`keyTypesSupported`, `keyStoreFormatsSupported`, `keyStoreLocation`, `keyStoreRef`,
-`externalDependencies` and `enablementSetting`. The capability group member
-`validatedModeAvailability` follows the group convention. `keyStoreRef` names the `bom-ref` of
+`enablementMethod`, `availableFromVersion`, `transitionMode`, `algorithmSelection`,
+`integrationConstraints`, `keyWrappingSupported`, `managesKeys`, `keyOperations`,
+`keyTypesSupported`, `keyStoreFormatsSupported`, `keyStoreLocation`, `keysStoredIn`,
+`trustServiceDependencies` and `enablementSetting`. The capability group member
+`validatedModeAvailability` follows the group convention. `keysStoredIn` names the `bom-ref` of
 the managing interface, or one of the literals `out-of-band`, `product-managed` and `none`.
 
 CycloneDX 2.0 adds `rotation` on keys and `renewal` on certificates. They describe how a key or
@@ -325,7 +325,7 @@ and the hash. A changed revision fails `deployment-disclosure#P1`.
 not supplied, the validator checks the citation for form only. It reports an inherited value as
 unresolved, not as failed.
 
-Only implementation facts follow a join, and today that is `implementationPurl`. Present-state
+Only implementation facts follow a join, and today that is `implementingLibrary`. Present-state
 facts never do: each stage reports its own. The Keycloak observed record follows the library
 through two joins, from observed to configured and from configured to the product record. The
 readiness gap is computed from the join by a policy and is never stored in a record.
@@ -346,7 +346,7 @@ PKIC CBOM profile defines `contextKinds`. For each kind it names the CycloneDX
 | Its kind | property `pkic:profile:context` on the reference, naming the kind. Reference types are shared between kinds, so the type alone does not say which kind is meant | the same |
 | Access protocol (endpoints) | property `pkic:profile:accessProtocol`: `web-page`, `csaf-provider`, `osv-api`, `ghsa-api`, `vex-document` or `other` | the same |
 | Binding (documents) | `hashes[]` on the reference | the same |
-| Stated absence | subject property `pkic:profile:contextAbsent:<kind>` with a value from `contextAbsenceVocabulary` (`not-published`, `not-applicable-to-subject`), where the rule accepts one | the same, on `metadata.component` |
+| Stated absence | subject property `pkic:profile:absent:<kind>` with a value from `contextAbsenceVocabulary` (`not-published`, `not-applicable-to-subject`), where the rule accepts one | the same, on `metadata.component` |
 | Withheld | property `pkic:profile:disclosure:<kind>` = `withheld`, where the rule permits it | the same |
 
 | Rule | Kind | Carrier types | Form |
@@ -356,11 +356,11 @@ PKIC CBOM profile defines `contextKinds`. For each kind it names the CycloneDX
 | interface-disclosure#R3 (SHOULD, product) | `advisories` | `advisories` | endpoint |
 | interface-disclosure#R4 (SHOULD, product) | `security-contact` | `security-contact`, `rfc-9116` | endpoint |
 | interface-disclosure#R5 (MUST on an interface where I3 to I5 is `deployment-defined`) | `configuration-guidance` | `documentation`, `configuration` | endpoint |
-| interface-disclosure#R6 (MAY) | `design-intent` | `threat-model`, `adversary-model`, `documentation` | document or endpoint |
+| interface-disclosure#R6 (MAY) | `threat-model` | `threat-model`, `adversary-model`, `documentation` | document or endpoint |
 | deployment-disclosure#R1 (MUST, at `configured`) | `configuration-source` | `configuration`, `codified-infrastructure`, `vcs` | document or endpoint |
 | deployment-disclosure#R2 (SHOULD, at `observed`, withholdable) | `observation-evidence` | `evidence`, `runtime-analysis-report`, `log` | document |
 | deployment-disclosure#R3 (SHOULD, withholdable) | `data-register` | `risk-assessment`, `other` | document or endpoint |
-| deployment-disclosure#R4 (MAY) | `issuer-policy` | `documentation` | endpoint |
+| deployment-disclosure#R4 (MAY) | `certificate-policy` | `documentation` | endpoint |
 | pqc-migration#R1 (SHOULD) | `support-lifecycle` | `support`, `release-notes`, `documentation` | endpoint; or a stated absence |
 | pqc-migration#R2 (SHOULD) | `roadmap` | `documentation`, `release-notes`, `other` | document (with hash) or endpoint; or a stated absence |
 
@@ -369,7 +369,7 @@ advisory sources: the GitHub advisories page (`web-page`) and the OSV API (`osv-
 to the security policy as its security contact. It points to an illustrative VEX document by
 BOM-Link and hash, with access protocol `vex-document`; upstream Keycloak publishes no VEX, and the
 record exercising the disclosure states shows the stated absence
-`contextAbsent:vulnerability-statements = not-published`. Each library points to its own SBOM
+`absent:vulnerability-statements = not-published`. Each library points to its own SBOM
 entry with `externalReferences[type=bom]` and a BOM-Link to the element. The configuration
 guidance and the roadmap are fixed documents, pointed to by URL and SHA-256.
 

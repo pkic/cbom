@@ -58,7 +58,7 @@
             "value": "product"
           },
           {
-            "name": "pkic:profile:contextAbsent:support-lifecycle",
+            "name": "pkic:profile:absent:support-lifecycle",
             "value": "not-published"
           }
         ],
@@ -138,7 +138,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "software"
             },
             {
@@ -146,8 +146,8 @@
               "value": "not-available"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "simultaneous"
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
             },
             {
               "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
@@ -155,7 +155,7 @@
             },
             {
               "name": "pkic:profile:capabilityByPurpose:key-establishment:blockedBy",
-              "value": "provider"
+              "value": "crypto-library"
             },
             {
               "name": "pkic:profile:capabilityByPurpose:key-establishment:roadmapRef",
@@ -240,7 +240,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "software"
             },
             {
@@ -248,8 +248,8 @@
               "value": "not-available"
             },
             {
-              "name": "pkic:profile:coexistence",
-              "value": "simultaneous"
+              "name": "pkic:profile:transitionMode",
+              "value": "side-by-side"
             },
             {
               "name": "pkic:profile:capabilityByPurpose:key-establishment:capabilityStatus",
@@ -350,7 +350,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "software"
             },
             {
@@ -358,7 +358,7 @@
               "value": "not-available"
             },
             {
-              "name": "pkic:profile:coexistence",
+              "name": "pkic:profile:transitionMode",
               "value": "unknown"
             },
             {
@@ -447,7 +447,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:providerLocation",
+              "name": "pkic:profile:executionEnvironment",
               "value": "software"
             },
             {
@@ -455,7 +455,7 @@
               "value": "not-available"
             },
             {
-              "name": "pkic:profile:coexistence",
+              "name": "pkic:profile:transitionMode",
               "value": "unknown"
             },
             {
@@ -581,7 +581,7 @@
               "value": "1.3"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Named groups are set by the JVM property jdk.tls.namedGroups"
             },
             {
@@ -589,15 +589,15 @@
               "value": "Server certificate and key are operator-supplied files. Carries the HTTPS service, and through it OIDC, SAML and the Admin API."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "out-of-band"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "certificate-authority"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "random-bit-generator"
             },
             {
@@ -657,7 +657,7 @@
               "value": "1.3"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Inherits the main listener TLS settings by default"
             },
             {
@@ -665,15 +665,15 @@
               "value": "Health and metrics only; the services it carries apply no cryptography of their own and are not declared separately (K7)"
             },
             {
-              "name": "pkic:profile:keyManagementFunction",
-              "value": "none"
+              "name": "pkic:profile:managesKeys",
+              "value": "no"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "certificate-authority"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "random-bit-generator"
             },
             {
@@ -759,7 +759,7 @@
               "value": "1.3"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "TLS mode set in the JDBC URL"
             },
             {
@@ -767,15 +767,15 @@
               "value": "Driver default is opportunistic TLS without verification"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "out-of-band"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "certificate-authority"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "random-bit-generator"
             },
             {
@@ -835,7 +835,7 @@
               "value": "1.3"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "JVM named groups"
             },
             {
@@ -843,19 +843,19 @@
               "value": "Directory server must also support the new groups"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "out-of-band"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "directory"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "certificate-authority"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "random-bit-generator"
             },
             {
@@ -915,7 +915,7 @@
               "value": "1.3"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "JVM named groups"
             },
             {
@@ -923,19 +923,19 @@
               "value": "Carries the brokered token verification service"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "out-of-band"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "identity-provider"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "certificate-authority"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "random-bit-generator"
             },
             {
@@ -995,7 +995,7 @@
               "value": "1.3"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "JVM named groups"
             },
             {
@@ -1003,15 +1003,15 @@
               "value": "Mail server must also support the new groups"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "out-of-band"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "certificate-authority"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "random-bit-generator"
             },
             {
@@ -1079,7 +1079,7 @@
               "value": "1.3"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Not configurable beyond the JVM named groups"
             },
             {
@@ -1095,11 +1095,11 @@
               "value": "product"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "product-managed"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "none"
             },
             {
@@ -1597,7 +1597,7 @@
               "value": "HMAC-SHA-512"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Signature algorithm is set per realm (defaultSignatureAlgorithm) and per client"
             },
             {
@@ -1605,11 +1605,11 @@
               "value": "ML-DSA-65 signed tokens exceed the 4 KB browser cookie limit; relying parties must accept the AKP JWK key type, which is still an Internet-Draft"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "service:mgmt-admin"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "random-bit-generator"
             },
             {
@@ -1675,11 +1675,11 @@
               "value": "ECDSA-SHA-256"
             },
             {
-              "name": "pkic:profile:coexistence",
+              "name": "pkic:profile:transitionMode",
               "value": "unknown"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Signature algorithm is set per client"
             },
             {
@@ -1703,11 +1703,11 @@
               "value": "standard"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "service:mgmt-admin"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "none"
             },
             {
@@ -1773,7 +1773,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Enabled only with http-enabled=true"
             },
             {
@@ -1781,11 +1781,11 @@
               "value": "Carries tokens and credentials in clear on the proxy hop"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "none"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "none"
             },
             {
@@ -1859,7 +1859,7 @@
               "value": "Ed448"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Master realm signature algorithm"
             },
             {
@@ -1867,8 +1867,8 @@
               "value": "Carried over the HTTPS listener"
             },
             {
-              "name": "pkic:profile:keyManagementFunction",
-              "value": "keys-and-certificates"
+              "name": "pkic:profile:managesKeys",
+              "value": "yes"
             },
             {
               "name": "pkic:profile:keyOperations",
@@ -1955,7 +1955,7 @@
               "value": "software"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "none"
             },
             {
@@ -2033,7 +2033,7 @@
               "value": "Ed448"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Accepted algorithms set per identity provider"
             },
             {
@@ -2041,11 +2041,11 @@
               "value": "The external provider chooses the signature algorithm; Keycloak can accept ML-DSA only once it can verify it"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "none"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "identity-provider"
             },
             {
@@ -2079,7 +2079,7 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Not applicable"
             },
             {
@@ -2087,11 +2087,11 @@
               "value": "Key material held in the database in plaintext (#39933)"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "service:mgmt-admin"
             },
             {
-              "name": "pkic:profile:externalDependencies",
+              "name": "pkic:profile:trustServiceDependencies",
               "value": "none"
             },
             {
@@ -2498,7 +2498,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "a0e8129ec15c152ed9161b414408356c56c2dbe02d6cc2f4ddcb2e78d0f3f4bb"
+          "content": "811d52990abced974723b3e26dc936b4bb091b9fb97f650bdf4b316b26583734"
         }
       ]
     }

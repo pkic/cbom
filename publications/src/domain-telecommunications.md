@@ -123,7 +123,7 @@ Vulnerability response and PQC migration need nothing telecom-specific beyond th
 
 #### 8.1 Network function product profile (drafted)
 
-A product profile for a network function release, drafted as `telecom-network-function` v0.1-draft. It extends the interface disclosure baseline and adds two rules. Every interface states the reference point it implements (`referencePoint`, I1), from a vocabulary that starts with `n32-c`, `n32-f`, `sbi`, `n2`, `n3`, `n4`, `n9`, `nds-ip`, the O-RAN interfaces, `ota` and `rsp`, or `not-a-reference-point` for a key store. Where it implements one, it names the specification and clause that profile its security (`referenceSpecification`, I2), such as TS 33.501 13.1.
+A product profile for a network function release, drafted as `telecom-network-function` v0.1-draft. It extends the interface disclosure baseline and adds two rules. Every interface states the reference point it implements (`referencePoint`, I1), from a vocabulary that starts with `n32-c`, `n32-f`, `sbi`, `n2`, `n3`, `n4`, `n9`, `nds-ip`, the O-RAN interfaces, `ota` and `rsp`, or `not-a-reference-point` for a key store. Where it implements one, it names the specification and clause that profile its security (`governingSpecification`, I2), such as TS 33.501 13.1.
 
 A generic profile is not enough because a reference point and its governing specification are telecom concepts, and an operator compares vendors by reference point. The draft extends the baseline, not the change core, because comparison is a disclosure need. A planning depth on the change core can follow, using the same two attributes.
 
@@ -137,8 +137,8 @@ The profile, telecom-service-assurance v0.1-draft, adds four telecom rules. Serv
 |--------|-----------------------------------------------------|---------------------|-------------------|
 | P1   | `services`: the services the system delivers, as the operator's service model names them                                                                                                                                            | MUST               | present                                   |
 | I1   | `carriesService` on each interface in use: the services that depend on it, from the record's `services`, or `none`                                                              | MUST, withholdable | `inSubjectList` |
-| I2   | `boundary` on each interface in use: `intra-operator` or `inter-operator`                                                                                                       | MUST               | vocabulary                                |
-| I3   | `boundaryProxy` where `boundary` is `inter-operator`: the component that terminates or relays the connection, such as the SEPP, a security gateway or the interconnect provider | MUST, withholdable | `refersToLocal` |
+| I2   | `operatorBoundary` on each interface in use: `intra-operator` or `inter-operator`                                                                                                       | MUST               | vocabulary                                |
+| I3   | `proxiedBy` where `operatorBoundary` is `inter-operator`: the component that terminates or relays the connection, such as the SEPP, a security gateway or the interconnect provider | MUST, withholdable | `refersToLocal` |
 
 The operator boundary is the telecom counterpart of an IEC 62443 conduit. Release 1 keeps such boundaries as sector rules (Publication 3, Step 2), so the rule lives here. The key provider rule matters in telecom because N32 and service-based interface certificates come from the operator's PKI, not from the network function.
 
@@ -297,8 +297,8 @@ A first set of rows. Post-quantum status as of November 2026.
 |-----------------------|-----------------------------|-----------------------------------------------|
 | Network function                     | Subject of a product record                         | One record per release                                                                                            |
 | Reference point                      | Interface                                           | The proposed attribute names it (8.1)                                                                             |
-| PLMN                                 | One side of an operator boundary                    | `boundary` is `inter-operator` where the connection leaves it |
-| SEPP, security gateway, IPX provider | Target of `boundaryProxy` | A component of the system record                                                                                  |
+| PLMN                                 | One side of an operator boundary                    | `operatorBoundary` is `inter-operator` where the connection leaves it |
+| SEPP, security gateway, IPX provider | Target of `proxiedBy` | A component of the system record                                                                                  |
 | Service                              | An entry in `services`    | Named as the operator's service model names it                                                                    |
 | Network slice                        | None yet                                            | To decide: a service, or a coverage statement                                                                     |
 | Telco cloud, NFVI                    | Subject of a platform record                        | Cited by the deployment record                                                                                    |

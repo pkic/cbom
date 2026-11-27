@@ -47,7 +47,7 @@
         "X25519MLKEM768"
       ],
       "capabilityStatus": "planned",
-      "blockedBy": "provider",
+      "blockedBy": "crypto-library",
       "targetRelease": null,
       "dependsOn": [
         {

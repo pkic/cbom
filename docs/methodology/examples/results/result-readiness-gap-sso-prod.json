@@ -30,7 +30,7 @@
       "stage": "implemented",
       "digest": {
         "alg": "SHA-256",
-        "value": "ed6d9b210f77f5817ba79dffd65ec7b21425ae5a2a978332ceff5c043c980edc"
+        "value": "1f1eb1d84e94ddd3134a8b72fcc1d126181afe81efdbb25c279090f302c9e59c"
       }
     },
     {
@@ -42,7 +42,7 @@
       "stage": "configured",
       "digest": {
         "alg": "SHA-256",
-        "value": "948bf083ca9d4920aaa4f9c3bff746faab973c9fb446a65b35449a35ce35dc41"
+        "value": "bb9d7131feae768377187fdadbda92e78cc700daa4a6abf390a321af646dd688"
       }
     },
     {
@@ -54,7 +54,7 @@
       "stage": "observed",
       "digest": {
         "alg": "SHA-256",
-        "value": "d235a61efd781bd491261b42c88cb6f423499addc4c4a0a9e8ad8a2a226a09de"
+        "value": "cde255c6e5f1044a52364134e9a1d5890b2e8d233035ce24511e200e44f6ddb8"
       }
     }
   ],
@@ -142,7 +142,7 @@
       },
       "productCapability": {
         "capabilityStatus": "planned",
-        "blockedBy": "provider",
+        "blockedBy": "crypto-library",
         "roadmapRef": "https://openjdk.org/jeps/527"
       },
       "class": "not-capable"
@@ -215,7 +215,7 @@
       },
       "productCapability": {
         "capabilityStatus": "planned",
-        "blockedBy": "provider",
+        "blockedBy": "crypto-library",
         "roadmapRef": "https://openjdk.org/jeps/527"
       },
       "class": "not-capable"
@@ -288,7 +288,7 @@
       },
       "productCapability": {
         "capabilityStatus": "planned",
-        "blockedBy": "provider",
+        "blockedBy": "crypto-library",
         "roadmapRef": "https://openjdk.org/jeps/527"
       },
       "class": "not-capable"
@@ -679,7 +679,7 @@
       },
       "productCapability": {
         "capabilityStatus": "planned",
-        "blockedBy": "provider",
+        "blockedBy": "crypto-library",
         "roadmapRef": "https://openjdk.org/jeps/527"
       },
       "class": "not-capable"

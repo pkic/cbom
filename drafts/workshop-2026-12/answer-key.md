@@ -31,7 +31,7 @@ to the PQC migration profile.
 
 A team that knows OpenSSL 3.5 added ML-KEM may plan a software update. Point out that the knowledge
 came from outside the document. That is exactly what `keyExchangeSupported`, `enablementMethod` and
-`minimumProductVersion` would have carried.
+`availableFromVersion` would have carried.
 
 **Substations, document C.** It cannot be planned. No algorithms, partial coverage, nothing about
 updates. Realistic actions:
@@ -60,7 +60,7 @@ argument too.
 | Keycloak | **No** | The TLS is the Java runtime's, not OpenSSL. The team can say so because the library is named |
 | PR-500 | **Cannot tell** | The entry depth does not ask for the library |
 
-*Lands on:* Disclosure, with `implementationPurl` (I9) already required. Withholding it is allowed
+*Lands on:* Disclosure, with `implementingLibrary` (I9) already required. Withholding it is allowed
 by the baseline; whether a vulnerability-response profile should forbid that is Q57, and the drafted
 procurement profile already does.
 
@@ -90,22 +90,22 @@ Discussion #37).
 | Gap (as teams tend to phrase it) | Doc | Group | Row | Covered by |
 |---|---|---|---|---|
 | "What could it support that it doesn't use today?" | B, C | Change planning | Profile already | `keyExchangeSupported`, `authenticationSupported` (PQC migration) |
-| "Is it a config change, an update or new hardware?" | B, C | Change planning | Profile already | `enablementMethod`, `providerLocation`, `minimumProductVersion` |
+| "Is it a config change, an update or new hardware?" | B, C | Change planning | Profile already | `enablementMethod`, `executionEnvironment`, `availableFromVersion` |
 | "When will it be quantum-safe, and what is stopping it?" | B, C | Change planning | Profile already | `capabilityStatus`, `blockedBy`, `roadmapRef` per purpose |
-| "Can we migrate while the far end is still classical?" | B, C | Change planning | Profile already | `coexistence`, `negotiationControl` |
+| "Can we migrate while the far end is still classical?" | B, C | Change planning | Profile already | `transitionMode`, `algorithmSelection` |
 | "What breaks when we switch?" | B, C | Change planning | Profile already | `integrationConstraints` (the 4 KB cookie limit in A) |
 | "Which algorithms does the relay use at all?" | C | Disclosure | Profile already | Baseline I3 to I5. The entry depth does not ask |
 | "Is this the whole list?" | C | Disclosure | Profile already | Coverage (P4). C says partial, which is honest |
 | "Which library does SSH use?" | B | Disclosure | Profile already | I9, but withholdable. Q57; the procurement draft forbids withholding |
 | "Is SSH traffic encrypted?" | B | Disclosure | Profile already | I4. The supplier said unknown, which the disclosure model allows |
 | "Where are keys kept, and are they protected?" | B, C | Disclosure | Draft | `keyWrapping` (baseline v0.8 draft); a storage interface or stated absence (procurement draft P5) |
-| "Can the product create and hold the new key type?" | A, B | Change planning | Draft | `keyTypesSupported`, `keyStoreRef` (extended draft) |
+| "Can the product create and hold the new key type?" | A, B | Change planning | Draft | `keyTypesSupported`, `keysStoredIn` (extended draft) |
 | "Will it work in FIPS mode?" | A | Change planning | Draft | `validatedModeAvailability`, module validation (PQC migration v0.7 draft) |
 | "Does changing the relay's crypto mean re-certification?" | C | Change planning | Draft | `certificationImpact` (substation draft) |
 | "Can the relay's firmware verification ever change?" | C | Change planning | Draft | `verifierReplaceable` (substation draft), `keyReplaceable` (IoT draft) |
 | "Who can install new firmware, and how?" | C | Change planning | Draft | `updateAuthority`, `updateMechanism` (IoT draft; change core) |
 | "Does it fit the protection timing budget?" | C | Change planning | Draft | `integrationConstraints` with a timing entry (substation draft) |
-| "Where do GOOSE keys come from?" | C | Change planning | Draft | `keyStoreRef` mandatory for group-keyed interfaces (substation draft); shared keys are Q08 |
+| "Where do GOOSE keys come from?" | C | Change planning | Draft | `keysStoredIn` mandatory for group-keyed interfaces (substation draft); shared keys are Q08 |
 | "Can our forty applications accept ML-DSA tokens?" | A | Operation | None yet | The operator's estate, not the supplier's product (PKI estate placeholder) |
 | "How many relays, and which firmware where?" | C | Operation | None yet | Instance data the operator holds (Q67) |
 | "Which data must stay confidential beyond 2035?" | all | Operation | None yet | Q36, Q37, Q45 |

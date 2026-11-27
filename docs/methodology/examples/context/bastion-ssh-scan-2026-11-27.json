@@ -1,0 +1,20 @@
+{
+  "$comment": "EXAMPLE scan output for bastion.example.org, abridged. Fictional.",
+  "target": "bastion.example.org:22",
+  "scanned": "2026-11-27T08:30:00Z",
+  "tool": "ssh-audit",
+  "banner": "SSH-2.0-OpenSSH_10.0",
+  "kex": [
+    "mlkem768x25519-sha256",
+    "sntrup761x25519-sha512",
+    "curve25519-sha256"
+  ],
+  "hostKeys": [
+    "ssh-ed25519"
+  ],
+  "ciphers": [
+    "chacha20-poly1305@openssh.com",
+    "aes256-gcm@openssh.com"
+  ],
+  "note": "curve25519-sha256 is offered although the configured record does not allow it."
+}

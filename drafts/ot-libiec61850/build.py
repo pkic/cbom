@@ -82,7 +82,7 @@ GROUPS = ["X25519", "ECDH-P256", "ECDH-P384", "X448", "ECDH-P521", "ECDH-brainpo
           "FFDHE-6144", "FFDHE-8192"]
 
 NONE3 = [("keyExchange", "none"), ("encryption", "none"), ("authentication", "none"),
-         ("implementationPurl", SUBJECT_PURL), ("keyStoreRef", "none")]
+         ("implementingLibrary", SUBJECT_PURL), ("keysStoredIn", "none")]
 
 
 def interfaces():
@@ -92,7 +92,7 @@ def interfaces():
             ("endpointRole:client", "endpoint:embedding-application"), ("endpointRole:server", "endpoint:peer"),
             ("keyExchange", "peer-defined"), ("encryption", "peer-defined"), ("authentication", "deployment-defined"),
             ("protocolVersionsSupported", ["1.2", "1.3"]), ("keyExchangeSupported", GROUPS),
-            ("negotiationControl", "Cipher suites through TLSConfiguration_addCipherSuite; minimum and maximum version "
+            ("algorithmSelection", "Cipher suites through TLSConfiguration_addCipherSuite; minimum and maximum version "
                                    "through TLSConfiguration_setMinTlsVersion and _setMaxTlsVersion. The library has "
                                    "no function for named groups or signature schemes."),
             ("integrationConstraints", "Default maximum certificate size 8192 bytes "
@@ -100,7 +100,7 @@ def interfaces():
             ("integrationConstraints", "Default minimum key length 1024 bits (TLSConfiguration_setMinimumKeyLength)."),
             ("integrationConstraints", "TLS 1.2 renegotiation enabled, legacy renegotiation allowed; TLS 1.3 needs "
                                        "Mbed TLS 3.6, and only Mbed TLS 2.28 and 3.6 are integrated."),
-            ("keyStoreRef", "out-of-band")],
+            ("keysStoredIn", "out-of-band")],
             refs=guidance(SRC + "hal/inc/tls_config.h",
                           "Where the application sets its certificate, key, CA certificates, cipher suites and "
                           "TLS versions.")),
@@ -129,7 +129,7 @@ def interfaces():
             ("integrationConstraints", "Beta, off by default (CONFIG_IEC61850_R_GOOSE). Keys are provisioned by the "
                                        "application through RSession_addKey; the library has no group key "
                                        "distribution (IEC 62351-9). Encryption only in session protocol version 2."),
-            ("keyStoreRef", "out-of-band")], state="disabled",
+            ("keysStoredIn", "out-of-band")], state="disabled",
             refs=guidance("https://github.com/mz-automation/libiec61850/tree/v1.6/src/r_session",
                           "Where the application adds keys and chooses the signature and encryption algorithms.")),
     ]
@@ -146,8 +146,8 @@ def product(sbom_hash):
                      "supplier": {"name": AUTHOR["name"], "url": ["https://pkic.org"]}},
         "inventories": [{"bom-ref": "inventory:subject", "subject": subject(props([
             ("coverage", "all"), ("subjectType", "product"),
-            ("managementInterfaceAbsence", "not-applicable-to-subject"),
-            ("contextAbsent:vulnerability-statements", "not-published")])),
+            ("absent:management-interface", "not-applicable-to-subject"),
+            ("absent:vulnerability-statements", "not-published")])),
             "components": [{"type": "library", "bom-ref": "lib:mbedtls", "name": "Mbed TLS", "version": "3.6.0",
                             "identifiers": ident(MBEDTLS_PURL)}] + interfaces()}],
         "dependencies": [{"ref": "lib:libiec61850", "dependsOn": ["lib:mbedtls"]},

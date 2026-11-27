@@ -72,7 +72,7 @@ nav: confidentiality
     </tbody>
   </table>
   </div>
-  <p>This approach has a cost, which the methodology accepts deliberately. A marker confirms that the information exists. For example, a producer withholding <code>implementationPurl</code> has confirmed that it knows which library implements the interface. The methodology treats that confirmation as information the consumer is entitled to. It tells a buyer that there is a conversation to open with the supplier, rather than a gap to write off. The alternative is to leave the attribute out with no marker, and a document that does so does not conform.</p>
+  <p>This approach has a cost, which the methodology accepts deliberately. A marker confirms that the information exists. For example, a producer withholding <code>implementingLibrary</code> has confirmed that it knows which library implements the interface. The methodology treats that confirmation as information the consumer is entitled to. It tells a buyer that there is a conversation to open with the supplier, rather than a gap to write off. The alternative is to leave the attribute out with no marker, and a document that does so does not conform.</p>
 
   <h2>A profile sets a floor and cannot set a maximum</h2>
   <p>No type of rule in this methodology fails a document because it contains <em>more</em>: more attributes, more interfaces, or more detail than the rule asked for. Every count in the constraint vocabulary is a minimum (<code>minCount</code>, <code>minInterfaces</code>, <code>minInterfacesOfType</code>, <code>minProviders</code>). There is no maximum of any kind. A profile therefore cannot say "do not disclose X". This is deliberate, for three reasons.</p>
@@ -91,13 +91,13 @@ nav: confidentiality
   </ul>
   <p>Reference rules carry the same setting. A reference rule requires a pointer to context the document does not carry (see <a href="context.html">Context Pointers</a>). The Deployment Disclosure profile lets the operator withhold two pointers: the one to observation evidence (R2), because evidence often carries internal addresses, and the one to the data register (R3).</p>
   <p>Removing withholdability from a rule is a tightening, and the validator already treats it as one. The validator refuses an override that makes a non-withholdable attribute withholdable, because that would relax the rule. It accepts and records the reverse. <strong>The restricted profile is therefore a derived profile of the public one</strong>, and the pair needs no new machinery at all. Conformance to the restricted profile carries conformance to the public one. A consumer gains two things from this. A supplier's restricted disclosure is never <em>less</em> acceptable than its public one. A consumer holding a conformance claim against the restricted profile also does not have to re-evaluate the document against the public profile to know where it stands.</p>
-  <p>The migration profile already uses this pattern. It tightens the baseline profile's <code>implementationPurl</code> rule in exactly this way:</p>
+  <p>The migration profile already uses this pattern. It tightens the baseline profile's <code>implementingLibrary</code> rule in exactly this way:</p>
   <pre><code>{
   "id": "interface-disclosure#I9",
   "level": "MUST",
   "withholdable": false,
   "note": "Tightened by removing withholdability. The base already requires
-           implementationPurl at MUST and accepts a 'withheld' marker in place
+           implementingLibrary at MUST and accepts a 'withheld' marker in place
            of a value. Migration sequencing depends on knowing which library
            implements an interface, so this profile removes that option and
            requires the value itself. Level is restated as MUST for readability

@@ -52,7 +52,7 @@ questions:
     verdict: partial
     rationale: >
       A CBOM names where keys and certificates are stored (keyStoreLocation) and which
-      store serves each interface (keyStoreRef), and a system record names the
+      store serves each interface (keysStoredIn), and a system record names the
       component that provides each interface's keys. That identifies the
       certificate-storing devices. Individual certificates, and which functions are
       critical or important, are outside the CBOM.

@@ -1,5 +1,5 @@
 {
-  "$comment": "DRAFT. The telecom service-assurance overlay. Extends the generic system overlay system-disclosure, which supplies the citations, the join to product interfaces, usage and the key provider. Adds the component-to-service dependency mapping the telecom CBOM document asks for (3.2.4), and the operator boundary.",
+  "$comment": "DRAFT. The telecom service-assurance overlay. Extends the generic system overlay system-disclosure, which supplies the citations, the join to product interfaces, usage and the key provider. Adds the component-to-service dependency mapping the telecom CBOM document asks for (3.2.4), and the operator operatorBoundary.",
   "profileId": "pkic.example.telecom-service-assurance",
   "profileTag": "telecom-service-assurance",
   "title": "Telecom Service Assurance Overlay (draft)",
@@ -13,7 +13,7 @@
   "objective": {
     "$comment": "C1. The consumer is the operator's service assurance team, or a customer of a critical service such as a public safety authority. The decision is the one the telecom document names: how a weakness or a change at one component affects the services built on it.",
     "consumer": "An operator's service assurance team, or a customer of a critical communications service acting through the operator.",
-    "decision": "For each interface the system uses: which services depend on it and whether it crosses the operator boundary, so that a weakness or a migration at that interface can be traced to the services, and the partners, it affects.",
+    "decision": "For each interface the system uses: which services depend on it and whether it crosses the operator operatorBoundary, so that a weakness or a migration at that interface can be traced to the services, and the partners, it affects.",
     "decisionOptions": [
       "record the dependencies and take no further action",
       "raise the priority of a migration that affects a critical service",
@@ -43,7 +43,7 @@
     "intra-operator",
     "inter-operator"
   ],
-  "$commentBoundary": "'inter-operator': the connection leaves the operator's network, to a roaming partner, an interconnect provider (IPX) or another network, the boundary 3GPP TS 33.210 draws between security domains.",
+  "$commentBoundary": "'inter-operator': the connection leaves the operator's network, to a roaming partner, an interconnect provider (IPX) or another network, the operatorBoundary 3GPP TS 33.210 draws between security domains.",
   "productRules": [
     {
       "id": "P1",
@@ -70,38 +70,38 @@
       "withholdable": true,
       "list": true,
       "requiredWhen": {
-        "attribute": "usage",
+        "attribute": "designUse",
         "equals": "in-use"
       },
       "note": "The services that depend on this interface, by the names the system gives them (P1). A list, because an interconnect usually carries several. 'none' for an interface no service depends on directly, such as management. This is the component-to-service dependency mapping. Withholdable, because a public record may not show which services depend on what."
     },
     {
       "id": "I2",
-      "attribute": "boundary",
+      "attribute": "operatorBoundary",
       "level": "MUST",
       "constraint": {
         "enumRef": "boundaryVocabulary"
       },
       "withholdable": false,
       "requiredWhen": {
-        "attribute": "usage",
+        "attribute": "designUse",
         "equals": "in-use"
       },
       "note": "Whether the connection stays in the operator's network or crosses to another. A change on an inter-operator interface needs the other party to change too."
     },
     {
       "id": "I3",
-      "attribute": "boundaryProxy",
+      "attribute": "proxiedBy",
       "level": "MUST",
       "constraint": {
         "refersToLocal": {}
       },
       "withholdable": true,
       "requiredWhen": {
-        "attribute": "boundary",
+        "attribute": "operatorBoundary",
         "equals": "inter-operator"
       },
-      "note": "The component that terminates the boundary, by its bom-ref: the SEPP for N32, a security gateway for Za, or the interconnect provider where it relays the traffic."
+      "note": "The component that terminates the operatorBoundary, by its bom-ref: the SEPP for N32, a security gateway for Za, or the interconnect provider where it relays the traffic."
     }
   ],
   "exclusions": [

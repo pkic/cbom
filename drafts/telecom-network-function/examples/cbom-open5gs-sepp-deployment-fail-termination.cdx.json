@@ -32,7 +32,7 @@
             "value": "all"
           },
           {
-            "name": "pkic:profile:managementInterfaceAbsence",
+            "name": "pkic:profile:absent:management-interface",
             "value": "configured-out-of-band"
           }
         ],
@@ -179,7 +179,7 @@
               "value": "endpoint:peer-sepp"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "dep:sto-keys"
             },
             {
@@ -234,7 +234,7 @@
               "value": "endpoint:peer-sepp"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "dep:sto-keys"
             },
             {
@@ -422,7 +422,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "8ef151da3e1b9ebbd0a24717f053224222d93711f58f6baa4aa7f1da8c6db479"
+          "content": "0275aebbc173a263807aeeaa3f0e04b7c2fa54156a8eb3046979ca97f51aa3ad"
         }
       ]
     },

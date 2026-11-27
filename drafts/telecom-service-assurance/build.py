@@ -7,13 +7,13 @@ Writes, in this folder:
   examples/sepp-5.1.0-sbom.cdx.json                        its companion SBOM
   examples/cbom-roaming-interconnect-system.cdx.json       the operator's roaming interconnect, 'configured'
   examples/cbom-roaming-interconnect-fail-service.cdx.json   N32-f in use, the services it carries not named
-  examples/cbom-roaming-interconnect-fail-proxy.cdx.json     N32-c crosses the operator boundary, proxy not named
+  examples/cbom-roaming-interconnect-fail-proxy.cdx.json     N32-c crosses the operator operatorBoundary, proxy not named
 
 Service assurance asks which services depend on which interfaces, so that a weakness or a
 migration at one interface can be traced to the services and commitments it affects (telecom
 CBOM document, 3.2.4). The overlay extends the generic system overlay, system-disclosure, which
 supplies the citations, the join to product interfaces, usage and the key provider. It adds the
-services the system delivers, the services each interface carries, and the operator boundary.
+services the system delivers, the services each interface carries, and the operator operatorBoundary.
 
 Draft only. Nothing in docs/methodology/ is changed. Values are illustrative; the SEPP is not a
 real product.
@@ -63,7 +63,7 @@ def profile():
         "$comment": "DRAFT. The telecom service-assurance overlay. Extends the generic system overlay "
                     "system-disclosure, which supplies the citations, the join to product interfaces, usage and "
                     "the key provider. Adds the component-to-service dependency mapping the telecom CBOM document "
-                    "asks for (3.2.4), and the operator boundary.",
+                    "asks for (3.2.4), and the operator operatorBoundary.",
         "profileId": "pkic.example.telecom-service-assurance",
         "profileTag": "telecom-service-assurance",
         "title": "Telecom Service Assurance Overlay (draft)",
@@ -78,7 +78,7 @@ def profile():
             "consumer": "An operator's service assurance team, or a customer of a critical communications service "
                         "acting through the operator.",
             "decision": "For each interface the system uses: which services depend on it and whether it crosses "
-                        "the operator boundary, so that a weakness or a migration at that interface can be traced "
+                        "the operator operatorBoundary, so that a weakness or a migration at that interface can be traced "
                         "to the services, and the partners, it affects.",
             "decisionOptions": ["record the dependencies and take no further action",
                                 "raise the priority of a migration that affects a critical service",
@@ -90,7 +90,7 @@ def profile():
         "appliesTo": {"cyclonedx": {"min": "1.6", "tested": "2.0"}},
         "boundaryVocabulary": ["intra-operator", "inter-operator"],
         "$commentBoundary": "'inter-operator': the connection leaves the operator's network, to a roaming partner, "
-                            "an interconnect provider (IPX) or another network, the boundary 3GPP TS 33.210 draws "
+                            "an interconnect provider (IPX) or another network, the operatorBoundary 3GPP TS 33.210 draws "
                             "between security domains.",
         "productRules": [
             {"id": "P1", "description": "System names the services it delivers", "level": "MUST",
@@ -101,20 +101,20 @@ def profile():
         "interfaceRules": [
             {"id": "I1", "attribute": "carriesService", "level": "MUST",
              "constraint": {"inSubjectList": "services", "literals": ["none"]}, "withholdable": True, "list": True,
-             "requiredWhen": {"attribute": "usage", "equals": "in-use"},
+             "requiredWhen": {"attribute": "designUse", "equals": "in-use"},
              "note": "The services that depend on this interface, by the names the system gives them (P1). A "
                      "list, because an interconnect usually carries several. 'none' for an interface no service "
                      "depends on directly, such as management. This is the component-to-service dependency "
                      "mapping. Withholdable, because a public record may not show which services depend on what."},
-            {"id": "I2", "attribute": "boundary", "level": "MUST",
+            {"id": "I2", "attribute": "operatorBoundary", "level": "MUST",
              "constraint": {"enumRef": "boundaryVocabulary"}, "withholdable": False,
-             "requiredWhen": {"attribute": "usage", "equals": "in-use"},
+             "requiredWhen": {"attribute": "designUse", "equals": "in-use"},
              "note": "Whether the connection stays in the operator's network or crosses to another. A change on "
                      "an inter-operator interface needs the other party to change too."},
-            {"id": "I3", "attribute": "boundaryProxy", "level": "MUST", "constraint": {"refersToLocal": {}},
+            {"id": "I3", "attribute": "proxiedBy", "level": "MUST", "constraint": {"refersToLocal": {}},
              "withholdable": True,
-             "requiredWhen": {"attribute": "boundary", "equals": "inter-operator"},
-             "note": "The component that terminates the boundary, by its bom-ref: the SEPP for N32, a security "
+             "requiredWhen": {"attribute": "operatorBoundary", "equals": "inter-operator"},
+             "note": "The component that terminates the operatorBoundary, by its bom-ref: the SEPP for N32, a security "
                      "gateway for Za, or the interconnect provider where it relays the traffic."}],
         "exclusions": [
             {"item": "Service levels, availability targets and the customers of each service",
@@ -147,27 +147,27 @@ def sepp_interfaces():
             ("keyExchange", "X25519"), ("encryption", "AES-256-GCM"), ("authentication", "ECDSA-P256-SHA256"),
             ("protocolVersionsSupported", ["1.2", "1.3"]), ("keyExchangeSupported", TLS_GROUPS),
             ("authenticationSupported", ["ECDSA-P256-SHA256", "ECDSA-P384-SHA384", "RSA-PSS-2048-SHA256"]),
-            ("negotiationControl", "Groups, signature schemes and cipher suites set per roaming partner"),
+            ("algorithmSelection", "Groups, signature schemes and cipher suites set per roaming partner"),
             ("integrationConstraints", "OpenSSL 3.5 offers X25519MLKEM768 by default. The SEPP sets its own "
                                        "group list and leaves the hybrid group out unless the operator enables "
                                        "it per roaming partner, because the 3GPP TLS profile for N32-c does not "
                                        "name it. Both SEPPs must support it."),
-            ("keyStoreRef", "sto-keys")]),
+            ("keysStoredIn", "sto-keys")]),
         iface("n32f", "N32-f: forwarded messages, application-layer protection (PRINS)", "interconnect", [
             ("protocol", "PRINS"), ("protocolVersion", "17"),
             ("endpointRole:sender", "endpoint:sepp"), ("endpointRole:receiver", "endpoint:peer-sepp"),
             ("keyExchange", "none"), ("encryption", "AES-128-GCM"), ("authentication", "ECDSA-P256-SHA256"),
-            ("negotiationControl", "Cipher suites for JWE and JWS agreed over N32-c"),
+            ("algorithmSelection", "Cipher suites for JWE and JWS agreed over N32-c"),
             ("integrationConstraints", "The JWE keys are derived from the N32-c TLS session; an interconnect "
                                        "provider that modifies a message signs its change with JWS."),
-            ("keyStoreRef", "n32c")]),
+            ("keysStoredIn", "n32c")]),
         iface("sbi", "Service-based interface to the operator's network functions (TLS, OAuth 2.0)", "service", [
             ("protocol", "TLS"), ("protocolVersion", "1.3"),
             ("endpointRole:client", "endpoint:nf-consumer"), ("endpointRole:server", "endpoint:sepp"),
             ("keyExchange", "X25519"), ("encryption", "AES-256-GCM"), ("authentication", "ECDSA-P256-SHA256"),
             ("protocolVersionsSupported", ["1.2", "1.3"]), ("keyExchangeSupported", TLS_GROUPS),
             ("integrationConstraints", "Access tokens are JWTs signed ES256 by the operator's NRF."),
-            ("keyStoreRef", "sto-keys")]),
+            ("keysStoredIn", "sto-keys")]),
         iface("mgmt", "Management (NETCONF over SSH)", "management", [
             ("protocol", "SSH"), ("protocolVersion", "2.0"),
             ("endpointRole:client", "endpoint:oam"), ("endpointRole:server", "endpoint:sepp"),
@@ -175,7 +175,7 @@ def sepp_interfaces():
             ("keyExchangeSupported", ["mlkem768x25519-sha256", "sntrup761x25519-sha512", "X25519", "ECDH-P256"]),
             ("integrationConstraints", "The SEPP restricts SSH key exchange to X25519 and ECDH-P256 unless the "
                                        "operator enables the hybrid methods OpenSSH 9.9 provides."),
-            ("keyStoreRef", "sto-keys")]),
+            ("keysStoredIn", "sto-keys")]),
         iface("sto-keys", "Private keys and trust anchors", "storage", [
             ("encryption", "AES-256-GCM"), ("keyWrapping", "AES-256-KW"),
             ("integrationConstraints", "The key-encryption key can be held in an external HSM over PKCS#11.")]),
@@ -222,7 +222,7 @@ def sepp(sbom_hash):
                      "supplier": {"name": "Example Telco Vendor (illustrative)"}},
         "inventories": [{"bom-ref": "inventory:subject", "subject": sepp_subject(props([
             ("coverage", "all"), ("subjectType", "product"),
-            ("contextAbsent:vulnerability-statements", "not-published")])),
+            ("absent:vulnerability-statements", "not-published")])),
             "components": libs() + sepp_interfaces()}],
         "dependencies": [{"ref": "app:sepp", "dependsOn": ["lib:openssl", "lib:jose", "lib:openssh"]},
                          {"ref": "lib:openssl", "provides": ["n32c", "sbi", "sto-keys"]},
@@ -244,10 +244,10 @@ def sepp(sbom_hash):
 # --------------------------------------------------------------------------- #
 # The system record                                                           #
 # --------------------------------------------------------------------------- #
-DROP = ["protocolVersionsSupported", "keyExchangeSupported", "authenticationSupported", "negotiationControl",
+DROP = ["protocolVersionsSupported", "keyExchangeSupported", "authenticationSupported", "algorithmSelection",
         "integrationConstraints", "defaultState"]
 ALL = SERVICES
-# usage, carriesService, boundary, boundaryProxy, keyProvider
+# usage, carriesService, operatorBoundary, proxiedBy, keysProvidedBy
 DESIGN = {
     "n32c": ("in-use", ALL, "inter-operator", "sys:sepp", "sys:operator-pki"),
     "n32f": ("in-use", ALL, "inter-operator", "sys:ipx-provider", "product"),
@@ -270,19 +270,19 @@ def system(sepp_doc, sepp_bytes):
     for c in sepp_doc["inventories"][0]["components"]:
         if c.get("type") != "service":
             continue
-        usage, svc, boundary, proxy, keys = DESIGN[c["bom-ref"]]
+        usage, svc, operatorBoundary, proxy, keys = DESIGN[c["bom-ref"]]
         i = copy.deepcopy(c)
         i["bom-ref"] = "sepp:" + c["bom-ref"]
         i["name"] = "SEPP: " + c["name"]
         i["properties"] = [p for p in i["properties"] if not any(p["name"].startswith(P + d) for d in DROP)]
         for p in i["properties"]:
             # A key store named by the product's own bom-ref is renamed to this record's copy.
-            if p["name"] == P + "keyStoreRef" and p["value"] in sepp_refs:
+            if p["name"] == P + "keysStoredIn" and p["value"] in sepp_refs:
                 p["value"] = "sepp:" + p["value"]
-        add = [("correspondsTo", "urn:cdx:%s/1#%s" % (serial, c["bom-ref"])), ("usage", usage),
-               ("carriesService", svc), ("boundary", boundary), ("keyProvider", keys)]
+        add = [("correspondsTo", "urn:cdx:%s/1#%s" % (serial, c["bom-ref"])), ("designUse", usage),
+               ("carriesService", svc), ("operatorBoundary", operatorBoundary), ("keysProvidedBy", keys)]
         if proxy:
-            add.append(("boundaryProxy", proxy))
+            add.append(("proxiedBy", proxy))
         i["properties"] += props(add)
         ifaces.append(i)
     others = [{"type": "device", "bom-ref": ref, "name": name,
@@ -293,7 +293,7 @@ def system(sepp_doc, sepp_bytes):
         "$comment": "DRAFT EXAMPLE for telecom-service-assurance v0.1-draft. An operator's roaming interconnect as "
                     "its architects deliver it, stage 'configured'. Lists every interface of the SEPP, each joined "
                     "to the product interface it realises, with the services it carries, whether it crosses the "
-                    "operator boundary and the component that provides its keys. Illustrative values.",
+                    "operator operatorBoundary and the component that provides its keys. Illustrative values.",
         "serialNumber": "urn:uuid:" + SERIAL["system"], "version": 1,
         "metadata": {"timestamp": STAMP, "lifecycles": [{"phase": "operations"}],
                      "supplier": {"name": "Example Operator (illustrative)"}},
@@ -341,9 +341,9 @@ def main():
             "DRAFT NON-CONFORMING EXAMPLE for telecom-service-assurance. The conforming record with carriesService "
             "removed from N32-f, which is in use. Fails telecom-service-assurance#I1."),
         "cbom-roaming-interconnect-fail-proxy.cdx.json": variant(
-            rec, "sepp:n32c", "boundaryProxy", "2",
-            "DRAFT NON-CONFORMING EXAMPLE for telecom-service-assurance. The conforming record with boundaryProxy "
-            "removed from N32-c, which crosses the operator boundary. Fails telecom-service-assurance#I3."),
+            rec, "sepp:n32c", "proxiedBy", "2",
+            "DRAFT NON-CONFORMING EXAMPLE for telecom-service-assurance. The conforming record with proxiedBy "
+            "removed from N32-c, which crosses the operator operatorBoundary. Fails telecom-service-assurance#I3."),
     }
     for name, obj in files.items():
         with open(os.path.join(OUT, name), "wb") as fh:

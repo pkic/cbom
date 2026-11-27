@@ -21,8 +21,8 @@ A property moves to a native field only if all three hold:
 | Profile attribute | CycloneDX 1.7 location | Notes |
 |---|---|---|
 | `interfaceId` | `bom-ref` | Redundant. Drop the property. |
-| `implementationPurl` | `dependencies[].provides` from the library component (which carries `purl`) to the protocol component or service | The examples already emit `provides` for the JDK. Two statements of one fact can disagree; keep one. |
-| `providerLocation` | `algorithmProperties.executionEnvironment` on the algorithms the interface uses | `software-plain-ram`/`software-encrypted-ram` → `software`, `software-tee` → `tee`, `hardware` → `hsm`. Derivable if the interface's algorithms agree; a mixed answer is a finding, not an error. |
+| `implementingLibrary` | `dependencies[].provides` from the library component (which carries `purl`) to the protocol component or service | The examples already emit `provides` for the JDK. Two statements of one fact can disagree; keep one. |
+| `executionEnvironment` | `algorithmProperties.executionEnvironment` on the algorithms the interface uses | `software-plain-ram`/`software-encrypted-ram` → `software`, `software-tee` → `tee`, `hardware` → `hsm`. Derivable if the interface's algorithms agree; a mixed answer is a finding, not an error. |
 | `keyTypes` (present state) | `related-crypto-material` components (`type: private-key` or `secret-key`, `algorithmRef`, `size`, `state`) that the management surface or service depends on | The realm key is already one. Richer than the property: size, state and dates come with it. |
 | `keyStoreFormats` | `relatedCryptoMaterialProperties.format` | Values are free text in CycloneDX; the profile's vocabulary becomes a convention on that field. |
 | `keyWrapping` | `relatedCryptoMaterialProperties.securedBy` (`mechanism`, `algorithmRef`) on the stored key | Exactly the fact. An unwrapped key has no `securedBy`, which is ambiguous with "not stated", so keep `none` explicit (K3) as `mechanism: "none"`. |
@@ -36,7 +36,7 @@ A property moves to a native field only if all three hold:
 |---|---|---|
 | `moduleValidationScheme` | `algorithmProperties.certificationLevel` on each algorithm | Per algorithm, not per module. Its enum covers FIPS 140-1/2/3 levels and CC EAL, not ISO/IEC 19790 or national approval (`other`). It also puts FIPS and CC in one list, the conflation decision 0022 separated. Use it where it fits; the property stays authoritative. |
 | `lifecycleStage` | `metadata.lifecycles[].phase` | Document-level only. The Keycloak document mixes `implemented` and `configured`, which a single phase cannot say. Phases also differ in kind (`post-build`, `operations`, `discovery`). Use when uniform; keep the per-interface property. |
-| `externalDependencies` | External `services` (the CA, the directory, the identity provider) with `tags` from the profile's vocabulary, and `dependsOn` edges | Native and more informative, and heavier: the producer declares services it does not operate. Reasonable for an extended-depth document. |
+| `trustServiceDependencies` | External `services` (the CA, the directory, the identity provider) with `tags` from the profile's vocabulary, and `dependsOn` edges | Native and more informative, and heavier: the producer declares services it does not operate. Reasonable for an extended-depth document. |
 | `roadmapRef` | `externalReferences[type="issue-tracker"]` or `"release-notes"` | Loses the per-purpose key. Usable only where one reference covers the interface. |
 
 ## No native home
@@ -51,14 +51,14 @@ does not model.
 - **Explicit absence:** `keyExchange`, `encryption`, `authentication` with value `none` (K3), and
   the `unknown` and `withheld` markers.
 - **Capability and roadmap:** the `capabilityByPurpose` group (`capabilityStatus`, `blockedBy`,
-  `validatedModeAvailability`), `enablementMethod`, `minimumProductVersion`, `coexistence`,
-  `negotiationControl`, `integrationConstraints`, `enablementSetting`. CycloneDX records what
+  `validatedModeAvailability`), `enablementMethod`, `availableFromVersion`, `transitionMode`,
+  `algorithmSelection`, `integrationConstraints`, `enablementSetting`. CycloneDX records what
   is; Q26 is precisely whether a CBOM should record what will be. `declarations.claims` could
   in principle carry supplier commitments, but they are built for attestation against standards
   and would be a stretch.
 - **Capability of key management:** `keyTypesSupported`, `keyStoreFormatsSupported`,
-  `keyOperations` (`cryptoFunctions` is per algorithm, not per surface), `keyManagementFunction`,
-  `keyStoreLocation`, `keyStoreRef`.
+  `keyOperations` (`cryptoFunctions` is per algorithm, not per surface), `managesKeys`,
+  `keyStoreLocation`, `keysStoredIn`.
 - **Everything with no TLS-style native list:** `protocolVersionsSupported` everywhere, and
   `keyExchangeSupported`/`authenticationSupported` for services and non-TLS protocols.
 - **Product certification scheme:** a reference could go in `externalReferences`; the scheme

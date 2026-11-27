@@ -67,15 +67,15 @@ The baseline pqc-migration attributes carry most of the load. Only two new ones 
 | Which interface, of what type | `interfaceType` | Baseline |
 | What it uses now and could use | `keyExchange`, `authentication`, and their `Supported` forms | Baseline |
 | What blocks PQC, per purpose, and who can change it | `capabilityStatus`, `blockedBy`, `roadmapRef` | Baseline |
-| Can it migrate while the far end is still classical | `coexistence`, `negotiationControl` | Baseline. One-way multicast needs a defined value: `not-applicable` |
+| Can it migrate while the far end is still classical | `transitionMode`, `algorithmSelection` | Baseline. One-way multicast needs a defined value: `not-applicable` |
 | What breaks | `integrationConstraints` | Baseline. Carries the GOOSE frame and timing limit as a structured entry |
-| Which interface delivers this interface's keys | `keyStoreRef` | Extended. **Promoted to MUST** for group-keyed interfaces |
+| Which interface delivers this interface's keys | `keysStoredIn` | Extended. **Promoted to MUST** for group-keyed interfaces |
 | Can the trust anchor be replaced in the field | `keyReplaceable` | IoT draft |
 | Who can push an update, and how | `updateAuthority`, `updateMechanism` | IoT draft |
-| Can the firmware verification algorithm change in the field | `verifierReplaceable` | **New**. `yes`, `no` (boot ROM), `via-bootloader-update`, `unknown` |
-| What does enabling the capability cost in certification | `certificationImpact` with `certificationScheme` | **New**. `none`, `retest`, `recertification`, `unknown` |
-| Which component interfaces are actually used | `usage` | System document. **New**. `in-use`, `disabled`, `not-connected` |
-| Which conduit carries an inter-zone path, and which interface implements it | `conduitRef` | System document. **New** |
+| Can the firmware verification algorithm change in the field | `verifierReplaceable` | **New**. `in-field`, `not-replaceable` (boot ROM), `bootloader-update`, `unknown` |
+| What does enabling the capability cost in certification | `certificationImpact` with `impactedCertification` | **New**. `none`, `retest`, `recertification`, `unknown` |
+| Which component interfaces are actually used | `designUse` | System document. **New**. `in-use`, `disabled`, `not-connected` |
+| Which conduit carries an inter-zone path, and which interface implements it | `crossesConduit` | System document. **New** |
 
 **Tried and rejected:**
 
@@ -94,7 +94,7 @@ There are two profiles: one for the component, one for the system.
 |---|---|---|
 | Inherited | All change-core rules, including the conditional update-path rules | as the core |
 | I-OT1 | `certificationImpact` on every interface whose `capabilityStatus` is not `not-planned` | MUST |
-| I-OT2 | `keyStoreRef` on every interface keyed by a group key service | MUST |
+| I-OT2 | `keysStoredIn` on every interface keyed by a group key service | MUST |
 | I-OT3 | `verifierReplaceable` on every update interface | MUST |
 | I-OT5 | Real-time limits stated in `integrationConstraints` where they exist | SHOULD |
 | P-OT1 | Declare at least one update interface, or state why there is none | MUST |
@@ -104,8 +104,8 @@ There are two profiles: one for the component, one for the system.
 | Rule | Requirement | Level |
 |---|---|---|
 | S1 | Reference every component CBOM by link and digest | MUST |
-| S2 | State `usage` for every interface of every referenced component | MUST |
-| S3 | Declare zones, and for each inter-zone path name the conduit with `conduitRef` | MUST |
+| S2 | State `designUse` for every interface of every referenced component | MUST |
+| S3 | Declare zones, and for each inter-zone path name the conduit with `crossesConduit` | MUST |
 | S4 | Name the component that provides the key plane: the GDOI key server and the certificate authority's enrolment interface | MUST |
 | S5 | State the IEC 62443-3-3 security level achieved by the system as delivered | SHOULD |
 
@@ -165,10 +165,10 @@ The worked example is a reference SAS with generic components and values taken f
 ## 7. Expressing it in CycloneDX
 
 - **Components follow the Keycloak pattern (K7).** TLS is a protocol component. GOOSE, SV, MMS, IEC 60870-5-104 and GDOI are services, because the CycloneDX protocol types do not include them. Each service depends on what carries it.
-- **The group-key relationship is a dependency.** `svc-goose` depends on the key material, and the key material on `int-gdoi`. `keyStoreRef` points to `int-gdoi`.
-- **The system document is a separate BOM.** It references component BOMs through BOM-Link with a hash. `usage` and `conduitRef` are `pkic:profile:` properties.
+- **The group-key relationship is a dependency.** `svc-goose` depends on the key material, and the key material on `int-gdoi`. `keysStoredIn` points to `int-gdoi`.
+- **The system document is a separate BOM.** It references component BOMs through BOM-Link with a hash. `designUse` and `crossesConduit` are `pkic:profile:` properties.
 - **Zones have no native home in 1.7.** In 2.0 the blueprint model (zones, boundaries and flows) is the candidate. This case is the first worked use for it, and a concrete input to the CycloneDX feedback on the edge gap.
-- **Certification.** `certificationScheme` maps to `certifications` in 2.0 and is a property in 1.7, as for module validation.
+- **Certification.** `impactedCertification` maps to `certifications` in 2.0 and is a property in 1.7, as for module validation.
 
 ## 8. Proposed decisions and open questions
 
@@ -176,7 +176,7 @@ The worked example is a reference SAS with generic components and values taken f
 
 - **O1.** The OT use case is the substation automation system, named by its decision.
 - **O2.** Two profiles: a component profile extending the change core, and a system overlay.
-- **O3.** The data plane and the key plane are separate interfaces, linked by `keyStoreRef`, which is MUST for group-keyed interfaces.
+- **O3.** The data plane and the key plane are separate interfaces, linked by `keysStoredIn`, which is MUST for group-keyed interfaces.
 - **O4.** Real-time limits are integration constraints, not a new attribute.
 - **O5.** A conduit is an interface of the device that implements it. The edge model stays parked.
 - **O6.** Values are illustrative until a supplier volunteers a product.
@@ -186,7 +186,7 @@ The worked example is a reference SAS with generic components and values taken f
 1. Does IEC 62351-9:2023 already profile G-IKEv2, or only GDOI over IKEv1? This changes the `int-gdoi` finding.
 2. Has IEC TC 57 WG 15 started PQC work on IEC 62351-3, -6, -8 and -9?
 3. Is `certificationImpact` a product fact, or a deployment fact that belongs in the system document?
-4. Should `usage` stay in the system overlay, or become a general facility for derived CBOMs?
+4. Should `designUse` stay in the system overlay, or become a general facility for derived CBOMs?
 5. Who can bring a protection IED supplier and a transmission or distribution operator to review the draft? Targeted requests to named people are the route.
 
 ## Sources

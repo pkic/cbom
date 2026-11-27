@@ -21,7 +21,7 @@ Run from `docs/methodology/`, with `--with ../../drafts/ot-libiec61850/examples/
 | --- | --- |
 | `profile-interface-enumeration.rules.json` | conforms |
 | `profile-interface-disclosure.rules.json` | conforms |
-| `profile-change-core.rules.json` | does not conform: no capability, enablement, coexistence or update mechanism |
+| `profile-change-core.rules.json` | does not conform: no capability, enablement, transition mode or update mechanism |
 | `profile-pqc-migration-ot.rules.json` | does not conform: the change core's failures, plus I1 (`certificationImpact`) |
 
 Both documents validate against the pinned CycloneDX 2.0 schema (`tests/check-cyclonedx.py`).
@@ -29,7 +29,7 @@ Both documents validate against the pinned CycloneDX 2.0 schema (`tests/check-cy
 ## Findings
 
 - A record written from public source stops at the baseline. The change-core facts need the maintainer.
-- MMS, GOOSE and SV state `keyStoreRef` as `none`: they use no key, and `pqc-migration-ot#I3` accepts the literal (R2-16).
+- MMS, GOOSE and SV state `keysStoredIn` as `none`: they use no key, and `pqc-migration-ot#I3` accepts the literal (R2-16).
 - `R-GOOSE` is added to the list of protocol names after Release 1 (R2-17).
 
 ## Values to confirm

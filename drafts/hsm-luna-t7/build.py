@@ -64,16 +64,16 @@ def capability(pqc_purposes):
 
 # Facts shared by every interface: one firmware release under one certificate.
 COMMON = [
-    ("providerLocation", "hsm"),
-    ("minimumProductVersion", "7.15.1"),
+    ("executionEnvironment", "hsm"),
+    ("availableFromVersion", "7.15.1"),
     ("moduleValidationScheme", "fips-140-3"),
     ("moduleValidationRef", "CMVP certificate #5450 (FIPS 140-3, overall level 3, validated 29 July 2026)"),
     ("certificationImpact", "recertification"),
-    ("certificationScheme", "FIPS 140-3"),
-    ("externalDependencies", "none"),
+    ("impactedCertification", "FIPS 140-3"),
+    ("trustServiceDependencies", "none"),
     ("defaultState", "disabled"),
 ]
-COMMON_UNKNOWN = ["enablementMethod", "coexistence", "implementationPurl", "protocolVersionsSupported"]
+COMMON_UNKNOWN = ["enablementMethod", "transitionMode", "implementingLibrary", "protocolVersionsSupported"]
 CONSTRAINT_MODE = ("The approved mode must be set by the Security Officer with HSM policy 12 "
                    "(security policy, section 11.1.2); the module is valid only when configured that way. ")
 
@@ -98,14 +98,14 @@ ICD = iface(
      ("keyExchangeSupported", "none"), ("authenticationSupported", ["password", "ped-key"]),
      ("keyTypesSupported", ["AES-128", "AES-192", "AES-256", "TDEA-3KEY", "RSA-2048", "RSA-3072", "RSA-4096",
                             "ECDSA-P256", "ECDSA-P384", "ECDSA-P521", "ML-KEM", "ML-DSA", "LMS"]),
-     ("negotiationControl", "The application chooses the mechanism in each command"),
+     ("algorithmSelection", "The application chooses the mechanism in each command"),
      ("integrationConstraints", CONSTRAINT_MODE +
       "ICD input and output are plaintext over the PCIe bus (table 18). The user password is entered "
       "encrypted under the module's RSA-4096 PEC key (tables 18, 20, 21). Approved services include ML-KEM "
       "key generation, encapsulation and decapsulation, ML-DSA and LMS key generation, signing and "
       "verification (tables 4, 5 and 13; algorithm certificates A7879 and A7880). Parameter sets are not "
       "restated here."),
-     ("keyStoreRef", "service:sto-partition-keys")],
+     ("keysStoredIn", "service:sto-partition-keys")],
     ALL_PQC, ["protocolVersion"],
     "The command interface that applications reach, normally through the vendor's PKCS #11 library on the host. "
     "The library is outside the module boundary, so its mechanism list is not part of this record.")
@@ -116,17 +116,17 @@ ADMIN = iface(
      ("endpointRole:administrator", "endpoint:security-officer"), ("endpointRole:server", "endpoint:luna-t7"),
      ("keyExchange", "none"), ("encryption", "none"), ("authentication", "password"),
      ("keyExchangeSupported", "none"), ("authenticationSupported", ["password", "ped-key"]),
-     ("negotiationControl", "Fixed by the firmware; HSM policies set by the Security Officer"),
+     ("algorithmSelection", "Fixed by the firmware; HSM policies set by the Security Officer"),
      ("integrationConstraints", CONSTRAINT_MODE +
       "Roles authenticate with a password or with PED keys (section 11.1.2, tables 13 and 18)."),
-     ("keyManagementFunction", "keys-and-certificates"),
+     ("managesKeys", "yes"),
      ("keyOperations", ["generate", "import", "export", "wrap", "unwrap", "derive", "delete", "zeroize"]),
      ("keyTypesSupported", ["AES-128", "AES-192", "AES-256", "TDEA-3KEY", "RSA-2048", "RSA-3072", "RSA-4096",
                             "ECDSA-P256", "ECDSA-P384", "ECDSA-P521", "ML-KEM", "ML-DSA", "LMS"]),
      ("keyStoreFormatsSupported", ["token-native"]),
      ("keyStoreLocation", "hsm"),
      ("keyBlockFormatsSupported", ["proprietary"]),
-     ("keyStoreRef", "service:sto-partition-keys")],
+     ("keysStoredIn", "service:sto-partition-keys")],
     ALL_PQC, ["protocolVersion", "keyTypes", "keyStoreFormats", "keyBlockFormats"],
     "Key generation, import, export, wrapping and zeroisation, and HSM policy changes. Which key types and "
     "formats an owner actually uses is a deployment fact, so it is marked unknown here.")
@@ -137,8 +137,8 @@ PED = iface(
      ("endpointRole:administrator", "endpoint:ped-key-holder"), ("endpointRole:server", "endpoint:luna-t7"),
      ("keyExchange", "ECDH"), ("encryption", "AES-256"), ("authentication", "HMAC"),
      ("keyExchangeSupported", ["ECDH", "RSA"]), ("authenticationSupported", "HMAC"),
-     ("keyManagementFunction", "none"),
-     ("negotiationControl", "Fixed by the firmware"),
+     ("managesKeys", "no"),
+     ("algorithmSelection", "Fixed by the firmware"),
      ("integrationConstraints",
       "The PED tunnel is established with KAS-ECC (table 13). Remote PED traffic is protected with KTS-RSA "
       "and KTS-HMAC; a locally connected PED (TPED) passes data in plaintext over the serial port (table 18). "
@@ -153,8 +153,8 @@ FIRMWARE = iface(
      ("endpointRole:administrator", "endpoint:security-officer"), ("endpointRole:server", "endpoint:luna-t7"),
      ("keyExchange", "none"), ("encryption", "none"), ("authentication", "RSA-4096-SHA-384"),
      ("keyExchangeSupported", "none"), ("authenticationSupported", "RSA-4096-SHA-384"),
-     ("keyManagementFunction", "none"),
-     ("negotiationControl", "Fixed by the firmware"),
+     ("managesKeys", "no"),
+     ("algorithmSelection", "Fixed by the firmware"),
      ("integrationConstraints",
       "A firmware load test verifies an RSA 4096 signature with SHA2-384 before the new firmware is accepted "
       "(table 23). The bootloader checks its own integrity with a SHA-1 error detection code, and the "
@@ -170,14 +170,14 @@ CLONING = iface(
      ("endpointRole:initiator", "endpoint:luna-t7"), ("endpointRole:responder", "endpoint:luna-t7-peer"),
      ("keyExchange", "RSA-4096"), ("encryption", "AES-256-KWP"), ("authentication", "RSA-4096"),
      ("keyExchangeSupported", "RSA-4096"), ("authenticationSupported", "RSA-4096"),
-     ("negotiationControl", "Fixed by the firmware"),
+     ("algorithmSelection", "Fixed by the firmware"),
      ("integrationConstraints",
       "The cloning tunnel is established with KAS-RSA between the modules' RSA-4096 TUK keys, whose "
       "certificates (TWC) are signed by the module's HOK (tables 13, 20, 21). Objects are wrapped with AES "
       "KWP under a cloning key encryption vector derived with a two-step KDF of SP 800-56C and SP 800-108 "
       "(section 2.10.2). Only modules in the same domain can clone. No post-quantum key establishment is "
       "listed for this interface."),
-     ("keyStoreRef", "service:sto-partition-keys")],
+     ("keysStoredIn", "service:sto-partition-keys")],
     [], ["protocolVersion"])
 
 EXPORT = iface(
@@ -186,14 +186,14 @@ EXPORT = iface(
      ("endpointRole:initiator", "endpoint:luna-t7"), ("endpointRole:responder", "endpoint:key-recipient"),
      ("keyExchange", "RSA-OAEP"), ("encryption", "AES-256-KWP"), ("authentication", "none"),
      ("keyExchangeSupported", ["RSA-OAEP", "none"]), ("authenticationSupported", "none"),
-     ("negotiationControl", "The application chooses the wrapping mechanism"),
+     ("algorithmSelection", "The application chooses the wrapping mechanism"),
      ("integrationConstraints",
       "Key export and import, and partition backup and restore, use KTS-AES (table 13). Approved key "
       "transport is AES-KW and AES-KWP (SP 800-38F), RSA-OAEP (SP 800-56B rev 2, 128-bit strength), and "
       "AES-CBC with HMAC-SHA2-256 (section 2.10.3). Wrapped keys pass through the WICD path (table 18). "
       "ML-KEM is an approved service of the module, but its use for key transport on this interface is not "
       "stated."),
-     ("keyStoreRef", "service:sto-partition-keys")],
+     ("keysStoredIn", "service:sto-partition-keys")],
     [], ["protocolVersion"])
 
 
@@ -205,9 +205,9 @@ STORE_PURPOSES = ["key-establishment", "entity-authentication", "non-repudiation
 def store(ref, name, encryption, wrapping, protected_by, note):
     return iface(ref, name, "storage",
         [("encryption", encryption), ("keyWrapping", wrapping), ("keyWrappingSupported", [wrapping]),
-         ("negotiationControl", "Not applicable"), ("integrationConstraints", note),
-         ("keyStoreRef", "service:mgmt-icd"),
-         ("protectedBy", protected_by), ("keyBlockFormat", "proprietary")],
+         ("algorithmSelection", "Not applicable"), ("integrationConstraints", note),
+         ("keysStoredIn", "service:mgmt-icd"),
+         ("protectedBy", protected_by), ("keyBlockFormats", "proprietary")],
         STORE_PURPOSES, [])
 
 
@@ -246,8 +246,8 @@ record = {
                             "Manager offerings."),
             "properties": props(("subjectType", "product"), ("coverage", "all"),
                                 ("productCertificationScheme", "none"),
-                                ("hsmApproval", "none"),
-                                ("contextAbsent:support-lifecycle", "not-published"))
+                                ("productCertificationScheme", "none"),
+                                ("absent:support-lifecycle", "not-published"))
                           + unknown("correspondsTo"),
             "identifiers": [{"party": "party:vendor", "identities": [
                 {"scheme": "mpn", "value": "872-500025-001"}, {"scheme": "mpn", "value": "875-500025-002"}]}],

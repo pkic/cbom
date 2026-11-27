@@ -34,11 +34,11 @@
             "value": "product"
           },
           {
-            "name": "pkic:profile:managementInterfaceAbsence",
+            "name": "pkic:profile:absent:management-interface",
             "value": "configured-out-of-band"
           },
           {
-            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "name": "pkic:profile:absent:vulnerability-statements",
             "value": "not-published"
           }
         ],
@@ -177,7 +177,7 @@
               "value": "endpoint:peer-sepp"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Certificate and key from the 'tls' section of sepp.yaml; client certificate verification is off unless 'verify_client' is set"
             },
             {
@@ -185,7 +185,7 @@
               "value": "The server context (lib/sbi/nghttp2-server.c) allows TLS 1.0 to 1.3 and sets the group list to P-256 only, so the server negotiates ECDHE on P-256 whatever the client offers. OpenSSL 3 refuses TLS 1.0 and 1.1 at its default security level. TLS 1.2 suites are ECDHE-ECDSA and ECDHE-RSA with AES-GCM or ChaCha20-Poly1305, and DHE-RSA with AES-GCM; TLS 1.3 suites are the OpenSSL defaults, with server preference. The client side (lib/sbi/client.c) uses libcurl with OpenSSL and its default groups. There is no setting for the group list. The SEPP advertises TLS as its only N32-f security capability. Library version from an Ubuntu 24.04 build; to confirm."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {
@@ -269,7 +269,7 @@
               "value": "endpoint:peer-sepp"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "A separate listener and certificate may be set in the 'n32f' section"
             },
             {
@@ -281,11 +281,11 @@
               "value": "n32-f"
             },
             {
-              "name": "pkic:profile:referenceSpecification",
+              "name": "pkic:profile:governingSpecification",
               "value": "TS 33.501 13.1 and 13.5"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {
@@ -369,7 +369,7 @@
               "value": "endpoint:sepp"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "The scheme is set per server in the 'sbi' section: 'http' or 'https'"
             },
             {
@@ -381,11 +381,11 @@
               "value": "sbi"
             },
             {
-              "name": "pkic:profile:referenceSpecification",
+              "name": "pkic:profile:governingSpecification",
               "value": "TS 33.501 13.1"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sto-keys"
             },
             {

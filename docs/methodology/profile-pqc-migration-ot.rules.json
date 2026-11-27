@@ -49,15 +49,15 @@
   "$inherited": "The disclosure model and the requirement keywords are inherited from the base and are deliberately not restated. Restating an inherited block would override the base's value silently, so a later change to the base, such as a new marker prefix, would not reach this profile and every marker would stop being recognised without an error. Only appliesTo is restated, because narrowing the carrier range is a real choice and the validator checks that a restated range does not widen the base's.",
   "$commentCertification": "IEDs are certified per product version. Changing their cryptography can trigger IEC 61850 conformance re-testing, IEC 62443-4-2 re-certification, or the operator's own type approval. certificationImpact states what enabling the interface's capability would trigger for this product; the operator's own type approval stays in the operator's register.",
   "verifierReplaceableVocabulary": [
-    "yes",
-    "via-bootloader-update",
-    "no"
+    "in-field",
+    "bootloader-update",
+    "not-replaceable"
   ],
   "productRules": [],
   "interfaceRules": [
     {
       "id": "I3",
-      "attribute": "keyStoreRef",
+      "attribute": "keysStoredIn",
       "level": "MUST",
       "constraint": {
         "refersToLocal": {
@@ -87,7 +87,7 @@
         "attribute": "updateMechanism",
         "notEquals": "none"
       },
-      "note": "Whether the algorithm the device uses to verify new firmware, with its trust anchor, can change in the field: 'yes', 'via-bootloader-update', or 'no' where it is fixed in boot ROM. Splits a fleet into devices that can be updated and devices that must be replaced."
+      "note": "Whether the algorithm the device uses to verify new firmware, with its trust anchor, can change in the field ('in-field'), only through a bootloader update ('bootloader-update'), or not at all because it is fixed in boot ROM ('not-replaceable'). Splits a fleet into devices that can be updated and devices that must be replaced."
     }
   ],
   "exclusions": [
@@ -114,6 +114,14 @@
     "conformingExample": "examples/cbom-ot-protection-ied-product.cdx.json",
     "nonConformingExample": "examples/cbom-ot-protection-ied-product-fail-ot-I4.cdx.json"
   },
+  "overrides": [
+    {
+      "id": "change-core#I17",
+      "level": "MUST",
+      "withholdable": false,
+      "note": "Raised to MUST: certification impact turns each substation action into a schedule. Was pqc-migration-ot#I1 before R2-23."
+    }
+  ],
   "changelog": [
     {
       "version": "0.1",
@@ -139,14 +147,21 @@
           "summary": "I1 and I2 moved to the change core as change-core#I17 and change-core#I18 (R2-23). This profile raises I17 to MUST, as I1 was; I18 stays at SHOULD, as I2 was. Verdicts are unchanged; the rule ids in a report change. I3 and I4 keep their ids."
         }
       ]
-    }
-  ],
-  "overrides": [
+    },
     {
-      "id": "change-core#I17",
-      "level": "MUST",
-      "withholdable": false,
-      "note": "Raised to MUST: certification impact turns each substation action into a schedule. Was pqc-migration-ot#I1 before R2-23."
+      "version": "0.2",
+      "date": "2026-11-27",
+      "summary": "Attribute names made clearer and consistent across the profiles (drafts/attribute-naming-review.md; decision 0028). The version is unchanged because no release has been published.",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Renamed: verifierReplaceable values yes → in-field, via-bootloader-update → bootloader-update, no → not-replaceable. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: keyStoreRef → keysStoredIn. A record that uses the previous name no longer conforms."
+        }
+      ]
     }
   ]
 }

@@ -15,7 +15,7 @@
       "request a fuller disclosure from the producer, where the record cannot answer the question",
       "reject the submission as insufficient to inventory"
     ],
-    "$note": "The profile permits a producer to withhold implementationPurl (I9). A consumer should read a conforming document that exercises that permission as answering the second half of the decision and not the first: library-level vulnerability matching is the use this profile is built for, and a withheld library removes it. The verdict remains 'conforms'; the conformance report states the disclosure state of every rule, which is where that fact is visible. A procurement profile deriving from this one should tighten I9, as the migration profile does."
+    "$note": "The profile permits a producer to withhold implementingLibrary (I9). A consumer should read a conforming document that exercises that permission as answering the second half of the decision and not the first: library-level vulnerability matching is the use this profile is built for, and a withheld library removes it. The verdict remains 'conforms'; the conformance report states the disclosure state of every rule, which is where that fact is visible. A procurement profile deriving from this one should tighten I9, as the migration profile does."
   },
   "scope": {
     "$comment": "C11, revised in v0.9. 'subjectTypes' replaces 'subjectType' and is a set. A derived profile narrows it to a subset, as it narrows lifecycleStages. The baseline names two subject types because its rules describe an interface the same way whether a vendor reports what a product does at build time or an operator reports what a deployment does. Only the subject identifier (P3) and some reference rules differ, and they are keyed by subject type. 'intended' is removed: a design intention answers nothing about deployed interfaces, which is this profile's decision. A vendor's intention is a capability status (pqc-migration G1); an operator's intention is a requirement, held in policy or a tender, and a design document is referenced as context (R6), not reported as a stage.",
@@ -83,7 +83,7 @@
           "interfaceType": "management",
           "min": 1
         },
-        "orDeclaredAbsent": "managementInterfaceAbsence",
+        "orDeclaredAbsent": "absent:management-interface",
         "absenceEnumRef": "managementAbsenceVocabulary",
         "orCitedDeclares": true,
         "absenceConditions": {
@@ -300,7 +300,7 @@
     },
     {
       "id": "I9",
-      "attribute": "implementationPurl",
+      "attribute": "implementingLibrary",
       "level": "MUST",
       "constraint": {
         "startsWith": "pkg:"
@@ -322,7 +322,7 @@
         "equals": "storage"
       },
       "schemeRef": "algorithm",
-      "note": "Added in v0.8. On a storage interface: the algorithm that protects the data keys, for example RSA-OAEP over an AES key, or 'none' where the product does not wrap them. It stands in for I3 on storage, and it is a different attribute because it is a different job: wrapping keys at rest is the key-protection purpose, not key establishment between parties. It belongs at this depth because it answers this profile's decision. When RSA weakens, a storage path whose data keys are wrapped under RSA is one of the affected interfaces. I4 (encryption) and I9 (implementationPurl) apply to storage unchanged. See decision 0022."
+      "note": "Added in v0.8. On a storage interface: the algorithm that protects the data keys, for example RSA-OAEP over an AES key, or 'none' where the product does not wrap them. It stands in for I3 on storage, and it is a different attribute because it is a different job: wrapping keys at rest is the key-protection purpose, not key establishment between parties. It belongs at this depth because it answers this profile's decision. When RSA weakens, a storage path whose data keys are wrapped under RSA is one of the affected interfaces. I4 (encryption) and I9 (implementingLibrary) apply to storage unchanged. See decision 0022."
     },
     {
       "id": "I11",
@@ -380,7 +380,7 @@
         "attribute": "interfaceType",
         "notEquals": "storage"
       },
-      "note": "What terminates the interface's cryptography: 'workload' where the subject does it itself; the bom-ref of the component of the same record that does it for the subject, such as an ingress, a service mesh sidecar or a gateway; or 'platform' on that component's own interface. A product record seldom knows; Deployment Disclosure requires it. IoT Device Estate's cryptoTerminationPoint states what a device model allows; this states what does terminate it."
+      "note": "What terminates the interface's cryptography: 'workload' where the subject does it itself; the bom-ref of the component of the same record that does it for the subject, such as an ingress, a service mesh sidecar or a gateway; or 'platform' on that component's own interface. A product record seldom knows; Deployment Disclosure requires it. IoT Device Estate's terminationOptions states what a device model allows; this states what does terminate it."
     }
   ],
   "exclusions": [
@@ -411,6 +411,176 @@
     "conformingExample": "examples/cbom-keycloak-product.cdx.json",
     "nonConformingExample": "examples/cbom-keycloak-product-fail-R5.cdx.json"
   },
+  "$commentIdentifierSchemes": "Q38. Identity cannot be settled in general, because some asset classes have no agreed identifier. It can be settled per profile, and this is the lever the methodology has. The baseline previously constrained the form of the least contested identifier — the implementing library, which had to be a purl — and left the most contested ones free, so 'our secure channel' and 'elliptic curve' were conforming values for protocol and keyExchange. An inventory built from twelve suppliers cannot correlate on free text. Whether the algorithm scheme should be the CycloneDX Cryptography Registry or another is Q20 and is unsettled; what this profile settles is that a scheme is named, so a consumer knows which naming they are reading. The validator cannot verify membership of a registry it does not hold, and does not pretend to: it checks that a scheme is declared for every asset class the rules constrain. Added in v0.8: wherever a rule requires an algorithm, the literal 'none' is an accepted value. It states that the interface applies no algorithm for that job, for example tokens that are signed and not encrypted, or data keys that are not wrapped. It is a claim about the product and is as checkable as any other value. It is not the same as not knowing, which is the 'unknown' disclosure marker, nor as declining to say, which is 'withheld'. See decision 0022 (K3).",
+  "identifierSchemes": {
+    "algorithm": "cyclonedx-cryptography-registry",
+    "protocol": "cyclonedx-cryptography-registry",
+    "library": "purl",
+    "subject": {
+      "product": "purl",
+      "deployment": "tag-uri",
+      "service": "tag-uri",
+      "system": "tag-uri"
+    }
+  },
+  "coverageVocabulary": [
+    "all-external",
+    "all",
+    "partial"
+  ],
+  "managementAbsenceVocabulary": [
+    "no-configuration-surface",
+    "configured-out-of-band",
+    "not-applicable-to-subject",
+    "not-reached"
+  ],
+  "defaultStateVocabulary": [
+    "enabled",
+    "disabled"
+  ],
+  "$commentReferenceRules": "New in v0.9. A reference rule requires the document to point to an artefact that it does not carry. The profile defines the kind of context, where in the document the pointer sits, which carrier reference types express it, whether the target must be bound by a hash, and whether the producer may state that no such artefact exists. Conformance checks that the pointer is present and well formed, and, where the evaluator is given the target, that the hash matches. It never evaluates the target's content. This is decision 0020 generalised: a CBOM records facts that change when the product or deployment changes; context that changes on another trigger, or is held by another party, is joined and not merged. Direction matters. A document points to artefacts that exist when it is written: its companion SBOM, the configuration it was read from, the evidence it was built on, and the locations where later statements will be published (a VEX feed, an advisory API). A judgement made about the document afterwards, such as a conformance claim or a policy evaluation, points to the document by digest, never the reverse.",
+  "contextKinds": {
+    "sbom": {
+      "carrier": [
+        "bom"
+      ],
+      "form": "document"
+    },
+    "vulnerability-statements": {
+      "carrier": [
+        "vulnerability-assertion",
+        "exploitability-statement"
+      ],
+      "form": "document-or-endpoint"
+    },
+    "advisories": {
+      "carrier": [
+        "advisories"
+      ],
+      "form": "endpoint"
+    },
+    "security-contact": {
+      "carrier": [
+        "security-contact",
+        "rfc-9116"
+      ],
+      "form": "endpoint"
+    },
+    "configuration-guidance": {
+      "carrier": [
+        "documentation",
+        "configuration"
+      ],
+      "form": "document-or-endpoint"
+    },
+    "threat-model": {
+      "carrier": [
+        "threat-model",
+        "adversary-model",
+        "documentation"
+      ],
+      "form": "document-or-endpoint"
+    },
+    "change-notice": {
+      "carrier": [
+        "release-notes",
+        "documentation",
+        "website"
+      ],
+      "form": "endpoint"
+    }
+  },
+  "accessProtocolVocabulary": [
+    "web-page",
+    "csaf-provider",
+    "osv-api",
+    "ghsa-api",
+    "vex-document",
+    "other"
+  ],
+  "contextAbsenceVocabulary": [
+    "not-published",
+    "not-applicable-to-subject"
+  ],
+  "referenceRules": [
+    {
+      "id": "R1",
+      "context": "sbom",
+      "at": "document",
+      "level": "MUST",
+      "hashRequired": true,
+      "withholdable": false,
+      "requiredWhen": {
+        "subjectType": "product"
+      },
+      "note": "The SBOM of the same subject, as a BOM-Link with a hash. It is how a consumer reaches components the CBOM does not describe, and how a library named under I9 is placed in the dependency tree."
+    },
+    {
+      "id": "R2",
+      "context": "vulnerability-statements",
+      "at": "document",
+      "level": "MUST",
+      "hashRequired": "when-document",
+      "orDeclaredAbsent": "contextAbsenceVocabulary",
+      "withholdable": false,
+      "requiredWhen": {
+        "subjectType": "product"
+      },
+      "note": "Where the producer publishes statements about whether this subject is affected by a vulnerability (VEX, CSAF VEX, or an exploitability statement). Either a fixed document, with a hash, or a feed or API, with its access protocol named. A producer that publishes none says so ('not-published'). Silence fails, because a consumer cannot tell 'none published' from 'not addressed'. The rule completes decision 0020: the CBOM supplies the join key (I9) and says where the other half of the join is."
+    },
+    {
+      "id": "R3",
+      "context": "advisories",
+      "at": "document",
+      "level": "SHOULD",
+      "hashRequired": false,
+      "withholdable": false,
+      "requiredWhen": {
+        "subjectType": "product"
+      },
+      "note": "Where third-party or vendor advisories about the subject and its libraries are published, with the access protocol named: a web page, a CSAF provider, the OSV API or the GitHub advisory API. A machine-readable endpoint lets a consumer query by the package URLs the CBOM already carries."
+    },
+    {
+      "id": "R4",
+      "context": "security-contact",
+      "at": "document",
+      "level": "SHOULD",
+      "hashRequired": false,
+      "withholdable": false,
+      "requiredWhen": {
+        "subjectType": "product"
+      },
+      "note": "Where to report a weakness or request a fuller disclosure. The objective lists 'request a fuller disclosure from the producer' as a decision option; without a contact, that option has no address."
+    },
+    {
+      "id": "R5",
+      "context": "configuration-guidance",
+      "at": "interface",
+      "level": "MUST",
+      "hashRequired": false,
+      "withholdable": false,
+      "requiredWhen": {
+        "anyAttributeEquals": {
+          "attributes": [
+            "keyExchange",
+            "encryption",
+            "authentication"
+          ],
+          "value": "deployment-defined"
+        }
+      },
+      "note": "If a product states that the operator decides an algorithm, the interface points to where the operator decides it. 'deployment-defined' without this pointer tells the operator that the decision is theirs and not how to make it."
+    },
+    {
+      "id": "R6",
+      "context": "threat-model",
+      "at": "document",
+      "level": "MAY",
+      "hashRequired": false,
+      "withholdable": false,
+      "note": "A threat model or design document. This is where design intention is recorded now that 'intended' is not an accepted stage: as context the record points to, not as a stage it reports."
+    }
+  ],
   "changelog": [
     {
       "version": "0.1",
@@ -569,176 +739,29 @@
           "summary": "Added I14 'terminatedBy' at MAY: what terminates an interface's cryptography, the workload itself or the component that does it for it. No verdict changes."
         }
       ]
-    }
-  ],
-  "$commentIdentifierSchemes": "Q38. Identity cannot be settled in general, because some asset classes have no agreed identifier. It can be settled per profile, and this is the lever the methodology has. The baseline previously constrained the form of the least contested identifier — the implementing library, which had to be a purl — and left the most contested ones free, so 'our secure channel' and 'elliptic curve' were conforming values for protocol and keyExchange. An inventory built from twelve suppliers cannot correlate on free text. Whether the algorithm scheme should be the CycloneDX Cryptography Registry or another is Q20 and is unsettled; what this profile settles is that a scheme is named, so a consumer knows which naming they are reading. The validator cannot verify membership of a registry it does not hold, and does not pretend to: it checks that a scheme is declared for every asset class the rules constrain. Added in v0.8: wherever a rule requires an algorithm, the literal 'none' is an accepted value. It states that the interface applies no algorithm for that job, for example tokens that are signed and not encrypted, or data keys that are not wrapped. It is a claim about the product and is as checkable as any other value. It is not the same as not knowing, which is the 'unknown' disclosure marker, nor as declining to say, which is 'withheld'. See decision 0022 (K3).",
-  "identifierSchemes": {
-    "algorithm": "cyclonedx-cryptography-registry",
-    "protocol": "cyclonedx-cryptography-registry",
-    "library": "purl",
-    "subject": {
-      "product": "purl",
-      "deployment": "tag-uri",
-      "service": "tag-uri",
-      "system": "tag-uri"
-    }
-  },
-  "coverageVocabulary": [
-    "all-external",
-    "all",
-    "partial"
-  ],
-  "managementAbsenceVocabulary": [
-    "no-configuration-surface",
-    "configured-out-of-band",
-    "not-applicable-to-subject",
-    "not-reached"
-  ],
-  "defaultStateVocabulary": [
-    "enabled",
-    "disabled"
-  ],
-  "$commentReferenceRules": "New in v0.9. A reference rule requires the document to point to an artefact that it does not carry. The profile defines the kind of context, where in the document the pointer sits, which carrier reference types express it, whether the target must be bound by a hash, and whether the producer may state that no such artefact exists. Conformance checks that the pointer is present and well formed, and, where the evaluator is given the target, that the hash matches. It never evaluates the target's content. This is decision 0020 generalised: a CBOM records facts that change when the product or deployment changes; context that changes on another trigger, or is held by another party, is joined and not merged. Direction matters. A document points to artefacts that exist when it is written: its companion SBOM, the configuration it was read from, the evidence it was built on, and the locations where later statements will be published (a VEX feed, an advisory API). A judgement made about the document afterwards, such as a conformance claim or a policy evaluation, points to the document by digest, never the reverse.",
-  "contextKinds": {
-    "sbom": {
-      "carrier": [
-        "bom"
-      ],
-      "form": "document"
-    },
-    "vulnerability-statements": {
-      "carrier": [
-        "vulnerability-assertion",
-        "exploitability-statement"
-      ],
-      "form": "document-or-endpoint"
-    },
-    "advisories": {
-      "carrier": [
-        "advisories"
-      ],
-      "form": "endpoint"
-    },
-    "security-contact": {
-      "carrier": [
-        "security-contact",
-        "rfc-9116"
-      ],
-      "form": "endpoint"
-    },
-    "configuration-guidance": {
-      "carrier": [
-        "documentation",
-        "configuration"
-      ],
-      "form": "document-or-endpoint"
-    },
-    "design-intent": {
-      "carrier": [
-        "threat-model",
-        "adversary-model",
-        "documentation"
-      ],
-      "form": "document-or-endpoint"
-    },
-    "change-notice": {
-      "carrier": [
-        "release-notes",
-        "documentation",
-        "website"
-      ],
-      "form": "endpoint"
-    }
-  },
-  "accessProtocolVocabulary": [
-    "web-page",
-    "csaf-provider",
-    "osv-api",
-    "ghsa-api",
-    "vex-document",
-    "other"
-  ],
-  "contextAbsenceVocabulary": [
-    "not-published",
-    "not-applicable-to-subject"
-  ],
-  "referenceRules": [
-    {
-      "id": "R1",
-      "context": "sbom",
-      "at": "document",
-      "level": "MUST",
-      "hashRequired": true,
-      "withholdable": false,
-      "requiredWhen": {
-        "subjectType": "product"
-      },
-      "note": "The SBOM of the same subject, as a BOM-Link with a hash. It is how a consumer reaches components the CBOM does not describe, and how a library named under I9 is placed in the dependency tree."
     },
     {
-      "id": "R2",
-      "context": "vulnerability-statements",
-      "at": "document",
-      "level": "MUST",
-      "hashRequired": "when-document",
-      "orDeclaredAbsent": "contextAbsenceVocabulary",
-      "withholdable": false,
-      "requiredWhen": {
-        "subjectType": "product"
-      },
-      "note": "Where the producer publishes statements about whether this subject is affected by a vulnerability (VEX, CSAF VEX, or an exploitability statement). Either a fixed document, with a hash, or a feed or API, with its access protocol named. A producer that publishes none says so ('not-published'). Silence fails, because a consumer cannot tell 'none published' from 'not addressed'. The rule completes decision 0020: the CBOM supplies the join key (I9) and says where the other half of the join is."
-    },
-    {
-      "id": "R3",
-      "context": "advisories",
-      "at": "document",
-      "level": "SHOULD",
-      "hashRequired": false,
-      "withholdable": false,
-      "requiredWhen": {
-        "subjectType": "product"
-      },
-      "note": "Where third-party or vendor advisories about the subject and its libraries are published, with the access protocol named: a web page, a CSAF provider, the OSV API or the GitHub advisory API. A machine-readable endpoint lets a consumer query by the package URLs the CBOM already carries."
-    },
-    {
-      "id": "R4",
-      "context": "security-contact",
-      "at": "document",
-      "level": "SHOULD",
-      "hashRequired": false,
-      "withholdable": false,
-      "requiredWhen": {
-        "subjectType": "product"
-      },
-      "note": "Where to report a weakness or request a fuller disclosure. The objective lists 'request a fuller disclosure from the producer' as a decision option; without a contact, that option has no address."
-    },
-    {
-      "id": "R5",
-      "context": "configuration-guidance",
-      "at": "interface",
-      "level": "MUST",
-      "hashRequired": false,
-      "withholdable": false,
-      "requiredWhen": {
-        "anyAttributeEquals": {
-          "attributes": [
-            "keyExchange",
-            "encryption",
-            "authentication"
-          ],
-          "value": "deployment-defined"
+      "version": "0.10",
+      "date": "2026-11-27",
+      "summary": "Attribute names made clearer and consistent across the profiles (drafts/attribute-naming-review.md; decision 0028). The version is unchanged because no release has been published.",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Renamed: implementationPurl → implementingLibrary. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: managementInterfaceAbsence → absent:management-interface. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: contextAbsent:<kind> → absent:<kind>. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: context design-intent → threat-model. A record that uses the previous name no longer conforms."
         }
-      },
-      "note": "If a product states that the operator decides an algorithm, the interface points to where the operator decides it. 'deployment-defined' without this pointer tells the operator that the decision is theirs and not how to make it."
-    },
-    {
-      "id": "R6",
-      "context": "design-intent",
-      "at": "document",
-      "level": "MAY",
-      "hashRequired": false,
-      "withholdable": false,
-      "note": "A threat model or design document. This is where design intention is recorded now that 'intended' is not an accepted stage: as context the record points to, not as a stage it reports."
+      ]
     }
   ]
 }

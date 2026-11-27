@@ -44,11 +44,11 @@
             "value": "product"
           },
           {
-            "name": "pkic:profile:managementInterfaceAbsence",
+            "name": "pkic:profile:absent:management-interface",
             "value": "not-applicable-to-subject"
           },
           {
-            "name": "pkic:profile:contextAbsent:vulnerability-statements",
+            "name": "pkic:profile:absent:vulnerability-statements",
             "value": "not-published"
           }
         ],
@@ -214,7 +214,7 @@
               "value": "FFDHE-ffdhe8192"
             },
             {
-              "name": "pkic:profile:negotiationControl",
+              "name": "pkic:profile:algorithmSelection",
               "value": "Cipher suites through TLSConfiguration_addCipherSuite and _clearCipherSuiteList; minimum and maximum version through TLSConfiguration_setMinTlsVersion and _setMaxTlsVersion. The library has no function for named groups or signature schemes."
             },
             {
@@ -242,7 +242,7 @@
               "value": "Integrated with Mbed TLS 2.28 and 3.6. The README names only 2.28, whose support ended at the end of 2024. The CMake build takes 2.28 when both are present; the Makefile takes 3.6."
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "out-of-band"
             },
             {
@@ -306,11 +306,11 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:implementationPurl",
+              "name": "pkic:profile:implementingLibrary",
               "value": "pkg:github/mz-automation/lib60870@v2.4.1"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "none"
             },
             {
@@ -361,11 +361,11 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:implementationPurl",
+              "name": "pkic:profile:implementingLibrary",
               "value": "pkg:github/mz-automation/lib60870@v2.4.1"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "none"
             },
             {

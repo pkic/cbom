@@ -31,12 +31,12 @@ nav: uc-pqc
   <p>An operator or enterprise architect is evaluating a product it did not build and cannot inspect. It must decide how and when that product can move to post-quantum cryptography. An inventory says which algorithms are in use. The migration decision also depends on questions about integration, enforcement and planning, asked of every exposed interface:</p>
   <ul>
     <li><strong>Capability.</strong> Can this interface support post-quantum cryptography? Which algorithms can it negotiate for key exchange and authentication, and which protocol versions? These questions motivate <code>protocolVersionsSupported</code>, <code>keyExchangeSupported</code> and <code>authenticationSupported</code>, and the capability group <code>G1</code>, which states a status for each cryptographic purpose.</li>
-    <li><strong>Enablement route.</strong> Is the capability already enabled, or does it need a configuration change, a software update, a licence or a hardware change? Which product version introduces it? These questions motivate <code>enablementMethod</code>, <code>minimumProductVersion</code> and <code>providerLocation</code>.</li>
-    <li><strong>Operator enforcement.</strong> Can the operator require post-quantum algorithms and refuse a classical fallback? This question motivates <code>negotiationControl</code>. How the interface selects among algorithms, for example by a fixed list or a preference order, is not an attribute of either profile.</li>
+    <li><strong>Enablement route.</strong> Is the capability already enabled, or does it need a configuration change, a software update, a licence or a hardware change? Which product version introduces it? These questions motivate <code>enablementMethod</code>, <code>availableFromVersion</code> and <code>executionEnvironment</code>.</li>
+    <li><strong>Operator enforcement.</strong> Can the operator require post-quantum algorithms and refuse a classical fallback? This question motivates <code>algorithmSelection</code>. How the interface selects among algorithms, for example by a fixed list or a preference order, is not an attribute of either profile.</li>
     <li><strong>Integration friction.</strong> What will break when the capability is enabled? Typical causes are signature or ciphertext sizes, cookie and header limits, fragmentation and intermediaries. This question motivates <code>integrationConstraints</code>.</li>
     <li><strong>Blockers and roadmap.</strong> If an interface cannot yet do it, what is the obstacle, and who can remove it? Is a target release committed? These questions motivate <code>capabilityStatus</code>, <code>blockedBy</code> and <code>roadmapRef</code>.</li>
     <li><strong>Module validation.</strong> Is the implementing provider validated under a recognised scheme, such as FIPS 140-3 or ISO/IEC 19790? Can the post-quantum capability be used in validated mode? These questions motivate <code>moduleValidationScheme</code>, <code>moduleValidationRef</code> and <code>validatedModeAvailability</code>.</li>
-    <li><strong>Key management and dependencies.</strong> Can the product's management surfaces create, hold and rotate the new key types? Are stored keys protected at rest? Which external services, such as certificate authorities, identity providers and directories, must migrate first? These questions motivate <code>keyManagementFunction</code>, <code>keyOperations</code>, <code>keyTypesSupported</code>, <code>keyWrappingSupported</code>, <code>keyStoreRef</code> and <code>externalDependencies</code>.</li>
+    <li><strong>Key management and dependencies.</strong> Can the product's management surfaces create, hold and rotate the new key types? Are stored keys protected at rest? Which external services, such as certificate authorities, identity providers and directories, must migrate first? These questions motivate <code>managesKeys</code>, <code>keyOperations</code>, <code>keyTypesSupported</code>, <code>keyWrappingSupported</code>, <code>keysStoredIn</code> and <code>trustServiceDependencies</code>.</li>
   </ul>
   <p>An inventory of algorithms cannot answer any of these questions. Knowing which algorithms an interface uses today leaves all of them unanswered. The questions concern what the interface is capable of, how that capability is enabled, and what enabling it costs in interoperability. A migration profile therefore has to require the facts those answers rest on.</p>
 
@@ -197,11 +197,11 @@ nav: uc-pqc
       <tr><td>Are stored keys exposed at rest as well as traffic?</td><td><code>keyWrapping</code> (<code>interface-disclosure#I10</code>), <code>keyWrappingSupported</code> (<code>pqc-migration#I12</code>)</td><td><code>keyWrapping</code> is inherited from the interface disclosure baseline (new in its v0.8). <code>keyWrappingSupported</code> is new in pqc-migration v0.7. Realm keys are stored unwrapped</td></tr>
 
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">3 · Enablement route and deployment cost</th></tr>
-      <tr><td>How do we switch it on, and from which product version?</td><td><code>enablementMethod</code>, <code>minimumProductVersion</code> (<code>pqc-migration#I4</code>, <code>#I5</code>)</td><td>Migration. <code>not-available</code> on every Keycloak interface today</td></tr>
-      <tr><td>Is this a software change or a hardware one, and which component supplies it?</td><td><code>providerLocation</code> (<code>pqc-migration#I6</code>), <code>implementationPurl</code> (<code>interface-disclosure#I9</code>)</td><td>Migration. Software throughout. The provider is the JDK or Keycloak itself</td></tr>
+      <tr><td>How do we switch it on, and from which product version?</td><td><code>enablementMethod</code>, <code>availableFromVersion</code> (<code>pqc-migration#I4</code>, <code>#I5</code>)</td><td>Migration. <code>not-available</code> on every Keycloak interface today</td></tr>
+      <tr><td>Is this a software change or a hardware one, and which component supplies it?</td><td><code>executionEnvironment</code> (<code>pqc-migration#I6</code>), <code>implementingLibrary</code> (<code>interface-disclosure#I9</code>)</td><td>Migration. Software throughout. The provider is the JDK or Keycloak itself</td></tr>
 
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">4 · Operator enforcement</th></tr>
-      <tr><td>Can the operator require post-quantum algorithms and refuse a classical fallback?</td><td><code>negotiationControl</code> (<code>pqc-migration#I8</code>, SHOULD)</td><td>Migration. On TLS, the JVM property <code>jdk.tls.namedGroups</code> sets the groups. On tokens, the signature algorithm is set per realm and per client</td></tr>
+      <tr><td>Can the operator require post-quantum algorithms and refuse a classical fallback?</td><td><code>algorithmSelection</code> (<code>pqc-migration#I8</code>, SHOULD)</td><td>Migration. On TLS, the JVM property <code>jdk.tls.namedGroups</code> sets the groups. On tokens, the signature algorithm is set per realm and per client</td></tr>
 
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">5 · Integration friction</th></tr>
       <tr><td>What is likely to break when the capability is enabled?</td><td><code>integrationConstraints</code> (<code>pqc-migration#I9</code>, SHOULD)</td><td>Migration. ML-DSA-signed tokens exceed the 4 KB browser cookie limit</td></tr>
@@ -214,9 +214,9 @@ nav: uc-pqc
       <tr><td>Is the overall product certified under a formal security scheme?</td><td><code>productCertificationScheme</code> (<code>pqc-migration-extended#P2</code>)</td><td>Extended. Common Criteria or EUCC evaluated configuration</td></tr>
 
       <tr><th colspan="3" style="background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">8 · Key management and ecosystem dependencies</th></tr>
-      <tr><td>Can the product create, import and hold the new key types?</td><td><code>keyManagementFunction</code>, <code>keyOperations</code>, <code>keyTypesSupported</code>, <code>keyTypes</code>, <code>keyStoreLocation</code> (<code>pqc-migration-extended#I1</code> to <code>#I4</code>, <code>#I7</code>)</td><td>Extended. The Admin API cannot generate an ML-DSA key</td></tr>
-      <tr><td>Which surface manages this interface's key?</td><td><code>keyStoreRef</code> (<code>pqc-migration-extended#I8</code>)</td><td>Extended. Tokens: the Admin API. TLS: files, out of band. Cluster: the product itself</td></tr>
-      <tr><td>What else in the ecosystem has to move first?</td><td><code>externalDependencies</code> (<code>pqc-migration-extended#I9</code>)</td><td>Extended. The certificate authority, the directory, external identity providers</td></tr>
+      <tr><td>Can the product create, import and hold the new key types?</td><td><code>managesKeys</code>, <code>keyOperations</code>, <code>keyTypesSupported</code>, <code>keyTypes</code>, <code>keyStoreLocation</code> (<code>pqc-migration-extended#I1</code> to <code>#I4</code>, <code>#I7</code>)</td><td>Extended. The Admin API cannot generate an ML-DSA key</td></tr>
+      <tr><td>Which surface manages this interface's key?</td><td><code>keysStoredIn</code> (<code>pqc-migration-extended#I8</code>)</td><td>Extended. Tokens: the Admin API. TLS: files, out of band. Cluster: the product itself</td></tr>
+      <tr><td>What else in the ecosystem has to move first?</td><td><code>trustServiceDependencies</code> (<code>pqc-migration-extended#I9</code>)</td><td>Extended. The certificate authority, the directory, external identity providers</td></tr>
     </tbody>
   </table>
   </div>
@@ -229,7 +229,7 @@ nav: uc-pqc
     <thead><tr><th>Profile</th><th>Extends</th><th>Adds</th></tr></thead>
     <tbody>
       <tr><td><strong>PQC Migration</strong><br><code>pkic.example.pqc-migration</code> v0.8</td><td>Interface disclosure baseline v0.10</td><td>Capability, enablement and blockers per interface and per purpose; module validation; key wrapping on storage; pointers to the support lifecycle (R1) and the supplier's roadmap (R2), both SHOULD. Accepts product records at the stage <code>implemented</code> only. Makes one inherited rule stricter.</td></tr>
-      <tr><td><strong>Extended</strong><br><code>pkic.example.pqc-migration-extended</code> v0.2</td><td>PQC Migration</td><td>Key management surfaces, key-store references, external dependencies, the obligation to declare storage, product certification. Tightens validated-mode availability to MUST.</td></tr>
+      <tr><td><strong>Extended</strong><br><code>pkic.example.pqc-migration-extended</code> v0.2</td><td>PQC Migration</td><td>Key management surfaces, key-store references, trust-service dependencies, the obligation to declare storage, product certification. Tightens validated-mode availability to MUST.</td></tr>
     </tbody>
   </table>
   </div>
@@ -262,16 +262,16 @@ nav: uc-pqc
       <tr><td><code>I2</code></td><td><code>keyExchangeSupported</code></td><td>MUST</td><td>The full set the interface can negotiate, including hybrid constructions. Not on storage.</td></tr>
       <tr><td><code>I3</code></td><td><code>authenticationSupported</code></td><td>MUST</td><td>Authentication migrates separately from key exchange and usually later. Not on storage.</td></tr>
       <tr><td><code>I4</code></td><td><code>enablementMethod</code></td><td>MUST</td><td><code>already-enabled</code> · <code>configuration</code> · <code>software-update</code> · <code>hardware-change</code> · <code>licence</code> · <code>not-available</code>. Separates the cheap changes from the expensive ones.</td></tr>
-      <tr><td><code>I5</code></td><td><code>minimumProductVersion</code></td><td>conditional MUST</td><td>Where <code>enablementMethod</code> is <code>software-update</code>.</td></tr>
-      <tr><td><code>I6</code></td><td><code>providerLocation</code></td><td>MUST</td><td><code>software</code> · <code>hsm</code> · <code>tee</code> · <code>unspecified</code>.</td></tr>
-      <tr><td><code>I7</code></td><td><code>coexistence</code></td><td>MUST</td><td><code>simultaneous</code> · <code>exclusive</code> · <code>unknown</code>. An exclusive interface forces a coordinated cutover with every counterparty.</td></tr>
-      <tr><td><code>I8</code></td><td><code>negotiationControl</code></td><td>SHOULD</td><td>Whether post-quantum can be required and a classical fallback refused.</td></tr>
+      <tr><td><code>I5</code></td><td><code>availableFromVersion</code></td><td>conditional MUST</td><td>Where <code>enablementMethod</code> is <code>software-update</code>.</td></tr>
+      <tr><td><code>I6</code></td><td><code>executionEnvironment</code></td><td>MUST</td><td><code>software</code> · <code>hsm</code> · <code>tee</code> · <code>unspecified</code>.</td></tr>
+      <tr><td><code>I7</code></td><td><code>transitionMode</code></td><td>MUST</td><td><code>side-by-side</code> · <code>switch-over</code> · <code>unknown</code>. A switch-over interface forces a coordinated cutover with every counterparty.</td></tr>
+      <tr><td><code>I8</code></td><td><code>algorithmSelection</code></td><td>SHOULD</td><td>Whether post-quantum can be required and a classical fallback refused.</td></tr>
       <tr><td><code>I9</code></td><td><code>integrationConstraints</code></td><td>SHOULD</td><td>Known effects of enabling the capability: size limits, intermediaries, performance.</td></tr>
       <tr><td><code>I10</code></td><td><code>moduleValidationScheme</code></td><td>MUST</td><td><code>fips-140-2</code> · <code>fips-140-3</code> · <code>iso-19790</code> · <code>national-crypto-approval</code> · <code>none</code>. The validation of the module implementing the interface. This is the fact that a <code>certification</code> blocker (<code>G1.2</code>) rests on. New in v0.7.</td></tr>
       <tr><td><code>I11</code></td><td><code>moduleValidationRef</code></td><td>conditional MUST</td><td>The certificate reference, where a scheme other than <code>none</code> is declared. New in v0.7.</td></tr>
       <tr><td><code>I12</code></td><td><code>keyWrappingSupported</code></td><td>conditional MUST</td><td>On a storage interface: the wrapping algorithms the storage path can use, or <code>none</code>. New in v0.7.</td></tr>
       <tr><td><code>G1.1</code></td><td><code>capabilityStatus</code></td><td>MUST</td><td>Per cryptographic purpose. <code>available</code> · <code>committed</code> · <code>planned</code> · <code>under-evaluation</code> · <code>not-planned</code>. Each value states a level of commitment, not a date.</td></tr>
-      <tr><td><code>G1.2</code></td><td><code>blockedBy</code></td><td>conditional MUST</td><td>Where the purpose's status is not <code>available</code>. <code>provider</code> · <code>product</code> · <code>hardware</code> · <code>standard</code> · <code>certification</code>.</td></tr>
+      <tr><td><code>G1.2</code></td><td><code>blockedBy</code></td><td>conditional MUST</td><td>Where the purpose's status is not <code>available</code>. <code>crypto-library</code> · <code>product</code> · <code>hardware</code> · <code>standard</code> · <code>certification</code>.</td></tr>
       <tr><td><code>G1.3</code></td><td><code>roadmapRef</code></td><td>MAY</td><td>Reference to a roadmap entry carrying the target release. Interfaces sharing a blocker reference the same entry.</td></tr>
       <tr><td><code>G1.4</code></td><td><code>validatedModeAvailability</code></td><td>SHOULD</td><td>Where the purpose's capability is available: <code>in-validated-mode</code> · <code>outside-validated-mode-only</code> · <code>no-validated-mode</code>. In regulated settings, a capability commonly ships before the module implementing it is validated. New in v0.7.</td></tr>
     </tbody>
@@ -287,14 +287,14 @@ nav: uc-pqc
     <tbody>
       <tr><td><code>P1</code></td><td>Declare at least one storage interface, or state why there is none</td><td>MUST</td><td>Stored ciphertext is exposed by a shorter route than captured traffic, and a backup path is the interface most easily left out.</td></tr>
       <tr><td><code>P2</code></td><td><code>productCertificationScheme</code></td><td>SHOULD</td><td>Common Criteria, EUCC or a national scheme. Kept apart from module validation because it certifies a different object: enabling a new algorithm can take a product outside its evaluated configuration.</td></tr>
-      <tr><td><code>I1</code></td><td><code>keyManagementFunction</code></td><td>MUST</td><td>Management interfaces: whether they manage keys at all. Keycloak's health port does not.</td></tr>
+      <tr><td><code>I1</code></td><td><code>managesKeys</code></td><td>MUST</td><td>Management interfaces: whether they manage keys at all. Keycloak's health port does not.</td></tr>
       <tr><td><code>I2</code></td><td><code>keyOperations</code></td><td>MUST</td><td>Surfaces that manage keys: generate, import, export, request-certificate, rotate and so on.</td></tr>
       <tr><td><code>I3</code></td><td><code>keyTypesSupported</code></td><td>MUST</td><td>The key types the surface can generate or import. This rule catches an interface that can use a new algorithm when the product cannot create the key for it.</td></tr>
       <tr><td><code>I4</code></td><td><code>keyTypes</code></td><td>MUST</td><td>The key types held now: the population the migration has to replace.</td></tr>
       <tr><td><code>I5</code>, <code>I6</code></td><td><code>keyStoreFormatsSupported</code>, <code>keyStoreFormats</code></td><td>SHOULD</td><td>Container formats, where a format cannot carry a new key type.</td></tr>
       <tr><td><code>I7</code></td><td><code>keyStoreLocation</code></td><td>MUST</td><td>Software, HSM, TEE, TPM, OS keyring or external vault: whether the new key type waits on hardware.</td></tr>
-      <tr><td><code>I8</code></td><td><code>keyStoreRef</code></td><td>SHOULD</td><td>Every other interface: the management interface that manages its keys, or <code>out-of-band</code>, <code>product-managed</code> or <code>none</code>.</td></tr>
-      <tr><td><code>I9</code></td><td><code>externalDependencies</code></td><td>MUST</td><td>Services the interface's cryptography depends on at run time: certificate authority, revocation responder, directory, identity provider, HSM, key vault, time source, random bit generator, or <code>none</code>. These are what the operator must migrate first, or must be able to rely on.</td></tr>
+      <tr><td><code>I8</code></td><td><code>keysStoredIn</code></td><td>SHOULD</td><td>Every other interface: the management interface that manages its keys, or <code>out-of-band</code>, <code>product-managed</code> or <code>none</code>.</td></tr>
+      <tr><td><code>I9</code></td><td><code>trustServiceDependencies</code></td><td>MUST</td><td>Services the interface's cryptography depends on at run time: certificate authority, revocation responder, directory, identity provider, HSM, key vault, time source, random bit generator, or <code>none</code>. These are what the operator must migrate first, or must be able to rely on.</td></tr>
       <tr><td><code>I10</code></td><td><code>enablementSetting</code></td><td>SHOULD</td><td>Where enablement is by configuration: the setting that enables it.</td></tr>
       <tr><td><code>pqc-migration#G1.4</code></td><td><code>validatedModeAvailability</code></td><td>MUST</td><td>Tightened from SHOULD. At the extended depth the consumer is deciding the order of actual changes, so it needs this fact.</td></tr>
     </tbody>
@@ -305,7 +305,7 @@ nav: uc-pqc
   <table>
     <thead><tr><th>Inherited rule</th><th>In the baseline</th><th>In PQC Migration</th></tr></thead>
     <tbody>
-      <tr><td>I9 <code>implementationPurl</code></td><td>MUST, may be withheld</td><td>MUST, may not be withheld</td></tr>
+      <tr><td>I9 <code>implementingLibrary</code></td><td>MUST, may be withheld</td><td>MUST, may not be withheld</td></tr>
     </tbody>
   </table>
   <p>Migration planning depends on knowing which library implements an interface, since that determines whether an update exists and when it arrived. If a vendor withholds it, the consumer cannot plan the order of the work. This is the only inherited rule PQC Migration changes. Raising the level is permitted because it makes the rule stricter.</p>
@@ -320,7 +320,7 @@ nav: uc-pqc
   <table>
     <thead><tr><th><code>blockedBy</code></th><th>What has to happen</th><th>Who can move it</th><th>Predictability</th></tr></thead>
     <tbody>
-      <tr><td><code>provider</code></td><td>A dependency is upgraded to a version offering the algorithm.</td><td>The vendor, by taking the upgrade.</td><td>Reasonable</td></tr>
+      <tr><td><code>crypto-library</code></td><td>A dependency is upgraded to a version offering the algorithm.</td><td>The vendor, by taking the upgrade.</td><td>Reasonable</td></tr>
       <tr><td><code>product</code></td><td>The product's own code must change to expose or negotiate it.</td><td>The vendor, in a named release.</td><td>Reasonable</td></tr>
       <tr><td><code>hardware</code></td><td>A module, firmware or platform must support the algorithm.</td><td>The vendor together with the module supplier.</td><td>Poor</td></tr>
       <tr><td><code>standard</code></td><td>No specification yet defines the algorithm for this protocol.</td><td>Nobody, until the standards process concludes.</td><td>None</td></tr>
@@ -328,7 +328,7 @@ nav: uc-pqc
     </tbody>
   </table>
   <p>The most important distinction is the fourth row, <code>standard</code>. An interface blocked on a protocol standard cannot be given a credible date by any vendor, and a consumer who understands that stops waiting and considers compensating controls instead. Recording it as "planned, date to follow" alongside a case that really is scheduled for the next release mixes up two situations that call for opposite responses.</p>
-  <p>Keycloak shows four of the five on one product. TLS key exchange is blocked by the <code>provider</code>: hybrid ML-KEM groups ship in JDK 27 and are enabled there by default, with backports to earlier releases announced, so the timing depends on the Java runtime's releases, not Keycloak's. Token signing is blocked by a <code>standard</code>: an ML-DSA signature provider is committed upstream, but the JSON Web Key representation it needs is still an Internet-Draft. The cluster transport is blocked by the <code>product</code>, because Keycloak generates its RSA-2048 key itself. And whether the capability will be usable in validated mode is a <code>certification</code> question for the Bouncy Castle FIPS module.</p>
+  <p>Keycloak shows four of the five on one product. TLS key exchange is blocked by the <code>crypto-library</code>: hybrid ML-KEM groups ship in JDK 27 and are enabled there by default, with backports to earlier releases announced, so the timing depends on the Java runtime's releases, not Keycloak's. Token signing is blocked by a <code>standard</code>: an ML-DSA signature provider is committed upstream, but the JSON Web Key representation it needs is still an Internet-Draft. The cluster transport is blocked by the <code>product</code>, because Keycloak generates its RSA-2048 key itself. And whether the capability will be usable in validated mode is a <code>certification</code> question for the Bouncy Castle FIPS module.</p>
   <p>Where a date or release is offered, the profile keeps it out of the interface and out of the CBOM. Target release and date sit in a roadmap entry that interfaces reference through <code>roadmapRef</code>, so that interfaces sharing a blocker point at one entry. There are two reasons. First, a CBOM revision is a fixed record of one point in time. A date that slips either goes stale inside a document that looks authoritative, or forces the CBOM to be republished when nothing about the product has changed. Second, roadmap data has a different owner and changes at a different pace from the rest of the document. This is the same argument that the <a href="../methodology/governance.html">Governance</a> section makes for keeping artifacts with separate lifecycles apart.</p>
   <p>A target release is also preferable to a calendar date. Releases are the vendor's own unit of change, and the statement "this lands in 9.x" survives slippage in a way that a date does not.</p>
   <div class="banner">Three existing parts of the methodology already support this approach, so nothing new has to be added. Forward-looking capability is carried by <code>capabilityStatus</code>, <code>blockedBy</code> and <code>roadmapRef</code>, not by the lifecycle stage. This profile accepts only <code>implemented</code>, and the interface disclosure baseline it extends no longer accepts <code>intended</code> at all. A migration plan cannot rest on cryptography that a producer has not yet implemented. The example <code>cbom-keycloak-product-intended.cdx.json</code>, a design record for Keycloak 27.0 with ML-DSA-65 token signing, fails baseline I8 on every interface for this reason. The same fact is already in the product record, as the status <code>committed</code> with a roadmap reference. The lifecycle stage says how the reported present state was obtained; the three attributes above say what is coming. A vendor that shares roadmap detail only under agreement records <code>roadmapRef</code> as <code>withheld</code>, meaning the information exists but is not disclosed. This is more informative than an empty field. And the freshness policy in <a href="../methodology/versioning.html">Versioning</a> applies to the roadmap entry, so a consumer can tell a current commitment from one nobody has revisited.</div>
@@ -346,7 +346,7 @@ nav: uc-pqc
       <tr><td><code>keyExchange</code></td><td><code>x25519</code></td><td><code>none</code> (token encryption is off by default)</td></tr>
       <tr><td><code>encryption</code></td><td><code>AES-256-GCM</code></td><td><code>none</code></td></tr>
       <tr><td><code>authentication</code></td><td><code>deployment-defined</code> (the operator supplies the certificate)</td><td><code>RSA-PKCS1-1.5-SHA-256</code> (JOSE RS256)</td></tr>
-      <tr><td><code>implementationPurl</code></td><td><code>pkg:rpm/redhat/java-21-openjdk-headless?arch=x86_64&amp;distro=rhel-9</code></td><td><code>pkg:maven/org.keycloak/keycloak-services@26.7.3</code></td></tr>
+      <tr><td><code>implementingLibrary</code></td><td><code>pkg:rpm/redhat/java-21-openjdk-headless?arch=x86_64&amp;distro=rhel-9</code></td><td><code>pkg:maven/org.keycloak/keycloak-services@26.7.3</code></td></tr>
       <tr><td><code>defaultState</code></td><td><code>enabled</code></td><td><code>enabled</code></td></tr>
       <tr><td><code>lifecycleStage</code></td><td><code>implemented</code>, declared once for the record in <code>metadata.lifecycles</code> (phase <code>build</code>)</td><td>the same</td></tr>
       <tr><td colspan="3"><strong>Per-interface rules of the migration profile</strong></td></tr>
@@ -354,14 +354,14 @@ nav: uc-pqc
       <tr><td><code>keyExchangeSupported</code> (I2)</td><td><code>x25519</code>, <code>secp256r1</code>, <code>secp384r1</code>, <code>secp521r1</code>, <code>x448</code>, <code>ffdhe2048</code></td><td><code>RSA-OAEP</code>, <code>RSA-OAEP-256</code>, <code>ECDH-ES</code></td></tr>
       <tr><td><code>authenticationSupported</code> (I3)</td><td>RSA-PSS, RSA PKCS#1, ECDSA P-256 and P-384, and Ed25519 signature schemes</td><td>the RS, PS, ES and HS families, and <code>EdDSA</code></td></tr>
       <tr><td><code>enablementMethod</code> (I4)</td><td><code>not-available</code></td><td><code>not-available</code></td></tr>
-      <tr><td><code>minimumProductVersion</code> (I5)</td><td>not required, because the method is not <code>software-update</code></td><td>not required</td></tr>
-      <tr><td><code>providerLocation</code> (I6)</td><td><code>software</code></td><td><code>software</code></td></tr>
-      <tr><td><code>coexistence</code> (I7)</td><td><code>simultaneous</code></td><td><code>simultaneous</code></td></tr>
-      <tr><td><code>negotiationControl</code> (I8)</td><td>Named groups are set by the JVM property <code>jdk.tls.namedGroups</code></td><td>The signature algorithm is set per realm and per client</td></tr>
+      <tr><td><code>availableFromVersion</code> (I5)</td><td>not required, because the method is not <code>software-update</code></td><td>not required</td></tr>
+      <tr><td><code>executionEnvironment</code> (I6)</td><td><code>software</code></td><td><code>software</code></td></tr>
+      <tr><td><code>transitionMode</code> (I7)</td><td><code>side-by-side</code></td><td><code>side-by-side</code></td></tr>
+      <tr><td><code>algorithmSelection</code> (I8)</td><td>Named groups are set by the JVM property <code>jdk.tls.namedGroups</code></td><td>The signature algorithm is set per realm and per client</td></tr>
       <tr><td><code>integrationConstraints</code> (I9)</td><td>The server certificate and key are operator-supplied files</td><td>ML-DSA-65 tokens exceed the 4 KB browser cookie limit. Relying parties must accept the <code>AKP</code> key type, which is still an Internet-Draft</td></tr>
       <tr><td><code>moduleValidationScheme</code> (I10)</td><td><code>none</code> in default mode</td><td><code>none</code> in default mode</td></tr>
       <tr><td colspan="3"><strong>Group rule G1, the two purposes taken in depth</strong></td></tr>
-      <tr><td><code>key-establishment</code></td><td><code>planned</code>, blocked by <code>provider</code>, roadmap JEP 527</td><td><code>under-evaluation</code>, blocked by <code>standard</code></td></tr>
+      <tr><td><code>key-establishment</code></td><td><code>planned</code>, blocked by <code>crypto-library</code>, roadmap JEP 527</td><td><code>under-evaluation</code>, blocked by <code>standard</code></td></tr>
       <tr><td><code>entity-authentication</code></td><td><code>under-evaluation</code>, blocked by <code>standard</code></td><td><code>committed</code>, blocked by <code>standard</code>, roadmap Keycloak issue 43690</td></tr>
     </tbody>
   </table>
@@ -373,8 +373,8 @@ nav: uc-pqc
   <table>
     <thead><tr><th>Interfaces</th><th><code>key-establishment</code> entry</th><th><code>entity-authentication</code> entry</th></tr></thead>
     <tbody>
-      <tr><td>Six of the seven JDK TLS interfaces</td><td><code>planned</code>, blocked by <code>provider</code>, roadmap: JEP 527</td><td><code>under-evaluation</code>, blocked by <code>standard</code></td></tr>
-      <tr><td><code>int-cache</code>, the seventh, shown apart because its entity authentication differs</td><td><code>planned</code>, blocked by <code>provider</code></td><td><code>under-evaluation</code>, blocked by <code>product</code>: the key type is fixed</td></tr>
+      <tr><td>Six of the seven JDK TLS interfaces</td><td><code>planned</code>, blocked by <code>crypto-library</code>, roadmap: JEP 527</td><td><code>under-evaluation</code>, blocked by <code>standard</code></td></tr>
+      <tr><td><code>int-cache</code>, the seventh, shown apart because its entity authentication differs</td><td><code>planned</code>, blocked by <code>crypto-library</code></td><td><code>under-evaluation</code>, blocked by <code>product</code>: the key type is fixed</td></tr>
       <tr><td><code>svc-oidc</code>, <code>mgmt-admin</code></td><td><code>under-evaluation</code>, blocked by <code>standard</code></td><td><code>committed</code>, blocked by <code>standard</code>, roadmap: Keycloak issue 43690</td></tr>
       <tr><td><code>svc-saml</code></td><td><code>under-evaluation</code>, blocked by <code>standard</code></td><td><code>under-evaluation</code>, blocked by <code>standard</code></td></tr>
       <tr><td><code>svc-http</code>, <code>sto-realm-keys</code></td><td><code>not-planned</code>, blocked by <code>product</code></td><td><code>not-planned</code>, blocked by <code>product</code></td></tr>
@@ -394,14 +394,14 @@ nav: uc-pqc
   <table>
     <thead><tr><th>Attribute</th><th>Keycloak</th></tr></thead>
     <tbody>
-      <tr><td><code>keyManagementFunction</code> on <code>mgmt-admin</code></td><td><code>keys-and-certificates</code></td></tr>
+      <tr><td><code>managesKeys</code> on <code>mgmt-admin</code></td><td><code>yes</code></td></tr>
       <tr><td><code>keyOperations</code></td><td><code>generate</code>, <code>import</code>, <code>export</code> (public keys and certificates only), <code>rotate</code>, <code>delete</code></td></tr>
       <tr><td><code>keyTypesSupported</code></td><td>RSA-2048 and 4096, ECDSA P-256 to P-521, Ed25519, Ed448, HMAC, AES. No ML-DSA.</td></tr>
       <tr><td><code>keyTypes</code></td><td>RSA-2048, HMAC-SHA512, AES-128: the defaults of a new realm</td></tr>
       <tr><td><code>keyStoreLocation</code></td><td><code>software</code></td></tr>
-      <tr><td><code>keyManagementFunction</code> on <code>tls-mgmt</code></td><td><code>none</code></td></tr>
-      <tr><td><code>keyStoreRef</code></td><td><code>svc-oidc</code>, <code>svc-saml</code>: the Admin API. <code>tls-https</code> and the outbound TLS: <code>out-of-band</code>, because the keys arrive as files. <code>int-cache</code>: <code>product-managed</code>.</td></tr>
-      <tr><td><code>externalDependencies</code></td><td><code>tls-https</code>: <code>certificate-authority</code>. <code>int-ldap</code>: <code>directory</code>. <code>int-broker</code> and <code>svc-broker-tokens</code>: <code>identity-provider</code>. The TLS interfaces and the OIDC token service also name <code>random-bit-generator</code>: the Java runtime draws its randomness from the operating system, which is outside the product image. Other token services: <code>none</code>.</td></tr>
+      <tr><td><code>managesKeys</code> on <code>tls-mgmt</code></td><td><code>none</code></td></tr>
+      <tr><td><code>keysStoredIn</code></td><td><code>svc-oidc</code>, <code>svc-saml</code>: the Admin API. <code>tls-https</code> and the outbound TLS: <code>out-of-band</code>, because the keys arrive as files. <code>int-cache</code>: <code>product-managed</code>.</td></tr>
+      <tr><td><code>trustServiceDependencies</code></td><td><code>tls-https</code>: <code>certificate-authority</code>. <code>int-ldap</code>: <code>directory</code>. <code>int-broker</code> and <code>svc-broker-tokens</code>: <code>identity-provider</code>. The TLS interfaces and the OIDC token service also name <code>random-bit-generator</code>: the Java runtime draws its randomness from the operating system, which is outside the product image. Other token services: <code>none</code>.</td></tr>
       <tr><td>Storage</td><td><code>sto-realm-keys</code> declared, with <code>keyWrapping</code> <code>none</code></td></tr>
       <tr><td><code>productCertificationScheme</code></td><td><code>none</code> for the upstream project (to be verified)</td></tr>
     </tbody>
@@ -522,7 +522,7 @@ nav: uc-pqc
 
   <h2>Points under discussion</h2>
   <ul>
-    <li>Whether raising <code>implementationPurl</code> to a non-withholdable MUST is acceptable to vendors. It is the one place where PQC Migration makes a rule of the interface profile it extends stricter.</li>
+    <li>Whether raising <code>implementingLibrary</code> to a non-withholdable MUST is acceptable to vendors. It is the one place where PQC Migration makes a rule of the interface profile it extends stricter.</li>
     <li>Whether <code>enablementMethod</code> should be a single value or a set, since some capabilities need both an update and a configuration change.</li>
     <li>Whether <code>integrationConstraints</code> can be structured usefully or should remain prose.</li>
     <li>Whether an interface should be defined as a logical boundary rather than a port. Keycloak needs it, because its token signatures and its TLS migrate separately, but it means one port can carry several interfaces.</li>

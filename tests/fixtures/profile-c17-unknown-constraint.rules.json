@@ -19,7 +19,7 @@
   "interfaceRules": [
     {
       "id": "I1",
-      "attribute": "implementationPurl",
+      "attribute": "implementingLibrary",
       "level": "MUST",
       "withholdable": false,
       "constraint": { "startswith": "pkg:" }

@@ -9,7 +9,7 @@ Run `python3 build.py` in this folder to regenerate every file.
 
 | File | Telecom document | Extends | Adds |
 | --- | --- | --- | --- |
-| `profile-telecom-network-function.rules.json` | 8.1 | Interface Disclosure Baseline v0.10 | `referencePoint` on every interface (I1); `referenceSpecification` where it implements one (I2) |
+| `profile-telecom-network-function.rules.json` | 8.1 | Interface Disclosure Baseline v0.10 | `referencePoint` on every interface (I1); `governingSpecification` where it implements one (I2) |
 
 The rule on what terminates each interface was first drafted here as `telecom-nf-deployment`. On 19 November 2026 it moved into Release 1: the baseline defines `terminatedBy` (I14) at MAY, and Deployment Disclosure v0.3 requires it. The draft profile was removed.
 

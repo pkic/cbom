@@ -60,13 +60,13 @@ PKI Consortium Publications 1 to 3 define all of this in full. This draft uses o
 3. What is different about cryptography in healthcare
 ------------------------------------------------------
 
-**Devices live long and change slowly.** A medical device is often in service for more than a decade. A change to its cryptography may need a new submission to the regulator. IoT Device Estate records the hard limits of a device model, whether the manufacturer will still offer firmware, and whether the device's keys and update verifier can be replaced. The change core and the PQC migration profile record the approval a change triggers, with `certificationImpact` and `certificationScheme`.
+**Devices live long and change slowly.** A medical device is often in service for more than a decade. A change to its cryptography may need a new submission to the regulator. IoT Device Estate records the hard limits of a device model, whether the manufacturer will still offer firmware, and whether the device's keys and update verifier can be replaced. The change core and the PQC migration profile record the approval a change triggers, with `certificationImpact` and `impactedCertification`.
 
 **Health data stays sensitive for decades.** A patient record, an image or a genome stays sensitive for the patient's lifetime and often beyond. An adversary who records traffic today could read it once a quantum computer can break the key exchange that protected it. The interfaces that carry health data therefore come first, and a hospital needs to know how long the data on each interface must stay confidential. That lifetime is held in the operator's data register, which a deployment record points to (`data-register`). How the register is linked is open as cluster J of the decision backlog.
 
 **Some devices can never change.** A device whose verifier is fixed in boot ROM can never accept firmware signed with a new algorithm. IoT Device Estate records this as a permanent limit, and the question register proposes moving the update verification facts into the change core (R2-30). For such a device the choice is to shield it or to replace it.
 
-**Clinical safety constrains timing.** A cryptographic change must not interrupt care. Whether old and new algorithms can run side by side (`coexistence`) decides whether a hospital can move one device at a time, without a maintenance window across a ward.
+**Clinical safety constrains timing.** A cryptographic change must not interrupt care. Whether old and new algorithms can run side by side (`transitionMode`) decides whether a hospital can move one device at a time, without a maintenance window across a ward.
 
 **Hospitals rely on what manufacturers disclose.** A hospital cannot inspect most of its devices. It reads the manufacturer's product record and writes its own deployment record of what it has configured and observed. The hospital's record cites the manufacturer's.
 

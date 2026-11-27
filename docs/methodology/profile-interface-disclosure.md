@@ -269,7 +269,7 @@ profile, reuses these names unchanged and adds the suffixed forms alongside them
 | I6 | `endpointRoles` | **MUST** | at least two endpoints declared. Not required of a storage interface |
 | I7 | `interfaceType` | **MUST** | from the vocabulary in §2 |
 | I8 | `lifecycleStage` | **MUST** | one of `implemented` \| `configured` \| `observed`. The effective value is the interface's own stage or, where it has none, the document's stage |
-| I9 | `implementationPurl` | **MUST** | `pkg:` Package URL of the implementing library. Withholdable (§5.4): a `withheld` marker satisfies the rule, silent omission does not |
+| I9 | `implementingLibrary` | **MUST** | `pkg:` Package URL of the implementing library. Withholdable (§5.4): a `withheld` marker satisfies the rule, silent omission does not |
 | I10 | `keyWrapping` | **MUST** on a storage interface | the algorithm that protects the data keys, for example RSA-OAEP over an AES key, or `none` |
 | I11 | `defaultState` | SHOULD, at `implemented` | `enabled` or `disabled`: whether the interface is active in the product's default configuration |
 
@@ -337,7 +337,7 @@ information. The first records a limit of the producing process. The second reco
 producer never addressed the question. A record with gaps conforms one depth down, at the entry
 profile, instead.
 
-In the baseline only I9 (`implementationPurl`) is withholdable. A producer may reasonably decline
+In the baseline only I9 (`implementingLibrary`) is withholdable. A producer may reasonably decline
 to publish the implementing library and still meet part of the objective. The objective's own
 note says what that costs: a withheld library removes library-level vulnerability matching, which
 is the use the baseline is built for. The verdict remains "conforms", and the report shows the
@@ -375,12 +375,12 @@ The profile defines each **context kind** in `contextKinds`. For each kind it na
 | R3 | `advisories` | document | SHOULD | product | `advisories` | endpoint | Where advisories about the subject and its libraries appear, with access protocol `web-page`, `csaf-provider`, `osv-api` or `ghsa-api` |
 | R4 | `security-contact` | document | SHOULD | product | `security-contact`, `rfc-9116` | endpoint | Where to report a weakness or ask for a fuller disclosure |
 | R5 | `configuration-guidance` | interface | **MUST** | any interface where I3, I4 or I5 is `deployment-defined` | `documentation`, `configuration` | endpoint | Where the operator makes the choice the product leaves open |
-| R6 | `design-intent` | document | MAY | any | `threat-model`, `adversary-model`, `documentation` | document or endpoint | A threat model or design document. Design intention lives here now that `intended` is not an accepted stage |
+| R6 | `threat-model` | document | MAY | any | `threat-model`, `adversary-model`, `documentation` | document or endpoint | A threat model or design document. Design intention lives here now that `intended` is not an accepted stage |
 
 In CycloneDX, each pointer is an external reference with the property `pkic:profile:context`,
 which names the kind. The property is needed because two kinds can share one reference type. An
 endpoint also carries `pkic:profile:accessProtocol`. CycloneDX 2.0 allows properties on external
-references. A stated absence is a subject property, `pkic:profile:contextAbsent:<kind>`, with a
+references. A stated absence is a subject property, `pkic:profile:absent:<kind>`, with a
 value from `not-published` or `not-applicable-to-subject`.
 
 Two principles govern every reference rule:
@@ -522,14 +522,14 @@ numbers are the profile's own and are independent of the carrier version.
 | Change | Kind | Effect on an existing document |
 |---|---|---|
 | Added the disclosure state model of §5.4, with the `pkic:profile:disclosure:` marker prefix and a `withholdable` flag on every rule | tightening | A document that omitted an attribute silently now fails as `undeclared`; supplying a marker restores conformance |
-| Added rule I9 `implementationPurl` at SHOULD, withholdable | none | SHOULD rules are reported, not enforced |
+| Added rule I9 `implementingLibrary` at SHOULD, withholdable | none | SHOULD rules are reported, not enforced |
 | Recorded `appliesTo` as CycloneDX `min: 1.6`, `tested: 1.7` | editorial | Documents at 1.6 are evaluated and flagged legacy rather than refused |
 
 ### v0.3 — 2026-08-09
 
 | Change | Kind | Effect on an existing document |
 |---|---|---|
-| Raised I9 `implementationPurl` from SHOULD to MUST, keeping it withholdable | tightening | A document omitting the attribute in silence no longer conforms. Adding either a value or a `withheld` marker restores conformance |
+| Raised I9 `implementingLibrary` from SHOULD to MUST, keeping it withholdable | tightening | A document omitting the attribute in silence no longer conforms. Adding either a value or a `withheld` marker restores conformance |
 | Stated `withholdable` explicitly on every rule | editorial | None. An absent flag was already treated as false; the value is now readable from the profile rather than inferred from a validator's default |
 
 The first change exists for the reason §5.4 describes. No rule in either example profile combined

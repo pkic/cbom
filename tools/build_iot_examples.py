@@ -75,9 +75,9 @@ def radio(provider_location):
         ("keyExchange", "none"), ("encryption", "AES-128-CTR"), ("authentication", "AES-128-CMAC"),
         ("protocolVersionsSupported", "1.0.4"), ("keyExchangeSupported", "none"),
         ("authenticationSupported", "AES-128-CMAC"),
-        ("negotiationControl", "None: the algorithms are fixed by the LoRaWAN specification"), FRAME,
-        ("keyStoreRef", "sto-keys"), ("cryptoTerminationPoint", "device"),
-        ("providerLocation", provider_location)])
+        ("algorithmSelection", "None: the algorithms are fixed by the LoRaWAN specification"), FRAME,
+        ("keysStoredIn", "sto-keys"), ("terminationOptions", "device"),
+        ("executionEnvironment", provider_location)])
 
 
 # --- S1: no update path -----------------------------------------------------------------------
@@ -99,9 +99,9 @@ S2_CAP = [("key-establishment", "not-planned", "standard"), ("encryption", "avai
           ("key-derivation", "available", None)]
 
 
-def library(ref, name, version, purl, cap, enablement, coexistence, extra=()):
+def library(ref, name, version, purl, cap, enablement, transitionMode, extra=()):
     return {"type": "library", "bom-ref": ref, "name": name, "version": version,
-            "properties": props([("enablementMethod", enablement), ("coexistence", coexistence)] + list(extra)
+            "properties": props([("enablementMethod", enablement), ("transitionMode", transitionMode)] + list(extra)
                                 + capability(cap)),
             "identifiers": ident(purl)}
 
@@ -150,27 +150,27 @@ def sbom(m, model, version, libs):
 
 def s1():
     libs = [library("lib:s1-firmware", "S1 firmware and LoRaWAN stack (illustrative)", "1.3.0", S1["fw"], S1_CAP,
-                    "not-available", "exclusive")]
+                    "not-available", "switch-over")]
     comps = libs + [
         radio("mcu-internal"),
         iface("sto-keys", "LoRaWAN root key (AppKey) and device identity", "storage", [
             ("encryption", "none"), ("keyWrapping", "none"),
-            ("negotiationControl", "Not applicable"),
+            ("algorithmSelection", "Not applicable"),
             ("integrationConstraints", "The root key is written at manufacture into the microcontroller's internal "
                                        "flash, with read-out protection set."),
             ("keyReplaceable", "not-replaceable"), ("keyProvisioning", "factory-injected")])]
     subject_props = [("coverage", "all"), ("subjectType", "product"),
-                     ("managementInterfaceAbsence", "no-configuration-surface"),
+                     ("absent:management-interface", "no-configuration-surface"),
                      ("updateMechanism", "none"), ("updateSupportStatus", "never-offered"),
-                     ("resourceBound", "flash=16384 ram=4096 frame=242"),
-                     ("contextAbsent:support-lifecycle", "not-published"), ("contextAbsent:roadmap", "not-published"),
-                     ("contextAbsent:vulnerability-statements", "not-published")]
+                     ("resourceLimits", "flash=16384 ram=4096 frame=242"),
+                     ("absent:support-lifecycle", "not-published"), ("absent:roadmap", "not-published"),
+                     ("absent:vulnerability-statements", "not-published")]
     return libs, comps, subject_props, {"lib:s1-firmware": ["radio-lorawan", "sto-keys"]}
 
 
 def s2():
     libs = [library("lib:s2-firmware", "S2 firmware and LoRaWAN stack (illustrative)", "2.0.1", S2["fw"], S2_CAP,
-                    "software-update", "simultaneous", [("minimumProductVersion", "unreleased")])]
+                    "software-update", "side-by-side", [("availableFromVersion", "unreleased")])]
     comps = libs + [
         radio("secure-element"),
         iface("upd-fuota", "Firmware update over the air (LoRaWAN FUOTA)", "management", [
@@ -179,24 +179,24 @@ def s2():
             ("keyExchange", "none"), ("encryption", "AES-128-CTR"), ("authentication", "ECDSA-P-256-SHA-256"),
             ("protocolVersionsSupported", "1.0.0"), ("keyExchangeSupported", "none"),
             ("authenticationSupported", "ECDSA-P-256-SHA-256"),
-            ("negotiationControl", "The firmware signature algorithm is fixed by the bootloader"),
+            ("algorithmSelection", "The firmware signature algorithm is fixed by the bootloader"),
             ("integrationConstraints", "Images arrive in fragments over multicast and are verified as a whole by "
                                        "the bootloader, so a larger post-quantum signature costs flash, not frames."),
             ("updateMechanism", "remote-managed"), ("updateAuthority", "platform"),
             ("updateAuthoritySupported", ["platform", "vendor"]),
-            ("keyStoreRef", "sto-keys"), ("cryptoTerminationPoint", "device"),
-            ("providerLocation", "secure-element")]),
+            ("keysStoredIn", "sto-keys"), ("terminationOptions", "device"),
+            ("executionEnvironment", "secure-element")]),
         iface("sto-keys", "LoRaWAN root key and firmware verification key, in a secure element", "storage", [
             ("encryption", "AES-128-CCM"), ("keyWrapping", "AES-128-KW"),
-            ("negotiationControl", "Not applicable"),
+            ("algorithmSelection", "Not applicable"),
             ("integrationConstraints", "The secure element holds the root key and the firmware verification key, "
                                        "which a signed update can replace."),
             ("keyReplaceable", "software-update"), ("keyProvisioning", "provisioned-at-onboarding")])]
     subject_props = [("coverage", "all"), ("subjectType", "product"),
                      ("updateMechanism", "remote-managed"), ("updateSupportStatus", "supported"),
-                     ("resourceBound", "flash=262144 ram=65536 frame=242"),
-                     ("contextAbsent:support-lifecycle", "not-published"), ("contextAbsent:roadmap", "not-published"),
-                     ("contextAbsent:vulnerability-statements", "not-published")]
+                     ("resourceLimits", "flash=262144 ram=65536 frame=242"),
+                     ("absent:support-lifecycle", "not-published"), ("absent:roadmap", "not-published"),
+                     ("absent:vulnerability-statements", "not-published")]
     return libs, comps, subject_props, {"lib:s2-firmware": ["radio-lorawan", "upd-fuota", "sto-keys"]}
 
 
@@ -223,10 +223,10 @@ def main():
           "over the air, described by its manufacturer against iot-device v0.1. Read with the S1 record.")
     v = copy.deepcopy(r1)
     v["serialNumber"] = "urn:uuid:10700001-5e45-4e01-9a01-0000000000f1"
-    v["$comment"] = ("NON-CONFORMING EXAMPLE. The S1 record with resourceBound left out. Fails iot-device#P1 only: "
+    v["$comment"] = ("NON-CONFORMING EXAMPLE. The S1 record with resourceLimits left out. Fails iot-device#P1 only: "
                      "the operator cannot tell a permanent 'no' from one a firmware release could change.")
     subj = v["inventories"][0]["subject"]
-    subj["properties"] = [p for p in subj["properties"] if p["name"] != P + "resourceBound"]
+    subj["properties"] = [p for p in subj["properties"] if p["name"] != P + "resourceLimits"]
     write(os.path.join(OUT, "cbom-iot-sensor-s1-product-fail-P1.cdx.json"), v)
     print("written to", OUT)
 

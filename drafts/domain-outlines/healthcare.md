@@ -32,7 +32,7 @@ Candidate sources, to confirm before drafting: section 524B of the US Federal Fo
 - Long device lifetimes and re-approval when cryptography changes. `certificationImpact` records the approval a change triggers.
 - Long confidentiality of health data, which raises the priority of key establishment on interfaces that carry it.
 - Devices that cannot be updated, recorded as permanent limits under IoT Device Estate.
-- Clinical safety: a cryptographic change must not interrupt care, which constrains `coexistence` and timing.
+- Clinical safety: a cryptographic change must not interrupt care, which constrains `transitionMode` and timing.
 
 ### 4. Healthcare in the methodology's terms
 - A device model: a product record under IoT Device Estate, written by the manufacturer.

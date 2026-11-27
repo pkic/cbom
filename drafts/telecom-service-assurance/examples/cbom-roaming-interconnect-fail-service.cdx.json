@@ -111,7 +111,7 @@
               "value": "ECDSA-P256-SHA256"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sepp:sto-keys"
             },
             {
@@ -119,7 +119,7 @@
               "value": "urn:cdx:5e990001-3c4d-4e5f-9a01-329020000001/1#n32c"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -135,15 +135,15 @@
               "value": "mission-critical-roaming"
             },
             {
-              "name": "pkic:profile:boundary",
+              "name": "pkic:profile:operatorBoundary",
               "value": "inter-operator"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "sys:operator-pki"
             },
             {
-              "name": "pkic:profile:boundaryProxy",
+              "name": "pkic:profile:proxiedBy",
               "value": "sys:sepp"
             }
           ]
@@ -186,7 +186,7 @@
               "value": "ECDSA-P256-SHA256"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sepp:n32c"
             },
             {
@@ -194,19 +194,19 @@
               "value": "urn:cdx:5e990001-3c4d-4e5f-9a01-329020000001/1#n32f"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
-              "name": "pkic:profile:boundary",
+              "name": "pkic:profile:operatorBoundary",
               "value": "inter-operator"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "product"
             },
             {
-              "name": "pkic:profile:boundaryProxy",
+              "name": "pkic:profile:proxiedBy",
               "value": "sys:ipx-provider"
             }
           ]
@@ -249,7 +249,7 @@
               "value": "ECDSA-P256-SHA256"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sepp:sto-keys"
             },
             {
@@ -257,7 +257,7 @@
               "value": "urn:cdx:5e990001-3c4d-4e5f-9a01-329020000001/1#sbi"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -273,11 +273,11 @@
               "value": "mission-critical-roaming"
             },
             {
-              "name": "pkic:profile:boundary",
+              "name": "pkic:profile:operatorBoundary",
               "value": "intra-operator"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "sys:operator-pki"
             }
           ]
@@ -320,7 +320,7 @@
               "value": "Ed25519"
             },
             {
-              "name": "pkic:profile:keyStoreRef",
+              "name": "pkic:profile:keysStoredIn",
               "value": "sepp:sto-keys"
             },
             {
@@ -328,7 +328,7 @@
               "value": "urn:cdx:5e990001-3c4d-4e5f-9a01-329020000001/1#mgmt"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -336,11 +336,11 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:boundary",
+              "name": "pkic:profile:operatorBoundary",
               "value": "intra-operator"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "product"
             }
           ]
@@ -367,7 +367,7 @@
               "value": "urn:cdx:5e990001-3c4d-4e5f-9a01-329020000001/1#sto-keys"
             },
             {
-              "name": "pkic:profile:usage",
+              "name": "pkic:profile:designUse",
               "value": "in-use"
             },
             {
@@ -375,11 +375,11 @@
               "value": "none"
             },
             {
-              "name": "pkic:profile:boundary",
+              "name": "pkic:profile:operatorBoundary",
               "value": "intra-operator"
             },
             {
-              "name": "pkic:profile:keyProvider",
+              "name": "pkic:profile:keysProvidedBy",
               "value": "sys:operator-hsm"
             }
           ]
@@ -461,7 +461,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "78e6f4b98b4d850c83a1a2b453a97ac870c00dae082c2444eb0f642664746adf"
+          "content": "55d768f612ab5c8390a930bca26391ae230a077a0b00d59f156041e32532a16e"
         }
       ]
     }

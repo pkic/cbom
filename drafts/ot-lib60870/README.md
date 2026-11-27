@@ -31,7 +31,7 @@ Run from `docs/methodology/`, with `--with ../../drafts/ot-lib60870/examples/lib
 | --- | --- |
 | `profile-interface-enumeration.rules.json` | conforms |
 | `profile-interface-disclosure.rules.json` | conforms |
-| `profile-change-core.rules.json` | does not conform: no capability, enablement, coexistence or update mechanism |
+| `profile-change-core.rules.json` | does not conform: no capability, enablement, transition mode or update mechanism |
 | `profile-pqc-migration-ot.rules.json` | does not conform: the change core's failures, plus I1 (`certificationImpact`) |
 
 The same pattern as libIEC61850. Both documents validate against the pinned CycloneDX 2.0 schema.

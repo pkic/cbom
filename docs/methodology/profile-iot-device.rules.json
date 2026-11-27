@@ -59,22 +59,24 @@
     "generated-on-device",
     "operator-provisioned"
   ],
-  "cryptoTerminationPointVocabulary": [
+  "terminationOptionsVocabulary": [
     "device",
-    "gateway",
-    "either"
+    "gateway"
   ],
-  "$commentTermination": "Whether the model's design lets the cryptography of an interface terminate somewhere other than the device. 'either' means the design permits a gateway to terminate it. Whether a deployment does so is the operator's fact.",
-  "providerLocationVocabulary": [
+  "$commentTermination": "Where the model's design lets the cryptography of an interface terminate: on the device, at a gateway, or both. A set, because a design can allow both. Whether a deployment does terminate at a gateway is the operator's fact, stated by terminatedBy.",
+  "executionEnvironmentVocabulary": [
     "software",
     "hsm",
     "tee",
+    "tpm",
     "secure-element",
     "mcu-internal",
     "otp-fuses",
+    "os-keyring",
+    "external-vault",
     "unspecified"
   ],
-  "$commentProviderLocation": "The PQC migration profile's values, with three a device needs: a secure element, the microcontroller's internal flash, and one-time-programmable fuses.",
+  "$commentExecutionEnvironment": "One location vocabulary is shared by executionEnvironment (where key operations run) and keyStoreLocation (where keys are held), so that a consumer can compare the two on one interface. A value that makes no sense for one of them, such as os-keyring for execution, is simply not used there. A device mostly needs secure-element, mcu-internal and otp-fuses.",
   "overrides": [
     {
       "id": "change-core#I9",
@@ -88,7 +90,7 @@
       "description": "Device states the hard limits that bound what any firmware could support",
       "level": "MUST",
       "constraint": {
-        "productAttribute": "resourceBound"
+        "productAttribute": "resourceLimits"
       },
       "withholdable": false,
       "note": "Usable flash, RAM and the largest frame the link allows, in bytes, written 'flash=<n> ram=<n> frame=<n>'. On a constrained device, a 'no' to a capability question is often set by these limits, which no firmware release changes. This is how a permanent 'no' is told apart from a temporary one."
@@ -122,24 +124,25 @@
     },
     {
       "id": "I2",
-      "attribute": "cryptoTerminationPoint",
+      "attribute": "terminationOptions",
       "level": "SHOULD",
       "constraint": {
-        "enumRef": "cryptoTerminationPointVocabulary"
+        "enumRef": "terminationOptionsVocabulary"
       },
       "withholdable": false,
       "requiredWhen": {
         "attribute": "interfaceType",
         "notEquals": "storage"
       },
-      "note": "Whether the design permits the cryptography of this interface to terminate at a gateway. The option of putting something in front of the device depends on it. SHOULD, because it is partly a deployment fact."
+      "note": "Where the design permits the cryptography of this interface to terminate: 'device', 'gateway', or both. The option of putting something in front of the device depends on it. SHOULD, because it is partly a deployment fact. Renamed from terminationOptions; 'either' is now the two values together.",
+      "list": true
     },
     {
       "id": "I3",
-      "attribute": "providerLocation",
+      "attribute": "executionEnvironment",
       "level": "SHOULD",
       "constraint": {
-        "enumRef": "providerLocationVocabulary"
+        "enumRef": "executionEnvironmentVocabulary"
       },
       "withholdable": true,
       "requiredWhen": {
@@ -182,6 +185,25 @@
       "date": "2026-11-18",
       "summary": "Initial version, built on two illustrative LoRaWAN soil sensors.",
       "changes": []
+    },
+    {
+      "version": "0.1",
+      "date": "2026-11-27",
+      "summary": "Attribute names made clearer and consistent across the profiles (drafts/attribute-naming-review.md; decision 0028). The version is unchanged because no release has been published.",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Renamed: cryptoTerminationPoint → terminationOptions, now a set of 'device' and 'gateway'; 'either' becomes both values. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: resourceBound → resourceLimits. A record that uses the previous name no longer conforms."
+        },
+        {
+          "kind": "tightening",
+          "summary": "Renamed: providerLocation → executionEnvironment, with the shared location vocabulary. A record that uses the previous name no longer conforms."
+        }
+      ]
     }
   ]
 }

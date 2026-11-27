@@ -57,7 +57,7 @@ Candidate sources, to confirm before drafting: FIPS 140-3 and ISO/IEC 19790, and
 
 ### 8. Profiles
 - HSM Product (drafted): extends PQC Migration Extended; adds the payment HSM approval and key block formats, and makes certification impact and key store references mandatory.
-- HSM Key Hierarchy (drafted): a depth of HSM Product; adds `protectedBy` and `keyBlockFormat` on every key store.
+- HSM Key Hierarchy (drafted): a depth of HSM Product; adds `protectedBy` and `keyBlockFormats` on every key store.
 - HSM Deployment (proposed): the owner's record of partitions, enabled mechanisms and loaded key types, citing the product record.
 - Key management service (proposed): Service Disclosure with the SaaS key custody depth, for cloud HSM and key management services.
 

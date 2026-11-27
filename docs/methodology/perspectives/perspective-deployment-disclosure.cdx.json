@@ -106,7 +106,7 @@
         },
         {
           "expression": "$.dependencies[*].provides",
-          "nativeName": "interface-disclosure#I9 implementationPurl",
+          "nativeName": "interface-disclosure#I9 implementingLibrary",
           "relevance": "required",
           "rationale": "Every declared interface."
         },
@@ -159,8 +159,8 @@
           "rationale": "Required when lifecycleStage is observed."
         },
         {
-          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:peerInterface')]",
-          "nativeName": "deployment-disclosure#I4 peerInterface",
+          "expression": "$.inventories[*].components[*].properties[?(@.name=='pkic:profile:connectsTo')]",
+          "nativeName": "deployment-disclosure#I4 connectsTo",
           "relevance": "optional",
           "rationale": "Every declared interface."
         },
@@ -195,8 +195,8 @@
           "rationale": "If a product states that the operator decides an algorithm, the interface points to where the operator decides it. 'deployment-defined' without this pointer tells the operator that the decision is theirs and not how to make it."
         },
         {
-          "expression": "$.externalReferences[?(@.properties[?(@.name=='pkic:profile:context' && @.value=='design-intent')])]",
-          "nativeName": "interface-disclosure#R6 design-intent",
+          "expression": "$.externalReferences[?(@.properties[?(@.name=='pkic:profile:context' && @.value=='threat-model')])]",
+          "nativeName": "interface-disclosure#R6 threat-model",
           "relevance": "optional",
           "rationale": "A threat model or design document. This is where design intention is recorded now that 'intended' is not an accepted stage: as context the record points to, not as a stage it reports."
         },
@@ -219,8 +219,8 @@
           "rationale": "Where the operator records what data each interface carries and how long it must stay confidential. These facts decide harvest-now-decrypt-later exposure and are excluded from the CBOM (base exclusions; Q36, Q37, Q45). The record points to the register; it does not carry it."
         },
         {
-          "expression": "$.externalReferences[?(@.properties[?(@.name=='pkic:profile:context' && @.value=='issuer-policy')])]",
-          "nativeName": "deployment-disclosure#R4 issuer-policy",
+          "expression": "$.externalReferences[?(@.properties[?(@.name=='pkic:profile:context' && @.value=='certificate-policy')])]",
+          "nativeName": "deployment-disclosure#R4 certificate-policy",
           "relevance": "optional",
           "rationale": "The certificate policy or practice statement of the CA that issues the deployment's certificates. The CA is an external dependency (pqc-migration-extended I9): an interface cannot present an ML-DSA chain before its CA issues one."
         }

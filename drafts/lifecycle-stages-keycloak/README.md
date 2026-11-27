@@ -122,7 +122,7 @@ three times. Each time it added a literal value that states a fact: `none` (K3),
    certificate. Accept `peer-defined` for values the counterpart decides, such as an
    interconnect's negotiated group and the server's certificate. Each value tells a consumer who
    has to act. The first means the operator acts. The second means another system has to migrate
-   first, which links to `externalDependencies` in the extended depth.
+   first, which links to `trustServiceDependencies` in the extended depth.
 2. Accept these values only at `implemented`. At `configured` or `observed` they would let a
    producer avoid giving an answer it has. This needs a stage-conditional constraint, which the
    evaluator does not support yet.

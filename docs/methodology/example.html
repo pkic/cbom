@@ -120,11 +120,11 @@ const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp
 const PURPOSES = ["key-establishment","encryption","entity-authentication","data-integrity","non-repudiation","key-protection","key-derivation"];
 const LITERALS = ["none","deployment-defined","peer-defined","out-of-band","product-managed","peer-not-recorded","no-product-document","product"];
 const GROUPS = [
-  ["What it is", a => /^(protocol$|protocolVersion$|endpointRole:|defaultState|terminatedBy|correspondsTo|peerInterface|usage|keyProvider|zone|zonePath|conduitRef|observationMethod|observedAt|implementationPurl|lifecycleStage)/.test(a)],
+  ["What it is", a => /^(protocol$|protocolVersion$|endpointRole:|defaultState|terminatedBy|terminationOptions|correspondsTo|connectsTo|designUse|keysProvidedBy|keysStoredIn|keysHeldBy|proxiedBy|zone|zonePath|crossesConduit|operatorBoundary|observationMethod|observedAt|implementingLibrary|lifecycleStage)/.test(a)],
   ["In use", a => /^(keyExchange|encryption|authentication|keyWrapping)$/.test(a)],
   ["Can support", a => /Supported$/.test(a)],
-  ["Moving to post-quantum", a => /^(enablementMethod|enablementSetting|minimumProductVersion|providerLocation|coexistence|moduleValidation|certification|negotiationControl)/.test(a)],
-  ["Keys", a => /^(keyManagementFunction|keyOperations|keyTypes|keyStore|externalDependencies|credentialLifetime|intrinsicData)/.test(a)],
+  ["Moving to post-quantum", a => /^(enablementMethod|enablementSetting|availableFromVersion|executionEnvironment|transitionMode|moduleValidation|certification|impactedCertification|algorithmSelection)/.test(a)],
+  ["Keys", a => /^(managesKeys|keyOperations|keyTypes|keyStore|keyBlockFormats|trustServiceDependencies|credentialLifetime|intrinsicData)/.test(a)],
   ["Notes", a => a === "integrationConstraints"],
 ];
 const STATUS_TEXT = {"available":"available","committed":"committed","planned":"planned","under-evaluation":"evaluating","not-planned":"not planned"};

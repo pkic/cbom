@@ -32,7 +32,7 @@ NATIVE = {
     "authentication": PROTO + ".relatedCryptographicAssets",
     "keyExchangeSupported": PROTO + ".cipherSuites[*].tlsGroups",
     "authenticationSupported": PROTO + ".cipherSuites[*].tlsSignatureSchemes",
-    "implementationPurl": "$.dependencies[*].provides",
+    "implementingLibrary": "$.dependencies[*].provides",
     "lifecycleStage": "$.metadata.lifecycles",
     "moduleValidationScheme": "$.inventories[*].components[?(@.type=='library')].certifications",
     "moduleValidationRef": "$.inventories[*].components[?(@.type=='library')].certifications[*].url",

@@ -55,7 +55,7 @@ These profiles add capability, blocker and enablement facts.
 |---|---|---|---|
 | Crypto-agility assessment | any | Nothing, if the core is target-neutral. This is a test of the core, not a new profile | Catalogue |
 | PQC migration | product | Product rules, module validation, the extended depth | Developed (Keycloak) |
-| IoT device estate | device model | `resourceBound`, model-versus-instance rules (Q62, Q63) | Draft. Blocked on Q62 to Q65 |
+| IoT device estate | device model | `resourceLimits`, model-versus-instance rules (Q62, Q63) | Draft. Blocked on Q62 to Q65 |
 | Substation automation (OT) | system | `certificationImpact`, `verifierReplaceable`, plus a system overlay | Draft, October 2026 |
 
 **Not a use case:** the CI quality gate. Any profile can gate a pipeline. The requirement falls on
@@ -80,8 +80,8 @@ sas-system                             overlay over component documents (system)
 
 - `capabilityStatus`, `blockedBy` and `roadmapRef` per purpose;
 - the `Supported` forms of the algorithm attributes;
-- `enablementMethod` and `providerLocation`;
-- `coexistence` and `negotiationControl`;
+- `enablementMethod` and `executionEnvironment`;
+- `transitionMode` and `algorithmSelection`;
 - `integrationConstraints`;
 - `keyWrapping` and `keyWrappingSupported`.
 

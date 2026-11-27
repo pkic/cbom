@@ -62,7 +62,7 @@
           "interfaceType": "storage",
           "min": 1
         },
-        "orDeclaredAbsent": "storageInterfaceAbsence",
+        "orDeclaredAbsent": "absent:storage-interface",
         "absenceEnumRef": "storageAbsenceVocabulary"
       },
       "withholdable": false,
@@ -101,6 +101,10 @@
     "conformingExample": "examples/cbom-keycloak-product.cdx.json",
     "nonConformingExample": "examples/cbom-keycloak-product-fail-procurement-P1.cdx.json"
   },
+  "procurementCoverageVocabulary": [
+    "all",
+    "all-external"
+  ],
   "changelog": [
     {
       "version": "0.1",
@@ -127,10 +131,17 @@
           "summary": "Renumbered the profile's own product rules from P5 and P6 to P1 and P2, so that numbering starts at 1 in every profile. The rules are unchanged. Citations of procurement#P5 and procurement#P6 now read procurement#P1 and procurement#P2."
         }
       ]
+    },
+    {
+      "version": "0.2",
+      "date": "2026-11-27",
+      "summary": "Attribute names made clearer and consistent across the profiles (drafts/attribute-naming-review.md; decision 0028). The version is unchanged because no release has been published.",
+      "changes": [
+        {
+          "kind": "tightening",
+          "summary": "Renamed: storageInterfaceAbsence → absent:storage-interface. A record that uses the previous name no longer conforms."
+        }
+      ]
     }
-  ],
-  "procurementCoverageVocabulary": [
-    "all",
-    "all-external"
   ]
 }

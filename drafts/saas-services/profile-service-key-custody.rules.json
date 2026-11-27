@@ -53,7 +53,7 @@
   "interfaceRules": [
     {
       "id": "I1",
-      "attribute": "keyStoreRef",
+      "attribute": "keysStoredIn",
       "level": "MUST",
       "constraint": {
         "refersToLocal": {

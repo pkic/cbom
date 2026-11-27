@@ -93,8 +93,8 @@ def capability():
 
 def library(ref, name, purl, extra):
     return {"type": "library", "bom-ref": ref, "name": name,
-            "properties": props([("enablementMethod", "software-update"), ("minimumProductVersion", "unreleased"),
-                                 ("coexistence", "simultaneous")] + extra + capability()),
+            "properties": props([("enablementMethod", "software-update"), ("availableFromVersion", "unreleased"),
+                                 ("transitionMode", "side-by-side")] + extra + capability()),
             "externalReferences": [{"type": "bom", "url": "urn:cdx:%s/1#%s" % (SERIAL["sbom"], ref),
                                     "comment": "This library's entry in the companion SBOM."}],
             "identifiers": ident(purl)}
@@ -118,88 +118,88 @@ def interfaces():
             ("keyExchange", "none"), ("encryption", "none"), ("authentication", "HMAC-SHA-256"),
             ("protocolVersionsSupported", "2.1"), ("keyExchangeSupported", "none"),
             ("authenticationSupported", ["HMAC-SHA-256", "AES-GMAC"]),
-            ("negotiationControl", "Not applicable: one-way multicast"),
+            ("algorithmSelection", "Not applicable: one-way multicast"),
             ("integrationConstraints", "Layer-2 multicast with a 3 ms transfer time for trip messages "
                                        "(IEC 61850-5 P2/P3). A per-message signature does not fit: ML-DSA-44 "
                                        "signatures are 2,420 bytes. Already symmetric."),
-            ("keyStoreRef", "int-gdoi"), ("certificationImpact", "not-applicable")]),
+            ("keysStoredIn", "int-gdoi"), ("certificationImpact", "not-applicable")]),
         iface("svc-sv", "Sampled values (IEC 62351-6)", "service", [
             ("protocol", "SV"), ("protocolVersion", "2.1"),
             ("endpointRole:publisher", "endpoint:merging-unit"), ("endpointRole:subscriber", "endpoint:ied"),
             ("keyExchange", "none"), ("encryption", "none"), ("authentication", "HMAC-SHA-256"),
             ("protocolVersionsSupported", "2.1"), ("keyExchangeSupported", "none"),
             ("authenticationSupported", ["HMAC-SHA-256", "AES-GMAC"]),
-            ("negotiationControl", "Not applicable: one-way multicast"),
+            ("algorithmSelection", "Not applicable: one-way multicast"),
             ("integrationConstraints", "Layer-2 multicast within the sampling interval. Already symmetric."),
-            ("keyStoreRef", "int-gdoi"), ("certificationImpact", "not-applicable")]),
+            ("keysStoredIn", "int-gdoi"), ("certificationImpact", "not-applicable")]),
         iface("tls-mms", "TLS for MMS (IEC 62351-3)", "service", [
             ("protocol", "TLS"), ("protocolVersion", "1.3"),
             ("endpointRole:client", "endpoint:station-server"), ("endpointRole:server", "endpoint:ied")] + TLS + [
-            ("negotiationControl", "Groups and signature schemes limited to those IEC 62351-3:2023 profiles"),
+            ("algorithmSelection", "Groups and signature schemes limited to those IEC 62351-3:2023 profiles"),
             ("integrationConstraints", "Conformance to IEC 62351-3 permits only the groups and signature schemes it "
                                        "lists, and it lists no post-quantum ones."),
-            ("keyStoreRef", "sto-keys"), ("certificationImpact", "recertification"),
-            ("certificationScheme", "IEC 62443-4-2 (ISASecure CSA)")]),
+            ("keysStoredIn", "sto-keys"), ("certificationImpact", "recertification"),
+            ("impactedCertification", "IEC 62443-4-2 (ISASecure CSA)")]),
         iface("svc-mms", "MMS with role-based access tokens (IEC 62351-4, -8)", "service", [
             ("protocol", "MMS"), ("protocolVersion", "2003"),
             ("endpointRole:client", "endpoint:station-server"), ("endpointRole:server", "endpoint:ied"),
             ("keyExchange", "none"), ("encryption", "none"), ("authentication", "ECDSA-P-256-SHA-256"),
             ("protocolVersionsSupported", "2003"), ("keyExchangeSupported", "none"),
             ("authenticationSupported", "ECDSA-P-256-SHA-256"),
-            ("negotiationControl", "Token signature algorithm set by the access token issuer"),
+            ("algorithmSelection", "Token signature algorithm set by the access token issuer"),
             ("integrationConstraints", "Carried over tls-mms. The token signature is what grants authority."),
-            ("keyStoreRef", "sto-keys"), ("certificationImpact", "retest"),
-            ("certificationScheme", "IEC 61850 conformance testing")]),
+            ("keysStoredIn", "sto-keys"), ("certificationImpact", "retest"),
+            ("impactedCertification", "IEC 61850 conformance testing")]),
         iface("int-gdoi", "GDOI group key distribution (IEC 62351-9)", "interconnect", [
             ("protocol", "GDOI"), ("protocolVersion", "1"),
             ("endpointRole:group-member", "endpoint:ied"), ("endpointRole:key-server", "endpoint:station-server"),
             ("keyExchange", "FFDH-MODP-2048"), ("encryption", "AES-128-CBC"), ("authentication", "RSA-2048"),
             ("protocolVersionsSupported", "1"), ("keyExchangeSupported", ["FFDH-MODP-2048", "ECDH-P-256"]),
             ("authenticationSupported", ["RSA-2048", "ECDSA-P-256-SHA-256"]),
-            ("negotiationControl", "Set by the key server's group policy"),
+            ("algorithmSelection", "Set by the key server's group policy"),
             ("integrationConstraints", "The key plane for GOOSE and SV. GDOI over IKEv1 phase 1 (RFC 8052). Its "
                                        "successor G-IKEv2 (RFC 9838) is not profiled by IEC 62351-9:2023, which "
                                        "provides no post-quantum measures."),
-            ("certificationImpact", "recertification"), ("certificationScheme", "IEC 62443-4-2 (ISASecure CSA)")]),
+            ("certificationImpact", "recertification"), ("impactedCertification", "IEC 62443-4-2 (ISASecure CSA)")]),
         iface("mgmt-enrol", "Certificate enrolment (EST, IEC 62351-9)", "management", [
             ("protocol", "EST"), ("protocolVersion", "1"),
             ("endpointRole:client", "endpoint:ied"), ("endpointRole:server", "endpoint:enrolment-service")] + [
             ("keyExchange", "ECDH-P-256"), ("encryption", "AES-128-GCM"), ("authentication", "ECDSA-P-256-SHA-256"),
             ("protocolVersionsSupported", "1"), ("keyExchangeSupported", ["ECDH-P-256", "ECDH-P-384"]),
             ("authenticationSupported", ["ECDSA-P-256-SHA-256", "ECDSA-P-384-SHA-384"]),
-            ("negotiationControl", "Certificate profile set by the enrolment service"),
+            ("algorithmSelection", "Certificate profile set by the enrolment service"),
             ("integrationConstraints", "Device identity certificates with long validity."),
             ("updateMechanism", "none"), ("certificationImpact", "retest"),
-            ("certificationScheme", "IEC 61850 conformance testing")]),
+            ("impactedCertification", "IEC 61850 conformance testing")]),
         iface("upd-fw", "Firmware update", "management", [
             ("protocol", "TLS"), ("protocolVersion", "1.2"),
             ("endpointRole:client", "endpoint:engineering-workstation"), ("endpointRole:server", "endpoint:ied")] + TLS + [
-            ("negotiationControl", "Firmware signature algorithm fixed by the bootloader"),
+            ("algorithmSelection", "Firmware signature algorithm fixed by the bootloader"),
             ("integrationConstraints", "Firmware images are signed ECDSA-P256-SHA256 and verified by the bootloader."),
             ("updateMechanism", "local-network"), ("updateAuthority", "operator"),
             ("updateAuthoritySupported", ["operator", "installer"]),
-            ("verifierReplaceable", "via-bootloader-update"), ("certificationImpact", "recertification"),
-            ("certificationScheme", "IEC 62443-4-2 (ISASecure CSA)")]),
+            ("verifierReplaceable", "bootloader-update"), ("certificationImpact", "recertification"),
+            ("impactedCertification", "IEC 62443-4-2 (ISASecure CSA)")]),
         iface("mgmt-eng", "Engineering configuration download", "management", [
             ("protocol", "TLS"), ("protocolVersion", "1.2"),
             ("endpointRole:client", "endpoint:engineering-workstation"), ("endpointRole:server", "endpoint:ied")] + TLS + [
-            ("negotiationControl", "Inherits the device TLS settings"),
+            ("algorithmSelection", "Inherits the device TLS settings"),
             ("integrationConstraints", "Protected by TLS and access control. The configuration file itself is not signed."),
             ("updateMechanism", "none"), ("certificationImpact", "retest"),
-            ("certificationScheme", "IEC 61850 conformance testing")]),
+            ("impactedCertification", "IEC 61850 conformance testing")]),
         iface("peer-ptp", "Time synchronisation (IEEE 1588)", "peer", [
             ("protocol", "PTP"), ("protocolVersion", "2.1"),
             ("endpointRole:client", "endpoint:ied"), ("endpointRole:server", "endpoint:grandmaster-clock"),
             ("keyExchange", "none"), ("encryption", "none"), ("authentication", "none"),
             ("protocolVersionsSupported", "2.1"), ("keyExchangeSupported", "none"), ("authenticationSupported", "none"),
-            ("negotiationControl", "Not applicable"),
+            ("algorithmSelection", "Not applicable"),
             ("integrationConstraints", "No cryptography.")]),
         iface("sto-keys", "Device private key and trust anchors", "storage", [
             ("encryption", "none"), ("keyWrapping", "none"),
-            ("negotiationControl", "Not applicable"),
+            ("algorithmSelection", "Not applicable"),
             ("integrationConstraints", "Whether a secure element holds the device key is under evaluation."),
             ("keyReplaceable", "software-update"), ("certificationImpact", "recertification"),
-            ("certificationScheme", "IEC 62443-4-2 (ISASecure CSA)")]),
+            ("impactedCertification", "IEC 62443-4-2 (ISASecure CSA)")]),
     ]
 
 
@@ -222,8 +222,8 @@ def product(sbom_hash):
                      "supplier": {"name": AUTHOR["name"], "url": ["https://pkic.org"]}},
         "inventories": [{"bom-ref": "inventory:subject", "subject": subject(props([
             ("coverage", "all"), ("subjectType", "product"), ("updateMechanism", "local-network"),
-            ("contextAbsent:support-lifecycle", "not-published"), ("contextAbsent:roadmap", "not-published"),
-            ("contextAbsent:vulnerability-statements", "not-published")])), "components": comps}],
+            ("absent:support-lifecycle", "not-published"), ("absent:roadmap", "not-published"),
+            ("absent:vulnerability-statements", "not-published")])), "components": comps}],
         "dependencies": [{"ref": "dev:protection-ied", "dependsOn": [c["bom-ref"] for c in comps]}] +
                         [{"ref": k, "provides": v} for k, v in PROVIDES.items()],
         "compositions": [{"kind": "components", "aggregate": "complete", "targets": ["inventory:subject"]}],

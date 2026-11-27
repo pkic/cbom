@@ -813,7 +813,7 @@ and is more work for the producer).
 hardware forbids (trade-off: defensible, and leaves the IoT use case unserved).
 
 **Where it stands.** Settled provisionally on 11 November 2026, as the chair's call: Option B. The
-attribute `resourceBound`, proposed in the IoT use case, records the hard limits themselves: usable
+attribute `resourceLimits`, proposed in the IoT use case, records the hard limits themselves: usable
 flash and RAM, and the maximum frame or message size the link imposes. Sizes are given in bytes. The
 consumer draws its own conclusion about whether a limit is permanent, which keeps a judgement out of
 the document (decision 0002).
@@ -1823,7 +1823,7 @@ composes along a path, including that a signature spanning the path does not com
 per-hop protection, and leave the representation to implementers.
 
 **Where it stands.** Option C in substance for paths, and Option A for single connections.
-Decision 0026 lets a deployment record name the far end of each connection with `peerInterface`
+Decision 0026 lets a deployment record name the far end of each connection with `connectsTo`
 (deployment disclosure I4), and the `edge-posture` evaluation joins the two ends and names the
 one that limits the connection. Composing posture along a whole path stays with the inventory,
 and the Inventory section still defines no record for a path.

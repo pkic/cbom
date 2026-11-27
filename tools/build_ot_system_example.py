@@ -37,12 +37,12 @@ def dump(obj):
 # The system record                                                           #
 # --------------------------------------------------------------------------- #
 DROP = ["protocolVersionsSupported", "keyExchangeSupported", "authenticationSupported", "certification",
-        "updateAuthoritySupported", "verifierReplaceable", "keyReplaceable", "negotiationControl",
+        "updateAuthoritySupported", "verifierReplaceable", "keyReplaceable", "algorithmSelection",
         "integrationConstraints", "defaultState", "capabilityByPurpose", "enablementMethod",
-        "minimumProductVersion", "coexistence", "updateMechanism", "updateAuthority"]
+        "availableFromVersion", "transitionMode", "updateMechanism", "updateAuthority"]
 
 # What the design does with each interface of the protection IED (bay 1).
-# usage, zone, zonePath, conduitRef, keyProvider
+# usage, zone, zonePath, crossesConduit, keysProvidedBy
 DESIGN = {
     "svc-goose": ("in-use", "station-bus", "within-zone", None, "sys:station-server-gdoi"),
     "svc-sv": ("not-connected", "station-bus", None, None, None),
@@ -60,7 +60,7 @@ DESIGN = {
 # the integrator knows it embeds lib60870 v2.4.1 and joins to that record. Values are what the design
 # configures: the control centre's front end accepts only the cipher suite IEC 62351-4:2018 makes
 # mandatory, TLS_RSA_WITH_AES_128_CBC_SHA256 (illustrative).
-# usage, zone, zonePath, conduitRef, keyProvider, configured values
+# usage, zone, zonePath, crossesConduit, keysProvidedBy, configured values
 GATEWAY = {
     "tls-104": ("in-use", "station-bus", "crosses-zones", "sys:substation-gateway", "sys:enrolment-service",
                 [("protocolVersion", "1.2"), ("keyExchange", "RSA-PKCS1-1.5"), ("encryption", "AES-128-CBC"),
@@ -93,13 +93,13 @@ def system_record(ied, ied_bytes, gw, gw_bytes):
         i = copy.deepcopy(c)
         i["bom-ref"] = "ied1:" + c["bom-ref"]
         i["name"] = "Protection IED, bay 1: " + c["name"]
-        add = [("correspondsTo", "urn:cdx:%s/1#%s" % (serial, c["bom-ref"])), ("usage", usage), ("zone", zone)]
-        add += [(k, v) for k, v in (("zonePath", path), ("conduitRef", conduit), ("keyProvider", keys)) if v]
+        add = [("correspondsTo", "urn:cdx:%s/1#%s" % (serial, c["bom-ref"])), ("designUse", usage), ("zone", zone)]
+        add += [(k, v) for k, v in (("zonePath", path), ("crossesConduit", conduit), ("keysProvidedBy", keys)) if v]
         props = strip(i["properties"])
         for p in props:
             # A key store named by the product's own bom-ref is renamed to this record's copy,
             # so that the reference resolves inside the system record.
-            if p["name"] == P + "keyStoreRef" and p["value"] in ied_refs:
+            if p["name"] == P + "keysStoredIn" and p["value"] in ied_refs:
                 p["value"] = "ied1:" + p["value"]
         i["properties"] = props + [{"name": P + k, "value": v} for k, v in add]
         ifaces.append(i)
@@ -122,8 +122,8 @@ def system_record(ied, ied_bytes, gw, gw_bytes):
             elif k == "endpointRole:client":
                 p = {"name": p["name"], "value": "endpoint:control-centre-front-end"}
             props.append(p)
-        add = [("correspondsTo", "urn:cdx:%s/1#%s" % (gw_serial, c["bom-ref"])), ("usage", usage), ("zone", zone)]
-        add += [(k, v) for k, v in (("zonePath", path), ("conduitRef", conduit), ("keyProvider", keys)) if v]
+        add = [("correspondsTo", "urn:cdx:%s/1#%s" % (gw_serial, c["bom-ref"])), ("designUse", usage), ("zone", zone)]
+        add += [(k, v) for k, v in (("zonePath", path), ("crossesConduit", conduit), ("keysProvidedBy", keys)) if v]
         i["properties"] = props + [{"name": P + k, "value": v} for k, v in add]
         ifaces.append(i)
     others = [{"type": "device", "bom-ref": ref, "name": name,
@@ -149,7 +149,7 @@ def system_record(ied, ied_bytes, gw, gw_bytes):
                            {"name": P + "coverage", "value": "partial"},
                            {"name": P + "zones", "value": "station-bus"},
                            {"name": P + "zones", "value": "control-centre"},
-                           {"name": P + "claimedLevel62443", "value": "SL-C 2"}],
+                           {"name": P + "claimedSecurityLevel", "value": "sl-c-2"}],
             "identifiers": [{"party": "party:document-author", "identities": [
                 {"scheme": {"name": "tag-uri", "description": "A tag URI (RFC 4151)."}, "value": SUBJECT_TAG}]}],
             "parties": [{"bom-ref": "party:document-author", "roles": [{"role": "author"}],
@@ -168,7 +168,7 @@ def system_record(ied, ied_bytes, gw, gw_bytes):
 
 def variant(rec, ref, drop, comment):
     v = copy.deepcopy(rec)
-    v["serialNumber"] = v["serialNumber"][:-1] + {"conduitRef": "3", "keyProvider": "4"}[drop]
+    v["serialNumber"] = v["serialNumber"][:-1] + {"crossesConduit": "3", "keysProvidedBy": "4"}[drop]
     v["$comment"] = comment
     for c in v["inventories"][0]["components"]:
         if c["bom-ref"] == ref:
@@ -186,8 +186,8 @@ def main():
     files = {
         "cbom-ot-sas-system-configured.cdx.json": rec,
         "cbom-ot-sas-system-fail-keyprovider.cdx.json": variant(
-            rec, "ied1:svc-goose", "keyProvider",
-            "NON-CONFORMING EXAMPLE for system-disclosure. The conforming record with keyProvider removed from "
+            rec, "ied1:svc-goose", "keysProvidedBy",
+            "NON-CONFORMING EXAMPLE for system-disclosure. The conforming record with keysProvidedBy removed from "
             "the GOOSE interface, which is in use. Fails system-disclosure#I3."),
     }
     for name, obj in files.items():

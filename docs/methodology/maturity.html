@@ -74,7 +74,7 @@ nav: maturity
       </tr>
       <tr>
         <td><a href="profile-pqc-migration-extended.rules.json">PQC Migration Extended</a> v0.2</td>
-        <td>Everything PQC Migration asks, and key management and storage: the key types the management interfaces can generate, where keys are stored, external dependencies, and storage interfaces declared or their absence stated.</td>
+        <td>Everything PQC Migration asks, and key management and storage: the key types the management interfaces can generate, where keys are stored, the trust services they depend on, and storage interfaces declared or their absence stated.</td>
         <td>extends PQC Migration: adds P1, P2, I1–I10; tightens <code>pqc-migration#G1.4</code></td>
         <td>One depth deeper <em>within</em> the migration branch. It serves the same decision with one added option, and the same orientation.</td>
       </tr>
@@ -92,7 +92,7 @@ nav: maturity
       </tr>
       <tr>
         <td><a href="profile-change-core.rules.json">Change core</a> v0.1</td>
-        <td>The facts every change-planning profile asks for: capability per purpose and what blocks it, how a capability is enabled, coexistence, integration constraints, and whether new software and new keys can reach the product at all.</td>
+        <td>The facts every change-planning profile asks for: capability per purpose and what blocks it, how a capability is enabled, whether old and new algorithms can run side by side, integration constraints, and whether new software and new keys can reach the product at all.</td>
         <td>extends the baseline as a sibling of PQC Migration: shares P1, I1–I5, I7–I9, G1.1–G1.3, R1 and R2 under the same ids; adds P2 and I13–I16</td>
         <td>A branch, kept in step with PQC Migration by <code>tests/check-core.py</code>.</td>
       </tr>

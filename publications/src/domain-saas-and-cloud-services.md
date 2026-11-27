@@ -195,9 +195,9 @@ The service disclosure profile extends the baseline with the subject type `servi
 | Rule           | Requirement                                                                                                                                                                                                                                                   | Level  |
 |---------------------|---------------------------------------------------------------|---------------|
 | P1             | `serviceRegions`: the regions the record describes. Editions and service tiers go in the coverage statement                                                                                                                         | MUST   |
-| P2             | At least one storage interface for customer data, or `storageInterfaceAbsence` stating `stores-no-customer-data`                                                                                          | MUST   |
+| P2             | At least one storage interface for customer data, or `absent:storage-interface` stating `stores-no-customer-data`                                                                                          | MUST   |
 | P3             | A citation, by link and digest, of the record of each service it runs on, or a statement that it runs on infrastructure the provider operates itself                                                                                                          | MUST   |
-| P4             | `regenerationTrigger`: what makes the provider produce a new record: `schedule`, `interface-change` or `schedule-and-interface-change`                | MUST   |
+| P4             | `recordRefreshTrigger`: what makes the provider produce a new record: `schedule`, `interface-change` or `schedule-and-interface-change`                | MUST   |
 | I1             | On every storage interface, `keyCustodySupported`: the custody models a tenant can choose, from `provider-managed`, `customer-managed` and `external` | MUST   |
 | I3             | On every storage interface, `keyCustody`: the custody model a new tenant gets unless it chooses another. The present-state attribute behind I1.                                                                                     | MUST   |
 | I2             | On every storage interface, `storageRegion`: where the data is held                                                                                                                                                                 | SHOULD |
@@ -224,7 +224,7 @@ A deeper profile for customers whose main concern is stored data, drafted as `se
 
 | Rule | Requirement                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Level  |
 |-----------|------------------------------------------------------------------------|-----------------|
-| I1   | `keyStoreRef`: the interface of the key service that holds the keys, as a component of the same record or, by BOM-Link, of a record the document cites; `out-of-band` where the tenant's own service holds them and no record of it is cited; `product-managed`; or `none`. The literals are those of PQC Migration Extended I8 (question register, R2-22 and R2-27). | MUST   |
+| I1   | `keysStoredIn`: the interface of the key service that holds the keys, as a component of the same record or, by BOM-Link, of a record the document cites; `out-of-band` where the tenant's own service holds them and no record of it is cited; `product-managed`; or `none`. The literals are those of PQC Migration Extended I8 (question register, R2-22 and R2-27). | MUST   |
 | I2   | `replicaProtection`: whether backups and replicas are protected as the live data is: `same-as-primary`, `differs-from-primary` or `no-replicas`                                                                                                                                                                                                                       | MUST   |
 | I3   | `moduleValidationScheme` of the module that holds the keys, with the vocabulary of PQC Migration                                                                                                                                                                                                                                                                                                                                                    | SHOULD |
 
@@ -234,7 +234,7 @@ A profile for customers planning around the provider's post-quantum work, drafte
 
 ### 8.6 Tenant record
 
-The tenant record is a deployment record with the service record as the record it cites. It is drafted as `tenant-disclosure` v0.1-draft, extending Deployment Disclosure with two rules. Every storage interface states the custody model the tenant chose (`keyCustody`, I1). Where that is `external`, the interface names the tenant's key service, in a record the tenant record cites (`externalKeyService`, I2). The chosen model should be one the service record offers; the evaluator does not compare the two records.
+The tenant record is a deployment record with the service record as the record it cites. It is drafted as `tenant-disclosure` v0.1-draft, extending Deployment Disclosure with two rules. Every storage interface states the custody model the tenant chose (`keyCustody`, I1). Where that is `external`, the interface names the tenant's key service, in a record the tenant record cites (`keysHeldBy`, I2). The chosen model should be one the service record offers; the evaluator does not compare the two records.
 
 9. Policies for services
 ------------------------
@@ -384,15 +384,15 @@ Annex A. Service terms and methodology terms
 Annex B. Service attributes
 ---------------------------
 
-These attributes are defined in Release 1 (Publication 2, C.1) and used by the two service disclosure profiles. The draft profiles add `replicaProtection` (8.4) and `externalKeyService` (8.6), and use `keyStoreRef` and `moduleValidationScheme` from Release 1 on storage interfaces.
+These attributes are defined in Release 1 (Publication 2, C.1) and used by the two service disclosure profiles. The draft profiles add `replicaProtection` (8.4) and `keysHeldBy` (8.6), and use `keysStoredIn` and `moduleValidationScheme` from Release 1 on storage interfaces.
 
 | Attribute                                           | Where                                                                          | Values                                                                                                                                          | Level                                 |
 |-------------------------|----------------------------|----------------------------------|-------------|
 | `keyCustodySupported`     | Storage interface, service record                                              | `provider-managed`, `customer-managed`, `external` (a set)        | MUST                                  |
 | `keyCustody`              | Storage interface, service record (the default) and tenant record (the choice) | one of the values above                                                                                                                         | MUST                                  |
 | `storageRegion`           | Storage interface, service record                                              | a region identifier, as the provider names it                                                                                                   | SHOULD                                |
-| `regenerationTrigger`     | Document                                                                       | `schedule`, `interface-change` or `schedule-and-interface-change` | MUST                                  |
+| `recordRefreshTrigger`     | Document                                                                       | `schedule`, `interface-change` or `schedule-and-interface-change` | MUST                                  |
 | `serviceRegions`          | Service record                                                                 | region identifiers, as the provider names them                                                                                                  | MUST                                  |
-| `storageInterfaceAbsence` | Service record, when it has no storage interface                               | `stores-no-customer-data`                                                                                             | MUST, in place of a storage interface |
+| `absent:storage-interface` | Service record, when it has no storage interface                               | `stores-no-customer-data`                                                                                             | MUST, in place of a storage interface |
 
 Attribute names follow the methodology's convention: the bare name states what is in use, and the `Supported` form states what can be chosen.

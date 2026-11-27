@@ -823,11 +823,11 @@ PHASE_TO_STAGE = {"design": "intended", "pre-build": "implemented", "build": "im
 
 # Attributes that describe the implementation rather than the boundary. An
 # interface inherits them from the library that provides it (decision 0022, K9).
-INHERITABLE = ("moduleValidationScheme", "moduleValidationRef", "providerLocation",
-               "enablementMethod", "minimumProductVersion", "coexistence")
+INHERITABLE = ("moduleValidationScheme", "moduleValidationRef", "executionEnvironment",
+               "enablementMethod", "availableFromVersion", "transitionMode")
 # The only facts that follow a correspondsTo join from one document to another.
 # Present-state facts never do: each stage reports its own.
-INHERITED_ACROSS_DOCUMENTS = ("implementationPurl",)
+INHERITED_ACROSS_DOCUMENTS = ("implementingLibrary",)
 
 VALIDATION_STANDARDS = {"fips 140-3": "fips-140-3", "fips 140-2": "fips-140-2",
                         "iso/iec 19790": "iso-19790", "cavp": "cavp"}
@@ -1184,23 +1184,23 @@ def extract_interfaces(bom, registry=None):
                 iface["_sources"]["authenticationSupported"] = "cipherSuites.tlsSignatureSchemes"
         for k in ("protocolVersionsSupported", "keyExchangeSupported", "authenticationSupported",
                   "keyOperations", "keyTypesSupported", "keyStoreFormatsSupported", "keyStoreFormats",
-                  "keyTypes", "externalDependencies", "keyWrappingSupported", "observationMethod"):
+                  "keyTypes", "trustServiceDependencies", "keyWrappingSupported", "observationMethod"):
             if k in multi:
                 iface[k] = list(multi[k])
-        if "providerLocation" not in single:
+        if "executionEnvironment" not in single:
             envs = _unique(EXECUTION_TO_LOCATION.get(comps[r]["cryptoProperties"]
                                                      .get("algorithmProperties", {}).get("executionEnvironment"))
                            for r in arefs if _asset_type(comps.get(r)) == "algorithm")
             if len(envs) == 1:
-                iface["providerLocation"] = envs[0]
-                iface["_sources"]["providerLocation"] = "algorithm executionEnvironment"
+                iface["executionEnvironment"] = envs[0]
+                iface["_sources"]["executionEnvironment"] = "algorithm executionEnvironment"
         # K9: inherit implementation facts from the providing library.
         lib = comps.get(provider.get(ref))
         lib_groups, lib_gm = {}, {}
         if lib is not None:
-            if "implementationPurl" not in single and purl_of(lib):
-                iface["implementationPurl"] = purl_of(lib)
-                iface["_sources"]["implementationPurl"] = "provided by %s" % lib.get("bom-ref")
+            if "implementingLibrary" not in single and purl_of(lib):
+                iface["implementingLibrary"] = purl_of(lib)
+                iface["_sources"]["implementingLibrary"] = "provided by %s" % lib.get("bom-ref")
             facts, lib_groups, lib_gm = _library_facts(lib)
             for k, v in facts.items():
                 if not present(iface.get(k)) and k not in markers:
@@ -1733,7 +1733,7 @@ def check_reference(rule, profile, element_refs, markers, absence, registry=None
         if marker == "withheld":
             return (bool(rule.get("withholdable")), "withheld", "withheld by producer (%s)"
                     % ("permitted" if rule.get("withholdable") else "not permitted here"))
-        reason = absence.get("contextAbsent:" + rule["context"])
+        reason = absence.get("absent:" + rule["context"])
         if reason:
             allowed = profile.get(rule.get("orDeclaredAbsent") or "", [])
             if rule.get("orDeclaredAbsent") and reason in allowed:

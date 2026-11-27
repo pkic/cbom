@@ -27,6 +27,13 @@ IOT = "iot-device"
 LIB = "cbom-lib60870-2.4.1-product.cdx.json"
 SAS = "cbom-ot-sas-system-configured.cdx.json"
 IED = "cbom-ot-protection-ied-product.cdx.json"
+SSH = "cbom-openssh-10.0p2-product.cdx.json"
+G42 = "cbom-examplegate-4.2.0-product.cdx.json"
+G43 = "cbom-examplegate-4.3.0-product.cdx.json"
+BC = "cbom-bastion-deployment-configured.cdx.json"
+BO = "cbom-bastion-deployment-observed.cdx.json"
+VC = "cbom-vpn-deployment-configured.cdx.json"
+RAS = "cbom-remote-admin-system-configured.cdx.json"
 PRODUCT = "cbom-keycloak-product.cdx.json"
 CONF = "cbom-keycloak-deployment-configured.cdx.json"
 OBS = "cbom-keycloak-deployment-observed.cdx.json"
@@ -79,7 +86,7 @@ CASES = [
      ["crypto:protocol:ing-tls/%s#I9" % BASE]),
     ("cbom-keycloak-deployment-observed-outside.cdx.json", ENUM, [PRODUCT], []),
     # The far end of the database connection, recorded by the team that runs it. Its
-    # peerInterface (I4) resolves into the Keycloak configured record when that is supplied.
+    # connectsTo (I4) resolves into the Keycloak configured record when that is supplied.
     ("cbom-postgres-deployment-configured.cdx.json", DEPL, [CONF], []),
     ("cbom-postgres-deployment-configured.cdx.json", DEPL, [], []),
     # The substation automation (OT) worked example: one protection IED, described by its
@@ -120,6 +127,89 @@ CASES = [
     ("cbom-iot-sensor-s2-product.cdx.json", IOT, [], []),
     ("cbom-iot-sensor-s1-product-fail-P1.cdx.json", IOT, [], ["%s#P1" % IOT]),
     ("cbom-iot-sensor-s1-product-fail-P1.cdx.json", CORE, [], []),
+    # PQC migration beyond Keycloak (tools/build_pqc_examples.py). OpenSSH 10.0p2 ships hybrid ML-KEM
+    # key establishment on by default; the fictional ExampleGate 4.2.0 gets it by a software update and
+    # 4.3.0 by configuration, outside its FIPS 140-3 validated boundary. Each conforms to all five
+    # product profiles. Each failure variant fails one rule of one profile and conforms to its parent.
+    (SSH, ENUM, [], []),
+    (SSH, BASE, [], []),
+    (SSH, PQC, [], []),
+    (SSH, EXT, [], []),
+    (SSH, PROC, [], []),
+    (G42, ENUM, [], []),
+    (G42, BASE, [], []),
+    (G42, PQC, [], []),
+    (G42, EXT, [], []),
+    (G42, PROC, [], []),
+    (G43, ENUM, [], []),
+    (G43, BASE, [], []),
+    (G43, PQC, [], []),
+    (G43, EXT, [], []),
+    (G43, PROC, [], []),
+    (SSH.replace(".cdx.json", "-fail-pqc-I1.cdx.json"), PQC, [], ["ssh-transport/%s#I1" % PQC]),
+    (SSH.replace(".cdx.json", "-fail-pqc-I1.cdx.json"), BASE, [], []),
+    (SSH.replace(".cdx.json", "-fail-pqc-I2.cdx.json"), PQC, [], ["ssh-transport/%s#I2" % PQC]),
+    (SSH.replace(".cdx.json", "-fail-pqc-I2.cdx.json"), BASE, [], []),
+    (SSH.replace(".cdx.json", "-fail-pqc-I3.cdx.json"), PQC, [], ["ssh-userauth/%s#I3" % PQC]),
+    (SSH.replace(".cdx.json", "-fail-pqc-I3.cdx.json"), BASE, [], []),
+    (SSH.replace(".cdx.json", "-fail-pqc-I4.cdx.json"), PQC, [], ["ssh-transport/%s#I4" % PQC]),
+    (SSH.replace(".cdx.json", "-fail-pqc-I4.cdx.json"), BASE, [], []),
+    (SSH.replace(".cdx.json", "-fail-pqc-I6.cdx.json"), PQC, [], ["ssh-transport/%s#I6" % PQC]),
+    (SSH.replace(".cdx.json", "-fail-pqc-I6.cdx.json"), BASE, [], []),
+    (SSH.replace(".cdx.json", "-fail-pqc-I7.cdx.json"), PQC, [], ["ssh-transport/%s#I7" % PQC]),
+    (SSH.replace(".cdx.json", "-fail-pqc-I7.cdx.json"), BASE, [], []),
+    (SSH.replace(".cdx.json", "-fail-pqc-I10.cdx.json"), PQC, [], ["ssh-transport/%s#I10" % PQC]),
+    (SSH.replace(".cdx.json", "-fail-pqc-I10.cdx.json"), BASE, [], []),
+    (SSH.replace(".cdx.json", "-fail-pqc-G1.cdx.json"), PQC, [], ["sto-hostkeys/%s#G1" % PQC]),
+    (SSH.replace(".cdx.json", "-fail-pqc-G1.cdx.json"), BASE, [], []),
+    (SSH.replace(".cdx.json", "-fail-ext-P1.cdx.json"), EXT, [], ["%s#P1" % EXT]),
+    (SSH.replace(".cdx.json", "-fail-ext-P1.cdx.json"), PQC, [], []),
+    (SSH.replace(".cdx.json", "-fail-ext-I9.cdx.json"), EXT, [], ["ssh-userauth/%s#I9" % EXT]),
+    (SSH.replace(".cdx.json", "-fail-ext-I9.cdx.json"), PQC, [], []),
+    (SSH.replace(".cdx.json", "-fail-procurement-P2.cdx.json"), PROC, [], ["%s#P2" % PROC]),
+    (SSH.replace(".cdx.json", "-fail-procurement-P2.cdx.json"), BASE, [], []),
+    (G42.replace(".cdx.json", "-fail-pqc-I5.cdx.json"), PQC, [], ["%s/%s#I5" % (i, PQC) for i in ("ike", "esp", "mgmt-https")]),
+    (G42.replace(".cdx.json", "-fail-pqc-I5.cdx.json"), BASE, [], []),
+    (G43.replace(".cdx.json", "-fail-pqc-I11.cdx.json"), PQC, [], ["%s/%s#I11" % (i, PQC) for i in ("ike", "esp", "mgmt-https", "sto-hsm")]),
+    (G43.replace(".cdx.json", "-fail-pqc-I11.cdx.json"), BASE, [], []),
+    (G43.replace(".cdx.json", "-fail-ext-I1.cdx.json"), EXT, [], ["mgmt-https/%s#I1" % EXT]),
+    (G43.replace(".cdx.json", "-fail-ext-I1.cdx.json"), PQC, [], []),
+    (G43.replace(".cdx.json", "-fail-ext-I2.cdx.json"), EXT, [], ["mgmt-https/%s#I2" % EXT]),
+    (G43.replace(".cdx.json", "-fail-ext-I2.cdx.json"), PQC, [], []),
+    (G43.replace(".cdx.json", "-fail-ext-I4.cdx.json"), EXT, [], ["mgmt-https/%s#I4" % EXT]),
+    (G43.replace(".cdx.json", "-fail-ext-I4.cdx.json"), PQC, [], []),
+    (G43.replace(".cdx.json", "-fail-ext-I7.cdx.json"), EXT, [], ["mgmt-https/%s#I7" % EXT]),
+    (G43.replace(".cdx.json", "-fail-ext-I7.cdx.json"), PQC, [], []),
+    (G43, DEPL, [], None),
+    # Deployment and system records built on those products (tools/build_pqc_deployment_examples.py).
+    # The bastion's observed record finds a classical key exchange the configured record does not allow.
+    # The VPN's management interface names the bastion as its peer. The remote administration system
+    # joins both products, and two of its interfaces wait on components outside them for their keys.
+    (BC, DEPL, [SSH], []),
+    (BC, DEPL, [], []),
+    (BO, DEPL, [SSH, BC], []),
+    (VC, DEPL, [G43, BC], []),
+    (VC, DEPL, [], []),
+    (RAS, SYS, [G43, SSH], []),
+    (RAS, SYS, [], []),
+    (BC.replace(".cdx.json", "-fail-I1.cdx.json"), DEPL, [SSH], ["ssh-userauth/%s#I1" % DEPL]),
+    (BC.replace(".cdx.json", "-fail-R1.cdx.json"), DEPL, [SSH], ["%s#R1" % DEPL]),
+    (BC.replace(".cdx.json", "-fail-I14.cdx.json"), DEPL, [SSH], ["ssh-transport/%s#I14" % BASE]),
+    (BO.replace(".cdx.json", "-fail-I2.cdx.json"), DEPL, [SSH, BC], ["ssh-transport/%s#I2" % DEPL]),
+    (BO.replace(".cdx.json", "-fail-I3.cdx.json"), DEPL, [SSH, BC], ["ssh-transport/%s#I3" % DEPL]),
+    # A stale citation is only detectable when the cited record is supplied.
+    (VC.replace(".cdx.json", "-fail-P1.cdx.json"), DEPL, [G43, BC], ["%s#P1" % DEPL]),
+    (VC.replace(".cdx.json", "-fail-P1.cdx.json"), DEPL, [], []),
+    (RAS.replace(".cdx.json", "-fail-P1.cdx.json"), SYS, [G43, SSH], ["%s#P1" % SYS]),
+    (RAS.replace(".cdx.json", "-fail-P1.cdx.json"), SYS, [], ["%s#P1" % SYS]),
+    (RAS.replace(".cdx.json", "-fail-P2.cdx.json"), SYS, [G43, SSH], ["%s#P2" % SYS]),
+    (RAS.replace(".cdx.json", "-fail-P2.cdx.json"), SYS, [], []),
+    # Without its link the interface also drops out of the coverage count, so P2 fails as well when the
+    # cited records are supplied. Evaluated without them, I1 is the only failure.
+    (RAS.replace(".cdx.json", "-fail-I1.cdx.json"), SYS, [], ["gw:esp/%s#I1" % SYS]),
+    (RAS.replace(".cdx.json", "-fail-I1.cdx.json"), SYS, [G43, SSH], ["%s#P2" % SYS, "gw:esp/%s#I1" % SYS]),
+    (RAS.replace(".cdx.json", "-fail-I2.cdx.json"), SYS, [G43, SSH], ["bastion:ssh-userauth/%s#I2" % SYS]),
+    (RAS.replace(".cdx.json", "-fail-I3.cdx.json"), SYS, [G43, SSH], ["gw:ike/%s#I3" % SYS]),
     # A product profile refuses to treat a deployment record as a product record.
     (CONF, PQC, [PRODUCT], None),
     (PRODUCT, DEPL, [], None),

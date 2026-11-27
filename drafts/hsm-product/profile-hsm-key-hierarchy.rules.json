@@ -67,7 +67,7 @@
     },
     {
       "id": "I4",
-      "attribute": "keyBlockFormat",
+      "attribute": "keyBlockFormats",
       "level": "MUST",
       "constraint": {
         "enumRef": "keyBlockFormatVocabulary"
