@@ -25,6 +25,7 @@
     - { id: introduction, title: Introduction,      url: introduction.html }
     - { id: index,        title: Overview,          url: index.html }
     - { id: demo,         title: Demo,              url: demo.html }
+    - { id: examples,     title: Examples,          url: examples.html }
 
 - group: Background
   items:

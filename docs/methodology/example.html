@@ -1,0 +1,295 @@
+---
+nav: examples
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Example record</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .facts{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 6px}
+  .tag{font:600 10.5px/1 var(--mono);padding:5px 8px;border-radius:20px;background:var(--panel2);color:var(--muted);
+    text-transform:uppercase;letter-spacing:.3px}
+  .tag.t-product{background:#e8f1fd;color:#1c4f9c} .tag.t-deployment{background:#eaf7f0;color:#0f6b47}
+  .tag.t-system{background:#f3ecfd;color:#5b2bb5} .tag.t-service{background:#fdf3e4;color:#8a5600}
+  .tag.fict{background:#fff;border:1px dashed var(--faint)} .tag.draft{background:#fff4d6;color:#7a5600}
+  .idline{font:500 12.5px/1.5 var(--mono);color:var(--muted);word-break:break-all}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 4px;font-size:14px}
+  .actions a{padding:6px 11px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+  .comment{font-size:14.5px;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:var(--radius);padding:12px 15px;margin:14px 0}
+  h2.sec{margin:36px 0 6px}
+  p.sub{margin:0 0 14px;color:var(--muted);font-size:14.5px}
+  /* what's wrong */
+  .wrong{border:1px solid #f2caca;background:#fdf4f4;border-radius:var(--radius-lg);padding:16px 18px;margin:18px 0}
+  .wrong h2{margin:0 0 6px;color:var(--fail);font-size:20px}
+  .wrong table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px;background:#fff;border-radius:8px;overflow:hidden}
+  .wrong th,.wrong td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  .wrong th{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);background:#fbfcfe}
+  .wrong td.before{color:var(--pass)} .wrong td.after{color:var(--fail)}
+  .wrong .fix{background:#eefaf1;border:1px solid #bfe6cb;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:14.5px}
+  .wrong .rule{font-size:14.5px;margin:6px 0}
+  /* purpose grid */
+  .grid{overflow-x:auto;margin:4px 0 8px}
+  .grid table{border-collapse:separate;border-spacing:3px;font-size:12.5px;min-width:720px}
+  .grid th{font-weight:600;color:var(--muted);text-align:left;padding:4px 6px;font-size:11.5px}
+  .grid th.p{text-align:center;width:11%}
+  .grid table td,.grid table th{border:0;background:none}
+  .grid td.n{font:500 12px/1.3 var(--mono);color:var(--ink);padding:4px 10px 4px 0;white-space:nowrap}
+  .grid table td.c{text-align:center;padding:8px 4px;border-radius:6px;font-weight:600;line-height:1.25}
+  .grid table td.s-available,.s-available{background:#d7f2e1;color:#0b5e3e} .grid table td.s-committed,.s-committed{background:#dbe8fb;color:#1b4b94}
+  .grid table td.s-planned,.s-planned{background:#fbeccc;color:#7a4f00} .grid table td.s-under-evaluation,.s-under-evaluation{background:#fdf3df;color:#8a5f10}
+  .grid table td.s-not-planned,.s-not-planned{background:#f3dede;color:#8f2525} .grid table td.s-none,.s-none{background:#f1f3f6;color:#9aa3b0;font-weight:400}
+  .grid small{display:block;font-weight:400;font-size:10.5px;opacity:.85}
+  .glegend{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;margin:6px 0}
+  .glegend span{padding:4px 8px;border-radius:6px}
+  /* interfaces */
+  .ifaces{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:14px}
+  .iface{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow);
+    padding:14px 16px;border-top:3px solid var(--svc)}
+  .iface.management{border-top-color:var(--mgmt)} .iface.storage{border-top-color:#8a5600}
+  .iface.interconnect{border-top-color:#0f6b47} .iface.peer{border-top-color:#64748b}
+  .iface .itype{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+  .iface h3{margin:5px 0 2px;font-size:16px} .iface .iref{font:500 12px/1 var(--mono);color:var(--faint)}
+  .iface.changed{box-shadow:0 0 0 2px #f2caca}
+  .grp{margin-top:10px} .grp h4{margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent)}
+  .kv{display:grid;grid-template-columns:170px 1fr;gap:3px 10px;font-size:13px}
+  .kv .k{font:500 12px/1.5 var(--mono);color:var(--muted);word-break:break-word}
+  .kv .v{word-break:break-word}
+  .kv .v .val{display:inline-block;font:500 12px/1.4 var(--mono);background:var(--panel2);border-radius:5px;
+    padding:2px 6px;margin:0 4px 3px 0;color:var(--ink)}
+  .kv .v a.val{color:var(--accent);background:var(--accent-soft)}
+  .kv .v .val.lit{background:#fff4d6;color:#7a5600}
+  .kv .from{font-size:11px;color:var(--faint)}
+  .kv .hl{background:#fdeeee;border-radius:4px;margin:0 -4px;padding:0 4px}
+  .kv .note{font-size:13px;color:var(--body)}
+  /* conformance */
+  .ptabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+  .ptabs button{font:600 12.5px/1 var(--mono);padding:8px 11px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel);cursor:pointer;color:var(--body)}
+  .ptabs button.ok{border-color:#bfe6cb} .ptabs button.no{border-color:#f2caca}
+  .ptabs button.on.ok{background:#eefaf1;color:var(--pass)} .ptabs button.on.no{background:#fdeeee;color:var(--fail)}
+  [id^=if-]{scroll-margin-top:90px}
+  .verdict{font-family:var(--font-ui);border-radius:12px;padding:12px 16px;font-weight:700;font-size:16px;margin:10px 0;border:1px solid}
+  .verdict.pass{background:#eefaf1;border-color:#bfe6cb;color:var(--pass)}
+  .verdict.fail{background:#fdeeee;border-color:#f2caca;color:var(--fail)}
+  .rulebox{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:12px;background:var(--panel)}
+  .rulebox h3{margin:0 0 8px;font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  ul.checks{list-style:none;margin:0;padding:0}
+  ul.checks li{display:grid;grid-template-columns:50px 50px 1fr;gap:10px;padding:6px 8px;border-radius:7px;font-size:13px;align-items:start}
+  ul.checks li:nth-child(odd){background:#fafbfd}
+  ul.checks li.fail{background:#fdf2f2}
+  .st{font:700 10.5px/1 var(--mono);padding:5px 6px;border-radius:6px;text-align:center}
+  .st.pass{background:#e3f5ea;color:var(--pass)} .st.fail{background:#fbe0e0;color:var(--fail)}
+  .st.warn{background:#fbeed4;color:var(--warn)} .st.none{background:#eef0f3;color:#7b8494}
+  .st.held{background:#ede4fb;color:var(--mgmt)} .st.unkn{background:#e5ebf5;color:#3d5480} .st.open{background:#e9f0fb;color:#26456f}
+  .pill{font:600 10px/1 var(--mono);padding:5px 6px;border-radius:20px;text-align:center;background:#e5ebf5;color:#2b3f66}
+  .rid{font:600 12px/1 var(--mono);color:var(--ink)} .detail{color:var(--muted);font-size:12.5px}
+  details.iface-rules{margin-bottom:8px} details.iface-rules summary{cursor:pointer;font-size:13.5px;padding:6px 0}
+  details.iface-rules summary b.ok{color:var(--pass)} details.iface-rules summary b.no{color:var(--fail)}
+  .refs{font-size:13.5px} .refs li{margin-bottom:6px} .refs code{font-size:12px}
+  .related{display:flex;flex-wrap:wrap;gap:6px}
+  .related a{font:600 11.5px/1 var(--mono);padding:6px 8px;border-radius:6px;border:1px solid var(--line);background:var(--panel)}
+  .related a.v{color:var(--fail);border-color:#f2caca;background:#fdf6f6}
+  .muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include methodology-nav.html %}
+
+<main id="page">
+  <div class="crumb"><a href="examples.html">EXAMPLES</a> <span id="crumbStory"></span></div>
+  <h1 id="title">Loading…</h1>
+  <div id="body"></div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
+</main>
+</div>
+<script>
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const PURPOSES = ["key-establishment","encryption","entity-authentication","data-integrity","non-repudiation","key-protection","key-derivation"];
+const LITERALS = ["none","deployment-defined","peer-defined","out-of-band","product-managed","peer-not-recorded","no-product-document","product"];
+const GROUPS = [
+  ["What it is", a => /^(protocol$|protocolVersion$|endpointRole:|defaultState|terminatedBy|correspondsTo|peerInterface|usage|keyProvider|zone|zonePath|conduitRef|observationMethod|observedAt|implementationPurl|lifecycleStage)/.test(a)],
+  ["In use", a => /^(keyExchange|encryption|authentication|keyWrapping)$/.test(a)],
+  ["Can support", a => /Supported$/.test(a)],
+  ["Moving to post-quantum", a => /^(enablementMethod|enablementSetting|minimumProductVersion|providerLocation|coexistence|moduleValidation|certification|negotiationControl)/.test(a)],
+  ["Keys", a => /^(keyManagementFunction|keyOperations|keyTypes|keyStore|externalDependencies|credentialLifetime|intrinsicData)/.test(a)],
+  ["Notes", a => a === "integrationConstraints"],
+];
+const STATUS_TEXT = {"available":"available","committed":"committed","planned":"planned","under-evaluation":"evaluating","not-planned":"not planned"};
+const ST_LABEL = {pass:"PASS",fail:"FAIL",warn:"warn",none:"NONE",held:"HELD",unkn:"UNKN",open:"OPEN"};
+
+let SERIALS = {}, LOCAL = new Set();
+function bomlink(v){
+  const m = /^urn:cdx:([0-9a-f-]+)\/\d+(?:#(.+))?$/.exec(v);
+  if (!m) return null;
+  const id = SERIALS[m[1]];
+  const label = (id || "record " + m[1].slice(0, 8) + "\u2026") + (m[2] ? " \u203a " + m[2] : "");
+  return id ? '<a class="val" href="example.html?id=' + encodeURIComponent(id) + (m[2] ? "#if-" + encodeURIComponent(m[2]) : "") +
+    '" title="' + esc(v) + '">' + esc(label) + '</a>' : '<span class="val" title="' + esc(v) + '">' + esc(label) + '</span>';
+}
+function vals(vs){
+  // A sentence reads better as text than as a code chip.
+  if (vs.every(v => / /.test(v) && v.length > 28)) return vs.map(v => '<div class="note">' + esc(v) + '</div>').join("");
+  return vs.map(v => bomlink(v) || (LOCAL.has(v) ? '<a class="val" href="#if-' + encodeURIComponent(v) + '">' + esc(v) + '</a>' :
+    '<span class="val' + (LITERALS.includes(v) ? ' lit' : '') + '">' + esc(v) + '</span>')).join("");
+}
+function linkify(v){
+  const m = /^urn:cdx:[^#]+#(.+)$/.exec(v);
+  return m ? esc(v) : esc(v);
+}
+function ifaceCard(i, changed){
+  const done = new Set();
+  let html = "";
+  const hl = new Set(changed.filter(c => c.where === i.ref).map(c => c.attribute));
+  GROUPS.forEach(([title, test]) => {
+    const attrs = i.attributes.filter(a => !done.has(a.name) && a.name !== "interfaceType" && test(a.name));
+    if (!attrs.length) return;
+    attrs.forEach(a => done.add(a.name));
+    html += '<div class="grp"><h4>' + esc(title) + '</h4><div class="kv">' + attrs.map(a =>
+      '<div class="k' + (hl.has(a.name) ? ' hl' : '') + '">' + esc(a.name) + '</div><div class="v' + (hl.has(a.name) ? ' hl' : '') + '">' +
+      (a.name === "integrationConstraints" ? a.values.map(v => '<div class="note">' + esc(v) + '</div>').join("") : vals(a.values)) +
+      (a.from ? ' <span class="from">from ' + esc(a.from) + '</span>' : '') + '</div>').join("") + '</div></div>';
+  });
+  const rest = i.attributes.filter(a => !done.has(a.name) && a.name !== "interfaceType");
+  if (rest.length) html += '<div class="grp"><h4>Other</h4><div class="kv">' + rest.map(a =>
+    '<div class="k' + (hl.has(a.name) ? ' hl' : '') + '">' + esc(a.name) + '</div><div class="v">' + vals(a.values) +
+    (a.from ? ' <span class="from">from ' + esc(a.from) + '</span>' : '') + '</div>').join("") + '</div></div>';
+  const missing = [...hl].filter(a => !i.attributes.some(x => x.name === a));
+  if (missing.length) html += '<div class="grp"><h4 style="color:var(--fail)">Missing in this variant</h4><div class="kv">' +
+    missing.map(a => '<div class="k hl">' + esc(a) + '</div><div class="v hl muted">not stated</div>').join("") + '</div></div>';
+  return '<div class="iface ' + esc(i.type) + (hl.size ? ' changed' : '') + '" id="if-' + esc(i.ref) + '"><div class="itype">' + esc(i.type) + ' interface</div>' +
+    '<h3>' + esc(i.name) + '</h3><div class="iref">' + esc(i.ref) + (i.endpoints.length ? ' · ' + esc(i.endpoints.join(", ")) : '') +
+    '</div>' + html + '</div>';
+}
+function purposeGrid(r){
+  const rows = r.interfaces.filter(i => Object.keys(i.purposes).length);
+  if (!rows.length) return "";
+  const cell = p => {
+    if (!p) return '<td class="c s-none">not stated</td>';
+    const s = p.capabilityStatus || "";
+    const sub = [p.blockedBy ? "blocked by " + p.blockedBy : "",
+      p.validatedModeAvailability ? p.validatedModeAvailability.replace(/-/g, " ") : ""].filter(Boolean).join(" · ");
+    return '<td class="c s-' + esc(s) + '" title="' + esc(JSON.stringify(p)) + '">' + esc(STATUS_TEXT[s] || s) +
+      (sub ? '<small>' + esc(sub) + '</small>' : '') + '</td>';
+  };
+  return '<h2 class="sec">Post-quantum status at a glance</h2><p class="sub">For each interface, how far each cryptographic purpose has moved to post-quantum algorithms, as the record states it (pqc-migration, rule G1). Hover a cell for the full entry.</p>' +
+    '<div class="glegend">' + Object.keys(STATUS_TEXT).map(s => '<span class="s-' + s + '">' + STATUS_TEXT[s] + '</span>').join("") + '</div>' +
+    '<div class="grid"><table><tr><th></th>' + PURPOSES.map(p => '<th class="p">' + esc(p.replace("-", " ")) + '</th>').join("") + '</tr>' +
+    rows.map(i => '<tr><td class="n">' + esc(i.ref) + '</td>' + PURPOSES.map(p => cell(i.purposes[p])).join("") + '</tr>').join("") +
+    '</table></div>';
+}
+function checks(rows){
+  return '<ul class="checks">' + rows.map(r => '<li class="' + (r[0] === "fail" ? "fail" : "") + '"><span class="st ' + r[0] + '">' +
+    ST_LABEL[r[0]] + '</span><span class="pill">' + esc(r[1]) + '</span><span><span class="rid">' + esc(r[2]) + '</span> ' +
+    esc(r[3]) + '<br><span class="detail">' + esc(r[4]) + '</span></span></li>').join("") + '</ul>';
+}
+function report(p){
+  const rep = p.report;
+  const n = p.failing.length;
+  let html = '<div class="verdict ' + (p.verdict === "conforms" ? "pass" : "fail") + '">' +
+    (p.verdict === "conforms" ? "✓ Conforms to " : "✕ Does not conform to ") + esc(p.title) + ' v' + esc(p.version) +
+    (n ? " — " + n + " MUST check" + (n > 1 ? "s" : "") + " not met" : "") + '</div>';
+  if (p.gapAnalysis) html += '<p class="sub">This record describes a real product from its public documentation. It is meant not to conform: each failing check is something the documentation does not say.</p>';
+  if (p.with.length) html += '<p class="sub">Evaluated with the records it cites: ' + p.with.map(w => '<code>' + esc(w) + '</code>').join(", ") + '.</p>';
+  html += '<div class="rulebox"><h3>The record as a whole</h3>' + checks(rep.product) + '</div>';
+  if (rep.references.length) html += '<div class="rulebox"><h3>What the record points to</h3>' + checks(rep.references) + '</div>';
+  html += rep.interfaces.map(i => '<details class="iface-rules"' + (i.conforms ? '' : ' open') + '><summary><b class="' +
+    (i.conforms ? 'ok">✓' : 'no">✕') + '</b> <code>' + esc(i.id) + '</code> · ' + esc(i.type) + ' · ' +
+    i.rows.length + ' checks' + (i.notApplicable ? ', ' + i.notApplicable + ' not applicable' : '') + '</summary>' +
+    checks(i.rows) + '</details>').join("");
+  return html;
+}
+function wrong(r){
+  const v = r.variant;
+  if (!v) return "";
+  return '<div class="wrong"><h2>What is wrong with this record</h2>' +
+    '<p>It is a copy of <a href="example.html?id=' + encodeURIComponent(v.base) + '"><code>' + esc(v.baseName) +
+    '</code></a> with one thing broken: ' + esc(v.what || "see the change below") + '.</p>' +
+    v.rules.map(x => '<div class="rule"><b>Rule <code>' + esc(x.id) + '</code></b> (' + esc(x.level || "") + '): ' + esc(x.text) +
+      (x.vocabulary ? '. Allowed values: ' + x.vocabulary.map(esc).join(", ") : '') + '.</div>').join("") +
+    '<table><tr><th>Where</th><th>Attribute</th><th>In the conforming record</th><th>In this variant</th></tr>' +
+    v.changes.map(c => '<tr><td><code>' + esc(c.where) + '</code></td><td><code>' + esc(c.attribute) + '</code></td><td class="before">' +
+      (c.before ? esc(c.before.join(", ")) : '<i>absent</i>') + '</td><td class="after">' +
+      (c.after ? esc(c.after.join(", ")) : '<i>absent</i>') + '</td></tr>').join("") + '</table>' +
+    '<div class="fix"><b>How to fix it.</b> ' + v.fix.map(esc).join(" ") + '</div></div>';
+}
+function render(r, index){
+  SERIALS = index.serials || {};
+  LOCAL = new Set(r.interfaces.map(i => i.ref).concat(r.components.map(c => c.ref)));
+  const story = index.stories.find(s => s.id === r.story);
+  document.title = "CBOM Profiles — " + r.file;
+  document.getElementById("crumbStory").innerHTML = story ? ' / <a href="examples.html#' + esc(story.id) + '">' + esc(story.title.toUpperCase()) + '</a>' : "";
+  document.getElementById("title").textContent = (r.variant ? "Failure variant: " : "") + r.name + (r.version ? " " + r.version : "");
+  const changed = r.variant ? r.variant.changes : [];
+  const siblings = index.examples.filter(e => e.story === r.story && e.id !== r.id && !e.variant);
+  const variants = index.examples.filter(e => e.base === r.id);
+  let html = '<div class="facts"><span class="tag t-' + esc(r.subjectType) + '">' + esc(r.subjectType) + '</span>' +
+    '<span class="tag">stage: ' + esc(r.stage) + '</span>' + (r.coverage ? '<span class="tag">coverage: ' + esc(r.coverage) + '</span>' : '') +
+    (r.fictional ? '<span class="tag fict">fictional</span>' : '') + (r.draft ? '<span class="tag draft">draft domain</span>' : '') + '</div>' +
+    '<div class="idline">' + esc(r.identifier) + '</div>' +
+    (r.description ? '<p>' + esc(r.description) + '</p>' : '') +
+    '<div class="actions"><a href="' + esc(r.raw) + '">View the JSON</a><a href="' + esc(r.raw) + '" download>Download</a>' +
+    (r.variant ? '<a href="example.html?id=' + encodeURIComponent(r.variant.base) + '">Open the conforming record</a>' : '') + '</div>' +
+    wrong(r) +
+    (r.comment && !r.variant ? '<div class="comment">' + esc(r.comment) + '</div>' : '');
+  html += purposeGrid(r);
+  html += '<h2 class="sec">Cryptographic interfaces</h2><p class="sub">' + r.interfaces.length +
+    ' interface' + (r.interfaces.length === 1 ? '' : 's') + '. Yellow values are statements rather than algorithms: for example <span class="val lit" style="font:500 12px var(--mono);background:#fff4d6;padding:1px 5px;border-radius:4px">deployment-defined</span> means the operator decides. "from" marks a value inherited from the library that provides the interface.</p>' +
+    '<div class="ifaces">' + r.interfaces.map(i => ifaceCard(i, changed)).join("") + '</div>';
+  if (r.components.length) html += '<h2 class="sec">Other components</h2><p class="sub">Libraries that implement the interfaces, and system components that provide keys or trust.</p><div class="kv" style="max-width:860px">' +
+    r.components.map(c => '<div class="k" id="if-' + esc(c.ref) + '">' + esc(c.ref) + '</div><div class="v"><b>' + esc(c.name) + '</b>' +
+      (c.version ? ' ' + esc(c.version) : '') + ' <span class="muted">(' + esc(c.type) + ')</span>' +
+      (c.description ? '<div class="note">' + esc(c.description) + '</div>' : '') + '</div>').join("") + '</div>';
+  if (r.subjectFacts.length) html += '<h2 class="sec">About the subject</h2><div class="kv" style="max-width:760px">' +
+    r.subjectFacts.map(f => '<div class="k">' + esc(f.name) + '</div><div class="v">' + vals(f.values) + '</div>').join("") + '</div>';
+  if (r.references.length) html += '<h2 class="sec">What the record points to</h2><p class="sub">Documents and endpoints the record cites without carrying them.</p><ul class="refs">' +
+    r.references.map(x => '<li><b>' + esc(x.context) + '</b> · <code>' + esc(x.url) + '</code>' + (x.hashed ? ' · pinned by digest' : '') +
+      (x.comment ? '<br><span class="muted">' + esc(x.comment) + '</span>' : '') + '</li>').join("") + '</ul>';
+  html += '<h2 class="sec">Conformance</h2><p class="sub">The reference validator’s report for each profile this record is tested against. Pick a profile.</p>' +
+    '<div class="ptabs" id="ptabs">' + r.profiles.map((p, k) => '<button data-k="' + k + '" class="' + (p.verdict === "conforms" ? "ok" : "no") + '">' +
+      (p.verdict === "conforms" ? "✓ " : "✕ ") + esc(p.tag) + (p.draft ? " (draft)" : "") + '</button>').join("") + '</div><div id="report"></div>' +
+    '<p class="sub">To evaluate it yourself: <code>python3 validate_cbom.py ' + esc(r.file) + ' profile-&lt;name&gt;.rules.json</code>, adding <code>--with</code> for each cited record.</p>';
+  if (variants.length) html += '<h2 class="sec">Failure variants of this record</h2><p class="sub">Each one breaks a single rule.</p><div class="related">' +
+    variants.map(v => '<a class="v" href="example.html?id=' + encodeURIComponent(v.id) + '" title="' + esc(v.breaks) + '">' +
+      esc(v.profiles.map(p => p.failing.join(", ")).filter(Boolean)[0] || v.file) + '</a>').join("") + '</div>';
+  if (siblings.length) html += '<h2 class="sec">More in this story</h2><div class="related">' + siblings.map(s =>
+    '<a href="example.html?id=' + encodeURIComponent(s.id) + '">' + esc(s.name) + (s.version ? " " + esc(s.version) : "") + ' · ' + esc(s.stage) + '</a>').join("") + '</div>';
+  document.getElementById("body").innerHTML = html;
+  const show = k => {
+    document.querySelectorAll("#ptabs button").forEach(b => b.classList.toggle("on", +b.dataset.k === k));
+    document.getElementById("report").innerHTML = report(r.profiles[k]);
+  };
+  document.querySelectorAll("#ptabs button").forEach(b => b.addEventListener("click", () => show(+b.dataset.k)));
+  const firstFail = r.profiles.findIndex(p => p.verdict !== "conforms");
+  show(r.variant && firstFail >= 0 ? firstFail : 0);
+  if (location.hash) { const t = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (t) { t.scrollIntoView(); t.style.boxShadow = "0 0 0 3px var(--accent)"; } }
+}
+const id = new URLSearchParams(location.search).get("id");
+if (!id || !/^[A-Za-z0-9.-]+$/.test(id)) {
+  document.getElementById("title").textContent = "No record chosen";
+  document.getElementById("body").innerHTML = '<p>Choose a record from the <a href="examples.html">examples gallery</a>.</p>';
+} else {
+  Promise.all([fetch("gallery/" + id + ".json").then(r => { if (!r.ok) throw new Error(); return r.json(); }),
+               fetch("gallery/index.json").then(r => r.json())])
+    .then(([r, index]) => render(r, index))
+    .catch(() => {
+      document.getElementById("title").textContent = "Record not found";
+      document.getElementById("body").innerHTML = '<p>There is no example called <code>' + esc(id) + '</code>. Choose one from the <a href="examples.html">examples gallery</a>.</p>';
+    });
+}
+</script>
+</body>
+</html>

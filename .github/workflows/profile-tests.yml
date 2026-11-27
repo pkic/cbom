@@ -10,22 +10,28 @@ on:
     branches: [main]
     paths:
       - 'docs/methodology/**'
+      - 'drafts/**'
       - 'docs/_data/**'
       - 'docs/assets/presentations/**'
       - 'tests/**'
       - 'publications/**'
       - 'regulation/**'
       - 'tools/build_regulatory_coverage.py'
+      - 'tools/build_examples_catalogue.py'
+      - 'tools/build_examples_site.py'
       - '.github/workflows/profile-tests.yml'
   pull_request:
     paths:
       - 'docs/methodology/**'
+      - 'drafts/**'
       - 'docs/_data/**'
       - 'docs/assets/presentations/**'
       - 'tests/**'
       - 'publications/**'
       - 'regulation/**'
       - 'tools/build_regulatory_coverage.py'
+      - 'tools/build_examples_catalogue.py'
+      - 'tools/build_examples_site.py'
       - '.github/workflows/profile-tests.yml'
   workflow_dispatch:
 

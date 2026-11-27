@@ -894,6 +894,24 @@ printf '%s\n' "$OUT" | tail -3 | sed 's/^/  /'
 if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else printf '%s\n' "$OUT" | grep FAIL -A2; failed=$((failed + 1)); fi
 
 echo
+echo "Every draft-domain example gets its expected verdicts"
+OUT="$("$PY" "$ROOT/tests/check-draft-examples.py" 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | tail -1 | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else printf '%s\n' "$OUT" | grep FAIL -A2; failed=$((failed + 1)); fi
+
+echo
+echo "The examples catalogue matches the test cases"
+OUT="$("$PY" "$ROOT/tools/build_examples_catalogue.py" --check 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else failed=$((failed + 1)); fi
+
+echo
+echo "The examples gallery data matches the test cases and the validator"
+OUT="$("$PY" "$ROOT/tools/build_examples_site.py" --check 2>&1)"; RC=$?
+printf '%s\n' "$OUT" | sed 's/^/  /'
+if [ "$RC" -eq 0 ]; then passed=$((passed + 1)); else failed=$((failed + 1)); fi
+
+echo
 echo "The example claim verifies against the product record"
 OUT="$("$PY" "$ROOT/tests/check-claim.py" 2>&1)"; RC=$?
 printf '%s\n' "$OUT" | sed 's/^/  /'

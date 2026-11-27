@@ -1,0 +1,172 @@
+---
+nav: examples
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBOM Profiles — Examples</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .filters{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;margin:18px 0 8px;padding:14px 16px;
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow)}
+  .filters label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.4px}
+  .filters select{font:inherit;font-size:14px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;
+    background:#fff;color:var(--body);min-width:170px;text-transform:none;letter-spacing:0;font-weight:400}
+  .filters .check{flex-direction:row;align-items:center;text-transform:none;letter-spacing:0;font-size:14px;
+    font-weight:500;color:var(--body)}
+  .count{font-size:13.5px;color:var(--muted);margin:6px 0 4px}
+  section.story{margin:34px 0 10px}
+  section.story h2{margin:0 0 4px}
+  section.story .sdom{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--accent)}
+  section.story p.blurb{margin:6px 0 14px;max-width:760px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:15px 16px;
+    box-shadow:var(--shadow);display:flex;flex-direction:column;gap:9px;color:inherit;transition:box-shadow .15s,border-color .15s}
+  .card:hover{box-shadow:var(--shadow-md);border-color:#c9d6ea;text-decoration:none}
+  .card .top{display:flex;gap:6px;flex-wrap:wrap}
+  .tag{font:600 10.5px/1 var(--mono);padding:5px 7px;border-radius:20px;background:var(--panel2);color:var(--muted);
+    text-transform:uppercase;letter-spacing:.3px}
+  .tag.t-product{background:#e8f1fd;color:#1c4f9c} .tag.t-deployment{background:#eaf7f0;color:#0f6b47}
+  .tag.t-system{background:#f3ecfd;color:#5b2bb5} .tag.t-service{background:#fdf3e4;color:#8a5600}
+  .tag.fict{background:#fff;border:1px dashed var(--faint)} .tag.draft{background:#fff4d6;color:#7a5600}
+  .card h3{margin:0;font-family:var(--font-display);font-size:18px;color:var(--ink);line-height:1.3}
+  .card .file{font:500 11.5px/1.3 var(--mono);color:var(--faint);word-break:break-all}
+  .badges{display:flex;flex-wrap:wrap;gap:5px}
+  .b{font:600 11px/1 var(--mono);padding:5px 8px;border-radius:6px;border:1px solid}
+  .b.ok{background:#eefaf1;border-color:#bfe6cb;color:var(--pass)}
+  .b.no{background:#fdeeee;border-color:#f2caca;color:var(--fail)}
+  .b.gap{background:#fbf4e6;border-color:#ecd8ad;color:var(--warn)}
+  .vars{border-top:1px solid var(--line-soft);padding-top:9px;font-size:12.5px;color:var(--muted)}
+  .vars .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+  .chip{font:600 11px/1 var(--mono);padding:5px 7px;border-radius:6px;background:#fdf2f2;color:var(--fail);
+    border:1px solid #f2caca}
+  .chip:hover{text-decoration:none;background:#fbe3e3}
+  .card.variant{border-left:3px solid var(--fail)}
+  .card.variant .breaks{font-size:13.5px;color:var(--body)}
+  .legend2{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--muted);margin:10px 0 0}
+  .empty{padding:30px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="hbar">
+    <a class="brand" href="../"><span class="brand-mark">CBOM</span><span class="brand-text">Profiles</span></a>
+    <span class="hsep">/</span><span class="hsection">Methodology</span>
+    <a class="hback" href="../">&#8592; Working group site</a>
+  </div>
+</header>
+
+<div class="shell">
+{% include methodology-nav.html %}
+
+<main>
+  <div class="crumb">EXAMPLES</div>
+  <h1>Example CBOMs</h1>
+  <p class="lead">Every example record the working group has written, grouped by the story it tells. Open a record to read it as a page: what the subject is, each cryptographic interface, how far each purpose has moved to post-quantum cryptography, and the validator's verdict for each profile.</p>
+  <p>There are two kinds of example. A <b>record</b> shows what a good answer looks like. A <b>failure variant</b> is a copy of a record with one thing broken, so that it fails exactly one rule. Each variant shows what was changed and how to fix it. Every verdict on this page is checked by the test suite.</p>
+  <div class="legend2">
+    <span><span class="b ok">&#10003; profile</span> conforms</span>
+    <span><span class="b no">&#10005; profile</span> does not conform</span>
+    <span><span class="b gap">gap analysis</span> a real product described from public documentation, meant to show what is missing</span>
+  </div>
+
+  <div class="filters">
+    <label>Domain<select id="fDomain"><option value="">All domains</option></select></label>
+    <label>Subject type<select id="fType"><option value="">All types</option></select></label>
+    <label>Stage<select id="fStage"><option value="">All stages</option></select></label>
+    <label>Profile<select id="fProfile"><option value="">Any profile</option></select></label>
+    <label class="check"><input type="checkbox" id="fVariants"> List failure variants as cards</label>
+  </div>
+  <div class="count" id="count"></div>
+  <div id="stories"></div>
+
+  <p style="font-size:13.5px;color:var(--muted);margin-top:30px">The page data is generated by <code>tools/build_examples_site.py</code> from the test cases and the reference validator, <code>validate_cbom.py</code>; the test suite fails if it is out of date. The same examples are listed as a table in <a href="https://github.com/pkic/cbom/blob/main/docs/methodology/examples/README.md">examples/README.md</a>.</p>
+  <div class="pagenav">
+    <a href="demo.html">← Demo</a>
+    <a class="next" href="challenges.html">Next: Challenges →</a>
+  </div>
+  <div class="foot">PKIC CBOM Profiles Working Group · draft for comment.</div>
+</main>
+</div>
+<script>
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let DATA = null;
+const $ = id => document.getElementById(id);
+
+function fill(sel, values){
+  [...new Set(values)].filter(Boolean).sort().forEach(v => {
+    const o = document.createElement("option"); o.value = v; o.textContent = v; sel.appendChild(o);
+  });
+}
+function badges(e){
+  return e.profiles.map(p => {
+    const cls = p.verdict === "conforms" ? "ok" : (p.gapAnalysis ? "gap" : "no");
+    const mark = p.verdict === "conforms" ? "✓ " : (p.gapAnalysis ? "gap · " : "✕ ");
+    const title = p.verdict === "conforms" ? "Conforms" : "Fails " + p.failing.join(", ");
+    return '<span class="b ' + cls + '" title="' + esc(title) + '">' + mark + esc(p.tag) + (p.draft ? "*" : "") + '</span>';
+  }).join("");
+}
+function tags(e){
+  return '<span class="tag t-' + esc(e.subjectType) + '">' + esc(e.subjectType) + '</span>' +
+    '<span class="tag">' + esc(e.stage) + '</span>' +
+    (e.fictional ? '<span class="tag fict">fictional</span>' : '') +
+    (e.draft ? '<span class="tag draft">draft domain</span>' : '');
+}
+function link(e){ return "example.html?id=" + encodeURIComponent(e.id); }
+function matches(e){
+  const d = $("fDomain").value, t = $("fType").value, s = $("fStage").value, p = $("fProfile").value;
+  return (!d || DATA.storyDomain[e.story] === d || e.domain === d) && (!t || e.subjectType === t) &&
+    (!s || e.stage === s) && (!p || e.profiles.some(x => x.tag === p));
+}
+function render(){
+  const showVariants = $("fVariants").checked;
+  const byBase = {};
+  DATA.examples.filter(e => e.variant).forEach(e => (byBase[e.base] = byBase[e.base] || []).push(e));
+  let shown = 0, html = "";
+  DATA.stories.forEach(st => {
+    const items = DATA.examples.filter(e => e.story === st.id && matches(e) && (showVariants || !e.variant ||
+      !DATA.examples.some(b => b.id === e.base)));
+    if (!items.length) return;
+    shown += items.length;
+    html += '<section class="story" id="' + esc(st.id) + '"><div class="sdom">' + esc(st.domain) + '</div><h2>' + esc(st.title) + '</h2>' +
+      (st.blurb ? '<p class="blurb">' + esc(st.blurb) + '</p>' : '') + '<div class="cards">' +
+      items.map(e => {
+        const vs = (byBase[e.id] || []);
+        if (e.variant) {
+          return '<a class="card variant" href="' + link(e) + '"><div class="top">' + tags(e) + '</div>' +
+            '<h3>Breaks ' + esc(e.profiles.map(p => p.failing.join(", ")).filter(Boolean).join(", ")) + '</h3>' +
+            '<div class="breaks">' + esc(e.breaks) + '</div><div class="file">' + esc(e.file) + '</div></a>';
+        }
+        return '<div class="card"><div class="top">' + tags(e) + '</div>' +
+          '<h3><a href="' + link(e) + '">' + esc(e.name) + (e.version ? " " + esc(e.version) : "") + '</a></h3>' +
+          '<div class="file">' + esc(e.file) + '</div><div class="badges">' + badges(e) + '</div>' +
+          (vs.length && !showVariants ? '<div class="vars">' + vs.length + ' failure variant' + (vs.length > 1 ? "s" : "") +
+            ', each breaking one rule:<div class="chips">' + vs.map(v => '<a class="chip" href="' + link(v) +
+            '" title="' + esc(v.breaks) + '">' + esc(v.profiles.map(p => p.failing.join(", ")).filter(Boolean)[0] || v.file) +
+            '</a>').join("") + '</div></div>' : '') + '</div>';
+      }).join("") + '</div></section>';
+  });
+  $("stories").innerHTML = html || '<div class="empty">No example matches these filters.</div>';
+  const records = DATA.examples.filter(e => !e.variant).length;
+  $("count").textContent = DATA.examples.length + " examples: " + records + " records and " +
+    (DATA.examples.length - records) + " failure variants. Showing " + shown + ". A profile marked * is a draft.";
+}
+fetch("gallery/index.json").then(r => r.json()).then(d => {
+  DATA = d;
+  DATA.storyDomain = {};
+  d.stories.forEach(s => DATA.storyDomain[s.id] = s.domain);
+  fill($("fDomain"), d.examples.map(e => e.domain).concat(d.stories.map(s => s.domain)));
+  fill($("fType"), d.examples.map(e => e.subjectType));
+  fill($("fStage"), d.examples.map(e => e.stage));
+  fill($("fProfile"), d.examples.flatMap(e => e.profiles.map(p => p.tag)));
+  const q = new URLSearchParams(location.search);
+  ["Domain", "Type", "Stage", "Profile"].forEach(k => { if (q.get(k.toLowerCase())) $("f" + k).value = q.get(k.toLowerCase()); });
+  ["fDomain", "fType", "fStage", "fProfile", "fVariants"].forEach(id => $(id).addEventListener("change", render));
+  render();
+});
+</script>
+</body>
+</html>
